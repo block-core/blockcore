@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.BlockStore.Tests</AssemblyName>
-    <PackageId>Stratis.Bitcoin.Features.BlockStore.Tests</PackageId>
+    <PackageId>Blockcore.Stratis.Bitcoin.Features.BlockStore.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>

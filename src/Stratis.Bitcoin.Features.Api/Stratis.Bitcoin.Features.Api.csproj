@@ -5,9 +5,9 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>Stratis.Bitcoin.Features.Api</AssemblyName>
     <OutputType>Library</OutputType>
-    <PackageId>Stratis.Bitcoin.Api</PackageId>
+    <PackageId>Blockcore.Stratis.Bitcoin.Api</PackageId>
     <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
-    <Version>3.0.6.0-beta</Version>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>

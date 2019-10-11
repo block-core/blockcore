@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Stratis.SmartContracts.IntegrationTests</AssemblyName>
-    <PackageId>Stratis.SmartContracts.IntegrationTests</PackageId>
+    <PackageId>Blockcore.Stratis.SmartContracts.IntegrationTests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>

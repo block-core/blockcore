@@ -7,13 +7,10 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>4.0.0.74</Version>
-  </PropertyGroup>
-  
-  <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <PackageId>Blockcore.NStratis</PackageId>
     <RootNamespace>NBitcoin</RootNamespace>
-    <PackageId>NStratis</PackageId>
     <Authors>NStratis</Authors>
     <Product>NStratis</Product>
   </PropertyGroup>

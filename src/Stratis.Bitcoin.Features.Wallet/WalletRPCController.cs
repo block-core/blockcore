@@ -221,11 +221,11 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             foreach (TransactionData transactionData in transactions)
             {
-                GetTransactionModel transaction = await this.GetTransactionAsync(transactionData.ToString());
+                GetTransactionModel transaction = await this.GetTransactionAsync(transactionData.Id.ToString());
 
                 int blockHeight = transactionData.BlockHeight ?? 0;
 
-                if (block != null && this.ChainIndexer.GetHeader(block?.GetHash()).Height < blockHeight)
+                if (block != null && blockHeight < this.ChainIndexer.GetHeader(block?.GetHash()).Height)
                     continue;
 
                 if (transaction.Confirmations < targetConfirmations)

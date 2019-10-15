@@ -158,7 +158,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <returns>The new address.</returns>
         [ActionName("getnewaddress")]
         [ActionDescription("Returns a new wallet address for receiving payments.")]
-        public NewAddressModel GetNewAddress(string account, string addressType)
+        public NewAddressModel GetNewAddress(string account = "", string addressType = "")
         {
             if (!string.IsNullOrEmpty(account))
                 throw new RPCServerException(RPCErrorCode.RPC_METHOD_DEPRECATED, "Use of 'account' parameter has been deprecated");
@@ -169,7 +169,12 @@ namespace Stratis.Bitcoin.Features.Wallet
                 if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase))
                     throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' is currently supported.");
             }
-            HdAddress hdAddress = this.walletManager.GetUnusedAddress(this.GetWalletAccountReference());
+
+            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
+            HdAccount walletAccount = wallet.GetAccount(accountReference.AccountName);
+            HdAddress hdAddress = walletAccount.CreateAddresses(this.Network, 1).Single();
+
             string base58Address = hdAddress.Address;
 
             return new NewAddressModel(base58Address);
@@ -195,6 +200,77 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             Money balance = this.walletManager.GetSpendableTransactionsInAccount(account, minConfirmations).Sum(x => x.Transaction.Amount);
             return balance?.ToUnit(MoneyUnit.BTC) ?? 0;
+        }
+
+        [ActionName("listsinceblock")]
+        [ActionDescription("Get all transactions in blocks since block 'blockhash', or all transactions if omitted.")]
+        public async Task<ListSinceBlockModel> ListSinceBlockAsync(string blockHash, int targetConfirmations = 1)
+        {
+            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
+            Block block = null;
+
+            if (!string.IsNullOrEmpty(blockHash) && uint256.TryParse(blockHash, out uint256 hashBlock))
+            {
+                this.ConsensusManager.GetOrDownloadBlocks(new List<uint256> { hashBlock }, b => { block = b.Block; });
+            }
+
+            IEnumerable<TransactionData> transactions = wallet.GetAllTransactions();
+
+            var model = new ListSinceBlockModel();
+
+            foreach (TransactionData transactionData in transactions)
+            {
+                GetTransactionModel transaction = await this.GetTransactionAsync(transactionData.ToString());
+
+                int blockHeight = transactionData.BlockHeight ?? 0;
+
+                if (block != null && this.ChainIndexer.GetHeader(block?.GetHash()).Height < blockHeight)
+                    continue;
+
+                if (transaction.Confirmations < targetConfirmations)
+                    continue;
+
+                foreach (GetTransactionDetailsModel transactionDetail in transaction.Details)
+                {
+                    ListSinceBlockTransactionCategoryModel category = GetListSinceBlockTransactionCategoryModel(transaction);
+
+                    model.Transactions.Add(new ListSinceBlockTransactionModel
+                    {
+                        Confirmations = transaction.Confirmations,
+                        BlockHash = transaction.BlockHash,
+                        BlockIndex = transaction.BlockIndex,
+                        BlockTime = transaction.BlockTime,
+                        TransactionId = transaction.TransactionId,
+                        TransactionTime = transaction.TransactionTime,
+                        TimeReceived = transaction.TimeReceived,
+                        Account = accountReference.AccountName,
+                        Address = transactionDetail.Address,
+                        Amount = transactionDetail.Amount,
+                        Category = category,
+                        Fee = transaction.Fee,
+                        OutputIndex = transactionDetail.OutputIndex
+                    });
+                }
+            }
+
+            model.LastBlock = this.ConsensusManager.Tip.HashBlock;
+
+            return model;
+        }
+
+        private ListSinceBlockTransactionCategoryModel GetListSinceBlockTransactionCategoryModel(GetTransactionModel transaction)
+        {
+            if (transaction.Isgenerated ?? false)
+            {
+                return transaction.Confirmations > this.FullNode.Network.Consensus.CoinbaseMaturity
+                    ? ListSinceBlockTransactionCategoryModel.Generate
+                    : ListSinceBlockTransactionCategoryModel.Immature;
+            }
+
+            return transaction.Amount > 0
+                ? ListSinceBlockTransactionCategoryModel.Receive
+                : ListSinceBlockTransactionCategoryModel.Send;
         }
 
         /// <summary>

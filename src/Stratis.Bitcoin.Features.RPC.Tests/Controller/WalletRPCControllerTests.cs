@@ -96,5 +96,29 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
             Assert.NotNull(exception);
             Assert.Equal("Only address type 'legacy' is currently supported.", exception.Message);
         }
+
+        [Fact]
+        public void GetUnusedAddress_WithAccountParameterSet_ThrowsException()
+        {
+            RPCServerException exception = Assert.Throws<RPCServerException>(() =>
+            {
+                NewAddressModel result = this.controller.GetUnusedAddress("test", "");
+            });
+
+            Assert.NotNull(exception);
+            Assert.Equal("Use of 'account' parameter has been deprecated", exception.Message);
+        }
+
+        [Fact]
+        public void GetUnusedAddress_WithIncompatibleAddressType_ThrowsException()
+        {
+            RPCServerException exception = Assert.Throws<RPCServerException>(() =>
+            {
+                NewAddressModel result = this.controller.GetUnusedAddress("", "x");
+            });
+
+            Assert.NotNull(exception);
+            Assert.Equal("Only address type 'legacy' is currently supported.", exception.Message);
+        }
     }
 }

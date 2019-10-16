@@ -208,11 +208,11 @@ namespace Stratis.Bitcoin.Features.Wallet
         {
             WalletAccountReference accountReference = this.GetWalletAccountReference();
             Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
-            Block block = null;
+            ChainedHeaderBlock headerBlock = null;
 
             if (!string.IsNullOrEmpty(blockHash) && uint256.TryParse(blockHash, out uint256 hashBlock))
             {
-                this.ConsensusManager.GetOrDownloadBlocks(new List<uint256> { hashBlock }, b => { block = b.Block; });
+                this.ConsensusManager.GetOrDownloadBlocks(new List<uint256> { hashBlock }, b => { headerBlock = b; });
             }
 
             IEnumerable<TransactionData> transactions = wallet.GetAllTransactions();
@@ -225,7 +225,7 @@ namespace Stratis.Bitcoin.Features.Wallet
 
                 int blockHeight = transactionData.BlockHeight ?? 0;
 
-                if (block != null && blockHeight < this.ChainIndexer.GetHeader(block?.GetHash()).Height)
+                if (headerBlock?.ChainedHeader != null && blockHeight < headerBlock?.ChainedHeader.Height)
                     continue;
 
                 if (transaction.Confirmations < targetConfirmations)

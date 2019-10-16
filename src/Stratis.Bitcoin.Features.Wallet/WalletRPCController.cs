@@ -254,7 +254,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                 }
             }
 
-            model.LastBlock = this.ConsensusManager.Tip.HashBlock;
+            model.LastBlock = this.ChainIndexer.Tip.HashBlock;
 
             return model;
         }

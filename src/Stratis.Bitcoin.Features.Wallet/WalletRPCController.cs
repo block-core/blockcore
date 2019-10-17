@@ -169,7 +169,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                 if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase))
                     throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' is currently supported.");
             }
-            
+
             WalletAccountReference accountReference = this.GetWalletAccountReference();
 
             HdAddress hdAddress = this.walletManager.GetUnusedAddresses(accountReference, 1, alwaysnew: true).Single();
@@ -231,14 +231,21 @@ namespace Stratis.Bitcoin.Features.Wallet
         [ActionDescription("Get all transactions in blocks since block 'blockhash', or all transactions if omitted.")]
         public async Task<ListSinceBlockModel> ListSinceBlockAsync(string blockHash, int targetConfirmations = 1)
         {
-            WalletAccountReference accountReference = this.GetWalletAccountReference();
-            Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
             ChainedHeader headerBlock = null;
 
             if (!string.IsNullOrEmpty(blockHash) && uint256.TryParse(blockHash, out uint256 hashBlock))
             {
                 headerBlock = this.ChainIndexer.GetHeader(hashBlock);
             }
+
+            if (!string.IsNullOrEmpty(blockHash) && headerBlock == null)
+                throw new RPCServerException(RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
+
+            if (targetConfirmations < 1)
+                throw new RPCServerException(RPCErrorCode.RPC_INVALID_PARAMETER, "Invalid parameter");
+
+            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
 
             IEnumerable<TransactionData> transactions = wallet.GetAllTransactions();
 
@@ -256,27 +263,24 @@ namespace Stratis.Bitcoin.Features.Wallet
                 if (transaction.Confirmations < targetConfirmations)
                     continue;
 
-                foreach (GetTransactionDetailsModel transactionDetail in transaction.Details)
-                {
-                    ListSinceBlockTransactionCategoryModel category = GetListSinceBlockTransactionCategoryModel(transaction);
 
-                    model.Transactions.Add(new ListSinceBlockTransactionModel
-                    {
-                        Confirmations = transaction.Confirmations,
-                        BlockHash = transaction.BlockHash,
-                        BlockIndex = transaction.BlockIndex,
-                        BlockTime = transaction.BlockTime,
-                        TransactionId = transaction.TransactionId,
-                        TransactionTime = transaction.TransactionTime,
-                        TimeReceived = transaction.TimeReceived,
-                        Account = accountReference.AccountName,
-                        Address = transactionDetail.Address,
-                        Amount = transactionDetail.Amount,
-                        Category = category,
-                        Fee = transaction.Fee,
-                        OutputIndex = transactionDetail.OutputIndex
-                    });
-                }
+                ListSinceBlockTransactionCategoryModel category = GetListSinceBlockTransactionCategoryModel(transaction);
+
+                model.Transactions.Add(new ListSinceBlockTransactionModel
+                {
+                    Confirmations = transaction.Confirmations,
+                    BlockHash = transaction.BlockHash,
+                    BlockIndex = transaction.BlockIndex,
+                    BlockTime = transaction.BlockTime,
+                    TransactionId = transaction.TransactionId,
+                    TransactionTime = transaction.TransactionTime,
+                    TimeReceived = transaction.TimeReceived,
+                    Account = accountReference.AccountName,
+                    Address = transactionData.ScriptPubKey?.GetDestinationAddress(this.Network)?.ToString(),
+                    Amount = transaction.Amount,
+                    Category = category,
+                    Fee = transaction.Fee
+                });
             }
 
             model.LastBlock = this.ChainIndexer.Tip.HashBlock;

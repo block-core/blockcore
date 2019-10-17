@@ -35,12 +35,6 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
         public decimal Amount { get; set; }
 
         /// <summary>
-        /// The index of the output being sent or received.
-        /// </summary>
-        [JsonProperty("vout", NullValueHandling = NullValueHandling.Ignore)]
-        public int? OutputIndex { get; set; }
-
-        /// <summary>
         /// The amount of the fee. This is negative and only available for the 'send' category of transactions.
         /// </summary>
         [JsonProperty("fee", NullValueHandling = NullValueHandling.Ignore)]

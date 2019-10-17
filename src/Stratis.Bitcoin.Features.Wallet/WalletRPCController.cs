@@ -169,11 +169,10 @@ namespace Stratis.Bitcoin.Features.Wallet
                 if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase))
                     throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' is currently supported.");
             }
-
+            
             WalletAccountReference accountReference = this.GetWalletAccountReference();
-            Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
-            HdAccount walletAccount = wallet.GetAccount(accountReference.AccountName);
-            HdAddress hdAddress = walletAccount.CreateAddresses(this.Network, 1).Single();
+
+            HdAddress hdAddress = this.walletManager.GetUnusedAddresses(accountReference, 1, alwaysnew: true).Single();
 
             string base58Address = hdAddress.Address;
 

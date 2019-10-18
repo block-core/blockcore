@@ -25,10 +25,12 @@ jobs:
   - task: NuGetToolInstaller@1
 
   - task: NuGetCommand@2
+    displayName: 'Restore Solution Nuget Packages'
     inputs:
       restoreSolution: '$(solution)'
 
   - task: VSBuild@1
+    displayName: 'Build Solution'
     inputs:
       solution: '$(solution)'
       msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -36,6 +38,7 @@ jobs:
       configuration: '$(buildConfiguration)'
 
   - task: VSTest@2
+    displayName: 'Run Tests'
     inputs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
@@ -45,13 +48,19 @@ jobs:
           !**\*TestAdapter.dll
           !**\obj\**
           !**\*Common*.dll
+          !**\Stratis.Features.FederatedPeg.IntegrationTests.dll
+          !**\Stratis.Features.FederatedPeg.Tests.dll
+          !**\Stratis.SmartContracts.IntegrationTests.dll
+          !**\Stratis.SmartContracts.Tests.Tests.dll
 
   - task: PowerShell@2
+    displayName: 'Pack Nuget Packages'
     inputs:
       filePath: 'PackNuget.ps1'
       arguments: '-releaseType $(nugetReleaseType)'
 
   - task: NuGetCommand@2
+    displayName: 'Publish Nuget Packages'
     inputs:
       command: 'push'
       feedsToUse: 'config'

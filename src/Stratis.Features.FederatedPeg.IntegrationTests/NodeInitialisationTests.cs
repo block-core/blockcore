@@ -43,7 +43,7 @@ namespace Stratis.Features.FederatedPeg.IntegrationTests
             this.scriptAndAddresses = FederatedPegTestHelper.GenerateScriptAndAddresses(this.mainNetwork, this.sidechainNetwork, 2, pubKeysByMnemonic);
         }
 
-        [Fact(Skip = "Broken. Re-enable when fixed")]
+        [Fact]
         public void SidechainUserStarts()
         {
             using (SidechainNodeBuilder nodeBuilder = SidechainNodeBuilder.CreateSidechainNodeBuilder(this))
@@ -58,7 +58,7 @@ namespace Stratis.Features.FederatedPeg.IntegrationTests
             }
         }
 
-        [Fact(Skip = "Broken. Re-enable when fixed")]
+        [Fact]
         public void SidechainMinerStarts()
         {
             using (SidechainNodeBuilder nodeBuilder = SidechainNodeBuilder.CreateSidechainNodeBuilder(this))
@@ -109,7 +109,7 @@ namespace Stratis.Features.FederatedPeg.IntegrationTests
             }
         }
 
-        [Fact(Skip = "Broken. Re-enable when fixed")]
+        [Fact]
         public void MainChainGatewayStarts()
         {
             using (SidechainNodeBuilder nodeBuilder = SidechainNodeBuilder.CreateSidechainNodeBuilder(this))

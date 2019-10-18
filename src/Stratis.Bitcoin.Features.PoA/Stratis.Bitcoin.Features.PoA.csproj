@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.PoA</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.PoA</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.PoA</PackageId>
+    <PackageId>Blockcore.Features.PoA</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

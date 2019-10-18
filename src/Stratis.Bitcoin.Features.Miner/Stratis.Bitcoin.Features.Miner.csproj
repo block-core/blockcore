@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.Miner</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.Miner</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.Miner</PackageId>
+    <PackageId>Blockcore.Features.Miner</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

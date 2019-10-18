@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Stratis.BreezeD</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Blockcore.Stratis.BreezeD</PackageId>
+    <PackageId>Stratis.BreezeD</PackageId>
     <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>

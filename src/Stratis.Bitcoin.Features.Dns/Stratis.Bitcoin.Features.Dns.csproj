@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.Dns</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.Dns</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.Dns</PackageId>
+    <PackageId>Blockcore.Features.Dns</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

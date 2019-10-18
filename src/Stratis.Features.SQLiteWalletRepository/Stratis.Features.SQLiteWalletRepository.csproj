@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Features.SQLiteWalletRepository</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Features.SQLiteWalletRepository</AssemblyName>
-    <PackageId>Blockcore.Stratis.Features.SQLiteWalletRepository</PackageId>
+    <PackageId>Blockcore.Features.SQLiteWalletRepository</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

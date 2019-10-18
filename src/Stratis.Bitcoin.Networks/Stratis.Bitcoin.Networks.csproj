@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Networks</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Networks</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Networks</PackageId>
+    <PackageId>Blockcore.Networks</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

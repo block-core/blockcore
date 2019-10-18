@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.Wallet</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.Wallet</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.Wallet</PackageId>
+    <PackageId>Blockcore.Features.Wallet</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

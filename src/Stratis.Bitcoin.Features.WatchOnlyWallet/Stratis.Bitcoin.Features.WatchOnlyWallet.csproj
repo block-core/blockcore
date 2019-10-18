@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.WatchOnlyWallet</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.WatchOnlyWallet</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.WatchOnlyWallet</PackageId>
+    <PackageId>Blockcore.Features.WatchOnlyWallet</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

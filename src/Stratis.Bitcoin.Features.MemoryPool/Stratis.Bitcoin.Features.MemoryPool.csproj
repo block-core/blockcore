@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.MemoryPool</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.MemoryPool</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.MemoryPool</PackageId>
+    <PackageId>Blockcore.Features.MemoryPool</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

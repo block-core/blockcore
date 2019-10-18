@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.Bitcoin.IntegrationTests.Common</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.IntegrationTests.Common</PackageId>
+    <PackageId>Blockcore.IntegrationTests.Common</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

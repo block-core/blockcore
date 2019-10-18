@@ -9,10 +9,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <PackageId>Blockcore.NStratis</PackageId>
+    <PackageId>Blockcore.NBitcoin</PackageId>
     <RootNamespace>NBitcoin</RootNamespace>
-    <Authors>NStratis</Authors>
-    <Product>NStratis</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

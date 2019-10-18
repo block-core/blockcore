@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.Bitcoin.Tests.Wallet.Common</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Tests.Wallet.Common</PackageId>
+    <PackageId>Blockcore.Tests.Wallet.Common</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

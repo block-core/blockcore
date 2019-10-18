@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.Consensus</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.Consensus</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.Consensus</PackageId>
+    <PackageId>Blockcore.Features.Consensus</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

@@ -5,7 +5,7 @@
     <AssemblyTitle>Stratis.Bitcoin.Features.BlockStore</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.BlockStore</AssemblyName>
-    <PackageId>Blockcore.Stratis.Bitcoin.Features.BlockStore</PackageId>
+    <PackageId>Blockcore.Features.BlockStore</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

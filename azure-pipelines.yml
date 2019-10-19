@@ -16,7 +16,7 @@ jobs:
     vmImage: 'windows-latest'
 
   variables:
-    solution: '**/*.sln'
+    solution: '**/Blockcore.sln'
     buildPlatform: 'Any CPU'
     buildConfiguration: 'Release'
     nugetReleaseType: 'alpha'
@@ -48,10 +48,6 @@ jobs:
           !**\*TestAdapter.dll
           !**\obj\**
           !**\*Common*.dll
-          !**\Stratis.Features.FederatedPeg.IntegrationTests.dll
-          !**\Stratis.Features.FederatedPeg.Tests.dll
-          !**\Stratis.SmartContracts.IntegrationTests.dll
-          !**\Stratis.SmartContracts.Tests.Tests.dll
 
   - task: PowerShell@2
     displayName: 'Pack Nuget Packages'

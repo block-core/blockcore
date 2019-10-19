@@ -23,21 +23,10 @@ $projectPaths = @(
 	".\src\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj",
 	".\src\Stratis.Bitcoin.Features.WatchOnlyWallet\Stratis.Bitcoin.Features.WatchOnlyWallet.csproj",
 	".\src\Stratis.Bitcoin.Networks\Stratis.Bitcoin.Networks.csproj",
-	".\src\Stratis.Features.Collateral\Stratis.Features.Collateral.csproj",
-	".\src\Stratis.Features.FederatedPeg\Stratis.Features.FederatedPeg.csproj",
-	# SMARTCONTRACT PROJECTS
-	".\src\Stratis.Sidechains.Networks\Stratis.Sidechains.Networks.csproj",
-	".\src\Stratis.SmartContracts.CLR\Stratis.SmartContracts.CLR.csproj",
-	".\src\Stratis.SmartContracts.CLR.Validation\Stratis.SmartContracts.CLR.Validation.csproj",
-	".\src\Stratis.SmartContracts.Core\Stratis.SmartContracts.Core.csproj",
-	".\src\Stratis.SmartContracts.Networks\Stratis.SmartContracts.Networks.csproj",
-	".\src\Stratis.SmartContracts.RuntimeObserver\Stratis.SmartContracts.RuntimeObserver.csproj",
-	".\src\Stratis.Bitcoin.Features.SmartContracts\Stratis.Bitcoin.Features.SmartContracts.csproj"
 	# TESTS PROJECTS
 	".\src\Stratis.Bitcoin.IntegrationTests.Common\Stratis.Bitcoin.IntegrationTests.Common.csproj",
 	".\src\Stratis.Bitcoin.Tests.Common\Stratis.Bitcoin.Tests.Common.csproj",
 	".\src\Stratis.Bitcoin.Tests.Wallet.Common\Stratis.Bitcoin.Tests.Wallet.Common.csproj",
-	".\src\Stratis.Bitcoin.Features.PoA.IntegrationTests.Common\Stratis.Bitcoin.Features.PoA.IntegrationTests.Common.csproj",
 	# TOOLS PROJECTS
 	".\src\FodyNlogAdapter\FodyNlogAdapter.csproj"
 )

@@ -1,6 +1,8 @@
 **What is Blockcore?**
 
-- Blockcore is a unified repository for all developers of C# full node blockchain technology.
+- Blockcore is a [.NET Core](https://dotnet.github.io/) platform to build decentralized networks based on the Bitcoin protocol
+- Blockcore is a platform to build Layer 1 consensus networks based on the Bitcoin protocol, built on the [.NET Core](https://dotnet.github.io/) framework and written entirely in C#. 
+- Blockcore aims to maintain an alternative C# Bitcoin implementation, based on the [NBitcoin](https://github.com/MetacoSA/NBitcoin) & [Stratis](https://github.com/stratisproject/StratisBitcoinFullNode) projects.
 - Blockcore isn't a coin.
 - Blockcore isn't a for profit business.
 
@@ -23,4 +25,4 @@
 - We encourage contribution to the blockcore open source software.
 - We aim to make it easier for everyone to contribute to the ecosystem.
 - We help each other, and all projects that utilise the underlying technology.
-- We encourage projects to adopt Blockcore technolody as we believe every project has something to offer and help make the technology stronger.
+- We encourage projects to adopt Blockcore technology as we believe every project has something to offer and help make the technology stronger.

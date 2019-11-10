@@ -5,7 +5,7 @@
     <AssemblyName>Stratis.Bitcoin.Features.SmartContracts.Tests</AssemblyName>
     <PackageId>Stratis.Bitcoin.Features.SmartContracts.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

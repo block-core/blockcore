@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <Version>1.0.2.0-beta</Version>
     <Authors>Stratis Group Ltd.</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Tracer.Fody" Version="3.1.0">
+    <PackageReference Include="Tracer.Fody" Version="3.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

@@ -3,7 +3,8 @@
   <PropertyGroup>
     <Description>Stratis Bitcoin Features Miner</Description>
     <AssemblyTitle>Stratis.Bitcoin.Features.Miner</AssemblyTitle>
-	<TargetFramework>netcoreapp2.2</TargetFramework>
+	  <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.Bitcoin.Features.Miner</AssemblyName>
     <PackageId>Stratis.Bitcoin.Features.Miner</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -26,9 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-    <PackageReference Include="Tracer.Fody" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Tracer.Fody" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

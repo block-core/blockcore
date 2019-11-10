@@ -4,6 +4,7 @@
     <Description>Stratis Bitcoin FullNode</Description>
     <AssemblyTitle>Stratis.Bitcoin.Networks</AssemblyTitle>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.Bitcoin.Networks</AssemblyName>
     <PackageId>Stratis.Bitcoin.Networks</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>

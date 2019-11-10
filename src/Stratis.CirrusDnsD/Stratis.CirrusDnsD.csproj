@@ -5,7 +5,7 @@
         <AssemblyName>Stratis.CirrusDnsD</AssemblyName>
         <OutputType>Exe</OutputType>
         <PackageId>Stratis.CirrusDnsD</PackageId>
-        <RuntimeFrameworkVersion>2.1.1</RuntimeFrameworkVersion>
+        <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

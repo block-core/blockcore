@@ -26,10 +26,9 @@ namespace Stratis.Bitcoin.IntegrationTests.Compatibility
     public class StratisXTests
     {
         /// <summary>
-        /// Tests whether a quantity of blocks mined on SBFN are
-        /// correctly synced to a stratisX node.
+        /// Tests whether a quantity of blocks mined on SBFN are correctly synced to a stratisX node.
         /// </summary>
-        [Fact(Skip = "Takes a long time to run with SBFN making blocks. Need to investigate why.")]
+        [Fact]
         public void SBFNMinesBlocks_XSyncs()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -43,23 +42,21 @@ namespace Stratis.Bitcoin.IntegrationTests.Compatibility
                 var network = new StratisRegTest();
 
                 CoreNode stratisXNode = builder.CreateStratisXNode(version: "2.0.0.5").Start();
-                CoreNode stratisNode = builder.CreateStratisPosNode(network).WithWallet().Start();
+                CoreNode sbfnNode = builder.CreateStratisPosNode(network).WithWallet().Start();
 
                 RPCClient stratisXRpc = stratisXNode.CreateRPCClient();
-                RPCClient stratisNodeRpc = stratisNode.CreateRPCClient();
+                RPCClient sbfnNodeRpc = sbfnNode.CreateRPCClient();
 
                 // TODO: Need to troubleshoot why TestHelper.Connect() does not work here, possibly unsupported RPC method (it seems that addnode does not work for X).
-                stratisNodeRpc.AddNode(stratisXNode.Endpoint, false);
+                sbfnNodeRpc.AddNode(stratisXNode.Endpoint, false);
 
                 // TODO: Similarly, the 'generate' RPC call is problematic on X. Possibly returning an unexpected JSON format.
-                TestHelper.MineBlocks(stratisNode, 10);
+                TestHelper.MineBlocks(sbfnNode, 10);
 
-                // As we are not actually sending transactions, it does not matter that the datetime provider is substituted
-                // for this test. The blocks get accepted by X despite getting generated very rapidly.
                 var cancellationToken = new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token;
 
-                TestBase.WaitLoop(() => stratisNodeRpc.GetBlockCount() >= 10, cancellationToken: cancellationToken);
-                TestBase.WaitLoop(() => stratisNodeRpc.GetBestBlockHash() == stratisXRpc.GetBestBlockHash(), cancellationToken: cancellationToken);
+                TestBase.WaitLoop(() => sbfnNodeRpc.GetBlockCount() >= 10, cancellationToken: cancellationToken);
+                TestBase.WaitLoop(() => sbfnNodeRpc.GetBestBlockHash() == stratisXRpc.GetBestBlockHash(), cancellationToken: cancellationToken);
             }
         }
 
@@ -400,7 +397,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Compatibility
         }
 
         [Fact]
-        public void GatewayNodeCanSyncFirst15KBlocks()
+        public void GatewayNodeCanSyncBeforeAndAfterLastCheckpointPowAndPoS()
         {
             Network network = new StratisMain10KCheckpoint();
 
@@ -418,8 +415,11 @@ namespace Stratis.Bitcoin.IntegrationTests.Compatibility
                 var gatewayParameters = new NodeConfigParameters();
                 gatewayParameters.Add("regtest", "0");
                 gatewayParameters.Add("gateway", "1");
+                gatewayParameters.Add("txindex", "0");
                 gatewayParameters.Add("whitelist", stratisXNode.Endpoint.ToString());
-                CoreNode gatewayNode = builder.CreateStratisPosNode(network, configParameters: gatewayParameters, isGateway:true);
+                CoreNode gatewayNode =
+                    builder.CreateStratisPosNode(network, configParameters: gatewayParameters, isGateway: true)
+                    .WithReadyBlockchainData(ReadyBlockchain.StratisMainnet9500);
 
                 gatewayNode.Start();
                 stratisXNode.Start();
@@ -429,7 +429,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Compatibility
 
                 gatewayNodeRpc.AddNode(stratisXNode.Endpoint);
 
-                TestBase.WaitLoop(() => gatewayNode.FullNode.ChainIndexer.Height >= 15_000, waitTimeSeconds: 600);
+                TestBase.WaitLoop(() => gatewayNode.FullNode.ChainIndexer.Height >= 13_000, waitTimeSeconds: 600);
             }
         }
 

@@ -110,7 +110,7 @@ namespace Stratis.Bitcoin.IntegrationTests
                 // Core (in version 0.15.1) only mines segwit blocks above a certain height on regtest
                 // See issue for more details https://github.com/stratisproject/StratisBitcoinFullNode/issues/1028
                 BIP9DeploymentsParameters prevSegwitDeployment = KnownNetworks.RegTest.Consensus.BIP9Deployments[BitcoinBIP9Deployments.Segwit];
-                KnownNetworks.RegTest.Consensus.BIP9Deployments[BitcoinBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Test", 1, 0, DateTime.Now.AddDays(50).ToUnixTimestamp());
+                KnownNetworks.RegTest.Consensus.BIP9Deployments[BitcoinBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Test", 1, 0, DateTime.Now.AddDays(50).ToUnixTimestamp(), BIP9DeploymentsParameters.DefaultRegTestThreshold);
 
                 try
                 {
@@ -216,13 +216,11 @@ namespace Stratis.Bitcoin.IntegrationTests
                 var network = new StratisRegTest();
 
                 // Set the date ranges such that ColdStaking will 'Start' immediately after the initial confirmation window.
-                network.Consensus.BIP9Deployments[StratisBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Test", 1, 0, DateTime.Now.AddDays(50).ToUnixTimestamp());
+                // Minimum number of 'votes' required within the confirmation window to reach 'LockedIn' state.
+                network.Consensus.BIP9Deployments[StratisBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Test", 1, 0, DateTime.Now.AddDays(50).ToUnixTimestamp(), 8);
 
                 // Set a small confirmation window to reduce time taken by this test.
                 network.Consensus.MinerConfirmationWindow = 10;
-
-                // Minimum number of 'votes' required within the confirmation window to reach 'LockedIn' state.
-                network.Consensus.RuleChangeActivationThreshold = 8;
 
                 CoreNode stratisNode = builder.CreateStratisPosNode(network).WithWallet();
                 stratisNode.Start();

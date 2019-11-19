@@ -253,7 +253,7 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             foreach (TransactionData transactionData in transactions)
             {
-                GetTransactionModel transaction = await this.GetTransactionAsync(transactionData.Id.ToString());
+                GetTransactionModel transaction = this.GetTransaction(transactionData.Id.ToString());
 
                 int blockHeight = transactionData.BlockHeight ?? 0;
 

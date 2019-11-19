@@ -440,7 +440,7 @@ namespace Stratis.Bitcoin.IntegrationTests.API
             commands.Should().Contain(x => x.Command == "startstaking <walletname> <walletpassword>");
             commands.Should().Contain(x => x.Command == "getstakinginfo [<isjsonformat>]");
             commands.Should().Contain(x => x.Command == "sendtoaddress <address> <amount> <commenttx> <commentdest>");
-            commands.Should().Contain(x => x.Command == "getnewaddress <account> <addresstype>");
+            commands.Should().Contain(x => x.Command == "getnewaddress [<account>] [<addresstype>]");
             commands.Should().Contain(x => x.Command == "getunusedaddress <account> <addresstype>");
             commands.Should().Contain(x => x.Command == "sendrawtransaction <hex>");
             commands.Should().Contain(x => x.Command == "decoderawtransaction <hex>");
@@ -448,7 +448,7 @@ namespace Stratis.Bitcoin.IntegrationTests.API
             commands.Should().Contain(x => x.Command == "walletlock");
             commands.Should().Contain(x => x.Command == "walletpassphrase <passphrase> <timeout>");
             commands.Should().Contain(x => x.Command == "listunspent [<minconfirmations>] [<maxconfirmations>] [<addressesjson>]");
-            commands.Should().Contain(x => x.Command == "listsinceblock <blockHash> [<targetConfirmations>]");
+            commands.Should().Contain(x => x.Command == "listsinceblock <blockhash> [<targetconfirmations>]");
             commands.Should().Contain(x => x.Command == "sendmany <fromaccount> <addressesjson> [<minconf>] [<comment>] [<subtractfeefromjson>] [<isreplaceable>] [<conftarget>] [<estimatemode>]");
             commands.Should().Contain(x => x.Command == "getblockchaininfo");
             commands.Should().Contain(x => x.Command == "getnetworkinfo");

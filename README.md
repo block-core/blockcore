@@ -2,73 +2,52 @@
 | :---- | :------ | :---- |
 | [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedWindowsContainer-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=4) | [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedmacOS-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=6) | [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedUbuntu1604-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=5)
 
-Stratis Bitcoin
+Blockcore
 ===============
 
-https://stratisplatform.com
+https://blockcore.net
 
 Bitcoin Implementation in C#
 ----------------------------
 
-Stratis is an implementation of the Bitcoin protocol in C# on the [.NET Core](https://dotnet.github.io/) platform.  
-The node can run on the Bitcoin and Stratis networks.  
-Stratis Bitcoin is based on the [NBitcoin](https://github.com/MetacoSA/NBitcoin) project.  
+**What is Blockcore?**
 
-For Proof of Stake support on the Stratis token the node is using [NStratis](https://github.com/stratisproject/NStratis) which is a POS implementation of NBitcoin.  
+- Blockcore is a platform to build Layer 1 consensus networks based on the Bitcoin protocol, built on the [.NET Core](https://dotnet.github.io/) framework and written entirely in C#. 
+- Blockcore aims to maintain an alternative C# Bitcoin implementation, based on the [NBitcoin](https://github.com/MetacoSA/NBitcoin) & [Stratis](https://github.com/stratisproject/StratisBitcoinFullNode) projects.
+- Blockcore is neither a coin or a for profit business.
 
-[.NET Core](https://dotnet.github.io/) is an open source cross platform framework and enables the development of applications and services on Windows, macOS and Linux.  
+**Why Blockcore?**
 
-Join our community on [discord](https://discord.gg/9tDyfZs).  
+- We see a need within the crypto ecosystem for development of the C# full node technology.
+- [Stratis](https://github.com/stratisproject/StratisBitcoinFullNode) has provided an excellent starting point but their focus is enterprise and businesses and we feel strongly that there is also value focusing on open and public blockchains.
 
-The design
-----------
+**Blockcore objectives**
 
-**A Modular Approach**
+- Continue development of the C# Stratis fullnode.
+- Maintain the C# Bitcoin fullnode.
+- Support projects and teams that use the underlying technology.
+- Extend the technology by building developer and user tools
+- Provide a forum for developers and teams to collaborate and improve on the technology.
 
-A Blockchain is made of many components, from a FullNode that validates blocks to a Simple Wallet that track addresses.
-The end goal is to develop a set of [Nuget](https://en.wikipedia.org/wiki/NuGet) packages from which an implementer can cherry pick what he needs.
+**Blockcore principles**
 
-* **NBitcoin**
-* **Stratis.Bitcoin.Core**  - The bare minimum to run a pruned node.
-* **Stratis.Bitcoin.Store** - Store and relay blocks to peers.
-* **Stratis.Bitcoin.MemoryPool** - Track pending transaction.
-* **Stratis.Bitcoin.Wallet** - Send and Receive coins
-* **Stratis.Bitcoin.Miner** - POS or POW
-* **Stratis.Bitcoin.Explorer**
+- We help each other, and all projects that utilise the underlying technology.
+- We encourage contribution to the Blockcore open source software.
+- We aim to make it easier for everyone to contribute to the ecosystem.
+- We encourage projects to adopt Blockcore technology as we believe every project has something to offer and help make the technology stronger.
+
+Join our community on [discord](https://discord.gg/TXx4Rm3).  
 
 
-Create a Blockchain in a .NET Core style programming
-```
-  var node = new FullNodeBuilder()
-   .UseNodeSettings(nodeSettings)
-   .UseConsensus()
-   .UseBlockStore()
-   .UseMempool()
-   .AddMining()
-   .AddRPC()
-   .Build();
-
-  node.Run();
-```
-
-What's Next
-----------
-
-We plan to add many more features on top of the Stratis Bitcoin blockchain:
-Sidechains, Private/Permissioned blockchain, Compiled Smart Contracts, NTumbleBit/Breeze wallet and more...
-
-Running a FullNode
+**Running a Full Node**
 ------------------
 
 The master branch is actively developed and regularly committed to, and it can become unstable.  
-To compile a stable (production) release use any of the release tags form version 3.0.x.x and upwards.  
+To compile a stable (production) release use the most recent release tags.  
 
 ```
-git clone https://github.com/stratisproject/StratisBitcoinFullNode.git  
+git clone https://github.com/block-core/blockcore.git  
 cd StratisBitcoinFullNode\src
-
-dotnet build
-
 ```
 
 To run on the Bitcoin network:
@@ -85,7 +64,7 @@ dotnet run
 
 Getting Started Guide
 -----------
-More details on getting started are available [here](https://github.com/stratisproject/StratisBitcoinFullNode/blob/master/Documentation/getting-started.md)
+More details on getting started are available [here](https://github.com/block-core/blockcore/blob/master/Documentation/getting-started.md)
 
 Development
 -----------
@@ -94,10 +73,10 @@ Up for some blockchain development?
 Check this guides for more info:
 * [Contributing Guide](Documentation/contributing.md)
 * [Coding Style](Documentation/coding-style.md)
-* [Wiki Page](https://stratisplatform.atlassian.net/wiki/spaces/WIKI/overview)
 
 There is a lot to do and we welcome contributers developers and testers who want to get some Blockchain experience.
-You can find tasks at the issues/projects or visit the dev_general channel on [discord](https://discord.gg/9tDyfZs).
+
+You can find tasks at the issues/projects or visit us on [discord](https://discord.gg/TXx4Rm3).
 
 Testing
 -------

@@ -302,7 +302,8 @@ namespace Stratis.Bitcoin.Networks
 
             Transaction txNew = consensusFactory.CreateTransaction();
             txNew.Version = 1;
-            txNew.Time = nTime;
+            if (txNew is PosTransaction posTx)
+                posTx.Time = nTime;
             txNew.AddInput(new TxIn()
             {
                 ScriptSig = new Script(Op.GetPushOp(0), new Op()

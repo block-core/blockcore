@@ -114,7 +114,7 @@ namespace NBitcoin
             if (IsProofOfStake(block))
             {
                 blockStake.SetProofOfStake();
-                blockStake.StakeTime = block.Transactions[1].Time;
+                blockStake.StakeTime = block.Header.Time;
                 blockStake.PrevoutStake = block.Transactions[1].Inputs[0].PrevOut;
             }
 
@@ -165,6 +165,20 @@ namespace NBitcoin
     {
         public bool IsColdCoinStake { get; set; }
 
+        private uint nTime = Utils.DateTimeToUnixTime(DateTime.UtcNow);
+
+        public uint Time
+        {
+            get
+            {
+                return this.nTime;
+            }
+            set
+            {
+                this.nTime = value;
+            }
+        }
+
         public PosTransaction() : base()
         {
         }
@@ -182,6 +196,99 @@ namespace NBitcoin
         public override bool IsProtocolTransaction()
         {
             return this.IsCoinStake || this.IsCoinBase;
+        }
+
+        public virtual void ReadWrite(BitcoinStream stream)
+        {
+            bool witSupported = (((uint)stream.TransactionOptions & (uint)TransactionOptions.Witness) != 0) &&
+                                stream.ProtocolVersion >= ProtocolVersion.WITNESS_VERSION;
+
+            byte flags = 0;
+            if (!stream.Serializing)
+            {
+                stream.ReadWrite(ref this.nVersion);
+
+                // POS time stamp
+                stream.ReadWrite(ref this.nTime);
+
+                /* Try to read the vin. In case the dummy is there, this will be read as an empty vector. */
+                stream.ReadWrite<TxInList, TxIn>(ref this.vin);
+
+                bool hasNoDummy = (this.nVersion & NoDummyInput) != 0 && this.vin.Count == 0;
+                if (witSupported && hasNoDummy) this.nVersion = this.nVersion & ~NoDummyInput;
+
+                if (this.vin.Count == 0 && witSupported && !hasNoDummy)
+                {
+                    /* We read a dummy or an empty vin. */
+                    stream.ReadWrite(ref flags);
+                    if (flags != 0)
+                    {
+                        /* Assume we read a dummy and a flag. */
+                        stream.ReadWrite<TxInList, TxIn>(ref this.vin);
+                        this.vin.Transaction = this;
+                        stream.ReadWrite<TxOutList, TxOut>(ref this.vout);
+                        this.vout.Transaction = this;
+                    }
+                    else
+                    {
+                        /* Assume read a transaction without output. */
+                        this.vout = new TxOutList();
+                        this.vout.Transaction = this;
+                    }
+                }
+                else
+                {
+                    /* We read a non-empty vin. Assume a normal vout follows. */
+                    stream.ReadWrite<TxOutList, TxOut>(ref this.vout);
+                    this.vout.Transaction = this;
+                }
+                if (((flags & 1) != 0) && witSupported)
+                {
+                    /* The witness flag is present, and we support witnesses. */
+                    flags ^= 1;
+                    var wit = new Witness(this.Inputs);
+                    wit.ReadWrite(stream);
+                }
+                if (flags != 0)
+                {
+                    /* Unknown flag in the serialization */
+                    throw new FormatException("Unknown transaction optional data");
+                }
+            }
+            else
+            {
+                uint version = (witSupported && (this.vin.Count == 0 && this.vout.Count > 0)) ? this.nVersion | NoDummyInput : this.nVersion;
+                stream.ReadWrite(ref version);
+
+                // the POS time stamp
+                stream.ReadWrite(ref this.nTime);
+
+                if (witSupported)
+                {
+                    /* Check whether witnesses need to be serialized. */
+                    if (this.HasWitness)
+                    {
+                        flags |= 1;
+                    }
+                }
+                if (flags != 0)
+                {
+                    /* Use extended format in case witnesses are to be serialized. */
+                    var vinDummy = new TxInList();
+                    stream.ReadWrite<TxInList, TxIn>(ref vinDummy);
+                    stream.ReadWrite(ref flags);
+                }
+                stream.ReadWrite<TxInList, TxIn>(ref this.vin);
+                this.vin.Transaction = this;
+                stream.ReadWrite<TxOutList, TxOut>(ref this.vout);
+                this.vout.Transaction = this;
+                if ((flags & 1) != 0)
+                {
+                    var wit = new Witness(this.Inputs);
+                    wit.ReadWrite(stream);
+                }
+            }
+            stream.ReadWriteStruct(ref this.nLockTime);
         }
     }
 

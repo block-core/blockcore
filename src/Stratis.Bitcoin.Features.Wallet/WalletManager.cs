@@ -1132,7 +1132,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                     BlockHash = block?.GetHash(),
                     BlockIndex = block?.Transactions.FindIndex(t => t.GetHash() == transactionHash),
                     Id = transactionHash,
-                    CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? transaction.Time),
+                    CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? this.dateTimeProvider.GetTime()),
                     Index = index,
                     ScriptPubKey = script,
                     Hex = this.walletSettings.SaveTransactionHex ? transaction.ToHex() : null,
@@ -1247,7 +1247,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                 {
                     TransactionId = transactionHash,
                     Payments = payments,
-                    CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? transaction.Time),
+                    CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? this.dateTimeProvider.GetTime()),
                     BlockHeight = blockHeight,
                     BlockIndex = block?.Transactions.FindIndex(t => t.GetHash() == transactionHash),
                     Hex = this.walletSettings.SaveTransactionHex ? transaction.ToHex() : null,

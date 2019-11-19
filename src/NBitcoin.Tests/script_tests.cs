@@ -220,7 +220,8 @@ namespace NBitcoin.Tests
             });
 
             Transaction coldCoinStake = network.CreateTransaction();
-            coldCoinStake.Time = (uint)18276127;
+            if(coldCoinStake is PosTransaction posTrx)
+                posTrx.Time = (uint)18276127;
             coldCoinStake.Inputs.Add(new TxIn(tx.Outputs.AsCoins().First().Outpoint, new Script()));
 
             if (isCoinStake)

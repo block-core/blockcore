@@ -114,9 +114,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
         /// <inheritdoc />
         protected override void CheckInputValidity(Transaction transaction, UnspentOutputs coins)
         {
-            // Transaction timestamp earlier than input transaction - main.cpp, CTransaction::ConnectInputs
-            if (coins.Time > transaction.Time)
-                ConsensusErrors.BadTransactionEarlyTimestamp.Throw();
+            // TODO: Keep this check to avoid a network split
+            if (transaction is PosTransaction posTrx)
+            {
+                // Transaction timestamp earlier than input transaction - main.cpp, CTransaction::ConnectInputs
+                if (coins.Time > posTrx.Time)
+                    ConsensusErrors.BadTransactionEarlyTimestamp.Throw();
+            }
         }
 
         /// <summary>

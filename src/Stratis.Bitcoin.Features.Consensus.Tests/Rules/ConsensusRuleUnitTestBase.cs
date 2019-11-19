@@ -312,7 +312,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules
             {
                 var hash = new uint256(RandomUtils.GetBytes(32));
                 hashes.Add(hash);
-                this.posBlock.Transactions.Add(new Transaction { Time = (uint)i });
+                this.posBlock.Transactions.Add(new PosTransaction { Time = (uint)i });
             }
 
             this.posBlock.UpdateMerkleRoot();

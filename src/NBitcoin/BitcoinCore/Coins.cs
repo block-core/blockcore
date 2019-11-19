@@ -75,10 +75,10 @@ namespace NBitcoin.BitcoinCore
 
         public Coins(Transaction tx, int height)
         {
-            if (tx is PosTransaction)
+            if (tx is PosTransaction posTx)
             {
                 this.fCoinStake = tx.IsCoinStake;
-                this.nTime = tx.Time;
+                this.nTime = posTx.Time;
             }
 
             this.CoinBase = tx.IsCoinBase;

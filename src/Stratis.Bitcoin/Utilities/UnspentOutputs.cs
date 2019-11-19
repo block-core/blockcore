@@ -21,7 +21,10 @@ namespace Stratis.Bitcoin.Utilities
             this.Version = tx.Version;
             this.IsCoinbase = tx.IsCoinBase;
             this.IsCoinstake = tx.IsCoinStake;
-            this.Time = tx.Time;
+            if (tx is PosTransaction posTrx)
+            {
+                this.Time = posTrx.Time;
+            }
         }
 
         public UnspentOutputs(uint256 txId, Coins coins)

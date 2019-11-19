@@ -83,8 +83,6 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
             // Finalize the block and add it to the chain.
             block.Header.HashPrevBlock = this.ChainIndexer.Tip.HashBlock;
             block.Header.Time = (uint)1483747200;
-            block.Transactions[0].Time = (uint)1483747200;
-            block.Transactions[1].Time = (uint)1483747200;
             block.UpdateMerkleRoot();
 
             Assert.True(BlockStake.IsProofOfStake(block));

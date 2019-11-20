@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Policy;
+using Stratis.Bitcoin.Features.Wallet;
 using Stratis.Bitcoin.Features.Wallet.Interfaces;
 using Stratis.Bitcoin.Utilities;
 
@@ -22,6 +23,11 @@ namespace Stratis.Bitcoin.Features.Wallet
     /// </remarks>
     public class WalletTransactionHandler : IWalletTransactionHandler
     {
+        /// <summary>
+        /// We will assume that we're never going to have a fee over 1 STRAT.
+        /// </summary>
+        private static readonly Money PretendMaxFee = Money.Coins(1);
+
         private readonly ILogger logger;
 
         private readonly Network network;
@@ -268,7 +274,14 @@ namespace Stratis.Bitcoin.Features.Wallet
                 context.ChangeAddress = this.walletManager.GetUnusedChangeAddress(new WalletAccountReference(context.AccountReference.WalletName, context.AccountReference.AccountName));
             }
 
-            context.TransactionBuilder.SetChange(context.ChangeAddress.ScriptPubKey);
+            if (context.UseSegwitChangeAddress)
+            {
+                context.TransactionBuilder.SetChange(new BitcoinWitPubKeyAddress(context.ChangeAddress.Bech32Address, this.network).ScriptPubKey);
+            }
+            else
+            {
+                context.TransactionBuilder.SetChange(context.ChangeAddress.ScriptPubKey);
+            }
         }
 
         /// <summary>
@@ -291,6 +304,7 @@ namespace Stratis.Bitcoin.Features.Wallet
             if (balance < totalToSend)
                 throw new WalletException("Not enough funds.");
 
+            Money sum = 0;
             var coins = new List<Coin>();
 
             if (context.SelectedInputs != null && context.SelectedInputs.Any())
@@ -319,10 +333,13 @@ namespace Stratis.Bitcoin.Features.Wallet
                     UnspentOutputReference item = availableHashList[outPoint];
 
                     coins.Add(new Coin(item.Transaction.Id, (uint)item.Transaction.Index, item.Transaction.Amount, item.Transaction.ScriptPubKey));
+                    sum += item.Transaction.Amount;
                 }
             }
 
-            foreach (UnspentOutputReference item in context.UnspentOutputs)
+            foreach (UnspentOutputReference item in context.UnspentOutputs
+                .OrderByDescending(a => a.Confirmations > 0)
+                .ThenByDescending(a => a.Transaction.Amount))
             {
                 if (context.SelectedInputs?.Contains(item.ToOutPoint()) ?? false)
                     continue;
@@ -332,7 +349,14 @@ namespace Stratis.Bitcoin.Features.Wallet
                 // The primary goal is to reduce the time it takes to build a trx
                 // when the wallet is bloated with UTXOs.
 
+                // Get to our total, and then check that we're a little bit over to account for tx fees.
+                // If it gets over totalToSend but doesn't hit this break, that's fine too.
+                // The TransactionBuilder will have a go with what we give it, and throw NotEnoughFundsException accurately if it needs to.
+                if (sum > totalToSend + PretendMaxFee)
+                    break;
+
                 coins.Add(new Coin(item.Transaction.Id, (uint)item.Transaction.Index, item.Transaction.Amount, item.Transaction.ScriptPubKey));
+                sum += item.Transaction.Amount;
             }
 
             // All the UTXOs are added to the builder without filtering.
@@ -532,5 +556,10 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// The timestamp to set on the transaction.
         /// </summary>
         public uint? Time { get; set; }
+
+        /// <summary>
+        /// Whether to send the change to a P2WPKH (segwit bech32) addresses, or a regular P2PKH address
+        /// </summary>
+        public bool UseSegwitChangeAddress { get; set; }
     }
 }

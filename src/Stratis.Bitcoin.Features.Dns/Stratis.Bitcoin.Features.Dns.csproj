@@ -3,7 +3,8 @@
   <PropertyGroup>
     <Description>Stratis Bitcoin Features Dns</Description>
     <AssemblyTitle>Stratis.Bitcoin.Features.Dns</AssemblyTitle>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.Bitcoin.Features.Dns</AssemblyName>
     <PackageId>Blockcore.Features.Dns</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -22,7 +23,10 @@
   <ItemGroup>
     <PackageReference Include="DNS" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Tracer.Fody" Version="3.1.0" />
+    <PackageReference Include="Tracer.Fody" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

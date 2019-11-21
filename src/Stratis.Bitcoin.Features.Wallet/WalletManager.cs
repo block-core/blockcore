@@ -640,7 +640,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                 // Save the changes to the file.
                 this.SaveWallet(wallet);
 
-                return newAddresses;
+                return alwaysnew ? newAddresses : addresses;
             }
 
             return addresses;

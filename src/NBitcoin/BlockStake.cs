@@ -198,7 +198,7 @@ namespace NBitcoin
             return this.IsCoinStake || this.IsCoinBase;
         }
 
-        public virtual void ReadWrite(BitcoinStream stream)
+        public override void ReadWrite(BitcoinStream stream)
         {
             bool witSupported = (((uint)stream.TransactionOptions & (uint)TransactionOptions.Witness) != 0) &&
                                 stream.ProtocolVersion >= ProtocolVersion.WITNESS_VERSION;

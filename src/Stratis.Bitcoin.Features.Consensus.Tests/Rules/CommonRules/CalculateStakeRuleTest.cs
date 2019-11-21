@@ -27,6 +27,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
                 BlockToValidate = block,
                 ChainedHeaderToValidate = this.ChainIndexer.GetHeader(4)
             };
+            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = 18276127;
 
             var target = new Target(0x1f111115);
             this.ruleContext.ValidationContext.BlockToValidate.Header.Bits = target;

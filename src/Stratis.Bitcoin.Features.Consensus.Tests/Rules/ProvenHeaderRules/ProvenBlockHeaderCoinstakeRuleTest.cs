@@ -78,6 +78,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), null);
@@ -106,16 +108,18 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             posBlock.Transactions[1].Inputs[0].PrevOut.N = 2;
 
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), null);
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 10);
 
             // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = new Transaction();
+            var utxoOneTransaction = this.network.CreateTransaction();
             utxoOneTransaction.AddOutput(new TxOut());
             var utxoOne = new UnspentOutputs(10, utxoOneTransaction);
-            var utxoTwo = new UnspentOutputs(11, new Transaction());
+            var utxoTwo = new UnspentOutputs(11, this.network.CreateTransaction());
 
             this.coinView
                 .Setup(m => m.FetchCoins(It.IsAny<uint256[]>(), It.IsAny<CancellationToken>()))
@@ -132,6 +136,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), null);
@@ -163,7 +169,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup coinstake transaction.
             this.coinView
                 .Setup(m => m.FetchCoins(It.IsAny<uint256[]>(), It.IsAny<CancellationToken>()))
-                .Returns(new FetchCoinsResponse(new[] { new UnspentOutputs(10, new Transaction()) }, posBlock.GetHash()));
+                .Returns(new FetchCoinsResponse(new[] { new UnspentOutputs(10, this.network.CreateTransaction()) }, posBlock.GetHash()));
 
             // Change coinstake outputs to make it invalid.
             ((ProvenBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).Coinstake.Outputs.RemoveAt(0);
@@ -188,7 +194,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup coinstake transaction.
             this.coinView
                 .Setup(m => m.FetchCoins(It.IsAny<uint256[]>(), It.IsAny<CancellationToken>()))
-                .Returns(new FetchCoinsResponse(new[] { new UnspentOutputs(10, new Transaction()) }, posBlock.GetHash()));
+                .Returns(new FetchCoinsResponse(new[] { new UnspentOutputs(10, this.network.CreateTransaction()) }, posBlock.GetHash()));
 
             // Change coinstake time to differ from header time but divisible by 16.
             ((ProvenBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).Time = 16;
@@ -222,13 +228,15 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), previousChainedHeader);
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 2);
 
             // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = new Transaction();
+            var utxoOneTransaction = this.network.CreateTransaction();
             utxoOneTransaction.AddOutput(new TxOut());
             var utxoOne = new UnspentOutputs(10, utxoOneTransaction);
 
@@ -262,13 +270,15 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), previousChainedHeader);
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 2);
 
             // Ensure that coinview returns UTXO with valid outputs.
-            var utxoOneTransaction = new Transaction();
+            var utxoOneTransaction = this.network.CreateTransaction();
             utxoOneTransaction.AddOutput(new TxOut());
             var utxoOne = new UnspentOutputs((uint)this.provenHeadersActivationHeight + 10, utxoOneTransaction);
 
@@ -306,13 +316,15 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), previousChainedHeader);
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 2);
 
             // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = new Transaction();
+            var utxoOneTransaction = this.network.CreateTransaction();
             utxoOneTransaction.AddOutput(new TxOut());
             var utxoOne = new UnspentOutputs((uint)this.provenHeadersActivationHeight + 10, utxoOneTransaction);
 
@@ -351,13 +363,15 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), previousChainedHeader);
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 2);
 
             // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = new Transaction();
+            var utxoOneTransaction = this.network.CreateTransaction();
             utxoOneTransaction.AddOutput(new TxOut());
             var utxoOne = new UnspentOutputs((uint)this.provenHeadersActivationHeight + 10, utxoOneTransaction);
 
@@ -402,6 +416,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Corrupt merkle proof.
             provenBlockHeader.SetPrivateVariableValue("merkleProof", new PartialMerkleTree(new[] { new uint256(1234) }, new[] { false }));
@@ -411,7 +427,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 2);
 
             // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = new Transaction();
+            var utxoOneTransaction = this.network.CreateTransaction();
             utxoOneTransaction.AddOutput(new TxOut());
             var utxoOne = new UnspentOutputs(10, utxoOneTransaction);
 
@@ -460,7 +476,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             posBlock.UpdateMerkleRoot();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            //provenBlockHeader.Coinstake.Time = provenBlockHeader.Time;
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Set invalid coinstake script pub key.
             provenBlockHeader.Coinstake.Outputs[1].ScriptPubKey = new Script("03cdac179a3391d96cf4957fa0255e4aa8055a993e92df7146e740117885b184ea OP_CHECKSIG");
@@ -472,7 +489,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup coinstake transaction with a valid stake age.
             uint unspentOutputsHeight = (uint)this.provenHeadersActivationHeight + 10;
 
-            var unspentOutputs = new UnspentOutputs(unspentOutputsHeight, new Transaction())
+            var unspentOutputs = new UnspentOutputs(unspentOutputsHeight, this.network.CreateTransaction())
             {
                 Outputs = new[] { new TxOut(new Money(100), privateKey.PubKey) }
             };
@@ -527,6 +544,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
 
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+                posTrx.Time = provenBlockHeader.Time;
 
             // Set invalid coinstake script pub key
             provenBlockHeader.Coinstake.Outputs[1].ScriptPubKey = privateKey.PubKey.ScriptPubKey;
@@ -537,7 +556,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
 
             // Setup coinstake transaction with a valid stake age.
             uint unspentOutputsHeight = (uint)this.provenHeadersActivationHeight + 10;
-            var unspentOutputs = new UnspentOutputs(unspentOutputsHeight, new Transaction())
+            var unspentOutputs = new UnspentOutputs(unspentOutputsHeight, this.network.CreateTransaction())
             {
                 Outputs = new[] { new TxOut(new Money(100), privateKey.PubKey) }
             };

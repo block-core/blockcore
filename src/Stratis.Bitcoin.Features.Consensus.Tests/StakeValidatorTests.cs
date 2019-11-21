@@ -766,6 +766,9 @@ namespace Stratis.Bitcoin.Tests.Consensus
                 UnspentOutputSet = new UnspentOutputSet()
             };
             context.UnspentOutputSet.SetCoins(new UnspentOutputs[] { unspentoutputs });
+           
+            context.ValidationContext = new ValidationContext() { ChainedHeaderToValidate = chainedHeader.Previous };
+            chainedHeader.Previous.Header.Time = ((PosTransaction)input1).Time;
 
             this.stakeValidator.CheckProofOfStake(context, chainedHeader, blockStake, input1, headerbits);
         }

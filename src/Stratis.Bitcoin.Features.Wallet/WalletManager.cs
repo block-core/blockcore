@@ -176,7 +176,9 @@ namespace Stratis.Bitcoin.Features.Wallet
         {
             return new Dictionary<string, ScriptTemplate> {
                 { "P2PK", PayToPubkeyTemplate.Instance },
-                { "P2PKH", PayToPubkeyHashTemplate.Instance } };
+                { "P2PKH", PayToPubkeyHashTemplate.Instance },
+                { "P2WPKH", PayToWitPubKeyHashTemplate.Instance }
+            };
         }
 
         // <inheritdoc />
@@ -598,7 +600,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         }
 
         /// <inheritdoc />
-        public IEnumerable<HdAddress> GetUnusedAddresses(WalletAccountReference accountReference, int count, bool isChange = false)
+        public IEnumerable<HdAddress> GetUnusedAddresses(WalletAccountReference accountReference, int count, bool isChange = false, bool alwaysnew = false)
         {
             Guard.NotNull(accountReference, nameof(accountReference));
             Guard.Assert(count > 0);
@@ -607,6 +609,8 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             bool generated = false;
             IEnumerable<HdAddress> addresses;
+            
+            var newAddresses = new List<HdAddress>();
 
             lock (this.lockObject)
             {
@@ -619,8 +623,8 @@ namespace Stratis.Bitcoin.Features.Wallet
                     account.InternalAddresses.Where(acc => !acc.Transactions.Any()).ToList() :
                     account.ExternalAddresses.Where(acc => !acc.Transactions.Any()).ToList();
 
-                int diff = unusedAddresses.Count - count;
-                var newAddresses = new List<HdAddress>();
+                int diff = alwaysnew ? -1 : unusedAddresses.Count - count;
+                
                 if (diff < 0)
                 {
                     newAddresses = account.CreateAddresses(this.network, Math.Abs(diff), isChange: isChange).ToList();
@@ -635,6 +639,8 @@ namespace Stratis.Bitcoin.Features.Wallet
             {
                 // Save the changes to the file.
                 this.SaveWallet(wallet);
+
+                return alwaysnew ? newAddresses : addresses;
             }
 
             return addresses;
@@ -1488,9 +1494,16 @@ namespace Stratis.Bitcoin.Features.Wallet
                     {
                         foreach (HdAddress address in account.GetCombinedAddresses())
                         {
+                            // Track the P2PKH of this pubic key
                             this.scriptToAddressLookup[address.ScriptPubKey] = address;
+
+                            // Track the P2PK of this public key
                             if (address.Pubkey != null)
                                 this.scriptToAddressLookup[address.Pubkey] = address;
+
+                            // Track the P2WPKH of this pubic key
+                            if (address.Bech32Address != null)
+                                this.scriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Bech32Address, this.network).ScriptPubKey] = address;
 
                             foreach (TransactionData transaction in address.Transactions)
                             {
@@ -1521,9 +1534,16 @@ namespace Stratis.Bitcoin.Features.Wallet
             {
                 foreach (HdAddress address in addresses)
                 {
+                    // Track the P2PKH of this pubic key
                     this.scriptToAddressLookup[address.ScriptPubKey] = address;
+
+                    // Track the P2PK of this public key
                     if (address.Pubkey != null)
                         this.scriptToAddressLookup[address.Pubkey] = address;
+
+                    // Track the P2WPKH of this pubic key
+                    if (address.Bech32Address != null)
+                        this.scriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Bech32Address, this.network).ScriptPubKey] = address;
                 }
             }
         }

@@ -606,6 +606,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
 
                 // Mine and sync so that we make sure the receiving node is up to date.
                 TestHelper.MineBlocks(sendingNode, 1);
+                TestHelper.WaitForNodeToSync(sendingNode, receivingNode);
 
                 // The receiving node should have 50 more coins.
                 receivingNodeBalances = await $"http://localhost:{receivingNode.ApiPort}/api"

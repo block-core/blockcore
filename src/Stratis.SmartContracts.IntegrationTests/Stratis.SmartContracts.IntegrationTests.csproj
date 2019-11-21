@@ -112,7 +112,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Update="SmartContracts\Lottery.cs">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Update="SmartContracts\MemoryConsumingContract.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -124,7 +124,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Update="SmartContracts\NonceTest.cs">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Update="SmartContracts\MultipleNestedCalls.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -137,7 +137,7 @@
     </Compile>
     <Compile Update="SmartContracts\PrivateMethod.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-     </Compile>
+    </Compile>
     <Compile Update="SmartContracts\ReceiveFundsTest.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -169,7 +169,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Update="Modules\Hang">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

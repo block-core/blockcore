@@ -1058,7 +1058,7 @@ namespace Stratis.Bitcoin.Features.RPC
         {
             // bitcoind implements this RPC with slightly more flexibility, it accepts both an int or a bool for the verbosity.
             // stratisd, however, only accepts a bool. And it unconditionally returns a JSON object, which is not useable for parsing back into a block.
-            RPCResponse resp = await SendCommandAsync(RPCOperations.getblock, blockId.ToString(), false).ConfigureAwait(false);
+            RPCResponse resp = await SendCommandAsync(RPCOperations.getblock, blockId.ToString(), 0).ConfigureAwait(false);
             return Block.Load(Encoders.Hex.DecodeData(resp.Result.ToString()), this.Network.Consensus.ConsensusFactory);
         }
 

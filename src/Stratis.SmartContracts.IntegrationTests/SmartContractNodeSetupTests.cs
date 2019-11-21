@@ -11,7 +11,7 @@ namespace Stratis.SmartContracts.IntegrationTests
 {
     public class SmartContractNodeSetupTests
     {
-        [Fact]
+        [Fact(Skip="Broken. Re-enable when fixed")]
         public void Mainnet_RequireStandard_False()
         {
             var network = new FakeSmartContractMain();

@@ -6,17 +6,15 @@
     <Description>The C# Bitcoin Library based on NBitcoin</Description>
   </PropertyGroup>
   
-  <PropertyGroup>
-    <Version>4.0.0.74</Version>
-  </PropertyGroup>
+
   
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
+    
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <PackageId>Blockcore.NBitcoin</PackageId>
     <RootNamespace>NBitcoin</RootNamespace>
-    <PackageId>NStratis</PackageId>
-    <Authors>NStratis</Authors>
-    <Product>NStratis</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

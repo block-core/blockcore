@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>FodyNlogAdapter</AssemblyName>
-    <Version>3.0.6.0-beta</Version>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Authors>Stratis Group Ltd.</Authors>
-    <PackageId>Stratis.FodyNlogAdapter</PackageId>
+    <PackageId>Blockcore.FodyNlogAdapter</PackageId>
     <Product>Stratis.FodyNlogAdapter</Product>
   </PropertyGroup>
 

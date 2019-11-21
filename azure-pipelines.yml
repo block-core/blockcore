@@ -1,0 +1,66 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+name: $(date:yyMMdd)$(rev:r)
+
+jobs:
+- job: CI
+  timeoutInMinutes: 360
+
+  pool:
+    vmImage: 'windows-latest'
+
+  variables:
+    solution: '**/Blockcore.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+    nugetReleaseType: 'alpha'
+
+  steps:
+  - task: NuGetToolInstaller@1
+
+  - task: NuGetCommand@2
+    displayName: 'Restore Solution Nuget Packages'
+    inputs:
+      restoreSolution: '$(solution)'
+
+  - task: VSBuild@1
+    displayName: 'Build Solution'
+    inputs:
+      solution: '$(solution)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+
+  - task: VSTest@2
+    displayName: 'Run Tests'
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: |
+          **\*test*.dll
+          !**\*TestAdapter.dll
+          !**\obj\**
+          !**\*Common*.dll
+
+  - task: PowerShell@2
+    displayName: 'Pack Nuget Packages'
+    inputs:
+      filePath: 'PackNuget.ps1'
+      arguments: '-releaseType $(nugetReleaseType)'
+
+  - task: NuGetCommand@2
+    displayName: 'Publish Nuget Packages'
+    inputs:
+      command: 'push'
+      feedsToUse: 'config'
+      packagesToPush: '**/*.nupkg;!**/*.symbols.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: '9e7b5616-a6fd-45a5-8020-bb28768af46d/cc0b3e37-47a1-4b53-ad8a-b60e202e3799'
+      allowPackageConflicts: true

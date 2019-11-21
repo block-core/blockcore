@@ -4,7 +4,7 @@
     <IsPackable>false</IsPackable>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyName>Stratis.Bitcoin.Features.Miner.Tests</AssemblyName>
-    <PackageId>Stratis.Bitcoin.Features.Miner.Tests</PackageId>
+    <PackageId>Blockcore.Features.Miner.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>

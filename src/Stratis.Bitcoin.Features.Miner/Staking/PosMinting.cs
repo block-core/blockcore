@@ -908,8 +908,22 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             try
             {
                 var transactionBuilder = new TransactionBuilder(this.network)
-                    .AddKeys(input.Key)
-                    .AddCoins(new Coin(input.OutPoint, input.TxOut));
+                    .AddKeys(input.Key);
+
+                if (PayToScriptHashTemplate.Instance.CheckScriptPubKey(input.TxOut.ScriptPubKey) ||
+                    PayToWitScriptHashTemplate.Instance.CheckScriptPubKey(input.TxOut.ScriptPubKey))
+                {
+                    if (input.Address.RedeemScript == null)
+                        throw new MinerException("Redeem script does not match output");
+                   
+                    var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, input.Address.RedeemScript);
+                    
+                    transactionBuilder.AddCoins(scriptCoin);
+                }
+                else
+                {
+                    transactionBuilder.AddCoins(new Coin(input.OutPoint, input.TxOut));
+                }
 
                 foreach (BuilderExtension extension in this.walletManager.GetTransactionBuilderExtensionsForStaking())
                     transactionBuilder.Extensions.Add(extension);

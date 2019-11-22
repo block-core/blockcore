@@ -104,7 +104,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         // 2. the list of addresses contained in our wallet for checking whether a transaction is being paid to the wallet.
         // 3. a mapping of all inputs with their corresponding transactions, to facilitate rapid lookup
         private Dictionary<OutPoint, TransactionData> outpointLookup;
-        internal ScriptToAddressLookup scriptToAddressLookup;
+        protected internal ScriptToAddressLookup scriptToAddressLookup;
         private Dictionary<OutPoint, TransactionData> inputLookup;
 
         public WalletManager(
@@ -177,7 +177,9 @@ namespace Stratis.Bitcoin.Features.Wallet
             return new Dictionary<string, ScriptTemplate> {
                 { "P2PK", PayToPubkeyTemplate.Instance },
                 { "P2PKH", PayToPubkeyHashTemplate.Instance },
-                { "P2WPKH", PayToWitPubKeyHashTemplate.Instance }
+                { "P2SH", PayToScriptHashTemplate.Instance },
+                { "P2WPKH", PayToWitPubKeyHashTemplate.Instance },
+                { "P2WSH", PayToWitScriptHashTemplate.Instance }
             };
         }
 
@@ -1010,7 +1012,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         }
 
         /// <inheritdoc />
-        public bool ProcessTransaction(Transaction transaction, int? blockHeight = null, Block block = null, bool isPropagated = true)
+        public virtual bool ProcessTransaction(Transaction transaction, int? blockHeight = null, Block block = null, bool isPropagated = true)
         {
             Guard.NotNull(transaction, nameof(transaction));
             uint256 hash = transaction.GetHash();
@@ -1187,7 +1189,6 @@ namespace Stratis.Bitcoin.Features.Wallet
                     this.RemoveTxLookupLocked(transaction);
                 }
             }
-
 
             this.TransactionFoundInternal(script);
         }
@@ -1494,16 +1495,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                     {
                         foreach (HdAddress address in account.GetCombinedAddresses())
                         {
-                            // Track the P2PKH of this pubic key
-                            this.scriptToAddressLookup[address.ScriptPubKey] = address;
-
-                            // Track the P2PK of this public key
-                            if (address.Pubkey != null)
-                                this.scriptToAddressLookup[address.Pubkey] = address;
-
-                            // Track the P2WPKH of this pubic key
-                            if (address.Bech32Address != null)
-                                this.scriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Bech32Address, this.network).ScriptPubKey] = address;
+                            this.AddAddressToIndex(address);
 
                             foreach (TransactionData transaction in address.Transactions)
                             {
@@ -1520,6 +1512,20 @@ namespace Stratis.Bitcoin.Features.Wallet
             }
         }
 
+        protected virtual void AddAddressToIndex(HdAddress address)
+        {
+            // Track the P2PKH of this pubic key
+            this.scriptToAddressLookup[address.ScriptPubKey] = address;
+
+            // Track the P2PK of this public key
+            if (address.Pubkey != null)
+                this.scriptToAddressLookup[address.Pubkey] = address;
+
+            // Track the P2WPKH of this pubic key
+            if (address.Bech32Address != null)
+                this.scriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Bech32Address, this.network).ScriptPubKey] = address;
+        }
+
         /// <summary>
         /// Update the keys and transactions we're tracking in memory for faster lookups.
         /// </summary>
@@ -1534,16 +1540,7 @@ namespace Stratis.Bitcoin.Features.Wallet
             {
                 foreach (HdAddress address in addresses)
                 {
-                    // Track the P2PKH of this pubic key
-                    this.scriptToAddressLookup[address.ScriptPubKey] = address;
-
-                    // Track the P2PK of this public key
-                    if (address.Pubkey != null)
-                        this.scriptToAddressLookup[address.Pubkey] = address;
-
-                    // Track the P2WPKH of this pubic key
-                    if (address.Bech32Address != null)
-                        this.scriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Bech32Address, this.network).ScriptPubKey] = address;
+                    this.AddAddressToIndex(address);
                 }
             }
         }

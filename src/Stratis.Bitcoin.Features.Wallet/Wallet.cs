@@ -873,6 +873,13 @@ namespace Stratis.Bitcoin.Features.Wallet
         public string Address { get; set; }
 
         /// <summary>
+        /// A script that is used for P2SH and P2WSH scenarios (mostly used for staking).
+        /// </summary>
+        [JsonProperty(PropertyName = "redeemScript")]
+        [JsonConverter(typeof(ScriptJsonConverter))]
+        public Script RedeemScript { get; set; }
+
+        /// <summary>
         /// A path to the address as defined in BIP44.
         /// </summary>
         [JsonProperty(PropertyName = "hdPath")]

@@ -188,7 +188,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Controllers
 
                 Transaction transaction = this.ColdStakingManager.GetColdStakingSetupTransaction(
                     this.walletTransactionHandler, request.ColdWalletAddress, request.HotWalletAddress,
-                    request.WalletName, request.WalletAccount, request.WalletPassword, amount, feeAmount, request.SegwitChangeAddress);
+                    request.WalletName, request.WalletAccount, request.WalletPassword, amount, feeAmount, request.SegwitChangeAddress, request.PayToScript);
 
                 var model = new SetupColdStakingResponse
                 {

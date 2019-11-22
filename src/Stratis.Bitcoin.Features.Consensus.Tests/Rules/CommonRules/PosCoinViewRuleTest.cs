@@ -169,7 +169,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
             // we need to ensure that the transaction used for the coinstake's
             // input occurs well before the block time (as the coinstake time
             // is set to the block time)
-            if(prevTransaction is IPosTrxTime posTrx)
+            if(prevTransaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = blockTime - 100;
 
             // Coins sent to miner 2.

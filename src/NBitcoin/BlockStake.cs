@@ -155,9 +155,12 @@ namespace NBitcoin
     }
 
     /// <summary>
-    ///  Represnts a transaction with a time field.
+    ///  Represents a transaction with a time field, such trx are used by POS networks however 
+    ///  the time field is not really needed anymore for POS consensus so in order to allow a new PoSv4 protocol
+    ///  network we make this field encapsolated by an interface, removing the time field will make POS
+    ///  transactions have the same serialization format as Bitcoin.
     /// </summary>
-    public interface IPosTrxTime
+    public interface IPosTransactionWithTime
     {
         uint Time { get; set; }
     }
@@ -165,7 +168,7 @@ namespace NBitcoin
     /// <summary>
     /// A Proof Of Stake transaction.
     /// </summary>
-    public class PosTransaction : Transaction 
+    public class PosTransaction : Transaction , IPosTransactionWithTime
     {
         public bool IsColdCoinStake { get; set; }
 

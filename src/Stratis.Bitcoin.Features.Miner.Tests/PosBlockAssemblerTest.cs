@@ -87,7 +87,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
                 var datetime = new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc);
                 this.dateTimeProvider.Setup(d => d.GetAdjustedTimeAsUnixTimestamp()).Returns(datetime.ToUnixTimestamp());
                 Transaction transaction = CreateTransaction(this.stratisTest, this.key, 5, new Money(400 * 1000 * 1000), new Key(), new uint256(124124));
-                if(transaction is IPosTrxTime posTrx)
+                if(transaction is IPosTransactionWithTime posTrx)
                     posTrx.Time = Utils.DateTimeToUnixTime(datetime);
                 var txFee = new Money(1000);
 

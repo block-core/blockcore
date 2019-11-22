@@ -302,7 +302,7 @@ namespace Stratis.Bitcoin.Networks
 
             Transaction txNew = consensusFactory.CreateTransaction();
             txNew.Version = 1;
-            if (txNew is IPosTrxTime posTx)
+            if (txNew is IPosTransactionWithTime posTx)
                 posTx.Time = nTime;
             txNew.AddInput(new TxIn()
             {

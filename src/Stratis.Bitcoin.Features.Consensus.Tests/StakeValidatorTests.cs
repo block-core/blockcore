@@ -779,7 +779,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var transactionTimestamp = DateTime.Now;
             var posTimeStamp = transactionTimestamp.AddSeconds(-1);
             var transaction = this.Network.CreateTransaction();
-            if (transaction is IPosTrxTime posTrx)
+            if (transaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
@@ -795,7 +795,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var transactionTimestamp = DateTime.Now;
             var posTimeStamp = transactionTimestamp;
             var transaction = CreateStubCoinStakeTransaction();
-            if (transaction is IPosTrxTime posTrx)
+            if (transaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
@@ -813,7 +813,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var posTimeStamp = transactionTimestamp;
 
             var transaction = CreateStubCoinStakeTransaction(5000 * Money.COIN);
-            if (transaction is IPosTrxTime posTrx)
+            if (transaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
@@ -830,7 +830,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var posTimeStamp = transactionTimestamp;
 
             var transaction = CreateStubCoinStakeTransaction(5000 * Money.COIN);
-            if (transaction is IPosTrxTime posTrx)
+            if (transaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
@@ -847,7 +847,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var posTimeStamp = transactionTimestamp.AddSeconds(1);
 
             var transaction = CreateStubCoinStakeTransaction(5000 * Money.COIN);
-            if (transaction is IPosTrxTime posTrx)
+            if (transaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
@@ -1395,7 +1395,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
         {
             Transaction outputm = this.Network.CreateTransaction();
             outputm.Version = 1;
-            if (outputm is IPosTrxTime posTrx)
+            if (outputm is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             outputm.Inputs.Add(new TxIn());
             outputm.Inputs[0].PrevOut = new OutPoint();
@@ -1422,7 +1422,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             Transaction inputm = this.Network.CreateTransaction();
             inputm.Version = 1;
-            if (outputm is IPosTrxTime posTrx1)
+            if (outputm is IPosTransactionWithTime posTrx1)
                 posTrx1.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             inputm.Inputs.Add(new TxIn());
             inputm.Inputs[0].PrevOut.Hash = output.GetHash();

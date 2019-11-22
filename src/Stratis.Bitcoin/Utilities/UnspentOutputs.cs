@@ -21,7 +21,7 @@ namespace Stratis.Bitcoin.Utilities
             this.Version = tx.Version;
             this.IsCoinbase = tx.IsCoinBase;
             this.IsCoinstake = tx.IsCoinStake;
-            if (tx is IPosTrxTime posTrx)
+            if (tx is IPosTransactionWithTime posTrx)
             {
                 this.Time = posTrx.Time;
             }

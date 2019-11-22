@@ -77,8 +77,8 @@ namespace NBitcoin.BitcoinCore
         {
             this.fCoinStake = tx.IsCoinStake;
 
-            if (tx is IPosTrxTime posTx)
-            {   
+            if (tx is IPosTransactionWithTime posTx)
+            {
                 this.nTime = posTx.Time;
             }
 
@@ -166,7 +166,8 @@ namespace NBitcoin.BitcoinCore
 
                 stream.ReadWrite(ref this.fCoinStake);
 
-                if (stream.ConsensusFactory is PosConsensusFactory)
+                // This is an ugly hack that will go away when refactoring coinview
+                if (stream.ConsensusFactory.CreateTransaction() is IPosTransactionWithTime)
                 {
                     stream.ReadWrite(ref this.nTime);
                 }
@@ -222,7 +223,8 @@ namespace NBitcoin.BitcoinCore
 
                 stream.ReadWrite(ref this.fCoinStake);
 
-                if (stream.ConsensusFactory is PosConsensusFactory)
+                // This is an ugly hack that will go away when refactoring coinview
+                if (stream.ConsensusFactory.CreateTransaction() is IPosTransactionWithTime)
                 {
                     stream.ReadWrite(ref this.nTime);
                 }

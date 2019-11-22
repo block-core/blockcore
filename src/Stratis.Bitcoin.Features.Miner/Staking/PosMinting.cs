@@ -570,7 +570,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 {
                     // Make sure coinstake would meet timestamp protocol as it would be the same as the block timestamp.
                     block.Header.Time = coinstakeContext.StakeTimeSlot;
-                    if (block.Transactions[0] is IPosTrxTime posTrx)
+                    if (block.Transactions[0] is IPosTransactionWithTime posTrx)
                     {
                         posTrx.Time = coinstakeContext.StakeTimeSlot;
                     }
@@ -687,7 +687,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             for (int i = blockTemplate.Block.Transactions.Count - 1; i >= 1; i--)
             {
                 // We have not yet updated the header timestamp, so we use the coinstake timestamp directly here.
-                if (blockTemplate.Block.Transactions[i] is IPosTrxTime posTrx)
+                if (blockTemplate.Block.Transactions[i] is IPosTransactionWithTime posTrx)
                 {
                     if (posTrx.Time <= coinstakeContext.StakeTimeSlot)
                         continue;
@@ -720,7 +720,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             int eventuallyStakableUtxosCount = utxoStakeDescriptions.Count;
             Transaction coinstakeTx = this.PrepareCoinStakeTransactions(chainTip.Height, coinstakeContext, coinstakeOutputValue, eventuallyStakableUtxosCount, ourWeight);
 
-            if(coinstakeTx is IPosTrxTime posTrxn)
+            if(coinstakeTx is IPosTransactionWithTime posTrxn)
             {
                 posTrxn.Time = coinstakeContext.StakeTimeSlot;
             }

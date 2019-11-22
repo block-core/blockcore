@@ -88,7 +88,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
                 // With the new changes this check is actually not needed amnymore.
                 // The trx time has no meaning for the network,its a legacy field from
                 // the days where coin age was used for POS protocol.
-                if (transaction is IPosTrxTime posTrx)
+                if (transaction is IPosTransactionWithTime posTrx)
                 {
                     // Check transaction timestamp.
                     if (block.Header.Time < posTrx.Time)

@@ -2700,7 +2700,7 @@ namespace NBitcoin.Tests
         {
             Transaction outputm = this.stratisMain.CreateTransaction();
             outputm.Version = 1;
-            if(outputm is IPosTrxTime posTrx)
+            if(outputm is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             outputm.Inputs.Add(new TxIn());
             outputm.Inputs[0].PrevOut = new OutPoint();
@@ -2720,7 +2720,7 @@ namespace NBitcoin.Tests
 
             Transaction inputm = this.stratisMain.CreateTransaction();
             inputm.Version = 1;
-            if (outputm is IPosTrxTime posTrx1)
+            if (outputm is IPosTransactionWithTime posTrx1)
                 posTrx1.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             inputm.Inputs.Add(new TxIn());
             inputm.Inputs[0].PrevOut.Hash = output.GetHash();

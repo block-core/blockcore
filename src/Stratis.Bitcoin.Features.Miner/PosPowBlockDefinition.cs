@@ -85,7 +85,7 @@ namespace Stratis.Bitcoin.Features.Miner
             // We can include txes with timestamp greater than header's timestamp and those txes are invalid to have in block.
             // However this is needed in order to avoid recreation of block template on every attempt to find kernel.
             // When kernel is found txes with timestamp greater than header's timestamp are removed.
-            if (entry.Transaction is IPosTrxTime posTrx)
+            if (entry.Transaction is IPosTransactionWithTime posTrx)
             {
                 if (posTrx.Time > latestValidTime)
                 {

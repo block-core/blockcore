@@ -454,7 +454,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
             // TODO: Move this into its own small rule that only PoS networks use.
             if (this.network.Consensus.IsProofOfStake)
             {
-                if (tx is PosTransaction posTrx)
+                if (tx is IPosTrxTime posTrx)
                 {
                     long adjustedTime = this.dateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
                     PosFutureDriftRule futureDriftRule = this.consensusRules.GetRule<PosFutureDriftRule>();

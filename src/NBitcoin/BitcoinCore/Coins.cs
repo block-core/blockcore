@@ -75,9 +75,10 @@ namespace NBitcoin.BitcoinCore
 
         public Coins(Transaction tx, int height)
         {
-            if (tx is PosTransaction posTx)
-            {
-                this.fCoinStake = tx.IsCoinStake;
+            this.fCoinStake = tx.IsCoinStake;
+
+            if (tx is IPosTrxTime posTx)
+            {   
                 this.nTime = posTx.Time;
             }
 
@@ -163,9 +164,10 @@ namespace NBitcoin.BitcoinCore
                 // coinbase height
                 stream.ReadWriteAsVarInt(ref this.nHeight);
 
+                stream.ReadWrite(ref this.fCoinStake);
+
                 if (stream.ConsensusFactory is PosConsensusFactory)
                 {
-                    stream.ReadWrite(ref this.fCoinStake);
                     stream.ReadWrite(ref this.nTime);
                 }
             }
@@ -218,9 +220,10 @@ namespace NBitcoin.BitcoinCore
                 //// coinbase height
                 stream.ReadWriteAsVarInt(ref this.nHeight);
 
+                stream.ReadWrite(ref this.fCoinStake);
+
                 if (stream.ConsensusFactory is PosConsensusFactory)
                 {
-                    stream.ReadWrite(ref this.fCoinStake);
                     stream.ReadWrite(ref this.nTime);
                 }
 

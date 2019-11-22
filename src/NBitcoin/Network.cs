@@ -334,7 +334,7 @@ namespace NBitcoin
 
             Transaction txNew = consensusFactory.CreateTransaction();
             txNew.Version = (uint)version;
-            if (txNew is PosTransaction posTx)
+            if (txNew is IPosTrxTime posTx)
                 posTx.Time = unixTime;
             txNew.AddInput(new TxIn()
             {

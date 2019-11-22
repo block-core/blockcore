@@ -106,7 +106,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         private static Transaction CreateCoinStakeTransaction(Network network, Key key, int height, uint256 prevout)
         {
             var coinStake = network.CreateTransaction();
-            if(coinStake is PosTransaction posTrx)
+            if(coinStake is IPosTrxTime posTrx)
                 posTrx.Time = (uint)18276127;
             coinStake.AddInput(new TxIn(new OutPoint(prevout, 1)));
             coinStake.AddOutput(new TxOut(0, new Script()));

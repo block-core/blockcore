@@ -78,7 +78,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
@@ -108,7 +108,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             posBlock.Transactions[1].Inputs[0].PrevOut.N = 2;
 
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
@@ -136,7 +136,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
@@ -228,7 +228,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
@@ -270,7 +270,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
@@ -316,7 +316,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
@@ -363,7 +363,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Setup chained header and move it to the height higher than proven header activation height.
@@ -416,7 +416,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Corrupt merkle proof.
@@ -476,7 +476,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             posBlock.UpdateMerkleRoot();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Set invalid coinstake script pub key.
@@ -544,7 +544,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
 
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
             provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
-            if (provenBlockHeader.Coinstake is PosTransaction posTrx)
+            if (provenBlockHeader.Coinstake is IPosTrxTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
             // Set invalid coinstake script pub key

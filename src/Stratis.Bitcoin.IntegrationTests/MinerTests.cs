@@ -874,7 +874,7 @@ namespace Stratis.Bitcoin.IntegrationTests
                 Transaction trx = stratisMiner.FullNode.WalletTransactionHandler().BuildTransaction(context);
 
                 // This should make the mempool reject a POS trx.
-                if (trx is PosTransaction posTrx)
+                if (trx is IPosTrxTime posTrx)
                     posTrx.Time = Utils.DateTimeToUnixTime(Utils.UnixTimeToDateTime(posTrx.Time).AddMinutes(5));
 
                 // Sign trx again after changing the time property.

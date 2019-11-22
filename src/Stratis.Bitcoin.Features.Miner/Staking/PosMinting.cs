@@ -570,7 +570,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 {
                     // Make sure coinstake would meet timestamp protocol as it would be the same as the block timestamp.
                     block.Header.Time = coinstakeContext.StakeTimeSlot;
-                    if (block.Transactions[0] is PosTransaction posTrx)
+                    if (block.Transactions[0] is IPosTrxTime posTrx)
                     {
                         posTrx.Time = coinstakeContext.StakeTimeSlot;
                     }
@@ -687,16 +687,16 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             for (int i = blockTemplate.Block.Transactions.Count - 1; i >= 1; i--)
             {
                 // We have not yet updated the header timestamp, so we use the coinstake timestamp directly here.
-                if (blockTemplate.Block.Transactions[i] is PosTransaction posTrx)
+                if (blockTemplate.Block.Transactions[i] is IPosTrxTime posTrx)
                 {
                     if (posTrx.Time <= coinstakeContext.StakeTimeSlot)
                         continue;
 
                     // Update the total fees, with the to-be-removed transaction taken into account.
-                    fees -= blockTemplate.FeeDetails[posTrx.GetHash()].Satoshi;
+                    fees -= blockTemplate.FeeDetails[blockTemplate.Block.Transactions[i].GetHash()].Satoshi;
 
                     this.logger.LogDebug("Removing transaction with timestamp {0} as it is greater than coinstake transaction timestamp {1}. New fee amount {2}.", posTrx.Time, coinstakeContext.StakeTimeSlot, fees);
-                    blockTemplate.Block.Transactions.Remove(posTrx);
+                    blockTemplate.Block.Transactions.Remove(blockTemplate.Block.Transactions[i]);
                 }
             }
 
@@ -720,7 +720,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             int eventuallyStakableUtxosCount = utxoStakeDescriptions.Count;
             Transaction coinstakeTx = this.PrepareCoinStakeTransactions(chainTip.Height, coinstakeContext, coinstakeOutputValue, eventuallyStakableUtxosCount, ourWeight);
 
-            if(coinstakeTx is PosTransaction posTrxn)
+            if(coinstakeTx is IPosTrxTime posTrxn)
             {
                 posTrxn.Time = coinstakeContext.StakeTimeSlot;
             }

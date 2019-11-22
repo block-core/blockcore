@@ -177,7 +177,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         /// </exception>
         private void CheckHeaderAndCoinstakeTimes(ProvenBlockHeader header)
         {
-            if (header.Coinstake is PosTransaction posTrx)
+            if (header.Coinstake is IPosTrxTime posTrx)
             {
                 if (header.Time != posTrx.Time)
                 {

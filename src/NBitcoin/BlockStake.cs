@@ -155,13 +155,17 @@ namespace NBitcoin
     }
 
     /// <summary>
+    ///  Represnts a transaction with a time field.
+    /// </summary>
+    public interface IPosTrxTime
+    {
+        uint Time { get; set; }
+    }
+
+    /// <summary>
     /// A Proof Of Stake transaction.
     /// </summary>
-    /// <remarks>
-    /// TODO: later we can move the POS timestamp field in this class.
-    /// serialization can be refactored to have a common array that will be serialized and each inheritance can add to the array)
-    /// </remarks>
-    public class PosTransaction : Transaction
+    public class PosTransaction : Transaction 
     {
         public bool IsColdCoinStake { get; set; }
 

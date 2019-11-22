@@ -720,7 +720,7 @@ namespace Stratis.Bitcoin.IntegrationTests
             });
 
             var dateTimeProvider = minerA.FullNode.NodeService<IDateTimeProvider>();
-            if(txThatSpendCoinstake is PosTransaction posTrx)
+            if(txThatSpendCoinstake is IPosTrxTime posTrx)
                 posTrx.Time = (uint)dateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
 
 

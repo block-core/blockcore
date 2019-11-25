@@ -239,6 +239,20 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         }
 
         /// <summary>
+        /// Add cold staking cold account when a wallet is recovered, this means every recovered wallet will automatical
+        /// track addresses under the <see cref="ColdWalletAccountIndex"/> HD account.
+        /// </summary>
+        /// <inheritdoc />
+        public override Wallet.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase)
+        {
+            Wallet.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase);
+
+            this.GetOrCreateColdStakingAccount(wallet.Name, true, password);
+
+            return wallet;
+        }
+
+        /// <summary>
         /// Gets the first unused cold staking address. Creates a new address if required.
         /// </summary>
         /// <param name="walletName">The name of the wallet providing the cold staking address.</param>

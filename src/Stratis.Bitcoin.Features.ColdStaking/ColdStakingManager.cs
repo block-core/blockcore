@@ -247,6 +247,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         {
             Wallet.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase);
 
+            this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
             this.GetOrCreateColdStakingAccount(wallet.Name, true, password);
 
             return wallet;

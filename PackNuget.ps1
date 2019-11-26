@@ -1,8 +1,10 @@
-[cmdletbinding()]
-
+[CmdletBinding()]
 Param(
-	[Parameter(Mandatory=$true)]
-	[string]$releaseType
+	[Parameter(Mandatory)]
+	[string]$releaseType,
+
+	[Parameter(Mandatory)]
+	[string]$buildNumber
 )
 
 $projectPaths = @(
@@ -31,30 +33,31 @@ $projectPaths = @(
 	".\src\FodyNlogAdapter\FodyNlogAdapter.csproj"
 )
 
-if (-not $Env:BUILD_BUILDNUMBER)
-{
-	Write-Error ("BUILD_BUILDNUMBER environment variable is missing.")
-	exit 1
-}
-
 Write-Verbose "Release Type: $releaseType"
-Write-Verbose "BUILD_BUILDNUMBER: $Env:BUILD_BUILDNUMBER"
+Write-Verbose "Build Number: $buildNumber"
+
+
+if ($releaseType -eq "release") {
+	$configuration = "Release"
+} else {
+	$configuration = "Debug"
+	$versionSuffix = "$releaseType$buildNumber"
+}
+	
+Write-Verbose "Configuration: $configuration"
+Write-Verbose "Version Suffix: $versionSuffix"
 
 foreach ($projectPath in $projectPaths) {
-	if (Test-Path $projectPath -PathType Leaf)
-	{
-		try 
-		{ 
-			dotnet pack $projectPath --configuration Debug --include-source --include-symbols --version-suffix $releaseType$Env:BUILD_BUILDNUMBER --verbosity Detailed		
-			Write-Verbose "Published - $projectPath";
+	if (Test-Path $projectPath -PathType Leaf) {
+
+		if ($versionSuffix -eq $null) {
+			dotnet pack $projectPath --configuration $configuration --no-build --include-source --include-symbols -o bin\publish\nuget\ /p:OutputPath=.\bin\publish\
 		}
-		catch 
-		{ 
-			Write-Error ("Failed to publish - $projectPath")	
+		else {
+			dotnet pack $projectPath --configuration $configuration --no-build --include-source --include-symbols --version-suffix $versionSuffix -o bin\publish\nuget\ /p:OutputPath=.\bin\publish\
 		}
 	}
-	else
-	{
-		Write-Error ("Can't find project to publish - $projectPath")	
+	else {
+		Write-Error "Can't find project to pack nuget package $projectPath"
 	}
 }

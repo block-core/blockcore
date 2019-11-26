@@ -1,0 +1,46 @@
+name: .NET Core
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    env:
+      SOLUTION_PATH: 'src/Blockcore.sln'
+      BUILD_PLATFORM: 'Any CPU'
+      BUILD_CONFIGURATION: 'Release'
+      NUGET_RELEASE_TYPE: 'alpha'
+      
+    steps:
+                    
+    - uses: actions/checkout@v1
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      
+    - name: Setup NuGet.exe
+      uses: NuGet/setup-nuget@v1.0.2
+
+    - name: Generate build number
+      uses: einaregilsson/build-number@v2 
+      with:
+        token: ${{secrets.github_token}}        
+
+    - name: Print new build number
+      run: echo "Build number is $BUILD_NUMBER"
+                              
+    - name: Restore
+      run: dotnet restore $SOLUTION_PATH
+      
+    - name: Build
+      run: dotnet build --configuration $BUILD_CONFIGURATION $SOLUTION_PATH -o bin\publish\ --no-restore
+      
+    - name: Test
+      run: dotnet test $SOLUTION_PATH --no-build
+      if: 'false'
+      
+    - name: Pack Nuget Packages 
+      shell: pwsh
+      run: ./PackNuget.ps1 -verbose -buildNumber $BUILD_NUMBER -releaseType $NUGET_RELEASE_TYPE

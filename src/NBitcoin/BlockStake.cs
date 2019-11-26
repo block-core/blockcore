@@ -170,8 +170,6 @@ namespace NBitcoin
     /// </summary>
     public class PosTransaction : Transaction , IPosTransactionWithTime
     {
-        public bool IsColdCoinStake { get; set; }
-
         private uint nTime = Utils.DateTimeToUnixTime(DateTime.UtcNow);
 
         public uint Time

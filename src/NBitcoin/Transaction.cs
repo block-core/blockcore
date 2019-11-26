@@ -1433,6 +1433,12 @@ namespace NBitcoin
             }
         }
 
+        /// <summary>
+        /// This flag is used to carry state between the script engine and the 
+        /// cold staking rule checks, it should not be used outside of that context.
+        /// </summary>
+        public bool IsColdCoinStake { get; set; }
+
         public virtual bool IsProtocolTransaction()
         {
             return this.IsCoinBase;

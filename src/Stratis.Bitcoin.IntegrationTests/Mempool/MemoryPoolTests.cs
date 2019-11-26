@@ -366,7 +366,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Mempool
                 Transaction trx = stratisSender.FullNode.WalletTransactionHandler().BuildTransaction(context);
 
                 // This should make the mempool reject a POS trx.
-                trx.Time = Utils.DateTimeToUnixTime(Utils.UnixTimeToDateTime(trx.Time).AddMinutes(5));
+                ((PosTransaction)trx).Time = Utils.DateTimeToUnixTime(Utils.UnixTimeToDateTime(((PosTransaction)trx).Time).AddMinutes(5));
 
                 // Sign trx again after changing the time property.
                 trx = context.TransactionBuilder.SignTransaction(trx);
@@ -512,7 +512,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Mempool
                 Transaction trx = stratisSender.FullNode.WalletTransactionHandler().BuildTransaction(context);
 
                 // Use timestamp value that is definitely earlier than the input's timestamp
-                trx.Time = 1;
+                ((PosTransaction)trx).Time = 1;
 
                 // Sign trx again after mutating timestamp
                 trx = context.TransactionBuilder.SignTransaction(trx);

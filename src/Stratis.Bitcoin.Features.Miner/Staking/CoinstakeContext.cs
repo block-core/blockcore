@@ -12,5 +12,8 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
         
         /// <summary>If the function succeeds, this is filled with private key for signing the coinstake kernel.</summary>
         public Key Key { get; set; }
+
+        /// <summary>The time slot that stake was found.</summary>
+        public uint StakeTimeSlot { get; set; }
     }
 }

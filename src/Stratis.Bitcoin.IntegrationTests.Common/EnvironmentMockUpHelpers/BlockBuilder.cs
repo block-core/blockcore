@@ -70,7 +70,8 @@ namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
 
                 // Create a valid coinbase transaction.
                 var coinbase = this.coreNode.FullNode.Network.CreateTransaction();
-                coinbase.Time = (uint)dateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
+                if (coinbase is IPosTransactionWithTime posTx)
+                    posTx.Time = (uint)dateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
                 coinbase.AddInput(TxIn.CreateCoinbase(chainTip.Height + 1));
                 coinbase.AddOutput(new TxOut(this.coreNode.FullNode.Network.Consensus.ProofOfWorkReward, this.coreNode.MinerSecret.GetAddress()));
                 block.AddTransaction(coinbase);
@@ -113,7 +114,8 @@ namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
         public static Block InvalidDuplicateCoinbase(CoreNode coreNode, Block block)
         {
             var badTxNoInputs = coreNode.FullNode.Network.CreateTransaction();
-            badTxNoInputs.Time = (uint)coreNode.FullNode.NodeService<IDateTimeProvider>().GetAdjustedTimeAsUnixTimestamp();
+            if (badTxNoInputs is IPosTransactionWithTime posTx)
+                posTx.Time = (uint)coreNode.FullNode.NodeService<IDateTimeProvider>().GetAdjustedTimeAsUnixTimestamp();
             badTxNoInputs.AddInput(new TxIn());
             badTxNoInputs.AddOutput(new TxOut(Money.Coins(1), coreNode.MinerSecret.GetAddress()));
 

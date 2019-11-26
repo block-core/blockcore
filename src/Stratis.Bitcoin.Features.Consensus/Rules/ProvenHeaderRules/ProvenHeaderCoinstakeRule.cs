@@ -177,10 +177,16 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         /// </exception>
         private void CheckHeaderAndCoinstakeTimes(ProvenBlockHeader header)
         {
-            uint coinstakeTime = header.Coinstake.Time;
-            uint headerTime = header.Time;
+            if (header.Coinstake is IPosTransactionWithTime posTrx)
+            {
+                if (header.Time != posTrx.Time)
+                {
+                    this.Logger.LogTrace("(-)[BAD_TIME]");
+                    ConsensusErrors.StakeTimeViolation.Throw();
+                }
+            }
 
-            if ((headerTime != coinstakeTime) || ((coinstakeTime & PosConsensusOptions.StakeTimestampMask) != 0))
+            if ((header.Time & PosConsensusOptions.StakeTimestampMask) != 0)
             {
                 this.Logger.LogTrace("(-)[BAD_TIME]");
                 ConsensusErrors.StakeTimeViolation.Throw();
@@ -282,7 +288,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         private void CheckStakeKernelHash(PosRuleContext context, UnspentOutputs stakingCoins, ProvenBlockHeader header, ChainedHeader chainedHeader)
         {
             OutPoint prevOut = this.GetPreviousOut(header);
-            uint transactionTime = header.Coinstake.Time;
+            uint transactionTime = header.Time;
             uint headerBits = chainedHeader.Header.Bits.ToCompact();
 
             uint256 previousStakeModifier = this.GetPreviousStakeModifier(chainedHeader);

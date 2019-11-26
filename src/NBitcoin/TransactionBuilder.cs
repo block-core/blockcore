@@ -1162,7 +1162,8 @@ namespace NBitcoin
                 ctx.Transaction.LockTime = this._LockTime.Value;
 
             if (this._TimeStamp != null)
-                ctx.Transaction.Time = this._TimeStamp.Value;
+                if (ctx.Transaction is IPosTransactionWithTime posTx)
+                    posTx.Time = this._TimeStamp.Value;
 
             foreach (BuilderGroup group in this._BuilderGroups)
             {

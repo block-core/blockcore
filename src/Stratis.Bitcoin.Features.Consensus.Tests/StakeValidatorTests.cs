@@ -766,6 +766,9 @@ namespace Stratis.Bitcoin.Tests.Consensus
                 UnspentOutputSet = new UnspentOutputSet()
             };
             context.UnspentOutputSet.SetCoins(new UnspentOutputs[] { unspentoutputs });
+           
+            context.ValidationContext = new ValidationContext() { ChainedHeaderToValidate = chainedHeader.Previous };
+            chainedHeader.Previous.Header.Time = ((PosTransaction)input1).Time;
 
             this.stakeValidator.CheckProofOfStake(context, chainedHeader, blockStake, input1, headerbits);
         }
@@ -776,7 +779,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var transactionTimestamp = DateTime.Now;
             var posTimeStamp = transactionTimestamp.AddSeconds(-1);
             var transaction = this.Network.CreateTransaction();
-            transaction.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
+            if (transaction is IPosTransactionWithTime posTrx)
+                posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
 
@@ -791,7 +795,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var transactionTimestamp = DateTime.Now;
             var posTimeStamp = transactionTimestamp;
             var transaction = CreateStubCoinStakeTransaction();
-            transaction.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
+            if (transaction is IPosTransactionWithTime posTrx)
+                posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
             var outpoint = new OutPoint(transaction, 1);
@@ -808,7 +813,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var posTimeStamp = transactionTimestamp;
 
             var transaction = CreateStubCoinStakeTransaction(5000 * Money.COIN);
-            transaction.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
+            if (transaction is IPosTransactionWithTime posTrx)
+                posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
             var outpoint = new OutPoint(transaction, 1);
@@ -824,7 +830,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var posTimeStamp = transactionTimestamp;
 
             var transaction = CreateStubCoinStakeTransaction(5000 * Money.COIN);
-            transaction.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
+            if (transaction is IPosTransactionWithTime posTrx)
+                posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
             var outpoint = new OutPoint(transaction, 1);
@@ -840,7 +847,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var posTimeStamp = transactionTimestamp.AddSeconds(1);
 
             var transaction = CreateStubCoinStakeTransaction(5000 * Money.COIN);
-            transaction.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
+            if (transaction is IPosTransactionWithTime posTrx)
+                posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
             UnspentOutputs stakingCoins = new UnspentOutputs(15, transaction);
             var outpoint = new OutPoint(transaction, 1);
@@ -1021,7 +1029,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             var outPoint = new OutPoint(transaction, 1);
             var headerbits = Target.Difficulty1.ToCompact();
-            var transactionTime = stakableHeader.Block.Transactions[0].Time;
+            var transactionTime = ((PosTransaction)stakableHeader.Block.Transactions[0]).Time;
 
             this.stakeValidator.CheckKernel(new PosRuleContext(), header, headerbits, transactionTime, outPoint);
         }
@@ -1387,7 +1395,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
         {
             Transaction outputm = this.Network.CreateTransaction();
             outputm.Version = 1;
-            outputm.Time = Utils.DateTimeToUnixTime(posTimeStamp);
+            if (outputm is IPosTransactionWithTime posTrx)
+                posTrx.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             outputm.Inputs.Add(new TxIn());
             outputm.Inputs[0].PrevOut = new OutPoint();
             outputm.Inputs[0].ScriptSig = Script.Empty;
@@ -1413,7 +1422,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             Transaction inputm = this.Network.CreateTransaction();
             inputm.Version = 1;
-            outputm.Time = Utils.DateTimeToUnixTime(posTimeStamp);
+            if (outputm is IPosTransactionWithTime posTrx1)
+                posTrx1.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             inputm.Inputs.Add(new TxIn());
             inputm.Inputs[0].PrevOut.Hash = output.GetHash();
             inputm.Inputs[0].PrevOut.N = 0;

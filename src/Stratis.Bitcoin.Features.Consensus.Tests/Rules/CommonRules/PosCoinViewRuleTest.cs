@@ -169,7 +169,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
             // we need to ensure that the transaction used for the coinstake's
             // input occurs well before the block time (as the coinstake time
             // is set to the block time)
-            prevTransaction.Time = blockTime - 100;
+            if(prevTransaction is IPosTransactionWithTime posTrx)
+                posTrx.Time = blockTime - 100;
 
             // Coins sent to miner 2.
             prevTransaction.Outputs.Add(new TxOut(Money.COIN * 5_000_000, scriptPubKey2));
@@ -208,8 +209,6 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
             block.Header.Time = blockTime;
             block.Header.Bits = block.Header.GetWorkRequired(this.network, this.ChainIndexer.Tip);
             block.SetPrivatePropertyValue("BlockSize", 1L);
-            block.Transactions[0].Time = block.Header.Time;
-            block.Transactions[1].Time = block.Header.Time;
             block.UpdateMerkleRoot();
             Assert.True(BlockStake.IsProofOfStake(block));
             // Add a signature to the block.

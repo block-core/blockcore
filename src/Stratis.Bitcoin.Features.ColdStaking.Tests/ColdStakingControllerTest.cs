@@ -953,9 +953,17 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             // Record the spendable outputs.
             this.unspentOutputs[prevTran.GetHash()] = new UnspentOutputs(1, prevTran);
 
+            // activate segwit
+            BIP9DeploymentsParameters current = this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit];
+            this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit] =
+                new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, BIP9DeploymentsParameters.AlwaysActive);
+
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
             Assert.True(this.mempoolManager.Validator.AcceptToMemoryPool(state, transaction).GetAwaiter().GetResult(), "Transaction failed mempool validation.");
+
+            // Revert back changes
+            this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit] = current;
         }
 
         /// <summary>

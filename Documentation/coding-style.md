@@ -253,7 +253,7 @@ namespace Stratis.Bitcoin.BlockPulling
         /// Constructs relations to peer nodes that meet the requirements.
         /// </summary>
         /// <returns>Array of relations to peer nodes that can be asked for blocks.</returns>
-        /// <remarks>TODO: https://github.com/stratisproject/StratisBitcoinFullNode/issues/246</remarks>
+        /// <remarks>TODO: https://github.com/block-core/blockcore/issues/1</remarks>
         /// <seealso cref="requirements"/>
         private BlockPullerBehavior[] GetNodeBehaviors()
         {

@@ -19,7 +19,7 @@ Bitcoin Implementation in C#
 **Why Blockcore?**
 
 - We see a need within the crypto ecosystem for development of the C# full node technology.
-- [Stratis](https://github.com/stratisproject/StratisBitcoinFullNode) has provided an excellent starting point but their focus is enterprise and businesses and we feel strongly that there is also value focusing on open and public blockchains.
+- [Stratis](https://github.com/stratisproject/StratisBitcoinFullNode) has provided an excellent starting point but their focus is enterprise and business. We feel strongly that there is significant value focusing on open & public blockchains, using open source software.
 
 **Blockcore objectives**
 
@@ -28,6 +28,7 @@ Bitcoin Implementation in C#
 - Support projects and teams that use the underlying technology.
 - Extend the technology by building developer and user tools
 - Provide a forum for developers and teams to collaborate and improve on the technology.
+- Build relationships with potential sponsors & partners to help boost the pace of development.
 
 **Blockcore principles**
 
@@ -38,45 +39,21 @@ Bitcoin Implementation in C#
 
 Join our community on [discord](https://discord.gg/TXx4Rm3).  
 
-
-**Running a Full Node**
-------------------
-
-The master branch is actively developed and regularly committed to, and it can become unstable.  
-To compile a stable (production) release use the most recent release tags.  
-
-```
-git clone https://github.com/block-core/blockcore.git  
-cd StratisBitcoinFullNode\src
-```
-
-To run on the Bitcoin network:
-```
-cd Stratis.BitcoinD
-dotnet run
-```  
-
-To run on the Stratis network:
-```
-cd Stratis.StratisD
-dotnet run
-```  
-
 Getting Started Guide
 -----------
-More details on getting started are available [here](https://github.com/block-core/blockcore/blob/master/Documentation/getting-started.md)
+More details on getting started are available [here](https://github.com/block-core/blockcore/blob/master/Documentation)
 
 Development
 -----------
-Up for some blockchain development?
+If you are up for some blockchain development?
 
 Check this guides for more info:
 * [Contributing Guide](Documentation/contributing.md)
 * [Coding Style](Documentation/coding-style.md)
 
-There is a lot to do and we welcome contributers developers and testers who want to get some Blockchain experience.
+There is a lot to do and we welcome contributions from developers and testers who want to gain some Blockchain experience.
 
-You can find tasks at the issues/projects or visit us on [discord](https://discord.gg/TXx4Rm3).
+You can find tasks on the [issues](https://github.com/block-core/blockcore/issues) tab or visit us on [discord](https://discord.gg/TXx4Rm3).
 
 Testing
 -------

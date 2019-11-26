@@ -27,6 +27,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
                 BlockToValidate = block,
                 ChainedHeaderToValidate = this.ChainIndexer.GetHeader(4)
             };
+            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = 18276127;
 
             var target = new Target(0x1f111115);
             this.ruleContext.ValidationContext.BlockToValidate.Header.Bits = target;
@@ -105,7 +106,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         private static Transaction CreateCoinStakeTransaction(Network network, Key key, int height, uint256 prevout)
         {
             var coinStake = network.CreateTransaction();
-            coinStake.Time = (uint)18276127;
+            if(coinStake is IPosTransactionWithTime posTrx)
+                posTrx.Time = (uint)18276127;
             coinStake.AddInput(new TxIn(new OutPoint(prevout, 1)));
             coinStake.AddOutput(new TxOut(0, new Script()));
             coinStake.AddOutput(new TxOut(network.GetReward(height), key.ScriptPubKey));

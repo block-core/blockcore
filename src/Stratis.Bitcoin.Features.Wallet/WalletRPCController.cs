@@ -363,7 +363,11 @@ namespace Stratis.Bitcoin.Features.Wallet
             string hex;
             if (transactionFromStore != null)
             {
-                transactionTime = Utils.UnixTimeToDateTime(transactionFromStore.Time);
+                if (transactionFromStore is IPosTransactionWithTime posTrx)
+                    transactionTime = Utils.UnixTimeToDateTime(posTrx.Time);
+                else
+                    transactionTime = Utils.UnixTimeToDateTime(chainedHeaderBlock.ChainedHeader.Header.Time);
+
                 isGenerated = transactionFromStore.IsCoinBase || transactionFromStore.IsCoinStake;
                 hex = transactionFromStore.ToHex();
 

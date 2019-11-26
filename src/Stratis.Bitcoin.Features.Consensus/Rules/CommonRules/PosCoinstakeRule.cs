@@ -79,18 +79,27 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
                 }
             }
 
+            // TODO: while time is not used anymore 
+            // we keep this check to avoid a network split
+
             // Check transactions.
             foreach (Transaction transaction in block.Transactions)
             {
-                // Check transaction timestamp.
-                if (block.Header.Time < transaction.Time)
+                // With the new changes this check is actually not needed amnymore.
+                // The trx time has no meaning for the network,its a legacy field from
+                // the days where coin age was used for POS protocol.
+                if (transaction is IPosTransactionWithTime posTrx)
                 {
-                    this.Logger.LogDebug("Block contains transaction with timestamp {0}, which is greater than block's timestamp {1}.", transaction.Time, block.Header.Time);
-                    this.Logger.LogTrace("(-)[TX_TIME_MISMATCH]");
-                    ConsensusErrors.BlockTimeBeforeTrx.Throw();
+                    // Check transaction timestamp.
+                    if (block.Header.Time < posTrx.Time)
+                    {
+                        this.Logger.LogDebug("Block contains transaction with timestamp {0}, which is greater than block's timestamp {1}.", posTrx.Time, block.Header.Time);
+                        this.Logger.LogTrace("(-)[TX_TIME_MISMATCH]");
+                        ConsensusErrors.BlockTimeBeforeTrx.Throw();
+                    }
                 }
             }
-
+            
             return Task.CompletedTask;
         }
     }

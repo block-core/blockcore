@@ -1,8 +1,8 @@
-Contributing to Stratis FullNode
-================================
+Contributing to Blockcore
+=========================
 
-The Stratis team maintains a few guidelines, which are provided below. Many of these are straightforward.  
-For any questions a Stratis team member will be happy to explain more.
+The Blockcore team maintains a few guidelines, which are provided below. Many of these are straightforward.  
+For any questions a Blockcore team member will be happy to explain more.
 
 We try to follow the [.Net core](https://github.com/dotnet/coreclr/blob/master/Documentation/project-docs/contributing.md) guidlines.
 
@@ -28,7 +28,7 @@ Adding Unit Tests
 -----------------
 Test contributions are more than welcome!
 Pick a class that does not have any tests and start testing it.
-Have a look at our [testing guidelines](https://github.com/stratisproject/StratisBitcoinFullNode/blob/master/Documentation/testing-guidelines.md)
+Have a look at our [testing guidelines](https://github.com/block-core/blockcore/blob/master/Documentation/testing-guidelines.md)
 Use other tests for reference.
 
 Typos and small changes
@@ -85,7 +85,7 @@ Copyright
 Source License
 --------------
 
-The Stratis licenses can be found under the [HERE](https://github.com/stratisproject/StratisBitcoinFullNode/blob/master/LICENSE) project.
+The Blockcore licenses can be found under the [HERE](https://github.com/block-core/Blockcore/blob/master/LICENSE) project.
 
 Copying Files from Other Projects
 ---------------------------------
@@ -99,12 +99,12 @@ The following rules must be followed for PRs that include files from another pro
 Porting Files from Other Projects
 ---------------------------------
 
-There are many good algorithms implemented in other languages that would benefit the Stratis project. The rules for porting a Java file to C# , for example, are the same as would be used for copying the same file, as described above.
+There are many good algorithms implemented in other languages that would benefit the Blockcore project. The rules for porting a Java file to C# , for example, are the same as would be used for copying the same file, as described above.
 
 Contributing
 ------------
 
 By contributing to this repository, you agree to license your work under the 
-[Stratis](https://github.com/stratisproject/StratisBitcoinFullNode/blob/master/LICENSE) license unless specified otherwise at 
+[Blockcore](https://github.com/block-core/blockcore/blob/master/LICENSE) license unless specified otherwise at 
 the top of the file itself. Any work contributed where you are not the original 
 author must contain its license header with the original author(s) and source.

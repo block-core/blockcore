@@ -1,11 +1,24 @@
 [CmdletBinding()]
 Param(
-	[Parameter(Mandatory)]
 	[string]$releaseType,
-
-	[Parameter(Mandatory)]
 	[string]$buildNumber
 )
+
+if (-not $releaseType) {
+	$releaseType = $env:NUGET_RELEASE_TYPE
+}
+if (-not $releaseType) {
+	Write-Error ("releaseType param or NUGET_RELEASE_TYPE environment variable is required.")
+	exit 1
+}
+
+if (-not $buildNumber) {
+	$buildNumber = $env:BUILD_NUMBER
+}
+if (-not $buildNumber) {
+	Write-Error ("buildNumber param or BUILD_NUMBER environment variable is required.")
+	exit 1
+}
 
 $projectPaths = @(
 	# BASE PROJECTS
@@ -50,11 +63,11 @@ Write-Verbose "Version Suffix: $versionSuffix"
 foreach ($projectPath in $projectPaths) {
 	if (Test-Path $projectPath -PathType Leaf) {
 
-		if ($versionSuffix -eq $null) {
-			dotnet pack $projectPath --configuration $configuration --no-build --include-source --include-symbols -o bin\publish\nuget\ /p:OutputPath=.\bin\publish\
+		if (-not $versionSuffix) {
+			dotnet pack $projectPath --configuration $configuration --no-build --include-source --include-symbols -o bin/publish/nuget/
 		}
 		else {
-			dotnet pack $projectPath --configuration $configuration --no-build --include-source --include-symbols --version-suffix $versionSuffix -o bin\publish\nuget\ /p:OutputPath=.\bin\publish\
+			dotnet pack $projectPath --configuration $configuration --no-build --include-source --include-symbols --version-suffix $versionSuffix -o bin/publish/nuget/ 
 		}
 	}
 	else {

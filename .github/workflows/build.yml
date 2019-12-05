@@ -3,14 +3,20 @@ name: .NET Core
 on: [push]
 
 jobs:
-  build:
+  
+  buildAndTest:
+    
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+      fail-fast: false
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
       BUILD_PLATFORM: 'Any CPU'
-      BUILD_CONFIGURATION: 'Release'
+      BUILD_CONFIGURATION: 'Debug'
       NUGET_RELEASE_TYPE: 'alpha'
       
     steps:
@@ -19,28 +25,41 @@ jobs:
       
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
-      
-    - name: Setup NuGet.exe
-      uses: NuGet/setup-nuget@v1.0.2
 
     - name: Generate build number
       uses: einaregilsson/build-number@v2 
       with:
-        token: ${{secrets.github_token}}        
-
-    - name: Print new build number
-      run: echo "Build number is $BUILD_NUMBER"
-                              
+        token: ${{secrets.GITHUB_TOKEN}}   
+                                    
     - name: Restore
-      run: dotnet restore $SOLUTION_PATH
+      run: dotnet restore ${{env.SOLUTION_PATH}}
       
     - name: Build
-      run: dotnet build --configuration $BUILD_CONFIGURATION $SOLUTION_PATH -o bin\publish\ --no-restore
+      run: dotnet build --no-restore --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
       
     - name: Test
-      run: dotnet test $SOLUTION_PATH --no-build
-      if: 'false'
-      
-    - name: Pack Nuget Packages 
-      shell: pwsh
-      run: ./PackNuget.ps1 -verbose -buildNumber $BUILD_NUMBER -releaseType $NUGET_RELEASE_TYPE
+      run: dotnet test --no-build ${{env.SOLUTION_PATH}}
+      if: 'false'          
+        
+    - name: Setup NuGet.exe
+      uses: NuGet/setup-nuget@v1.0.2
+
+    - name: Nuget Pack
+      run: dotnet pack --no-build --include-source --include-symbols --version-suffix "${{env.NUGET_RELEASE_TYPE }}${{env.BUILD_NUMBER}}" --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH }}
+
+    - name: Nuget Add Source
+      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/spartacrypt/ -Username spartacrypt -Password ${{secrets.GITHUB_TOKEN}} 
+
+    - name: Update Directory.Build.props for Push
+      run: |
+        find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
+        do
+	    if grep -c '<IsPackable>true</IsPackable>' $file > /dev/null 2>&1
+          then
+			sed -i 's,<IsPackable>true</IsPackable>,<IsPackable>true</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>git://github.com/spartacrypt</RepositoryUrl>,g' $file
+	    fi
+        done
+      shell: bash
+
+    - name: Nuget Push
+      run: nuget push **/*.nupkg -Source "GPR" -SkipDuplicate      

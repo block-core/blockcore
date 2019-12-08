@@ -74,8 +74,7 @@ namespace Stratis.Bitcoin.Tests.BlockPulling
             var chain = new ChainIndexer(this.Network);
 
             // Create behaviour using the test wraper which exposes protected properties and methods
-            ExtendedLoggerFactory loggerFactory = new ExtendedLoggerFactory();
-            loggerFactory.AddConsoleWithFilters();
+            ILoggerFactory loggerFactory = ExtendedLoggerFactory.Create();
             EnforcePeerVersionCheckBehaviorWrapper behavior = new EnforcePeerVersionCheckBehaviorWrapper(chain, nodeSettings, this.Network, loggerFactory);
 
             // Intentionally set Peer Version to 0 as its value it shouldn't be used anythere in the test.
@@ -118,8 +117,7 @@ namespace Stratis.Bitcoin.Tests.BlockPulling
             var chain = new ChainIndexer(this.Network);
 
             // Create behaviour using the test wraper which exposes protected properties and methods
-            ExtendedLoggerFactory loggerFactory = new ExtendedLoggerFactory();
-            loggerFactory.AddConsoleWithFilters();
+            ILoggerFactory loggerFactory = ExtendedLoggerFactory.Create();
             EnforcePeerVersionCheckBehaviorWrapper behavior = new EnforcePeerVersionCheckBehaviorWrapper(chain, nodeSettings, this.Network, loggerFactory);
 
             // Intentionally set Peer Version to 0 as its value it shouldn't be used anythere in the test.

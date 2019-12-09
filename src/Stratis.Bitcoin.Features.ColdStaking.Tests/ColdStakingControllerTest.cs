@@ -956,7 +956,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             // activate segwit
             BIP9DeploymentsParameters current = this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit];
             this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit] =
-                new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, BIP9DeploymentsParameters.AlwaysActive);
+                new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, BIP9DeploymentsParameters.AlwaysActive, BIP9DeploymentsParameters.AlwaysActive);
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);

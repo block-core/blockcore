@@ -70,10 +70,10 @@ namespace Stratis.Bitcoin.Networks
             var bip9Deployments = new StratisBIP9Deployments()
             {
                 // Always active on StratisRegTest.
-                [StratisBIP9Deployments.TestDummy] = new BIP9DeploymentsParameters("TestDummy", 28, BIP9DeploymentsParameters.AlwaysActive, 999999999),
-                [StratisBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999),
-                [StratisBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999),
-                [StratisBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999)
+                [StratisBIP9Deployments.TestDummy] = new BIP9DeploymentsParameters("TestDummy", 28, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [StratisBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [StratisBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [StratisBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
             };
 
             this.Consensus = new NBitcoin.Consensus(
@@ -88,7 +88,6 @@ namespace Stratis.Bitcoin.Networks
                 buriedDeployments: buriedDeployments,
                 bip9Deployments: bip9Deployments,
                 bip34Hash: new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"),
-                ruleChangeActivationThreshold: 1916, // 95% of 2016
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 500,
                 defaultAssumeValid: null, // turn off assumevalid for regtest.

@@ -170,7 +170,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         /// <returns>The cold staking account or <c>null</c> if the account does not exist.</returns>
         internal HdAccount GetColdStakingAccount(Wallet.Wallet wallet, bool isColdWalletAccount)
         {
-            var coinType = (CoinType)wallet.Network.Consensus.CoinType;
+            var coinType = wallet.Network.Consensus.CoinType;
             HdAccount account = wallet.GetAccount(isColdWalletAccount ? ColdWalletAccountName : HotWalletAccountName);
             if (account == null)
             {

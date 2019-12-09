@@ -24,7 +24,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
         public string HdPath { get; set; }
 
         [JsonProperty(PropertyName = "coinType")]
-        public CoinType CoinType { get; set; }
+        public int CoinType { get; set; }
 
         [JsonProperty(PropertyName = "amountConfirmed")]
         public Money AmountConfirmed { get; set; }

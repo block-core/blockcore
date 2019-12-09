@@ -63,7 +63,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         public ConcurrentBag<Wallet> Wallets { get; }
 
         /// <summary>The type of coin used in this manager.</summary>
-        protected readonly CoinType coinType;
+        protected readonly int coinType;
 
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         protected readonly Network network;
@@ -137,7 +137,7 @@ namespace Stratis.Bitcoin.Features.Wallet
             this.Wallets = new ConcurrentBag<Wallet>();
 
             this.network = network;
-            this.coinType = (CoinType)network.Consensus.CoinType;
+            this.coinType = network.Consensus.CoinType;
             this.ChainIndexer = chainIndexer;
             this.asyncProvider = asyncProvider;
             this.nodeLifetime = nodeLifetime;
@@ -1406,9 +1406,10 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <param name="encryptedSeed">The seed for this wallet, password encrypted.</param>
         /// <param name="chainCode">The chain code.</param>
         /// <param name="creationTime">The time this wallet was created.</param>
+        /// <param name="coinType">A BIP44 coin type, this will allow to overwrite the default network coin type.</param>
         /// <returns>The wallet object that was saved into the file system.</returns>
         /// <exception cref="WalletException">Thrown if wallet cannot be created.</exception>
-        private Wallet GenerateWalletFile(string name, string encryptedSeed, byte[] chainCode, DateTimeOffset? creationTime = null)
+        private Wallet GenerateWalletFile(string name, string encryptedSeed, byte[] chainCode, DateTimeOffset? creationTime = null, int? coinType = null)
         {
             Guard.NotEmpty(name, nameof(name));
             Guard.NotEmpty(encryptedSeed, nameof(encryptedSeed));
@@ -1437,7 +1438,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                 ChainCode = chainCode,
                 CreationTime = creationTime ?? this.dateTimeProvider.GetTimeOffset(),
                 Network = this.network,
-                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = this.coinType } },
+                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = coinType ?? this.coinType } },
             };
 
             // Create a folder if none exists and persist the file.

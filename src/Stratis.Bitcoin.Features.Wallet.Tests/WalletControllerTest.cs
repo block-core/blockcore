@@ -720,7 +720,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
                 AccountsRoot = new List<AccountRoot> {
                     new AccountRoot()
                     {
-                        CoinType = (CoinType)this.Network.Consensus.CoinType,
+                        CoinType = this.Network.Consensus.CoinType,
                         LastBlockSyncedHeight = 15
                     }
                 }

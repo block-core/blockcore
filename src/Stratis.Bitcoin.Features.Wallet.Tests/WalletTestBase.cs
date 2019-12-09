@@ -7,7 +7,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
 {
     public class WalletTestBase
     {
-        public static AccountRoot CreateAccountRoot(CoinType coinType)
+        public static AccountRoot CreateAccountRoot(int coinType)
         {
             return new AccountRoot()
             {
@@ -16,7 +16,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
             };
         }
 
-        public static AccountRoot CreateAccountRootWithHdAccountHavingAddresses(string accountName, CoinType coinType)
+        public static AccountRoot CreateAccountRootWithHdAccountHavingAddresses(string accountName, int coinType)
         {
             return new AccountRoot()
             {

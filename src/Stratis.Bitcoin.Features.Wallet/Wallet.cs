@@ -365,7 +365,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// The type of coin, Bitcoin or Stratis.
         /// </summary>
         [JsonProperty(PropertyName = "coinType")]
-        public CoinType CoinType { get; set; }
+        public int CoinType { get; set; }
 
         /// <summary>
         /// The height of the last block that was synced.
@@ -602,10 +602,10 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <summary>
         /// Gets the type of coin this account is for.
         /// </summary>
-        /// <returns>A <see cref="CoinType"/>.</returns>
-        public CoinType GetCoinType()
+        /// <returns>A BIP44 CoinType.</returns>
+        public int GetCoinType()
         {
-            return (CoinType)HdOperations.GetCoinType(this.HdPath);
+            return HdOperations.GetCoinType(this.HdPath);
         }
 
         /// <summary>

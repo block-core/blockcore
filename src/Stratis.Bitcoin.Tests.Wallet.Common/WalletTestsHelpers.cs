@@ -154,7 +154,7 @@ namespace Stratis.Bitcoin.Tests.Wallet.Common
                 ChainCode = extendedKey.ChainCode,
                 CreationTime = DateTimeOffset.Now,
                 Network = KnownNetworks.Main,
-                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = (CoinType)KnownNetworks.Main.Consensus.CoinType } },
+                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = KnownNetworks.Main.Consensus.CoinType } },
             };
 
             return (walletFile, extendedKey);
@@ -210,7 +210,7 @@ namespace Stratis.Bitcoin.Tests.Wallet.Common
             {
                 wallet.AccountsRoot.Add(new AccountRoot()
                 {
-                    CoinType = CoinType.Bitcoin,
+                    CoinType = KnownCoinTypes.Bitcoin,
                     Accounts = new List<HdAccount>
                     {
                         new HdAccount

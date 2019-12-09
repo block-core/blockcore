@@ -34,7 +34,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Controllers
 
         private readonly IWalletSyncManager walletSyncManager;
 
-        private readonly CoinType coinType;
+        private readonly int coinType;
 
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         private readonly Network network;
@@ -67,7 +67,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Controllers
             this.walletSyncManager = walletSyncManager;
             this.connectionManager = connectionManager;
             this.network = network;
-            this.coinType = (CoinType)network.Consensus.CoinType;
+            this.coinType = network.Consensus.CoinType;
             this.chainIndexer = chainIndexer;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.broadcasterManager = broadcasterManager;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NBitcoin;
+using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace Stratis.Bitcoin.Features.Wallet.Tests
@@ -14,9 +15,9 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
             var account = new HdAccount();
             account.HdPath = "1/2/105";
 
-            CoinType result = account.GetCoinType();
+            int result = account.GetCoinType();
 
-            Assert.Equal(CoinType.Stratis, result);
+            Assert.Equal(KnownCoinTypes.Stratis, result);
         }
 
         [Fact]

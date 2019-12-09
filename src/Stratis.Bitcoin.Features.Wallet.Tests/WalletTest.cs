@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NBitcoin;
+using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace Stratis.Bitcoin.Features.Wallet.Tests
@@ -21,7 +22,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
         public void GetAllTransactionsReturnsTransactionsFromWallet()
         {
             var wallet = new Wallet();
-            AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", CoinType.Stratis);
+            AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", KnownCoinTypes.Stratis);
 
             TransactionData transaction1 = CreateTransaction(new uint256(1), new Money(15000), 1);
             TransactionData transaction2 = CreateTransaction(new uint256(2), new Money(91209), 1);
@@ -52,7 +53,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
         public void GetAllPubKeysReturnsPubkeysFromWallet()
         {
             var wallet = new Wallet();
-            AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", CoinType.Stratis);
+            AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", KnownCoinTypes.Stratis);
             wallet.AccountsRoot.Add(stratisAccountRoot);
 
             List<Script> result = wallet.GetAllPubKeys().ToList();

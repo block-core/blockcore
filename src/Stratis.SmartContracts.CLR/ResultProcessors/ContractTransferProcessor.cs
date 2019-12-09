@@ -68,7 +68,9 @@ namespace Stratis.SmartContracts.CLR.ResultProcessors
         private Transaction CreateRefundTransaction(IContractTransactionContext transactionContext)
         {
             Transaction tx = this.network.CreateTransaction();
-            tx.Time = transactionContext.Time;
+
+            if (tx is IPosTransactionWithTime posTx)
+                posTx.Time = transactionContext.Time;
 
             // Input from contract call
             var outpoint = new OutPoint(transactionContext.TransactionHash, transactionContext.Nvout);

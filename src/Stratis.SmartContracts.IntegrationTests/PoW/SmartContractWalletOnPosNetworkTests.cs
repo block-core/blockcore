@@ -153,7 +153,9 @@ namespace Stratis.SmartContracts.IntegrationTests.PoW
             Transaction transferContractTransaction = scSender.FullNode.NodeService<IWalletTransactionHandler>().BuildTransaction(txBuildContext);
 
             var updatedTransaction = scSender.FullNode.Network.CreateTransaction();
-            updatedTransaction.Time = (uint)scSender.FullNode.NodeService<IDateTimeProvider>().GetAdjustedTimeAsUnixTimestamp();
+
+            if (updatedTransaction is IPosTransactionWithTime posTx)
+                posTx.Time = (uint)scSender.FullNode.NodeService<IDateTimeProvider>().GetAdjustedTimeAsUnixTimestamp();
 
             foreach (var txIn in transferContractTransaction.Inputs)
             {

@@ -92,15 +92,22 @@ namespace Stratis.Features.SQLiteWalletRepository.External
                 {
                     TxIn txIn = tx.Inputs[i];
 
-                    if (transactionsOfInterest.Contains(txIn.PrevOut, out HashSet<AddressIdentifier> addresses))
-                    {
-                        // Record our outputs that are being spent.
-                        foreach (AddressIdentifier address in addresses)
-                            RecordSpend(block, txIn, address.ScriptPubKey, tx.IsCoinBase | tx.IsCoinStake, tx.Time, tx.TotalOut, txId, i);
+                    if (!transactionsOfInterest.Contains(txIn.PrevOut, out HashSet<AddressIdentifier> addresses))
+                        continue;
 
-                        additions = true;
-                        addSpendTx = true;
+                    // Record our outputs that are being spent.
+                    foreach (AddressIdentifier address in addresses)
+                    {
+                        // TODO: Probably need to derive time explicitly from the block header. How were PoW transactions being handled here?
+                        long time = 0;
+                        if (tx is IPosTransactionWithTime posTx)
+                            time = posTx.Time;
+
+                        RecordSpend(block, txIn, address.ScriptPubKey, tx.IsCoinBase | tx.IsCoinStake, time, tx.TotalOut, txId, i);
                     }
+
+                    additions = true;
+                    addSpendTx = true;
                 }
 
                 // Build temp.Outputs.
@@ -119,41 +126,46 @@ namespace Stratis.Features.SQLiteWalletRepository.External
                         bool containsAddress = addressesOfInterest.Contains(pubKeyScript, out AddressIdentifier address);
 
                         // Paying to one of our addresses?
-                        if (addSpendTx || containsAddress)
-                        {
-                            // Check if top-up is required.
-                            if (containsAddress && address != null)
-                            {
-                                // Get the top-up tracker that applies to this account and address type.
-                                ITopUpTracker tracker = this.GetTopUpTracker(address);
-                                if (!tracker.IsWatchOnlyAccount)
-                                {
-                                    // If an address inside the address buffer is being used then top-up the buffer.
-                                    while (address.AddressIndex >= tracker.NextAddressIndex)
-                                    {
-                                        AddressIdentifier newAddress = tracker.CreateAddress();
+                        if (!addSpendTx && !containsAddress) 
+                            continue;
 
-                                        // Add the new address to our addresses of interest.
-                                        addressesOfInterest.AddTentative(Script.FromHex(newAddress.ScriptPubKey),
-                                            new AddressIdentifier()
-                                            {
-                                                WalletId = newAddress.WalletId,
-                                                AccountIndex = newAddress.AccountIndex,
-                                                AddressType = newAddress.AddressType,
-                                                AddressIndex = newAddress.AddressIndex
-                                            });
-                                    }
+                        // Check if top-up is required.
+                        if (containsAddress && address != null)
+                        {
+                            // Get the top-up tracker that applies to this account and address type.
+                            ITopUpTracker tracker = this.GetTopUpTracker(address);
+                            if (!tracker.IsWatchOnlyAccount)
+                            {
+                                // If an address inside the address buffer is being used then top-up the buffer.
+                                while (address.AddressIndex >= tracker.NextAddressIndex)
+                                {
+                                    AddressIdentifier newAddress = tracker.CreateAddress();
+
+                                    // Add the new address to our addresses of interest.
+                                    addressesOfInterest.AddTentative(Script.FromHex(newAddress.ScriptPubKey),
+                                        new AddressIdentifier()
+                                        {
+                                            WalletId = newAddress.WalletId,
+                                            AccountIndex = newAddress.AccountIndex,
+                                            AddressType = newAddress.AddressType,
+                                            AddressIndex = newAddress.AddressIndex
+                                        });
                                 }
                             }
-
-                            // Record outputs received by our wallets.
-                            this.RecordReceipt(block, pubKeyScript, txOut, tx.IsCoinBase | tx.IsCoinStake, tx.Time, txId, i, containsAddress && address.AddressType == 1);
-
-                            additions = true;
-
-                            if (containsAddress)
-                                transactionsOfInterest.AddTentative(new OutPoint(txId, i), address);
                         }
+
+                        // TODO: Probably need to derive time explicitly from the block header. How were PoW transactions being handled here?
+                        long time = 0;
+                        if (tx is IPosTransactionWithTime posTx)
+                            time = posTx.Time;
+
+                        // Record outputs received by our wallets.
+                        this.RecordReceipt(block, pubKeyScript, txOut, tx.IsCoinBase | tx.IsCoinStake, time, txId, i, containsAddress && address.AddressType == 1);
+
+                        additions = true;
+
+                        if (containsAddress)
+                            transactionsOfInterest.AddTentative(new OutPoint(txId, i), address);
                     }
                 }
             }

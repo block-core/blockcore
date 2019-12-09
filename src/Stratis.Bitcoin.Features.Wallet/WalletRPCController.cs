@@ -363,6 +363,7 @@ namespace Stratis.Bitcoin.Features.Wallet
             string hex;
             if (transactionFromStore != null)
             {
+                // TODO: Use block header time only. The transaction times will need to be uniformly set to a fixed value when an anti-malleability softfork activates
                 if (transactionFromStore is IPosTransactionWithTime posTrx)
                     transactionTime = Utils.UnixTimeToDateTime(posTrx.Time);
                 else

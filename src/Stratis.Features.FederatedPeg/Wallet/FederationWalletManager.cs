@@ -704,7 +704,7 @@ namespace Stratis.Features.FederatedPeg.Wallet
                     BlockHeight = blockHeight,
                     BlockHash = blockHash,
                     Id = transactionHash,
-                    CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? transaction.Time),
+                    CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? this.dateTimeProvider.GetTime()),
                     Index = index,
                     ScriptPubKey = script
                 };
@@ -843,7 +843,7 @@ namespace Stratis.Features.FederatedPeg.Wallet
             {
                 TransactionId = transaction.GetHash(),
                 Payments = payments,
-                CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? transaction.Time),
+                CreationTime = DateTimeOffset.FromUnixTimeSeconds(block?.Header.Time ?? this.dateTimeProvider.GetTime()),
                 BlockHeight = blockHeight,
                 BlockHash = blockHash,
                 Transaction = (blockHeight > 0) ? null : transaction,

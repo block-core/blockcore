@@ -17,7 +17,11 @@ namespace Stratis.Sidechains.Networks
         public static Block CreateGenesis(SmartContractCollateralPoAConsensusFactory consensusFactory, uint genesisTime, uint nonce, uint bits, int version, Money reward, string coinbaseText)
         {
             Transaction genesisTransaction = consensusFactory.CreateTransaction();
-            genesisTransaction.Time = genesisTime;
+
+            // TODO: If the PoW/PoA networks do not use a PosConsensusFactory, their transactions will now be missing timestamps that were historically included for hashing.
+            if (genesisTransaction is IPosTransactionWithTime posTx)
+                posTx.Time = genesisTime;
+
             genesisTransaction.Version = 1;
             genesisTransaction.AddInput(new TxIn()
             {

@@ -243,9 +243,9 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         /// track addresses under the <see cref="ColdWalletAccountIndex"/> HD account.
         /// </summary>
         /// <inheritdoc />
-        public override Wallet.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase)
+        public override Wallet.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null)
         {
-            Wallet.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase);
+            Wallet.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, coinType);
 
             this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
             this.GetOrCreateColdStakingAccount(wallet.Name, true, password);

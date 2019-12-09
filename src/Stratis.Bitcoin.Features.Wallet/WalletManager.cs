@@ -266,7 +266,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         }
 
         /// <inheritdoc />
-        public Mnemonic CreateWallet(string password, string name, string passphrase, Mnemonic mnemonic = null)
+        public Mnemonic CreateWallet(string password, string name, string passphrase, Mnemonic mnemonic = null, int? coinType = null)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(name, nameof(name));
@@ -280,7 +280,7 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             // Create a wallet file.
             string encryptedSeed = extendedKey.PrivateKey.GetEncryptedBitcoinSecret(password, this.network).ToWif();
-            Wallet wallet = this.GenerateWalletFile(name, encryptedSeed, extendedKey.ChainCode);
+            Wallet wallet = this.GenerateWalletFile(name, encryptedSeed, extendedKey.ChainCode, coinType: coinType);
 
             // Generate multiple accounts and addresses from the get-go.
             for (int i = 0; i < WalletCreationAccountsCount; i++)
@@ -416,7 +416,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         }
 
         /// <inheritdoc />
-        public virtual Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase)
+        public virtual Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(name, nameof(name));
@@ -442,7 +442,7 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             // Create a wallet file.
             string encryptedSeed = extendedKey.PrivateKey.GetEncryptedBitcoinSecret(password, this.network).ToWif();
-            Wallet wallet = this.GenerateWalletFile(name, encryptedSeed, extendedKey.ChainCode, creationTime);
+            Wallet wallet = this.GenerateWalletFile(name, encryptedSeed, extendedKey.ChainCode, creationTime, coinType);
 
             // Generate multiple accounts and addresses from the get-go.
             for (int i = 0; i < WalletRecoveryAccountsCount; i++)

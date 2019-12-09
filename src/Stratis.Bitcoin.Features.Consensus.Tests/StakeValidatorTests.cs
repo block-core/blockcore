@@ -1029,6 +1029,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             var outPoint = new OutPoint(transaction, 1);
             var headerbits = Target.Difficulty1.ToCompact();
+            // TODO: Is this intentionally using the time of the stub coinbase instead of the coinstake? This looks like a bug
             var transactionTime = ((PosTransaction)stakableHeader.Block.Transactions[0]).Time;
 
             this.stakeValidator.CheckKernel(new PosRuleContext(), header, headerbits, transactionTime, outPoint);

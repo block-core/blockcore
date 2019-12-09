@@ -56,7 +56,7 @@ namespace Stratis.Features.FederatedPeg.Tests.Wallet
 
             // Create a spending transaction that spends transaction A
             Transaction transactionB = this.network.CreateTransaction();
-            transactionB.Time = transactionA.Time + 1;
+            ((PosTransaction)transactionB).Time = ((PosTransaction)transactionA).Time + 1;
             transactionB.AddInput(transactionA, 0);
             transactionB.AddOutput(new TxOut(Money.Coins(5), this.federationMultiSigAddress));
             federationWalletManager.ProcessTransaction(transactionB);
@@ -74,7 +74,7 @@ namespace Stratis.Features.FederatedPeg.Tests.Wallet
 
             // Create another spending transaction that also spends transaction A
             Transaction transactionC = this.network.CreateTransaction();
-            transactionC.Time = transactionB.Time + 1;
+            ((PosTransaction)transactionC).Time = ((PosTransaction)transactionB).Time + 1;
             transactionC.AddInput(transactionA, 0);
             transactionC.AddOutput(new TxOut(Money.Coins(5), this.federationMultiSigAddress));
             federationWalletManager.ProcessTransaction(transactionC);

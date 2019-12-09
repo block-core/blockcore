@@ -253,6 +253,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 resultSendingWallet.BlockIndex.Should().BeNull();
                 resultSendingWallet.BlockTime.Should().BeNull();
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
+                resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
                 resultSendingWallet.Details.Count.Should().Be(1);
 
                 GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Single();

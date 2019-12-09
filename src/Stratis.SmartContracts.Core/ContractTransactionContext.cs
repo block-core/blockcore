@@ -70,7 +70,8 @@ namespace Stratis.SmartContracts.Core
         {
             get
             {
-                return this.transaction.Time;
+                // TODO: Is a zero fallback value acceptable here?
+                return (this.transaction is IPosTransactionWithTime posTx) ? posTx.Time : 0;
             }
         }
 

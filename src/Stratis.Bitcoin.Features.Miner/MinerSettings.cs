@@ -47,6 +47,11 @@ namespace Stratis.Bitcoin.Features.Miner
         public bool Mine { get; private set; }
 
         /// <summary>
+        /// If true this will only allow staking coins that have been flaged.
+        /// </summary>
+        public bool EnforceStakingFlag { get; private set; }
+
+        /// <summary>
         /// An address to use when mining, if not specified and address from the wallet will be used.
         /// </summary>
         public string MineAddress { get; set; }
@@ -98,6 +103,8 @@ namespace Stratis.Bitcoin.Features.Miner
             this.MinimumSplitCoinValue = config.GetOrDefault("minimumsplitcoinvalue", MinimumSplitCoinValueDefaultValue, this.logger);
             this.MinimumStakingCoinValue = config.GetOrDefault("minimumstakingcoinvalue", MinimumStakingCoinValueDefaultValue, this.logger);
             this.MinimumStakingCoinValue = this.MinimumStakingCoinValue == 0 ? 1 : this.MinimumStakingCoinValue;
+
+            this.EnforceStakingFlag = config.GetOrDefault("enforceStakingFlag", false, this.logger);
         }
 
         /// <summary>
@@ -119,6 +126,8 @@ namespace Stratis.Bitcoin.Features.Miner
             builder.AppendLine("-enablecoinstakesplitting=<0 or 1>  Enable splitting coins when staking. This is true by default.");
             builder.AppendLine($"-minimumstakingcoinvalue=<number>   Minimum size of the coins considered for staking, in satoshis. Default value is {MinimumStakingCoinValueDefaultValue:N0} satoshis (= {MinimumStakingCoinValueDefaultValue / (decimal)Money.COIN:N1} Coin).");
             builder.AppendLine($"-minimumsplitcoinvalue=<number>     Targeted minimum value of staking coins after splitting, in satoshis. Default value is {MinimumSplitCoinValueDefaultValue:N0} satoshis (= {MinimumSplitCoinValueDefaultValue / Money.COIN} Coin).");
+
+            builder.AppendLine($"-enforceStakingFlag=<0 or 1>        If true staking will require whitelisting addresses in order to stake. Defult is false");
 
             defaults.Logger.LogInformation(builder.ToString());
         }
@@ -151,6 +160,9 @@ namespace Stratis.Bitcoin.Features.Miner
             builder.AppendLine($"#minimumstakingcoinvalue={MinimumStakingCoinValueDefaultValue}");
             builder.AppendLine("#Targeted minimum value of staking coins after splitting, in satoshis.");
             builder.AppendLine($"#minimumsplitcoinvalue={MinimumSplitCoinValueDefaultValue}");
+            builder.AppendLine("#If staking will require whitelisting addresses in order to stake. Defult is false.");
+            builder.AppendLine($"#enforceStakingFlag=0");
+
         }
     }
 }

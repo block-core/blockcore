@@ -132,6 +132,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
 
         /// <summary>Factory for creating loggers.</summary>
         private readonly ILoggerFactory loggerFactory;
+        private readonly MinerSettings minerSettings;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -250,6 +251,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             this.walletManager = walletManager;
             this.timeSyncBehaviorState = timeSyncBehaviorState;
             this.loggerFactory = loggerFactory;
+            this.minerSettings = minerSettings;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.minerSleep = 500; // GetArg("-minersleep", 500);
@@ -442,6 +444,16 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 .GetSpendableTransactionsInWalletForStaking(walletSecret.WalletName, 1)
                 .Where(utxo => utxo.Transaction.Amount >= this.MinimumStakingCoinValue) // exclude dust from stake process
                 .ToList();
+
+            if (this.minerSettings.EnforceStakingFlag)
+            {
+                var toRemove = stakableUtxos.Where(utxo => utxo.Address.StakingEnabled == false);
+
+                foreach (var item in toRemove)
+                {
+                    stakableUtxos.Remove(item);
+                }
+            }
 
             FetchCoinsResponse fetchedCoinSet = this.coinView.FetchCoins(stakableUtxos.Select(t => t.Transaction.Id).Distinct().ToArray(), cancellationToken);
             Dictionary<uint256, UnspentOutputs> utxoByTransaction = fetchedCoinSet.UnspentOutputs.Where(utxo => utxo != null).ToDictionary(utxo => utxo.TransactionId, utxo => utxo);

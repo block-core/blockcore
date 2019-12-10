@@ -447,7 +447,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
 
             if (this.minerSettings.EnforceStakingFlag)
             {
-                var toRemove = stakableUtxos.Where(utxo => utxo.Address.StakingEnabled == false);
+                var toRemove = stakableUtxos.Where(utxo => utxo.Address.StakingEnabled == false).ToList();
 
                 foreach (var item in toRemove)
                 {

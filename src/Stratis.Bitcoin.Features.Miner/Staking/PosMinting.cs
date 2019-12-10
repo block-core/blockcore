@@ -442,18 +442,18 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
 
             List<UnspentOutputReference> stakableUtxos = this.walletManager
                 .GetSpendableTransactionsInWalletForStaking(walletSecret.WalletName, 1)
+                .Where(utxo =>
+                {
+                    if (this.minerSettings.EnforceStakingFlag)
+                    {
+                        if (utxo.Address.StakingEnabled == false)
+                            return false;
+                    }
+
+                    return true;
+                })
                 .Where(utxo => utxo.Transaction.Amount >= this.MinimumStakingCoinValue) // exclude dust from stake process
                 .ToList();
-
-            if (this.minerSettings.EnforceStakingFlag)
-            {
-                var toRemove = stakableUtxos.Where(utxo => utxo.Address.StakingEnabled == false).ToList();
-
-                foreach (var item in toRemove)
-                {
-                    stakableUtxos.Remove(item);
-                }
-            }
 
             FetchCoinsResponse fetchedCoinSet = this.coinView.FetchCoins(stakableUtxos.Select(t => t.Transaction.Id).Distinct().ToArray(), cancellationToken);
             Dictionary<uint256, UnspentOutputs> utxoByTransaction = fetchedCoinSet.UnspentOutputs.Where(utxo => utxo != null).ToDictionary(utxo => utxo.TransactionId, utxo => utxo);

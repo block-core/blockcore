@@ -18,9 +18,10 @@ jobs:
       BUILD_PLATFORM: 'Any CPU'
       BUILD_CONFIGURATION: 'Debug'
       NUGET_RELEASE_TYPE: 'alpha'
-      
+      REPOSITORY_URL:  git://github.com/${{github.repository}}
+
     steps:
-                    
+
     - uses: actions/checkout@v1
       
     - name: Setup .NET Core
@@ -44,22 +45,19 @@ jobs:
     - name: Setup NuGet.exe
       uses: NuGet/setup-nuget@v1.0.2
 
-    - name: Nuget Pack
-      run: dotnet pack --no-build --include-source --include-symbols --version-suffix "${{env.NUGET_RELEASE_TYPE }}${{env.BUILD_NUMBER}}" --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH }}
-
-    - name: Nuget Add Source
-      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/spartacrypt/ -Username spartacrypt -Password ${{secrets.GITHUB_TOKEN}} 
-
     - name: Update Directory.Build.props for Push
       run: |
         find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
         do
-	      if grep -c '<IsPackable>true</IsPackable>' $file > /dev/null 2>&1
-            then
-			sed -i 's,<IsPackable>true</IsPackable>,<IsPackable>true</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>git://github.com/spartacrypt</RepositoryUrl>,g' $file
-	      fi
+          sed -i 's,</IsPackable>,</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>{{env:REPOSITORY_URL}}</RepositoryUrl>,g' $file
         done
       shell: bash
+
+    - name: Nuget Pack
+      run: dotnet pack --no-build --include-source --include-symbols --version-suffix "${{env.NUGET_RELEASE_TYPE}}${{env.BUILD_NUMBER}}" --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH }}
+
+    - name: Nuget Add Source
+      run: nuget sources add -name "GPR" -Source "https://nuget.pkg.github.com/${{env.NUGET_USER}}/index.json" -Username "${{github.owner}}" -Password ${{secrets.GITHUB_TOKEN}} 
 
     - name: Nuget Push
       run: nuget push **/*.nupkg -Source "GPR" -SkipDuplicate      

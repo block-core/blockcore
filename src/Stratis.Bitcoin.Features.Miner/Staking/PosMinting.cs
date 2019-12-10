@@ -446,6 +446,9 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 {
                     if (this.minerSettings.EnforceStakingFlag)
                     {
+                        if (utxo.Address.StakingEnabled == null)
+                            return false;
+
                         if (utxo.Address.StakingEnabled == false)
                             return false;
                     }

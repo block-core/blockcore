@@ -78,7 +78,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
 
             for (int i = 0; i < expectedWallet.AccountsRoot.Count; i++)
             {
-                Assert.Equal(CoinType.Stratis, expectedWallet.AccountsRoot.ElementAt(i).CoinType);
+                Assert.Equal(KnownCoinTypes.Stratis, expectedWallet.AccountsRoot.ElementAt(i).CoinType);
                 Assert.Equal(1, expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
                 Assert.Equal(block.GetHash(), expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
 
@@ -190,7 +190,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
 
             for (int i = 0; i < expectedWallet.AccountsRoot.Count; i++)
             {
-                Assert.Equal(CoinType.Stratis, expectedWallet.AccountsRoot.ElementAt(i).CoinType);
+                Assert.Equal(KnownCoinTypes.Stratis, expectedWallet.AccountsRoot.ElementAt(i).CoinType);
                 Assert.Equal(1, expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
                 Assert.Equal(block.GetHash(), expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
 
@@ -1094,7 +1094,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
-            wallet.AccountsRoot.ElementAt(0).CoinType = CoinType.Stratis;
+            wallet.AccountsRoot.ElementAt(0).CoinType = KnownCoinTypes.Stratis;
             walletManager.Wallets.Add(wallet);
 
             int result = walletManager.LastBlockHeight();
@@ -1129,7 +1129,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
-            wallet.AccountsRoot.ElementAt(0).CoinType = CoinType.Stratis;
+            wallet.AccountsRoot.ElementAt(0).CoinType = KnownCoinTypes.Stratis;
             walletManager.Wallets.Add(wallet);
 
             uint256 result = walletManager.LastReceivedBlockInfo().Hash;
@@ -1175,7 +1175,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
 
             wallet.AccountsRoot.Add(new AccountRoot()
             {
-                CoinType = CoinType.Stratis,
+                CoinType = KnownCoinTypes.Stratis,
                 Accounts = new List<HdAccount>
                 {
                     new HdAccount {
@@ -1186,7 +1186,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
             });
 
             Wallet wallet2 = this.walletFixture.GenerateBlankWallet("myWallet2", "password");
-            wallet2.AccountsRoot.ElementAt(0).CoinType = CoinType.Stratis;
+            wallet2.AccountsRoot.ElementAt(0).CoinType = KnownCoinTypes.Stratis;
             wallet2.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 ExternalAddresses = WalletTestsHelpers.CreateUnspentTransactionsOfBlockHeights(KnownNetworks.StratisMain, 1, 3, 5, 7, 9, 10),
@@ -2812,7 +2812,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
         [Fact]
         public void CreateBip44PathWithChangeAddressReturnsPath()
         {
-            string result = HdOperations.CreateHdPath((int)CoinType.Stratis, 4, true, 3);
+            string result = HdOperations.CreateHdPath((int)KnownCoinTypes.Stratis, 4, true, 3);
 
             Assert.Equal("m/44'/105'/4'/1/3", result);
         }
@@ -2820,7 +2820,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Tests
         [Fact]
         public void CreateBip44PathWithoutChangeAddressReturnsPath()
         {
-            string result = HdOperations.CreateHdPath((int)CoinType.Stratis, 4, false, 3);
+            string result = HdOperations.CreateHdPath((int)KnownCoinTypes.Stratis, 4, false, 3);
 
             Assert.Equal("m/44'/105'/4'/0/3", result);
         }

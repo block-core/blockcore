@@ -1,24 +1,24 @@
-﻿namespace Stratis.Bitcoin.Features.Wallet
+﻿namespace Stratis.Bitcoin.Tests.Common
 {
     /// <summary>
     /// The type of coin, as specified in BIP44.
     /// </summary>
     /// <remarks>For more, see https://github.com/satoshilabs/slips/blob/master/slip-0044.md</remarks>
-    public enum CoinType
+    public class KnownCoinTypes
     {
         /// <summary>
         /// Bitcoin
         /// </summary>
-        Bitcoin = 0,
+        public const int Bitcoin = 0;
 
         /// <summary>
         /// Testnet (all coins)
         /// </summary>
-        Testnet = 1,
+        public const int Testnet = 1;
 
         /// <summary>
         /// Stratis
         /// </summary>
-        Stratis = 105
+        public const int Stratis = 105;
     }
 }

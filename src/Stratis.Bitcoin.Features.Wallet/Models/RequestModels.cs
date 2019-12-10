@@ -119,6 +119,11 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
 
         [JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime CreationDate { get; set; }
+
+        /// <summary>
+        /// Optional CoinType to overwrite the default <see cref="NBitcoin.IConsensus.CoinType"/>.
+        /// </summary>
+        public int? CoinType { get; set; }
     }
 
     /// <summary>

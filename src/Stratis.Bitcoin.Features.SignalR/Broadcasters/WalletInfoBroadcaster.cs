@@ -54,7 +54,7 @@ namespace Stratis.Bitcoin.Features.SignalR.Broadcasters
 
                         var accountBalanceModel = new AccountBalanceModel
                         {
-                            CoinType = (CoinType) wallet.Network.Consensus.CoinType,
+                            CoinType =  wallet.Network.Consensus.CoinType,
                             Name = account.Name,
                             HdPath = account.HdPath,
                             AmountConfirmed = balance.AmountConfirmed,

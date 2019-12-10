@@ -170,7 +170,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         /// <returns>The cold staking account or <c>null</c> if the account does not exist.</returns>
         internal HdAccount GetColdStakingAccount(Wallet.Wallet wallet, bool isColdWalletAccount)
         {
-            var coinType = (CoinType)wallet.Network.Consensus.CoinType;
+            var coinType = wallet.Network.Consensus.CoinType;
             HdAccount account = wallet.GetAccount(isColdWalletAccount ? ColdWalletAccountName : HotWalletAccountName);
             if (account == null)
             {
@@ -243,9 +243,9 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         /// track addresses under the <see cref="ColdWalletAccountIndex"/> HD account.
         /// </summary>
         /// <inheritdoc />
-        public override Wallet.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase)
+        public override Wallet.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null)
         {
-            Wallet.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase);
+            Wallet.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, coinType);
 
             this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
             this.GetOrCreateColdStakingAccount(wallet.Name, true, password);

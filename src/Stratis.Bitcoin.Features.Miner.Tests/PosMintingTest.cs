@@ -275,7 +275,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             account.ExternalAddresses.Add(new HdAddress { Index = 2, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(18), Index = 0, Amount = 2 * Money.CENT } } });
             account.ExternalAddresses.Add(new HdAddress { Index = 3, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(19), Index = 0, Amount = 1 * Money.NANO } } });
             account.ExternalAddresses.Add(new HdAddress { Index = 4, Transactions = null });
-            wallet.AccountsRoot.Add(new AccountRoot() { Accounts = new[] { account }, CoinType = CoinType.Stratis });
+            wallet.AccountsRoot.Add(new AccountRoot() { Accounts = new[] { account }, CoinType = KnownCoinTypes.Stratis });
         }
 
         // the difficulty tests are ported from: https://github.com/bitcoin/bitcoin/blob/3e1ee310437f4c93113f6121425beffdc94702c2/src/test/blockchain_tests.cpp

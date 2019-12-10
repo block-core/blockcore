@@ -75,8 +75,9 @@ namespace Stratis.Bitcoin.Features.Wallet.Interfaces
         /// <param name="name">The name of the wallet.</param>
         /// <param name="passphrase">The passphrase used in the seed.</param>
         /// <param name="mnemonic">The user's mnemonic for the wallet.</param>
+        /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>A mnemonic defining the wallet's seed used to generate addresses.</returns>
-        Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null);
+        Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null, int? coinType = null);
 
         /// <summary>
         /// Signs a string message.
@@ -127,8 +128,9 @@ namespace Stratis.Bitcoin.Features.Wallet.Interfaces
         /// <param name="mnemonic">The user's mnemonic for the wallet.</param>
         /// <param name="passphrase">The passphrase used in the seed.</param>
         /// <param name="creationTime">The date and time this wallet was created.</param>
+        /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>The recovered wallet.</returns>
-        Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null);
+        Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null, int? coinType = null);
 
         /// <summary>
         /// Recovers a wallet using extended public key and account index.

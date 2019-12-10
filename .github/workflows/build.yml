@@ -54,10 +54,10 @@ jobs:
       run: |
         find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
         do
-	    if grep -c '<IsPackable>true</IsPackable>' $file > /dev/null 2>&1
-          then
+	      if grep -c '<IsPackable>true</IsPackable>' $file > /dev/null 2>&1
+            then
 			sed -i 's,<IsPackable>true</IsPackable>,<IsPackable>true</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>git://github.com/spartacrypt</RepositoryUrl>,g' $file
-	    fi
+	      fi
         done
       shell: bash
 

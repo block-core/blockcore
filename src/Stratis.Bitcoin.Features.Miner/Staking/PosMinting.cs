@@ -132,6 +132,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
 
         /// <summary>Factory for creating loggers.</summary>
         private readonly ILoggerFactory loggerFactory;
+        private readonly MinerSettings minerSettings;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -250,6 +251,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             this.walletManager = walletManager;
             this.timeSyncBehaviorState = timeSyncBehaviorState;
             this.loggerFactory = loggerFactory;
+            this.minerSettings = minerSettings;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.minerSleep = 500; // GetArg("-minersleep", 500);
@@ -440,6 +442,16 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
 
             List<UnspentOutputReference> stakableUtxos = this.walletManager
                 .GetSpendableTransactionsInWalletForStaking(walletSecret.WalletName, 1)
+                .Where(utxo =>
+                {
+                    if (this.minerSettings.EnforceStakingFlag)
+                    {
+                        if (utxo.Address.StakingEnabled == false)
+                            return false;
+                    }
+
+                    return true;
+                })
                 .Where(utxo => utxo.Transaction.Amount >= this.MinimumStakingCoinValue) // exclude dust from stake process
                 .ToList();
 

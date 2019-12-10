@@ -36,13 +36,13 @@ namespace Stratis.Bitcoin.Features.Miner.Tests.Controllers
             this.timeSyncBehaviorState = new Mock<ITimeSyncBehaviorState>();
             this.fullNode.Setup(i => i.Network).Returns(KnownNetworks.StratisTest);
 
-            this.controller = new StakingController(this.fullNode.Object, this.LoggerFactory.Object, this.walletManager.Object, this.posMinting.Object);
+            this.controller = new StakingController(this.fullNode.Object, this.LoggerFactory.Object, this.walletManager.Object, null, this.posMinting.Object);
         }
 
         [Fact]
         public void GetStakingInfo_WithoutPosMinting_ReturnsEmptyStakingInfoModel()
         {
-            this.controller = new StakingController(this.fullNode.Object, this.LoggerFactory.Object, this.walletManager.Object);
+            this.controller = new StakingController(this.fullNode.Object, this.LoggerFactory.Object, this.walletManager.Object, null);
 
             IActionResult response = this.controller.GetStakingInfo();
 
@@ -249,7 +249,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests.Controllers
                 fullNodeWithPowConsensus.Setup(f => f.NodeService<IWalletManager>(false))
                     .Returns(this.walletManager.Object);
 
-                this.controller = new StakingController(fullNodeWithPowConsensus.Object, this.LoggerFactory.Object, this.walletManager.Object);
+                this.controller = new StakingController(fullNodeWithPowConsensus.Object, this.LoggerFactory.Object, this.walletManager.Object, null);
 
                 IActionResult startStakingResult = this.controller.StartStaking(new StartStakingRequest() { Name = "myWallet", Password = "password1" });
 

@@ -32,15 +32,12 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
 
         /// <summary>The wallet manager.</summary>
         private readonly IWalletManager walletManager;
+        private readonly MinerSettings minerSettings;
 
         /// <summary>
         /// Initializes a new instance of the object.
         /// </summary>
-        /// <param name="fullNode">Full Node.</param>
-        /// <param name="loggerFactory">Factory to be used to create logger for the node.</param>
-        /// <param name="walletManager">The wallet manager.</param>
-        /// <param name="posMinting">PoS staker or null if PoS staking is not enabled.</param>
-        public StakingController(IFullNode fullNode, ILoggerFactory loggerFactory, IWalletManager walletManager, IPosMinting posMinting = null)
+        public StakingController(IFullNode fullNode, ILoggerFactory loggerFactory, IWalletManager walletManager, MinerSettings minerSettings, IPosMinting posMinting = null)
         {
             Guard.NotNull(fullNode, nameof(fullNode));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
@@ -49,6 +46,7 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
             this.fullNode = fullNode;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.walletManager = walletManager;
+            this.minerSettings = minerSettings;
             this.posMinting = posMinting;
         }
 
@@ -139,6 +137,41 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
 
                 this.fullNode.NodeFeature<MiningFeature>(true).StopStaking();
+                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Whitelist an address for staking, this only allowed if <see cref="MinerSettings.EnforceStakingFlag"/> is true.
+        /// </summary>
+        /// <returns>An <see cref="OkResult"/> object that produces a status code 200 HTTP response.</returns>
+        [Route("whitelist")]
+        [HttpPost]
+        public IActionResult Whitelist([FromBody] WhitelistRequest request)
+        {
+            try
+            {
+                if (!this.minerSettings.EnforceStakingFlag)
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.Forbidden, "Operation not allowed", "This operation is only allowed if EnforceStakingFlag is true");
+
+                Wallet.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
+
+                foreach (Wallet.HdAccount account in wallet.GetAccounts())
+                {
+                    foreach (Wallet.HdAddress address in account.GetCombinedAddresses())
+                    {
+                        if ((address.Address == request.Address) || address.Bech32Address == request.Address)
+                        {
+                            address.StakingEnabled = request.Whitelist;
+                        }
+                    }
+                }
+
                 return this.Ok();
             }
             catch (Exception e)

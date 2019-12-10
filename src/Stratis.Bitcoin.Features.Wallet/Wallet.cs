@@ -908,6 +908,12 @@ namespace Stratis.Bitcoin.Features.Wallet
         public ICollection<TransactionData> Transactions { get; set; }
 
         /// <summary>
+        /// Specify whether UTXOs associated with this address can stake. 
+        /// </summary>
+        [JsonProperty(PropertyName = "stakingEnabled")]
+        public bool? StakingEnabled { get; set; }
+
+        /// <summary>
         /// Determines whether this is a change address or a receive address.
         /// </summary>
         /// <returns>

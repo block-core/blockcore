@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Stratis.Bitcoin.Features.Miner.Models
 {
@@ -49,10 +51,15 @@ namespace Stratis.Bitcoin.Features.Miner.Models
     }
 
     /// <summary>
-    /// Model for the "generate" mining request.
+    /// Model for the staking request.
     /// </summary>
-    public class WhitelistRequest : RequestModel
+    public class StakingExpiryRequest : RequestModel
     {
+        public StakingExpiryRequest()
+        {
+            this.StakingExpiry = DateTime.UtcNow;
+        }
+
         /// <summary>
         /// Name of wallet.
         /// </summary>
@@ -66,9 +73,21 @@ namespace Stratis.Bitcoin.Features.Miner.Models
         public string Address { get; set; }
 
         /// <summary>
-        /// Wheather to enable or not.
+        /// Specify whether UTXOs associated with this address is within the allowed staing time, null will disable staking. 
         /// </summary>
-        [Required(ErrorMessage = "Wheather to enable or not.")]
-        public bool Whitelist { get; set; }
+        [JsonProperty(PropertyName = "stakingExpiry", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime? StakingExpiry { get; set; }
+    }
+
+    public class StakingNotExpiredRequest : RequestModel
+    {
+        /// <summary>
+        /// Name of wallet.
+        /// </summary>
+        [Required(ErrorMessage = "Name of wallet.")]
+        public string WalletName { get; set; }
+
+        public bool Segwit { get; set; }
     }
 }

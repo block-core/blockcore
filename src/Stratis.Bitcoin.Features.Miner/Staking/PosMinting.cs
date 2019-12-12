@@ -446,10 +446,10 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 {
                     if (this.minerSettings.EnforceStakingFlag)
                     {
-                        if (utxo.Address.StakingEnabled == null)
+                        if (utxo.Address.StakingExpiry == null)
                             return false;
 
-                        if (utxo.Address.StakingEnabled == false)
+                        if (utxo.Address.StakingExpiry > this.dateTimeProvider.GetUtcNow())
                             return false;
                     }
 

@@ -1593,14 +1593,28 @@ namespace NBitcoin
                 }
             }
 
-            Script scriptPubkey = coin.GetScriptCode(this.Network);
-            int scriptSigSize = -1;
-            foreach (BuilderExtension extension in this.Extensions)
+            Script scriptPubkey = null;
+            
+            try
             {
-                if (extension.CanEstimateScriptSigSize(this.Network, scriptPubkey))
+                scriptPubkey = coin.GetScriptCode(this.Network);
+            }
+            catch
+            {
+                // unable to evaluate scirpt.
+            }
+
+            int scriptSigSize = -1;
+
+            if (scriptPubkey != null)
+            {
+                foreach (BuilderExtension extension in this.Extensions)
                 {
-                    scriptSigSize = extension.EstimateScriptSigSize(this.Network, scriptPubkey);
-                    break;
+                    if (extension.CanEstimateScriptSigSize(this.Network, scriptPubkey))
+                    {
+                        scriptSigSize = extension.EstimateScriptSigSize(this.Network, scriptPubkey);
+                        break;
+                    }
                 }
             }
 

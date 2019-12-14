@@ -1,6 +1,4 @@
-| Windows | MacOs | Ubuntu64
-| :---- | :------ | :---- |
-| [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedWindowsContainer-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=4) | [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedmacOS-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=6) | [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedUbuntu1604-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=5)
+![](https://github.com/spartacrypt/blockcore/workflows/Build/badge.svg)   ![](https://github.com/spartacrypt/blockcore/workflows/Publish%20Packages/badge.svg)
 
 Stratis Bitcoin
 ===============

@@ -1,14 +1,14 @@
-name: .NET Core
+name: Build
 
 on: [push]
 
 jobs:
   
   buildAndTest:
-    
+
     strategy:
       matrix:
-        os: [ windows-latest ]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -16,9 +16,7 @@ jobs:
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
       BUILD_PLATFORM: 'Any CPU'
-      BUILD_CONFIGURATION: 'Debug'
-      NUGET_RELEASE_TYPE: 'alpha'
-      REPOSITORY_URL:  git://github.com/${{github.repository}}
+      BUILD_CONFIGURATION: 'Release'
 
     steps:
 
@@ -26,11 +24,6 @@ jobs:
       
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
-
-    - name: Generate build number
-      uses: einaregilsson/build-number@v2 
-      with:
-        token: ${{secrets.GITHUB_TOKEN}}   
                                     
     - name: Restore
       run: dotnet restore ${{env.SOLUTION_PATH}}
@@ -40,24 +33,3 @@ jobs:
       
     - name: Test
       run: dotnet test --no-build ${{env.SOLUTION_PATH}}
-      if: 'false'          
-        
-    - name: Setup NuGet.exe
-      uses: NuGet/setup-nuget@v1.0.2
-
-    - name: Update Directory.Build.props for Push
-      run: |
-        find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
-        do
-          sed -i 's,</IsPackable>,</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>{{env:REPOSITORY_URL}}</RepositoryUrl>,g' $file
-        done
-      shell: bash
-
-    - name: Nuget Pack
-      run: dotnet pack --no-build --include-source --include-symbols --version-suffix "${{env.NUGET_RELEASE_TYPE}}${{env.BUILD_NUMBER}}" --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH }}
-
-    - name: Nuget Add Source
-      run: nuget sources add -name "GPR" -Source "https://nuget.pkg.github.com/${{env.NUGET_USER}}/index.json" -Username "${{github.owner}}" -Password ${{secrets.GITHUB_TOKEN}} 
-
-    - name: Nuget Push
-      run: nuget push **/*.nupkg -Source "GPR" -SkipDuplicate      

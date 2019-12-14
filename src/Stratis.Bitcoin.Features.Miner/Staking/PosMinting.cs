@@ -449,7 +449,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                         if (utxo.Address.StakingExpiry == null)
                             return false;
 
-                        if (utxo.Address.StakingExpiry > this.dateTimeProvider.GetUtcNow())
+                        if (utxo.Address.StakingExpiry < this.dateTimeProvider.GetUtcNow())
                             return false;
                     }
 

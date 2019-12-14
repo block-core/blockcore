@@ -186,7 +186,7 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
 
         [Route("getStakingNotExpired")]
         [HttpGet]
-        public IActionResult GetStakingNotExpired([FromBody] StakingNotExpiredRequest request)
+        public IActionResult GetStakingNotExpired(StakingNotExpiredRequest request)
         {
             try
             {
@@ -204,7 +204,7 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
                 {
                     foreach (Wallet.HdAddress address in account.GetCombinedAddresses())
                     {
-                        if (address.StakingExpiry != null && address.StakingExpiry < DateTime.UtcNow)
+                        if (address.StakingExpiry != null && address.StakingExpiry > DateTime.UtcNow)
                         {
                             model.Addresses.Add(request.Segwit ? address.Bech32Address : address.Address);
                         }

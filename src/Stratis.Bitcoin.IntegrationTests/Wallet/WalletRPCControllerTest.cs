@@ -253,7 +253,6 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 resultSendingWallet.BlockIndex.Should().BeNull();
                 resultSendingWallet.BlockTime.Should().BeNull();
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
-                resultSendingWallet.TransactionTime.Should().Be(trx.Time);
                 resultSendingWallet.Details.Count.Should().Be(1);
 
                 GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Single();
@@ -364,7 +363,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 resultSendingWallet.BlockIndex.Should().Be(1);
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
-                resultSendingWallet.TransactionTime.Should().Be(trx.Time);
+                resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
                 resultSendingWallet.Details.Count.Should().Be(1);
 
                 GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Single();
@@ -476,7 +475,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 resultSendingWallet.BlockIndex.Should().Be(1);
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
-                resultSendingWallet.TransactionTime.Should().Be(trx.Time);
+                resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
                 resultSendingWallet.Details.Count.Should().Be(2);
 
                 GetTransactionDetailsModel detailsSendingWalletFirstRecipient = resultSendingWallet.Details.Single(d => d.Address == unusedaddresses.First());
@@ -598,7 +597,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 resultSendingWallet.BlockIndex.Should().Be(1);
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
-                resultSendingWallet.TransactionTime.Should().Be(trx.Time);
+                resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
                 resultSendingWallet.Details.Count.Should().Be(2);
 
                 GetTransactionDetailsModel detailsReceivingWallet = resultSendingWallet.Details.Single(d => d.Category == GetTransactionDetailsCategoryModel.Receive);
@@ -690,7 +689,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 resultSendingWallet.BlockIndex.Should().Be(1);
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeLessOrEqualTo(blockModelAtTip.Time);
-                resultSendingWallet.TransactionTime.Should().Be(trx.Time);
+                resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
                 resultSendingWallet.Details.Count.Should().Be(1);
 
                 GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Single();

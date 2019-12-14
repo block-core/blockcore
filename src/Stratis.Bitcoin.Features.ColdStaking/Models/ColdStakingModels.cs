@@ -246,6 +246,11 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Models
         /// </summary>
         public bool SegwitChangeAddress { get; set; }
 
+        /// <summary>
+        /// Use script outputs (P2SH and P2WSH) for cold staking
+        /// </summary>
+        public bool PayToScript { get; set; }
+
         /// <summary>Creates a string containing the properties of this object.</summary>
         /// <returns>A string containing the properties of the object.</returns>
         public override string ToString()

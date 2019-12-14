@@ -1153,7 +1153,7 @@ namespace NBitcoin
             }
         }
 
-        private uint nVersion = 1;
+        protected uint nVersion = 1;
 
         public uint Version
         {
@@ -1167,23 +1167,10 @@ namespace NBitcoin
             }
         }
 
-        private uint nTime = Utils.DateTimeToUnixTime(DateTime.UtcNow);
 
-        public uint Time
-        {
-            get
-            {
-                return this.nTime;
-            }
-            set
-            {
-                this.nTime = value;
-            }
-        }
-
-        private TxInList vin;
-        private TxOutList vout;
-        private LockTime nLockTime;
+        protected TxInList vin;
+        protected TxOutList vout;
+        protected LockTime nLockTime;
 
         public Transaction()
         {
@@ -1227,7 +1214,7 @@ namespace NBitcoin
         }
 
         //Since it is impossible to serialize a transaction with 0 input without problems during deserialization with wit activated, we fit a flag in the version to workaround it
-        private const uint NoDummyInput = (1 << 27);
+        protected const uint NoDummyInput = (1 << 27);
 
         #region IBitcoinSerializable Members
 
@@ -1240,10 +1227,6 @@ namespace NBitcoin
             if (!stream.Serializing)
             {
                 stream.ReadWrite(ref this.nVersion);
-
-                // the POS time stamp
-                if (this is PosTransaction)
-                    stream.ReadWrite(ref this.nTime);
 
                 /* Try to read the vin. In case the dummy is there, this will be read as an empty vector. */
                 stream.ReadWrite<TxInList, TxIn>(ref this.vin);
@@ -1293,10 +1276,6 @@ namespace NBitcoin
             {
                 uint version = (witSupported && (this.vin.Count == 0 && this.vout.Count > 0)) ? this.nVersion | NoDummyInput : this.nVersion;
                 stream.ReadWrite(ref version);
-
-                // the POS time stamp
-                if (this is PosTransaction)
-                    stream.ReadWrite(ref this.nTime);
 
                 if (witSupported)
                 {
@@ -1454,6 +1433,12 @@ namespace NBitcoin
             }
         }
 
+        /// <summary>
+        /// This flag is used to carry state between the script engine and the 
+        /// cold staking rule checks, it should not be used outside of that context.
+        /// </summary>
+        public bool IsColdCoinStake { get; set; }
+
         public virtual bool IsProtocolTransaction()
         {
             return this.IsCoinBase;
@@ -1481,12 +1466,12 @@ namespace NBitcoin
             return @in;
         }
 
-        internal static readonly int WITNESS_SCALE_FACTOR = 4;
         /// <summary>
         /// Size of the transaction discounting the witness (Used for fee calculation)
         /// </summary>
+        /// <param name="witnessScaleFactor">Witness scale factor from network settings (i.e. 4 for BTC).</param>
         /// <returns>Transaction size</returns>
-        public int GetVirtualSize()
+        public int GetVirtualSize(int witnessScaleFactor)
         {
             int totalSize = this.GetSerializedSize(TransactionOptions.Witness);
             int strippedSize = this.GetSerializedSize(TransactionOptions.None);
@@ -1494,8 +1479,8 @@ namespace NBitcoin
             // using only serialization with and without witness data. As witness_size
             // is equal to total_size - stripped_size, this formula is identical to:
             // weight = (stripped_size * 3) + total_size.
-            int weight = strippedSize * (WITNESS_SCALE_FACTOR - 1) + totalSize;
-            return (weight + WITNESS_SCALE_FACTOR - 1) / WITNESS_SCALE_FACTOR;
+            int weight = strippedSize * (witnessScaleFactor - 1) + totalSize;
+            return (weight + witnessScaleFactor - 1) / witnessScaleFactor;
         }
 
         public TxIn AddInput(Transaction prevTx, int outIndex)
@@ -1726,14 +1711,15 @@ namespace NBitcoin
         /// <summary>
         /// Calculate the fee rate of the transaction
         /// </summary>
+        /// <param name="witnessScaleFactor">Witness scale factor from network settings (i.e. 4 for BTC).</param>
         /// <param name="spentCoins">Coins being spent</param>
         /// <returns>Fee or null if some spent coins are missing or if spentCoins is null</returns>
-        public FeeRate GetFeeRate(ICoin[] spentCoins)
+        public FeeRate GetFeeRate(int witnessScaleFactor, ICoin[] spentCoins)
         {
             Money fee = GetFee(spentCoins);
             if(fee == null)
                 return null;
-            return new FeeRate(fee, GetVirtualSize());
+            return new FeeRate(fee, GetVirtualSize(witnessScaleFactor));
         }
 
         public bool IsFinal(ChainedHeader block)

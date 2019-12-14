@@ -58,15 +58,15 @@ namespace Stratis.Bitcoin.Features.Wallet
         {
             this.InitializeTransactionBuilder(context);
 
-            if (context.Shuffle)
-                context.TransactionBuilder.Shuffle();
-
-            const int maxRetries = 3;
+            const int maxRetries = 5;
             int retryCount = 0;
 
             TransactionPolicyError[] errors = null;
             while (retryCount <= maxRetries)
             {
+                if (context.Shuffle)
+                    context.TransactionBuilder.Shuffle();
+
                 Transaction transaction = context.TransactionBuilder.BuildTransaction(false);
                 if (context.Sign)
                 {
@@ -425,9 +425,11 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <param name="context">The context associated with the current transaction being built.</param>
         protected void AddOpReturnOutput(TransactionBuildContext context)
         {
-            if (string.IsNullOrEmpty(context.OpReturnData)) return;
-
-            byte[] bytes = Encoding.UTF8.GetBytes(context.OpReturnData);
+            if (string.IsNullOrEmpty(context.OpReturnData) && context.OpReturnRawData == null) 
+                return;
+            
+            byte[] bytes = context.OpReturnRawData ?? Encoding.UTF8.GetBytes(context.OpReturnData);
+          
             // TODO: Get the template from the network standard scripts instead
             Script opReturnScript = TxNullDataTemplate.Instance.GenerateScriptPubKey(bytes);
             context.TransactionBuilder.Send(opReturnScript, context.OpReturnAmount ?? Money.Zero);
@@ -536,6 +538,11 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// Optional data to be added as an extra OP_RETURN transaction output.
         /// </summary>
         public string OpReturnData { get; set; }
+
+        /// <summary>
+        /// The raw data to be added as an extra OP_RETURN transaction output, this will take precedence over <see cref="OpReturnData"/>.
+        /// </summary>
+        public byte[] OpReturnRawData { get; set; }
 
         /// <summary>
         /// Optional amount to add to the OP_RETURN transaction output.

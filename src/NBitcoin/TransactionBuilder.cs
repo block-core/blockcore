@@ -1162,7 +1162,8 @@ namespace NBitcoin
                 ctx.Transaction.LockTime = this._LockTime.Value;
 
             if (this._TimeStamp != null)
-                ctx.Transaction.Time = this._TimeStamp.Value;
+                if (ctx.Transaction is IPosTransactionWithTime posTx)
+                    posTx.Time = this._TimeStamp.Value;
 
             foreach (BuilderGroup group in this._BuilderGroups)
             {
@@ -1213,7 +1214,7 @@ namespace NBitcoin
             int witSize = 0;
             int baseSize = 0;
             EstimateScriptSigSize(c, ref witSize, ref baseSize);
-            var vSize = witSize / Transaction.WITNESS_SCALE_FACTOR + baseSize;
+            var vSize = witSize / this.Network.Consensus.Options.WitnessScaleFactor + baseSize;
 
             return c.Amount >= this.FilterUneconomicalCoinsRate.GetFee(vSize);
         }
@@ -1464,7 +1465,7 @@ namespace NBitcoin
         {
             if (tx == null)
                 throw new ArgumentNullException("tx");
-            return Verify(tx, expectedFeeRate == null ? null : expectedFeeRate.GetFee(tx), out errors);
+            return Verify(tx, expectedFeeRate == null ? null : expectedFeeRate.GetFee(tx, this.Network.Consensus.Options.WitnessScaleFactor), out errors);
         }
 
         /// <summary>
@@ -1475,7 +1476,7 @@ namespace NBitcoin
         /// <returns>Detected errors</returns>
         public TransactionPolicyError[] Check(Transaction tx, FeeRate expectedFeeRate)
         {
-            return Check(tx, expectedFeeRate == null ? null : expectedFeeRate.GetFee(tx));
+            return Check(tx, expectedFeeRate == null ? null : expectedFeeRate.GetFee(tx, this.Network.Consensus.Options.WitnessScaleFactor));
         }
 
         /// <summary>
@@ -1565,7 +1566,7 @@ namespace NBitcoin
                 baseSize += 41;
             }
 
-            return (virtualSize ? witSize / Transaction.WITNESS_SCALE_FACTOR + baseSize : witSize + baseSize);
+            return (virtualSize ? witSize / this.Network.Consensus.Options.WitnessScaleFactor + baseSize : witSize + baseSize);
         }
 
         private void EstimateScriptSigSize(ICoin coin, ref int witSize, ref int baseSize)
@@ -1592,14 +1593,28 @@ namespace NBitcoin
                 }
             }
 
-            Script scriptPubkey = coin.GetScriptCode(this.Network);
-            int scriptSigSize = -1;
-            foreach (BuilderExtension extension in this.Extensions)
+            Script scriptPubkey = null;
+            
+            try
             {
-                if (extension.CanEstimateScriptSigSize(this.Network, scriptPubkey))
+                scriptPubkey = coin.GetScriptCode(this.Network);
+            }
+            catch
+            {
+                // unable to evaluate scirpt.
+            }
+
+            int scriptSigSize = -1;
+
+            if (scriptPubkey != null)
+            {
+                foreach (BuilderExtension extension in this.Extensions)
                 {
-                    scriptSigSize = extension.EstimateScriptSigSize(this.Network, scriptPubkey);
-                    break;
+                    if (extension.CanEstimateScriptSigSize(this.Network, scriptPubkey))
+                    {
+                        scriptSigSize = extension.EstimateScriptSigSize(this.Network, scriptPubkey);
+                        break;
+                    }
                 }
             }
 

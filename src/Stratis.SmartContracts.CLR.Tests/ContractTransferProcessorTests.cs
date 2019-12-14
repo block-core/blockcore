@@ -164,7 +164,8 @@ namespace Stratis.SmartContracts.CLR.Tests
             // Condensing tx generated. 1 input from tx and 2 outputs - 1 for each contract and receiver
             Transaction internalTransaction = this.transferProcessor.Process(stateMock.Object, contractAddress, txContextMock.Object, transferInfos, false);
             Assert.NotNull(internalTransaction);
-            Assert.Equal(txContextMock.Object.Time, internalTransaction.Time);
+            if (internalTransaction is IPosTransactionWithTime posTx)
+                Assert.Equal(txContextMock.Object.Time, posTx.Time);
             Assert.Single(internalTransaction.Inputs);
             Assert.Equal(2, internalTransaction.Outputs.Count);
             Assert.Equal(txContextMock.Object.TransactionHash, internalTransaction.Inputs[0].PrevOut.Hash);
@@ -242,7 +243,8 @@ namespace Stratis.SmartContracts.CLR.Tests
             // Condensing tx generated. 2 inputs. Current tx and stored spendable output. 1 output. 
             Transaction internalTransaction = this.transferProcessor.Process(stateMock.Object, contractAddress, txContextMock.Object, transferInfos, false);
             Assert.NotNull(internalTransaction);
-            Assert.Equal(txContextMock.Object.Time, internalTransaction.Time);
+            if (internalTransaction is IPosTransactionWithTime posTx)
+                Assert.Equal(txContextMock.Object.Time, posTx.Time);
             Assert.Equal(2, internalTransaction.Inputs.Count);
             Assert.Single(internalTransaction.Outputs);
             Assert.Equal(txContextMock.Object.TransactionHash, internalTransaction.Inputs[0].PrevOut.Hash);
@@ -292,7 +294,8 @@ namespace Stratis.SmartContracts.CLR.Tests
             // Condensing tx generated. 1 input. 2 outputs for each receiver and contract.
             Transaction internalTransaction = this.transferProcessor.Process(stateMock.Object, contractAddress, txContextMock.Object, transferInfos, false);
             Assert.NotNull(internalTransaction);
-            Assert.Equal(txContextMock.Object.Time, internalTransaction.Time);
+            if (internalTransaction is IPosTransactionWithTime posTx)
+                Assert.Equal(txContextMock.Object.Time, posTx.Time);
             Assert.Single(internalTransaction.Inputs);
             Assert.Equal(2, internalTransaction.Outputs.Count);
             Assert.Equal(new uint256(1), internalTransaction.Inputs[0].PrevOut.Hash);
@@ -345,7 +348,8 @@ namespace Stratis.SmartContracts.CLR.Tests
             // Condensing tx generated. 2 inputs from currently stored utxo and current tx. 2 outputs for each receiver and contract.
             Transaction internalTransaction = this.transferProcessor.Process(stateMock.Object, contractAddress, txContextMock.Object, transferInfos, false);
             Assert.NotNull(internalTransaction);
-            Assert.Equal(txContextMock.Object.Time, internalTransaction.Time);
+            if (internalTransaction is IPosTransactionWithTime posTx)
+                Assert.Equal(txContextMock.Object.Time, posTx.Time);
             Assert.Equal(2, internalTransaction.Inputs.Count);
             Assert.Equal(2, internalTransaction.Outputs.Count);
             Assert.Equal(new uint256(123), internalTransaction.Inputs[0].PrevOut.Hash);
@@ -425,7 +429,8 @@ namespace Stratis.SmartContracts.CLR.Tests
             // Condensing tx generated. 1 input. 3 outputs with consolidated balances.
             Transaction internalTransaction = this.transferProcessor.Process(stateMock.Object, contractAddress, txContextMock.Object, transferInfos, false);
             Assert.NotNull(internalTransaction);
-            Assert.Equal(txContextMock.Object.Time, internalTransaction.Time);
+            if (internalTransaction is IPosTransactionWithTime posTx)
+                Assert.Equal(txContextMock.Object.Time, posTx.Time);
             Assert.Single(internalTransaction.Inputs);
             Assert.Equal(3, internalTransaction.Outputs.Count);
             Assert.Equal(new uint256(1), internalTransaction.Inputs[0].PrevOut.Hash);
@@ -463,7 +468,8 @@ namespace Stratis.SmartContracts.CLR.Tests
             string outputAddress = PayToPubkeyHashTemplate.Instance.ExtractScriptPubKeyParameters(refundTransaction.Outputs[0].ScriptPubKey).GetAddress(this.network).ToString();
 
             Assert.Equal(txContextMock.Object.Sender.ToBase58Address(this.network), outputAddress);
-            Assert.Equal(txContextMock.Object.Time, refundTransaction.Time);
+            if (refundTransaction is IPosTransactionWithTime posTx)
+                Assert.Equal(txContextMock.Object.Time, posTx.Time);
         }
 
         [Fact]

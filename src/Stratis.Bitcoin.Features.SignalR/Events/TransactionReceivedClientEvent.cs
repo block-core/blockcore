@@ -23,7 +23,7 @@ namespace Stratis.Bitcoin.Features.SignalR.Events
                 this.TxHash = transactionReceived.ReceivedTransaction.GetHash().ToString();
                 this.IsCoinbase = transactionReceived.ReceivedTransaction.IsCoinBase;
                 this.IsCoinstake = transactionReceived.ReceivedTransaction.IsCoinStake;
-                this.Time = transactionReceived.ReceivedTransaction.Time;
+               // this.Time = transactionReceived.ReceivedTransaction.Time;
                 return;
             }
 

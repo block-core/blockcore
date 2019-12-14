@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -118,6 +119,11 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
 
         [JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime CreationDate { get; set; }
+
+        /// <summary>
+        /// Optional CoinType to overwrite the default <see cref="NBitcoin.IConsensus.CoinType"/>.
+        /// </summary>
+        public int? CoinType { get; set; }
     }
 
     /// <summary>
@@ -278,7 +284,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
 
     public class WalletName : RequestModel
     {
-        
+
         [Required(ErrorMessage = "The name of the wallet is missing.")]
         public string Name { get; set; }
     }
@@ -390,7 +396,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
         [MoneyFormat(ErrorMessage = "The amount is not in the correct format.")]
         public string Amount { get; set; }
     }
- 
+
     /// <summary>
     /// A class containing the necessary parameters for a build transaction request.
     /// </summary>
@@ -401,7 +407,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
         /// </summary>
         [MoneyFormat(isRequired: false, ErrorMessage = "The fee is not in the correct format.")]
         public string FeeAmount { get; set; }
-                
+
         /// <summary>
         /// The password for the wallet containing the funds for the transaction.
         /// </summary>
@@ -439,12 +445,12 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
     /// </summary>
     public class SendTransactionRequest : RequestModel
     {
-        
+
         public SendTransactionRequest()
         {
         }
 
-        
+
         public SendTransactionRequest(string transactionHex)
         {
             this.Hex = transactionHex;
@@ -510,7 +516,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
             }
 
             // Check that only one of the filters is set.
-            if ((this.DeleteAll && this.TransactionsIds != null) 
+            if ((this.DeleteAll && this.TransactionsIds != null)
                 || (this.DeleteAll && this.FromDate != default(DateTime))
                 || (this.TransactionsIds != null && this.FromDate != default(DateTime)))
             {
@@ -786,6 +792,65 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
 
         [Required]
         public int UtxosCount { get; set; }
+    }
+
+    public sealed class DistributeUtxosRequest : RequestModel, IValidatableObject
+    {
+        public DistributeUtxosRequest()
+        {
+            this.AccountName = WalletManager.DefaultAccount;
+        }
+
+        [Required(ErrorMessage = "The name of the wallet is missing.")]
+        public string WalletName { get; set; }
+
+        public string AccountName { get; set; }
+
+        [Required(ErrorMessage = "A password is required.")]
+        public string WalletPassword { get; set; }
+
+        [DefaultValue(false)]
+        public bool UseUniqueAddressPerUtxo { get; set; }
+
+        [DefaultValue(true)]
+        public bool ReuseAddresses { get; set; }
+
+        [DefaultValue(false)]
+        public bool UseChangeAddresses { get; set; }
+
+        [Required]
+        public int UtxosCount { get; set; }
+
+        [Required]
+        public int UtxoPerTransaction { get; set; }
+
+        [DefaultValue(0)]
+        public int TimestampDifferenceBetweenTransactions { get; set; }
+
+        /// <summary>
+        /// The minimum number of confirmations a transaction needs to have to be included.
+        /// To include unconfirmed transactions, set this value to 0.
+        /// </summary>
+        [DefaultValue(1)]
+        public int MinConfirmations { get; set; }
+
+        /// <summary>
+        /// A list of outpoints to use as inputs for the transaction.
+        /// </summary> 
+        public List<OutpointRequest> Outpoints { get; set; }
+
+        [Required]
+        public bool DryRun { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (this.UtxoPerTransaction > this.UtxosCount)
+            {
+                yield return new ValidationResult(
+                    $"The number of UTXOs per transaction ('{nameof(this.UtxoPerTransaction)}') has to be equal or smaller than total number of UTXOs ('{nameof(this.UtxosCount)}')",
+                    new[] { $"{nameof(this.UtxoPerTransaction)}", $"{nameof(this.UtxosCount)}" });
+            }
+        }
     }
 
     /// <summary>

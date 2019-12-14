@@ -1237,14 +1237,14 @@ namespace NBitcoin.Tests
         {
             Action<Transaction, TransactionBuilder> AssertEstimatedSize = (tx, b) =>
             {
-                int expectedVSize = tx.GetVirtualSize();
+                int expectedVSize = tx.GetVirtualSize(KnownNetworks.StratisMain.Consensus.Options.WitnessScaleFactor);
                 int actualVSize = b.EstimateSize(tx, true);
                 int expectedSize = tx.GetSerializedSize();
                 int actualSize = b.EstimateSize(tx, false);
-                Assert.True(Math.Abs(expectedVSize - actualVSize) < Math.Abs(expectedVSize - actualSize));
-                Assert.True(Math.Abs(expectedSize - actualSize) < Math.Abs(expectedSize - actualVSize));
-                Assert.True(Math.Abs(expectedVSize - actualVSize) < Math.Abs(expectedSize - actualVSize));
-                Assert.True(Math.Abs(expectedSize - actualSize) < Math.Abs(expectedVSize - actualSize));
+                Assert.True(Math.Abs(expectedVSize - actualVSize) <= Math.Abs(expectedVSize - actualSize));
+                Assert.True(Math.Abs(expectedSize - actualSize) <= Math.Abs(expectedSize - actualVSize));
+                Assert.True(Math.Abs(expectedVSize - actualVSize) <= Math.Abs(expectedSize - actualVSize));
+                Assert.True(Math.Abs(expectedSize - actualSize) <= Math.Abs(expectedVSize - actualSize));
 
                 decimal error = (decimal)Math.Abs(expectedVSize - actualVSize) / Math.Min(expectedVSize, actualSize);
                 Assert.True(error < 0.01m);
@@ -2700,7 +2700,8 @@ namespace NBitcoin.Tests
         {
             Transaction outputm = this.stratisMain.CreateTransaction();
             outputm.Version = 1;
-            outputm.Time = Utils.DateTimeToUnixTime(posTimeStamp);
+            if(outputm is IPosTransactionWithTime posTrx)
+                posTrx.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             outputm.Inputs.Add(new TxIn());
             outputm.Inputs[0].PrevOut = new OutPoint();
             outputm.Inputs[0].ScriptSig = Script.Empty;
@@ -2719,7 +2720,8 @@ namespace NBitcoin.Tests
 
             Transaction inputm = this.stratisMain.CreateTransaction();
             inputm.Version = 1;
-            outputm.Time = Utils.DateTimeToUnixTime(posTimeStamp);
+            if (outputm is IPosTransactionWithTime posTrx1)
+                posTrx1.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             inputm.Inputs.Add(new TxIn());
             inputm.Inputs[0].PrevOut.Hash = output.GetHash();
             inputm.Inputs[0].PrevOut.N = 0;

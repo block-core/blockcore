@@ -44,7 +44,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             }
 
             // Check coinbase timestamp.
-            uint coinbaseTime = context.ValidationContext.BlockToValidate.Transactions[0].Time;
+            uint coinbaseTime = chainedHeader.Header.Time;
             if (chainedHeader.Header.Time > coinbaseTime + this.FutureDriftRule.GetFutureDrift(coinbaseTime))
             {
                 this.Logger.LogTrace("(-)[TIME_TOO_NEW]");
@@ -52,11 +52,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             }
 
             // Check coinstake timestamp.
-            if (posRuleContext.BlockStake.IsProofOfStake()
-                && !this.CheckCoinStakeTimestamp(chainedHeader.Header.Time, context.ValidationContext.BlockToValidate.Transactions[1].Time))
+            if (posRuleContext.BlockStake.IsProofOfStake())
             {
-                this.Logger.LogTrace("(-)[BAD_TIME]");
-                ConsensusErrors.StakeTimeViolation.Throw();
+                if (!this.CheckCoinStakeTimestamp(chainedHeader.Header.Time))
+                {
+                    this.Logger.LogTrace("(-)[BAD_TIME]");
+                    ConsensusErrors.StakeTimeViolation.Throw();
+                }
             }
 
             return Task.CompletedTask;
@@ -66,11 +68,10 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
         /// Checks whether the coinstake timestamp meets protocol.
         /// </summary>
         /// <param name="blockTime">The block time.</param>
-        /// <param name="transactionTime">Transaction UNIX timestamp.</param>
         /// <returns><c>true</c> if block timestamp is equal to transaction timestamp, <c>false</c> otherwise.</returns>
-        private bool CheckCoinStakeTimestamp(long blockTime, long transactionTime)
+        private bool CheckCoinStakeTimestamp(long blockTime)
         {
-            return (blockTime == transactionTime) && ((transactionTime & PosConsensusOptions.StakeTimestampMask) == 0);
+            return (blockTime & PosConsensusOptions.StakeTimestampMask) == 0;
         }
     }
 }

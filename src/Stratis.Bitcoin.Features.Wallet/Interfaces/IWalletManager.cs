@@ -44,6 +44,13 @@ namespace Stratis.Bitcoin.Features.Wallet.Interfaces
         IEnumerable<UnspentOutputReference> GetSpendableTransactionsInWalletForStaking(string walletName, int confirmations = 0);
 
         /// <summary>
+        /// List all unspent transactions contained in a given wallet.
+        /// This is distinct from the list of spendable transactions. A transaction can be unspent but not yet spendable due to coinbase/stake maturity, for example.
+        /// </summary>
+        /// <returns>A collection of unspent outputs</returns>
+        IEnumerable<UnspentOutputReference> GetUnspentTransactionsInWallet(string walletName, int confirmations, Func<HdAccount, bool> accountFilter);
+
+        /// <summary>
         /// Helps identify UTXO's that can participate in staking.
         /// </summary>
         /// <returns>A dictionary containing string and template pairs - e.g. { "P2PK", PayToPubkeyTemplate.Instance }</returns>
@@ -68,8 +75,9 @@ namespace Stratis.Bitcoin.Features.Wallet.Interfaces
         /// <param name="name">The name of the wallet.</param>
         /// <param name="passphrase">The passphrase used in the seed.</param>
         /// <param name="mnemonic">The user's mnemonic for the wallet.</param>
+        /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>A mnemonic defining the wallet's seed used to generate addresses.</returns>
-        Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null);
+        Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null, int? coinType = null);
 
         /// <summary>
         /// Signs a string message.
@@ -120,8 +128,9 @@ namespace Stratis.Bitcoin.Features.Wallet.Interfaces
         /// <param name="mnemonic">The user's mnemonic for the wallet.</param>
         /// <param name="passphrase">The passphrase used in the seed.</param>
         /// <param name="creationTime">The date and time this wallet was created.</param>
+        /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>The recovered wallet.</returns>
-        Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null);
+        Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null, int? coinType = null);
 
         /// <summary>
         /// Recovers a wallet using extended public key and account index.

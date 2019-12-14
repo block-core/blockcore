@@ -32,7 +32,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
         public string HdPath { get; set; }
 
         [JsonProperty(PropertyName = "coinType")]
-        public CoinType CoinType { get; set; }
+        public int CoinType { get; set; }
 
         [JsonProperty(PropertyName = "transactionsHistory")]
         public ICollection<TransactionItemModel> TransactionsHistory { get; set; }

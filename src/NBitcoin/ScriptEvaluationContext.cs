@@ -859,15 +859,21 @@ namespace NBitcoin
                                             break;
                                         }
 
-                                        // This opcode should not be used outside coinstake transactions.
-                                        if (!(checker.Transaction is PosTransaction posTran) || !posTran.IsCoinStake)
+                                        if (!this.Network.Consensus.IsProofOfStake)
                                         {
                                             return SetError(ScriptError.CheckColdStakeVerify);
                                         }
 
+                                        // This opcode should not be used outside coinstake transactions.
+                                        if (!checker.Transaction.IsCoinStake)
+                                        {
+                                            return SetError(ScriptError.CheckColdStakeVerify);
+                                        }
+
+
                                         // Set a flag to perform further checks if the spend is using a hot wallet key.
                                         // The fact that this opcode is executing implies that this is such a spend.
-                                        posTran.IsColdCoinStake = true;
+                                        checker.Transaction.IsColdCoinStake = true;
 
                                         // If the above-mentioned checks pass, the instruction does nothing.                                        
                                         break;

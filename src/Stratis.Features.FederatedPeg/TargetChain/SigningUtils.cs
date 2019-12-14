@@ -56,10 +56,12 @@ namespace Stratis.Features.FederatedPeg.TargetChain
         {
             if (network.Consensus.IsProofOfStake)
             {
-                if (partialTransaction1.Time != partialTransaction2.Time)
-                {
+                // As a proof of stake network will be using a PosConsensusFactory, this should never happen, but it is checked for safety.
+                if (!(partialTransaction1 is IPosTransactionWithTime tx1) || !(partialTransaction2 is IPosTransactionWithTime tx2))
                     return false;
-                }
+
+                if (tx1.Time != tx2.Time)
+                    return false;
             }
 
             if ((partialTransaction1.Inputs.Count != partialTransaction2.Inputs.Count) ||

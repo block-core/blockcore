@@ -64,9 +64,7 @@ namespace NBitcoin
         public uint256 MinimumChainWork { get; }
 
         public int MinerConfirmationWindow { get; set; }
-
-        public int RuleChangeActivationThreshold { get; set; }
-
+        
         /// <inheritdoc />
         public int CoinType { get; }
 
@@ -107,7 +105,6 @@ namespace NBitcoin
             BuriedDeploymentsArray buriedDeployments,
             IBIP9DeploymentsArray bip9Deployments,
             uint256 bip34Hash,
-            int ruleChangeActivationThreshold,
             int minerConfirmationWindow,
             uint maxReorgLength,
             uint256 defaultAssumeValid,
@@ -153,7 +150,6 @@ namespace NBitcoin
             this.HashGenesisBlock = hashGenesisBlock;
             this.MinimumChainWork = minimumChainWork;
             this.MinerConfirmationWindow = minerConfirmationWindow;
-            this.RuleChangeActivationThreshold = ruleChangeActivationThreshold;
             this.CoinType = coinType;
             this.ProofOfStakeLimit = proofOfStakeLimit;
             this.ProofOfStakeLimitV2 = proofOfStakeLimitV2;

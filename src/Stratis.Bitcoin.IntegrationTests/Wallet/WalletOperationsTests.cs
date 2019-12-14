@@ -15,6 +15,7 @@ using Stratis.Bitcoin.Features.Wallet;
 using Stratis.Bitcoin.Features.Wallet.Models;
 using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Stratis.Bitcoin.Networks;
+using Stratis.Bitcoin.Tests.Common;
 using Stratis.Bitcoin.Utilities.JsonErrors;
 using Xunit;
 
@@ -179,7 +180,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             account.InternalAddresses.Count().Should().Be(20);
             account.Index.Should().Be(0);
             account.ExtendedPubKey.Should().NotBeNullOrEmpty();
-            account.GetCoinType().Should().Be(CoinType.Stratis);
+            account.GetCoinType().Should().Be(KnownCoinTypes.Stratis);
             account.HdPath.Should().Be("m/44'/105'/0'");
         }
 
@@ -230,7 +231,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             account.InternalAddresses.Count().Should().Be(20);
             account.Index.Should().Be(0);
             account.ExtendedPubKey.Should().NotBeNullOrEmpty();
-            account.GetCoinType().Should().Be(CoinType.Stratis);
+            account.GetCoinType().Should().Be(KnownCoinTypes.Stratis);
             account.HdPath.Should().Be("m/44'/105'/0'");
         }
 
@@ -285,7 +286,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             account.InternalAddresses.Count().Should().Be(20);
             account.Index.Should().Be(0);
             account.ExtendedPubKey.Should().NotBeNullOrEmpty();
-            account.GetCoinType().Should().Be(CoinType.Stratis);
+            account.GetCoinType().Should().Be(KnownCoinTypes.Stratis);
             account.HdPath.Should().Be("m/44'/105'/0'");
         }
 
@@ -336,7 +337,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             account.InternalAddresses.Count().Should().Be(20);
             account.Index.Should().Be(0);
             account.ExtendedPubKey.Should().NotBeNullOrEmpty();
-            account.GetCoinType().Should().Be(CoinType.Stratis);
+            account.GetCoinType().Should().Be(KnownCoinTypes.Stratis);
             account.HdPath.Should().Be("m/44'/105'/0'");
         }
 
@@ -384,7 +385,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             account.InternalAddresses.Count().Should().Be(20);
             account.Index.Should().Be(0);
             account.ExtendedPubKey.Should().NotBeNullOrEmpty();
-            account.GetCoinType().Should().Be(CoinType.Stratis);
+            account.GetCoinType().Should().Be(KnownCoinTypes.Stratis);
             account.HdPath.Should().Be("m/44'/105'/0'");
         }
 
@@ -782,7 +783,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             account.InternalAddresses.Count().Should().Be(20);
             account.Index.Should().Be(0);
             account.ExtendedPubKey.Should().NotBeNullOrEmpty();
-            account.GetCoinType().Should().Be(CoinType.Stratis);
+            account.GetCoinType().Should().Be(KnownCoinTypes.Stratis);
             account.HdPath.Should().Be("m/44'/105'/0'");
         }
 
@@ -827,7 +828,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             account.InternalAddresses.Count().Should().Be(20);
             account.Index.Should().Be(0);
             account.ExtendedPubKey.Should().NotBeNullOrEmpty();
-            account.GetCoinType().Should().Be(CoinType.Stratis);
+            account.GetCoinType().Should().Be(KnownCoinTypes.Stratis);
             account.HdPath.Should().Be("m/44'/105'/0'");
         }
 
@@ -895,7 +896,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
             var accountBalance = response.AccountsBalances.Single();
             accountBalance.HdPath.Should().Be("m/44'/105'/0'");
             accountBalance.Name.Should().Be("account 0");
-            accountBalance.CoinType.Should().Be(CoinType.Stratis);
+            accountBalance.CoinType.Should().Be(KnownCoinTypes.Stratis);
             accountBalance.AmountConfirmed.Should().Be(new Money(142190299995400));
             accountBalance.AmountUnconfirmed.Should().Be(new Money(100000000000));
         }
@@ -958,7 +959,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 .GetJsonAsync<AddressBalanceModel>();
 
             addressBalance.Address.Should().Be(address);
-            addressBalance.CoinType.Should().Be(CoinType.Stratis);
+            addressBalance.CoinType.Should().Be(KnownCoinTypes.Stratis);
             addressBalance.AmountConfirmed.Should().Be(new Money(10150100000000));
             addressBalance.AmountUnconfirmed.Should().Be(Money.Zero);
 

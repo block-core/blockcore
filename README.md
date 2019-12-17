@@ -1,4 +1,4 @@
-![](https://github.com/spartacrypt/blockcore/workflows/Build/badge.svg)   ![](https://github.com/spartacrypt/blockcore/workflows/Publish%20Packages/badge.svg)
+[![Actions Status](https://github.com/spartacrypt/blockcore/workflows/Build/badge.svg)](https://github.com/spartacrypt/blockcore/actions)   [![Actions Status](https://github.com/spartacrypt/blockcore/workflows/Publish%20Packages/badge.svg)](https://github.com/spartacrypt/blockcore/actions)
 
 Blockcore
 ===============

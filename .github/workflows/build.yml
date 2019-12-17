@@ -1,6 +1,11 @@
 name: Build
 
-on: [push]
+on: 
+  push:
+    
+  pull_request:
+    branches:
+      - master
 
 jobs:
   
@@ -15,7 +20,6 @@ jobs:
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
-      BUILD_PLATFORM: 'Any CPU'
       BUILD_CONFIGURATION: 'Release'
 
     steps:
@@ -24,12 +28,19 @@ jobs:
       
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.2.402' 
                                     
     - name: Restore
       run: dotnet restore ${{env.SOLUTION_PATH}}
       
     - name: Build
-      run: dotnet build --no-restore --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      run: dotnet build --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
       
-    - name: Test
-      run: dotnet test --no-build ${{env.SOLUTION_PATH}}
+    - name: Unit Test
+      run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+
+    - name: Integration Test
+      run: dotnet test -v=normal --no-build --filter FullyQualifiedName~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      if: github.event_name == 'pull_request'
+

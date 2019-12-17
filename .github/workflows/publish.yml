@@ -13,7 +13,6 @@ jobs:
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
-      BUILD_PLATFORM: 'Any CPU'
       BUILD_CONFIGURATION: 'Debug'
       NUGET_RELEASE_TYPE: 'alpha'
 

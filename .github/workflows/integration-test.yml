@@ -6,7 +6,7 @@ on:
 
 jobs:
   
-  buildAndTest:
+  integrationTest:
 
     strategy:
       matrix:

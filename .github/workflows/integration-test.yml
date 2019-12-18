@@ -1,7 +1,7 @@
-name: Build
+name: Integration Test
 
 on: 
-  push:    
+  push:
   pull_request:
 
 jobs:
@@ -33,6 +33,6 @@ jobs:
       
     - name: Build
       run: dotnet build --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
-      
-    - name: Unit Test
-      run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+
+    - name: Integration Test
+      run: dotnet test -v=normal --no-build --filter FullyQualifiedName~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

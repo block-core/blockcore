@@ -164,7 +164,7 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
 
                 Wallet.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
 
-                foreach (Wallet.HdAccount account in wallet.GetAccounts())
+                foreach (Wallet.HdAccount account in wallet.GetAccounts(account => true))
                 {
                     foreach (Wallet.HdAddress address in account.GetCombinedAddresses())
                     {
@@ -200,7 +200,7 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
 
                 GetStakingAddressesModel model = new GetStakingAddressesModel { Addresses = new List<string>() };
 
-                foreach (Wallet.HdAccount account in wallet.GetAccounts())
+                foreach (Wallet.HdAccount account in wallet.GetAccounts(account => true))
                 {
                     foreach (Wallet.HdAddress address in account.GetCombinedAddresses())
                     {

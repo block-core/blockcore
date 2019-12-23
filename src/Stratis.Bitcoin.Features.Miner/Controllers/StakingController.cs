@@ -198,7 +198,7 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
 
                 Wallet.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
 
-                GetStakingAddressesModel model = new GetStakingAddressesModel { Addresses = new List<string>() };
+                GetStakingAddressesModel model = new GetStakingAddressesModel { Addresses = new List<GetStakingAddressesModelItem>() };
 
                 foreach (Wallet.HdAccount account in wallet.GetAccounts(account => true))
                 {
@@ -206,7 +206,11 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
                     {
                         if (address.StakingExpiry != null && address.StakingExpiry > DateTime.UtcNow)
                         {
-                            model.Addresses.Add(request.Segwit ? address.Bech32Address : address.Address);
+                            model.Addresses.Add(new GetStakingAddressesModelItem
+                            {
+                                Addresses = request.Segwit ? address.Bech32Address : address.Address,
+                                Expiry = address.StakingExpiry
+                            });
                         }
                     }
                 }

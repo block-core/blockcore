@@ -291,7 +291,8 @@ namespace Stratis.Bitcoin.Consensus
                     return connectNewHeadersResult;
                 }
 
-                this.chainState.IsAtBestChainTip = this.IsConsensusConsideredToBeSyncedLocked();
+                this.chainState.IsAtBestChainTip = this.IsConsensusConsideredToBeSyncedLocked(out ChainedHeader bestPeerTip);
+                this.chainState.BestPeerTip = bestPeerTip;
 
                 this.blockPuller.NewPeerTipClaimed(peer, connectNewHeadersResult.Consumed);
             }
@@ -912,7 +913,8 @@ namespace Stratis.Bitcoin.Consensus
             {
                 this.chainedHeaderTree.FullValidationSucceeded(blockToConnect.ChainedHeader);
 
-                this.chainState.IsAtBestChainTip = this.IsConsensusConsideredToBeSyncedLocked();
+                this.chainState.IsAtBestChainTip = this.IsConsensusConsideredToBeSyncedLocked(out ChainedHeader bestPeerTip);
+                this.chainState.BestPeerTip = bestPeerTip;
             }
 
             var result = new ConnectBlocksResult(true) { ConsensusTipChanged = true };
@@ -1368,9 +1370,9 @@ namespace Stratis.Bitcoin.Consensus
         /// blocks from the best tip's height.
         /// </summary>
         /// <remarks>Should be locked by <see cref="peerLock"/>.</remarks>
-        private bool IsConsensusConsideredToBeSyncedLocked()
+        private bool IsConsensusConsideredToBeSyncedLocked(out ChainedHeader bestTip)
         {
-            ChainedHeader bestTip = this.chainedHeaderTree.GetBestPeerTip();
+            bestTip = this.chainedHeaderTree.GetBestPeerTip();
 
             if (bestTip == null)
             {

@@ -908,7 +908,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         public ICollection<TransactionData> Transactions { get; set; }
 
         /// <summary>
-        /// Specify whether UTXOs associated with this address is within the allowed staing time. 
+        /// Specify whether UTXOs associated with this address is within the allowed staking time.
         /// </summary>
         [JsonProperty(PropertyName = "stakingExpiry", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? StakingExpiry { get; set; }

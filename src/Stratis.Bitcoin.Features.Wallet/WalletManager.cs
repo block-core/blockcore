@@ -1245,7 +1245,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                 foreach (TxOut paidToOutput in paidToOutputs)
                 {
                     // Figure out how to retrieve the destination address.
-                    string destinationAddress = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, paidToOutput.ScriptPubKey);
+                    string destinationAddress = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, paidToOutput.ScriptPubKey).ToString();
                     if (string.IsNullOrEmpty(destinationAddress))
                         if (this.scriptToAddressLookup.TryGetValue(paidToOutput.ScriptPubKey, out HdAddress destination))
                             destinationAddress = destination.Address;

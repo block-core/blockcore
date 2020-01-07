@@ -1,4 +1,5 @@
 ﻿using NBitcoin;
+using Stratis.Bitcoin.Consensus;
 
 namespace Stratis.Bitcoin.Interfaces
 {
@@ -8,11 +9,11 @@ namespace Stratis.Bitcoin.Interfaces
     public interface IScriptAddressReader
     {
         /// <summary>
-        /// Extracts an address from a given Script, if available. Otherwise returns <see cref="string.Empty"/>
+        /// Extracts ScriptAddressResult from a given Script, if available. Otherwise return <see cref="string.Empty"/> values.
         /// </summary>
         /// <param name="network"></param>
         /// <param name="script"></param>
         /// <returns></returns>
-        string GetAddressFromScriptPubKey(Network network, Script script);
+        ScriptAddressResult GetAddressFromScriptPubKey(Network network, Script script);
     }
 }

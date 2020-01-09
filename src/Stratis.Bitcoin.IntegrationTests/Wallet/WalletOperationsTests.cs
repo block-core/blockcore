@@ -41,6 +41,8 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
 
         internal readonly string validSignature = "IFpsneU79ikNfeqljDgSwrvdgOyEmrydaib1Xdc/npr7O1s+9GrAzaVOMfvz5x9mq4395JZQfNhSNiUqK0qTW4M=";
 
+        internal readonly string accountName = "account 0";
+
         public string WalletWithFundsFilePath { get; }
 
         public WalletOperationsFixture()
@@ -1494,6 +1496,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 {
                     WalletName = this.fixture.walletWithFundsName,
                     ExternalAddress = this.fixture.addressWithFunds,
+                    AccountName = this.fixture.accountName,
                     Password = this.fixture.walletWithFundsPassword,
                     Message = this.fixture.signatureMessage
                 })

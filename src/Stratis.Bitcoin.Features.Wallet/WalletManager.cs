@@ -239,7 +239,7 @@ namespace Stratis.Bitcoin.Features.Wallet
             // Find the last chain block received by the wallet manager.
             HashHeightPair hashHeightPair = this.LastReceivedBlockInfo();
             this.WalletTipHash = hashHeightPair.Hash;
-            this.WalletTipHeight= hashHeightPair.Height;
+            this.WalletTipHeight = hashHeightPair.Height;
 
             // Save the wallets file every 5 minutes to help against crashes.
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop("Wallet persist job", token =>
@@ -311,10 +311,11 @@ namespace Stratis.Bitcoin.Features.Wallet
         }
 
         /// <inheritdoc />
-        public string SignMessage(string password, string walletName, string externalAddress, string message)
+        public string SignMessage(string password, string walletName, string accountName, string externalAddress, string message)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(walletName, nameof(walletName));
+            Guard.NotEmpty(accountName, nameof(accountName));
             Guard.NotEmpty(message, nameof(message));
             Guard.NotEmpty(externalAddress, nameof(externalAddress));
 
@@ -322,7 +323,7 @@ namespace Stratis.Bitcoin.Features.Wallet
             Wallet wallet = this.GetWalletByName(walletName);
 
             // Sign the message.
-            HdAddress hdAddress = wallet.GetAddress(externalAddress);
+            HdAddress hdAddress = wallet.GetAddress(externalAddress, account => account.Name.Equals(accountName));
             Key privateKey = wallet.GetExtendedPrivateKeyForAddress(password, hdAddress).PrivateKey;
             return privateKey.SignMessage(message);
         }
@@ -611,7 +612,7 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             bool generated = false;
             IEnumerable<HdAddress> addresses;
-            
+
             var newAddresses = new List<HdAddress>();
 
             lock (this.lockObject)
@@ -626,7 +627,7 @@ namespace Stratis.Bitcoin.Features.Wallet
                     account.ExternalAddresses.Where(acc => !acc.Transactions.Any()).ToList();
 
                 int diff = alwaysnew ? -1 : unusedAddresses.Count - count;
-                
+
                 if (diff < 0)
                 {
                     newAddresses = account.CreateAddresses(this.network, Math.Abs(diff), isChange: isChange).ToList();

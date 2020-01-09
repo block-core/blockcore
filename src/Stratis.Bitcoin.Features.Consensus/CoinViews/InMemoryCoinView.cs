@@ -76,7 +76,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     UnspentOutput existing;
                     if (this.unspents.TryGetValue(unspent.OutPoint, out existing))
                     {
-                        existing.MarkAsSpent();
+                        existing.Spend();
                     }
                     else
                     {

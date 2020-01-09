@@ -82,7 +82,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
                     UnspentOutput existing;
                     if (this.unspents.TryGetValue(unspent.OutPoint, out existing))
                     {
-                        existing.MarkAsSpent();
+                        existing.Spend();
                     }
                     else
                     {

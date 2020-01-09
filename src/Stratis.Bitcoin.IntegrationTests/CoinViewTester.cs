@@ -43,7 +43,7 @@ namespace Stratis.Bitcoin.IntegrationTests
             FetchCoinsResponse result = this.coinView.FetchCoins(new[] { c.Outpoint });
             if (result.UnspentOutputs.Count == 0)
                 return false;
-            return result.UnspentOutputs[c.Outpoint] != null;
+            return result.UnspentOutputs[c.Outpoint].Coins != null;
         }
 
         public void Spend((Utilities.Coins Coins, OutPoint Outpoint) c)
@@ -55,13 +55,14 @@ namespace Stratis.Bitcoin.IntegrationTests
                 if (result.UnspentOutputs.Count == 0)
                     throw new InvalidOperationException("Coin unavailable");
 
-                //if (!result.UnspentOutputs[c.Outpoint].MarkAsSpent())
-                //    throw new InvalidOperationException("Coin unspendable");
+                if (!result.UnspentOutputs[c.Outpoint].Spend())
+                    throw new InvalidOperationException("Coin unspendable");
+
                 this.pendingCoins.Add(result.UnspentOutputs.Values.First());
             }
             else
             {
-                if (!coin.MarkAsSpent())
+                if (!coin.Spend())
                     throw new InvalidOperationException("Coin unspendable");
             }
         }

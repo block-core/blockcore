@@ -45,7 +45,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                 {
                     UnspentOutput unspentOutput = this.AccessCoins(input.PrevOut);
 
-                    if (!unspentOutput.MarkAsSpent())
+                    if (!unspentOutput.Spend())
                     {
                         throw new InvalidOperationException("Unspendable coins are invalid at this point");
                     }

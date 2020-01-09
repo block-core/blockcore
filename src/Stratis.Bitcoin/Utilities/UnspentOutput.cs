@@ -101,14 +101,14 @@ namespace Stratis.Bitcoin.Utilities
 
         public OutPoint OutPoint { get; private set; }
 
-        public bool Spent { get; private set; }
-
-        public bool MarkAsSpent()
+        public bool Spend()
         {
-            this.Spent = true;
+            if (this.Coins == null)
+                return false;
 
-            // If Coins is null this means they are spent (or none existant)
-            return this.Coins != null;
+            this.Coins = null;
+
+            return true;
         }
 
         public override string ToString()

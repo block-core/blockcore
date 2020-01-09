@@ -308,10 +308,10 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         transaction.RemoveKey("Coins", outPoint.ToBytes());
                     }
 
-                    foreach (RewindDataOutput coin in rewindData.OutputsToRestore)
+                    foreach (RewindDataOutput rewindDataOutput  in rewindData.OutputsToRestore)
                     {
-                        this.logger.LogDebug("Outputs of outpoint '{0}' will be restored.", coin.OutPoint);
-                        transaction.Insert("Coins", coin.OutPoint.ToBytes(), this.dBreezeSerializer.Serialize(coin));
+                        this.logger.LogDebug("Outputs of outpoint '{0}' will be restored.", rewindDataOutput.OutPoint);
+                        transaction.Insert("Coins", rewindDataOutput.OutPoint.ToBytes(), this.dBreezeSerializer.Serialize(rewindDataOutput.Coins));
                     }
 
                     res = rewindData.PreviousBlockHash;

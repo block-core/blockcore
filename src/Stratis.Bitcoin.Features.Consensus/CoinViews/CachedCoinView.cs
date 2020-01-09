@@ -352,17 +352,32 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         this.logger.LogDebug("CacheItem added to the cache during save '{0}'.", cacheItem.OutPoint);
                     }
 
-                    // An output must always have coins even if they are spent, 
-                    // so the coins can be added to the rewind data list
-
-                    if (output.Coins == null)
-                        throw new InvalidOperationException(string.Format("Missing coins for output {0}", output.OutPoint));
-
-                    // If output.Spent is true this means the utxo deleted and it's removed from cache
+                    // If output.Coins is null this means the utxo needs to be deleted
                     // otherwise this is a new utxo and we store it to cache.
 
-                    if (output.Spent)
+                    if (output.Coins == null)
                     {
+                        // DELETE COINS
+
+                        // In cases of an output spent in the same block 
+                        // it wont exist in cash or in disk so its safe to remove it
+                        if (cacheItem.Coins == null)
+                        {
+                            if (cacheItem.ExistInInner)
+                                throw new InvalidOperationException(string.Format("Missmtch between coins in cache and in disk for output {0}", cacheItem.OutPoint));
+                        }
+                        else
+                        {
+                            // Handle rewind data
+                            this.logger.LogDebug("Create restore outpoint '{0}' in OutputsToRestore rewind data.", cacheItem.OutPoint);
+                            rewindData.OutputsToRestore.Add(new RewindDataOutput(cacheItem.OutPoint, cacheItem.Coins));
+
+                            if (this.rewindDataIndexCache != null)
+                            {
+                                indexItems[cacheItem.OutPoint] = this.blockHash.Height;
+                            }
+                        }
+
                         // Now modify the cached items with the mutated data.
                         this.logger.LogDebug("Mark cache item '{0}' as spent .", cacheItem.OutPoint);
 
@@ -377,37 +392,36 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     }
                     else
                     {
+                        // ADD COINS
+
+                        if (cacheItem.Coins != null)
+                        {
+                            // Allow overrides.
+                            // See https://github.com/bitcoin/bitcoin/blob/master/src/coins.cpp#L94
+
+                            bool allowOverride = cacheItem.Coins.IsCoinbase && output.Coins != null;
+
+                            if (!allowOverride)
+                            {
+                                throw new InvalidOperationException(string.Format("New coins override coins in cache or store, for output '{0}'", cacheItem.OutPoint));
+                            }
+                        }
+
+                        // Handle rewind data
+                        // New trx so it needs to be deleted if a rewind happens.
+                        this.logger.LogDebug("Adding output '{0}' to TransactionsToRemove rewind data.", cacheItem.OutPoint);
+                        rewindData.OutputsToRemove.Add(cacheItem.OutPoint);
+
                         // Put in the cache the new UTXOs.
                         this.logger.LogDebug("Mark cache item '{0}' as new .", cacheItem.OutPoint);
+
                         cacheItem.Coins = output.Coins;
                     }
 
+                    // Mark the cahe item as dirty so it get persisted 
+                    // to disk and not evicted form cache
+
                     cacheItem.IsDirty = true;
-
-                    // If tip is bellow last checkpoint there is no need to keep rewind data
-                    // However the way the fullnode is built, occasionaly on shutdown if block store is behind
-                    // consensus will reorg to match block store.
-                    // We can prevent that by using the same underline storage for utxo and blocks
-                    // Or only persist to disk the last x blocks of rewind data.
-                    if (true) 
-                    {
-                        if (output.Spent)
-                        {
-                            this.logger.LogDebug("Create restore outpoint '{0}' in OutputsToRestore rewind data.", cacheItem.OutPoint);
-                            rewindData.OutputsToRestore.Add(new RewindDataOutput(output.OutPoint, output.Coins));
-
-                            if (this.rewindDataIndexCache != null)
-                            {
-                                indexItems[output.OutPoint] = this.blockHash.Height;
-                            }
-                        }
-                        else
-                        {
-                            // New trx so it needs to be deleted if a rewind happens.
-                            this.logger.LogDebug("Adding output '{0}' to TransactionsToRemove rewind data.", output.OutPoint);
-                            rewindData.OutputsToRemove.Add(output.OutPoint);
-                        }
-                    }
                 }
 
                 if (this.rewindDataIndexCache != null && indexItems.Any())

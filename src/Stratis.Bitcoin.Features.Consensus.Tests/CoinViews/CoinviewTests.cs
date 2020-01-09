@@ -66,7 +66,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             int currentHeight = 0;
 
             // Create a lot of new coins.
-            List<UnspentOutputs> outputsList = this.CreateOutputsList(currentHeight + 1, 100);
+            List<UnspentOutput> outputsList = this.CreateOutputsList(currentHeight + 1, 100);
             this.SaveChanges(outputsList, new List<TxOut[]>(), currentHeight + 1);
             currentHeight++;
 
@@ -96,8 +96,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 FetchCoinsResponse response = this.cachedCoinView.FetchCoins(new[] { txId });
                 Assert.Single(response.UnspentOutputs);
 
-                UnspentOutputs coins = response.UnspentOutputs[0];
-                UnspentOutputs unchangedClone = coins.Clone();
+                UnspentOutput coins = response.UnspentOutputs[0];
+                UnspentOutput unchangedClone = coins.Clone();
 
                 foreach (OutPoint outPointToSpend in txPointsToSpend)
                     coins.Spend(outPointToSpend.N);
@@ -106,7 +106,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 outPoints.RemoveAll(x => txPointsToSpend.Contains(x));
 
                 // Save coinview
-                this.SaveChanges(new List<UnspentOutputs>() { coins }, new List<TxOut[]>() { unchangedClone.Outputs }, currentHeight + 1);
+                this.SaveChanges(new List<UnspentOutput>() { coins }, new List<TxOut[]>() { unchangedClone.Outputs }, currentHeight + 1);
 
                 currentHeight++;
 
@@ -134,11 +134,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             await this.ValidateCoinviewIntegrityAsync(copyOfOriginalOutPoints);
         }
 
-        private List<OutPoint> ConvertToListOfOutputPoints(List<UnspentOutputs> outputsList)
+        private List<OutPoint> ConvertToListOfOutputPoints(List<UnspentOutput> outputsList)
         {
             var outPoints = new List<OutPoint>();
 
-            foreach (UnspentOutputs output in outputsList)
+            foreach (UnspentOutput output in outputsList)
             {
                 for (int i = 0; i < output.Outputs.Length; i++)
                 {
@@ -154,7 +154,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             return outPoints;
         }
 
-        private UnspentOutputs CreateOutputs(int height, int outputsCount = 20)
+        private UnspentOutput CreateOutputs(int height, int outputsCount = 20)
         {
             var tx = new Transaction();
             tx.LockTime = RandomUtils.GetUInt32(); // add randmoness
@@ -166,13 +166,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 tx.AddOutput(money, Script.Empty);
             }
 
-            var outputs = new UnspentOutputs((uint)height, tx);
+            var outputs = new UnspentOutput((uint)height, tx);
             return outputs;
         }
 
-        private List<UnspentOutputs> CreateOutputsList(int height, int itemsCount = 10)
+        private List<UnspentOutput> CreateOutputsList(int height, int itemsCount = 10)
         {
-            var list = new List<UnspentOutputs>();
+            var list = new List<UnspentOutput>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -182,7 +182,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             return list;
         }
 
-        private void SaveChanges(List<UnspentOutputs> unspent, List<TxOut[]> original, int height)
+        private void SaveChanges(List<UnspentOutput> unspent, List<TxOut[]> original, int height)
         {
             ChainedHeader current = this.chainIndexer.Tip.GetAncestor(height);
             ChainedHeader previous = current.Previous;

@@ -76,13 +76,9 @@ namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
                 return;
             }
 
-            foreach (UnspentOutputs unspent in rewindData.OutputsToRestore)
+            foreach (RewindDataOutput unspent in rewindData.OutputsToRestore)
             {
-                for (int outputIndex = 0; outputIndex < unspent.Outputs.Length; outputIndex++)
-                {
-                    var key = new OutPoint(unspent.TransactionId,outputIndex);
-                    this.items[key] = rewindHeight;
-                }
+                this.items[unspent.OutPoint] = rewindHeight;
             }
         }
 

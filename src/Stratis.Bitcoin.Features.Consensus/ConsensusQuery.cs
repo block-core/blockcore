@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -32,11 +33,11 @@ namespace Stratis.Bitcoin.Features.Consensus
         }
 
         /// <inheritdoc />
-        public Task<UnspentOutputs> GetUnspentTransactionAsync(uint256 trxid)
+        public Task<List<UnspentOutput>> GetUnspentTransactionAsync(uint256 trxid)
         {
-            FetchCoinsResponse response = this.coinView.FetchCoins(new[] { trxid });
+            FetchCoinsResponse response = this.coinView.FetchCoins(new[] { new OutPoint(trxid, 0) });
 
-            UnspentOutputs unspentOutputs = response.UnspentOutputs.FirstOrDefault();
+            List<UnspentOutput> unspentOutputs = response.UnspentOutputs.Values.ToList();
 
             return Task.FromResult(unspentOutputs);
         }

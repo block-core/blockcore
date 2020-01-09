@@ -227,13 +227,13 @@ namespace Stratis.Bitcoin.Consensus
             // We should consider creating a consensus store class that will internally contain
             // coinview and it will abstract the methods `RewindAsync()` `GetBlockHashAsync()`
 
-            uint256 consensusTipHash = this.ConsensusRules.GetBlockHash();
+            HashHeightPair consensusTipHash = this.ConsensusRules.GetBlockHash();
 
             ChainedHeader pendingTip;
 
             while (true)
             {
-                pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash);
+                pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash.Hash);
 
                 if ((pendingTip != null) && (this.chainState.BlockStoreTip.Height >= pendingTip.Height))
                     break;
@@ -758,7 +758,9 @@ namespace Stratis.Bitcoin.Consensus
 
             foreach (ChainedHeaderBlock blockToConnect in blocksToConnect)
             {
-                using (this.performanceCounter.MeasureBlockConnectionFV())
+                StopwatchDisposable dsb = (StopwatchDisposable)this.performanceCounter.MeasureBlockConnectionFV();
+
+                using (dsb)
                 {
                     connectBlockResult = await this.ConnectBlockAsync(blockToConnect).ConfigureAwait(false);
 
@@ -796,6 +798,11 @@ namespace Stratis.Bitcoin.Consensus
                 {
                     this.signals.Publish(new BlockConnected(blockToConnect));
                 }
+
+                this.logger.LogInformation("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : work = {4}",
+                    blockToConnect.ChainedHeader.Height, blockToConnect.ChainedHeader.HashBlock,
+                    dsb.watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.ChainedHeader.ChainWork);
+
             }
 
             // After successfully connecting all blocks set the tree tip and claim the branch.

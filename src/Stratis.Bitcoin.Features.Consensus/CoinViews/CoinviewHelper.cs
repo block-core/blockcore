@@ -12,25 +12,25 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <param name="block">The block with the transactions.</param>
         /// <param name="enforceBIP30">Whether to enforce look up of the transaction id itself and not only the reference to previous transaction id.</param>
         /// <returns>A list of transaction ids to fetch from store</returns>
-        public uint256[] GetIdsToFetch(Block block, bool enforceBIP30)
+        public OutPoint[] GetIdsToFetch(Block block, bool enforceBIP30)
         {
-            var ids = new HashSet<uint256>();
+            var ids = new HashSet<OutPoint>();
             foreach (Transaction tx in block.Transactions)
             {
                 if (enforceBIP30)
                 {
-                    uint256 txId = tx.GetHash();
-                    ids.Add(txId);
+                    foreach (var utxo in tx.Outputs.AsIndexedOutputs())
+                        ids.Add(utxo.ToOutPoint());
                 }
 
                 if (!tx.IsCoinBase)
                 {
                     foreach (TxIn input in tx.Inputs)
-                        ids.Add(input.PrevOut.Hash);
+                        ids.Add(input.PrevOut);
                 }
             }
 
-            uint256[] res = ids.ToArray();
+            OutPoint[] res = ids.ToArray();
             return res;
         }
     }

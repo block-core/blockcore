@@ -1,9 +1,11 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Consensus.Rules;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
+using Stratis.Bitcoin.Utilities;
 
 namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
 {
@@ -19,15 +21,14 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
         /// <inheritdoc />
         public override async Task RunAsync(RuleContext context)
         {
-            uint256 oldBlockHash = context.ValidationContext.ChainedHeaderToValidate.Previous.HashBlock;
-            uint256 nextBlockHash = context.ValidationContext.ChainedHeaderToValidate.HashBlock;
-            int height = context.ValidationContext.ChainedHeaderToValidate.Height;
+            ChainedHeader oldBlock = context.ValidationContext.ChainedHeaderToValidate.Previous;
+            ChainedHeader nextBlock = context.ValidationContext.ChainedHeaderToValidate;
 
             // Persist the changes to the coinview. This will likely only be stored in memory,
             // unless the coinview treashold is reached.
             this.Logger.LogDebug("Saving coinview changes.");
             var utxoRuleContext = context as UtxoRuleContext;
-            this.PowParent.UtxoSet.SaveChanges(utxoRuleContext.UnspentOutputSet.GetCoins(), null, oldBlockHash, nextBlockHash, height);
+            this.PowParent.UtxoSet.SaveChanges(utxoRuleContext.UnspentOutputSet.GetCoins(), new HashHeightPair(oldBlock), new HashHeightPair(nextBlock));
 
             // Use the default flush condition to decide if flush is required (currently set to every 60 seconds)
             if (this.PowParent.UtxoSet is CachedCoinView cachedCoinView)
@@ -55,9 +56,9 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             this.Logger.LogDebug("Loading UTXO set of the new block.");
             utxoRuleContext.UnspentOutputSet = new UnspentOutputSet();
 
-            uint256[] ids = this.coinviewHelper.GetIdsToFetch(context.ValidationContext.BlockToValidate, context.Flags.EnforceBIP30);
+            OutPoint[] ids = this.coinviewHelper.GetIdsToFetch(context.ValidationContext.BlockToValidate, context.Flags.EnforceBIP30);
             FetchCoinsResponse coins = this.PowParent.UtxoSet.FetchCoins(ids);
-            utxoRuleContext.UnspentOutputSet.SetCoins(coins.UnspentOutputs);
+            utxoRuleContext.UnspentOutputSet.SetCoins(coins.UnspentOutputs.Values.ToArray());
         }
     }
 }

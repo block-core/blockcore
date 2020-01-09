@@ -11,9 +11,9 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
         public void Constructor_InitializesClass()
         {
             var blockHash = new uint256(124);
-            var unspentOutputs = new UnspentOutputs[] {
-                new UnspentOutputs(1, new Transaction()),
-                new UnspentOutputs(2, new Transaction())
+            var unspentOutputs = new UnspentOutput[] {
+                new UnspentOutput(1, new Transaction()),
+                new UnspentOutput(2, new Transaction())
             };
 
             var fetchCoinsResponse = new FetchCoinsResponse(unspentOutputs, blockHash);

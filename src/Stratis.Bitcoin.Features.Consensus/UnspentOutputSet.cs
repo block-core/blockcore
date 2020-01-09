@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NBitcoin;
 using Stratis.Bitcoin.Utilities;
@@ -7,15 +8,18 @@ namespace Stratis.Bitcoin.Features.Consensus
 {
     public class UnspentOutputSet
     {
-        private Dictionary<uint256, UnspentOutputs> unspents;
+        private Dictionary<OutPoint, UnspentOutput> unspents;
 
         public TxOut GetOutputFor(TxIn txIn)
         {
-            UnspentOutputs unspent = this.unspents.TryGet(txIn.PrevOut.Hash);
-            if (unspent == null)
-                return null;
+            UnspentOutput unspent = this.unspents.TryGet(txIn.PrevOut);
 
-            return unspent.TryGetOutput(txIn.PrevOut.N);
+            if (unspent == null)
+            { 
+                return null; 
+            }
+
+            return unspent.Coins.TxOut;
         }
 
         public bool HaveInputs(Transaction tx)
@@ -23,9 +27,9 @@ namespace Stratis.Bitcoin.Features.Consensus
             return tx.Inputs.All(txin => this.GetOutputFor(txin) != null);
         }
 
-        public UnspentOutputs AccessCoins(uint256 uint256)
+        public UnspentOutput AccessCoins(OutPoint outpoint)
         {
-            return this.unspents.TryGet(uint256);
+            return this.unspents.TryGet(outpoint);
         }
 
         public Money GetValueIn(Transaction tx)
@@ -33,51 +37,70 @@ namespace Stratis.Bitcoin.Features.Consensus
             return tx.Inputs.Select(txin => this.GetOutputFor(txin).Value).Sum();
         }
 
-        /// <summary>
-        /// Adds transaction's outputs to unspent coins list and removes transaction's inputs from it.
-        /// </summary>
-        /// <param name="transaction">Transaction which inputs and outputs are used for updating unspent coins list.</param>
-        /// <param name="height">Height of a block that contains target transaction.</param>
-        public void Update(Transaction transaction, int height)
+        public void Update(Network network, Transaction transaction, int height)
         {
             if (!transaction.IsCoinBase)
             {
                 foreach (TxIn input in transaction.Inputs)
                 {
-                    UnspentOutputs c = this.AccessCoins(input.PrevOut.Hash);
+                    UnspentOutput unspentOutput = this.AccessCoins(input.PrevOut);
 
-                    c.Spend(input.PrevOut.N);
+                    if (!unspentOutput.MarkAsSpent())
+                    {
+                        throw new InvalidOperationException("Unspendable coins are invalid at this point");
+                    }
                 }
             }
 
-            this.unspents.AddOrReplace(transaction.GetHash(), new UnspentOutputs((uint)height, transaction));
+            foreach (IndexedTxOut output in transaction.Outputs.AsIndexedOutputs())
+            {
+                var outpoint = output.ToOutPoint();
+                var coinbase = transaction.IsCoinBase;
+                var coinstake = network.Consensus.IsProofOfStake ? transaction.IsCoinStake : false;
+                var time = (transaction is IPosTransactionWithTime posTx) ? posTx.Time : 0;
+               
+                var coins = new Coins((uint)height, output.TxOut, coinbase, coinstake, time);
+                var unspentOutput = new UnspentOutput(outpoint, coins);
+
+                if (coins.IsPrunable)
+                    continue;
+
+                this.unspents.AddOrReplace(outpoint, unspentOutput);
+            }
         }
 
-        public void SetCoins(UnspentOutputs[] coins)
+        public void SetCoins(UnspentOutput[] coins)
         {
-            this.unspents = new Dictionary<uint256, UnspentOutputs>(coins.Length);
-            foreach (UnspentOutputs coin in coins)
+            this.unspents = new Dictionary<OutPoint, UnspentOutput>(coins.Length);
+            foreach (UnspentOutput coin in coins)
             {
                 if (coin != null)
                 {
-                    this.unspents.Add(coin.TransactionId, coin);
+                    this.unspents.Add(coin.OutPoint, coin);
                 }
             }
         }
 
-        public void TrySetCoins(UnspentOutputs[] coins)
+        public void TrySetCoins(UnspentOutput[] coins)
         {
-            this.unspents = new Dictionary<uint256, UnspentOutputs>(coins.Length);
-            foreach (UnspentOutputs coin in coins)
+            this.unspents = new Dictionary<OutPoint, UnspentOutput>(coins.Length);
+            foreach (UnspentOutput coin in coins)
             {
                 if (coin != null)
-                    this.unspents.TryAdd(coin.TransactionId, coin);
+                {
+                    this.unspents.TryAdd(coin.OutPoint, coin); 
+                }
             }
         }
 
-        public IList<UnspentOutputs> GetCoins()
+        public IList<UnspentOutput> GetCoins()
         {
             return this.unspents.Select(u => u.Value).ToList();
+        }
+
+        public IList<UnspentOutput> GetCoins(uint256 trxid)
+        {
+            return this.unspents.Where(w => w.Key.Hash == trxid).Select(u => u.Value).ToList();
         }
     }
 }

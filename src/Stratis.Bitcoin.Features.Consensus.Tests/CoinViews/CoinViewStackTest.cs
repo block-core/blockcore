@@ -116,17 +116,17 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             }
 
             /// <inheritdoc />
-            public uint256 GetTipHash(CancellationToken cancellationToken = default(CancellationToken))
+            public HashHeightPair GetTipHash()
             {
                 throw new NotImplementedException();
             }
 
-            public FetchCoinsResponse FetchCoins(uint256[] txIds, CancellationToken cancellationToken = default(CancellationToken))
+            public FetchCoinsResponse FetchCoins(OutPoint[] txIds)
             {
                 throw new NotImplementedException();
             }
 
-            public uint256 Rewind()
+            public HashHeightPair Rewind()
             {
                 throw new NotImplementedException();
             }
@@ -136,7 +136,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 throw new NotImplementedException();
             }
 
-            public void SaveChanges(IList<UnspentOutputs> unspentOutputs, IEnumerable<TxOut[]> originalOutputs, uint256 oldBlockHash, uint256 nextBlockHash, int height, List<RewindData> rewindDataList = null)
+            public void SaveChanges(IList<UnspentOutput> unspentOutputs, HashHeightPair oldBlockHash, HashHeightPair nextBlockHash, List<RewindData> rewindDataList = null)
             {
                 throw new NotImplementedException();
             }
@@ -156,17 +156,17 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             public ICoinView Inner => this.inner;
 
             /// <inheritdoc />
-            public uint256 GetTipHash(CancellationToken cancellationToken = default(CancellationToken))
+            public HashHeightPair GetTipHash()
             {
                 throw new NotImplementedException();
             }
 
-            public FetchCoinsResponse FetchCoins(uint256[] txIds, CancellationToken cancellationToken = default(CancellationToken))
+            public FetchCoinsResponse FetchCoins(OutPoint[] txIds)
             {
                 throw new NotImplementedException();
             }
 
-            public uint256 Rewind()
+            public HashHeightPair Rewind()
             {
                 throw new NotImplementedException();
             }
@@ -176,7 +176,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 throw new NotImplementedException();
             }
 
-            public void SaveChanges(IList<UnspentOutputs> unspentOutputs, IEnumerable<TxOut[]> originalOutputs, uint256 oldBlockHash, uint256 nextBlockHash, int height, List<RewindData> rewindDataList = null)
+            public void SaveChanges(IList<UnspentOutput> unspentOutputs, HashHeightPair oldBlockHash, HashHeightPair nextBlockHash, List<RewindData> rewindDataList = null)
             {
                 throw new NotImplementedException();
             }
@@ -195,18 +195,17 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             public int OutputCount { get; }
             public ICoinView Inner => this.inner;
 
-            /// <inheritdoc />
-            public uint256 GetTipHash(CancellationToken cancellationToken = default(CancellationToken))
+            public HashHeightPair GetTipHash()
             {
                 throw new NotImplementedException();
             }
 
-            public FetchCoinsResponse FetchCoins(uint256[] txIds, CancellationToken cancellationToken = default(CancellationToken))
+            public FetchCoinsResponse FetchCoins(OutPoint[] txIds)
             {
                 throw new NotImplementedException();
             }
 
-            public uint256 Rewind()
+            public HashHeightPair Rewind()
             {
                 throw new NotImplementedException();
             }
@@ -216,7 +215,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 throw new NotImplementedException();
             }
 
-            public void SaveChanges(IList<UnspentOutputs> unspentOutputs, IEnumerable<TxOut[]> originalOutputs, uint256 oldBlockHash, uint256 nextBlockHash, int height, List<RewindData> rewindDataList = null)
+            public void SaveChanges(IList<UnspentOutput> unspentOutputs, HashHeightPair oldBlockHash, HashHeightPair nextBlockHash, List<RewindData> rewindDataList = null)
             {
                 throw new NotImplementedException();
             }

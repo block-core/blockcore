@@ -364,7 +364,7 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new List<UnspentOutput>() { new UnspentOutput(new OutPoint(transaction, 0), null) };
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
@@ -386,7 +386,7 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync((UnspentOutputs)null)
+                .ReturnsAsync((List<UnspentOutput>)null)
                 .Verifiable();
             string txid = txId.ToString();
             uint vout = 0;
@@ -420,7 +420,7 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync((UnspentOutputs)null)
+                .ReturnsAsync((List<UnspentOutput>)null)
                 .Verifiable();
             this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
                 this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
@@ -458,7 +458,7 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new List<UnspentOutput>() { new UnspentOutput(new OutPoint(transaction, 0), null) };
             this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
@@ -486,7 +486,7 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new List<UnspentOutput>() { new UnspentOutput(new OutPoint(transaction, 0), null) };
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
@@ -514,7 +514,7 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new List<UnspentOutput>() { new UnspentOutput(new OutPoint(transaction, 0), null) };
             this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
@@ -538,7 +538,7 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new List<UnspentOutput>() { new UnspentOutput(new OutPoint(transaction, 0), null) };
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();

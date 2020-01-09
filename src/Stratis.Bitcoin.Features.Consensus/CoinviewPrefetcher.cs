@@ -102,11 +102,11 @@ namespace Stratis.Bitcoin.Features.Consensus
             }
 
             bool enforceBIP30 = DeploymentFlags.EnforceBIP30ForBlock(currentHeader);
-            uint256[] idsToFetch = this.coinviewHelper.GetIdsToFetch(block, enforceBIP30);
+            OutPoint[] idsToFetch = this.coinviewHelper.GetIdsToFetch(block, enforceBIP30);
 
             if (idsToFetch.Length != 0)
             {
-                this.coinview.FetchCoins(idsToFetch, cancellation);
+                this.coinview.FetchCoins(idsToFetch);
 
                 this.logger.LogDebug("{0} ids were pre-fetched.", idsToFetch.Length);
             }

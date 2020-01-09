@@ -48,13 +48,13 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         public void Load()
         {
-            uint256 hash = this.dBreezeCoinView.GetTipHash();
-            ChainedHeader currentHeader = this.chainIndexer.GetHeader(hash);
+            HashHeightPair hash = this.dBreezeCoinView.GetTipHash();
+            ChainedHeader currentHeader = this.chainIndexer.GetHeader(hash.Hash);
 
             while (currentHeader == null)
             {
                 hash = this.dBreezeCoinView.Rewind();
-                currentHeader = this.chainIndexer.GetHeader(hash);
+                currentHeader = this.chainIndexer.GetHeader(hash.Hash);
             }
 
             var load = new List<StakeItem>();

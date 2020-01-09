@@ -65,7 +65,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules
             uint256 prevBlockHash = chainIndexer.Tip.HashBlock;
 
             (this.ruleContext as UtxoRuleContext).UnspentOutputSet = new UnspentOutputSet();
-            (this.ruleContext as UtxoRuleContext).UnspentOutputSet.SetCoins(new UnspentOutputs[0]);
+            (this.ruleContext as UtxoRuleContext).UnspentOutputSet.SetCoins(new UnspentOutput[0]);
 
             for (int i = 0; i < blockAmount; i++)
             {

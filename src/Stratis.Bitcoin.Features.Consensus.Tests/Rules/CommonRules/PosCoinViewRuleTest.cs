@@ -34,7 +34,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         /// </summary>
         /// <param name="unspentOutputs">The dictionary used to mock up the <see cref="ICoinView"/>.</param>
         /// <returns>The constructed consensus manager.</returns>
-        private async Task<ConsensusManager> CreateConsensusManagerAsync(Dictionary<uint256, UnspentOutputs> unspentOutputs)
+        private async Task<ConsensusManager> CreateConsensusManagerAsync(Dictionary<uint256, UnspentOutput> unspentOutputs)
         {
             this.consensusSettings = new ConsensusSettings(Configuration.NodeSettings.Default(this.network));
             var initialBlockDownloadState = new InitialBlockDownloadState(this.chainState.Object, this.network, this.consensusSettings, new Checkpoints(), this.loggerFactory.Object, DateTimeProvider.Default);
@@ -72,10 +72,10 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
                 .Returns((uint256[] txIds, CancellationToken cancel) =>
                 {
 
-                    var result = new UnspentOutputs[txIds.Length];
+                    var result = new UnspentOutput[txIds.Length];
 
                     for (int i = 0; i < txIds.Length; i++)
-                        result[i] = unspentOutputs.TryGetValue(txIds[i], out UnspentOutputs unspent) ? unspent : null;
+                        result[i] = unspentOutputs.TryGetValue(txIds[i], out UnspentOutput unspent) ? unspent : null;
 
                     return new FetchCoinsResponse(result, this.ChainIndexer.Tip.HashBlock);
                 });
@@ -91,11 +91,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
                 .Returns(this.network.Consensus.PowLimit);
 
             // Skip validation of signature in the proven header
-            this.stakeValidator.Setup(s => s.VerifySignature(It.IsAny<UnspentOutputs>(), It.IsAny<Transaction>(), 0, It.IsAny<ScriptVerify>()))
+            this.stakeValidator.Setup(s => s.VerifySignature(It.IsAny<UnspentOutput>(), It.IsAny<Transaction>(), 0, It.IsAny<ScriptVerify>()))
                 .Returns(true);
 
             // Skip validation of stake kernel
-            this.stakeValidator.Setup(s => s.CheckStakeKernelHash(It.IsAny<PosRuleContext>(), It.IsAny<uint>(), It.IsAny<uint256>(), It.IsAny<UnspentOutputs>(), It.IsAny<OutPoint>(), It.IsAny<uint>()))
+            this.stakeValidator.Setup(s => s.CheckStakeKernelHash(It.IsAny<PosRuleContext>(), It.IsAny<uint>(), It.IsAny<uint256>(), It.IsAny<UnspentOutput>(), It.IsAny<OutPoint>(), It.IsAny<uint>()))
                 .Returns(true);
 
             // Since we are mocking the stakechain ensure that the Get returns a BlockStake. Otherwise this results in "previous stake is not found".
@@ -135,7 +135,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public async Task PosCoinViewRuleFailsAsync()
         {
-            var unspentOutputs = new Dictionary<uint256, UnspentOutputs>();
+            var unspentOutputs = new Dictionary<uint256, UnspentOutput>();
 
             ConsensusManager consensusManager = await this.CreateConsensusManagerAsync(unspentOutputs);
 
@@ -178,7 +178,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
             prevTransaction.Outputs.Add(new TxOut(Money.COIN * 10_000_000, scriptPubKey1));
 
             // Record the spendable outputs.
-            unspentOutputs[prevTransaction.GetHash()] = new UnspentOutputs(1, prevTransaction);
+            unspentOutputs[prevTransaction.GetHash()] = new UnspentOutput(1, prevTransaction);
 
             // Create coin stake transaction.
             Transaction coinstakeTransaction = this.network.CreateTransaction();

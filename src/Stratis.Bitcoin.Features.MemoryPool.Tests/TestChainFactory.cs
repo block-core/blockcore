@@ -104,7 +104,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
 
             var consensusSettings = new ConsensusSettings(nodeSettings);
             var chain = new ChainIndexer(network);
-            var inMemoryCoinView = new InMemoryCoinView(chain.Tip.HashBlock);
+            var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(chain.Tip));
 
             var chainState = new ChainState();
             var deployments = new NodeDeployments(network, chain);
@@ -176,7 +176,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
                 chain.SetTip(block.Header);
                 srcTxs.Add(block.Transactions[0]);
 
-                inMemoryCoinView.SaveChanges(new List<UnspentOutputs>() { new UnspentOutputs((uint)(i + 1), block.Transactions[0]) }, new List<TxOut[]>(), chain.Tip.Previous.HashBlock, chain.Tip.HashBlock, chain.Tip.Height);
+                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(block.Transactions[0], 0), new Coins((uint)(i + 1), block.Transactions[0].Outputs.First(), false)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
             }
 
             return new TestChainContext { MempoolValidator = mempoolValidator, MempoolSettings = mempoolSettings, ChainIndexer = chain, SrcTxs = srcTxs};
@@ -214,7 +214,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
 
             var consensusSettings = new ConsensusSettings(nodeSettings);
             var chain = new ChainIndexer(network);
-            var inMemoryCoinView = new InMemoryCoinView(chain.Tip.HashBlock);
+            var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(chain.Tip));
 
             var asyncProvider = new AsyncProvider(loggerFactory, new Mock<ISignals>().Object, new NodeLifetime());
 
@@ -268,7 +268,8 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
                 chain.SetTip(currentBlock.Header);
                 srcTxs.Add(currentBlock.Transactions[0]);
 
-                inMemoryCoinView.SaveChanges(new List<UnspentOutputs>() { new UnspentOutputs((uint)(i + 1), currentBlock.Transactions[0]) }, new List<TxOut[]>(), chain.Tip.Previous.HashBlock, chain.Tip.HashBlock, chain.Tip.Height);
+                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(currentBlock.Transactions[0], 0), new Coins((uint)(i + 1), currentBlock.Transactions[0].Outputs.First(), false)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
+
             }
 
             // Just to make sure we can still make simple blocks

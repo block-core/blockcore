@@ -152,7 +152,7 @@ namespace Stratis.Bitcoin.IntegrationTests
                 var loggerFactory = new ExtendedLoggerFactory();
                 loggerFactory.AddConsoleWithFilters();
 
-                var inMemoryCoinView = new InMemoryCoinView(this.ChainIndexer.Tip.HashBlock);
+                var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(this.ChainIndexer.Tip));
                 var nodeStats = new NodeStats(dateTimeProvider, loggerFactory);
                 this.cachedCoinView = new CachedCoinView(inMemoryCoinView, dateTimeProvider, new LoggerFactory(), nodeStats);
 

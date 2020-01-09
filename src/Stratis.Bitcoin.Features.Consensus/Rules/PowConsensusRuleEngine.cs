@@ -45,7 +45,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
         }
 
         /// <inheritdoc />
-        public override uint256 GetBlockHash()
+        public override HashHeightPair GetBlockHash()
         {
             return this.UtxoSet.GetTipHash();
         }
@@ -70,11 +70,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
 
             breezeCoinView.Initialize();
 
-            uint256 consensusTipHash = breezeCoinView.GetTipHash();
+            HashHeightPair consensusTipHash = breezeCoinView.GetTipHash();
 
             while (true)
             {
-                ChainedHeader pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash);
+                ChainedHeader pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash.Hash);
 
                 if (pendingTip != null)
                     break;

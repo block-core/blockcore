@@ -117,7 +117,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests
             testChainContext.ChainState = new ChainState();
             testChainContext.InitialBlockDownloadState = new InitialBlockDownloadState(testChainContext.ChainState, testChainContext.Network, consensusSettings, new Checkpoints(), testChainContext.NodeSettings.LoggerFactory, testChainContext.DateTimeProvider);
 
-            var inMemoryCoinView = new InMemoryCoinView(testChainContext.ChainIndexer.Tip.HashBlock);
+            var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(testChainContext.ChainIndexer.Tip));
             var cachedCoinView = new CachedCoinView(inMemoryCoinView, DateTimeProvider.Default, testChainContext.LoggerFactory, new NodeStats(testChainContext.DateTimeProvider, testChainContext.LoggerFactory));
 
             var dataFolder = new DataFolder(TestBase.AssureEmptyDir(dataDir));

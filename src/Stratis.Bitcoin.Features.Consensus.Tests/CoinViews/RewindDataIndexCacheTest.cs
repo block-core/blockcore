@@ -128,7 +128,12 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             ulong index = 1;
             coinViewMock.Setup(c => c.GetRewindData(It.IsAny<int>())).Returns(() => new RewindData()
             {
-                OutputsToRestore = new List<UnspentOutput>() { new UnspentOutput(new uint256(index++), new Coins()) { Outputs = new TxOut[] { new TxOut(), new TxOut() } } }
+                OutputsToRestore = new List<RewindDataOutput>()
+                {
+                    new RewindDataOutput(new OutPoint(new uint256(index++), 0), new Utilities.Coins(0, new TxOut(), false)),
+                    new RewindDataOutput(new OutPoint(new uint256(index++), 0), new Utilities.Coins(0, new TxOut(), false)),
+                    new RewindDataOutput(new OutPoint(new uint256(index++), 0), new Utilities.Coins(0, new TxOut(), false)),
+                }
             });
         }
     }

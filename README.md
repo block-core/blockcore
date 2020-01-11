@@ -1,6 +1,4 @@
-| Windows | MacOs | Ubuntu64
-| :---- | :------ | :---- |
-| [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedWindowsContainer-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=4) | [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedmacOS-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=6) | [![Build Status](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_apis/build/status/HostedUbuntu1604-CI)](https://dev.azure.com/StratisProject/StratisBitcoinFullNode/_build/latest?definitionId=5)
+[![Build Status](https://github.com/block-core/blockcore/workflows/Build/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Integration Test Status](https://github.com/block-core/blockcore/workflows/Integration%20Test/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Publish Packages Status](https://github.com/block-core/blockcore/workflows/Publish%20Packages/badge.svg)](https://github.com/block-core/blockcore/actions)
 
 Blockcore
 ===============

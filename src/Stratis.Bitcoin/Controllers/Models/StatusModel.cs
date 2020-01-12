@@ -45,6 +45,9 @@ namespace Stratis.Bitcoin.Controllers.Models
         /// <seealso cref="Stratis.Bitcoin.Features.BlockRepository.HighestPersistedBlock.Height"/>
         public int BlockStoreHeight { get; set; }
 
+        /// <summary>The tip of the most advanced peer our node is connected to or <c>null</c> if no peer is connected.</summary>
+        public int? BestPeerHeight { get; set; }
+
         /// <summary>A collection of inbound peers.</summary>
         public List<ConnectedPeerModel> InboundPeers { get; set; }
 

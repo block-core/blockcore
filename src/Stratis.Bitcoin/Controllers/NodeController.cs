@@ -152,7 +152,8 @@ namespace Stratis.Bitcoin.Controllers
                 RelayFee = this.nodeSettings.MinRelayTxFeeRate?.FeePerK?.ToUnit(MoneyUnit.BTC) ?? 0,
                 RunningTime = this.dateTimeProvider.GetUtcNow() - this.fullNode.StartTime,
                 CoinTicker = this.network.CoinTicker,
-                State = this.fullNode.State.ToString()
+                State = this.fullNode.State.ToString(),
+                BestPeerHeight = this.chainState.BestPeerTip?.Height
             };
 
             // Add the list of features that are enabled.

@@ -30,6 +30,9 @@ namespace Stratis.Bitcoin.Utilities
             this.previousBlockHash = previousBlockHash;
         }
 
+        // This value is not set after deserialization.
+        public long TotalSize { get; set; }
+
         /// <summary>Hash of the block header of the tip of the previous state of the coinview.</summary>
         public HashHeightPair PreviousBlockHash
         {

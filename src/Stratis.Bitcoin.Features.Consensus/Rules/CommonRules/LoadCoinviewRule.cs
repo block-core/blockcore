@@ -9,17 +9,13 @@ using Stratis.Bitcoin.Utilities;
 
 namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
 {
-    public class SaveCoinviewRule : UtxoStoreConsensusRule
+    /// <summary>
+    /// Push the modified <see cref="UnspentOutputSet"/> back to the underline cache.
+    /// </summary>
+    public class PushCoinviewRule : UtxoStoreConsensusRule
     {
-        /// <summary>
-        /// Specifies time threshold which is used to determine if flush is required.
-        /// When consensus tip timestamp is greater than current time minus the threshold the flush is required.
-        /// </summary>
-        /// <remarks>Used only on blockchains without max reorg property.</remarks>
-        private const int FlushRequiredThresholdSeconds = 2 * 24 * 60 * 60;
-
         /// <inheritdoc />
-        public override async Task RunAsync(RuleContext context)
+        public override Task RunAsync(RuleContext context)
         {
             ChainedHeader oldBlock = context.ValidationContext.ChainedHeaderToValidate.Previous;
             ChainedHeader nextBlock = context.ValidationContext.ChainedHeaderToValidate;
@@ -30,16 +26,33 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             var utxoRuleContext = context as UtxoRuleContext;
             this.PowParent.UtxoSet.SaveChanges(utxoRuleContext.UnspentOutputSet.GetCoins(), new HashHeightPair(oldBlock), new HashHeightPair(nextBlock));
 
-            // Use the default flush condition to decide if flush is required (currently set to every 60 seconds)
-            if (this.PowParent.UtxoSet is CachedCoinView cachedCoinView)
-                cachedCoinView.Flush(false);
+            return Task.CompletedTask;
         }
     }
 
-    public class LoadCoinviewRule : UtxoStoreConsensusRule
+    /// <summary>
+    /// Track flush operations in a separate rule to better minitor its performance.
+    /// </summary>
+    public class FlushCoinviewRule : UtxoStoreConsensusRule
     {
         /// <inheritdoc />
-        public override async Task RunAsync(RuleContext context)
+        public override Task RunAsync(RuleContext context)
+        {
+            // Use the default flush condition to decide if flush is required (currently set to every 60 seconds)
+            if (this.PowParent.UtxoSet is CachedCoinView cachedCoinView)
+                cachedCoinView.Flush(false);
+
+            return Task.CompletedTask;
+        }
+    }
+
+    /// <summary>
+    /// Load a blocks utxos to <see cref="UnspentOutputSet"/> a workable data set.
+    /// </summary>
+    public class FetchCoinviewRule : UtxoStoreConsensusRule
+    {
+        /// <inheritdoc />
+        public override Task RunAsync(RuleContext context)
         {
             // Check that the current block has not been reorged.
             // Catching a reorg at this point will not require a rewind.
@@ -59,6 +72,33 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             OutPoint[] ids = this.coinviewHelper.GetIdsToFetch(context.ValidationContext.BlockToValidate, context.Flags.EnforceBIP30);
             FetchCoinsResponse coins = this.PowParent.UtxoSet.FetchCoins(ids);
             utxoRuleContext.UnspentOutputSet.SetCoins(coins.UnspentOutputs.Values.ToArray());
+
+            return Task.CompletedTask;
         }
+    }
+
+    /// <summary>
+    /// Legacy class for coins that did not upgrade.
+    /// </summary>
+    public class SaveCoinviewRule : PushCoinviewRule
+    {
+        /// <inheritdoc />
+        public override Task RunAsync(RuleContext context)
+        {
+            base.RunAsync(context);
+
+            // Use the default flush condition to decide if flush is required (currently set to every 60 seconds)
+            if (this.PowParent.UtxoSet is CachedCoinView cachedCoinView)
+                cachedCoinView.Flush(false);
+
+            return Task.CompletedTask;
+        }
+    }
+
+    /// <summary>
+    /// Legacy class for coins that did not upgrade.
+    /// </summary>
+    public class LoadCoinviewRule : FetchCoinviewRule
+    {
     }
 }

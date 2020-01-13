@@ -250,24 +250,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             return this.dBreeze.GetTransaction();
         }
 
-        /// <summary>
-        /// Obtains order number of the last saved rewind state in the database.
-        /// </summary>
-        /// <param name="transaction">Open dBreeze transaction.</param>
-        /// <returns>Order number of the last saved rewind state, or <c>0</c> if no rewind state is found in the database.</returns>
-        /// <remarks>TODO: Using <c>0</c> is hacky here, and <see cref="SaveChanges"/> exploits that in a way that if no such rewind data exist
-        /// the order number of the first rewind data is 0 + 1 = 1.</remarks>
-        private int GetRewindIndex(DBreeze.Transactions.Transaction transaction)
-        {
-            bool prevLazySettings = transaction.ValuesLazyLoadingIsOn;
-
-            transaction.ValuesLazyLoadingIsOn = true;
-            Row<int, byte[]> firstRow = transaction.SelectBackward<int, byte[]>("Rewind").FirstOrDefault();
-            transaction.ValuesLazyLoadingIsOn = prevLazySettings;
-
-            return firstRow != null ? firstRow.Key : 0;
-        }
-
         public RewindData GetRewindData(int height)
         {
             using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
@@ -285,37 +267,37 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
             {
                 transaction.SynchronizeTables("BlockHash", "Coins", "Rewind");
-                if (this.GetRewindIndex(transaction) == 0)
+
+                transaction.ValuesLazyLoadingIsOn = false;
+
+                HashHeightPair current = this.GetTipHash(transaction);
+
+                Row<int, byte[]> row = transaction.Select<int, byte[]>("Rewind", current.Height - 1);
+
+                if (!row.Exists)
                 {
-                    //transaction.RemoveAllKeys("Coins", true);
-                    //res = new HashHeightPair(this.network.GenesisHash, 0);
-                    //this.SetBlockHash(transaction, res);
-
-                    throw new InvalidOperationException("No rewind data found");
+                    throw new InvalidOperationException($"No rewind data found for block `{current}`");
                 }
-                else
+
+                transaction.RemoveKey("Rewind", row.Key);
+                
+                var rewindData = this.dBreezeSerializer.Deserialize<RewindData>(row.Value);
+                
+                this.SetBlockHash(transaction, rewindData.PreviousBlockHash);
+
+                foreach (OutPoint outPoint in rewindData.OutputsToRemove)
                 {
-                    transaction.ValuesLazyLoadingIsOn = false;
-
-                    Row<int, byte[]> firstRow = transaction.SelectBackward<int, byte[]>("Rewind").FirstOrDefault();
-                    transaction.RemoveKey("Rewind", firstRow.Key);
-                    var rewindData = this.dBreezeSerializer.Deserialize<RewindData>(firstRow.Value);
-                    this.SetBlockHash(transaction, rewindData.PreviousBlockHash);
-
-                    foreach (OutPoint outPoint in rewindData.OutputsToRemove)
-                    {
-                        this.logger.LogDebug("Outputs of outpoint '{0}' will be removed.", outPoint);
-                        transaction.RemoveKey("Coins", outPoint.ToBytes());
-                    }
-
-                    foreach (RewindDataOutput rewindDataOutput  in rewindData.OutputsToRestore)
-                    {
-                        this.logger.LogDebug("Outputs of outpoint '{0}' will be restored.", rewindDataOutput.OutPoint);
-                        transaction.Insert("Coins", rewindDataOutput.OutPoint.ToBytes(), this.dBreezeSerializer.Serialize(rewindDataOutput.Coins));
-                    }
-
-                    res = rewindData.PreviousBlockHash;
+                    this.logger.LogDebug("Outputs of outpoint '{0}' will be removed.", outPoint);
+                    transaction.RemoveKey("Coins", outPoint.ToBytes());
                 }
+
+                foreach (RewindDataOutput rewindDataOutput in rewindData.OutputsToRestore)
+                {
+                    this.logger.LogDebug("Outputs of outpoint '{0}' will be restored.", rewindDataOutput.OutPoint);
+                    transaction.Insert("Coins", rewindDataOutput.OutPoint.ToBytes(), this.dBreezeSerializer.Serialize(rewindDataOutput.Coins));
+                }
+
+                res = rewindData.PreviousBlockHash;
 
                 transaction.Commit();
             }

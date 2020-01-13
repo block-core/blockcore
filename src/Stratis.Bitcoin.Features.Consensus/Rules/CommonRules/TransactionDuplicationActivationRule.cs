@@ -33,15 +33,14 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
                     {
                         foreach(IndexedTxOut indexedTxOut in tx.Outputs.AsIndexedOutputs())
                         {
-                            UnspentOutput coins = view.AccessCoins(new OutPoint(tx, indexedTxOut.N));
-                            if ((coins != null) && !coins.Coins.IsPrunable)
+                            UnspentOutput coins = view.AccessCoins(indexedTxOut.ToOutPoint());
+                            if ((coins?.Coins != null) && !coins.Coins.IsPrunable)
                             {
                                 this.Logger.LogDebug("Transaction '{0}' already found in store", tx.GetHash());
                                 this.Logger.LogTrace("(-)[BAD_TX_BIP_30]");
                                 ConsensusErrors.BadTransactionBIP30.Throw();
                             }
-
-                        }
+}
 
                     }
                 }

@@ -799,10 +799,9 @@ namespace Stratis.Bitcoin.Consensus
                     this.signals.Publish(new BlockConnected(blockToConnect));
                 }
 
-                this.logger.LogInformation("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : work = {4}",
+                this.logger.LogInformation("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
                     blockToConnect.ChainedHeader.Height, blockToConnect.ChainedHeader.HashBlock,
-                    dsb.watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.ChainedHeader.ChainWork);
-
+                    dsb.watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.Block.Transactions.Count());
             }
 
             // After successfully connecting all blocks set the tree tip and claim the branch.

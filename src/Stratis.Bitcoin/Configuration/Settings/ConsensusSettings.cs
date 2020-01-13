@@ -32,6 +32,11 @@ namespace Stratis.Bitcoin.Configuration.Settings
         public int MaxBlockMemoryInMB { get; private set; }
 
         /// <summary>
+        /// Maximum memory to use for the coin db cache .
+        /// </summary>
+        public int MaxCoindbCacheInMB { get; private set; }
+
+        /// <summary>
         /// Initializes an instance of the object from the node configuration.
         /// </summary>
         /// <param name="nodeSettings">The node configuration.</param>
@@ -47,6 +52,7 @@ namespace Stratis.Bitcoin.Configuration.Settings
             this.BlockAssumedValid = config.GetOrDefault<uint256>("assumevalid", nodeSettings.Network.Consensus.DefaultAssumeValid, this.logger);
             this.MaxTipAge = config.GetOrDefault("maxtipage", nodeSettings.Network.MaxTipAge, this.logger);
             this.MaxBlockMemoryInMB = config.GetOrDefault("maxblkmem", 200, this.logger);
+            this.MaxCoindbCacheInMB = config.GetOrDefault("dbcache", 200, this.logger);
         }
 
         /// <summary>Prints the help information on how to configure the Consensus settings to the logger.</summary>
@@ -60,7 +66,8 @@ namespace Stratis.Bitcoin.Configuration.Settings
             builder.AppendLine($"-checkpoints=<0 or 1>     Use checkpoints. Default 1.");
             builder.AppendLine($"-assumevalid=<hex>        If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all). Defaults to { network.Consensus.DefaultAssumeValid }.");
             builder.AppendLine($"-maxtipage=<number>       Max tip age. Default {network.MaxTipAge}.");
-            builder.AppendLine($"-maxblkmem=<number>       Max memory to use for unconsumed blocks in MB. Default 200.");
+            builder.AppendLine($"-maxblkmem=<number>       Max memory to use for unconsumed blocks in MB. Default 200 (this does not include the size of objects in memory).");
+            builder.AppendLine($"-dbcache=<number>         Max cache memory for the coindb in MB. Default 200 (this does not include the size of objects in memory).");
 
             NodeSettings.Default(network).Logger.LogInformation(builder.ToString());
         }
@@ -79,7 +86,10 @@ namespace Stratis.Bitcoin.Configuration.Settings
             builder.AppendLine($"#assumevalid={network.Consensus.DefaultAssumeValid}");
             builder.AppendLine($"#Max tip age. Default {network.MaxTipAge}.");
             builder.AppendLine($"#maxtipage={network.MaxTipAge}");
+            builder.AppendLine($"#Max memory to use for unconsumed blocks in MB. Default 200.");
             builder.AppendLine($"#maxblkmem=200");
+            builder.AppendLine($"#Max cache memory for the coindb in MB. Default 200.");
+            builder.AppendLine($"#dbcache=200");
         }
     }
 }

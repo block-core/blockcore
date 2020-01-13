@@ -188,10 +188,11 @@ namespace Stratis.Bitcoin.Networks
                 .Register<SetActivationDeploymentsFullValidationRule>()
 
                 // rules that require the store to be loaded (coinview)
-                .Register<LoadCoinviewRule>()
+                .Register<FetchCoinviewRule>()
                 .Register<TransactionDuplicationActivationRule>() // implements BIP30
                 .Register<PowCoinviewRule>()// implements BIP68, MaxSigOps and BlockReward calculation
-                .Register<SaveCoinviewRule>();
+                .Register<PushCoinviewRule>()
+                .Register<FlushCoinviewRule>();
         }
 
         protected void RegisterMempoolRules(IConsensus consensus)

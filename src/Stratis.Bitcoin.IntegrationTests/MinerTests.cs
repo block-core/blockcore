@@ -152,13 +152,13 @@ namespace Stratis.Bitcoin.IntegrationTests
                 var loggerFactory = new ExtendedLoggerFactory();
                 loggerFactory.AddConsoleWithFilters();
 
-                var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(this.ChainIndexer.Tip));
-                var nodeStats = new NodeStats(dateTimeProvider, loggerFactory);
-                this.cachedCoinView = new CachedCoinView(inMemoryCoinView, dateTimeProvider, new LoggerFactory(), nodeStats);
-
                 var nodeSettings = new NodeSettings(this.network, args: new string[] { "-checkpoints" });
                 var consensusSettings = new ConsensusSettings(nodeSettings);
                 var connectionSettings = new ConnectionManagerSettings(nodeSettings);
+
+                var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(this.ChainIndexer.Tip));
+                var nodeStats = new NodeStats(dateTimeProvider, loggerFactory);
+                this.cachedCoinView = new CachedCoinView(inMemoryCoinView, dateTimeProvider, new LoggerFactory(), nodeStats, consensusSettings);
 
                 var signals = new Signals.Signals(loggerFactory, null);
                 var asyncProvider = new AsyncProvider(loggerFactory, signals, new NodeLifetime());

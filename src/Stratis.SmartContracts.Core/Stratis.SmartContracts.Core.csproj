@@ -4,8 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <Authors>Stratis Group Ltd.</Authors>
-    <Company>Stratis Group Ltd.</Company>
+    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

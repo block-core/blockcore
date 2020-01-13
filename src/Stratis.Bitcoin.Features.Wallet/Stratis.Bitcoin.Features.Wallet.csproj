@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Stratis Bitcoin Features Wallet</Description>
     <AssemblyTitle>Stratis.Bitcoin.Features.Wallet</AssemblyTitle>
-	  <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.Bitcoin.Features.Wallet</AssemblyName>
     <PackageId>Blockcore.Features.Wallet</PackageId>
@@ -17,7 +17,8 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <VersionPrefix>1.0.0</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Authors>Stratis Group Ltd.</Authors>
+    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

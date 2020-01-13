@@ -5,7 +5,8 @@
     <AssemblyName>FodyNlogAdapter</AssemblyName>
     <VersionPrefix>1.0.0</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Authors>Stratis Group Ltd.</Authors>
+    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>Blockcore.FodyNlogAdapter</PackageId>
     <Product>Stratis.FodyNlogAdapter</Product>
   </PropertyGroup>

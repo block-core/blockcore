@@ -55,9 +55,18 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             }
         }
 
-        /// <summary>Length of the coinview cache flushing interval in seconds.</summary>
+        /// <summary>
+        /// Length of the coinview cache flushing interval in seconds.
+        /// </summary>
+        /// <remarks>
+        /// The longer the time interval the better performant the coinview will be,
+        /// UTXOs that are added and deleted withing a single will never reach the underline disk
+        /// this saves two operations to disk (write the coinview and later delete it).
+        /// However if this interval is too high the cache will be filled with dirty items
+        /// Also a crash will mean a big redownload of the chain.
+        /// </remarks>
         /// <seealso cref="lastCacheFlushTime"/>
-        public const int CacheFlushTimeIntervalSeconds = 60;
+        public const int CacheFlushTimeIntervalSeconds = 60 * 60;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -110,29 +119,15 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private int rewindDataCount => this.cachedRewindDataIndex.Count;
 
         private long cacheSizeBytes;
-
         private long rewindDataSizeBytes;
-
-        /// <summary>Time of the last cache flush.</summary>
         private DateTime lastCacheFlushTime;
-
-        /// <summary>Provider of time functions.</summary>
+        
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ConsensusSettings consensusSettings;
         private CachePerformanceSnapshot latestPerformanceSnapShot;
 
         private readonly Random random;
 
-        /// <summary>
-        /// Initializes instance of the object based on DBreeze based coinview.
-        /// </summary>
-        /// <param name="inner">Underlying coinview with database storage.</param>
-        /// <param name="dateTimeProvider">Provider of time functions.</param>
-        /// <param name="loggerFactory">Factory to be used to create logger for the puller.</param>
-        /// <param name="nodeStats">The node stats.</param>
-        /// <param name="consensusSettings">Settings for consensus.</param>
-        /// <param name="stakeChainStore">Storage of POS block information.</param>
-        /// <param name="rewindDataIndexCache">Rewind data index store.</param>
         public CachedCoinView(DBreezeCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
             this(dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
         {
@@ -140,20 +135,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.inner = inner;
         }
 
-        /// <summary>
-        /// Initializes instance of the object based on memory based coinview.
-        /// </summary>
-        /// <param name="inner">Underlying coinview with memory based storage.</param>
-        /// <param name="dateTimeProvider">Provider of time functions.</param>
-        /// <param name="loggerFactory">Factory to be used to create logger for the puller.</param>
-        /// <param name="nodeStats">The node stats.</param>
-        /// <param name="consensusSettings">Settings for consensus.</param>
-        /// <param name="stakeChainStore">Storage of POS block information.</param>
-        /// <param name="rewindDataIndexCache">Rewind data index store.</param>
-        /// <remarks>
-        /// This is used for testing the coinview.
-        /// It allows a coin view that only has in-memory entries.
-        /// </remarks>
         public CachedCoinView(InMemoryCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
             this(dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
         {
@@ -251,15 +232,42 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     }
                 }
 
-                long totalBytes = this.cacheSizeBytes + this.rewindDataSizeBytes;
-                if (totalBytes > this.MaxCacheSizeBytes)
-                {
-                    this.logger.LogDebug("Cache is full now with {0} bytes, evicting.", totalBytes);
-                    this.EvictLocked();
-                }
+                // Check if we need to evict items form the cache.
+                // This happens every time data is fetched fomr coindb
+
+                this.TryEvictCacheLocked();
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Deletes some items from the cache to free space for new items.
+        /// Only items that are persisted in the underlaying storage can be deleted from the cache.
+        /// </summary>
+        /// <remarks>Should be protected by <see cref="lockobj"/>.</remarks>
+        private void TryEvictCacheLocked()
+        {
+            // Calculate total size of cache.
+            long totalBytes = this.cacheSizeBytes + this.rewindDataSizeBytes;
+
+            if (totalBytes > this.MaxCacheSizeBytes)
+            {
+                this.logger.LogDebug("Cache is full now with {0} bytes, evicting.", totalBytes);
+
+                foreach (KeyValuePair<OutPoint, CacheItem> entry in this.cachedUtxoItems)
+                {
+                    if (!entry.Value.IsDirty && entry.Value.ExistInInner)
+                    {
+                        if ((this.random.Next() % 3) == 0)
+                        {
+                            this.logger.LogDebug("Transaction Id '{0}' selected to be removed from the cache, CacheItem:'{1}'.", entry.Key, entry.Value.Coins);
+                            this.cachedUtxoItems.Remove(entry.Key);
+                            this.cacheSizeBytes -= entry.Value.GetSize;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -272,11 +280,26 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// </remarks>
         public void Flush(bool force = true)
         {
-            DateTime now = this.dateTimeProvider.GetUtcNow();
-            if (!force && ((now - this.lastCacheFlushTime).TotalSeconds < CacheFlushTimeIntervalSeconds))
+            if (!force)
             {
-                this.logger.LogTrace("(-)[NOT_NOW]");
-                return;
+                // Check if peridodic flush is reuired.
+                // Ideally this will flush less frequent and always be behind 
+                // blockstore which is currently set to 17 sec.
+
+                DateTime now = this.dateTimeProvider.GetUtcNow();
+                bool flushTimeLimit = (now - this.lastCacheFlushTime).TotalSeconds >= CacheFlushTimeIntervalSeconds;
+
+                // The size of the cache was reached and most likely TryEvictCacheLocked didn't work
+                // so the cahces is pulledted with flushable items, then we flush anyway.
+
+                long totalBytes = this.cacheSizeBytes + this.rewindDataSizeBytes;
+                bool flushSizeLimit = totalBytes > this.MaxCacheSizeBytes;
+
+                if (!flushTimeLimit && !flushSizeLimit)
+                {
+                    this.logger.LogTrace("(-)[NOT_NOW]");
+                    return;
+                }
             }
 
             // Before flushing the coinview persist the stake store
@@ -317,27 +340,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             }
 
             this.lastCacheFlushTime = this.dateTimeProvider.GetUtcNow();
-        }
-
-        /// <summary>
-        /// Deletes some items from the cache to free space for new items.
-        /// Only items that are persisted in the underlaying storage can be deleted from the cache.
-        /// </summary>
-        /// <remarks>Should be protected by <see cref="lockobj"/>.</remarks>
-        private void EvictLocked()
-        {
-            foreach (KeyValuePair<OutPoint, CacheItem> entry in this.cachedUtxoItems.ToList())
-            {
-                if (!entry.Value.IsDirty && entry.Value.ExistInInner)
-                {
-                    if ((this.random.Next() % 3) == 0)
-                    {
-                        this.logger.LogDebug("Transaction Id '{0}' selected to be removed from the cache, CacheItem:'{1}'.", entry.Key, entry.Value.Coins);
-                        this.cachedUtxoItems.Remove(entry.Key);
-                        this.cacheSizeBytes -= entry.Value.GetSize;
-                    }
-                }
-            }
         }
 
         public void SaveChanges(IList<UnspentOutput> outputs, HashHeightPair oldBlockHash, HashHeightPair nextBlockHash, List<RewindData> rewindDataList = null)
@@ -540,8 +542,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         {
             log.AppendLine("======CachedCoinView Bench======");
 
-            log.AppendLine("Cache has ".PadRight(20) + this.cacheCount + " items");
-            log.AppendLine("Rewind data has".PadRight(20) + this.rewindDataCount + " items");
+            log.AppendLine("Coin cache tip ".PadRight(20) + this.blockHash.Height);
+            log.AppendLine("Coin store tip ".PadRight(20) + this.innerBlockHash.Height);
+            log.AppendLine("block store tip ".PadRight(20) + "tbd");
+
+            log.AppendLine("Cache entries ".PadRight(20) + this.cacheCount + " items");
+            log.AppendLine("Rewind data entries ".PadRight(20) + this.rewindDataCount + " items");
             var cache = this.cacheSizeBytes;
             var rewind = this.rewindDataSizeBytes;
             double filledPercentage = Math.Round(((cache + rewind) / (double)this.MaxCacheSizeBytes) * 100, 2);

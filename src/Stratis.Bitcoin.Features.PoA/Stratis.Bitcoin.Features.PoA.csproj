@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Description>Stratis Bitcoin Features PoA</Description>
     <AssemblyTitle>Stratis.Bitcoin.Features.PoA</AssemblyTitle>
-	  <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
+	  <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.Bitcoin.Features.PoA</AssemblyName>
     <PackageId>Blockcore.Features.PoA</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>

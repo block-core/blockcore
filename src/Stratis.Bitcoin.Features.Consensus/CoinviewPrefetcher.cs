@@ -101,7 +101,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                 return Task.CompletedTask;
             }
 
-            bool enforceBIP30 = DeploymentFlags.EnforceBIP30ForBlock(currentHeader);
+            bool enforceBIP30 = DeploymentFlags.EnforceBIP30ForBlock(currentHeader, this.chainIndexer.Network.Consensus, this.chainIndexer);
             OutPoint[] idsToFetch = this.coinviewHelper.GetIdsToFetch(block, enforceBIP30);
 
             if (idsToFetch.Length != 0)

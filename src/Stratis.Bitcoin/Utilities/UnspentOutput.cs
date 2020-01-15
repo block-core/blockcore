@@ -101,6 +101,14 @@ namespace Stratis.Bitcoin.Utilities
 
         public OutPoint OutPoint { get; private set; }
 
+        /// <summary>
+        /// A flag to mark that the output is new and was created
+        /// form the block (and not fetched from disk or from cache).
+        /// This is only to be used by the coindb internal logic to indicate
+        /// and output is new and there is no need to try to fetch it form cache.
+        /// </summary>
+        public bool CreatedFromBlock { get; set; }
+
         public bool Spend()
         {
             if (this.Coins == null)

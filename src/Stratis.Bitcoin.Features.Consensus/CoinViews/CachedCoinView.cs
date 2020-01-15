@@ -255,17 +255,23 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             {
                 this.logger.LogDebug("Cache is full now with {0} bytes, evicting.", totalBytes);
 
+                List<CacheItem> itemsToRemove = new List<CacheItem>();
                 foreach (KeyValuePair<OutPoint, CacheItem> entry in this.cachedUtxoItems)
                 {
                     if (!entry.Value.IsDirty && entry.Value.ExistInInner)
                     {
                         if ((this.random.Next() % 3) == 0)
                         {
-                            this.logger.LogDebug("Transaction Id '{0}' selected to be removed from the cache, CacheItem:'{1}'.", entry.Key, entry.Value.Coins);
-                            this.cachedUtxoItems.Remove(entry.Key);
-                            this.cacheSizeBytes -= entry.Value.GetSize;
+                            itemsToRemove.Add(entry.Value);
                         }
                     }
+                }
+
+                foreach(CacheItem item in itemsToRemove)
+                {
+                    this.logger.LogDebug("Transaction Id '{0}' selected to be removed from the cache, CacheItem:'{1}'.", item.OutPoint, item.Coins);
+                    this.cachedUtxoItems.Remove(item.OutPoint);
+                    this.cacheSizeBytes -= item.GetSize;
                 }
             }
         }
@@ -360,6 +366,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 this.blockHash = nextBlockHash;
                 var rewindData = new RewindData(oldBlockHash);
                 var indexItems = new Dictionary<OutPoint, int>();
+                long utxoNotFlushed = 0;
 
                 foreach (UnspentOutput output in outputs)
                 {
@@ -371,17 +378,36 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                         this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
 
-                        FetchCoinsResponse result = this.inner.FetchCoins(new[] { output.OutPoint });
-
-                        UnspentOutput unspentOutput = result.UnspentOutputs.Single().Value;
-
-                        cacheItem = new CacheItem()
+                        if (output.CreatedFromBlock)
                         {
-                            ExistInInner = unspentOutput.Coins != null,
-                            IsDirty = false,
-                            OutPoint = unspentOutput.OutPoint,
-                            Coins = unspentOutput.Coins
-                        };
+                            // if the output is indicate that it was added from a block
+                            // There is no need to spend an extra call to disk.
+
+                            cacheItem = new CacheItem()
+                            {
+                                ExistInInner = false,
+                                IsDirty = false,
+                                OutPoint = output.OutPoint,
+                                Coins = null
+                            };
+                        }
+                        else
+                        {
+                            // This can happen if the cashe item was evicted while
+                            // the block was being processed, fetch the outut again from disk.
+
+                            FetchCoinsResponse result = this.inner.FetchCoins(new[] { output.OutPoint });
+
+                            UnspentOutput unspentOutput = result.UnspentOutputs.Single().Value;
+
+                            cacheItem = new CacheItem()
+                            {
+                                ExistInInner = unspentOutput.Coins != null,
+                                IsDirty = false,
+                                OutPoint = unspentOutput.OutPoint,
+                                Coins = unspentOutput.Coins
+                            };
+                        }
 
                         this.cachedUtxoItems.Add(cacheItem.OutPoint, cacheItem);
                         this.cacheSizeBytes += cacheItem.GetSize;
@@ -425,6 +451,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             this.logger.LogDebug("Utxo '{0}' is not in disk, removing from cache.", cacheItem.OutPoint);
                             this.cachedUtxoItems.Remove(cacheItem.OutPoint);
                             this.cacheSizeBytes -= cacheItem.GetSize;
+                            utxoNotFlushed++;
                         }
                         else
                         {
@@ -474,7 +501,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         this.cacheSizeBytes += cacheItem.GetScriptSize;
                     }
 
-                    // Mark the cahe item as dirty so it get persisted 
+                    // Mark the cache item as dirty so it get persisted 
                     // to disk and not evicted form cache
 
                     cacheItem.IsDirty = true;
@@ -488,6 +515,15 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 this.cachedRewindDataIndex.Add(this.blockHash.Height, rewindData);
                 this.rewindDataSizeBytes += rewindData.TotalSize;
+
+                this.performanceCounter.AddUtxoNotFlushedCount(utxoNotFlushed);
+
+                int rewindDataWindow = 10;
+                if (this.cachedRewindDataIndex.TryGetValue(this.blockHash.Height - rewindDataWindow, out RewindData delete))
+                {
+                    this.cachedRewindDataIndex.Remove(this.blockHash.Height - rewindDataWindow);
+                    this.rewindDataSizeBytes -= delete.TotalSize;
+                }
             }
         }
 
@@ -545,6 +581,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             log.AppendLine("Coin cache tip ".PadRight(20) + this.blockHash.Height);
             log.AppendLine("Coin store tip ".PadRight(20) + this.innerBlockHash.Height);
             log.AppendLine("block store tip ".PadRight(20) + "tbd");
+            log.AppendLine();
 
             log.AppendLine("Cache entries ".PadRight(20) + this.cacheCount + " items");
             log.AppendLine("Rewind data entries ".PadRight(20) + this.rewindDataCount + " items");

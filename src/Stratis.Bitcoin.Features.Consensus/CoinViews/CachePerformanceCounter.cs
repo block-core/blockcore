@@ -48,6 +48,16 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             }
         }
 
+        /// <summary>Number of utxos that never got flushed to disk.</summary>
+        private long utxoNotFlushed;
+
+        /// <summary>Number of utxos that never got flushed to disk.</summary>
+        public long UtxoNotFlushed
+        {
+            get { return this.utxoNotFlushed; }
+        }
+
+
         /// <summary>Provider of date time functionality.</summary>
         private readonly IDateTimeProvider dateTimeProvider;
 
@@ -84,13 +94,23 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         /// <summary>
+        /// Adds new sample to the number of utxo that never got flushed.
+        /// </summary>
+        /// <param name="count">Number of hit queries to add.</param>
+        [NoTrace]
+        public void AddUtxoNotFlushedCount(long count)
+        {
+            Interlocked.Add(ref this.utxoNotFlushed, count);
+        }
+
+        /// <summary>
         /// Creates a snapshot of the current state of the performance counter.
         /// </summary>
         /// <returns>Newly created snapshot.</returns>
         [NoTrace]
         public CachePerformanceSnapshot Snapshot()
         {
-            var snap = new CachePerformanceSnapshot(this.missCount, this.hitCount)
+            var snap = new CachePerformanceSnapshot(this.missCount, this.hitCount, this.utxoNotFlushed)
             {
                 Start = this.Start,
                 // TODO: Would it not be better for these two guys to be part of the constructor? Either implicitly or explicitly.
@@ -123,6 +143,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             get { return this.missCount; }
         }
 
+        private readonly long utxoNotFlushed;
+
+        public long TotalUtxoNotFlushed
+        {
+            get { return this.utxoNotFlushed; }
+        }
+
         /// <summary>UTC timestamp when the snapshotted performance counter was created.</summary>
         public DateTime Start { get; internal set; }
 
@@ -138,16 +165,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             }
         }
 
-        /// <summary>
-        /// Initializes the instance of the object.
-        /// </summary>
-        /// <param name="missCount">Number of cache queries for which the result was not found in the cache.</param>
-        /// <param name="hitCount">Number of cache queries for which the result was found in the cache.</param>
         [NoTrace]
-        public CachePerformanceSnapshot(long missCount, long hitCount)
+        public CachePerformanceSnapshot(long missCount, long hitCount,long utxoNotFlushed)
         {
             this.missCount = missCount;
             this.hitCount = hitCount;
+            this.utxoNotFlushed = utxoNotFlushed;
         }
 
         /// <summary>
@@ -172,7 +195,9 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
             long missCount = end.missCount - start.missCount;
             long hitCount = end.hitCount - start.hitCount;
-            return new CachePerformanceSnapshot(missCount, hitCount)
+            long utxoNotFlushed = end.utxoNotFlushed - start.utxoNotFlushed;
+
+            return new CachePerformanceSnapshot(missCount, hitCount, utxoNotFlushed)
             {
                 Start = start.Taken,
                 Taken = end.Taken
@@ -188,8 +213,9 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             builder.AppendLine("====Cache Stats(%)====");
             if (total != 0)
             {
-                builder.AppendLine("Hit:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalHitCount * 100m / total).ToString("0.00") + " %");
-                builder.AppendLine("Miss:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalMissCount * 100m / total).ToString("0.00") + " %");
+                builder.AppendLine("Cache Hit:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalHitCount * 100m / total).ToString("0.00") + " %");
+                builder.AppendLine("Cache Miss:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalMissCount * 100m / total).ToString("0.00") + " %");
+                builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoNotFlushed * 100m / total).ToString("0.00") + " %");
             }
 
             builder.AppendLine("========================");

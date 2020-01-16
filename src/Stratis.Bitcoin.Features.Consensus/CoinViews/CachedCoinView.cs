@@ -7,6 +7,7 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.Configuration.Settings;
+using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
@@ -121,39 +122,34 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private long cacheSizeBytes;
         private long rewindDataSizeBytes;
         private DateTime lastCacheFlushTime;
-        
+        private readonly Network network;
+        private readonly ICheckpoints checkpoints;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ConsensusSettings consensusSettings;
         private CachePerformanceSnapshot latestPerformanceSnapShot;
+        private int lastCheckpointHeight;
 
         private readonly Random random;
 
-        public CachedCoinView(DBreezeCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
-            this(dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
+        public CachedCoinView(Network network, ICheckpoints checkpoint, DBreezeCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
+            this(network, checkpoint, dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
         {
             Guard.NotNull(inner, nameof(inner));
             this.inner = inner;
         }
 
-        public CachedCoinView(InMemoryCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
-            this(dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
+        public CachedCoinView(Network network, ICheckpoints checkpoint, InMemoryCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
+            this(network, checkpoint, dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
         {
             Guard.NotNull(inner, nameof(inner));
             this.inner = inner;
         }
 
-        /// <summary>
-        /// Initializes instance of the object based.
-        /// </summary>
-        /// <param name="dateTimeProvider">Provider of time functions.</param>
-        /// <param name="loggerFactory">Factory to be used to create logger for the puller.</param>
-        /// <param name="nodeStats">The node stats.</param>
-        /// <param name="consensusSettings">Settings for consensus.</param>
-        /// <param name="stakeChainStore">Storage of POS block information.</param>
-        /// <param name="rewindDataIndexCache">Rewind data index store.</param>
-        private CachedCoinView(IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null)
+        private CachedCoinView(Network network, ICheckpoints checkpoints, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null)
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.network = network;
+            this.checkpoints = checkpoints;
             this.dateTimeProvider = dateTimeProvider;
             this.consensusSettings = consensusSettings;
             this.stakeChainStore = stakeChainStore;
@@ -165,6 +161,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.cachedRewindDataIndex = new Dictionary<int, RewindData>();
             this.random = new Random();
 
+            this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
+          
             this.MaxCacheSizeBytes = consensusSettings.MaxCoindbCacheInMB * 1024 * 1024;
 
             nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 300);
@@ -507,21 +505,58 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     cacheItem.IsDirty = true;
                 }
 
+                this.performanceCounter.AddUtxoNotFlushedCount(utxoNotFlushed);
+
                 if (this.rewindDataIndexCache != null && indexItems.Any())
                 {
                     this.rewindDataIndexCache.Save(indexItems);
                     this.rewindDataIndexCache.Flush(this.blockHash.Height);
                 }
 
+                // Add the most recent rewind data to the cache.
                 this.cachedRewindDataIndex.Add(this.blockHash.Height, rewindData);
                 this.rewindDataSizeBytes += rewindData.TotalSize;
 
-                this.performanceCounter.AddUtxoNotFlushedCount(utxoNotFlushed);
+                // Remove rewind data form the back of a moving window.
+                // The closer we get to the tip we keep a longer rewind data window.
+                // Anything bellow last checkpoint we keep the minimal of 10 
+                // (random low number) rewind data items.
+                // Beyond last checkpoint:
+                // - For POS we keep a window of MaxReorg.
+                // - For POW we keep a growing number of rewind data
 
-                int rewindDataWindow = 10;
-                if (this.cachedRewindDataIndex.TryGetValue(this.blockHash.Height - rewindDataWindow, out RewindData delete))
+                // A moving window of information needed to rewind the node to a previous block.
+                // When cache is flushed the rewind data will allow to rewind the node up to the 
+                // number of rewind blocks.
+                // TODO: move rewind data to use block store.
+                // Rewind data can go away all togetehr if the node uses teh blocks in block store
+                // to get the rewind information, blockstore persists much more frequent then coin cache
+                // So using block store for rewinds is not entirely impossible.
+               
+                uint rewindDataWindow = 10;
+
+                if (this.blockHash.Height >= this.lastCheckpointHeight)
                 {
-                    this.cachedRewindDataIndex.Remove(this.blockHash.Height - rewindDataWindow);
+                    if (this.network.Consensus.MaxReorgLength != 0)
+                    {
+                        rewindDataWindow = this.network.Consensus.MaxReorgLength;
+                    }
+                    else
+                    {
+                        // TODO: make the rewind data window a configuration
+                        // parameter of evern a network parameter.
+
+                        // For POW assume BTC where a rewind data of 100 is more then enough.
+                        rewindDataWindow = 100; 
+                    }
+                }
+
+                int rewindToRemove = this.blockHash.Height - (int)rewindDataWindow;
+
+                if (this.cachedRewindDataIndex.TryGetValue(rewindToRemove, out RewindData delete))
+                {
+                    this.logger.LogDebug("Remove rewind data height '{0}' from cache.", rewindToRemove);
+                    this.cachedRewindDataIndex.Remove(rewindToRemove);
                     this.rewindDataSizeBytes -= delete.TotalSize;
                 }
             }

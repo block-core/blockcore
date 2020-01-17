@@ -32,7 +32,8 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
             builder.AppendLine();
             builder.AppendLine("======ConsensusManager Bench======");
 
-            builder.AppendLine($"Total blocks per minuate: {this.TotalConnectionTime.GetAvgExecutionTimeCountMin()} pm");
+            builder.AppendLine($"Blocks per minuate: {this.TotalConnectionTime.GetAvgExecutionTimeCountMin()}");
+            builder.AppendLine();
 
             builder.AppendLine($"Total connection time (FV, CHT upd, Rewind, Signaling): {this.TotalConnectionTime.GetAvgExecutionTimeMs()} ms");
 

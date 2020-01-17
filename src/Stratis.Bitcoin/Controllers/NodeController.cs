@@ -406,7 +406,7 @@ namespace Stratis.Bitcoin.Controllers
                     return this.Json(null);
                 }
 
-                return this.Json(new GetTxOutModel(unspentOutputs.First(f => f.OutPoint.N == vout), this.network, this.chainIndexer.Tip));
+                return this.Json(new GetTxOutModel(unspentOutputs.FirstOrDefault(f => f.OutPoint.N == vout), this.network, this.chainIndexer.Tip));
             }
             catch (Exception e)
             {

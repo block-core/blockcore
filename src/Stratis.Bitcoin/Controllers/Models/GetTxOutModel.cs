@@ -22,17 +22,15 @@ namespace Stratis.Bitcoin.Controllers.Models
         /// <param name="tip">The current consensus tip's <see cref="ChainedHeader"/>.</param>
         public GetTxOutModel(UnspentOutput unspentOutputs, Network network, ChainedHeader tip)
         {
-            if (unspentOutputs != null)
+            this.BestBlock = tip.HashBlock;
+
+            if (unspentOutputs?.Coins != null)
             {
                 TxOut output = unspentOutputs.Coins.TxOut;
-                this.BestBlock = tip.HashBlock;
                 this.Coinbase = unspentOutputs.Coins.IsCoinbase;
                 this.Confirmations = NetworkExtensions.MempoolHeight == unspentOutputs.Coins.Height ? 0 : tip.Height - (int)unspentOutputs.Coins.Height + 1;
-                if (output != null)
-                {
-                    this.Value = output.Value;
-                    this.ScriptPubKey = new ScriptPubKey(output.ScriptPubKey, network);
-                }
+                this.Value = output.Value;
+                this.ScriptPubKey = new ScriptPubKey(output.ScriptPubKey, network);
             }
         }
 

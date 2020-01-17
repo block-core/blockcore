@@ -129,7 +129,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
                     for (int i = 0; i < txIds.Length; i++)
                         result.UnspentOutputs[txIds[i]] = this.unspentOutputs.TryGetValue(txIds[i], out UnspentOutput unspent) ? unspent : null;
 
-                    return new FetchCoinsResponse();
+                    return result;
                 });
 
             // Mock the coinviews "GetTipHashAsync" method.
@@ -537,7 +537,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
@@ -584,7 +584,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
@@ -632,7 +632,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
@@ -680,7 +680,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
@@ -726,7 +726,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
@@ -860,7 +860,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
@@ -907,7 +907,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // Verify that the transaction would be accepted to the memory pool.
             var state = new MempoolValidationState(true);
@@ -951,7 +951,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
-            //this.unspentOutputs[prevTran.GetHash()] = new UnspentOutput(1, prevTran);
+            this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // activate segwit
             BIP9DeploymentsParameters current = this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit];

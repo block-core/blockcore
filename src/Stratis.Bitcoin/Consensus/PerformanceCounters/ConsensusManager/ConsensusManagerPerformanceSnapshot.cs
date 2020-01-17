@@ -32,6 +32,8 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
             builder.AppendLine();
             builder.AppendLine("======ConsensusManager Bench======");
 
+            builder.AppendLine($"Total blocks per minuate: {this.TotalConnectionTime.GetAvgExecutionTimeCountMin()} pm");
+
             builder.AppendLine($"Total connection time (FV, CHT upd, Rewind, Signaling): {this.TotalConnectionTime.GetAvgExecutionTimeMs()} ms");
 
             builder.AppendLine($"Block connection (FV excluding rewind): {this.ConnectBlockFV.GetAvgExecutionTimeMs()} ms");
@@ -52,6 +54,11 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
         {
             this.totalExecutionsCount = 0;
             this.totalDelayTicks = 0;
+        }
+
+        public double GetAvgExecutionTimeCountMin()
+        {
+            return Math.Round(this.totalExecutionsCount / TimeSpan.FromTicks(this.totalDelayTicks).TotalMinutes, 4);
         }
 
         public double GetAvgExecutionTimeMs()

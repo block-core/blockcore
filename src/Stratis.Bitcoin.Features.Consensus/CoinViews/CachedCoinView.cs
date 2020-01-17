@@ -78,7 +78,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <summary>Statistics of hits and misses in the cache.</summary>
         private CachePerformanceCounter performanceCounter { get; set; }
 
-        /// <summary>Lock object to protect access to <see cref="cachedUtxoItems"/>, <see cref="blockHash"/>, <see cref="cachedRewindDataIndex"/>, and <see cref="innerBlockHash"/>.</summary>
+        /// <summary>Lock object to protect access to <see cref="cachedUtxoItems"/>, <see cref="blockHash"/>, <see cref="cachedRewindData"/>, and <see cref="innerBlockHash"/>.</summary>
         private readonly object lockobj;
 
         /// <summary>Hash of the block headers of the tip of the coinview.</summary>
@@ -94,7 +94,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
         /// <summary>Pending list of rewind data to be persisted to a persistent storage.</summary>
         /// <remarks>All access to this list has to be protected by <see cref="lockobj"/>.</remarks>
-        private readonly Dictionary<int, RewindData> cachedRewindDataIndex;
+        private readonly Dictionary<int, RewindData> cachedRewindData;
 
         /// <inheritdoc />
         public ICoinView Inner => this.inner;
@@ -116,9 +116,10 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private int cacheCount => this.cachedUtxoItems.Count;
 
         /// <summary>Number of items in the rewind data.</summary>
-        /// <remarks>The getter violates the lock contract on <see cref="cachedRewindDataIndex"/>, but the lock here is unnecessary as the <see cref="cachedRewindDataIndex"/> is marked as readonly.</remarks>
-        private int rewindDataCount => this.cachedRewindDataIndex.Count;
+        /// <remarks>The getter violates the lock contract on <see cref="cachedRewindData"/>, but the lock here is unnecessary as the <see cref="cachedRewindData"/> is marked as readonly.</remarks>
+        private int rewindDataCount => this.cachedRewindData.Count;
 
+        private long dirtyCacheCount;
         private long cacheSizeBytes;
         private long rewindDataSizeBytes;
         private DateTime lastCacheFlushTime;
@@ -158,7 +159,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.cachedUtxoItems = new Dictionary<OutPoint, CacheItem>();
             this.performanceCounter = new CachePerformanceCounter(this.dateTimeProvider);
             this.lastCacheFlushTime = this.dateTimeProvider.GetUtcNow();
-            this.cachedRewindDataIndex = new Dictionary<int, RewindData>();
+            this.cachedRewindData = new Dictionary<int, RewindData>();
             this.random = new Random();
 
             this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
@@ -270,6 +271,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     this.logger.LogDebug("Transaction Id '{0}' selected to be removed from the cache, CacheItem:'{1}'.", item.OutPoint, item.Coins);
                     this.cachedUtxoItems.Remove(item.OutPoint);
                     this.cacheSizeBytes -= item.GetSize;
+                    if (item.IsDirty) this.dirtyCacheCount--;
                 }
             }
         }
@@ -314,7 +316,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
             // Before flushing the coinview persist the rewind data index store as well.
             if (this.rewindDataIndexCache != null)
-                this.rewindDataIndexCache.Flush(this.blockHash.Height);
+                this.rewindDataIndexCache.SaveAndEvict(this.blockHash.Height, null);
 
             if (this.innerBlockHash == null)
                 this.innerBlockHash = this.inner.GetTipHash();
@@ -336,10 +338,11 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     modify.Add(new UnspentOutput(cacheItem.Key, cacheItem.Value.Coins));
                 }
 
-                this.Inner.SaveChanges(modify, this.innerBlockHash, this.blockHash, this.cachedRewindDataIndex.Select(c => c.Value).ToList());
+                this.Inner.SaveChanges(modify, this.innerBlockHash, this.blockHash, this.cachedRewindData.Select(c => c.Value).ToList());
 
-                this.cachedRewindDataIndex.Clear();
+                this.cachedRewindData.Clear();
                 this.rewindDataSizeBytes = 0;
+                this.dirtyCacheCount = 0;
                 this.innerBlockHash = this.blockHash;
             }
 
@@ -362,17 +365,20 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 }
 
                 this.blockHash = nextBlockHash;
-                var rewindData = new RewindData(oldBlockHash);
-                var indexItems = new Dictionary<OutPoint, int>();
                 long utxoNotFlushed = 0;
+
+                var rewindData = new RewindData(oldBlockHash);
+                Dictionary<OutPoint, int> indexItems = null;
+                if (this.rewindDataIndexCache != null)
+                    indexItems = new Dictionary<OutPoint, int>();
 
                 foreach (UnspentOutput output in outputs)
                 {
                     if (!this.cachedUtxoItems.TryGetValue(output.OutPoint, out CacheItem cacheItem))
                     {
-                       // Add outputs to cache, this will happen for two cases
-                       // 1. if a chaced item was evicted
-                       // 2. for new outputs that are added
+                        // Add outputs to cache, this will happen for two cases
+                        // 1. if a chaced item was evicted
+                        // 2. for new outputs that are added
 
                         this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
 
@@ -433,7 +439,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             rewindData.OutputsToRestore.Add(new RewindDataOutput(cacheItem.OutPoint, cacheItem.Coins));
                             rewindData.TotalSize += cacheItem.GetSize;
 
-                            if (this.rewindDataIndexCache != null)
+                            if (this.rewindDataIndexCache != null && indexItems != null)
                             {
                                 indexItems[cacheItem.OutPoint] = this.blockHash.Height;
                             }
@@ -450,15 +456,18 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             this.cachedUtxoItems.Remove(cacheItem.OutPoint);
                             this.cacheSizeBytes -= cacheItem.GetSize;
                             utxoNotFlushed++;
+                            if (cacheItem.IsDirty) this.dirtyCacheCount--;
                         }
                         else
                         {
                             this.cacheSizeBytes -= cacheItem.GetScriptSize;
+                            cacheItem.Coins = null;
 
                             // Delete output from cache but keep a the cache
                             // item reference so it will get deleted form disk
 
-                            cacheItem.Coins = null;
+                            cacheItem.IsDirty = true;
+                            this.dirtyCacheCount++;
                         }
                     }
                     else
@@ -483,7 +492,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                             // Clear this in order to calculate the cache sie
                             // this will get set later when overriden
-                            cacheItem.Coins = null; 
+                            cacheItem.Coins = null;
                         }
 
                         // Handle rewind data
@@ -497,24 +506,25 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                         cacheItem.Coins = output.Coins;
                         this.cacheSizeBytes += cacheItem.GetScriptSize;
+
+                        // Mark the cache item as dirty so it get persisted 
+                        // to disk and not evicted form cache
+
+                        cacheItem.IsDirty = true;
+                        this.dirtyCacheCount++;
                     }
-
-                    // Mark the cache item as dirty so it get persisted 
-                    // to disk and not evicted form cache
-
-                    cacheItem.IsDirty = true;
                 }
+
 
                 this.performanceCounter.AddUtxoNotFlushedCount(utxoNotFlushed);
 
                 if (this.rewindDataIndexCache != null && indexItems.Any())
                 {
-                    this.rewindDataIndexCache.Save(indexItems);
-                    this.rewindDataIndexCache.Flush(this.blockHash.Height);
+                    this.rewindDataIndexCache.SaveAndEvict(this.blockHash.Height, indexItems);
                 }
 
                 // Add the most recent rewind data to the cache.
-                this.cachedRewindDataIndex.Add(this.blockHash.Height, rewindData);
+                this.cachedRewindData.Add(this.blockHash.Height, rewindData);
                 this.rewindDataSizeBytes += rewindData.TotalSize;
 
                 // Remove rewind data form the back of a moving window.
@@ -539,7 +549,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 {
                     if (this.network.Consensus.MaxReorgLength != 0)
                     {
-                        rewindDataWindow = this.network.Consensus.MaxReorgLength;
+                        rewindDataWindow = this.network.Consensus.MaxReorgLength + 1;
                     }
                     else
                     {
@@ -553,10 +563,10 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 int rewindToRemove = this.blockHash.Height - (int)rewindDataWindow;
 
-                if (this.cachedRewindDataIndex.TryGetValue(rewindToRemove, out RewindData delete))
+                if (this.cachedRewindData.TryGetValue(rewindToRemove, out RewindData delete))
                 {
                     this.logger.LogDebug("Remove rewind data height '{0}' from cache.", rewindToRemove);
-                    this.cachedRewindDataIndex.Remove(rewindToRemove);
+                    this.cachedRewindData.Remove(rewindToRemove);
                     this.rewindDataSizeBytes -= delete.TotalSize;
                 }
             }
@@ -588,6 +598,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 // All the cached utxos are now on disk so we can clear the cached entry list.
                 this.cachedUtxoItems.Clear();
                 this.cacheSizeBytes = 0;
+                this.dirtyCacheCount = 0;
 
                 this.innerBlockHash = hash;
                 this.blockHash = hash;
@@ -602,7 +613,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <inheritdoc />
         public RewindData GetRewindData(int height)
         {
-            if (this.cachedRewindDataIndex.TryGetValue(height, out RewindData existingRewindData))
+            if (this.cachedRewindData.TryGetValue(height, out RewindData existingRewindData))
                 return existingRewindData;
 
             return this.Inner.GetRewindData(height);
@@ -619,6 +630,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             log.AppendLine();
 
             log.AppendLine("Cache entries ".PadRight(20) + this.cacheCount + " items");
+            log.AppendLine("Dirty cache entries ".PadRight(20) + this.dirtyCacheCount + " items");
+
             log.AppendLine("Rewind data entries ".PadRight(20) + this.rewindDataCount + " items");
             var cache = this.cacheSizeBytes;
             var rewind = this.rewindDataSizeBytes;

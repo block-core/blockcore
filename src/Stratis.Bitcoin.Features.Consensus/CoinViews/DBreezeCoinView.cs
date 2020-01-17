@@ -223,13 +223,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                     if (rewindDataList != null)
                     {
-                        //int nextRewindIndex = this.GetRewindIndex(transaction) + 1;
                         foreach (RewindData rewindData in rewindDataList)
                         {
-                            this.logger.LogDebug("Rewind state #{0} created.", rewindData.PreviousBlockHash.Height);
+                            var nextRewindIndex = rewindData.PreviousBlockHash.Height + 1;
 
-                            transaction.Insert("Rewind", rewindData.PreviousBlockHash.Height, this.dBreezeSerializer.Serialize(rewindData));
-                            //nextRewindIndex++;
+                            this.logger.LogDebug("Rewind state #{0} created.", nextRewindIndex);
+
+                            transaction.Insert("Rewind", nextRewindIndex, this.dBreezeSerializer.Serialize(rewindData));
                         }
                     }
 
@@ -272,7 +272,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 HashHeightPair current = this.GetTipHash(transaction);
 
-                Row<int, byte[]> row = transaction.Select<int, byte[]>("Rewind", current.Height - 1);
+                Row<int, byte[]> row = transaction.Select<int, byte[]>("Rewind", current.Height);
 
                 if (!row.Exists)
                 {

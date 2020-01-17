@@ -51,7 +51,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 {
                     var output = this.unspents.TryGet(txIds[i]);
 
-                    result.UnspentOutputs.Add(output.OutPoint, output);
+                    if (output != null)
+                        result.UnspentOutputs.Add(output.OutPoint, output);
                 }
 
                 return result;
@@ -80,10 +81,11 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     }
                     else
                     {
+                        existing = new UnspentOutput(unspent.OutPoint, unspent.Coins);
                         this.unspents.Add(unspent.OutPoint, existing);
                     }
 
-                    if (existing.Coins.IsPrunable)
+                    if (existing.Coins?.IsPrunable ?? false)
                         this.unspents.Remove(unspent.OutPoint);
                 }
             }

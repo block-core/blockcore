@@ -41,8 +41,8 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
             double minutesFromNowToTip = (DateTime.UtcNow - this.chainIndex.Tip.Header.BlockTime.DateTime).TotalMinutes;
             double blockTime = this.chainIndex.Network.Consensus.TargetSpacing.TotalMinutes;
             double expectedRemainingBlocks = minutesFromNowToTip / blockTime;
-            if (blocksPerMinute == 0) blocksPerMinute = 0.0001; // to void divid by zero.
-            builder.AppendLine($"Estimated time to full sync: {Math.Round(TimeSpan.FromMinutes(expectedRemainingBlocks / blocksPerMinute).TotalHours, 2)} hours");
+            if (blocksPerMinute != 0)
+                builder.AppendLine($"Estimated time to full sync: {Math.Round(TimeSpan.FromMinutes(expectedRemainingBlocks / blocksPerMinute).TotalHours, 2)} hours");
             builder.AppendLine();
 
             builder.AppendLine($"Total connection time (FV, CHT upd, Rewind, Signaling): {this.TotalConnectionTime.GetAvgExecutionTimeMs()} ms");
@@ -69,11 +69,17 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
 
         public double GetAvgExecutionTimeCountMin()
         {
+            if (this.totalDelayTicks == 0)
+                return 0;
+
             return Math.Round(this.totalExecutionsCount / TimeSpan.FromTicks(this.totalDelayTicks).TotalMinutes, 4);
         }
 
         public double GetAvgExecutionTimeMs()
         {
+            if (this.totalExecutionsCount == 0)
+                return 0;
+
             return Math.Round(TimeSpan.FromTicks(this.totalDelayTicks).TotalMilliseconds / this.totalExecutionsCount, 4);
         }
 

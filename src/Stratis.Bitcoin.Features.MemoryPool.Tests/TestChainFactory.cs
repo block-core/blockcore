@@ -268,7 +268,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
                 chain.SetTip(currentBlock.Header);
                 srcTxs.Add(currentBlock.Transactions[0]);
 
-                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(currentBlock.Transactions[0], 0), new Coins((uint)(i + 1), currentBlock.Transactions[0].Outputs.First(), false)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
+                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(currentBlock.Transactions[0], 0), new Coins((uint)(i + 1), currentBlock.Transactions[0].Outputs.First(), currentBlock.Transactions[0].IsCoinBase)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
 
             }
 

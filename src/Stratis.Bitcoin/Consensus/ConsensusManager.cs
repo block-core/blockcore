@@ -198,7 +198,7 @@ namespace Stratis.Bitcoin.Consensus
             this.callbacksByBlocksRequestedHash = new Dictionary<uint256, DownloadedCallbacks>();
             this.peersByPeerId = new Dictionary<int, INetworkPeer>();
             this.toDownloadQueue = new Queue<BlockDownloadRequest>();
-            this.performanceCounter = new ConsensusManagerPerformanceCounter();
+            this.performanceCounter = new ConsensusManagerPerformanceCounter(this.chainIndexer);
             this.ibdState = ibdState;
 
             this.blockPuller = blockPuller;

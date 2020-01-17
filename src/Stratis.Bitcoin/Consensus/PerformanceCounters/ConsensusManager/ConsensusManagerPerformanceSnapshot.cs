@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
+using NBitcoin;
 using TracerAttributes;
 
 namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
@@ -8,6 +9,8 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
     /// <summary>Snapshot of <see cref="ConsensusManager"/> performance.</summary>
     public class ConsensusManagerPerformanceSnapshot
     {
+        private readonly ChainIndexer chainIndex;
+
         public ExecutionsCountAndDelay TotalConnectionTime { get; }
 
         public ExecutionsCountAndDelay ConnectBlockFV { get; }
@@ -16,12 +19,13 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
 
         public ExecutionsCountAndDelay BlockConnectedSignal { get; }
 
-        public ConsensusManagerPerformanceSnapshot()
+        public ConsensusManagerPerformanceSnapshot(ChainIndexer chainIndex)
         {
             this.TotalConnectionTime = new ExecutionsCountAndDelay();
             this.ConnectBlockFV = new ExecutionsCountAndDelay();
             this.BlockDisconnectedSignal = new ExecutionsCountAndDelay();
             this.BlockConnectedSignal = new ExecutionsCountAndDelay();
+            this.chainIndex = chainIndex;
         }
 
         [NoTrace]
@@ -32,7 +36,13 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
             builder.AppendLine();
             builder.AppendLine("======ConsensusManager Bench======");
 
-            builder.AppendLine($"Blocks per minute: {this.TotalConnectionTime.GetAvgExecutionTimeCountMin()}");
+            double blocksPerMinute = this.TotalConnectionTime.GetAvgExecutionTimeCountMin();
+            builder.AppendLine($"Blocks per minute: {blocksPerMinute}");
+            double minutesFromNowToTip = (DateTime.UtcNow - this.chainIndex.Tip.Header.BlockTime.DateTime).TotalMinutes;
+            double blockTime = this.chainIndex.Network.Consensus.TargetSpacing.TotalMinutes;
+            double expectedRemainingBlocks = minutesFromNowToTip / blockTime;
+
+            builder.AppendLine($"Estimated time to full sync: {Math.Round(TimeSpan.FromMinutes(expectedRemainingBlocks / blocksPerMinute).TotalHours, 2)} hours");
             builder.AppendLine();
 
             builder.AppendLine($"Total connection time (FV, CHT upd, Rewind, Signaling): {this.TotalConnectionTime.GetAvgExecutionTimeMs()} ms");

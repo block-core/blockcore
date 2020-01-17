@@ -49,9 +49,7 @@ namespace Stratis.Bitcoin.Features.Consensus
         /// <summary>When checking the POS block signature this determines the maximum push data (public key) size following the OP_RETURN in the nonspendable output.</summary>
         private const int MaxPushDataSize = 40;
 
-        /// <summary>Expected (or target) block time in seconds.</summary>
-        public const uint TargetSpacingSeconds = 64;
-
+        // TODO: move this to IConsensus
         /// <summary>Time interval in minutes that is used in the retarget calculation.</summary>
         private const uint RetargetIntervalMinutes = 16;
 
@@ -105,7 +103,7 @@ namespace Stratis.Bitcoin.Features.Consensus
         /// <inheritdoc/>
         public Target CalculateRetarget(uint firstBlockTime, Target firstBlockTarget, uint secondBlockTime, BigInteger targetLimit)
         {
-            uint targetSpacing = TargetSpacingSeconds;
+            uint targetSpacing = (uint)this.network.Consensus.TargetSpacing.TotalSeconds;
             uint actualSpacing = firstBlockTime > secondBlockTime ? firstBlockTime - secondBlockTime : targetSpacing;
 
             if (actualSpacing > targetSpacing * 10)

@@ -62,8 +62,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
         [Fact]
         public async Task TestRewindAsync()
         {
-            uint256 tip = this.cachedCoinView.GetTipHash().Hash;
-            Assert.Equal(this.chainIndexer.Genesis.HashBlock, tip);
+            HashHeightPair tip = this.cachedCoinView.GetTipHash();
+            Assert.Equal(this.chainIndexer.Genesis.HashBlock, tip.Hash);
 
             int currentHeight = 0;
 
@@ -74,7 +74,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
 
             this.cachedCoinView.Flush(true);
 
-            uint256 tipAfterOriginalCoinsCreation = this.cachedCoinView.GetTipHash().Hash;
+            HashHeightPair tipAfterOriginalCoinsCreation = this.cachedCoinView.GetTipHash();
 
             // Collection that will be used as a coinview that we will update in parallel. Needed to verify that actual coinview is ok.
             List<OutPoint> outPoints = this.ConvertToListOfOutputPoints(outputsList);
@@ -83,7 +83,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             List<OutPoint> copyOfOriginalOutPoints = new List<OutPoint>(outPoints);
 
             List<OutPoint> copyAfterHalfOfAdditions = new List<OutPoint>();
-            uint256 coinviewTipAfterHalf = null;
+            HashHeightPair coinviewTipAfterHalf = null;
 
             int addChangesTimes = 500;
             // Spend some coins in the next N saves.
@@ -115,7 +115,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 if (i == addChangesTimes / 2)
                 {
                     copyAfterHalfOfAdditions = new List<OutPoint>(outPoints);
-                    coinviewTipAfterHalf = this.cachedCoinView.GetTipHash().Hash;
+                    coinviewTipAfterHalf = this.cachedCoinView.GetTipHash();
                 }
             }
 
@@ -125,13 +125,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             {
                 this.cachedCoinView.Rewind();
 
-                uint256 currentTip = this.cachedCoinView.GetTipHash().Hash;
+                HashHeightPair currentTip = this.cachedCoinView.GetTipHash();
 
                 if (currentTip == coinviewTipAfterHalf)
                     await this.ValidateCoinviewIntegrityAsync(copyAfterHalfOfAdditions);
             }
 
-            Assert.Equal(tipAfterOriginalCoinsCreation, this.cachedCoinView.GetTipHash().Hash);
+            Assert.Equal(tipAfterOriginalCoinsCreation, this.cachedCoinView.GetTipHash());
 
             await this.ValidateCoinviewIntegrityAsync(copyOfOriginalOutPoints);
         }

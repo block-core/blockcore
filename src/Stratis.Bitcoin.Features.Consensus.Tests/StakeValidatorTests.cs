@@ -136,7 +136,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
 
             var result = this.stakeValidator.CalculateRetarget(firstBlockTime, firstBlockTarget, secondBlockTime, targetLimit);
@@ -150,7 +150,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(targetLimit);
 
@@ -165,7 +165,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds / 2)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds / 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
 
             var result = this.stakeValidator.CalculateRetarget(firstBlockTime, firstBlockTarget, secondBlockTime, targetLimit);
@@ -179,7 +179,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds / 2)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds / 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(targetLimit);
 
@@ -194,7 +194,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 2)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
 
             var result = this.stakeValidator.CalculateRetarget(firstBlockTime, firstBlockTarget, secondBlockTime, targetLimit);
@@ -208,7 +208,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 2)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(targetLimit);
 
@@ -223,7 +223,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 11)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 11)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
 
             var result = this.stakeValidator.CalculateRetarget(firstBlockTime, firstBlockTarget, secondBlockTime, targetLimit);
@@ -237,7 +237,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 11)));
+            var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 11)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(targetLimit);
 
@@ -281,7 +281,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
 
             var result = this.stakeValidator.CalculateRetarget(firstBlockTime, firstBlockTarget, secondBlockTime, targetLimit);
@@ -295,7 +295,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(targetLimit);
 
@@ -310,7 +310,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds / 2)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds / 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
             var expectedTarget = new Target(new uint256("00000000efff0000000000000000000000000000000000000000000000000000")); // 1.66667751753
 
@@ -325,7 +325,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds / 2)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds / 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(new uint256("00000000efff0000000000000000000000000000000000000000000000000000")); // 1.66667751753
 
@@ -340,7 +340,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 2)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
             var expectedTarget = new Target(new uint256("000000011ffe0000000000000000000000000000000000000000000000000000")); // 0.888899438461
 
@@ -355,7 +355,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 2)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 2)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(targetLimit);
 
@@ -370,7 +370,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 11)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 11)));
+
             var targetLimit = Target.Difficulty1.ToBigInteger().Multiply(BigInteger.ValueOf(2));
             var expectedTarget = new Target(new uint256("00000001fffe0000000000000000000000000000000000000000000000000000")); // 0.5
 
@@ -385,7 +386,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var now = DateTime.UtcNow;
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds * 11)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds * 11)));
             var targetLimit = Target.Difficulty1.ToBigInteger().Subtract(BigInteger.ValueOf(1));
             var expectedTarget = new Target(targetLimit);
 
@@ -560,7 +561,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var firstBlock = headers.Last().Previous;
             var now = DateTime.UtcNow;
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds / 2)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds / 2)));
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             firstBlock.Header.Time = firstBlockTime;
             firstBlock.Header.Bits = firstBlockTarget;
@@ -600,7 +601,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var firstBlock = headers.Last().Previous.Previous;
             var now = DateTime.UtcNow;
             var firstBlockTarget = Target.Difficulty1;
-            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(StakeValidator.TargetSpacingSeconds / 2)));
+            var firstBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now.AddSeconds(this.Network.Consensus.TargetSpacing.TotalSeconds / 2)));
             var secondBlockTime = Utils.DateTimeToUnixTime(new DateTimeOffset(now));
             firstBlock.Header.Time = firstBlockTime;
             firstBlock.Header.Bits = firstBlockTarget;

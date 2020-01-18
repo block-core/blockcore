@@ -14,9 +14,9 @@ namespace Stratis.Bitcoin.Features.Consensus
         {
             UnspentOutput unspent = this.unspents.TryGet(txIn.PrevOut);
 
-            if (unspent == null)
-            { 
-                return null; 
+            if (unspent?.Coins == null)
+            {
+                return null;
             }
 
             return unspent.Coins.TxOut;

@@ -783,7 +783,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             if (transaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(transactionTimestamp);
             uint transactionTime = Utils.DateTimeToUnixTime(posTimeStamp);
-            UnspentOutput stakingCoins = new UnspentOutput(new OutPoint(transaction, 0), new Coins(15, transaction.Outputs.First(), false, false, ((IPosTransactionWithTime)transaction).Time));
+            UnspentOutput stakingCoins = new UnspentOutput(new OutPoint(transaction, 0), new Coins(15, new TxOut(), false, false, ((IPosTransactionWithTime)transaction).Time));
 
             var exception = Assert.Throws<ConsensusErrorException>(() => this.stakeValidator.CheckStakeKernelHash(new PosRuleContext(), 0, uint256.Zero, stakingCoins, new OutPoint(), transactionTime));
 
@@ -958,6 +958,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
 
+            this.coinView.Setup(c => c.GetTipHash()).Returns(new HashHeightPair(new uint256(1), 0));
 
             var exception = Assert.Throws<ConsensusErrorException>(() => this.stakeValidator.CheckKernel(new PosRuleContext(), ChainedHeadersHelper.CreateGenesisChainedHeader(), 15, 15, new OutPoint(uint256.One, 12)));
             Assert.Equal(ConsensusErrors.ReadTxPrevFailed.Code, exception.ConsensusError.Code);
@@ -974,10 +975,12 @@ namespace Stratis.Bitcoin.Tests.Consensus
             ret.UnspentOutputs.Add(new OutPoint(header.Block.Transactions[0], 0),
                 new UnspentOutput(
                 new OutPoint(header.Block.Transactions[0], 0),
-                new Utilities.Coins((uint)header.Height, header.Block.Transactions[0].Outputs.First(), false, false)));
+                new Utilities.Coins((uint)header.Height, new TxOut(), false, false)));
 
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
+
+            this.coinView.Setup(c => c.GetTipHash()).Returns(new HashHeightPair(header));
 
             var exception = Assert.Throws<ConsensusErrorException>(() => this.stakeValidator.CheckKernel(new PosRuleContext(), ChainedHeadersHelper.CreateGenesisChainedHeader(), 15, 15, new OutPoint(uint256.One, 12)));
             Assert.Equal(ConsensusErrors.InvalidStakeDepth.Code, exception.ConsensusError.Code);
@@ -1000,10 +1003,12 @@ namespace Stratis.Bitcoin.Tests.Consensus
             ret.UnspentOutputs.Add(new OutPoint(stakableHeader.Block.Transactions[0], 0),
                 new UnspentOutput(
                 new OutPoint(stakableHeader.Block.Transactions[0], 0),
-                new Utilities.Coins((uint)stakableHeader.Height, stakableHeader.Block.Transactions[0].Outputs.First(), false, false)));
+                new Utilities.Coins((uint)stakableHeader.Height, new TxOut(), false, false)));
 
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
+
+            this.coinView.Setup(c => c.GetTipHash()).Returns(new HashHeightPair(header));
 
             var exception = Assert.Throws<ConsensusErrorException>(() => this.stakeValidator.CheckKernel(new PosRuleContext(), header, 15, 15, new OutPoint(uint256.One, 12)));
             Assert.Equal(ConsensusErrors.BadStakeBlock.Code, exception.ConsensusError.Code);
@@ -1035,6 +1040,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
 
+            this.coinView.Setup(c => c.GetTipHash()).Returns(new HashHeightPair(header));
 
             var outPoint = new OutPoint(transaction, 1);
             var headerbits = Target.Difficulty1.ToCompact();

@@ -76,7 +76,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
                     for (int i = 0; i < txIds.Length; i++)
                     {
                         unspentOutputs.TryGetValue(txIds[i], out UnspentOutput unspent);
-                        result.UnspentOutputs.Add(unspent.OutPoint, unspent);
+                        result.UnspentOutputs.Add(txIds[i], unspent);
                     }
 
                     return result;
@@ -180,8 +180,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
             prevTransaction.Outputs.Add(new TxOut(Money.COIN * 10_000_000, scriptPubKey1));
 
             // Record the spendable outputs.
-            unspentOutputs.Add(new OutPoint(prevTransaction, 0), new UnspentOutput(new OutPoint(prevTransaction, 0), new Coins(1, prevTransaction.Outputs[0], false)));
-            unspentOutputs.Add(new OutPoint(prevTransaction, 1), new UnspentOutput(new OutPoint(prevTransaction, 1), new Coins(1, prevTransaction.Outputs[0], false)));
+            unspentOutputs.Add(new OutPoint(prevTransaction, 0), new UnspentOutput(new OutPoint(prevTransaction, 0), new Coins(1, prevTransaction.Outputs[0], prevTransaction.IsCoinBase)));
+            unspentOutputs.Add(new OutPoint(prevTransaction, 1), new UnspentOutput(new OutPoint(prevTransaction, 1), new Coins(1, prevTransaction.Outputs[1], prevTransaction.IsCoinBase)));
 
             // Create coin stake transaction.
             Transaction coinstakeTransaction = this.network.CreateTransaction();

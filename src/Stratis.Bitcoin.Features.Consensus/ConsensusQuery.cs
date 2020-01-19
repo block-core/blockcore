@@ -33,13 +33,11 @@ namespace Stratis.Bitcoin.Features.Consensus
         }
 
         /// <inheritdoc />
-        public Task<List<UnspentOutput>> GetUnspentTransactionAsync(uint256 trxid)
+        public Task<UnspentOutput> GetUnspentTransactionAsync(OutPoint outPoint)
         {
-            FetchCoinsResponse response = this.coinView.FetchCoins(new[] { new OutPoint(trxid, 0) });
+            FetchCoinsResponse response = this.coinView.FetchCoins(new[] { outPoint });
 
-            List<UnspentOutput> unspentOutputs = response.UnspentOutputs.Values.ToList();
-
-            return Task.FromResult(unspentOutputs);
+            return Task.FromResult(response.UnspentOutputs.Values.SingleOrDefault());
         }
 
         /// <inheritdoc/>

@@ -67,6 +67,7 @@ There is a lot to do and we welcome contributions from developers and testers wh
 
 You can find tasks on the [issues](https://github.com/block-core/blockcore/issues) tab or visit us on [discord](https://discord.gg/TXx4Rm3).
 
-Testing
+Other Points
 -------
 * [Testing Guidelines](Documentation/testing-guidelines.md)
+* [Official Website](http://blockcore.net/)

@@ -14,9 +14,13 @@
       <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Publish%20Packages/badge.svg" /></a>
   </p>
 </p>
+ 
 
-Bitcoin Implementation in C#
+
+Introduction
 ----------------------------
+
+### Bitcoin Implementation in C#
 
 **What is Blockcore?**
 

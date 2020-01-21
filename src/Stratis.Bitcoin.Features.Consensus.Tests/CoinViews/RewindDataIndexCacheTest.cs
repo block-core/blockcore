@@ -27,7 +27,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
         }
 
         [Fact]
-        public void RewindDataIndex_InitialiseCache_BelowMaxREprg()
+        public void RewindDataIndex_InitialiseCache_BelowMaxReorg()
         {
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
@@ -146,9 +146,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             {
                 OutputsToRestore = new List<RewindDataOutput>()
                 {
-                    new RewindDataOutput(new OutPoint(new uint256(index++), 0), new Utilities.Coins(0, new TxOut(), false)),
-                    new RewindDataOutput(new OutPoint(new uint256(index++), 0), new Utilities.Coins(0, new TxOut(), false)),
-                    new RewindDataOutput(new OutPoint(new uint256(index++), 0), new Utilities.Coins(0, new TxOut(), false)),
+                    new RewindDataOutput(new OutPoint(new uint256(index), 0), new Utilities.Coins(0, new TxOut(), false)),
+                    new RewindDataOutput(new OutPoint(new uint256(index++), 1), new Utilities.Coins(0, new TxOut(), false)),
                 }
             });
         }

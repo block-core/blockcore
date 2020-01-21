@@ -87,7 +87,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
 
             // By default no utxo are setup in coinview so fetch we return nothing.
             var res = new FetchCoinsResponse();
-            res.UnspentOutputs.Add(new OutPoint(posBlock.GetHash(), 0), new UnspentOutput());
+            res.UnspentOutputs.Add(new OutPoint(posBlock.Transactions[1].Inputs[0].PrevOut), null);
             this.coinView
                 .Setup(m => m.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(res);
@@ -97,43 +97,6 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             ruleValidation.Should().Throw<ConsensusErrorException>()
                 .And.ConsensusError
                 .Should().Be(ConsensusErrors.ReadTxPrevFailedInsufficient);
-        }
-
-        [Fact]
-        public void RunRule_ProvenHeadersActive_And_CoinstakeUnspentOutputsAreIncorrect_ReadTxPrevFailedErrorIsThrown()
-        {
-            // Setup proven header.
-            PosBlock posBlock = new PosBlockBuilder(this.network).Build();
-
-            // Ensure that the coinstake transaction's input's PrevOut index is higher than the amount of
-            // outputs from the previous UTXO.
-            posBlock.Transactions[1].Inputs[0].PrevOut.N = 2;
-
-            ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
-            if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
-                posTrx.Time = provenBlockHeader.Time;
-
-            // Setup chained header and move it to the height higher than proven header activation height.
-            this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), null);
-            this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 10);
-
-            // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = this.network.CreateTransaction();
-            utxoOneTransaction.AddOutput(new TxOut());
-            var utxoOne = new UnspentOutput(new OutPoint(utxoOneTransaction, 0), new Coins(10, utxoOneTransaction.Outputs.First(), false));
-            var utxoTwo = new UnspentOutput(new OutPoint(this.network.CreateTransaction(), 0), null);
-
-            var res = new FetchCoinsResponse();
-            res.UnspentOutputs.Add(utxoOne.OutPoint, utxoOne);
-            res.UnspentOutputs.Add(utxoTwo.OutPoint, utxoTwo);
-
-            this.coinView
-                .Setup(m => m.FetchCoins(It.IsAny<OutPoint[]>()))
-                .Returns(res);
-
-            // When we run the validation rule, ConsensusErrors.ReadTxPrevFailed should be thrown.
-            Action ruleValidation = () => this.consensusRules.RegisterRule<ProvenHeaderCoinstakeRule>().Run(this.ruleContext);
-            ruleValidation.Should().Throw<ConsensusErrorException>().And.ConsensusError.Should().Be(ConsensusErrors.ReadTxPrevFailedInsufficient);
         }
 
         [Fact]
@@ -151,7 +114,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
 
             // Add more null unspent output to coinstake.
             var res = new FetchCoinsResponse();
-            res.UnspentOutputs.Add(new OutPoint(), null);
+            res.UnspentOutputs.Add(posBlock.Transactions[1].Inputs[0].PrevOut, null);
 
             this.coinView
                 .Setup(m => m.FetchCoins(It.IsAny<OutPoint[]>()))
@@ -251,9 +214,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 2);
 
             // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = this.network.CreateTransaction();
-            utxoOneTransaction.AddOutput(new TxOut());
-            var utxoOne = new UnspentOutput(new OutPoint(utxoOneTransaction, 0), null);
+            var utxoOne = new UnspentOutput(prevPosBlock.Transactions[1].Inputs[0].PrevOut, new Coins((uint)previousChainedHeader.Height, new TxOut(), false, true));
 
             // Setup coinstake transaction with an invalid stake age.
             var res = new FetchCoinsResponse();
@@ -454,9 +415,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 2);
 
             // Ensure that coinview returns a UTXO with valid outputs.
-            var utxoOneTransaction = this.network.CreateTransaction();
-            utxoOneTransaction.AddOutput(new TxOut());
-            var utxoOne = new UnspentOutput(new OutPoint(utxoOneTransaction, 0), null);
+            var utxoOne = new UnspentOutput(prevPosBlock.Transactions[1].Inputs[0].PrevOut, new Coins((uint)previousChainedHeader.Height, new TxOut(), false, true));
 
             // Setup coinstake transaction with a valid stake age.
             var res = new FetchCoinsResponse();
@@ -520,7 +479,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
             uint unspentOutputsHeight = (uint)this.provenHeadersActivationHeight + 10;
 
             var res = new FetchCoinsResponse();
-            var unspentOutputs = new UnspentOutput(new OutPoint(this.network.CreateTransaction(), 0),
+            var unspentOutputs = new UnspentOutput(prevPosBlock.Transactions[1].Inputs[0].PrevOut,
                 new Coins(unspentOutputsHeight, new TxOut(new Money(100), privateKey.PubKey), false));
 
                 res.UnspentOutputs.Add(unspentOutputs.OutPoint, unspentOutputs);
@@ -590,9 +549,9 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
 
             uint unspentOutputsHeight = (uint)this.provenHeadersActivationHeight + 10;
             var res = new FetchCoinsResponse();
-            var unspentOutputs = new UnspentOutput(new OutPoint(this.network.CreateTransaction(), 0),
+            var unspentOutputs = new UnspentOutput(prevPosBlock.Transactions[1].Inputs[0].PrevOut,
                 new Coins(unspentOutputsHeight, new TxOut(new Money(100), privateKey.PubKey), false));
-
+          
             res.UnspentOutputs.Add(unspentOutputs.OutPoint, unspentOutputs);
 
             this.coinView

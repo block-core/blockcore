@@ -123,8 +123,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
             UnspentOutput prevUtxo = null;
 
             FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] {txIn.PrevOut});
-            prevUtxo = coins.UnspentOutputs.Single().Value;
-            if (prevUtxo.Coins == null)
+            prevUtxo = coins.UnspentOutputs[txIn.PrevOut];
+            if (prevUtxo?.Coins == null)
             {
                 // We did not find the previous trx in the database, look in rewind data.
                 prevUtxo = this.CheckIfCoinstakeIsSpentOnAnotherChain(header, context);

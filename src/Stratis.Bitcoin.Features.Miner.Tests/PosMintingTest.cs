@@ -570,11 +570,8 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
                 TxOut = new TxOut(new Money(100), new Mock<IDestination>().Object),
                 OutPoint = new OutPoint(uint256.One, 0),
                 HashBlock = chainTip.Previous.HashBlock,
-                UtxoSet = new UnspentOutput()
+                UtxoSet = new UnspentOutput(new OutPoint(uint256.One, 0), new Utilities.Coins(1, new TxOut(), false, isCoinstake, chainTip.Header.Time))
             };
-
-            utxoDescription.UtxoSet.SetPrivatePropertyValue("Time", chainTip.Header.Time);
-            utxoDescription.UtxoSet.SetPrivatePropertyValue("IsCoinstake", isCoinstake);
 
             descriptions.Add(utxoDescription);
 

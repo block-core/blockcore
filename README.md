@@ -1,7 +1,19 @@
-[![Build Status](https://github.com/block-core/blockcore/workflows/Build/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Integration Test Status](https://github.com/block-core/blockcore/workflows/Integration%20Test/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Publish Packages Status](https://github.com/block-core/blockcore/workflows/Publish%20Packages/badge.svg)](https://github.com/block-core/blockcore/actions)
-
-Blockcore
-===============
+<p align="center">
+  <p align="center">
+    <img src="https://avatars3.githubusercontent.com/u/53176002?s=200&v=4" height="100" alt="Blockcore" />
+  </p>
+  <h3 align="center">
+    About Blockcore
+  </h3>
+  <p align="center">
+    Open source .NET Core Bitcoin based blockchain node in C# 
+  </p>
+  <p align="center">
+      <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Build/badge.svg" /></a>
+      <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Integration%20Test/badge.svg" /></a>
+      <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Publish%20Packages/badge.svg" /></a>
+  </p>
+</p>
 
 https://blockcore.net
 

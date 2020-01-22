@@ -36,7 +36,7 @@ jobs:
 
     - name: Update Directory.Build.props for Push
       run: |
-        find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
+        /usr/bin/find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
         do
           sed -i 's,</IsPackable>,</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>git://github.com/${{github.repository}}</RepositoryUrl>,g' $file
         done

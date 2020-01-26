@@ -1,17 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <Company>NStratis</Company>
-    <Copyright>Copyright © Stratis Platform SA 2017</Copyright>
-    <Description>The C# Bitcoin Library based on NBitcoin</Description>
-  </PropertyGroup>
-  
-
-  
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    
+    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>    
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <VersionPrefix>1.0.0</VersionPrefix>
     <PackageId>Blockcore.NBitcoin</PackageId>
     <RootNamespace>NBitcoin</RootNamespace>

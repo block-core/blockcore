@@ -5,7 +5,8 @@
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
     <DebugType>Full</DebugType>
     <CodeAnalysisRuleSet>..\None.ruleset</CodeAnalysisRuleSet>
-    <Authors>Stratis Group Ltd.</Authors>
+    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>3.0.6.0-beta</Version>
   </PropertyGroup>
 

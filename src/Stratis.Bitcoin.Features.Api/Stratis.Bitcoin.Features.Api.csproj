@@ -14,10 +14,9 @@
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
-    <!-- Force packing of a web project https://github.com/aspnet/websdk/issues/228 -->
-    <IsPackable>true</IsPackable>
-    <Authors>Stratis Group Ltd.</Authors>
-  </PropertyGroup> 
+    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile></DocumentationFile>

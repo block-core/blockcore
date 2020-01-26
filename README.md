@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/block-core/blockcore/workflows/Build/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Integration Test Status](https://github.com/block-core/blockcore/workflows/Integration%20Test/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Publish Packages Status](https://github.com/block-core/blockcore/workflows/Publish%20Packages/badge.svg)](https://github.com/block-core/blockcore/actions)
+[![Build Status](https://github.com/block-core/blockcore/workflows/Build/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Integration Test Status](https://github.com/block-core/blockcore/workflows/Integration%20Test/badge.svg)](https://github.com/block-core/blockcore/actions)
 
 Blockcore
 ===============

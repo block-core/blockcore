@@ -95,20 +95,20 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 List<OutPoint> txPointsToSpend = txPoints.Take(txPoints.Count / 2).ToList();
 
                 // First spend in cached coinview
-                FetchCoinsResponse response = this.cachedCoinView.FetchCoins(new[] { txId });
-                Assert.Single(response.UnspentOutputs);
-
-                UnspentOutput coins = response.UnspentOutputs.Values.First(); ;
-                UnspentOutput unchangedClone = new UnspentOutput(coins.OutPoint, coins.Coins);
-
+                FetchCoinsResponse response = this.cachedCoinView.FetchCoins(txPoints.ToArray());
+                Assert.Equal(txPoints.Count, response.UnspentOutputs.Count);
+                var toSpend = new List<UnspentOutput>();
                 foreach (OutPoint outPointToSpend in txPointsToSpend)
-                    coins.Spend();
+                { 
+                    response.UnspentOutputs[outPointToSpend].Spend();
+                    toSpend.Add(response.UnspentOutputs[outPointToSpend]);
+                }
 
                 // Spend from outPoints.
                 outPoints.RemoveAll(x => txPointsToSpend.Contains(x));
 
                 // Save coinview
-                this.SaveChanges(new List<UnspentOutput>() { coins }, currentHeight + 1);
+                this.SaveChanges(toSpend, currentHeight + 1);
 
                 currentHeight++;
 
@@ -154,7 +154,12 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 for (int i = 0; i < outputCount; i++)
                 {
                     var money = new Money(this.random.Next(1_000, 1_000_000));
-                    lst.Add(new UnspentOutput(new OutPoint(tx, i), new Coins((uint)height, tx.AddOutput(money, Script.Empty), false)));
+                    tx.AddOutput(money, Script.Empty);
+                }
+
+                foreach (IndexedTxOut txout in tx.Outputs.AsIndexedOutputs())
+                {
+                    lst.Add(new UnspentOutput(txout.ToOutPoint(), new Coins((uint)height, txout.TxOut, false)));
                 }
             }
 

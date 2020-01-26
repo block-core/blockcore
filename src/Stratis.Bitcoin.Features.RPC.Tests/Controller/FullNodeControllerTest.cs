@@ -312,15 +312,14 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
         [Fact]
         public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionFound_ReturnsModelAsync()
         {
-            var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 1), null);
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
-            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId,0)))
+            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(transaction, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
 
-            GetTxOutModel model = await this.controller.GetTxOutAsync(txId.ToString(), 0, false).ConfigureAwait(false);
+            GetTxOutModel model = await this.controller.GetTxOutAsync(transaction.ToString(), 0, false).ConfigureAwait(false);
 
             this.getUnspentTransaction.Verify();
 

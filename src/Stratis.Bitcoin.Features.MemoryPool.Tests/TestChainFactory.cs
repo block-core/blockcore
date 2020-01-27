@@ -176,7 +176,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
                 chain.SetTip(block.Header);
                 srcTxs.Add(block.Transactions[0]);
 
-                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(block.Transactions[0], 0), new Coins((uint)(i + 1), block.Transactions[0].Outputs.First(), false)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
+                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(block.Transactions[0], 0), new Coins((uint)(i + 1), block.Transactions[0].Outputs.First(), block.Transactions[0].IsCoinBase)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
             }
 
             return new TestChainContext { MempoolValidator = mempoolValidator, MempoolSettings = mempoolSettings, ChainIndexer = chain, SrcTxs = srcTxs};

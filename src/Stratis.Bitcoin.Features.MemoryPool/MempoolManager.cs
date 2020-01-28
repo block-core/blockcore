@@ -228,7 +228,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                 return null;
             }
 
-            var memPoolCoinView = new MempoolCoinView(this.coinView, this.memPool, this.MempoolLock, this.Validator);
+            var memPoolCoinView = new MempoolCoinView(this.network, this.coinView, this.memPool, this.MempoolLock, this.Validator);
             await this.MempoolLock.ReadAsync(() => { memPoolCoinView.LoadViewLocked(txInfo.Trx); });
             UnspentOutput unspentOutput = memPoolCoinView.Set.AccessCoins(outPoint);
 

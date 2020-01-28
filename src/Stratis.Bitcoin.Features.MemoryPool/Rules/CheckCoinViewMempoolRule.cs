@@ -26,30 +26,22 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Rules
             context.LockPoints = new LockPoints();
 
             // Do we already have it?
-            if (context.View.HaveCoins(context.TransactionHash))
+            if (context.View.HaveTransaction(context.TransactionHash))
             {
                 this.logger.LogTrace("(-)[INVALID_ALREADY_KNOWN]");
                 context.State.Invalid(MempoolErrors.AlreadyKnown).Throw();
             }
 
             // Do all inputs exist?
-            // Note that this does not check for the presence of actual outputs (see the next check for that),
-            // and only helps with filling in pfMissingInputs (to determine missing vs spent).
             foreach (TxIn txin in context.Transaction.Inputs)
             {
-                if (!context.View.HaveCoins(txin.PrevOut.Hash))
+                if (!context.View.HaveCoins(txin.PrevOut))
                 {
+                    // Assume this might be an orphan tx for which we just haven't seen parents yet
                     context.State.MissingInputs = true;
                     this.logger.LogTrace("(-)[FAIL_MISSING_INPUTS]");
-                    context.State.Fail(MempoolErrors.MissingInputs).Throw(); // fMissingInputs and !state.IsInvalid() is used to detect this condition, don't set state.Invalid()
+                    context.State.Fail(MempoolErrors.MissingOrSpentInputs).Throw();
                 }
-            }
-
-            // Are the actual inputs available?
-            if (!context.View.HaveInputs(context.Transaction))
-            {
-                this.logger.LogTrace("(-)[INVALID_BAD_INPUTS]");
-                context.State.Invalid(MempoolErrors.BadInputsSpent).Throw();
             }
         }
     }

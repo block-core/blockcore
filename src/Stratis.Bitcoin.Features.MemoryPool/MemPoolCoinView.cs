@@ -22,6 +22,8 @@ namespace Stratis.Bitcoin.Features.MemoryPool
     /// </summary>
     public class MempoolCoinView : ICoinView, IBackedCoinView
     {
+        private readonly Network network;
+
         /// <summary>Transaction memory pool for managing transactions in the memory pool.</summary>
         /// <remarks>All access to this object has to be protected by <see cref="mempoolLock"/>.</remarks>
         private readonly ITxMempool memPool;
@@ -39,8 +41,9 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         /// <param name="memPool">Transaction memory pool for managing transactions in the memory pool.</param>
         /// <param name="mempoolLock">A lock for managing asynchronous access to memory pool.</param>
         /// <param name="mempoolValidator">Memory pool validator for validating transactions.</param>
-        public MempoolCoinView(ICoinView inner, ITxMempool memPool, SchedulerLock mempoolLock, IMempoolValidator mempoolValidator)
+        public MempoolCoinView(Network network, ICoinView inner, ITxMempool memPool, SchedulerLock mempoolLock, IMempoolValidator mempoolValidator)
         {
+            this.network = network;
             this.Inner = inner;
             this.memPool = memPool;
             this.mempoolLock = mempoolLock;
@@ -99,18 +102,25 @@ namespace Stratis.Bitcoin.Features.MemoryPool
             List<uint256> ids = trx.Inputs.Select(n => n.PrevOut.Hash).Distinct().Concat(new[] { trx.GetHash() }).ToList();
 
             // find coins currently in the mempool
-            List<Transaction> mempoolcoins = new List<Transaction>();
             foreach (uint256 trxid in ids)
             {
                 if (this.memPool.MapTx.TryGetValue(trxid, out TxMempoolEntry entry))
                 {
-                    foreach(IndexedTxOut txOut in entry.Transaction.Outputs.AsIndexedOutputs())
+                    foreach (IndexedTxOut txOut in entry.Transaction.Outputs.AsIndexedOutputs())
                     {
+                        // If an output was fetched form disk with empty coins but it 
+                        // was found mempool then override the output with whats in mempool
+                        
                         var outpoint = new OutPoint(trxid, txOut.N);
-                        coins.UnspentOutputs.Add(outpoint, new UnspentOutput(outpoint, new Coins(TxMempool.MempoolHeight, txOut.TxOut, false, false)));
-                    }
+                        var found = coins.UnspentOutputs.TryGetValue(outpoint, out UnspentOutput unspentOutput);
+                        if (!found || unspentOutput?.Coins == null)
+                        {
+                            if (unspentOutput?.Coins == null)
+                                coins.UnspentOutputs.Remove(outpoint);
 
-                    mempoolcoins.Add(entry.Transaction);
+                            coins.UnspentOutputs.Add(outpoint, new UnspentOutput(outpoint, new Coins(TxMempool.MempoolHeight, txOut.TxOut, entry.Transaction.IsCoinBase, this.network.Consensus.IsProofOfStake ? entry.Transaction.IsCoinStake : false)));
+                        }
+                    }
                 }
             }
 
@@ -123,23 +133,11 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         }
 
         /// <summary>
-        /// Gets the unspent outputs for a given transaction id.
-        /// </summary>
-        /// <param name="txid">Transaction identifier.</param>
-        /// <returns>The unspent outputs.</returns>
-        public UnspentOutput[] GetCoins(uint256 txid)
-        {
-            IList<UnspentOutput> unspentOutputs = this.Set.GetCoins(txid);
-
-            return unspentOutputs.ToArray();
-        }
-
-        /// <summary>
         /// Check whether a transaction id exists in the <see cref="TxMempool"/> or in the <see cref="MempoolCoinView"/>.
         /// </summary>
         /// <param name="txid">Transaction identifier.</param>
         /// <returns>Whether coins exist.</returns>
-        public bool HaveCoins(uint256 txid)
+        public bool HaveTransaction(uint256 txid)
         {
             if (this.memPool.Exists(txid))
                 return true;
@@ -208,13 +206,11 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         }
 
         /// <summary>
-        /// Whether the transaction has inputs.
+        /// Check if an output exists.
         /// </summary>
-        /// <param name="tx">Memory pool transaction.</param>
-        /// <returns>Whether the transaction has inputs.</returns>
-        public bool HaveInputs(Transaction tx)
+        public bool HaveCoins(OutPoint outPoint)
         {
-            return this.Set.HaveInputs(tx);
+            return this.Set.AccessCoins(outPoint)?.Coins != null;
         }
 
         /// <summary>

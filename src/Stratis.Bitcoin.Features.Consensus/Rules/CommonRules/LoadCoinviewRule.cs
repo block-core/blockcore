@@ -5,6 +5,7 @@ using NBitcoin;
 using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Consensus.Rules;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
+using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Utilities;
 
 namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
@@ -35,12 +36,21 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
     /// </summary>
     public class FlushCoinviewRule : UtxoStoreConsensusRule
     {
+        private readonly IInitialBlockDownloadState initialBlockDownloadState;
+
+        public FlushCoinviewRule(IInitialBlockDownloadState initialBlockDownloadState)
+        {
+            this.initialBlockDownloadState = initialBlockDownloadState;
+        }
+
         /// <inheritdoc />
         public override Task RunAsync(RuleContext context)
         {
-            // Use the default flush condition to decide if flush is required (currently set to every 60 seconds)
             if (this.PowParent.UtxoSet is CachedCoinView cachedCoinView)
-                cachedCoinView.Flush(false);
+            {
+                bool inIBD = this.initialBlockDownloadState.IsInitialBlockDownload();
+                cachedCoinView.Flush(force: !inIBD);
+            }
 
             return Task.CompletedTask;
         }

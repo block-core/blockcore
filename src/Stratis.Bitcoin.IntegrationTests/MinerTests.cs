@@ -186,7 +186,15 @@ namespace Stratis.Bitcoin.IntegrationTests
                 foreach (var ruleType in network.Consensus.ConsensusRules.HeaderValidationRules)
                     consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
                 foreach (var ruleType in network.Consensus.ConsensusRules.FullValidationRules)
-                    consensusRulesContainer.FullValidationRules.Add(Activator.CreateInstance(ruleType) as FullValidationConsensusRule);
+                {
+                    FullValidationConsensusRule rule = null;
+                    if (ruleType == typeof(FlushCoinviewRule))
+                        rule = new FlushCoinviewRule(new Mock<IInitialBlockDownloadState>().Object);
+                    else
+                        rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
+                    
+                    consensusRulesContainer.FullValidationRules.Add(rule);
+                }
 
                 this.ConsensusRules = new PowConsensusRuleEngine(this.network, loggerFactory, dateTimeProvider, this.ChainIndexer, deployments, consensusSettings,
                     new Checkpoints(), this.cachedCoinView, chainState, new InvalidBlockHashStore(dateTimeProvider), nodeStats, asyncProvider, consensusRulesContainer).SetupRulesEngineParent();

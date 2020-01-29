@@ -21,6 +21,7 @@ using Stratis.Bitcoin.Features.MemoryPool.Fee;
 using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 using Stratis.Bitcoin.Features.MemoryPool.Rules;
 using Stratis.Bitcoin.Features.Miner;
+using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Mining;
 using Stratis.Bitcoin.Signals;
 using Stratis.Bitcoin.Tests.Common;
@@ -207,10 +208,18 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
 
                 consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
             }
-            foreach (Type ruleType in network.Consensus.ConsensusRules.FullValidationRules)
-                consensusRulesContainer.FullValidationRules.Add(Activator.CreateInstance(ruleType) as FullValidationConsensusRule);
             foreach (Type ruleType in network.Consensus.ConsensusRules.PartialValidationRules)
                 consensusRulesContainer.PartialValidationRules.Add(Activator.CreateInstance(ruleType) as PartialValidationConsensusRule);
+            foreach (var ruleType in network.Consensus.ConsensusRules.FullValidationRules)
+            {
+                FullValidationConsensusRule rule = null;
+                if (ruleType == typeof(FlushCoinviewRule))
+                    rule = new FlushCoinviewRule(new Mock<IInitialBlockDownloadState>().Object);
+                else
+                    rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
+
+                consensusRulesContainer.FullValidationRules.Add(rule);
+            }
 
             var consensusSettings = new ConsensusSettings(nodeSettings);
             var chain = new ChainIndexer(network);

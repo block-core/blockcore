@@ -57,12 +57,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         /// <summary>
-        /// Length of the coinview cache flushing interval in seconds.
+        /// Length of the coinview cache flushing interval in seconds, in case of a crash up to 1 hour of syncing is lost.
         /// </summary>
         /// <remarks>
         /// The longer the time interval the better performant the coinview will be,
-        /// UTXOs that are added and deleted withing a single will never reach the underline disk
-        /// this saves two operations to disk (write the coinview and later delete it).
+        /// UTXOs that are added and deleted before tehy are flushed never reach the underline disk
+        /// this saves 3 operations to disk (write the coinview and later read and delete it).
         /// However if this interval is too high the cache will be filled with dirty items
         /// Also a crash will mean a big redownload of the chain.
         /// </remarks>
@@ -445,10 +445,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             }
                         }
 
-                        // Now modify the cached items with the mutated data.
-                        this.logger.LogDebug("Mark cache item '{0}' as spent .", cacheItem.OutPoint);
-
-
                         // If a spent utxo never made it to disk then no need to keep it in memory.
                         if (!cacheItem.ExistInInner)
                         {
@@ -460,6 +456,9 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         }
                         else
                         {
+                            // Now modify the cached items with the mutated data.
+                            this.logger.LogDebug("Mark cache item '{0}' as spent .", cacheItem.OutPoint);
+
                             this.cacheSizeBytes -= cacheItem.GetScriptSize;
                             cacheItem.Coins = null;
 
@@ -515,7 +514,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     }
                 }
 
-
                 this.performanceCounter.AddUtxoNotFlushedCount(utxoNotFlushed);
 
                 if (this.rewindDataIndexCache != null && indexItems.Any())
@@ -533,13 +531,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 // (random low number) rewind data items.
                 // Beyond last checkpoint:
                 // - For POS we keep a window of MaxReorg.
-                // - For POW we keep a growing number of rewind data
+                // - For POW we keep 100 items (possibly better is an algo that grows closer to tip)
 
                 // A moving window of information needed to rewind the node to a previous block.
                 // When cache is flushed the rewind data will allow to rewind the node up to the 
                 // number of rewind blocks.
                 // TODO: move rewind data to use block store.
-                // Rewind data can go away all togetehr if the node uses teh blocks in block store
+                // Rewind data can go away all togetehr if the node uses the blocks in block store
                 // to get the rewind information, blockstore persists much more frequent then coin cache
                 // So using block store for rewinds is not entirely impossible.
                

@@ -359,9 +359,10 @@ namespace Stratis.Bitcoin.Controllers
                     result.IsScript = true;
                 }
             }
-            catch (NotImplementedException)
+            catch (Exception e)
             {
-                result.IsValid = false;
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
 
             if (result.IsValid)

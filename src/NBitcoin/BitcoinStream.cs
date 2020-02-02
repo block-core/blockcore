@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if !NOSOCKET
+using System.Net.Sockets;
+#endif
 using System.Reflection;
 using System.Text;
 using NBitcoin.Protocol;
@@ -76,6 +79,10 @@ namespace NBitcoin
             .First();
         }
 
+#if !NOSOCKET
+        private readonly bool isNetworkStream;
+#endif
+
         private readonly Stream inner;
         public Stream Inner
         {
@@ -103,6 +110,9 @@ namespace NBitcoin
         {
             this.ConsensusFactory = new DefaultConsensusFactory();
             this.serializing = serializing;
+#if !NOSOCKET
+            this.isNetworkStream = inner is NetworkStream;
+#endif
             this.inner = inner;
         }
 
@@ -208,7 +218,7 @@ namespace NBitcoin
                 data = obj;
         }
 
-        public void ReadWrite<T>(ref List<T> list) where T : IBitcoinSerializable, new()
+        public void ReadWrite<T>(ref List<T> list) where T : IBitcoinSerializable
         {
             ReadWriteList<List<T>, T>(ref list);
         }
@@ -222,7 +232,7 @@ namespace NBitcoin
 
         private void ReadWriteList<TList, TItem>(ref TList data)
             where TList : List<TItem>, new()
-            where TItem : IBitcoinSerializable, new()
+            where TItem : IBitcoinSerializable
         {
             TItem[] dataArray = data == null ? null : data.ToArray();
 
@@ -243,9 +253,32 @@ namespace NBitcoin
             }
         }
 
+        public void ReadWriteListBytes(ref List<byte[]> data)
+        {
+            var dataArray = data?.ToArray();
+            if (this.Serializing && dataArray == null)
+            {
+                dataArray = new byte[0][];
+            }
+            ReadWriteArray(ref dataArray);
+            if (!this.Serializing)
+            {
+                if (data == null)
+                    data = new List<byte[]>();
+                else
+                    data.Clear();
+                data.AddRange(dataArray);
+            }
+        }
+
         public void ReadWrite(ref byte[] arr)
         {
             ReadWriteBytes(ref arr);
+        }
+
+        public void ReadWrite(ref Span<byte> arr)
+        {
+            ReadWriteBytes(arr);
         }
 
         public void ReadWrite(ref string str)
@@ -293,6 +326,32 @@ namespace NBitcoin
 
         private void ReadWriteNumber(ref ulong value, int size)
         {
+            if (this.isNetworkStream && this.ReadCancellationToken.CanBeCanceled)
+            {
+                ReadWriteNumberInefficient(ref value, size);
+                return;
+            }
+            Span<byte> bytes = stackalloc byte[size];
+            for (int i = 0; i < size; i++)
+            {
+                bytes[i] = (byte)(value >> i * 8);
+            }
+            if (this.IsBigEndian)
+                bytes.Reverse();
+            ReadWriteBytes(bytes);
+            if (this.IsBigEndian)
+                bytes.Reverse();
+            ulong valueTemp = 0;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                var v = (ulong)bytes[i];
+                valueTemp += v << (i * 8);
+            }
+            value = valueTemp;
+        }
+
+        private void ReadWriteNumberInefficient(ref ulong value, int size)
+        {
             var bytes = new byte[size];
 
             for (int i = 0; i < size; i++)
@@ -313,27 +372,32 @@ namespace NBitcoin
             value = valueTemp;
         }
 
+
         private void ReadWriteBytes(ref byte[] data, int offset = 0, int count = -1)
         {
-            if (data == null) throw new ArgumentNullException("data");
-
-            if (data.Length == 0) return;
-
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+            if (data.Length == 0)
+                return;
             count = count == -1 ? data.Length : count;
+            if (count == 0)
+                return;
+            ReadWriteBytes(new Span<byte>(data, offset, count));
+        }
 
-            if (count == 0) return;
-
+        private void ReadWriteBytes(Span<byte> data)
+        {
             if (this.Serializing)
             {
-                this.Inner.Write(data, offset, count);
-                this.Counter.AddWritten(count);
+                this.Inner.Write(data);
+                this.Counter.AddWritten(data.Length);
             }
             else
             {
-                int readen = this.Inner.ReadEx(data, offset, count, this.ReadCancellationToken);
-                if (readen == 0)
+                var read = this.Inner.ReadEx(data, this.ReadCancellationToken);
+                if (read == 0)
                     throw new EndOfStreamException("No more byte to read");
-                this.Counter.AddRead(readen);
+                this.Counter.AddRead(read);
 
             }
         }

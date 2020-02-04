@@ -11,6 +11,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Controllers
 {
     /// <summary> All functionality is in WalletRPCController, just inherit the functionality in this feature.</summary>
     [ApiVersion("1")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ColdStakingWalletRPCController : WalletRPCController
     {
         public ColdStakingWalletRPCController(

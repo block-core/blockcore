@@ -111,9 +111,8 @@ namespace Stratis.Bitcoin.BlockPulling
             this.dateTimeProvider = dateTimeProvider;
             this.QualityScore = SamplelessQualityScore;
 
-            int samplesCount = ibdState.IsInitialBlockDownload() ? IbdSamplesCount : NormalSamplesCount;
-            this.averageSizeBytes = new AverageCalculator(samplesCount);
-            this.averageDelaySeconds = new AverageCalculator(samplesCount);
+            this.averageSizeBytes = new AverageCalculator(IbdSamplesCount);
+            this.averageDelaySeconds = new AverageCalculator(IbdSamplesCount);
             this.SpeedBytesPerSecond = 0;
             this.lastDeliveryTime = null;
 

@@ -79,7 +79,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             this.Logger.LogDebug("Loading UTXO set of the new block.");
             utxoRuleContext.UnspentOutputSet = new UnspentOutputSet();
 
-            OutPoint[] ids = this.coinviewHelper.GetIdsToFetch(context.ValidationContext.BlockToValidate, context.Flags.EnforceBIP30);
+            bool enforceBIP30 = context.ValidationContext.ChainedHeaderToValidate.Height > this.Parent.Checkpoints.LastCheckpointHeight ? context.Flags.EnforceBIP30 : false;
+            OutPoint[] ids = this.coinviewHelper.GetIdsToFetch(context.ValidationContext.BlockToValidate, enforceBIP30);
             FetchCoinsResponse coins = this.PowParent.UtxoSet.FetchCoins(ids);
             utxoRuleContext.UnspentOutputSet.SetCoins(coins.UnspentOutputs.Values.ToArray());
 

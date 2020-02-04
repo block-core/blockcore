@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.Configuration.Settings;
@@ -182,6 +180,50 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             return this.blockHash;
         }
 
+
+        /// <summary>
+        /// A method to optimize the coindb progress by trying to fetch 
+        /// outputs in advance outsisw of the main consensus thread.
+        /// If an output is fetched it's placed in cache.
+        /// </summary>
+        /// <remarks>
+        /// The difference between this method and the main fetch coin method 
+        /// is to avoid the perf counter (for more accurate stats) and the evict call.
+        /// </remarks>
+        internal void PreFetchCoins(OutPoint[] utxos)
+        {
+            lock (this.lockobj)
+            {
+                var missedOutpoint = new List<OutPoint>();
+                foreach (OutPoint outPoint in utxos)
+                {
+                    if (!this.cachedUtxoItems.TryGetValue(outPoint, out CacheItem cache))
+                    {
+                        this.logger.LogDebug("Prefetch Utxo '{0}' not found in cache.", outPoint);
+                        missedOutpoint.Add(outPoint);
+                    }
+                }
+
+                if (missedOutpoint.Count > 0)
+                {
+                    FetchCoinsResponse fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+                    foreach (var unspentOutput in fetchedCoins.UnspentOutputs)
+                    {
+                        var cache = new CacheItem()
+                        {
+                            ExistInInner = unspentOutput.Value.Coins != null,
+                            IsDirty = false,
+                            OutPoint = unspentOutput.Key,
+                            Coins = unspentOutput.Value.Coins
+                        };
+                        this.logger.LogDebug("Prefetch CacheItem added to the cache, UTXO: '{0}', Coin:'{1}'.", cache.OutPoint, cache.Coins);
+                        this.cachedUtxoItems.Add(cache.OutPoint, cache);
+                        this.cacheSizeBytes += cache.GetSize;
+                    }
+                }
+            }
+        }
+
         public FetchCoinsResponse FetchCoins(OutPoint[] utxos)
         {
             Guard.NotNull(utxos, nameof(utxos));
@@ -225,7 +267,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             Coins = unspentOutput.Value.Coins
                         };
 
-                        this.logger.LogDebug("CacheItem added to the cache, Transaction Id '{0}', UTXO:'{1}'.", cache.OutPoint, cache.Coins);
+                        this.logger.LogDebug("CacheItem added to the cache, UTXO '{0}', Coin:'{1}'.", cache.OutPoint, cache.Coins);
                         this.cachedUtxoItems.Add(cache.OutPoint, cache);
                         this.cacheSizeBytes += cache.GetSize;
                     }
@@ -288,7 +330,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         {
             if (!force)
             {
-                // Check if peridodic flush is reuired.
+                // Check if periodic flush is reuired.
                 // Ideally this will flush less frequent and always be behind 
                 // blockstore which is currently set to 17 sec.
 
@@ -303,9 +345,10 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 if (!flushTimeLimit && !flushSizeLimit)
                 {
-                    this.logger.LogTrace("(-)[NOT_NOW]");
                     return;
                 }
+
+                this.logger.LogDebug("Flushing, reasons flushTimeLimit={0} flushSizeLimit={1}.", flushTimeLimit, flushSizeLimit);
             }
 
             // Before flushing the coinview persist the stake store
@@ -337,6 +380,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                     modify.Add(new UnspentOutput(cacheItem.Key, cacheItem.Value.Coins));
                 }
+
+                this.logger.LogDebug("Flushing {0} items.", modify.Count);
 
                 this.Inner.SaveChanges(modify, this.innerBlockHash, this.blockHash, this.cachedRewindData.Select(c => c.Value).ToList());
 
@@ -380,12 +425,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         // 1. if a chaced item was evicted
                         // 2. for new outputs that are added
 
-                        this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
-
                         if (output.CreatedFromBlock)
                         {
                             // if the output is indicate that it was added from a block
                             // There is no need to spend an extra call to disk.
+
+                            this.logger.LogDebug("New Outpoint '{0}' created.", output.OutPoint);
 
                             cacheItem = new CacheItem()
                             {
@@ -399,6 +444,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         {
                             // This can happen if the cashe item was evicted while
                             // the block was being processed, fetch the outut again from disk.
+
+                            this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
 
                             FetchCoinsResponse result = this.inner.FetchCoins(new[] { output.OutPoint });
 
@@ -484,6 +531,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             {
                                 throw new InvalidOperationException(string.Format("New coins override coins in cache or store, for output '{0}'", cacheItem.OutPoint));
                             }
+
+                            this.logger.LogDebug("Coin override alllowed for utxo '{0}'.", cacheItem.OutPoint);
 
                             // Deduct the crurrent script size form the 
                             // total cache size, it will be added again later. 

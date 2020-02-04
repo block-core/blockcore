@@ -215,7 +215,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             {
                 builder.AppendLine("Cache Hit:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalHitCount * 100m / total).ToString("0.00") + " %");
                 builder.AppendLine("Cache Miss:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalMissCount * 100m / total).ToString("0.00") + " %");
-                builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoNotFlushed * 100m / total).ToString("0.00") + " %");
+                builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoNotFlushed).ToString());
             }
 
             builder.AppendLine("========================");

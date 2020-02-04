@@ -171,7 +171,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             // Record proof hash value.
             blockStake.HashProof = posRuleContext.HashProofOfStake;
 
-            int lastCheckpointHeight = this.Parent.Checkpoints.GetLastCheckpointHeight();
+            int lastCheckpointHeight = this.Parent.Checkpoints.LastCheckpointHeight;
             if (chainedHeader.Height > lastCheckpointHeight)
             {
                 // Compute stake modifier.

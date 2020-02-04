@@ -15,6 +15,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         public OutPoint[] GetIdsToFetch(Block block, bool enforceBIP30)
         {
             var ids = new HashSet<OutPoint>();
+            var trx = new HashSet<uint256>(); 
             foreach (Transaction tx in block.Transactions)
             {
                 if (enforceBIP30)
@@ -26,8 +27,18 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 if (!tx.IsCoinBase)
                 {
                     foreach (TxIn input in tx.Inputs)
-                        ids.Add(input.PrevOut);
+                    {
+                        // Check if an output is spend in the same block
+                        // in case it was ignore it as no need to fetch it from disk.
+                        // This extra hash list has a small overhead 
+                        // but it's faster then fetching form disk an empty utxo.
+
+                        if (!trx.Contains(input.PrevOut.Hash))
+                            ids.Add(input.PrevOut);
+                    }
                 }
+
+                trx.Add(tx.GetHash());
             }
 
             OutPoint[] res = ids.ToArray();

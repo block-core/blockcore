@@ -34,7 +34,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.UtxoSet = utxoSet;
-            this.prefetcher = new CoinviewPrefetcher(this.UtxoSet, chainIndexer, loggerFactory, asyncProvider);
+            this.prefetcher = new CoinviewPrefetcher(this.UtxoSet, chainIndexer, loggerFactory, asyncProvider, checkpoints);
         }
 
         /// <inheritdoc />

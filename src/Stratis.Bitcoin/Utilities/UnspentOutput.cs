@@ -81,6 +81,11 @@ namespace Stratis.Bitcoin.Utilities
                 return ((this.TxOut.ScriptPubKey.Length > 0) && (this.TxOut.ScriptPubKey.ToBytes(true)[0] == (byte)OpcodeType.OP_RETURN));
             }
         }
+
+        public override string ToString()
+        {
+            return $"height={this.height}, coinbase={this.isCoinbase}, coinstake={this.isCoinstake}, {this.txOut}";
+        }
     }
 
     public class UnspentOutput

@@ -506,19 +506,7 @@ namespace NBitcoin
 
         public override int GetHashCode()
         {
-            int hash = 17;
-            unchecked
-            {
-                hash = hash * 31 + (int)this.pn0;
-                hash = hash * 31 + (int)this.pn1;
-                hash = hash * 31 + (int)this.pn2;
-                hash = hash * 31 + (int)this.pn3;
-                hash = hash * 31 + (int)this.pn4;
-                hash = hash * 31 + (int)this.pn5;
-                hash = hash * 31 + (int)this.pn6;
-                hash = hash * 31 + (int)this.pn7;
-            }
-            return hash;
+            return (int)this.pn0;
         }
     }
 
@@ -864,16 +852,7 @@ namespace NBitcoin
 
         public override int GetHashCode()
         {
-            int hash = 17;
-            unchecked
-            {
-                hash = hash * 31 + (int)pn0;
-                hash = hash * 31 + (int)pn1;
-                hash = hash * 31 + (int)pn2;
-                hash = hash * 31 + (int)pn3;
-                hash = hash * 31 + (int)pn4;
-            }
-            return hash;
+            return (int)this.pn0;
         }
     }
 }

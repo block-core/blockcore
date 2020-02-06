@@ -37,6 +37,11 @@ namespace Stratis.Bitcoin.Configuration.Settings
         public int MaxCoindbCacheInMB { get; private set; }
 
         /// <summary>
+        /// How often to flush the cache to disk when in IBD, note if dbcache is bigger then <see cref="MaxCoindbCacheInMB"/> flush will happen anyway happen.
+        /// </summary>
+        public int CoindbIbdFlushMin { get; private set; }
+
+        /// <summary>
         /// Initializes an instance of the object from the node configuration.
         /// </summary>
         /// <param name="nodeSettings">The node configuration.</param>
@@ -53,6 +58,7 @@ namespace Stratis.Bitcoin.Configuration.Settings
             this.MaxTipAge = config.GetOrDefault("maxtipage", nodeSettings.Network.MaxTipAge, this.logger);
             this.MaxBlockMemoryInMB = config.GetOrDefault("maxblkmem", 200, this.logger);
             this.MaxCoindbCacheInMB = config.GetOrDefault("dbcache", 200, this.logger);
+            this.CoindbIbdFlushMin = config.GetOrDefault("dbflush", 10, this.logger);
         }
 
         /// <summary>Prints the help information on how to configure the Consensus settings to the logger.</summary>
@@ -68,6 +74,7 @@ namespace Stratis.Bitcoin.Configuration.Settings
             builder.AppendLine($"-maxtipage=<number>       Max tip age. Default {network.MaxTipAge}.");
             builder.AppendLine($"-maxblkmem=<number>       Max memory to use for unconsumed blocks in MB. Default 200 (this does not include the size of objects in memory).");
             builder.AppendLine($"-dbcache=<number>         Max cache memory for the coindb in MB. Default 200 (this does not include the size of objects in memory).");
+            builder.AppendLine($"-dbflush=<number>         How often to flush the cache to disk when in IBD in minutes. Default 10 min (min=1min, max=60min).");
 
             NodeSettings.Default(network).Logger.LogInformation(builder.ToString());
         }
@@ -90,6 +97,8 @@ namespace Stratis.Bitcoin.Configuration.Settings
             builder.AppendLine($"#maxblkmem=200");
             builder.AppendLine($"#Max cache memory for the coindb in MB. Default 200.");
             builder.AppendLine($"#dbcache=200");
+            builder.AppendLine($"#How often to flush the cache to disk when in IBD in minutes (min=1min, max=60min). The bigger the number the faster the sync and smaller the db, but shutdown will be longer.");
+            builder.AppendLine($"#dbflush=10");
         }
     }
 }

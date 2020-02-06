@@ -95,6 +95,11 @@ namespace Stratis.Bitcoin.Tests.Consensus
             }
         }
 
+        public void CacheCoins(OutPoint[] utxos)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc />
         public HashHeightPair Rewind()
         {

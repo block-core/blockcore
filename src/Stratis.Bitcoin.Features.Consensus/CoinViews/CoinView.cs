@@ -35,17 +35,21 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         void SaveChanges(IList<UnspentOutput> unspentOutputs, HashHeightPair oldBlockHash, HashHeightPair nextBlockHash, List<RewindData> rewindDataList = null);
 
         /// <summary>
-        /// Obtains information about unspent outputs for specific transactions and also retrieves information about the coinview's tip.
+        /// Obtains information about unspent outputs.
         /// </summary>
         /// <param name="utxos">Transaction identifiers for which to retrieve information about unspent outputs.</param>
         /// <returns>
-        /// Coinview tip's hash and information about unspent outputs in the requested transactions.
         /// <para>
-        /// i-th item in <see cref="FetchCoinsResponse.UnspentOutputs"/> array is the information of the unspent outputs for i-th transaction in <paramref name="txIds"/>.
-        /// If the i-th item of <see cref="FetchCoinsResponse.UnspentOutputs"/> is <c>null</c>, it means that there are no unspent outputs in the given transaction.
+        /// If an item of <see cref="FetchCoinsResponse.UnspentOutputs"/> is <c>null</c>, it means that outpoint is spent.
         /// </para>
         /// </returns>
         FetchCoinsResponse FetchCoins(OutPoint[] utxos);
+
+        /// <summary>
+        /// Check if given utxos are not in cache then pull them from disk and place them in to the cache
+        /// </summary>
+        /// <param name="utxos">Transaction output identifiers for which to retrieve information about unspent outputs.</param>
+        void CacheCoins(OutPoint[] utxos);
 
         /// <summary>
         /// Rewinds the coinview to the last saved state.

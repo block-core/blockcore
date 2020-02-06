@@ -39,6 +39,24 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             get { return this.hitCount; }
         }
 
+        /// <summary>Number of cache queries for which the result was not found in the cache.</summary>
+        private long missCountCache;
+
+        /// <summary>Number of cache queries for which the result was not found in the cache.</summary>
+        public long MissCountCache
+        {
+            get { return this.missCountCache; }
+        }
+
+        /// <summary>Number of cache queries for which the result was found in the cache.</summary>
+        private long hitCountCache;
+
+        /// <summary>Number of cache queries for which the result was found in the cache.</summary>
+        public long HitCountCache
+        {
+            get { return this.hitCountCache; }
+        }
+
         /// <summary>Time span since the performance counter was created.</summary>
         public TimeSpan Elapsed
         {
@@ -49,14 +67,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         /// <summary>Number of utxos that never got flushed to disk.</summary>
-        private long utxoNotFlushed;
+        private long utxoSkipDisk;
 
         /// <summary>Number of utxos that never got flushed to disk.</summary>
-        public long UtxoNotFlushed
+        public long UtxoSkipDisk
         {
-            get { return this.utxoNotFlushed; }
+            get { return this.utxoSkipDisk; }
         }
-
 
         /// <summary>Provider of date time functionality.</summary>
         private readonly IDateTimeProvider dateTimeProvider;
@@ -94,13 +111,33 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         /// <summary>
+        /// Adds new sample to the number of missed cache queries.
+        /// </summary>
+        /// <param name="count">Number of missed queries to add.</param>
+        [NoTrace]
+        public void AddCacheMissCount(long count)
+        {
+            Interlocked.Add(ref this.missCountCache, count);
+        }
+
+        /// <summary>
+        /// Adds new sample to the number of hit cache queries.
+        /// </summary>
+        /// <param name="count">Number of hit queries to add.</param>
+        [NoTrace]
+        public void AddCacheHitCount(long count)
+        {
+            Interlocked.Add(ref this.hitCountCache, count);
+        }
+
+        /// <summary>
         /// Adds new sample to the number of utxo that never got flushed.
         /// </summary>
         /// <param name="count">Number of hit queries to add.</param>
         [NoTrace]
-        public void AddUtxoNotFlushedCount(long count)
+        public void AddUtxoSkipDiskCount(long count)
         {
-            Interlocked.Add(ref this.utxoNotFlushed, count);
+            Interlocked.Add(ref this.utxoSkipDisk, count);
         }
 
         /// <summary>
@@ -110,7 +147,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         [NoTrace]
         public CachePerformanceSnapshot Snapshot()
         {
-            var snap = new CachePerformanceSnapshot(this.missCount, this.hitCount, this.utxoNotFlushed)
+            var snap = new CachePerformanceSnapshot(this.missCount, this.hitCount, this.missCountCache,this.hitCountCache, this.utxoSkipDisk)
             {
                 Start = this.Start,
                 // TODO: Would it not be better for these two guys to be part of the constructor? Either implicitly or explicitly.
@@ -143,11 +180,29 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             get { return this.missCount; }
         }
 
-        private readonly long utxoNotFlushed;
+        /// <summary>Number of cache queries for which the result was found in the cache.</summary>
+        private readonly long hitCountCache;
 
-        public long TotalUtxoNotFlushed
+        /// <summary>Number of cache queries for which the result was found in the cache.</summary>
+        public long TotalHitCountCache
         {
-            get { return this.utxoNotFlushed; }
+            get { return this.hitCountCache; }
+        }
+
+        /// <summary>Number of cache queries for which the result was not found in the cache.</summary>
+        private readonly long missCountCache;
+
+        /// <summary>Number of cache queries for which the result was not found in the cache.</summary>
+        public long TotalMissCountCache
+        {
+            get { return this.missCountCache; }
+        }
+
+        private readonly long utxoSkipDisk;
+
+        public long TotalUtxoSkipDisk
+        {
+            get { return this.utxoSkipDisk; }
         }
 
         /// <summary>UTC timestamp when the snapshotted performance counter was created.</summary>
@@ -166,11 +221,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         [NoTrace]
-        public CachePerformanceSnapshot(long missCount, long hitCount,long utxoNotFlushed)
+        public CachePerformanceSnapshot(long missCount, long hitCount, long missCountCache, long hitCountCache, long utxoSkipDisk)
         {
             this.missCount = missCount;
             this.hitCount = hitCount;
-            this.utxoNotFlushed = utxoNotFlushed;
+            this.hitCountCache = hitCountCache;
+            this.missCountCache = missCountCache;
+            this.utxoSkipDisk = utxoSkipDisk;
         }
 
         /// <summary>
@@ -195,9 +252,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
             long missCount = end.missCount - start.missCount;
             long hitCount = end.hitCount - start.hitCount;
-            long utxoNotFlushed = end.utxoNotFlushed - start.utxoNotFlushed;
+            long missCountCache = end.missCountCache - start.missCountCache;
+            long hitCountCache = end.hitCountCache - start.hitCountCache;
 
-            return new CachePerformanceSnapshot(missCount, hitCount, utxoNotFlushed)
+            long utxoNotFlushed = end.utxoSkipDisk - start.utxoSkipDisk;
+
+            return new CachePerformanceSnapshot(missCount, hitCount, missCountCache, hitCountCache, utxoNotFlushed)
             {
                 Start = start.Taken,
                 Taken = end.Taken
@@ -209,13 +269,16 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         public override string ToString()
         {
             long total = this.TotalMissCount + this.TotalHitCount;
+            long totalCache = this.TotalMissCountCache + this.TotalHitCountCache;
+            long totalInsert = this.TotalMissCount + this.TotalMissCountCache;
+
             var builder = new StringBuilder();
             builder.AppendLine("====Cache Stats(%)====");
             if (total != 0)
             {
-                builder.AppendLine("Cache Hit:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalHitCount * 100m / total).ToString("0.00") + " %");
-                builder.AppendLine("Cache Miss:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalMissCount * 100m / total).ToString("0.00") + " %");
-                builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoNotFlushed).ToString());
+                if (totalCache > 0) builder.AppendLine("Prefetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + ((decimal)this.TotalHitCountCache * 100m / totalCache).ToString("0.00") + "% miss:" + ((decimal)this.TotalMissCountCache * 100m / totalCache).ToString("0.00") + "%");
+                if (total > 0) builder.AppendLine("Fetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + ((decimal)this.TotalHitCount * 100m / total).ToString("0.00") + "% miss:" + ((decimal)this.TotalMissCount * 100m / total).ToString("0.00") + "%");
+                if (totalInsert > 0)  builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoSkipDisk).ToString() + "(" + ((decimal)this.TotalUtxoSkipDisk * 100m / totalInsert).ToString("0.00") + "%)");
             }
 
             builder.AppendLine("========================");

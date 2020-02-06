@@ -3,6 +3,7 @@ using Stratis.Bitcoin.IntegrationTests.Common;
 using Stratis.Bitcoin.Features.Consensus;
 using Stratis.Bitcoin.Interfaces;
 using Xunit;
+using Stratis.Bitcoin.Base;
 
 namespace Stratis.Bitcoin.IntegrationTests.RPC
 {
@@ -41,6 +42,8 @@ namespace Stratis.Bitcoin.IntegrationTests.RPC
 
             IFullNode fullNode = this.BuildServicedNode(dir);
             var isIBDProvider = fullNode.NodeService<IInitialBlockDownloadState>(true);
+            var chainState = fullNode.NodeService<IChainState>(true);
+            chainState.ConsensusTip = new ChainedHeader(fullNode.Network.GetGenesis().Header, fullNode.Network.GenesisHash, 0);
 
             Assert.NotNull(isIBDProvider);
             Assert.True(isIBDProvider.IsInitialBlockDownload());

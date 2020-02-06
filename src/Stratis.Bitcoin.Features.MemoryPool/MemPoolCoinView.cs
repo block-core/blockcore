@@ -87,6 +87,11 @@ namespace Stratis.Bitcoin.Features.MemoryPool
             throw new NotImplementedException();
         }
 
+        public void CacheCoins(OutPoint[] utxos)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Load the coin view for a memory pool transaction. This should only be called
         /// inside the memory pool lock.

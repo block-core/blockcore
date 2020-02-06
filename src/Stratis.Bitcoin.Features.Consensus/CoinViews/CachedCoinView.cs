@@ -55,17 +55,17 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         /// <summary>
-        /// Length of the coinview cache flushing interval in seconds, in case of a crash up to 1 hour of syncing is lost.
+        /// Length of the coinview cache flushing interval in seconds, in case of a crash up to that number of seconds of syncing blocks are lost.
         /// </summary>
         /// <remarks>
         /// The longer the time interval the better performant the coinview will be,
-        /// UTXOs that are added and deleted before tehy are flushed never reach the underline disk
+        /// UTXOs that are added and deleted before they are flushed never reach the underline disk
         /// this saves 3 operations to disk (write the coinview and later read and delete it).
         /// However if this interval is too high the cache will be filled with dirty items
         /// Also a crash will mean a big redownload of the chain.
         /// </remarks>
         /// <seealso cref="lastCacheFlushTime"/>
-        public const int CacheFlushTimeIntervalSeconds = 60 * 60;
+        public int CacheFlushTimeIntervalSeconds { get; set; }
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -163,6 +163,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
           
             this.MaxCacheSizeBytes = consensusSettings.MaxCoindbCacheInMB * 1024 * 1024;
+            this.CacheFlushTimeIntervalSeconds = consensusSettings.CoindbIbdFlushMin * 60;
 
             nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 300);
         }
@@ -180,17 +181,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             return this.blockHash;
         }
 
-
-        /// <summary>
-        /// A method to optimize the coindb progress by trying to fetch 
-        /// outputs in advance outsisw of the main consensus thread.
-        /// If an output is fetched it's placed in cache.
-        /// </summary>
-        /// <remarks>
-        /// The difference between this method and the main fetch coin method 
-        /// is to avoid the perf counter (for more accurate stats) and the evict call.
-        /// </remarks>
-        internal void PreFetchCoins(OutPoint[] utxos)
+        /// <inheritdoc />
+        public void CacheCoins(OutPoint[] utxos)
         {
             lock (this.lockobj)
             {
@@ -203,6 +195,9 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         missedOutpoint.Add(outPoint);
                     }
                 }
+
+                this.performanceCounter.AddCacheMissCount(missedOutpoint.Count);
+                this.performanceCounter.AddCacheHitCount(utxos.Length - missedOutpoint.Count);
 
                 if (missedOutpoint.Count > 0)
                 {
@@ -224,6 +219,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             }
         }
 
+        /// <inheritdoc />
         public FetchCoinsResponse FetchCoins(OutPoint[] utxos)
         {
             Guard.NotNull(utxos, nameof(utxos));
@@ -335,7 +331,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 // blockstore which is currently set to 17 sec.
 
                 DateTime now = this.dateTimeProvider.GetUtcNow();
-                bool flushTimeLimit = (now - this.lastCacheFlushTime).TotalSeconds >= CacheFlushTimeIntervalSeconds;
+                bool flushTimeLimit = (now - this.lastCacheFlushTime).TotalSeconds >= this.CacheFlushTimeIntervalSeconds;
 
                 // The size of the cache was reached and most likely TryEvictCacheLocked didn't work
                 // so the cahces is pulledted with flushable items, then we flush anyway.
@@ -394,6 +390,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.lastCacheFlushTime = this.dateTimeProvider.GetUtcNow();
         }
 
+        /// <inheritdoc />
         public void SaveChanges(IList<UnspentOutput> outputs, HashHeightPair oldBlockHash, HashHeightPair nextBlockHash, List<RewindData> rewindDataList = null)
         {
             Guard.NotNull(oldBlockHash, nameof(oldBlockHash));
@@ -410,7 +407,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 }
 
                 this.blockHash = nextBlockHash;
-                long utxoNotFlushed = 0;
+                long utxoSkipDisk = 0;
 
                 var rewindData = new RewindData(oldBlockHash);
                 Dictionary<OutPoint, int> indexItems = null;
@@ -462,6 +459,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                         this.cachedUtxoItems.Add(cacheItem.OutPoint, cacheItem);
                         this.cacheSizeBytes += cacheItem.GetSize;
+                        this.performanceCounter.AddMissCount(1);
                         this.logger.LogDebug("CacheItem added to the cache during save '{0}'.", cacheItem.OutPoint);
                     }
 
@@ -498,7 +496,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             this.logger.LogDebug("Utxo '{0}' is not in disk, removing from cache.", cacheItem.OutPoint);
                             this.cachedUtxoItems.Remove(cacheItem.OutPoint);
                             this.cacheSizeBytes -= cacheItem.GetSize;
-                            utxoNotFlushed++;
+                            utxoSkipDisk++;
                             if (cacheItem.IsDirty) this.dirtyCacheCount--;
                         }
                         else
@@ -563,7 +561,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     }
                 }
 
-                this.performanceCounter.AddUtxoNotFlushedCount(utxoNotFlushed);
+                this.performanceCounter.AddUtxoSkipDiskCount(utxoSkipDisk);
 
                 if (this.rewindDataIndexCache != null && indexItems.Any())
                 {
@@ -670,6 +668,9 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private void AddBenchStats(StringBuilder log)
         {
             log.AppendLine("======CachedCoinView Bench======");
+            DateTime now = this.dateTimeProvider.GetUtcNow();
+            var lastFlush = (now - this.lastCacheFlushTime).TotalMinutes;
+            log.AppendLine("Last flush ".PadRight(20) + Math.Round(lastFlush, 2) + " min ago (flush every " + TimeSpan.FromSeconds(this.CacheFlushTimeIntervalSeconds).TotalMinutes + " min)");
 
             log.AppendLine("Coin cache tip ".PadRight(20) + this.blockHash.Height);
             log.AppendLine("Coin store tip ".PadRight(20) + this.innerBlockHash.Height);

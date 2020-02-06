@@ -126,6 +126,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 throw new NotImplementedException();
             }
 
+            public void CacheCoins(OutPoint[] utxos)
+            {
+                throw new NotImplementedException();
+            }
+
             public HashHeightPair Rewind()
             {
                 throw new NotImplementedException();
@@ -171,6 +176,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
                 throw new NotImplementedException();
             }
 
+            public void CacheCoins(OutPoint[] utxos)
+            {
+                throw new NotImplementedException();
+            }
+
             public RewindData GetRewindData(int height)
             {
                 throw new NotImplementedException();
@@ -206,6 +216,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             }
 
             public HashHeightPair Rewind()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CacheCoins(OutPoint[] utxos)
             {
                 throw new NotImplementedException();
             }

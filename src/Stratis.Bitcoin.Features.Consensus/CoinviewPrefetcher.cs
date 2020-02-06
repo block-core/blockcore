@@ -34,7 +34,6 @@ namespace Stratis.Bitcoin.Features.Consensus
         private readonly IAsyncDelegateDequeuer<ChainedHeader> headersQueue;
 
         private readonly ICoinView coinview;
-        private readonly CachedCoinView cachedCoinView;
 
         private readonly CoinviewHelper coinviewHelper;
 
@@ -53,9 +52,6 @@ namespace Stratis.Bitcoin.Features.Consensus
             this.headersQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<ChainedHeader>($"{nameof(CoinviewPrefetcher)}-{nameof(this.headersQueue)}", this.OnHeaderEnqueued);
             this.coinviewHelper = new CoinviewHelper();
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-
-            this.cachedCoinView = (CachedCoinView)coinview;
-            Guard.NotNull(this.cachedCoinView, nameof(this.cachedCoinView));
         }
 
         /// <summary>
@@ -111,13 +107,13 @@ namespace Stratis.Bitcoin.Features.Consensus
             if (currentHeader.Height > this.checkpoints.LastCheckpointHeight)
                 enforceBIP30 = DeploymentFlags.EnforceBIP30ForBlock(currentHeader, this.chainIndexer.Network.Consensus, this.chainIndexer);
 
-            OutPoint[] idsToFetch = this.coinviewHelper.GetIdsToFetch(block, enforceBIP30);
+            OutPoint[] idsToCache = this.coinviewHelper.GetIdsToFetch(block, enforceBIP30);
 
-            if (idsToFetch.Length != 0)
+            if (idsToCache.Length != 0)
             {
-                this.cachedCoinView.PreFetchCoins(idsToFetch);
+                this.coinview.CacheCoins(idsToCache);
 
-                this.logger.LogDebug("{0} ids were pre-fetched.", idsToFetch.Length);
+                this.logger.LogDebug("{0} ids were pre-fetched.", idsToCache.Length);
             }
 
             return Task.CompletedTask;

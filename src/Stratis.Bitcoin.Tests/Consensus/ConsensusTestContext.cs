@@ -208,6 +208,10 @@ namespace Stratis.Bitcoin.Tests.Consensus
             this.checkpoints
                 .Setup(c => c.GetLastCheckpointHeight())
                 .Returns(checkpoints.OrderBy(h => h.Height).Last().Height);
+
+            this.checkpoints
+                .Setup(c => c.LastCheckpointHeight)
+                .Returns(checkpoints.OrderBy(h => h.Height).Last().Height);
         }
 
         public ChainedHeader ExtendAChain(

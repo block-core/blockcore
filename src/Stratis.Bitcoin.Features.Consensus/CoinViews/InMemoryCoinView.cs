@@ -39,6 +39,11 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             return this.tipHash;
         }
 
+        public void CacheCoins(OutPoint[] utxos)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc />
         public FetchCoinsResponse FetchCoins(OutPoint[] txIds)
         {

@@ -864,6 +864,9 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
         [Required(ErrorMessage = "A password is required.")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "The name of the account is missing.")]
+        public string AccountName { get; set; }
+
         [Required(ErrorMessage = "An address is required.")]
         public string ExternalAddress { get; set; }
 

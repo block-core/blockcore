@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-      <TargetFramework>netcoreapp2.2</TargetFramework>
-      <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+      <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
       <VersionPrefix>1.0.0</VersionPrefix>
     </PropertyGroup>
     
     <ItemGroup>
         <PackageReference Include="CSharpFunctionalExtensions" Version="1.10.0" />
-        <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.0" />
     </ItemGroup>
     
     <ItemGroup>

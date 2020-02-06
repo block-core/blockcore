@@ -190,7 +190,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Controllers
 
             try
             {
-                string signature = this.walletManager.SignMessage(request.Password, request.WalletName, request.ExternalAddress, request.Message);
+                string signature = this.walletManager.SignMessage(request.Password, request.WalletName, request.AccountName, request.ExternalAddress, request.Message);
                 return this.Json(signature);
             }
             catch (Exception e)

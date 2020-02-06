@@ -459,6 +459,8 @@ namespace Stratis.Bitcoin.Consensus
                     {
                         this.blockPuller.RequestPeerServices(validationContext.MissingServices.Value);
 
+                        this.DownloadBlocks(new[] { validationContext.ChainedHeaderToValidate });
+                        this.logger.LogWarning("Downloading block for '{0}' had missing services {1}, it will be enqueued again.", validationContext.ChainedHeaderToValidate, validationContext.MissingServices);
                         this.logger.LogTrace("(-)[MISSING_SERVICES]");
                         return;
                     }

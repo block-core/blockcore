@@ -113,7 +113,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             {
                 this.coinview.CacheCoins(idsToCache);
 
-                this.logger.LogDebug("{0} ids were pre-fetched.", idsToCache.Length);
+                this.logger.LogDebug("Block '{0}' had {1} ids pre-fetched.", currentHeader.Height, idsToCache.Length);
             }
 
             return Task.CompletedTask;

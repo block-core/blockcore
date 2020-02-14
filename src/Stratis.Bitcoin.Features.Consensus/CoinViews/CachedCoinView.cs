@@ -161,7 +161,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.random = new Random();
 
             this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
-          
+
             this.MaxCacheSizeBytes = consensusSettings.MaxCoindbCacheInMB * 1024 * 1024;
             this.CacheFlushTimeIntervalSeconds = consensusSettings.CoindbIbdFlushMin * 60;
 
@@ -226,7 +226,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
             var result = new FetchCoinsResponse();
             var missedOutpoint = new List<OutPoint>();
-         
+
             lock (this.lockobj)
             {
                 foreach (OutPoint outPoint in utxos)
@@ -445,6 +445,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                             this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
 
                             FetchCoinsResponse result = this.inner.FetchCoins(new[] { output.OutPoint });
+                            this.performanceCounter.AddMissCount(1);
 
                             UnspentOutput unspentOutput = result.UnspentOutputs.Single().Value;
 
@@ -459,7 +460,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                         this.cachedUtxoItems.Add(cacheItem.OutPoint, cacheItem);
                         this.cacheSizeBytes += cacheItem.GetSize;
-                        this.performanceCounter.AddMissCount(1);
                         this.logger.LogDebug("CacheItem added to the cache during save '{0}'.", cacheItem.OutPoint);
                     }
 

@@ -313,7 +313,7 @@ namespace Stratis.Bitcoin.Consensus
         }
 
         /// <inheritdoc />
-        public async Task<ChainedHeader> BlockMinedAsync(Block block)
+        public async Task<ChainedHeader> BlockMinedAsync(Block block, bool assumeValid = false)
         {
             Guard.NotNull(block, nameof(block));
 
@@ -333,6 +333,9 @@ namespace Stratis.Bitcoin.Consensus
 
                     // This might throw ConsensusErrorException but we don't wanna catch it because miner will catch it.
                     chainedHeader = this.chainedHeaderTree.CreateChainedHeaderOfMinedBlock(block);
+
+                    if (assumeValid)
+                        chainedHeader.IsAssumedValid = true;
                 }
 
                 validationContext = await this.partialValidator.ValidateAsync(chainedHeader, block).ConfigureAwait(false);

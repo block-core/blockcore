@@ -99,7 +99,7 @@ namespace Stratis.Bitcoin.IntegrationTests
         public bool TestSequenceLocks(TestContext testContext, ChainedHeader chainedHeader, Transaction tx, Transaction.LockTimeFlags flags, LockPoints uselock = null)
         {
             var context = new MempoolValidationContext(tx, new MempoolValidationState(false));
-            context.View = new MempoolCoinView(testContext.cachedCoinView, testContext.mempool, testContext.mempoolLock, null);
+            context.View = new MempoolCoinView(this.network, testContext.cachedCoinView, testContext.mempool, testContext.mempoolLock, null);
             testContext.mempoolLock.ReadAsync(() => context.View.LoadViewLocked(tx)).GetAwaiter().GetResult();
             return CreateMempoolEntryMempoolRule.CheckSequenceLocks(testContext.network, chainedHeader, context, flags, uselock, false);
         }
@@ -151,13 +151,13 @@ namespace Stratis.Bitcoin.IntegrationTests
 
                 var loggerFactory = ExtendedLoggerFactory.Create();
 
-                var inMemoryCoinView = new InMemoryCoinView(this.ChainIndexer.Tip.HashBlock);
-                var nodeStats = new NodeStats(dateTimeProvider, loggerFactory);
-                this.cachedCoinView = new CachedCoinView(inMemoryCoinView, dateTimeProvider, new LoggerFactory(), nodeStats);
-
                 var nodeSettings = new NodeSettings(this.network, args: new string[] { "-checkpoints" });
                 var consensusSettings = new ConsensusSettings(nodeSettings);
                 var connectionSettings = new ConnectionManagerSettings(nodeSettings);
+
+                var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(this.ChainIndexer.Tip));
+                var nodeStats = new NodeStats(dateTimeProvider, loggerFactory);
+                this.cachedCoinView = new CachedCoinView(this.network, new Checkpoints(), inMemoryCoinView, dateTimeProvider, new LoggerFactory(), nodeStats, consensusSettings);
 
                 var signals = new Signals.Signals(loggerFactory, null);
                 var asyncProvider = new AsyncProvider(loggerFactory, signals, new NodeLifetime());
@@ -185,7 +185,15 @@ namespace Stratis.Bitcoin.IntegrationTests
                 foreach (var ruleType in network.Consensus.ConsensusRules.HeaderValidationRules)
                     consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
                 foreach (var ruleType in network.Consensus.ConsensusRules.FullValidationRules)
-                    consensusRulesContainer.FullValidationRules.Add(Activator.CreateInstance(ruleType) as FullValidationConsensusRule);
+                {
+                    FullValidationConsensusRule rule = null;
+                    if (ruleType == typeof(FlushCoinviewRule))
+                        rule = new FlushCoinviewRule(new Mock<IInitialBlockDownloadState>().Object);
+                    else
+                        rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
+                    
+                    consensusRulesContainer.FullValidationRules.Add(rule);
+                }
 
                 this.ConsensusRules = new PowConsensusRuleEngine(this.network, loggerFactory, dateTimeProvider, this.ChainIndexer, deployments, consensusSettings,
                     new Checkpoints(), this.cachedCoinView, chainState, new InvalidBlockHashStore(dateTimeProvider), nodeStats, asyncProvider, consensusRulesContainer).SetupRulesEngineParent();

@@ -56,8 +56,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
 
             // A temporary hack until tip manage will be introduced.
             var breezeCoinView = (DBreezeCoinView)((CachedCoinView)this.UtxoSet).Inner;
-            uint256 hash = breezeCoinView.GetTipHash();
-            ChainedHeader tip = chainTip.FindAncestorOrSelf(hash);
+            HashHeightPair hash = breezeCoinView.GetTipHash();
+            ChainedHeader tip = chainTip.FindAncestorOrSelf(hash.Hash);
 
             this.RewindDataIndexCache.Initialize(tip.Height, this.UtxoSet);
         }

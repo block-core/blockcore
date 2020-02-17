@@ -3,15 +3,15 @@ using Stratis.Bitcoin.Utilities;
 
 namespace Stratis.Bitcoin.Features.Consensus
 {
-    public class UnspentOutputsComparer : IComparer<UnspentOutputs>
+    public class UnspentOutputsComparer : IComparer<UnspentOutput>
     {
         public static UnspentOutputsComparer Instance { get; } = new UnspentOutputsComparer();
 
-        private readonly UInt256Comparer Comparer = new UInt256Comparer();
+        private readonly OutPointComparer Comparer = new OutPointComparer();
 
-        public int Compare(UnspentOutputs x, UnspentOutputs y)
+        public int Compare(UnspentOutput x, UnspentOutput y)
         {
-            return this.Comparer.Compare(x.TransactionId, y.TransactionId);
+            return this.Comparer.Compare(x.OutPoint, y.OutPoint);
         }
     }
 }

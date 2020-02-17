@@ -226,26 +226,26 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
                 .Returns(spendableTransactions);
 
             var fetchedUtxos = spendableTransactions
-                .Select(t => new UnspentOutputs(t.Transaction.Id, new Coins()
-                {
-                    CoinBase = false,
-                    CoinStake = false,
-                    Height = 0,
-                    Outputs = { new TxOut(t.Transaction.Amount ?? Money.Zero, t.Address.ScriptPubKey) },
-                    Time = milliseconds550MinutesAgo,
-                    Version = 1
-                }))
+                .Select(t => 
+                new UnspentOutput(
+                    new OutPoint( t.Transaction.Id, 0), 
+                    new Utilities.Coins(0, new TxOut(t.Transaction.Amount ?? Money.Zero, t.Address.ScriptPubKey), 
+                    false, 
+                    false, 
+                    milliseconds550MinutesAgo)))
                 .ToArray();
-            var fetchCoinsResponse = new FetchCoinsResponse(fetchedUtxos, this.chainIndexer.Tip.HashBlock);
+            var fetchCoinsResponse = new FetchCoinsResponse();
+            foreach (var fetch in fetchedUtxos)
+                fetchCoinsResponse.UnspentOutputs.Add(fetch.OutPoint, fetch);
 
             fetchCoinsResponse.UnspentOutputs
-                .Where(u => u.Outputs.Any(o => o.Value < this.posMinting.MinimumStakingCoinValue)).Should()
+                .Where(u => u.Value.Coins.TxOut.Value < this.posMinting.MinimumStakingCoinValue).Should()
                 .NotBeEmpty("otherwise we are not sure the code actually excludes them");
             fetchCoinsResponse.UnspentOutputs
-                .Where(u => u.Outputs.Any(o => o.Value >= this.posMinting.MinimumStakingCoinValue)).Should()
+                .Where(u => u.Value.Coins.TxOut.Value >= this.posMinting.MinimumStakingCoinValue).Should()
                 .NotBeEmpty("otherwise we are not sure the code actually includes them");
 
-            this.coinView.Setup(c => c.FetchCoins(It.IsAny<uint256[]>(), It.IsAny<CancellationToken>()))
+            this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(fetchCoinsResponse);
 
             this.consensusManager.Setup(c => c.Tip).Returns(this.chainIndexer.Tip);
@@ -570,11 +570,8 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
                 TxOut = new TxOut(new Money(100), new Mock<IDestination>().Object),
                 OutPoint = new OutPoint(uint256.One, 0),
                 HashBlock = chainTip.Previous.HashBlock,
-                UtxoSet = new UnspentOutputs()
+                UtxoSet = new UnspentOutput(new OutPoint(uint256.One, 0), new Utilities.Coins(1, new TxOut(), false, isCoinstake, chainTip.Header.Time))
             };
-
-            utxoDescription.UtxoSet.SetPrivatePropertyValue("Time", chainTip.Header.Time);
-            utxoDescription.UtxoSet.SetPrivatePropertyValue("IsCoinstake", isCoinstake);
 
             descriptions.Add(utxoDescription);
 

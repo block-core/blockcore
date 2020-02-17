@@ -71,10 +71,11 @@ namespace Stratis.Bitcoin.Consensus
         /// A new block was mined by the node and is attempted to connect to tip.
         /// </summary>
         /// <param name="block">Block that was mined.</param>
+        /// <param name="assumeValid">Assume the block is allready valid and skp validations.</param>
         /// <exception cref="ConsensusErrorException">Thrown if header validation failed.</exception>
         /// <exception cref="ConsensusException">Thrown if partial or full validation failed or if full validation wasn't required.</exception>
         /// <returns><see cref="ChainedHeader"/> of a block that was mined.</returns>
-        Task<ChainedHeader> BlockMinedAsync(Block block);
+        Task<ChainedHeader> BlockMinedAsync(Block block, bool assumeValid = false);
     }
 
     /// <summary>

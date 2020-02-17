@@ -26,8 +26,11 @@ namespace Stratis.Bitcoin.Features.BlockStore
         /// <summary><c>true</c> to maintain a full transaction index.</summary>
         public bool TxIndex { get; set; }
 
-        /// <summary><c>true</c> to rebuild chain state and block index from block data files on disk.</summary>
+        /// <summary><c>true</c> to rebuild block index from block data files on disk.</summary>
         public bool ReIndex { get; set; }
+
+        /// <summary><c>true</c> to rebuild chain state from block data files on disk.</summary>
+        public bool ReIndexChain { get; set; }
 
         /// <summary><c>true</c> to maintain a full addresses index.</summary>
         public bool AddressIndex { get; set; }
@@ -68,6 +71,7 @@ namespace Stratis.Bitcoin.Features.BlockStore
 
             this.TxIndex = config.GetOrDefault<bool>("txindex", false, this.logger);
             this.ReIndex = config.GetOrDefault<bool>("reindex", false, this.logger);
+            this.ReIndexChain = config.GetOrDefault<bool>("reindex-chain", false, this.logger);
             this.AddressIndex = config.GetOrDefault<bool>("addressindex", false, this.logger);
 
             if (this.PruningEnabled && this.TxIndex)
@@ -83,7 +87,8 @@ namespace Stratis.Bitcoin.Features.BlockStore
             builder.AppendLine($"-maxblkstoremem=<number>       Max memory to use before flushing blocks to disk in MB. Default is 5 MB.");
 
             builder.AppendLine($"-txindex=<0 or 1>              Enable to maintain a full transaction index.");
-            builder.AppendLine($"-reindex=<0 or 1>              Rebuild chain state and block index from block data files on disk.");
+            builder.AppendLine($"-reindex=<0 or 1>              Rebuild store with tx index from block data files on disk.");
+            builder.AppendLine($"-reindex-chain=<0 or 1>        Rebuild the coindb from block data files on disk.");
             builder.AppendLine($"-addressindex=<0 or 1>         Enable to maintain a full address index.");
 
             NodeSettings.Default(network).Logger.LogInformation(builder.ToString());
@@ -99,8 +104,10 @@ namespace Stratis.Bitcoin.Features.BlockStore
             builder.AppendLine("####BlockStore Settings####");
             builder.AppendLine($"#Enable to maintain a full transaction index.");
             builder.AppendLine($"#txindex=0");
-            builder.AppendLine($"#Rebuild chain state and block index from block data files on disk.");
+            builder.AppendLine($"#Rebuild store with tx index from block data files on disk.");
             builder.AppendLine($"#reindex=0");
+            builder.AppendLine($"#Rebuild the coindb from block data files on disk.");
+            builder.AppendLine($"#reindex-chain=0");
             builder.AppendLine($"#Enable pruning to reduce storage requirements by enabling deleting of old blocks.");
             builder.AppendLine($"#prune=2880");
             builder.AppendLine($"#The maximum amount of blocks the cache can contain. Default is 5 MB");

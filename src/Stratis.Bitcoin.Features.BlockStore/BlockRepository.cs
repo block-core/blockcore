@@ -334,6 +334,21 @@ namespace Stratis.Bitcoin.Features.BlockStore
                 dbreezeTransaction.Insert(TransactionTableName, transaction.GetHash().ToBytes(), block.GetHash().ToBytes());
         }
 
+        public IEnumerable<Block> EnumeratehBatch(List<ChainedHeader> headers)
+        {
+            using (DBreeze.Transactions.Transaction dbreezeTransaction = this.DBreeze.GetTransaction())
+            {
+                dbreezeTransaction.SynchronizeTables(BlockTableName, TransactionTableName);
+
+                foreach (ChainedHeader chainedHeader in headers)
+                {
+                    Row<byte[], byte[]> blockRow = dbreezeTransaction.Select<byte[], byte[]>(BlockTableName, chainedHeader.HashBlock.ToBytes());
+                    Block block = blockRow.Exists ? this.dBreezeSerializer.Deserialize<Block>(blockRow.Value) : null;
+                    yield return block;
+                }
+            }
+        }
+
         /// <inheritdoc />
         public void ReIndex()
         {

@@ -45,11 +45,15 @@ namespace Stratis.Bitcoin.Configuration.Logging
             return ExtendedLoggerFactory.Create(builder =>
             {
                 LoggingConfiguration.ConfigureConsoleFilters(builder, settings);
+
                 builder.AddFilter("Default", LogLevel.Information)
                     .AddFilter("System", LogLevel.Warning)
                     .AddFilter("Microsoft", LogLevel.Warning)
                     .AddFilter("Microsoft.AspNetCore", LogLevel.Error)
+                    .AddFilter<ConsoleLoggerProvider>("Stratis.Bitcoin.*", LogLevel.Information)
                     .AddConsole();
+
+                builder.SetMinimumLevel(LogLevel.Debug);
             }
             );
         }
@@ -259,7 +263,7 @@ namespace Stratis.Bitcoin.Configuration.Logging
                     if (settings.DebugArgs[0] == "1")
                     {
                         // Increase all logging to Debug.
-                        builder.AddFilter($"{nameof(Stratis)}.{nameof(Bitcoin)}", Microsoft.Extensions.Logging.LogLevel.Debug);
+                        builder.AddFilter<ConsoleLoggerProvider>($"{nameof(Stratis)}.{nameof(Bitcoin)}", Microsoft.Extensions.Logging.LogLevel.Debug);
                     }
                     else
                     {
@@ -279,7 +283,7 @@ namespace Stratis.Bitcoin.Configuration.Logging
                                 if (!usedCategories.Contains(category))
                                 {
                                     usedCategories.Add(category);
-                                    builder.AddFilter(category.TrimEnd('*').TrimEnd('.'), Microsoft.Extensions.Logging.LogLevel.Debug);
+                                    builder.AddFilter<ConsoleLoggerProvider>(category.TrimEnd('*').TrimEnd('.'), Microsoft.Extensions.Logging.LogLevel.Debug);
                                 }
                             }
                         }

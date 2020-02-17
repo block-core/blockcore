@@ -285,7 +285,7 @@ namespace Stratis.Bitcoin.Consensus
         public abstract RuleContext CreateRuleContext(ValidationContext validationContext);
 
         /// <inheritdoc />
-        public abstract uint256 GetBlockHash();
+        public abstract HashHeightPair GetBlockHash();
 
         /// <inheritdoc />
         public abstract Task<RewindState> RewindAsync();
@@ -325,6 +325,6 @@ namespace Stratis.Bitcoin.Consensus
         /// <summary>
         /// The block hash that represents the tip of the transition.
         /// </summary>
-        public uint256 BlockHash { get; set; }
+        public HashHeightPair BlockHash { get; set; }
     }
 }

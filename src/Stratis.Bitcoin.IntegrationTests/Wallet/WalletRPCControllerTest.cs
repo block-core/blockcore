@@ -51,7 +51,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
         public async Task GetTransactionExistsInBlockButDoesntExistInWalletAsync()
         {
             // Transaction included in block at height 3.
-            string txId = "21f3b1fd361f50992db217ea16728acc6b3dbf49c8531e60f8a28d7f3bdf4674";
+            string txId = "5369de2c6b7b62902d303995e90406d82de48f8c5ed0e847618dcf4e5cde84a1";
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
@@ -61,7 +61,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 //// Check transaction exists in block #3.
                 BlockModel block = await $"http://localhost:{node.ApiPort}/api"
                     .AppendPathSegment("blockstore/block")
-                    .SetQueryParams(new { hash = "b1209de1c0347be83bb02a3bf9b70e33b06c82b91e68bc6392e6fb813cd5e4bd", outputJson = true })
+                    .SetQueryParams(new { hash = "57546d732a7cdf38135377fd3eddebbb928ec760c1e6a4b1b36e775b4ac2a3c7", outputJson = true })
                     .GetJsonAsync<BlockModel>();
 
                 block.Transactions.Should().ContainSingle(t => (string)t == txId);
@@ -79,7 +79,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
         public async Task GetTransactionOnGeneratedTransactionAsync()
         {
             // Transaction included in block at height 3.
-            string txId = "21f3b1fd361f50992db217ea16728acc6b3dbf49c8531e60f8a28d7f3bdf4674";
+            string txId = "5369de2c6b7b62902d303995e90406d82de48f8c5ed0e847618dcf4e5cde84a1";
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
@@ -89,7 +89,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 // Check transaction exists in block #3.
                 BlockModel block = await $"http://localhost:{sendingNode.ApiPort}/api"
                     .AppendPathSegment("blockstore/block")
-                    .SetQueryParams(new { hash = "b1209de1c0347be83bb02a3bf9b70e33b06c82b91e68bc6392e6fb813cd5e4bd", outputJson = true })
+                    .SetQueryParams(new { hash = "57546d732a7cdf38135377fd3eddebbb928ec760c1e6a4b1b36e775b4ac2a3c7", outputJson = true })
                     .GetJsonAsync<BlockModel>();
 
                 block.Transactions.Should().ContainSingle(t => (string)t == txId);
@@ -105,11 +105,11 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 result.Confirmations.Should().Be(148);
                 result.Isgenerated.Should().BeTrue();
                 result.TransactionId.Should().Be(uint256.Parse(txId));
-                result.BlockHash.ToString().Should().Be("b1209de1c0347be83bb02a3bf9b70e33b06c82b91e68bc6392e6fb813cd5e4bd");
+                result.BlockHash.ToString().Should().Be("57546d732a7cdf38135377fd3eddebbb928ec760c1e6a4b1b36e775b4ac2a3c7");
                 result.BlockIndex.Should().Be(0);
-                result.BlockTime.Should().Be(1547206662);
-                result.TimeReceived.Should().Be(1547206661);
-                result.TransactionTime.Should().Be(1547206661);
+                result.BlockTime.Should().Be(1579271980);
+                result.TimeReceived.Should().Be(1579271980);
+                result.TransactionTime.Should().Be(1579271980);
                 result.Details.Should().ContainSingle();
 
                 GetTransactionDetailsModel details = result.Details.Single();
@@ -125,7 +125,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
         public async Task GetTransactionOnImmatureTransactionAsync()
         {
             // Transaction included in block at height 145.
-            string txId = "3a96e0ffd83526b24fc035920fec89f689a778f64cd692b5eda2861cccb1ddba";
+            string txId = "d65542742643891e17e7527101cee774e7b561f3f6499302c653aa93ace0d303";
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
@@ -135,7 +135,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 // Check transaction exists in block #145.
                 BlockTransactionDetailsModel blockTransactionDetailsModel = await $"http://localhost:{sendingNode.ApiPort}/api"
                     .AppendPathSegment("blockstore/block")
-                    .SetQueryParams(new { hash = "b8ab1d66febfde4c26d0b4755f7def50a63e06267cefc6d6836651fa8910babc", outputJson = true, showtransactiondetails = true })
+                    .SetQueryParams(new { hash = "a5f03782979d83120d446b2eee764c2e976697c9bf6baf5f5e3145b58ad9e72a", outputJson = true, showtransactiondetails = true })
                     .GetJsonAsync<BlockTransactionDetailsModel>();
 
                 blockTransactionDetailsModel.Transactions.Should().ContainSingle(t => t.TxId == txId);
@@ -151,7 +151,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 result.Confirmations.Should().Be(6);
                 result.Isgenerated.Should().BeTrue();
                 result.TransactionId.Should().Be(uint256.Parse(txId));
-                result.BlockHash.ToString().Should().Be("b8ab1d66febfde4c26d0b4755f7def50a63e06267cefc6d6836651fa8910babc");
+                result.BlockHash.ToString().Should().Be("a5f03782979d83120d446b2eee764c2e976697c9bf6baf5f5e3145b58ad9e72a");
                 result.BlockIndex.Should().Be(0);
                 result.BlockTime.Should().Be(blockTransactionDetailsModel.Time);
                 result.TimeReceived.Should().BeLessOrEqualTo(blockTransactionDetailsModel.Time);

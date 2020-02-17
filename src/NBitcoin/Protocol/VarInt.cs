@@ -1,4 +1,7 @@
-﻿namespace NBitcoin.Protocol
+﻿using System;
+using System.IO;
+
+namespace NBitcoin.Protocol
 {
     public class CompactVarInt : IBitcoinSerializable
     {
@@ -96,6 +99,65 @@
                 this.prefixByte = 0xFE;
             else
                 this.prefixByte = 0xFF;
+        }
+        public static void StaticWrite(BitcoinStream bs, ulong length)
+        {
+            if (!bs.Serializing)
+                throw new InvalidOperationException("Stream should be serializing");
+            var stream = bs.Inner;
+            bs.Counter.AddWritten(1);
+            if (length < 0xFD)
+            {
+                stream.WriteByte((byte)length);
+            }
+            else if (length <= 0xffff)
+            {
+                var value = (ushort)length;
+                stream.WriteByte((byte)0xFD);
+                bs.ReadWrite(ref value);
+            }
+            else if (length <= 0xffffffff)
+            {
+                var value = (uint)length;
+                stream.WriteByte((byte)0xFE);
+                bs.ReadWrite(ref value);
+            }
+            else
+            {
+                var value = length;
+                stream.WriteByte((byte)0xFF);
+                bs.ReadWrite(ref value);
+            }
+        }
+
+        public static ulong StaticRead(BitcoinStream bs)
+        {
+            if (bs.Serializing)
+                throw new InvalidOperationException("Stream should not be serializing");
+            var prefix = bs.Inner.ReadByte();
+            bs.Counter.AddRead(1);
+            if (prefix == -1)
+                throw new EndOfStreamException("No more byte to read");
+            if (prefix < 0xFD)
+                return (byte)prefix;
+            else if (prefix == 0xFD)
+            {
+                var value = (ushort)0;
+                bs.ReadWrite(ref value);
+                return value;
+            }
+            else if (prefix == 0xFE)
+            {
+                var value = (uint)0;
+                bs.ReadWrite(ref value);
+                return value;
+            }
+            else
+            {
+                var value = (ulong)0;
+                bs.ReadWrite(ref value);
+                return value;
+            }
         }
 
         public ulong ToLong()

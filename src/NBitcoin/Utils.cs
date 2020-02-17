@@ -223,6 +223,24 @@ namespace NBitcoin
             return totalReadCount;
         }
 #endif
+        public static int ReadEx(this Stream stream, Span<byte> buffer, CancellationToken cancellation = default(CancellationToken))
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            int totalReadCount = 0;
+            while (!buffer.IsEmpty)
+            {
+                cancellation.ThrowIfCancellationRequested();
+                int currentReadCount = stream.Read(buffer);
+                if (currentReadCount == 0)
+                    return 0;
+                buffer = buffer.Slice(currentReadCount);
+                totalReadCount += currentReadCount;
+            }
+
+            return totalReadCount;
+        }
+
         public static void AddOrReplace<TKey, TValue>(this IDictionary<TKey, TValue> dico, TKey key, TValue value)
         {
             if(dico.ContainsKey(key))
@@ -594,6 +612,24 @@ namespace NBitcoin
             return new IPEndPoint(endpoint.Address.MapToIPv6Ex(), endpoint.Port);
         }
 
+        public static void ToBytes(uint value, bool littleEndian, Span<byte> output)
+        {
+            if (littleEndian)
+            {
+                output[0] = (byte)value;
+                output[1] = (byte)(value >> 8);
+                output[2] = (byte)(value >> 16);
+                output[3] = (byte)(value >> 24);
+            }
+            else
+            {
+                output[0] = (byte)(value >> 24);
+                output[1] = (byte)(value >> 16);
+                output[2] = (byte)(value >> 8);
+                output[3] = (byte)value;
+            }
+        }
+
         public static byte[] ToBytes(uint value, bool littleEndian)
         {
             if(littleEndian)
@@ -646,6 +682,24 @@ namespace NBitcoin
                     (byte)(value >> 8),
                     (byte)value,
                 };
+            }
+        }
+
+        public static uint ToUInt32(ReadOnlySpan<byte> value, int index, bool littleEndian)
+        {
+            if (littleEndian)
+            {
+                return value[index]
+                       + ((uint)value[index + 1] << 8)
+                       + ((uint)value[index + 2] << 16)
+                       + ((uint)value[index + 3] << 24);
+            }
+            else
+            {
+                return value[index + 3]
+                       + ((uint)value[index + 2] << 8)
+                       + ((uint)value[index + 1] << 16)
+                       + ((uint)value[index + 0] << 24);
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using NBitcoin;
 using Stratis.Bitcoin.Consensus.Rules;
+using Stratis.Bitcoin.Utilities;
 
 namespace Stratis.Bitcoin.Consensus
 {
@@ -42,7 +43,7 @@ namespace Stratis.Bitcoin.Consensus
         /// Retrieves the block hash of the current tip of the chain.
         /// </summary>
         /// <returns>Block hash of the current tip of the chain.</returns>
-        uint256 GetBlockHash();
+        HashHeightPair GetBlockHash();
 
         /// <summary>
         /// Rewinds the chain to the last saved state.

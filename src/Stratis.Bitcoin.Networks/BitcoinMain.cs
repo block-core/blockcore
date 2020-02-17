@@ -84,8 +84,8 @@ namespace Stratis.Bitcoin.Networks
                 premineHeight: 0,
                 premineReward: Money.Zero,
                 proofOfWorkReward: Money.Coins(50),
-                powTargetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
-                powTargetSpacing: TimeSpan.FromSeconds(10 * 60),
+                targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
+                targetSpacing: TimeSpan.FromSeconds(10 * 60),
                 powAllowMinDifficultyBlocks: false,
                 posNoRetargeting: false,
                 powNoRetargeting: false,
@@ -135,9 +135,10 @@ namespace Stratis.Bitcoin.Networks
                 { 295000, new CheckpointInfo(new uint256("0x00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983"))},
                 { 486000, new CheckpointInfo(new uint256("0x000000000000000000a2a8104d61651f76c666b70754d6e9346176385f7afa24"))},
                 { 491800, new CheckpointInfo(new uint256("0x000000000000000000d80de1f855902b50941bc3a3d0f71064d9613fd3943dc4"))},
-                { 550000, new CheckpointInfo(new uint256("0x000000000000000000223b7a2298fb1c6c75fb0efc28a4c56853ff4112ec6bc9"))} // 14-11-2018
+                { 550000, new CheckpointInfo(new uint256("0x000000000000000000223b7a2298fb1c6c75fb0efc28a4c56853ff4112ec6bc9"))}, // 14-11-2018,
+                { 610000, new CheckpointInfo(new uint256("0x0000000000000000000a6f607f74db48dae0a94022c10354536394c17672b7f7"))}  // 27-12-2019
             };
-
+           
             this.DNSSeeds = new List<DNSSeedData>
             {
                 new DNSSeedData("bitcoin.sipa.be", "seed.bitcoin.sipa.be"), // Pieter Wuille
@@ -188,10 +189,11 @@ namespace Stratis.Bitcoin.Networks
                 .Register<SetActivationDeploymentsFullValidationRule>()
 
                 // rules that require the store to be loaded (coinview)
-                .Register<LoadCoinviewRule>()
+                .Register<FetchCoinviewRule>()
                 .Register<TransactionDuplicationActivationRule>() // implements BIP30
                 .Register<PowCoinviewRule>()// implements BIP68, MaxSigOps and BlockReward calculation
-                .Register<SaveCoinviewRule>();
+                .Register<PushCoinviewRule>()
+                .Register<FlushCoinviewRule>();
         }
 
         protected void RegisterMempoolRules(IConsensus consensus)

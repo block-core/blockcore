@@ -115,7 +115,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules
             return this.RuleContext ?? new PowRuleContext();
         }
 
-        public override uint256 GetBlockHash()
+        public override HashHeightPair GetBlockHash()
         {
             throw new NotImplementedException();
         }
@@ -177,7 +177,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules
 
             var deployments = new NodeDeployments(testRulesContext.Network, testRulesContext.ChainIndexer);
             testRulesContext.ConsensusRuleEngine = new PowConsensusRuleEngine(testRulesContext.Network, testRulesContext.LoggerFactory, testRulesContext.DateTimeProvider,
-                testRulesContext.ChainIndexer, deployments, consensusSettings, testRulesContext.Checkpoints, new InMemoryCoinView(new uint256()), testRulesContext.ChainState,
+                testRulesContext.ChainIndexer, deployments, consensusSettings, testRulesContext.Checkpoints, new InMemoryCoinView(new HashHeightPair()), testRulesContext.ChainState,
                 new InvalidBlockHashStore(DateTimeProvider.Default), new NodeStats(DateTimeProvider.Default, testRulesContext.LoggerFactory), testRulesContext.AsyncProvider, new ConsensusRulesContainer()).SetupRulesEngineParent();
 
             return testRulesContext;

@@ -34,7 +34,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         /// </summary>
         /// <param name="unspentOutputs">The dictionary used to mock up the <see cref="ICoinView"/>.</param>
         /// <returns>The constructed consensus manager.</returns>
-        private async Task<ConsensusManager> CreateConsensusManagerAsync(Dictionary<uint256, UnspentOutputs> unspentOutputs)
+        private async Task<ConsensusManager> CreateConsensusManagerAsync(Dictionary<OutPoint, UnspentOutput> unspentOutputs)
         {
             this.consensusSettings = new ConsensusSettings(Configuration.NodeSettings.Default(this.network));
             var initialBlockDownloadState = new InitialBlockDownloadState(this.chainState.Object, this.network, this.consensusSettings, new Checkpoints(), this.loggerFactory.Object, DateTimeProvider.Default);
@@ -68,22 +68,24 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
                 new Mock<IConnectionManager>().Object, new Mock<INodeStats>().Object, new Mock<INodeLifetime>().Object, this.consensusSettings, this.dateTimeProvider.Object);
 
                 // Mock the coinviews "FetchCoinsAsync" method. We will use the "unspentOutputs" dictionary to track spendable outputs.
-            this.coinView.Setup(d => d.FetchCoins(It.IsAny<uint256[]>(), It.IsAny<CancellationToken>()))
-                .Returns((uint256[] txIds, CancellationToken cancel) =>
+            this.coinView.Setup(d => d.FetchCoins(It.IsAny<OutPoint[]>()))
+                .Returns((OutPoint[] txIds) =>
                 {
-
-                    var result = new UnspentOutputs[txIds.Length];
+                    var result = new FetchCoinsResponse();
 
                     for (int i = 0; i < txIds.Length; i++)
-                        result[i] = unspentOutputs.TryGetValue(txIds[i], out UnspentOutputs unspent) ? unspent : null;
+                    {
+                        unspentOutputs.TryGetValue(txIds[i], out UnspentOutput unspent);
+                        result.UnspentOutputs.Add(txIds[i], unspent);
+                    }
 
-                    return new FetchCoinsResponse(result, this.ChainIndexer.Tip.HashBlock);
+                    return result;
                 });
 
             // Mock the coinviews "GetTipHashAsync" method.
-            this.coinView.Setup(d => d.GetTipHash(It.IsAny<CancellationToken>())).Returns(() =>
+            this.coinView.Setup(d => d.GetTipHash()).Returns(() =>
             {
-                return this.ChainIndexer.Tip.HashBlock;
+                return new HashHeightPair(this.ChainIndexer.Tip);
             });
 
             // Since we are mocking the stake validator ensure that GetNextTargetRequired returns something sensible. Otherwise we get the "bad-diffbits" error.
@@ -91,11 +93,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
                 .Returns(this.network.Consensus.PowLimit);
 
             // Skip validation of signature in the proven header
-            this.stakeValidator.Setup(s => s.VerifySignature(It.IsAny<UnspentOutputs>(), It.IsAny<Transaction>(), 0, It.IsAny<ScriptVerify>()))
+            this.stakeValidator.Setup(s => s.VerifySignature(It.IsAny<UnspentOutput>(), It.IsAny<Transaction>(), 0, It.IsAny<ScriptVerify>()))
                 .Returns(true);
 
             // Skip validation of stake kernel
-            this.stakeValidator.Setup(s => s.CheckStakeKernelHash(It.IsAny<PosRuleContext>(), It.IsAny<uint>(), It.IsAny<uint256>(), It.IsAny<UnspentOutputs>(), It.IsAny<OutPoint>(), It.IsAny<uint>()))
+            this.stakeValidator.Setup(s => s.CheckStakeKernelHash(It.IsAny<PosRuleContext>(), It.IsAny<uint>(), It.IsAny<uint256>(), It.IsAny<UnspentOutput>(), It.IsAny<OutPoint>(), It.IsAny<uint>()))
                 .Returns(true);
 
             // Since we are mocking the stakechain ensure that the Get returns a BlockStake. Otherwise this results in "previous stake is not found".
@@ -135,7 +137,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public async Task PosCoinViewRuleFailsAsync()
         {
-            var unspentOutputs = new Dictionary<uint256, UnspentOutputs>();
+            var unspentOutputs = new Dictionary<OutPoint, UnspentOutput>();
 
             ConsensusManager consensusManager = await this.CreateConsensusManagerAsync(unspentOutputs);
 
@@ -178,7 +180,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
             prevTransaction.Outputs.Add(new TxOut(Money.COIN * 10_000_000, scriptPubKey1));
 
             // Record the spendable outputs.
-            unspentOutputs[prevTransaction.GetHash()] = new UnspentOutputs(1, prevTransaction);
+            unspentOutputs.Add(new OutPoint(prevTransaction, 0), new UnspentOutput(new OutPoint(prevTransaction, 0), new Coins(1, prevTransaction.Outputs[0], prevTransaction.IsCoinBase)));
+            unspentOutputs.Add(new OutPoint(prevTransaction, 1), new UnspentOutput(new OutPoint(prevTransaction, 1), new Coins(1, prevTransaction.Outputs[1], prevTransaction.IsCoinBase)));
 
             // Create coin stake transaction.
             Transaction coinstakeTransaction = this.network.CreateTransaction();

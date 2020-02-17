@@ -399,22 +399,24 @@ namespace Stratis.Bitcoin.Controllers
                     throw new ArgumentException(nameof(trxid));
                 }
 
-                UnspentOutputs unspentOutputs = null;
+                OutPoint outPoint = new OutPoint(txid, vout);
+
+                UnspentOutput unspentOutput = null;
                 if (includeMemPool)
                 {
-                    unspentOutputs = this.pooledGetUnspentTransaction != null ? await this.pooledGetUnspentTransaction.GetUnspentTransactionAsync(txid).ConfigureAwait(false) : null;
+                    unspentOutput = this.pooledGetUnspentTransaction != null ? await this.pooledGetUnspentTransaction.GetUnspentTransactionAsync(outPoint).ConfigureAwait(false) : null;
                 }
                 else
                 {
-                    unspentOutputs = this.getUnspentTransaction != null ? await this.getUnspentTransaction.GetUnspentTransactionAsync(txid).ConfigureAwait(false) : null;
+                    unspentOutput = this.getUnspentTransaction != null ? await this.getUnspentTransaction.GetUnspentTransactionAsync(outPoint).ConfigureAwait(false) : null;
                 }
 
-                if (unspentOutputs == null)
+                if (unspentOutput?.Coins == null)
                 {
                     return this.Json(null);
                 }
 
-                return this.Json(new GetTxOutModel(unspentOutputs, vout, this.network, this.chainIndexer.Tip));
+                return this.Json(new GetTxOutModel(unspentOutput, this.network, this.chainIndexer.Tip));
             }
             catch (Exception e)
             {

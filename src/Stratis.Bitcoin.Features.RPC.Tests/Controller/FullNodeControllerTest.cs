@@ -261,8 +261,8 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
         public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionNotFound_ReturnsNullAsync()
         {
             var txId = new uint256(1243124);
-            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync((UnspentOutputs)null)
+            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
+                .ReturnsAsync((UnspentOutput)null)
                 .Verifiable();
 
             GetTxOutModel result = await this.controller.GetTxOutAsync(txId.ToString(), 0, false).ConfigureAwait(false);
@@ -287,8 +287,8 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
         public async Task GetTxOutAsync_IncludeMempool_UnspentTransactionNotFound_ReturnsNullAsync()
         {
             var txId = new uint256(1243124);
-            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync((UnspentOutputs)null)
+            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
+                .ReturnsAsync((UnspentOutput)null)
                 .Verifiable();
 
             GetTxOutModel result = await this.controller.GetTxOutAsync(txId.ToString(), 0, true).ConfigureAwait(false);
@@ -312,15 +312,14 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
         [Fact]
         public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionFound_ReturnsModelAsync()
         {
-            var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
-            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
+            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(transaction, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
 
-            GetTxOutModel model = await this.controller.GetTxOutAsync(txId.ToString(), 0, false).ConfigureAwait(false);
+            GetTxOutModel model = await this.controller.GetTxOutAsync(transaction.ToString(), 0, false).ConfigureAwait(false);
 
             this.getUnspentTransaction.Verify();
 
@@ -336,9 +335,9 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
-            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
+            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
 
@@ -359,20 +358,18 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
-            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
+            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
 
-            GetTxOutModel model = await this.controller.GetTxOutAsync(txId.ToString(), 13, false).ConfigureAwait(false);
+            GetTxOutModel model = await this.controller.GetTxOutAsync(txId.ToString(), 0, false).ConfigureAwait(false);
 
             this.getUnspentTransaction.Verify();
             Assert.Equal(this.chain.Tip.HashBlock, model.BestBlock);
             Assert.True(model.Coinbase);
             Assert.Equal(3, model.Confirmations);
-            Assert.Null(model.ScriptPubKey);
-            Assert.Null(model.Value);
         }
 
         [Fact]
@@ -380,20 +377,18 @@ namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
-            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
+            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
 
-            GetTxOutModel model = await this.controller.GetTxOutAsync(txId.ToString(), 13, true).ConfigureAwait(false);
+            GetTxOutModel model = await this.controller.GetTxOutAsync(txId.ToString(), 0, true).ConfigureAwait(false);
 
             this.pooledGetUnspentTransaction.Verify();
             Assert.Equal(this.chain.Tip.HashBlock, model.BestBlock);
             Assert.True(model.Coinbase);
             Assert.Equal(3, model.Confirmations);
-            Assert.Null(model.ScriptPubKey);
-            Assert.Null(model.Value);
         }
 
         [Fact]

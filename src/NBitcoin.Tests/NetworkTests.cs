@@ -78,7 +78,7 @@ namespace NBitcoin.Tests
         [Trait("UnitTest", "UnitTest")]
         public void BitcoinMainnetIsInitializedCorrectly()
         {
-            Assert.Equal(16, this.networkMain.Checkpoints.Count);
+            Assert.Equal(17, this.networkMain.Checkpoints.Count);
             Assert.Equal(6, this.networkMain.DNSSeeds.Count);
             Assert.Equal(512, this.networkMain.SeedNodes.Count);
 
@@ -126,8 +126,8 @@ namespace NBitcoin.Tests
             Assert.Equal(new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"), this.networkMain.Consensus.BIP34Hash);
             Assert.Equal(new Target(new uint256("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), this.networkMain.Consensus.PowLimit);
             Assert.Equal(new uint256("0x0000000000000000000000000000000000000000002cb971dd56d1c583c20f90"), this.networkMain.Consensus.MinimumChainWork);
-            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), this.networkMain.Consensus.PowTargetTimespan);
-            Assert.Equal(TimeSpan.FromSeconds(10 * 60), this.networkMain.Consensus.PowTargetSpacing);
+            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), this.networkMain.Consensus.TargetTimespan);
+            Assert.Equal(TimeSpan.FromSeconds(10 * 60), this.networkMain.Consensus.TargetSpacing);
             Assert.False(this.networkMain.Consensus.PowAllowMinDifficultyBlocks);
             Assert.False(this.networkMain.Consensus.PowNoRetargeting);
             Assert.Equal(2016, this.networkMain.Consensus.MinerConfirmationWindow);
@@ -207,8 +207,8 @@ namespace NBitcoin.Tests
             Assert.Equal(new uint256("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8"), network.Consensus.BIP34Hash);
             Assert.Equal(new Target(new uint256("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), network.Consensus.PowLimit);
             Assert.Equal(new uint256("0x0000000000000000000000000000000000000000000000198b4def2baa9338d6"), network.Consensus.MinimumChainWork);
-            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.PowTargetTimespan);
-            Assert.Equal(TimeSpan.FromSeconds(10 * 60), network.Consensus.PowTargetSpacing);
+            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.TargetTimespan);
+            Assert.Equal(TimeSpan.FromSeconds(10 * 60), network.Consensus.TargetSpacing);
             Assert.True(network.Consensus.PowAllowMinDifficultyBlocks);
             Assert.False(network.Consensus.PowNoRetargeting);
             Assert.Equal(2016, network.Consensus.MinerConfirmationWindow);
@@ -288,8 +288,8 @@ namespace NBitcoin.Tests
             Assert.Equal(new uint256(), network.Consensus.BIP34Hash);
             Assert.Equal(new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), network.Consensus.PowLimit);
             Assert.Equal(uint256.Zero, network.Consensus.MinimumChainWork);
-            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.PowTargetTimespan);
-            Assert.Equal(TimeSpan.FromSeconds(10 * 60), network.Consensus.PowTargetSpacing);
+            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.TargetTimespan);
+            Assert.Equal(TimeSpan.FromSeconds(10 * 60), network.Consensus.TargetSpacing);
             Assert.True(network.Consensus.PowAllowMinDifficultyBlocks);
             Assert.True(network.Consensus.PowNoRetargeting);
             Assert.Equal(144, network.Consensus.MinerConfirmationWindow);
@@ -368,8 +368,8 @@ namespace NBitcoin.Tests
             Assert.Equal(new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"), network.Consensus.BIP34Hash);
             Assert.Equal(new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), network.Consensus.PowLimit);
             Assert.Null(network.Consensus.MinimumChainWork);
-            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.PowTargetTimespan);
-            Assert.Equal(TimeSpan.FromSeconds(10 * 60), network.Consensus.PowTargetSpacing);
+            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.TargetTimespan);
+            Assert.Equal(TimeSpan.FromSeconds(64), network.Consensus.TargetSpacing);
             Assert.False(network.Consensus.PowAllowMinDifficultyBlocks);
             Assert.False(network.Consensus.PowNoRetargeting);
             Assert.Equal(2016, network.Consensus.MinerConfirmationWindow);
@@ -443,8 +443,8 @@ namespace NBitcoin.Tests
             Assert.Equal(new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"), network.Consensus.BIP34Hash);
             Assert.Equal(new Target(new uint256("0000ffff00000000000000000000000000000000000000000000000000000000")), network.Consensus.PowLimit);
             Assert.Null(network.Consensus.MinimumChainWork);
-            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.PowTargetTimespan);
-            Assert.Equal(TimeSpan.FromSeconds(10 * 60), network.Consensus.PowTargetSpacing);
+            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.TargetTimespan);
+            Assert.Equal(TimeSpan.FromSeconds(64), network.Consensus.TargetSpacing);
             Assert.False(network.Consensus.PowAllowMinDifficultyBlocks);
             Assert.False(network.Consensus.PowNoRetargeting);
             Assert.Equal(2016, network.Consensus.MinerConfirmationWindow);
@@ -518,8 +518,8 @@ namespace NBitcoin.Tests
             Assert.Equal(new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"), network.Consensus.BIP34Hash);
             Assert.Equal(new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), network.Consensus.PowLimit);
             Assert.Null(network.Consensus.MinimumChainWork);
-            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.PowTargetTimespan);
-            Assert.Equal(TimeSpan.FromSeconds(10 * 60), network.Consensus.PowTargetSpacing);
+            Assert.Equal(TimeSpan.FromSeconds(14 * 24 * 60 * 60), network.Consensus.TargetTimespan);
+            Assert.Equal(TimeSpan.FromSeconds(64), network.Consensus.TargetSpacing);
             Assert.True(network.Consensus.PowAllowMinDifficultyBlocks);
             Assert.True(network.Consensus.PowNoRetargeting);
             Assert.Equal(2016, network.Consensus.MinerConfirmationWindow);

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.AsyncWork;
 using Stratis.Bitcoin.Base;
+using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Primitives;
 using Stratis.Bitcoin.Utilities;
@@ -128,6 +129,51 @@ namespace Stratis.Bitcoin.Features.BlockStore
             this.BatchThresholdSizeBytes = storeSettings.MaxCacheSize * 1024 * 1024;
 
             nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
+        }
+
+        public void ReindexChain(IConsensusManager consensusManager, CancellationToken nodeCancellation)
+        {
+            if (!this.storeSettings.ReIndexChain)
+                return;
+
+            if (consensusManager.Tip.Height >= this.storeTip.Height)
+                return;
+
+            if (this.storeTip.FindFork(consensusManager.Tip) != consensusManager.Tip)
+                throw new Exception("Store and chain tip are not on same fork.");
+
+            List<ChainedHeader> headers = new List<ChainedHeader>();
+            foreach (ChainedHeader chainedHeader in this.storeTip.EnumerateToGenesis())
+            {
+                if (chainedHeader.Height == consensusManager.Tip.Height)
+                    break;
+
+                headers.Add(chainedHeader);
+            }
+
+            headers.Reverse();
+
+            BlockRepository blockRepository = (BlockRepository)this.blockRepository;
+
+            foreach (Block block in blockRepository.EnumeratehBatch(headers))
+            {
+                if (block == null)
+                    throw new Exception();
+
+                ChainedHeader newChainedHeader = consensusManager.BlockMinedAsync(block, true).Result;
+
+                if (newChainedHeader == null)
+                    throw new Exception();
+
+                if (nodeCancellation.IsCancellationRequested)
+                    return;
+
+                if (newChainedHeader.Height % 1000 == 0)
+                {
+                    this.logger.LogInformation("Reindex in process... {0}/{1} blocks processed.", newChainedHeader.Height, this.storeTip.Height);
+                }
+
+            }
         }
 
         /// <summary>

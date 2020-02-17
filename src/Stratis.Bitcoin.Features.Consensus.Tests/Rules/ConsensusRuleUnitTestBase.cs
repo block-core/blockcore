@@ -65,7 +65,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules
             uint256 prevBlockHash = chainIndexer.Tip.HashBlock;
 
             (this.ruleContext as UtxoRuleContext).UnspentOutputSet = new UnspentOutputSet();
-            (this.ruleContext as UtxoRuleContext).UnspentOutputSet.SetCoins(new UnspentOutputs[0]);
+            (this.ruleContext as UtxoRuleContext).UnspentOutputSet.SetCoins(new UnspentOutput[0]);
 
             for (int i = 0; i < blockAmount; i++)
             {
@@ -78,7 +78,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules
                 block.Header.Nonce = nonce;
                 chainIndexer.SetTip(block.Header);
                 prevBlockHash = block.GetHash();
-                (this.ruleContext as UtxoRuleContext).UnspentOutputSet.Update(transaction, i);
+                (this.ruleContext as UtxoRuleContext).UnspentOutputSet.Update(this.network, transaction, i);
                 this.lastAddedTransaction = transaction;
             }
         }

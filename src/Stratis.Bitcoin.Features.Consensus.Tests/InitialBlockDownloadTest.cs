@@ -31,21 +31,6 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests
         }
 
         [Fact]
-        public void NotInIBDIfChainStateIsNull()
-        {
-            var blockDownloadState = new InitialBlockDownloadState(null, this.network, this.consensusSettings, this.checkpoints, this.loggerFactory.Object, DateTimeProvider.Default);
-            Assert.False(blockDownloadState.IsInitialBlockDownload());
-        }
-
-        [Fact]
-        public void InIBDIfChainTipIsNull()
-        {
-            this.chainState.ConsensusTip = null;
-            var blockDownloadState = new InitialBlockDownloadState(this.chainState, this.network, this.consensusSettings, this.checkpoints, this.loggerFactory.Object, DateTimeProvider.Default);
-            Assert.True(blockDownloadState.IsInitialBlockDownload());
-        }
-
-        [Fact]
         public void InIBDIfBehindCheckpoint()
         {
             BlockHeader blockHeader = this.network.Consensus.ConsensusFactory.CreateBlockHeader();

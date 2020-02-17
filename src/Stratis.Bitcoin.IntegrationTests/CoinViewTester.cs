@@ -10,8 +10,8 @@ namespace Stratis.Bitcoin.IntegrationTests
     public class CoinViewTester
     {
         private ICoinView coinView;
-        private List<UnspentOutputs> pendingCoins = new List<UnspentOutputs>();
-        private uint256 hash;
+        private List<UnspentOutput> pendingCoins = new List<UnspentOutput>();
+        private HashHeightPair hash;
         private int blockHeight;
 
         public CoinViewTester(ICoinView coinView)
@@ -20,60 +20,64 @@ namespace Stratis.Bitcoin.IntegrationTests
             this.hash = coinView.GetTipHash();
         }
 
-        public Coin[] CreateCoins(int coinCount)
+        public List<(Utilities.Coins, OutPoint)> CreateCoins(int coinCount)
         {
             var tx = new Transaction();
             tx.Outputs.AddRange(Enumerable.Range(0, coinCount)
                 .Select(t => new TxOut(Money.Zero, new Key()))
                 .ToArray());
-            var output = new UnspentOutputs(1, tx);
-            this.pendingCoins.Add(output);
-            return tx.Outputs.AsCoins().ToArray();
+
+            List<(Utilities.Coins, OutPoint)> lst = new List<(Utilities.Coins, OutPoint)>();
+            foreach (var trxo in tx.Outputs.AsIndexedOutputs())
+            {
+                var output = new UnspentOutput(trxo.ToOutPoint(), new Coins(0, trxo.TxOut, false));
+                this.pendingCoins.Add(output);
+                lst.Add((output.Coins, output.OutPoint));
+
+            }
+            return lst;
         }
 
-        public bool Exists(Coin c)
+        public bool Exists((Utilities.Coins Coins, OutPoint Outpoint) c)
         {
-            FetchCoinsResponse result = this.coinView.FetchCoins(new[] { c.Outpoint.Hash });
-            if (result.BlockHash != this.hash)
-                throw new InvalidOperationException("Unexepected hash");
-            if (result.UnspentOutputs[0] == null)
+            FetchCoinsResponse result = this.coinView.FetchCoins(new[] { c.Outpoint });
+            if (result.UnspentOutputs.Count == 0)
                 return false;
-            return result.UnspentOutputs[0].IsAvailable(c.Outpoint.N);
+            return result.UnspentOutputs[c.Outpoint].Coins != null;
         }
 
-        public void Spend(Coin c)
+        public void Spend((Utilities.Coins Coins, OutPoint Outpoint) c)
         {
-            UnspentOutputs coin = this.pendingCoins.FirstOrDefault(u => u.TransactionId == c.Outpoint.Hash);
+            UnspentOutput coin = this.pendingCoins.FirstOrDefault(u => u.OutPoint == c.Outpoint);
             if (coin == null)
             {
-                FetchCoinsResponse result = this.coinView.FetchCoins(new[] { c.Outpoint.Hash });
-                if (result.BlockHash != this.hash)
-                    throw new InvalidOperationException("Unexepected hash");
-                if (result.UnspentOutputs[0] == null)
+                FetchCoinsResponse result = this.coinView.FetchCoins(new[] { c.Outpoint });
+                if (result.UnspentOutputs.Count == 0)
                     throw new InvalidOperationException("Coin unavailable");
 
-                if (!result.UnspentOutputs[0].Spend(c.Outpoint.N))
+                if (!result.UnspentOutputs[c.Outpoint].Spend())
                     throw new InvalidOperationException("Coin unspendable");
-                this.pendingCoins.Add(result.UnspentOutputs[0]);
+
+                this.pendingCoins.Add(result.UnspentOutputs.Values.First());
             }
             else
             {
-                if (!coin.Spend(c.Outpoint.N))
+                if (!coin.Spend())
                     throw new InvalidOperationException("Coin unspendable");
             }
         }
 
-        public uint256 NewBlock()
+        public HashHeightPair NewBlock()
         {
             this.blockHeight++;
-            var newHash = new uint256(RandomUtils.GetBytes(32));
-            this.coinView.SaveChanges(this.pendingCoins, null, this.hash, newHash, this.blockHeight);
+            var newHash = new HashHeightPair(new uint256(RandomUtils.GetBytes(32)), this.blockHeight);
+            this.coinView.SaveChanges(this.pendingCoins, this.hash, newHash);
             this.pendingCoins.Clear();
             this.hash = newHash;
             return newHash;
         }
 
-        public uint256 Rewind()
+        public HashHeightPair Rewind()
         {
             this.hash = this.coinView.Rewind();
             this.blockHeight--;

@@ -695,7 +695,7 @@ namespace Stratis.Bitcoin.Consensus
             ConnectNewHeadersResult connectNewHeadersResult = null;
 
             bool isAssumedValidEnabled = this.consensusSettings.BlockAssumedValid != null;
-            bool isBelowLastCheckpoint = this.consensusSettings.UseCheckpoints && (earliestNewHeader.Height <= this.checkpoints.GetLastCheckpointHeight());
+            bool isBelowLastCheckpoint = this.consensusSettings.UseCheckpoints && (earliestNewHeader.Height <= this.checkpoints.LastCheckpointHeight);
 
             if (isBelowLastCheckpoint || isAssumedValidEnabled)
             {
@@ -848,7 +848,7 @@ namespace Stratis.Bitcoin.Consensus
             }
 
             ChainedHeader subchainTip = chainedHeader;
-            if (chainedHeader.Height == this.checkpoints.GetLastCheckpointHeight())
+            if (chainedHeader.Height == this.checkpoints.LastCheckpointHeight)
                 subchainTip = latestNewHeader;
 
             ConnectNewHeadersResult connectNewHeadersResult = this.MarkBetterChainAsRequired(subchainTip, latestNewHeader);

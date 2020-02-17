@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Linq;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
@@ -79,7 +80,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
 
             this.CheckHeaderAndCoinstakeTimes(header);
 
-            UnspentOutputs prevUtxo = this.GetAndValidatePreviousUtxo(header, context);
+            UnspentOutput prevUtxo = this.GetAndValidatePreviousUtxo(header, context);
 
             this.CheckCoinstakeAgeRequirement(chainedHeader, prevUtxo);
 
@@ -113,16 +114,17 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         /// </summary>
         /// <param name="header">The header.</param>
         /// <param name="context">Rule context.</param>
-        /// <returns>The validated previous <see cref="UnspentOutputs"/></returns>
-        private UnspentOutputs GetAndValidatePreviousUtxo(ProvenBlockHeader header, PosRuleContext context)
+        /// <returns>The validated previous <see cref="UnspentOutput"/></returns>
+        private UnspentOutput GetAndValidatePreviousUtxo(ProvenBlockHeader header, PosRuleContext context)
         {
             // First try and find the previous trx in the database.
             TxIn txIn = header.Coinstake.Inputs[0];
 
-            UnspentOutputs prevUtxo = null;
+            UnspentOutput prevUtxo = null;
 
-            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] {txIn.PrevOut.Hash});
-            if (coins.UnspentOutputs[0] == null)
+            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] {txIn.PrevOut});
+            prevUtxo = coins.UnspentOutputs[txIn.PrevOut];
+            if (prevUtxo?.Coins == null)
             {
                 // We did not find the previous trx in the database, look in rewind data.
                 prevUtxo = this.CheckIfCoinstakeIsSpentOnAnotherChain(header, context);
@@ -130,16 +132,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
             else
             {
                 // The trx was found now check if the UTXO is spent.
-                prevUtxo = coins.UnspentOutputs[0];
-
-                TxOut utxo = null;
-                if (txIn.PrevOut.N < prevUtxo.Outputs.Length)
-                {
-                    // Check that the size of the outs collection is the same as the expected position of the UTXO
-                    // Note the collection will not always represent the original size of the transaction unspent
-                    // outputs because when we store outputs do disk the last spent items are removed from the collection.
-                    utxo = prevUtxo.Outputs[txIn.PrevOut.N];
-                }
+                TxOut utxo = prevUtxo.Coins.TxOut;
 
                 if (utxo == null)
                 {
@@ -201,7 +194,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         /// <exception cref="ConsensusException">
         /// Throws exception with error <see cref="ConsensusErrors.InvalidStakeDepth" /> if check fails.
         /// </exception>
-        private void CheckCoinstakeAgeRequirement(ChainedHeader chainedHeader, UnspentOutputs unspentOutputs)
+        private void CheckCoinstakeAgeRequirement(ChainedHeader chainedHeader, UnspentOutput unspentOutputs)
         {
             ChainedHeader prevChainedHeader = chainedHeader.Previous;
 
@@ -219,7 +212,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         /// <exception cref="ConsensusException">
         /// Throws exception with error <see cref="ConsensusErrors.CoinstakeVerifySignatureFailed" /> if check fails.
         /// </exception>
-        private void CheckSignature(ProvenBlockHeader header, UnspentOutputs unspentOutputs)
+        private void CheckSignature(ProvenBlockHeader header, UnspentOutput unspentOutputs)
         {
             if (!this.stakeValidator.VerifySignature(unspentOutputs, header.Coinstake, 0, ScriptVerify.None))
             {
@@ -285,7 +278,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         /// <exception cref="ConsensusException">
         /// Throws exception with error <see cref="ConsensusErrors.PrevStakeNull" /> if check fails.
         /// </exception>
-        private void CheckStakeKernelHash(PosRuleContext context, UnspentOutputs stakingCoins, ProvenBlockHeader header, ChainedHeader chainedHeader)
+        private void CheckStakeKernelHash(PosRuleContext context, UnspentOutput stakingCoins, ProvenBlockHeader header, ChainedHeader chainedHeader)
         {
             OutPoint prevOut = this.GetPreviousOut(header);
             uint transactionTime = header.Time;
@@ -347,8 +340,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
         /// </summary>
         /// <param name="header">The proven block header.</param>
         /// <param name="context">The POS rule context.</param>
-        /// <returns>The <see cref="UnspentOutputs"> found in a RewindData</returns>
-        private UnspentOutputs CheckIfCoinstakeIsSpentOnAnotherChain(ProvenBlockHeader header, PosRuleContext context)
+        /// <returns>The <see cref="UnspentOutput"> found in a RewindData</returns>
+        private UnspentOutput CheckIfCoinstakeIsSpentOnAnotherChain(ProvenBlockHeader header, PosRuleContext context)
         {
             Transaction coinstake = header.Coinstake;
             TxIn input = coinstake.Inputs[0];
@@ -370,16 +363,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
                 throw new ConsensusException("Rewind data should always be present");
             }
 
-            UnspentOutputs matchingUnspentUtxo = null;
-            foreach (UnspentOutputs unspent in rewindData.OutputsToRestore)
+            UnspentOutput matchingUnspentUtxo = null;
+            foreach (RewindDataOutput rewindDataOutput in rewindData.OutputsToRestore)
             {
-                if (unspent.TransactionId == input.PrevOut.Hash)
+                if (rewindDataOutput.OutPoint == input.PrevOut)
                 {
-                    if (input.PrevOut.N < unspent.Outputs.Length)
-                    {
-                        matchingUnspentUtxo = unspent;
-                        break;
-                    }
+                    matchingUnspentUtxo = new UnspentOutput(rewindDataOutput.OutPoint, rewindDataOutput.Coins);
+                    break;
                 }
             }
 

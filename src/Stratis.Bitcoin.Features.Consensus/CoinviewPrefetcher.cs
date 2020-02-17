@@ -6,7 +6,9 @@ using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.AsyncWork;
 using Stratis.Bitcoin.Base.Deployments;
+using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
+using Stratis.Bitcoin.Utilities;
 
 namespace Stratis.Bitcoin.Features.Consensus
 {
@@ -38,15 +40,15 @@ namespace Stratis.Bitcoin.Features.Consensus
         private readonly ChainIndexer chainIndexer;
 
         private readonly IAsyncProvider asyncProvider;
-
+        private readonly ICheckpoints checkpoints;
         private readonly ILogger logger;
 
-        public CoinviewPrefetcher(ICoinView coinview, ChainIndexer chainIndexer, ILoggerFactory loggerFactory, IAsyncProvider asyncProvider)
+        public CoinviewPrefetcher(ICoinView coinview, ChainIndexer chainIndexer, ILoggerFactory loggerFactory, IAsyncProvider asyncProvider, ICheckpoints checkpoints)
         {
             this.coinview = coinview;
             this.chainIndexer = chainIndexer;
             this.asyncProvider = asyncProvider;
-
+            this.checkpoints = checkpoints;
             this.headersQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<ChainedHeader>($"{nameof(CoinviewPrefetcher)}-{nameof(this.headersQueue)}", this.OnHeaderEnqueued);
             this.coinviewHelper = new CoinviewHelper();
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
@@ -101,14 +103,17 @@ namespace Stratis.Bitcoin.Features.Consensus
                 return Task.CompletedTask;
             }
 
-            bool enforceBIP30 = DeploymentFlags.EnforceBIP30ForBlock(currentHeader);
-            uint256[] idsToFetch = this.coinviewHelper.GetIdsToFetch(block, enforceBIP30);
+            bool enforceBIP30 = false;
+            if (currentHeader.Height > this.checkpoints.LastCheckpointHeight)
+                enforceBIP30 = DeploymentFlags.EnforceBIP30ForBlock(currentHeader, this.chainIndexer.Network.Consensus, this.chainIndexer);
 
-            if (idsToFetch.Length != 0)
+            OutPoint[] idsToCache = this.coinviewHelper.GetIdsToFetch(block, enforceBIP30);
+
+            if (idsToCache.Length != 0)
             {
-                this.coinview.FetchCoins(idsToFetch, cancellation);
+                this.coinview.CacheCoins(idsToCache);
 
-                this.logger.LogDebug("{0} ids were pre-fetched.", idsToFetch.Length);
+                this.logger.LogDebug("Block '{0}' had {1} ids pre-fetched.", currentHeader.Height, idsToCache.Length);
             }
 
             return Task.CompletedTask;

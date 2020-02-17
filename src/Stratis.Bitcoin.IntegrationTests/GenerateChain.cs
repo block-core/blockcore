@@ -3,6 +3,7 @@ using System.IO.Compression;
 using NBitcoin;
 using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Stratis.Bitcoin.Networks;
+using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace Stratis.Bitcoin.IntegrationTests.Common
@@ -67,9 +68,11 @@ namespace Stratis.Bitcoin.IntegrationTests.Common
                 CoreNode miningNode = builder.CreateStratisPosNode(network).WithWallet(walletMnemonic: MinerMnemonic).Start();
                 CoreNode listeningNode = builder.CreateStratisPosNode(network).WithWallet(walletMnemonic: ListenerMnemonic).Start();
 
-                TestHelper.Connect(miningNode, listeningNode);
                 TestHelper.MineBlocks(miningNode, blockCount);
+                TestHelper.Connect(miningNode, listeningNode);
                 TestHelper.WaitForNodeToSync(miningNode, listeningNode);
+                TestBase.WaitLoop(() => miningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
+                TestBase.WaitLoop(() => listeningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
 
                 dataFolderPath = miningNode.DataFolder;
                 listenerFolderPath = listeningNode.DataFolder;
@@ -109,9 +112,11 @@ namespace Stratis.Bitcoin.IntegrationTests.Common
                 CoreNode miningNode = builder.CreateStratisPowNode(network).WithWallet(walletMnemonic: MinerMnemonic).Start();
                 CoreNode listeningNode = builder.CreateStratisPowNode(network).WithWallet(walletMnemonic: ListenerMnemonic).Start();
 
-                TestHelper.Connect(miningNode, listeningNode);
                 TestHelper.MineBlocks(miningNode, blockCount);
+                TestHelper.Connect(miningNode, listeningNode);
                 TestHelper.WaitForNodeToSync(miningNode, listeningNode);
+                TestBase.WaitLoop(() => miningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
+                TestBase.WaitLoop(() => listeningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
 
                 dataFolderPath = miningNode.DataFolder;
                 listenerFolderPath = listeningNode.DataFolder;

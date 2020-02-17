@@ -941,7 +941,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
         }
 
         [Fact]
-        public async Task AcceptToMemoryPool_TxMissingInputs_ReturnsFalseAsync()
+        public async Task AcceptToMemoryPool_TxMissingInputsOrSpent_ReturnsFalseAsync()
         {
             string dataDir = GetTestDirectoryPath(this);
 
@@ -963,7 +963,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
             // CheckMempoolCoinView !context.View.HaveCoins(txin.PrevOut.Hash)
             bool isSuccess = await validator.AcceptToMemoryPool(state, tx);
             Assert.False(isSuccess, "Transaction with invalid input should not have been accepted.");
-            Assert.Equal("bad-txns-inputs-missing", state.Error.Code);
+            Assert.Equal("bad-txns-inputs-missingorspent", state.Error.Code);
             Assert.Equal(16, state.Error.RejectCode);
             Assert.True(state.MissingInputs);
         }

@@ -398,7 +398,7 @@ namespace NBitcoin
                     // Special difficulty rule for testnet:
                     // If the new block's timestamp is more than 2* 10 minutes
                     // then allow mining of a min-difficulty block.
-                    if (this.Header.BlockTime > (lastBlock.Header.BlockTime + TimeSpan.FromTicks(consensus.PowTargetSpacing.Ticks * 2)))
+                    if (this.Header.BlockTime > (lastBlock.Header.BlockTime + TimeSpan.FromTicks(consensus.TargetSpacing.Ticks * 2)))
                         return proofOfWorkLimit;
 
                     // Return the last non-special-min-difficulty-rules-block.
@@ -424,15 +424,15 @@ namespace NBitcoin
 
             // Limit adjustment step.
             TimeSpan actualTimespan = lastBlock.Header.BlockTime - firstChainedHeader.Header.BlockTime;
-            if (actualTimespan < TimeSpan.FromTicks(consensus.PowTargetTimespan.Ticks / 4))
-                actualTimespan = TimeSpan.FromTicks(consensus.PowTargetTimespan.Ticks / 4);
-            if (actualTimespan > TimeSpan.FromTicks(consensus.PowTargetTimespan.Ticks * 4))
-                actualTimespan = TimeSpan.FromTicks(consensus.PowTargetTimespan.Ticks * 4);
+            if (actualTimespan < TimeSpan.FromTicks(consensus.TargetTimespan.Ticks / 4))
+                actualTimespan = TimeSpan.FromTicks(consensus.TargetTimespan.Ticks / 4);
+            if (actualTimespan > TimeSpan.FromTicks(consensus.TargetTimespan.Ticks * 4))
+                actualTimespan = TimeSpan.FromTicks(consensus.TargetTimespan.Ticks * 4);
 
             // Retarget.
             BigInteger newTarget = lastBlock.Header.Bits.ToBigInteger();
             newTarget = newTarget.Multiply(BigInteger.ValueOf((long)actualTimespan.TotalSeconds));
-            newTarget = newTarget.Divide(BigInteger.ValueOf((long)consensus.PowTargetTimespan.TotalSeconds));
+            newTarget = newTarget.Divide(BigInteger.ValueOf((long)consensus.TargetTimespan.TotalSeconds));
 
             var finalTarget = new Target(newTarget);
             if (finalTarget > proofOfWorkLimit)
@@ -447,7 +447,7 @@ namespace NBitcoin
         /// <returns>The difficulty adjustment interval in blocks.</returns>
         private long GetDifficultyAdjustmentInterval(IConsensus consensus)
         {
-            return (long)consensus.PowTargetTimespan.TotalSeconds / (long)consensus.PowTargetSpacing.TotalSeconds;
+            return (long)consensus.TargetTimespan.TotalSeconds / (long)consensus.TargetSpacing.TotalSeconds;
         }
 
         /// <summary>

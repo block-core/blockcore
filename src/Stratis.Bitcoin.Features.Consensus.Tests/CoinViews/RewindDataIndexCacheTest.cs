@@ -12,6 +12,7 @@ using Stratis.Bitcoin.Tests.Common;
 using Stratis.Bitcoin.Tests.Common.Logging;
 using Stratis.Bitcoin.Utilities;
 using Xunit;
+using Stratis.Bitcoin.Consensus;
 
 namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
 {
@@ -26,13 +27,16 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
         }
 
         [Fact]
-        public void RewindDataIndex_InitialiseCache_BelowMaxREprg()
+        public void RewindDataIndex_InitialiseCache_BelowMaxReorg()
         {
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
             this.SetupMockCoinView(coinViewMock);
 
-            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network);
+            Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
+            finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
+
+            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network, finalizedBlockInfoRepositoryMock.Object, new Checkpoints());
 
             rewindDataIndexCache.Initialize(5, coinViewMock.Object);
 
@@ -49,7 +53,10 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
             this.SetupMockCoinView(coinViewMock);
 
-            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network);
+            Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
+            finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
+
+            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network, finalizedBlockInfoRepositoryMock.Object, new Checkpoints());
 
             rewindDataIndexCache.Initialize(20, coinViewMock.Object);
 
@@ -66,15 +73,18 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
             this.SetupMockCoinView(coinViewMock);
 
-            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network);
+            Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
+            finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
+
+            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network, finalizedBlockInfoRepositoryMock.Object, new Checkpoints());
 
             rewindDataIndexCache.Initialize(20, coinViewMock.Object);
 
-            rewindDataIndexCache.Save(new Dictionary<OutPoint, int>() { { new OutPoint(new uint256(21),0 ), 21}});
+            rewindDataIndexCache.SaveAndEvict(21, new Dictionary<OutPoint, int>() { { new OutPoint(new uint256(21), 0), 21 } });
             var items = rewindDataIndexCache.GetMemberValue("items") as ConcurrentDictionary<OutPoint, int>;
 
-            items.Should().HaveCount(23);
-            this.CheckCache(items, 21, 10);
+            items.Should().HaveCount(21);
+            this.CheckCache(items, 21, 1);
         }
 
         [Fact]
@@ -84,11 +94,14 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
             this.SetupMockCoinView(coinViewMock);
 
-            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network);
+            Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
+            finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
+
+            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network, finalizedBlockInfoRepositoryMock.Object, new Checkpoints());
 
             rewindDataIndexCache.Initialize(20, coinViewMock.Object);
 
-            rewindDataIndexCache.Flush(15);
+            rewindDataIndexCache.SaveAndEvict(15, null);
             var items = rewindDataIndexCache.GetMemberValue("items") as ConcurrentDictionary<OutPoint, int>;
 
             items.Should().HaveCount(12);
@@ -102,7 +115,10 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
             this.SetupMockCoinView(coinViewMock);
 
-            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network);
+            Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
+            finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
+
+            RewindDataIndexCache rewindDataIndexCache = new RewindDataIndexCache(dateTimeProviderMock.Object, this.Network, finalizedBlockInfoRepositoryMock.Object, new Checkpoints());
 
             rewindDataIndexCache.Initialize(20, coinViewMock.Object);
 
@@ -128,7 +144,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             ulong index = 1;
             coinViewMock.Setup(c => c.GetRewindData(It.IsAny<int>())).Returns(() => new RewindData()
             {
-                OutputsToRestore = new List<UnspentOutputs>() { new UnspentOutputs(new uint256(index++), new Coins()) { Outputs = new TxOut[] { new TxOut(), new TxOut() } } }
+                OutputsToRestore = new List<RewindDataOutput>()
+                {
+                    new RewindDataOutput(new OutPoint(new uint256(index), 0), new Utilities.Coins(0, new TxOut(), false)),
+                    new RewindDataOutput(new OutPoint(new uint256(index++), 1), new Utilities.Coins(0, new TxOut(), false)),
+                }
             });
         }
     }

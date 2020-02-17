@@ -200,7 +200,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             Block callbackBlock = null;
             this.chainIndexer.SetTip(this.chainIndexer.GetHeader(0));
 
-            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>()))
+            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>(), false))
                 .Callback<Block>((block) => { callbackBlock = block; })
                 .ReturnsAsync(new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip));
 
@@ -222,7 +222,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             this.chainIndexer.SetTip(this.chainIndexer.GetHeader(0));
             var chainedHeader = new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip);
 
-            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>())).ReturnsAsync(chainedHeader);
+            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>(), false)).ReturnsAsync(chainedHeader);
             blockTemplate.Block.Header.Nonce = 0;
             blockTemplate.Block.Header.Bits = KnownNetworks.TestNet.GetGenesis().Header.Bits; // make the difficulty harder.
 
@@ -253,7 +253,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             BlockTemplate blockTemplate = this.CreateBlockTemplate(this.fixture.Block1);
             var chainedHeader = new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip);
 
-            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>()))
+            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>(), false))
                 .Callback<Block>((context) =>
                 {
                     if (lastChainedHeader == null)
@@ -321,7 +321,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             var chainedHeader = new ChainedHeader(block1.Block.Header, block1.Block.GetHash(), this.chainIndexer.Tip);
 
             int blockHeight = 0;
-            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>()))
+            this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>(), false))
                 .ReturnsAsync(() =>
                 {
                     blockHeight++;

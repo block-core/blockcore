@@ -27,16 +27,11 @@ namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
         void Remove(int tipHeight, ICoinView coinView);
 
         /// <summary>
-        /// Stores all rewind data index from the cache to a disk and clears cache.
-        /// </summary>
-        /// <param name="tipHeight">The current block height.</param>
-        void Flush(int tipHeight);
-
-        /// <summary>
         /// Saves rewind index data to cache.
         /// </summary>
+        /// <param name="tipHeight">The current block height.</param>
         /// <param name="indexData">The rewind index data, where key is TxId + N and value is a height of the rewind data.</param>
-        void Save(Dictionary<OutPoint, int> indexData);
+        void SaveAndEvict(int tipHeight, Dictionary<OutPoint, int> indexData);
 
         /// <summary>
         /// Gets rewind data index from the cache (or if not found from the disk) by tx id and output index.

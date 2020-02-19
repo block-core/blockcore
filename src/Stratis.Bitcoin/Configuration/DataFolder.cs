@@ -23,7 +23,7 @@ namespace Stratis.Bitcoin.Configuration
         /// <param name="path">The data directory root path.</param>
         public DataFolder(string path)
         {
-            this.CoinViewPath = Path.Combine(path, "coinview");
+            this.CoinViewPath = Path.Combine(path, "coindb");
             this.AddressManagerFilePath = path;
             this.ChainPath = Path.Combine(path, "chain");
             this.KeyValueRepositoryPath = Path.Combine(path, "common");

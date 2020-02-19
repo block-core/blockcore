@@ -66,7 +66,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
         {
             base.Initialize(chainTip);
 
-            var breezeCoinView = (DBreezeCoinView)((CachedCoinView)this.UtxoSet).Inner;
+            var breezeCoinView = (Coindb)((CachedCoinView)this.UtxoSet).Inner;
 
             breezeCoinView.Initialize();
 
@@ -111,7 +111,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
                 cache.Flush();
             }
 
-            ((DBreezeCoinView)((CachedCoinView)this.UtxoSet).Inner).Dispose();
+            ((Coindb)((CachedCoinView)this.UtxoSet).Inner).Dispose();
         }
     }
 }

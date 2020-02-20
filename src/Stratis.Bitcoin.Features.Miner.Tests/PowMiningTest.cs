@@ -201,7 +201,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             this.chainIndexer.SetTip(this.chainIndexer.GetHeader(0));
 
             this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>(), false))
-                .Callback<Block>((block) => { callbackBlock = block; })
+                .Callback<Block, bool>((block, val) => { callbackBlock = block; })
                 .ReturnsAsync(new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip));
 
             Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
@@ -254,7 +254,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             var chainedHeader = new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip);
 
             this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>(), false))
-                .Callback<Block>((context) =>
+                .Callback<Block, bool>((context, val) =>
                 {
                     if (lastChainedHeader == null)
                     {

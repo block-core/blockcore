@@ -70,6 +70,38 @@ namespace NBitcoin
             }
         }
 
+        private void ReadWriteArray(ref byte[][] data)
+        {
+            if (data == null && this.Serializing)
+                throw new ArgumentNullException("Impossible to serialize a null array");
+            if (this.Serializing)
+            {
+                var len = data == null ? 0 : (ulong)data.Length;
+                if (len > (uint)MaxArraySize)
+                    throw new ArgumentOutOfRangeException("Array size too big");
+                VarInt.StaticWrite(this, len);
+                if (len == 0)
+                    return;
+            }
+            else
+            {
+                var len = VarInt.StaticRead(this);
+                if (len > (uint)this.MaxArraySize)
+                    throw new ArgumentOutOfRangeException("Array size too big");
+                data = new byte[len][];
+            }
+            for (int i = 0; i < data.Length; i++)
+            {
+                byte[] obj = data[i];
+                var len = VarInt.StaticRead(this);
+                if (len > (uint)this.MaxArraySize)
+                    throw new ArgumentOutOfRangeException("Array size too big");
+                obj = new byte[len];
+                ReadWrite(ref obj);
+                data[i] = obj;
+            }
+        }
+
         private void ReadWriteArray(ref uint[] data)
         {
             if(data == null && this.Serializing)

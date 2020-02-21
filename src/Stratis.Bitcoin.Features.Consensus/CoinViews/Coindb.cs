@@ -74,10 +74,10 @@
             {
                 LogDevice = this.log,
                 ObjectLogDevice = this.objLog,
-                MutableFraction = 0.5,
-                PageSizeBits = 15, // 25
-                SegmentSizeBits = 25, // 30
-                MemorySizeBits = 22 // 34
+                MutableFraction = 0.9,
+                PageSizeBits = 20, // 25
+                SegmentSizeBits = 24, // 30
+                MemorySizeBits = 24 // 34
             };
 
             var chekcpoint = new CheckpointSettings
@@ -224,21 +224,24 @@
                 {
                     this.performanceCounter.AddQueriedEntities(utxos.Length);
 
+                    Types.StoreInput input = new Types.StoreInput();
+                    Types.StoreOutput output = new Types.StoreOutput();
+                    Types.StoreContext context = new Types.StoreContext();
+                    var readKey = new Types.StoreKey { tableType = "Coins"};
+
                     foreach (OutPoint outPoint in utxos)
                     {
-                        Types.StoreInput input1 = new Types.StoreInput();
-                        Types.StoreOutput output1 = new Types.StoreOutput();
-                        Types.StoreContext context = new Types.StoreContext();
-                        var readKey = new Types.StoreKey { tableType = "Coins", key = outPoint.ToBytes() };
-                        var addStatus = session.Read(ref readKey, ref input1, ref output1, context, 1);
+                        output.value = null;
+                        readKey.key = outPoint.ToBytes();
+                        var addStatus = session.Read(ref readKey, ref input, ref output, context, 1);
 
                         if (addStatus == Status.PENDING)
                         {
                             session.CompletePending(true);
-                            context.FinalizeRead(ref addStatus, ref output1);
+                            context.FinalizeRead(ref addStatus, ref output);
                         }
 
-                        Utilities.Coins outputs = addStatus == Status.OK ? this.dBreezeSerializer.Deserialize<Utilities.Coins>(output1.value.value) : null;
+                        Utilities.Coins outputs = addStatus == Status.OK ? this.dBreezeSerializer.Deserialize<Utilities.Coins>(output.value.value) : null;
 
                         this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
 
@@ -554,7 +557,6 @@
                 {
                     ctx.Populate(ref status, ref output);
                 }
-
 
                 public void UpsertCompletionCallback(ref StoreKey key, ref StoreValue value, StoreContext ctx)
                 {

@@ -77,21 +77,24 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private CachePerformanceCounter performanceCounter { get; set; }
 
         /// <summary>Lock object to protect access to <see cref="cachedUtxoItems"/>, <see cref="blockHash"/>, <see cref="cachedRewindData"/>, and <see cref="innerBlockHash"/>.</summary>
-        private readonly object lockobj;
+        private readonly object cacheLock;
+
+        /// <summary>Lock object to protect access to coin db.</summary>
+        private readonly object dbLock;
 
         /// <summary>Hash of the block headers of the tip of the coinview.</summary>
-        /// <remarks>All access to this object has to be protected by <see cref="lockobj"/>.</remarks>
+        /// <remarks>All access to this object has to be protected by <see cref="cacheLock"/>.</remarks>
         private HashHeightPair blockHash;
 
         /// <summary>Hash of the block headers of the tip of the underlaying coinview.</summary>
-        /// <remarks>All access to this object has to be protected by <see cref="lockobj"/>.</remarks>
+        /// <remarks>All access to this object has to be protected by <see cref="cacheLock"/>.</remarks>
         private HashHeightPair innerBlockHash;
 
         /// <summary>Coin view at one layer below this implementaiton.</summary>
         private readonly ICoinView inner;
 
         /// <summary>Pending list of rewind data to be persisted to a persistent storage.</summary>
-        /// <remarks>All access to this list has to be protected by <see cref="lockobj"/>.</remarks>
+        /// <remarks>All access to this list has to be protected by <see cref="cacheLock"/>.</remarks>
         private readonly Dictionary<int, RewindData> cachedRewindData;
 
         /// <inheritdoc />
@@ -106,7 +109,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private readonly IRewindDataIndexCache rewindDataIndexCache;
 
         /// <summary>Information about cached items mapped by transaction IDs the cached item's unspent outputs belong to.</summary>
-        /// <remarks>All access to this object has to be protected by <see cref="lockobj"/>.</remarks>
+        /// <remarks>All access to this object has to be protected by <see cref="cacheLock"/>.</remarks>
         private readonly Dictionary<OutPoint, CacheItem> cachedUtxoItems;
 
         /// <summary>Number of items in the cache.</summary>
@@ -153,7 +156,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.consensusSettings = consensusSettings;
             this.stakeChainStore = stakeChainStore;
             this.rewindDataIndexCache = rewindDataIndexCache;
-            this.lockobj = new object();
+            this.cacheLock = new object();
+            this.dbLock = new object();
             this.cachedUtxoItems = new Dictionary<OutPoint, CacheItem>();
             this.performanceCounter = new CachePerformanceCounter(this.dateTimeProvider);
             this.lastCacheFlushTime = this.dateTimeProvider.GetUtcNow();
@@ -186,7 +190,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         {
             var missedOutpoint = new List<OutPoint>();
 
-            lock (this.lockobj)
+            lock (this.cacheLock)
             {
                 foreach (OutPoint outPoint in utxos)
                 {
@@ -207,9 +211,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
             if (missedOutpoint.Count > 0)
             {
-                FetchCoinsResponse fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+                FetchCoinsResponse fetchedCoins = null;
+                lock (this.dbLock)
+                {
+                    fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+                }
 
-                lock (this.lockobj)
+                lock (this.cacheLock)
                 {
                     foreach (var unspentOutput in fetchedCoins.UnspentOutputs)
                     {
@@ -234,7 +242,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     }
                 }
             }
-            //}
         }
 
         /// <inheritdoc />
@@ -245,7 +252,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             var result = new FetchCoinsResponse();
             var missedOutpoint = new List<OutPoint>();
 
-            lock (this.lockobj)
+            lock (this.cacheLock)
             {
                 foreach (OutPoint outPoint in utxos)
                 {
@@ -267,7 +274,11 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 if (missedOutpoint.Count > 0)
                 {
                     this.logger.LogDebug("{0} cache missed transaction needs to be loaded from underlying CoinView.", missedOutpoint.Count);
-                    FetchCoinsResponse fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+                    FetchCoinsResponse fetchedCoins = null;
+                    lock (this.dbLock)
+                    {
+                        fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+                    }
 
                     foreach (var unspentOutput in fetchedCoins.UnspentOutputs)
                     {
@@ -300,7 +311,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Deletes some items from the cache to free space for new items.
         /// Only items that are persisted in the underlaying storage can be deleted from the cache.
         /// </summary>
-        /// <remarks>Should be protected by <see cref="lockobj"/>.</remarks>
+        /// <remarks>Should be protected by <see cref="cacheLock"/>.</remarks>
         private void TryEvictCacheLocked()
         {
             // Calculate total size of cache.
@@ -378,7 +389,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             if (this.innerBlockHash == null)
                 this.innerBlockHash = this.inner.GetTipHash();
 
-            lock (this.lockobj)
+            lock (this.cacheLock)
             {
                 if (this.innerBlockHash == null)
                 {
@@ -397,7 +408,10 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 this.logger.LogDebug("Flushing {0} items.", modify.Count);
 
-                this.Inner.SaveChanges(modify, this.innerBlockHash, this.blockHash, this.cachedRewindData.Select(c => c.Value).ToList());
+                lock (this.dbLock)
+                {
+                    this.Inner.SaveChanges(modify, this.innerBlockHash, this.blockHash, this.cachedRewindData.Select(c => c.Value).ToList());
+                }
 
                 this.cachedRewindData.Clear();
                 this.rewindDataSizeBytes = 0;
@@ -415,7 +429,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             Guard.NotNull(nextBlockHash, nameof(nextBlockHash));
             Guard.NotNull(outputs, nameof(outputs));
 
-            lock (this.lockobj)
+            lock (this.cacheLock)
             {
                 if ((this.blockHash != null) && (oldBlockHash != this.blockHash))
                 {
@@ -457,12 +471,17 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         }
                         else
                         {
-                            // This can happen if the cashe item was evicted while
+                            // This can happen if the cache item was evicted while
                             // the block was being processed, fetch the outut again from disk.
 
                             this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
 
-                            FetchCoinsResponse result = this.inner.FetchCoins(new[] { output.OutPoint });
+                            FetchCoinsResponse result = null;
+                            lock (this.dbLock)
+                            {
+                                result = this.inner.FetchCoins(new[] { output.OutPoint });
+                            }
+
                             this.performanceCounter.AddMissCount(1);
 
                             UnspentOutput unspentOutput = result.UnspentOutputs.Single().Value;
@@ -620,7 +639,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         // parameter of evern a network parameter.
 
                         // For POW assume BTC where a rewind data of 100 is more then enough.
-                        rewindDataWindow = 100; 
+                        rewindDataWindow = 100;
                     }
                 }
 
@@ -645,9 +664,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             // Flush the entire cache before rewinding
             this.Flush(true);
 
-            lock (this.lockobj)
+            lock (this.cacheLock)
             {
-                HashHeightPair hash = this.inner.Rewind();
+                HashHeightPair hash;
+                lock (this.dbLock)
+                {
+                    hash = this.inner.Rewind();
+                }
 
                 foreach (KeyValuePair<OutPoint, CacheItem> cachedUtxoItem in this.cachedUtxoItems)
                 {
@@ -679,7 +702,14 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             if (this.cachedRewindData.TryGetValue(height, out RewindData existingRewindData))
                 return existingRewindData;
 
-            return this.Inner.GetRewindData(height);
+            RewindData res = null;
+
+            lock (this.dbLock)
+            {
+                res = this.Inner.GetRewindData(height);
+            }
+
+            return res;
         }
 
         [NoTrace]
@@ -705,7 +735,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             log.AppendLine("Cache size".PadRight(20) + cache.BytesToMegaBytes() + " MB");
             log.AppendLine("Rewind data size".PadRight(20) + rewind.BytesToMegaBytes() + " MB");
             log.AppendLine("Total cache size".PadRight(20) + (cache + rewind).BytesToMegaBytes() + " MB / " + this.consensusSettings.MaxCoindbCacheInMB + " MB (" + filledPercentage + "%)");
-
 
             CachePerformanceSnapshot snapShot = this.performanceCounter.Snapshot();
 

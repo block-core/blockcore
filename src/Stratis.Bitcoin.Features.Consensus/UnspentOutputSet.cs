@@ -47,7 +47,7 @@ namespace Stratis.Bitcoin.Features.Consensus
 
                     if (!unspentOutput.Spend())
                     {
-                        throw new InvalidOperationException("Unspendable coins are invalid at this point");
+                        throw new InvalidOperationException(string.Format("Invalid coin state, UTXO '{0}' is expected to be unspent", unspentOutput.OutPoint));
                     }
                 }
             }
@@ -58,7 +58,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                 var coinbase = transaction.IsCoinBase;
                 var coinstake = network.Consensus.IsProofOfStake ? transaction.IsCoinStake : false;
                 var time = (transaction is IPosTransactionWithTime posTx) ? posTx.Time : 0;
-               
+
                 var coins = new Coins((uint)height, output.TxOut, coinbase, coinstake, time);
                 var unspentOutput = new UnspentOutput(outpoint, coins) 
                 { 

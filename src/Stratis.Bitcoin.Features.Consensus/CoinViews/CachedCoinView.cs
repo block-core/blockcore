@@ -184,9 +184,10 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <inheritdoc />
         public void CacheCoins(OutPoint[] utxos)
         {
+            var missedOutpoint = new List<OutPoint>();
+
             lock (this.lockobj)
             {
-                var missedOutpoint = new List<OutPoint>();
                 foreach (OutPoint outPoint in utxos)
                 {
                     if (!this.cachedUtxoItems.TryGetValue(outPoint, out CacheItem cache))
@@ -194,29 +195,46 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         this.logger.LogDebug("Prefetch Utxo '{0}' not found in cache.", outPoint);
                         missedOutpoint.Add(outPoint);
                     }
-                }
-
-                this.performanceCounter.AddCacheMissCount(missedOutpoint.Count);
-                this.performanceCounter.AddCacheHitCount(utxos.Length - missedOutpoint.Count);
-
-                if (missedOutpoint.Count > 0)
-                {
-                    FetchCoinsResponse fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
-                    foreach (var unspentOutput in fetchedCoins.UnspentOutputs)
+                    else
                     {
-                        var cache = new CacheItem()
-                        {
-                            ExistInInner = unspentOutput.Value.Coins != null,
-                            IsDirty = false,
-                            OutPoint = unspentOutput.Key,
-                            Coins = unspentOutput.Value.Coins
-                        };
-                        this.logger.LogDebug("Prefetch CacheItem added to the cache, UTXO: '{0}', Coin:'{1}'.", cache.OutPoint, cache.Coins);
-                        this.cachedUtxoItems.Add(cache.OutPoint, cache);
-                        this.cacheSizeBytes += cache.GetSize;
+                        this.logger.LogDebug("Prefetch Utxo '{0}' found in cache, UTXOs:'{1}'.", outPoint, cache.Coins);
                     }
                 }
             }
+
+            this.performanceCounter.AddCacheMissCount(missedOutpoint.Count);
+            this.performanceCounter.AddCacheHitCount(utxos.Length - missedOutpoint.Count);
+
+            if (missedOutpoint.Count > 0)
+            {
+                FetchCoinsResponse fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+
+                lock (this.lockobj)
+                {
+                    foreach (var unspentOutput in fetchedCoins.UnspentOutputs)
+                    {
+                        // Check the cache item was not already added when lock was aquired
+                        if (!this.cachedUtxoItems.ContainsKey(unspentOutput.Key))
+                        {
+                            var cache = new CacheItem()
+                            {
+                                ExistInInner = unspentOutput.Value.Coins != null,
+                                IsDirty = false,
+                                OutPoint = unspentOutput.Key,
+                                Coins = unspentOutput.Value.Coins
+                            };
+                            this.logger.LogDebug("Prefetch CacheItem added to the cache, UTXO: '{0}', Coin:'{1}'.", cache.OutPoint, cache.Coins);
+                            this.cachedUtxoItems.Add(cache.OutPoint, cache);
+                            this.cacheSizeBytes += cache.GetSize;
+                        }
+                        else
+                        {
+                            this.logger.LogDebug("Prefetch CacheItem found in cache, skip adding to cache, UTXO: '{0}'.", unspentOutput.Key);
+                        }
+                    }
+                }
+            }
+            //}
         }
 
         /// <inheritdoc />

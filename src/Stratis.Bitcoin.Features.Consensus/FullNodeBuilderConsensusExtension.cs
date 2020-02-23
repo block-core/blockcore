@@ -28,7 +28,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                     .FeatureServices(services =>
                     {
                         services.AddSingleton<ConsensusOptions, ConsensusOptions>();
-                        services.AddSingleton<DBreezeCoinView>();
+                        services.AddSingleton<ICoindb, DBreezeCoindb>();
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<IConsensusRuleEngine, PowConsensusRuleEngine>();
                         services.AddSingleton<IChainState, ChainState>();
@@ -51,7 +51,9 @@ namespace Stratis.Bitcoin.Features.Consensus
                     .AddFeature<PosConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        services.AddSingleton<DBreezeCoinView>();
+                        services.AddSingleton<DBreezeCoindb>()
+                            .AddSingleton<ICoindb, DBreezeCoindb>(provider => provider.GetService<DBreezeCoindb>())
+                            .AddSingleton<IStakdb, DBreezeCoindb>(provider => provider.GetService<DBreezeCoindb>());
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<StakeChainStore>().AddSingleton<IStakeChain, StakeChainStore>(provider => provider.GetService<StakeChainStore>());
                         services.AddSingleton<IStakeValidator, StakeValidator>();

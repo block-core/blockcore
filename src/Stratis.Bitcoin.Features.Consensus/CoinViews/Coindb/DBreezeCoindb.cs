@@ -41,7 +41,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
         public DBreezeCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DBreezeSerializer dBreezeSerializer)
-            : this(network, dataFolder.CoinViewPath, dateTimeProvider, loggerFactory, nodeStats, dBreezeSerializer)
+            : this(network, dataFolder.CoindbPath, dateTimeProvider, loggerFactory, nodeStats, dBreezeSerializer)
         {
         }
 

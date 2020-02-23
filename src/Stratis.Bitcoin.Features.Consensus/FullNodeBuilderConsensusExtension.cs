@@ -28,7 +28,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                     .FeatureServices(services =>
                     {
                         services.AddSingleton<ConsensusOptions, ConsensusOptions>();
-                        services.AddSingleton<ICoindb, DBreezeCoindb>();
+                        services.AddSingleton<ICoindb, LeveldbCoindb>();
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<IConsensusRuleEngine, PowConsensusRuleEngine>();
                         services.AddSingleton<IChainState, ChainState>();

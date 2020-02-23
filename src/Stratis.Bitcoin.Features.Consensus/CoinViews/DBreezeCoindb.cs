@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using DBreeze;
 using DBreeze.DataTypes;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.BitcoinCore;
 using Stratis.Bitcoin.Configuration;
 using Stratis.Bitcoin.Utilities;
 
@@ -17,7 +15,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
     /// <summary>
     /// Persistent implementation of coinview using dBreeze database.
     /// </summary>
-    public class DBreezeCoinView : ICoinView, IDisposable
+    public class DBreezeCoindb : ICoindb, IStakdb, IDisposable
     {
         /// <summary>Database key under which the block hash of the coin view's current tip is stored.</summary>
         private static readonly byte[] blockHashKey = new byte[0];
@@ -41,30 +39,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
         private DBreezeSerializer dBreezeSerializer;
 
-        /// <summary>
-        /// Initializes a new instance of the object.
-        /// </summary>
-        /// <param name="network">Specification of the network the node runs on - regtest/testnet/mainnet.</param>
-        /// <param name="dataFolder">Information about path locations to important folders and files on disk.</param>
-        /// <param name="dateTimeProvider">Provider of time functions.</param>
-        /// <param name="loggerFactory">Factory to be used to create logger for the puller.</param>
-        /// <param name="dBreezeSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
-        public DBreezeCoinView(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
+        public DBreezeCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DBreezeSerializer dBreezeSerializer)
             : this(network, dataFolder.CoinViewPath, dateTimeProvider, loggerFactory, nodeStats, dBreezeSerializer)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the object.
-        /// </summary>
-        /// <param name="network">Specification of the network the node runs on - regtest/testnet/mainnet.</param>
-        /// <param name="folder">Path to the folder with coinview database files.</param>
-        /// <param name="dateTimeProvider">Provider of time functions.</param>
-        /// <param name="loggerFactory">Factory to be used to create logger for the puller.</param>
-        /// <param name="nodeStats"></param>
-        /// <param name="dBreezeSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
-        public DBreezeCoinView(Network network, string folder, IDateTimeProvider dateTimeProvider,
+        public DBreezeCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DBreezeSerializer dBreezeSerializer)
         {
             Guard.NotNull(network, nameof(network));
@@ -81,7 +62,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             this.performanceCounter = new BackendPerformanceCounter(dateTimeProvider);
 
             nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 400);
-
         }
 
         public void Initialize()
@@ -114,11 +94,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             }
 
             return tipHash;
-        }
-
-        public void CacheCoins(OutPoint[] utxos)
-        {
-            throw new NotImplementedException();
         }
 
         public FetchCoinsResponse FetchCoins(OutPoint[] utxos)
@@ -285,9 +260,9 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 }
 
                 transaction.RemoveKey("Rewind", row.Key);
-                
+
                 var rewindData = this.dBreezeSerializer.Deserialize<RewindData>(row.Value);
-                
+
                 this.SetBlockHash(transaction, rewindData.PreviousBlockHash);
 
                 foreach (OutPoint outPoint in rewindData.OutputsToRemove)

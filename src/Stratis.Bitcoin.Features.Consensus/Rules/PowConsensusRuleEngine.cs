@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.AsyncWork;
@@ -66,11 +67,11 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
         {
             base.Initialize(chainTip);
 
-            var breezeCoinView = (DBreezeCoinView)((CachedCoinView)this.UtxoSet).Inner;
+            var coindb = ((CachedCoinView)this.UtxoSet).ICoindb;
 
-            breezeCoinView.Initialize();
+            coindb.Initialize();
 
-            HashHeightPair consensusTipHash = breezeCoinView.GetTipHash();
+            HashHeightPair consensusTipHash = coindb.GetTipHash();
 
             while (true)
             {
@@ -82,7 +83,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
                 this.logger.LogInformation("Rewinding coin db from {0}", consensusTipHash);
                 // In case block store initialized behind, rewind until or before the block store tip.
                 // The node will complete loading before connecting to peers so the chain will never know if a reorg happened.
-                consensusTipHash = breezeCoinView.Rewind();
+                consensusTipHash = coindb.Rewind();
             }
         }
 
@@ -111,7 +112,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
                 cache.Flush();
             }
 
-            ((DBreezeCoinView)((CachedCoinView)this.UtxoSet).Inner).Dispose();
+            ((IDisposable)((CachedCoinView)this.UtxoSet).ICoindb).Dispose();
         }
     }
 }

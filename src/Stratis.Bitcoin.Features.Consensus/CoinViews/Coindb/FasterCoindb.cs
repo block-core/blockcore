@@ -402,7 +402,7 @@
 
         private void AddBenchStats(StringBuilder log)
         {
-            log.AppendLine("======DBreezeCoinView Bench======");
+            log.AppendLine("======Faster Bench======");
 
             BackendPerformanceSnapshot snapShot = this.performanceCounter.Snapshot();
 

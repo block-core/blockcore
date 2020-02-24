@@ -22,6 +22,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private static readonly byte coinsTable = 1;
         private static readonly byte blockTable = 2;
         private static readonly byte rewindTable = 3;
+        private static readonly byte stakeTable = 4;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -89,7 +90,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             if (this.blockHash == null)
             {
                 var row = this.leveldb.Get(new byte[] { blockTable }.Concat(blockHashKey).ToArray());
-                if (row?.Length > 0)
+                if (row != null)
                 {
                     this.blockHash = new HashHeightPair();
                     this.blockHash.FromBytes(row);
@@ -110,7 +111,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 foreach (OutPoint outPoint in utxos)
                 {
                     byte[] row = this.leveldb.Get(new byte[] { coinsTable }.Concat(outPoint.ToBytes()).ToArray());
-                    Utilities.Coins outputs = row?.Length > 0 ? this.dBreezeSerializer.Deserialize<Utilities.Coins>(row) : null;
+                    Utilities.Coins outputs = row != null ? this.dBreezeSerializer.Deserialize<Utilities.Coins>(row) : null;
 
                     this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
 
@@ -135,8 +136,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         this.logger.LogTrace("(-)[BLOCKHASH_MISMATCH]");
                         throw new InvalidOperationException("Invalid oldBlockHash");
                     }
-
-                    this.SetBlockHash(nextBlockHash);
 
                     // Here we'll add items to be inserted in a second pass.
                     List<UnspentOutput> toInsert = new List<UnspentOutput>();
@@ -178,15 +177,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                     insertedEntities += unspentOutputs.Count;
                     this.leveldb.Write(batch);
+
+                    this.SetBlockHash(nextBlockHash);
                 }
             }
 
             this.performanceCounter.AddInsertedEntities(insertedEntities);
-        }
-
-        public RewindData GetRewindData(int height)
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -208,8 +204,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 var rewindData = this.dBreezeSerializer.Deserialize<RewindData>(row);
 
-                this.SetBlockHash(rewindData.PreviousBlockHash);
-
                 foreach (OutPoint outPoint in rewindData.OutputsToRemove)
                 {
                     this.logger.LogDebug("Outputs of outpoint '{0}' will be removed.", outPoint);
@@ -225,9 +219,17 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 res = rewindData.PreviousBlockHash;
 
                 this.leveldb.Write(batch);
+
+                this.SetBlockHash(rewindData.PreviousBlockHash);
             }
 
             return res;
+        }
+
+        public RewindData GetRewindData(int height)
+        {
+            byte[] row = this.leveldb.Get(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(height)).ToArray());
+            return row != null ? this.dBreezeSerializer.Deserialize<RewindData>(row) : null;
         }
 
         /// <summary>
@@ -236,17 +238,19 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <param name="stakeEntries">List of POS block information to be examined and persists if unsaved.</param>
         public void PutStake(IEnumerable<StakeItem> stakeEntries)
         {
-            throw new NotImplementedException();
-        }
+            using (var batch = new WriteBatch())
+            {
+                foreach (StakeItem stakeEntry in stakeEntries)
+                {
+                    if (!stakeEntry.InStore)
+                    {
+                        batch.Put(new byte[] { stakeTable }.Concat(stakeEntry.BlockId.ToBytes(false)).ToArray(), this.dBreezeSerializer.Serialize(stakeEntry.BlockStake));
+                        stakeEntry.InStore = true;
+                    }
+                }
 
-        /// <summary>
-        /// Persists unsaved POS blocks information to the database.
-        /// </summary>
-        /// <param name="transaction">Open dBreeze transaction.</param>
-        /// <param name="stakeEntries">List of POS block information to be examined and persists if unsaved.</param>
-        private void PutStakeInternal(DBreeze.Transactions.Transaction transaction, IEnumerable<StakeItem> stakeEntries)
-        {
-            throw new NotImplementedException();
+                this.leveldb.Write(batch);
+            }
         }
 
         /// <summary>
@@ -255,12 +259,22 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <param name="blocklist">List of partially initialized POS block information that is to be fully initialized with the values from the database.</param>
         public void GetStake(IEnumerable<StakeItem> blocklist)
         {
-            throw new NotImplementedException();
+            foreach (StakeItem blockStake in blocklist)
+            {
+                this.logger.LogDebug("Loading POS block hash '{0}' from the database.", blockStake.BlockId);
+                byte[] stakeRow = this.leveldb.Get(new byte[] { stakeTable }.Concat(blockStake.BlockId.ToBytes(false)).ToArray());
+
+                if (stakeRow != null)
+                {
+                    blockStake.BlockStake = this.dBreezeSerializer.Deserialize<BlockStake>(stakeRow);
+                    blockStake.InStore = true;
+                }
+            }
         }
 
         private void AddBenchStats(StringBuilder log)
         {
-            log.AppendLine("======DBreezeCoinView Bench======");
+            log.AppendLine("======Leveldb Bench======");
 
             BackendPerformanceSnapshot snapShot = this.performanceCounter.Snapshot();
 

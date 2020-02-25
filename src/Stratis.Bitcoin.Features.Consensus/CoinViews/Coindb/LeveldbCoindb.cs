@@ -207,13 +207,13 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 foreach (OutPoint outPoint in rewindData.OutputsToRemove)
                 {
                     this.logger.LogDebug("Outputs of outpoint '{0}' will be removed.", outPoint);
-                    batch.Delete(new byte[] { rewindTable }.Concat(outPoint.ToBytes()).ToArray());
+                    batch.Delete(new byte[] { coinsTable }.Concat(outPoint.ToBytes()).ToArray());
                 }
 
                 foreach (RewindDataOutput rewindDataOutput in rewindData.OutputsToRestore)
                 {
                     this.logger.LogDebug("Outputs of outpoint '{0}' will be restored.", rewindDataOutput.OutPoint);
-                    batch.Put(new byte[] { rewindTable }.Concat(rewindDataOutput.OutPoint.ToBytes()).ToArray(), this.dBreezeSerializer.Serialize(rewindDataOutput.Coins));
+                    batch.Put(new byte[] { coinsTable }.Concat(rewindDataOutput.OutPoint.ToBytes()).ToArray(), this.dBreezeSerializer.Serialize(rewindDataOutput.Coins));
                 }
 
                 res = rewindData.PreviousBlockHash;

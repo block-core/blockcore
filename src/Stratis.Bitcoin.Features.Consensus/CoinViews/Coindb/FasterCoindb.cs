@@ -332,7 +332,6 @@
             this.performanceCounter.AddInsertedEntities(insertedEntities);
         }
 
-
         public HashHeightPair Rewind()
         {
             HashHeightPair res = null;

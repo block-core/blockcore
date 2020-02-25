@@ -41,6 +41,8 @@ namespace Stratis.Bitcoin.Configuration.Settings
         /// </summary>
         public int CoindbIbdFlushMin { get; private set; }
 
+        public string CoindbImpl { get; private set; }
+
         /// <summary>
         /// Initializes an instance of the object from the node configuration.
         /// </summary>
@@ -59,6 +61,9 @@ namespace Stratis.Bitcoin.Configuration.Settings
             this.MaxBlockMemoryInMB = config.GetOrDefault("maxblkmem", 200, this.logger);
             this.MaxCoindbCacheInMB = config.GetOrDefault("dbcache", 200, this.logger);
             this.CoindbIbdFlushMin = config.GetOrDefault("dbflush", 10, this.logger);
+
+            // For now default pow (bitcoin) to use leveldb
+            this.CoindbImpl = config.GetOrDefault("dbimpl", "leveldb", this.logger);
         }
 
         /// <summary>Prints the help information on how to configure the Consensus settings to the logger.</summary>
@@ -75,6 +80,8 @@ namespace Stratis.Bitcoin.Configuration.Settings
             builder.AppendLine($"-maxblkmem=<number>       Max memory to use for unconsumed blocks in MB. Default 200 (this does not include the size of objects in memory).");
             builder.AppendLine($"-dbcache=<number>         Max cache memory for the coindb in MB. Default 200 (this does not include the size of objects in memory).");
             builder.AppendLine($"-dbflush=<number>         How often to flush the cache to disk when in IBD in minutes. Default 10 min (min=1min, max=60min).");
+
+            builder.AppendLine($"-dbimpl=<name>            Coin database iplementaiton options: dbreeze, leveldb (default), faster.");
 
             NodeSettings.Default(network).Logger.LogInformation(builder.ToString());
         }

@@ -2,7 +2,9 @@
 using NBitcoin;
 using Stratis.Bitcoin.Base;
 using Stratis.Bitcoin.Builder;
+using Stratis.Bitcoin.Configuration;
 using Stratis.Bitcoin.Configuration.Logging;
+using Stratis.Bitcoin.Configuration.Settings;
 using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
 using Stratis.Bitcoin.Features.Consensus.Interfaces;
@@ -27,8 +29,8 @@ namespace Stratis.Bitcoin.Features.Consensus
                     .AddFeature<PowConsensusFeature>()
                     .FeatureServices(services =>
                     {
+                        AddCoindbImplementation(services);
                         services.AddSingleton<ConsensusOptions, ConsensusOptions>();
-                        services.AddSingleton<ICoindb, LeveldbCoindb>();
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<IConsensusRuleEngine, PowConsensusRuleEngine>();
                         services.AddSingleton<IChainState, ChainState>();
@@ -51,9 +53,8 @@ namespace Stratis.Bitcoin.Features.Consensus
                     .AddFeature<PosConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        services.AddSingleton<LeveldbCoindb>()
-                            .AddSingleton<ICoindb, LeveldbCoindb>(provider => provider.GetService<LeveldbCoindb>())
-                            .AddSingleton<IStakdb, LeveldbCoindb>(provider => provider.GetService<LeveldbCoindb>());
+                        AddCoindbImplementation(services);
+                        services.AddSingleton<IStakdb>(provider => (IStakdb)provider.GetService<ICoindb>());
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<StakeChainStore>().AddSingleton<IStakeChain, StakeChainStore>(provider => provider.GetService<StakeChainStore>());
                         services.AddSingleton<IStakeValidator, StakeValidator>();
@@ -69,6 +70,29 @@ namespace Stratis.Bitcoin.Features.Consensus
             });
 
             return fullNodeBuilder;
+        }
+
+        private static void AddCoindbImplementation(IServiceCollection services)
+        {
+            services.AddSingleton<DBreezeCoindb>();
+            services.AddSingleton<LeveldbCoindb>();
+            services.AddSingleton<FasterCoindb>();
+
+            services.AddSingleton<ICoindb>(provider =>
+           {
+               var settings = provider.GetService<ConsensusSettings>();
+
+               if (settings.CoindbImpl == "dbreeze")
+                   return provider.GetService<DBreezeCoindb>();
+
+               if (settings.CoindbImpl == "leveldb")
+                   return provider.GetService<LeveldbCoindb>();
+
+               if (settings.CoindbImpl == "faster")
+                   return provider.GetService<FasterCoindb>();
+
+               throw new ConfigurationException("Invalid coindb implementation name");
+           });
         }
     }
 }

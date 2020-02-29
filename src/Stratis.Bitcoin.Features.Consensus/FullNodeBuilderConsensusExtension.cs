@@ -19,7 +19,7 @@ namespace Stratis.Bitcoin.Features.Consensus
     /// </summary>
     public static class FullNodeBuilderConsensusExtension
     {
-        public static IFullNodeBuilder UsePowConsensus(this IFullNodeBuilder fullNodeBuilder)
+        public static IFullNodeBuilder UsePowConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Leveldb)
         {
             LoggingConfiguration.RegisterFeatureNamespace<PowConsensusFeature>("powconsensus");
 
@@ -29,7 +29,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                     .AddFeature<PowConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        AddCoindbImplementation(services);
+                        AddCoindbImplementation(services, coindbType);
                         services.AddSingleton<ConsensusOptions, ConsensusOptions>();
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<IConsensusRuleEngine, PowConsensusRuleEngine>();
@@ -43,7 +43,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             return fullNodeBuilder;
         }
 
-        public static IFullNodeBuilder UsePosConsensus(this IFullNodeBuilder fullNodeBuilder)
+        public static IFullNodeBuilder UsePosConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Leveldb)
         {
             LoggingConfiguration.RegisterFeatureNamespace<PosConsensusFeature>("posconsensus");
 
@@ -53,7 +53,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                     .AddFeature<PosConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        AddCoindbImplementation(services);
+                        AddCoindbImplementation(services, coindbType);
                         services.AddSingleton<IStakdb>(provider => (IStakdb)provider.GetService<ICoindb>());
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<StakeChainStore>().AddSingleton<IStakeChain, StakeChainStore>(provider => provider.GetService<StakeChainStore>());
@@ -72,7 +72,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             return fullNodeBuilder;
         }
 
-        private static void AddCoindbImplementation(IServiceCollection services)
+        private static void AddCoindbImplementation(IServiceCollection services, DbType coindbType)
         {
             services.AddSingleton<DBreezeCoindb>();
             services.AddSingleton<LeveldbCoindb>();
@@ -82,17 +82,24 @@ namespace Stratis.Bitcoin.Features.Consensus
            {
                var settings = provider.GetService<ConsensusSettings>();
 
-               if (settings.CoindbImpl == "dbreeze")
+               if (coindbType == DbType.Dbreeze)
                    return provider.GetService<DBreezeCoindb>();
 
-               if (settings.CoindbImpl == "leveldb")
+               if (coindbType == DbType.Leveldb)
                    return provider.GetService<LeveldbCoindb>();
 
-               if (settings.CoindbImpl == "faster")
+               if (coindbType == DbType.Faster)
                    return provider.GetService<FasterCoindb>();
 
                throw new ConfigurationException("Invalid coindb implementation name");
            });
         }
+    }
+
+    public enum DbType
+    {
+        Leveldb,
+        Dbreeze,
+        Faster
     }
 }

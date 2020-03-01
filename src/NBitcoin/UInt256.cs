@@ -640,7 +640,9 @@ namespace NBitcoin
         {
             if (ReferenceEquals(a, b))
                 return true;
-            if (((object)a == null) || ((object)b == null))
+            if (a is null || b is null)
+                return false;
+            if (a.GetHashCode() != b.GetHashCode())
                 return false;
 
             bool equals = true;

@@ -5,9 +5,9 @@ namespace Stratis.Bitcoin.IntegrationTests.Common.TestNetworks
 {
     public sealed class BitcoinRegTestNoValidationRules : BitcoinRegTest
     {
-        public BitcoinRegTestNoValidationRules()
+        public BitcoinRegTestNoValidationRules(string name = null)
         {
-            this.Name = Guid.NewGuid().ToString();
+            this.Name = name ?? Guid.NewGuid().ToString();
         }
     }
 }

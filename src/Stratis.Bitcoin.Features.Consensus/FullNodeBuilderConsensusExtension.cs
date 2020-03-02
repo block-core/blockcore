@@ -74,25 +74,14 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         private static void AddCoindbImplementation(IServiceCollection services, DbType coindbType)
         {
-            services.AddSingleton<DBreezeCoindb>();
-            services.AddSingleton<LeveldbCoindb>();
-            services.AddSingleton<FasterCoindb>();
+            if (coindbType == DbType.Dbreeze)
+                services.AddSingleton<ICoindb, DBreezeCoindb>();
 
-            services.AddSingleton<ICoindb>(provider =>
-           {
-               var settings = provider.GetService<ConsensusSettings>();
+            if (coindbType == DbType.Leveldb)
+                services.AddSingleton<ICoindb, LeveldbCoindb>();
 
-               if (coindbType == DbType.Dbreeze)
-                   return provider.GetService<DBreezeCoindb>();
-
-               if (coindbType == DbType.Leveldb)
-                   return provider.GetService<LeveldbCoindb>();
-
-               if (coindbType == DbType.Faster)
-                   return provider.GetService<FasterCoindb>();
-
-               throw new ConfigurationException("Invalid coindb implementation name");
-           });
+            if (coindbType == DbType.Faster)
+                services.AddSingleton<ICoindb, FasterCoindb>();
         }
     }
 

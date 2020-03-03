@@ -226,7 +226,7 @@ namespace Stratis.Bitcoin.IntegrationTests
         {
             using (var builder = NodeBuilder.Create(this))
             {
-                var noValidationRulesNetwork = new BitcoinRegTestNoValidationRules();
+                var noValidationRulesNetwork = new BitcoinRegTestNoValidationRules("regtest2");
 
                 var minerA = builder.CreateStratisPowNode(this.powNetwork, "cmfr-3-minerA").WithDummyWallet().Start();
                 var syncer = builder.CreateStratisPowNode(this.powNetwork, "cmfr-3-syncer").Start();
@@ -367,7 +367,7 @@ namespace Stratis.Bitcoin.IntegrationTests
         {
             using (var builder = NodeBuilder.Create(this))
             {
-                var noValidationRulesNetwork = new BitcoinRegTestNoValidationRules();
+                var noValidationRulesNetwork = new BitcoinRegTestNoValidationRules("regtest1");
 
                 var minerA = builder.CreateStratisPowNode(this.powNetwork, "cmfr-6-minerA").WithDummyWallet().Start();
                 var minerB = builder.CreateStratisPowNode(this.powNetwork, "cmfr-6-minerB").WithDummyWallet().Start();

@@ -23,7 +23,7 @@ namespace Stratis.Bitcoin.Configuration
         /// <param name="path">The data directory root path.</param>
         public DataFolder(string path)
         {
-            this.CoinViewPath = Path.Combine(path, "coinview");
+            this.CoindbPath = Path.Combine(path, "coindb");
             this.AddressManagerFilePath = path;
             this.ChainPath = Path.Combine(path, "chain");
             this.KeyValueRepositoryPath = Path.Combine(path, "common");
@@ -50,8 +50,7 @@ namespace Stratis.Bitcoin.Configuration
         public string AddressManagerFilePath { get; private set; }
 
         /// <summary>Path to the folder with coinview database files.</summary>
-        /// <seealso cref="Consensus.CoinViews.DBreezeCoinView.DBreezeCoinView"/>
-        public string CoinViewPath { get; set; }
+        public string CoindbPath { get; set; }
 
         /// <summary>Path to the folder with node's chain repository database files.</summary>
         /// <seealso cref="Base.BaseFeature.StartChain"/>

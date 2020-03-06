@@ -397,7 +397,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                 long mmsize = state.MempoolSize;
                 long memdyn = state.MempoolDynamicSize;
 
-                this.logger.LogInformation("Transaction ID '{0}' accepted to memory pool from peer '{1}' (poolsz {2} txn, {3} kb).", trxHash, peer.RemoteSocketEndpoint, mmsize, memdyn / 1000);
+                this.logger.LogDebug("Transaction ID '{0}' accepted to memory pool from peer '{1}' (poolsz {2} txn, {3} kb).", trxHash, peer.RemoteSocketEndpoint, mmsize, memdyn / 1000);
 
                 await this.orphans.ProcessesOrphansAsync(this, trx);
             }

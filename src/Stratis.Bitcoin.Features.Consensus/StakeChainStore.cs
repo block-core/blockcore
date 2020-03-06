@@ -23,7 +23,7 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         private readonly ChainIndexer chainIndexer;
 
-        private readonly DBreezeCoinView dBreezeCoinView;
+        private readonly IStakdb stakdb;
 
         private readonly int threshold;
 
@@ -33,12 +33,12 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         private readonly BlockStake genesis;
 
-        public StakeChainStore(Network network, ChainIndexer chainIndexer, DBreezeCoinView dBreezeCoinView, ILoggerFactory loggerFactory)
+        public StakeChainStore(Network network, ChainIndexer chainIndexer, IStakdb stakdb, ILoggerFactory loggerFactory)
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.network = network;
             this.chainIndexer = chainIndexer;
-            this.dBreezeCoinView = dBreezeCoinView;
+            this.stakdb = stakdb;
             this.threshold = 5000; // Count of items in memory.
             this.thresholdWindow = Convert.ToInt32(this.threshold * 0.4); // A window threshold.
             this.genesis = BlockStake.Load(this.network.GetGenesis());
@@ -48,12 +48,12 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         public void Load()
         {
-            HashHeightPair hash = this.dBreezeCoinView.GetTipHash();
+            HashHeightPair hash = this.stakdb.GetTipHash();
             ChainedHeader currentHeader = this.chainIndexer.GetHeader(hash.Hash);
 
             while (currentHeader == null)
             {
-                hash = this.dBreezeCoinView.Rewind();
+                hash = this.stakdb.Rewind();
                 currentHeader = this.chainIndexer.GetHeader(hash.Hash);
             }
 
@@ -67,7 +67,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                 currentHeader = currentHeader.Previous;
             }
 
-            this.dBreezeCoinView.GetStake(load);
+            this.stakdb.GetStake(load);
 
             // All block stake items should be in store.
             if (load.Any(l => l.BlockStake == null))
@@ -96,7 +96,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             }
 
             var stakeItem = new StakeItem { BlockId = blockid };
-            this.dBreezeCoinView.GetStake(new[] { stakeItem });
+            this.stakdb.GetStake(new[] { stakeItem });
 
             Guard.Assert(stakeItem.BlockStake != null); // if we ask for it then we expect its in store
             return stakeItem.BlockStake;
@@ -124,7 +124,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             {
                 // Push to store all items that are not already persisted.
                 ICollection<StakeItem> entries = this.items.Values;
-                this.dBreezeCoinView.PutStake(entries.Where(w => !w.InStore));
+                this.stakdb.PutStake(entries.Where(w => !w.InStore));
 
                 if (disposeMode)
                     return;

@@ -16,7 +16,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
     /// <summary>
     /// Cache layer for coinview prevents too frequent updates of the data in the underlying storage.
     /// </summary>
-    public class CachedCoinView : ICoinView, IBackedCoinView
+    public class CachedCoinView : ICoinView
     {
         /// <summary>
         /// Item of the coinview cache that holds information about the unspent outputs
@@ -88,14 +88,14 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         private HashHeightPair innerBlockHash;
 
         /// <summary>Coin view at one layer below this implementaiton.</summary>
-        private readonly ICoinView inner;
+        private readonly ICoindb coindb;
 
         /// <summary>Pending list of rewind data to be persisted to a persistent storage.</summary>
         /// <remarks>All access to this list has to be protected by <see cref="lockobj"/>.</remarks>
         private readonly Dictionary<int, RewindData> cachedRewindData;
 
         /// <inheritdoc />
-        public ICoinView Inner => this.inner;
+        public ICoindb ICoindb => this.coindb;
 
         /// <summary>Storage of POS block information.</summary>
         private readonly StakeChainStore stakeChainStore;
@@ -130,22 +130,11 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
         private readonly Random random;
 
-        public CachedCoinView(Network network, ICheckpoints checkpoint, DBreezeCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
-            this(network, checkpoint, dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
+        public CachedCoinView(Network network, ICheckpoints checkpoints, ICoindb coindb, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null)
         {
-            Guard.NotNull(inner, nameof(inner));
-            this.inner = inner;
-        }
+            Guard.NotNull(coindb, nameof(CachedCoinView.coindb));
 
-        public CachedCoinView(Network network, ICheckpoints checkpoint, InMemoryCoinView inner, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null) :
-            this(network, checkpoint, dateTimeProvider, loggerFactory, nodeStats, consensusSettings, stakeChainStore, rewindDataIndexCache)
-        {
-            Guard.NotNull(inner, nameof(inner));
-            this.inner = inner;
-        }
-
-        private CachedCoinView(Network network, ICheckpoints checkpoints, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null)
-        {
+            this.coindb = coindb;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.network = network;
             this.checkpoints = checkpoints;
@@ -172,7 +161,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         {
             if (this.blockHash == null)
             {
-                HashHeightPair response = this.inner.GetTipHash();
+                HashHeightPair response = this.coindb.GetTipHash();
 
                 this.innerBlockHash = response;
                 this.blockHash = this.innerBlockHash;
@@ -201,7 +190,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 if (missedOutpoint.Count > 0)
                 {
-                    FetchCoinsResponse fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+                    FetchCoinsResponse fetchedCoins = this.coindb.FetchCoins(missedOutpoint.ToArray());
                     foreach (var unspentOutput in fetchedCoins.UnspentOutputs)
                     {
                         var cache = new CacheItem()
@@ -249,7 +238,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 if (missedOutpoint.Count > 0)
                 {
                     this.logger.LogDebug("{0} cache missed transaction needs to be loaded from underlying CoinView.", missedOutpoint.Count);
-                    FetchCoinsResponse fetchedCoins = this.Inner.FetchCoins(missedOutpoint.ToArray());
+                    FetchCoinsResponse fetchedCoins = this.coindb.FetchCoins(missedOutpoint.ToArray());
 
                     foreach (var unspentOutput in fetchedCoins.UnspentOutputs)
                     {
@@ -358,7 +347,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 this.rewindDataIndexCache.SaveAndEvict(this.blockHash.Height, null);
 
             if (this.innerBlockHash == null)
-                this.innerBlockHash = this.inner.GetTipHash();
+                this.innerBlockHash = this.coindb.GetTipHash();
 
             lock (this.lockobj)
             {
@@ -379,7 +368,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 this.logger.LogDebug("Flushing {0} items.", modify.Count);
 
-                this.Inner.SaveChanges(modify, this.innerBlockHash, this.blockHash, this.cachedRewindData.Select(c => c.Value).ToList());
+                this.coindb.SaveChanges(modify, this.innerBlockHash, this.blockHash, this.cachedRewindData.Select(c => c.Value).ToList());
 
                 this.cachedRewindData.Clear();
                 this.rewindDataSizeBytes = 0;
@@ -444,7 +433,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                             this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
 
-                            FetchCoinsResponse result = this.inner.FetchCoins(new[] { output.OutPoint });
+                            FetchCoinsResponse result = this.coindb.FetchCoins(new[] { output.OutPoint });
                             this.performanceCounter.AddMissCount(1);
 
                             UnspentOutput unspentOutput = result.UnspentOutputs.Single().Value;
@@ -587,7 +576,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 // Rewind data can go away all togetehr if the node uses the blocks in block store
                 // to get the rewind information, blockstore persists much more frequent then coin cache
                 // So using block store for rewinds is not entirely impossible.
-               
+
                 uint rewindDataWindow = 10;
 
                 if (this.blockHash.Height >= this.lastCheckpointHeight)
@@ -621,7 +610,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         {
             if (this.innerBlockHash == null)
             {
-                this.innerBlockHash = this.inner.GetTipHash();
+                this.innerBlockHash = this.coindb.GetTipHash();
             }
 
             // Flush the entire cache before rewinding
@@ -629,7 +618,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
             lock (this.lockobj)
             {
-                HashHeightPair hash = this.inner.Rewind();
+                HashHeightPair hash = this.coindb.Rewind();
 
                 foreach (KeyValuePair<OutPoint, CacheItem> cachedUtxoItem in this.cachedUtxoItems)
                 {
@@ -661,7 +650,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             if (this.cachedRewindData.TryGetValue(height, out RewindData existingRewindData))
                 return existingRewindData;
 
-            return this.Inner.GetRewindData(height);
+            return this.coindb.GetRewindData(height);
         }
 
         [NoTrace]

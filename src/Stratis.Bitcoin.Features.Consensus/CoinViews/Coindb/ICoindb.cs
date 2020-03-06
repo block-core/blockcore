@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using NBitcoin;
-using Stratis.Bitcoin.Utilities;
+﻿
 
 namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 {
+    using System.Collections.Generic;
+    using NBitcoin;
+    using Stratis.Bitcoin.Utilities;
 
     /// <summary>
     /// Database of UTXOs.
     /// </summary>
-    public interface ICoinView
+    public interface ICoindb
     {
+        /// <summary>
+        /// Initialize the coindb.
+        /// </summary>
+        void Initialize();
+
         /// <summary>
         /// Retrieves the block hash of the current tip of the coinview.
         /// </summary>
@@ -46,12 +51,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         FetchCoinsResponse FetchCoins(OutPoint[] utxos);
 
         /// <summary>
-        /// Check if given utxos are not in cache then pull them from disk and place them in to the cache
-        /// </summary>
-        /// <param name="utxos">Transaction output identifiers for which to retrieve information about unspent outputs.</param>
-        void CacheCoins(OutPoint[] utxos);
-
-        /// <summary>
         /// Rewinds the coinview to the last saved state.
         /// <para>
         /// This operation includes removing the UTXOs of the recent transactions
@@ -66,5 +65,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// </summary>
         /// <param name="height">The height of the block.</param>
         RewindData GetRewindData(int height);
+    }
+
+    public interface IStakdb : ICoindb
+    {
+        void PutStake(IEnumerable<StakeItem> stakeEntries);
+
+        void GetStake(IEnumerable<StakeItem> blocklist);
     }
 }

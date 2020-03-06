@@ -20,7 +20,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
     /// Memory pool coin view.
     /// Provides coin view representation of memory pool transactions via a backed coin view.
     /// </summary>
-    public class MempoolCoinView : ICoinView, IBackedCoinView
+    public class MempoolCoinView : ICoinView
     {
         private readonly Network network;
 

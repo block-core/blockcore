@@ -127,8 +127,7 @@ namespace Stratis.Bitcoin
         {
             get
             {
-                string versionString = typeof(FullNode).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ??
-                    Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
+                string versionString = typeof(FullNode).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
 
                 if (!string.IsNullOrEmpty(versionString))
                 {

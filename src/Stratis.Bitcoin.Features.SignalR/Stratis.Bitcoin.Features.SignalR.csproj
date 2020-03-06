@@ -6,9 +6,9 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="CSharpFunctionalExtensions" Version="1.10.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.0" />
+        <PackageReference Include="CSharpFunctionalExtensions" Version="2.3.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.1" />
     </ItemGroup>
     
     <ItemGroup>

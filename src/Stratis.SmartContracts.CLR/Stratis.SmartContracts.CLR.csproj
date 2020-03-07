@@ -6,7 +6,8 @@
     <AssemblyVersion>1.0.2.0</AssemblyVersion>
     <FileVersion>1.0.2.0</FileVersion>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <Authors>Stratis Group Ltd.</Authors>
+    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Product>Stratis.SmartContracts.CLR</Product>
   </PropertyGroup>
 

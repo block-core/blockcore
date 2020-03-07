@@ -1,8 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -42,7 +42,7 @@ namespace Stratis.Bitcoin.Features.Api
             }
 
             //Set the comments path for the swagger json and ui.
-            string basePath = PlatformServices.Default.Application.ApplicationBasePath;
+            string basePath = AppContext.BaseDirectory;
             string apiXmlPath = Path.Combine(basePath, ApiXmlFilename);
             string walletXmlPath = Path.Combine(basePath, WalletXmlFilename);
 

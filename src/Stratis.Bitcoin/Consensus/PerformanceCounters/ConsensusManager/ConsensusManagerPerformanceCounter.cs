@@ -1,4 +1,5 @@
 ﻿using System;
+using NBitcoin;
 using Stratis.Bitcoin.Utilities;
 using TracerAttributes;
 
@@ -8,10 +9,12 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
     {
         /// <summary>Snapshot that is currently being populated.</summary>
         private ConsensusManagerPerformanceSnapshot currentSnapshot;
+        private readonly ChainIndexer chainIndexer;
 
-        public ConsensusManagerPerformanceCounter()
+        public ConsensusManagerPerformanceCounter(ChainIndexer chainIndexer)
         {
-            this.currentSnapshot = new ConsensusManagerPerformanceSnapshot();
+            this.chainIndexer = chainIndexer;
+            this.currentSnapshot = new ConsensusManagerPerformanceSnapshot(this.chainIndexer);
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
         [NoTrace]
         public ConsensusManagerPerformanceSnapshot TakeSnapshot()
         {
-            var newSnapshot = new ConsensusManagerPerformanceSnapshot();
+            var newSnapshot = new ConsensusManagerPerformanceSnapshot(this.chainIndexer);
             ConsensusManagerPerformanceSnapshot previousSnapshot = this.currentSnapshot;
             this.currentSnapshot = newSnapshot;
 

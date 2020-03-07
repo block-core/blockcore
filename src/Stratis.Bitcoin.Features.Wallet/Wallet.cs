@@ -344,7 +344,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         public HdAddress GetAddress(string address, Func<HdAccount, bool> accountFilter = null)
         {
             Guard.NotNull(address, nameof(address));
-            return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address);
+            return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address || a.Bech32Address == address);
         }
     }
 

@@ -22,6 +22,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Controllers
     /// <summary>
     /// Controller providing operations on a wallet.
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
     public class WalletController : Controller
@@ -190,7 +191,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Controllers
 
             try
             {
-                string signature = this.walletManager.SignMessage(request.Password, request.WalletName, request.ExternalAddress, request.Message);
+                string signature = this.walletManager.SignMessage(request.Password, request.WalletName, request.AccountName, request.ExternalAddress, request.Message);
                 return this.Json(signature);
             }
             catch (Exception e)

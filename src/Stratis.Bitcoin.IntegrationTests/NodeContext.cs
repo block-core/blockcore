@@ -24,9 +24,11 @@ namespace Stratis.Bitcoin.IntegrationTests
             this.FolderName = TestBase.CreateTestDir(caller, name);
             var dateTimeProvider = new DateTimeProvider();
             var serializer = new DBreezeSerializer(this.Network.Consensus.ConsensusFactory);
-            this.PersistentCoinView = new DBreezeCoinView(network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
-            this.PersistentCoinView.Initialize();
-            this.cleanList = new List<IDisposable> { this.PersistentCoinView };
+            //this.Coindb = new DBreezeCoindb(network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
+            //this.Coindb = new FasterCoindb(network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
+            this.Coindb = new LeveldbCoindb(network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
+            this.Coindb.Initialize();
+            this.cleanList = new List<IDisposable> { (IDisposable)this.Coindb };
         }
 
         public Network Network { get; }
@@ -41,7 +43,7 @@ namespace Stratis.Bitcoin.IntegrationTests
             }
         }
 
-        public DBreezeCoinView PersistentCoinView { get; private set; }
+        public ICoindb Coindb { get; private set; }
 
         public string FolderName { get; }
 
@@ -58,13 +60,16 @@ namespace Stratis.Bitcoin.IntegrationTests
 
         public void ReloadPersistentCoinView()
         {
-            this.PersistentCoinView.Dispose();
-            this.cleanList.Remove(this.PersistentCoinView);
+            ((IDisposable)this.Coindb).Dispose();
+            this.cleanList.Remove((IDisposable)this.Coindb);
             var dateTimeProvider = new DateTimeProvider();
             var serializer = new DBreezeSerializer(this.Network.Consensus.ConsensusFactory);
-            this.PersistentCoinView = new DBreezeCoinView(this.Network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
-            this.PersistentCoinView.Initialize();
-            this.cleanList.Add(this.PersistentCoinView);
+            //this.Coindb = new DBreezeCoindb(this.Network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
+            //this.Coindb = new FasterCoindb(this.Network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
+            this.Coindb = new LeveldbCoindb(this.Network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
+
+            this.Coindb.Initialize();
+            this.cleanList.Add((IDisposable)this.Coindb);
         }
     }
 }

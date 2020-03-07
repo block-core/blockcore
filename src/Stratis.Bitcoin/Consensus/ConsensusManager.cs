@@ -198,7 +198,7 @@ namespace Stratis.Bitcoin.Consensus
             this.callbacksByBlocksRequestedHash = new Dictionary<uint256, DownloadedCallbacks>();
             this.peersByPeerId = new Dictionary<int, INetworkPeer>();
             this.toDownloadQueue = new Queue<BlockDownloadRequest>();
-            this.performanceCounter = new ConsensusManagerPerformanceCounter();
+            this.performanceCounter = new ConsensusManagerPerformanceCounter(this.chainIndexer);
             this.ibdState = ibdState;
 
             this.blockPuller = blockPuller;
@@ -227,13 +227,13 @@ namespace Stratis.Bitcoin.Consensus
             // We should consider creating a consensus store class that will internally contain
             // coinview and it will abstract the methods `RewindAsync()` `GetBlockHashAsync()`
 
-            uint256 consensusTipHash = this.ConsensusRules.GetBlockHash();
+            HashHeightPair consensusTipHash = this.ConsensusRules.GetBlockHash();
 
             ChainedHeader pendingTip;
 
             while (true)
             {
-                pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash);
+                pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash.Hash);
 
                 if ((pendingTip != null) && (this.chainState.BlockStoreTip.Height >= pendingTip.Height))
                     break;
@@ -313,7 +313,7 @@ namespace Stratis.Bitcoin.Consensus
         }
 
         /// <inheritdoc />
-        public async Task<ChainedHeader> BlockMinedAsync(Block block)
+        public async Task<ChainedHeader> BlockMinedAsync(Block block, bool assumeValid = false)
         {
             Guard.NotNull(block, nameof(block));
 
@@ -333,6 +333,9 @@ namespace Stratis.Bitcoin.Consensus
 
                     // This might throw ConsensusErrorException but we don't wanna catch it because miner will catch it.
                     chainedHeader = this.chainedHeaderTree.CreateChainedHeaderOfMinedBlock(block);
+
+                    if (assumeValid)
+                        chainedHeader.IsAssumedValid = true;
                 }
 
                 validationContext = await this.partialValidator.ValidateAsync(chainedHeader, block).ConfigureAwait(false);
@@ -459,6 +462,8 @@ namespace Stratis.Bitcoin.Consensus
                     {
                         this.blockPuller.RequestPeerServices(validationContext.MissingServices.Value);
 
+                        this.DownloadBlocks(new[] { validationContext.ChainedHeaderToValidate });
+                        this.logger.LogWarning("Downloading block for '{0}' had missing services {1}, it will be enqueued again.", validationContext.ChainedHeaderToValidate, validationContext.MissingServices);
                         this.logger.LogTrace("(-)[MISSING_SERVICES]");
                         return;
                     }
@@ -759,7 +764,9 @@ namespace Stratis.Bitcoin.Consensus
 
             foreach (ChainedHeaderBlock blockToConnect in blocksToConnect)
             {
-                using (this.performanceCounter.MeasureBlockConnectionFV())
+                StopwatchDisposable dsb = (StopwatchDisposable)this.performanceCounter.MeasureBlockConnectionFV();
+
+                using (dsb)
                 {
                     connectBlockResult = await this.ConnectBlockAsync(blockToConnect).ConfigureAwait(false);
 
@@ -797,6 +804,10 @@ namespace Stratis.Bitcoin.Consensus
                 {
                     this.signals.Publish(new BlockConnected(blockToConnect));
                 }
+
+                this.logger.LogInformation("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
+                    blockToConnect.ChainedHeader.Height, blockToConnect.ChainedHeader.HashBlock,
+                    dsb.watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.Block.Transactions.Count());
             }
 
             // After successfully connecting all blocks set the tree tip and claim the branch.

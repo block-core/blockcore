@@ -21,6 +21,7 @@ using Stratis.Bitcoin.Features.MemoryPool.Fee;
 using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 using Stratis.Bitcoin.Features.MemoryPool.Rules;
 using Stratis.Bitcoin.Features.Miner;
+using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Mining;
 using Stratis.Bitcoin.Signals;
 using Stratis.Bitcoin.Tests.Common;
@@ -104,7 +105,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
 
             var consensusSettings = new ConsensusSettings(nodeSettings);
             var chain = new ChainIndexer(network);
-            var inMemoryCoinView = new InMemoryCoinView(chain.Tip.HashBlock);
+            var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(chain.Tip));
 
             var chainState = new ChainState();
             var deployments = new NodeDeployments(network, chain);
@@ -114,7 +115,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
             var stakeChain = new StakeChainStore(network, chain, null, loggerFactory);
             ConsensusRuleEngine consensusRules = new PosConsensusRuleEngine(network, loggerFactory, dateTimeProvider, chain, deployments, consensusSettings, new Checkpoints(),
                 inMemoryCoinView, stakeChain, new StakeValidator(network, stakeChain, chain, inMemoryCoinView, loggerFactory), chainState, new InvalidBlockHashStore(dateTimeProvider),
-                new NodeStats(dateTimeProvider, loggerFactory), new RewindDataIndexCache(dateTimeProvider, network), asyncProvider, consensusRulesContainer).SetupRulesEngineParent();
+                new NodeStats(dateTimeProvider, loggerFactory), new RewindDataIndexCache(dateTimeProvider, network, new FinalizedBlockInfoRepository(new HashHeightPair()), new Checkpoints()), asyncProvider, consensusRulesContainer).SetupRulesEngineParent();
 
             ConsensusManager consensus = ConsensusManagerHelper.CreateConsensusManager(network, dataDir, chainState, chainIndexer: chain, consensusRules: consensusRules, inMemoryCoinView: inMemoryCoinView);
 
@@ -176,7 +177,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
                 chain.SetTip(block.Header);
                 srcTxs.Add(block.Transactions[0]);
 
-                inMemoryCoinView.SaveChanges(new List<UnspentOutputs>() { new UnspentOutputs((uint)(i + 1), block.Transactions[0]) }, new List<TxOut[]>(), chain.Tip.Previous.HashBlock, chain.Tip.HashBlock, chain.Tip.Height);
+                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(block.Transactions[0], 0), new Coins((uint)(i + 1), block.Transactions[0].Outputs.First(), block.Transactions[0].IsCoinBase)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
             }
 
             return new TestChainContext { MempoolValidator = mempoolValidator, MempoolSettings = mempoolSettings, ChainIndexer = chain, SrcTxs = srcTxs};
@@ -207,14 +208,22 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
 
                 consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
             }
-            foreach (Type ruleType in network.Consensus.ConsensusRules.FullValidationRules)
-                consensusRulesContainer.FullValidationRules.Add(Activator.CreateInstance(ruleType) as FullValidationConsensusRule);
             foreach (Type ruleType in network.Consensus.ConsensusRules.PartialValidationRules)
                 consensusRulesContainer.PartialValidationRules.Add(Activator.CreateInstance(ruleType) as PartialValidationConsensusRule);
+            foreach (var ruleType in network.Consensus.ConsensusRules.FullValidationRules)
+            {
+                FullValidationConsensusRule rule = null;
+                if (ruleType == typeof(FlushCoinviewRule))
+                    rule = new FlushCoinviewRule(new Mock<IInitialBlockDownloadState>().Object);
+                else
+                    rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
+
+                consensusRulesContainer.FullValidationRules.Add(rule);
+            }
 
             var consensusSettings = new ConsensusSettings(nodeSettings);
             var chain = new ChainIndexer(network);
-            var inMemoryCoinView = new InMemoryCoinView(chain.Tip.HashBlock);
+            var inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(chain.Tip));
 
             var asyncProvider = new AsyncProvider(loggerFactory, new Mock<ISignals>().Object, new NodeLifetime());
 
@@ -268,7 +277,8 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
                 chain.SetTip(currentBlock.Header);
                 srcTxs.Add(currentBlock.Transactions[0]);
 
-                inMemoryCoinView.SaveChanges(new List<UnspentOutputs>() { new UnspentOutputs((uint)(i + 1), currentBlock.Transactions[0]) }, new List<TxOut[]>(), chain.Tip.Previous.HashBlock, chain.Tip.HashBlock, chain.Tip.Height);
+                inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(currentBlock.Transactions[0], 0), new Coins((uint)(i + 1), currentBlock.Transactions[0].Outputs.First(), currentBlock.Transactions[0].IsCoinBase)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
+
             }
 
             // Just to make sure we can still make simple blocks

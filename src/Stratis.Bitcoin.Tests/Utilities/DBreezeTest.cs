@@ -65,20 +65,14 @@ namespace Stratis.Bitcoin.Tests.Utilities
         {
             Network network = KnownNetworks.StratisRegTest;
             Block genesis = network.GetGenesis();
-            var coins = new Coins(genesis.Transactions[0], 0);
+            var coins = new Bitcoin.Utilities.Coins(0, genesis.Transactions[0].Outputs.First(), true);
 
-            var result = (Coins)this.dbreezeSerializer.Deserialize(coins.ToBytes(KnownNetworks.StratisRegTest.Consensus.ConsensusFactory), typeof(Coins));
+            var result = (Bitcoin.Utilities.Coins)this.dbreezeSerializer.Deserialize(coins.ToBytes(KnownNetworks.StratisRegTest.Consensus.ConsensusFactory), typeof(Bitcoin.Utilities.Coins));
 
-            Assert.Equal(coins.CoinBase, result.CoinBase);
+            Assert.Equal(coins.IsCoinbase, result.IsCoinbase);
             Assert.Equal(coins.Height, result.Height);
-            Assert.Equal(coins.IsEmpty, result.IsEmpty);
-            Assert.Equal(coins.IsPruned, result.IsPruned);
-            Assert.Equal(coins.Outputs.Count, result.Outputs.Count);
-            Assert.Equal(coins.Outputs[0].ScriptPubKey.Hash, result.Outputs[0].ScriptPubKey.Hash);
-            Assert.Equal(coins.Outputs[0].Value, result.Outputs[0].Value);
-            Assert.Equal(coins.UnspentCount, result.UnspentCount);
-            Assert.Equal(coins.Value, result.Value);
-            Assert.Equal(coins.Version, result.Version);
+            Assert.Equal(coins.TxOut.ScriptPubKey.Hash, result.TxOut.ScriptPubKey.Hash);
+            Assert.Equal(coins.TxOut.Value, result.TxOut.Value);
         }
 
         [Fact]
@@ -98,11 +92,11 @@ namespace Stratis.Bitcoin.Tests.Utilities
         {
             Network network = KnownNetworks.StratisRegTest;
             Block genesis = network.GetGenesis();
-            var rewindData = new RewindData(genesis.GetHash());
+            var rewindData = new RewindData(new HashHeightPair(genesis.GetHash(), 0));
 
             var result = (RewindData)this.dbreezeSerializer.Deserialize(rewindData.ToBytes(), typeof(RewindData));
 
-            Assert.Equal(genesis.GetHash(), result.PreviousBlockHash);
+            Assert.Equal(genesis.GetHash(), result.PreviousBlockHash.Hash);
         }
 
         [Fact]

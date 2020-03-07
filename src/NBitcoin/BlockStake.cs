@@ -303,11 +303,6 @@ namespace NBitcoin
     public class PosConsensusFactory : ConsensusFactory
     {
         /// <summary>
-        /// A dictionary for types assignable from <see cref="ProvenBlockHeader"/>.
-        /// </summary>
-        private readonly ConcurrentDictionary<Type, bool> isAssignableFromProvenBlockHeader = new ConcurrentDictionary<Type, bool>();
-
-        /// <summary>
         /// The <see cref="ProvenBlockHeader"/> type.
         /// </summary>
         private readonly TypeInfo provenBlockHeaderType = typeof(ProvenBlockHeader).GetTypeInfo();
@@ -324,7 +319,7 @@ namespace NBitcoin
         /// <returns><c>true</c> if it is assignable.</returns>
         protected bool IsProvenBlockHeader<T>()
         {
-            return this.IsAssignable<T>(this.provenBlockHeaderType, this.isAssignableFromProvenBlockHeader);
+            return this.provenBlockHeaderType.IsAssignableFrom(typeof(T).GetTypeInfo());
         }
 
         /// <inheritdoc />

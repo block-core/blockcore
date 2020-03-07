@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NBitcoin;
 using Stratis.Bitcoin.Configuration.Settings;
@@ -15,7 +16,13 @@ namespace Stratis.Bitcoin.Consensus
         /// <summary>
         /// Obtains a height of the last checkpointed block.
         /// </summary>
+        int LastCheckpointHeight { get; }
+
+        /// <summary>
+        /// Obtains a height of the last checkpointed block.
+        /// </summary>
         /// <returns>Height of the last checkpointed block, or 0 if no checkpoint is available.</returns>
+        [Obsolete("Use the property LastCheckpoint instead")]
         int GetLastCheckpointHeight();
 
         /// <summary>
@@ -56,6 +63,8 @@ namespace Stratis.Bitcoin.Consensus
         /// <summary>Consensus settings for the full node.</summary>
         private readonly ConsensusSettings consensusSettings;
 
+        public int LastCheckpointHeight { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the object.
         /// </summary>
@@ -75,6 +84,8 @@ namespace Stratis.Bitcoin.Consensus
 
             this.consensusSettings = consensusSettings;
             this.network = network;
+
+            this.LastCheckpointHeight = this.GetLastCheckpointHeight();
         }
 
         /// <inheritdoc />

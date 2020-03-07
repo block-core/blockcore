@@ -4,6 +4,7 @@ using Stratis.Bitcoin.Configuration.Settings;
 using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Utilities;
+using Stratis.Bitcoin.Utilities.Extensions;
 
 namespace Stratis.Bitcoin.Base
 {
@@ -31,45 +32,35 @@ namespace Stratis.Bitcoin.Base
         /// <summary>User defined consensus settings.</summary>
         private readonly ConsensusSettings consensusSettings;
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="InitialBlockDownloadState" /> class.
-        /// </summary>
-        /// <param name="chainState">Information about node's chain.</param>
-        /// <param name="network">Specification of the network the node runs on - regtest/testnet/mainnet.</param>
-        /// <param name="consensusSettings">Configurable settings for the consensus feature.</param>
-        /// <param name="checkpoints">Provider of block header hash checkpoints.</param>
-        /// <param name="loggerFactory">Provides us with a logger.</param>
+        private int lastCheckpointHeight;
+        private uint256 minimumChainWork;
+
         public InitialBlockDownloadState(IChainState chainState, Network network, ConsensusSettings consensusSettings, ICheckpoints checkpoints, ILoggerFactory loggerFactory, IDateTimeProvider dateTimeProvider)
         {
+            Guard.NotNull(chainState, nameof(chainState));
+
             this.network = network;
             this.consensusSettings = consensusSettings;
             this.chainState = chainState;
             this.checkpoints = checkpoints;
             this.dateTimeProvider = dateTimeProvider;
+
+            this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
+            this.minimumChainWork = this.network.Consensus.MinimumChainWork ?? uint256.Zero;
+
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />
         public bool IsInitialBlockDownload()
         {
-            if (this.chainState == null)
-                return false;
-
-            if (this.chainState.ConsensusTip == null)
+            if (this.lastCheckpointHeight > this.chainState.ConsensusTip.Height)
                 return true;
 
-            if (this.checkpoints.GetLastCheckpointHeight() > this.chainState.ConsensusTip.Height)
+            if (this.chainState.ConsensusTip.Header.BlockTime < (this.dateTimeProvider.GetUtcNow().AddSeconds(-this.consensusSettings.MaxTipAge)))
                 return true;
 
-            if (this.chainState.ConsensusTip.ChainWork < (this.network.Consensus.MinimumChainWork ?? uint256.Zero))
-                return true;
-
-            this.logger.LogDebug("BlockTimeUnixSeconds={0}, DateTimeProviderTime={1}, ConsensusSettingsMaxTipAge={2}",
-                this.chainState.ConsensusTip.Header.BlockTime.ToUnixTimeSeconds(),
-                this.dateTimeProvider.GetTime(),
-                this.consensusSettings.MaxTipAge);
-
-            if (this.chainState.ConsensusTip.Header.BlockTime.ToUnixTimeSeconds() < (this.dateTimeProvider.GetTime() - this.consensusSettings.MaxTipAge))
+            if (this.chainState.ConsensusTip.ChainWork < this.minimumChainWork)
                 return true;
 
             return false;

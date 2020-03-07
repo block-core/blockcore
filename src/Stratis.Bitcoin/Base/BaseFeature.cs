@@ -233,6 +233,8 @@ namespace Stratis.Bitcoin.Base
             this.chainState.ConsensusTip = this.consensusManager.Tip;
 
             this.nodeStats.RegisterStats(sb => sb.Append(this.asyncProvider.GetStatistics(!this.nodeSettings.Log.DebugArgs.Any())), StatsType.Component, this.GetType().Name, 100);
+
+            ((IBlockStoreQueue)this.blockStore).ReindexChain(this.consensusManager, this.nodeLifetime.ApplicationStopping);
         }
 
         /// <summary>

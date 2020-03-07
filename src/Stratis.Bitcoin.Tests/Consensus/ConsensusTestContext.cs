@@ -81,7 +81,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             this.dateTimeProvider = new DateTimeProvider();
             this.hashStore = new InvalidBlockHashStore(this.dateTimeProvider);
 
-            this.coinView = new TestInMemoryCoinView(this.chainIndexer.Tip.HashBlock);
+            this.coinView = new TestInMemoryCoinView(new HashHeightPair(this.chainIndexer.Tip));
             this.HeaderValidator = new Mock<IHeaderValidator>();
             this.HeaderValidator.Setup(hv => hv.ValidateHeader(It.IsAny<ChainedHeader>())).Returns(new ValidationContext());
 
@@ -207,6 +207,10 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             this.checkpoints
                 .Setup(c => c.GetLastCheckpointHeight())
+                .Returns(checkpoints.OrderBy(h => h.Height).Last().Height);
+
+            this.checkpoints
+                .Setup(c => c.LastCheckpointHeight)
                 .Returns(checkpoints.OrderBy(h => h.Height).Last().Height);
         }
 

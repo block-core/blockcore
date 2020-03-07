@@ -256,7 +256,7 @@ namespace Stratis.Bitcoin.Features.Miner
         {
             if (this.IncludeWitness)
             {
-                this.AddOrUpdateCoinbaseCommitmentToBlock(this.block);
+                this.AddOrUpdateCoinbaseCommitmentToBlock(block);
             }
 
             block.UpdateMerkleRoot();

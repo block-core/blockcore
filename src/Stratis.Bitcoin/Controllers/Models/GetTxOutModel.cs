@@ -17,23 +17,20 @@ namespace Stratis.Bitcoin.Controllers.Models
         /// <summary>
         /// Initializes a GetTxOutModel instance.
         /// </summary>
-        /// <param name="unspentOutputs">The <see cref="UnspentOutputs"/>.</param>
-        /// <param name="vout">The output index.</param>
+        /// <param name="unspentOutputs">The <see cref="UnspentOutput"/>.</param>
         /// <param name="network">The network the transaction occurred on.</param>
         /// <param name="tip">The current consensus tip's <see cref="ChainedHeader"/>.</param>
-        public GetTxOutModel(UnspentOutputs unspentOutputs, uint vout, Network network, ChainedHeader tip)
+        public GetTxOutModel(UnspentOutput unspentOutputs, Network network, ChainedHeader tip)
         {
-            if (unspentOutputs != null)
+            this.BestBlock = tip.HashBlock;
+
+            if (unspentOutputs?.Coins != null)
             {
-                TxOut output = unspentOutputs.TryGetOutput(vout);
-                this.BestBlock = tip.HashBlock;
-                this.Coinbase = unspentOutputs.IsCoinbase;
-                this.Confirmations = NetworkExtensions.MempoolHeight == unspentOutputs.Height ? 0 : tip.Height - (int)unspentOutputs.Height + 1;
-                if (output != null)
-                {
-                    this.Value = output.Value;
-                    this.ScriptPubKey = new ScriptPubKey(output.ScriptPubKey, network);
-                }
+                TxOut output = unspentOutputs.Coins.TxOut;
+                this.Coinbase = unspentOutputs.Coins.IsCoinbase;
+                this.Confirmations = NetworkExtensions.MempoolHeight == unspentOutputs.Coins.Height ? 0 : tip.Height - (int)unspentOutputs.Coins.Height + 1;
+                this.Value = output.Value;
+                this.ScriptPubKey = new ScriptPubKey(output.ScriptPubKey, network);
             }
         }
 

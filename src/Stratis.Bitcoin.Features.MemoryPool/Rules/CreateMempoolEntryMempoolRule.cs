@@ -130,18 +130,18 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Rules
                 var prevheights = new List<int>();
                 foreach (TxIn txin in context.Transaction.Inputs)
                 {
-                    UnspentOutputs coins = context.View.GetCoins(txin.PrevOut.Hash);
-                    if (coins == null)
+                    UnspentOutput unspentOutput = context.View.Set.AccessCoins(txin.PrevOut);
+                    if (unspentOutput?.Coins == null)
                         return false;
 
-                    if (coins.Height == TxMempool.MempoolHeight)
+                    if (unspentOutput.Coins.Height == TxMempool.MempoolHeight)
                     {
                         // Assume all mempool transaction confirm in the next block
                         prevheights.Add(tip.Height + 1);
                     }
                     else
                     {
-                        prevheights.Add((int)coins.Height);
+                        prevheights.Add((int)unspentOutput.Coins.Height);
                     }
                 }
                 lockPair = context.Transaction.CalculateSequenceLocks(prevheights.ToArray(), index, flags);

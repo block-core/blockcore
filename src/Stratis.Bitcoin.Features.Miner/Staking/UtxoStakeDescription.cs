@@ -22,7 +22,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
         public HdAddress Address { get; set; }
 
         /// <summary>Selected outputs of a transaction.</summary>
-        public UnspentOutputs UtxoSet { get; set; }
+        public UnspentOutput UtxoSet { get; set; }
 
         /// <summary>Credentials to wallet that contains the private key for the staking UTXO.</summary>
         public WalletSecret Secret { get; set; }

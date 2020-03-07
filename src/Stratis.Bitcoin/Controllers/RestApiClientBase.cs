@@ -48,7 +48,7 @@ namespace Stratis.Bitcoin.Controllers
 
             this.endpointUrl = $"{url}:{port}/api/{controllerName}";
 
-            this.policy = Policy.Handle<HttpRequestException>().WaitAndRetryAsync(retryCount: RetryCount, sleepDurationProvider:
+            this.policy = Policy.Handle<HttpRequestException>().WaitAndRetry(retryCount: RetryCount, sleepDurationProvider:
                 attemptNumber =>
                 {
                     // Intervals between new attempts are growing.
@@ -78,7 +78,7 @@ namespace Stratis.Bitcoin.Controllers
                 try
                 {
                     // Retry the following call according to the policy.
-                    await this.policy.ExecuteAsync(async token =>
+                    await this.policy.Execute(async token =>
                     {
                         this.logger.LogDebug("Sending request of type '{0}' to Uri '{1}'.",
                             requestModel.GetType().FullName, publicationUri);
@@ -174,7 +174,7 @@ namespace Stratis.Bitcoin.Controllers
                 try
                 {
                     // Retry the following call according to the policy.
-                    await this.policy.ExecuteAsync(async token =>
+                    await this.policy.Execute(async token =>
                     {
                         this.logger.LogDebug("Sending request to Url '{1}'.", url);
 

@@ -239,7 +239,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                     var stateDummy = new MempoolValidationState(true);
                     if (await this.Validator.AcceptToMemoryPool(stateDummy, orphanTx))
                     {
-                        this.logger.LogInformation("accepted orphan tx {0}", orphanHash);
+                        this.logger.LogDebug("accepted orphan tx {0}", orphanHash);
 
                         behavior.RelayTransaction(orphanTx.GetHash());
 
@@ -259,12 +259,12 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                             // Punish peer that gave us an invalid orphan tx
                             //Misbehaving(fromPeer, nDos);
                             setMisbehaving.Add(fromPeer);
-                            this.logger.LogInformation("invalid orphan tx {0}", orphanHash);
+                            this.logger.LogDebug("invalid orphan tx {0}", orphanHash);
                         }
 
                         // Has inputs but not accepted to mempool
                         // Probably non-standard or insufficient fee/priority
-                        this.logger.LogInformation("removed orphan tx {0}", orphanHash);
+                        this.logger.LogDebug("removed orphan tx {0}", orphanHash);
                         eraseQueue.Add(orphanHash);
                         if (!orphanTx.HasWitness && !stateDummy.CorruptionPossible)
                         {
@@ -324,7 +324,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
 
             if (rejectedParents)
             {
-                this.logger.LogInformation("not keeping orphan with rejected parents {0}", tx.GetHash());
+                this.logger.LogDebug("not keeping orphan with rejected parents {0}", tx.GetHash());
                 this.logger.LogTrace("(-)[REJECT_PARENTS_ORPH]:false");
                 return false;
             }
@@ -344,7 +344,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
             int nMaxOrphanTx = this.mempoolSettings.MaxOrphanTx;
             int nEvicted = this.LimitOrphanTxSize(nMaxOrphanTx);
             if (nEvicted > 0)
-                this.logger.LogInformation("mapOrphan overflow, removed {0} tx", nEvicted);
+                this.logger.LogDebug("mapOrphan overflow, removed {0} tx", nEvicted);
 
             return ret;
         }
@@ -391,7 +391,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                 this.nNextSweep = nMinExpTime + OrphanTxExpireInterval;
 
                 if (nErased > 0)
-                    this.logger.LogInformation("Erased {0} orphan tx due to expiration", nErased);
+                    this.logger.LogDebug("Erased {0} orphan tx due to expiration", nErased);
             }
 
             lock (this.lockObject)
@@ -437,7 +437,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                 int sz = MempoolValidator.GetTransactionWeight(tx, this.Validator.ConsensusOptions);
                 if (sz >= this.chainIndexer.Network.Consensus.Options.MaxStandardTxWeight)
                 {
-                    this.logger.LogInformation("ignoring large orphan tx (size: {0}, hash: {1})", sz, hash);
+                    this.logger.LogDebug("ignoring large orphan tx (size: {0}, hash: {1})", sz, hash);
                     this.logger.LogTrace("(-)[LARGE_ORPH]:false");
                     return false;
                 }
@@ -464,7 +464,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                 }
 
                 int orphanSize = this.mapOrphanTransactions.Count;
-                this.logger.LogInformation("stored orphan tx {0} (mapsz {1} outsz {2})", hash, orphanSize, this.mapOrphanTransactionsByPrev.Count);
+                this.logger.LogDebug("stored orphan tx {0} (mapsz {1} outsz {2})", hash, orphanSize, this.mapOrphanTransactionsByPrev.Count);
                 this.Validator.PerformanceCounter.SetMempoolOrphanSize(orphanSize);
             }
 
@@ -529,7 +529,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
                 }
 
                 if (erased > 0)
-                    this.logger.LogInformation("Erased {0} orphan tx from peer {1}", erased, peerId);
+                    this.logger.LogDebug("Erased {0} orphan tx from peer {1}", erased, peerId);
             }
         }
     }

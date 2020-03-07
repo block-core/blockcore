@@ -86,7 +86,7 @@ namespace Stratis.Bitcoin.Connection
         private readonly IAsyncProvider asyncProvider;
 
         private IConsensusManager consensusManager;
-
+        
         private readonly IAsyncDelegateDequeuer<INetworkPeer> connectedPeersQueue;
 
         /// <summary>Traffic statistics from peers that have been disconnected.</summary>
@@ -132,7 +132,7 @@ namespace Stratis.Bitcoin.Connection
             this.connectedPeersQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<INetworkPeer>($"{nameof(ConnectionManager)}-{nameof(this.connectedPeersQueue)}", this.OnPeerAdded);
             this.disconnectedPerfCounter = new PerformanceCounter();
 
-            this.Parameters.UserAgent = $"{this.ConnectionSettings.Agent}:{versionProvider.GetVersion()} ({(int)this.NodeSettings.ProtocolVersion})";
+            this.Parameters.UserAgent = $"{this.ConnectionSettings.Agent}:{versionProvider.GetVersion()}";
 
             this.Parameters.Version = this.NodeSettings.ProtocolVersion;
 

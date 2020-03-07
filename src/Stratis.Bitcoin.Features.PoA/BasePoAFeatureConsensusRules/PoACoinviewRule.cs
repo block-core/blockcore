@@ -52,7 +52,7 @@ namespace Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules
         }
 
         /// <inheritdoc/>
-        public override void CheckMaturity(UnspentOutputs coins, int spendHeight)
+        public override void CheckMaturity(UnspentOutput coins, int spendHeight)
         {
             base.CheckCoinbaseMaturity(coins, spendHeight);
         }

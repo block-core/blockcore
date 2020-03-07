@@ -25,7 +25,7 @@ namespace Stratis.Bitcoin.Utilities
     public class StopwatchDisposable : IDisposable
     {
         /// <summary>Stopwatch to measure elapsed ticks of the code block.</summary>
-        private readonly Stopwatch watch;
+        public readonly Stopwatch watch;
 
         /// <summary>
         /// Action to execute when the measurement is done.
@@ -47,6 +47,8 @@ namespace Stratis.Bitcoin.Utilities
             this.action = action;
             this.watch = Stopwatch.StartNew();
         }
+
+        public Stopwatch Watch => this.watch;
 
         /// <summary>
         /// Stops the time measurement and calls the action with the measured elapsed ticks.

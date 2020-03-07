@@ -131,8 +131,8 @@ namespace Stratis.Bitcoin.Networks
                 premineHeight: 2,
                 premineReward: Money.Coins(98000000),
                 proofOfWorkReward: Money.Coins(4),
-                powTargetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
-                powTargetSpacing: TimeSpan.FromSeconds(10 * 60),
+                targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
+                targetSpacing: TimeSpan.FromSeconds(64),
                 powAllowMinDifficultyBlocks: false,
                 posNoRetargeting: false,
                 powNoRetargeting: false,

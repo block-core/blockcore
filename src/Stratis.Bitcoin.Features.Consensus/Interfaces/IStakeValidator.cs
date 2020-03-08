@@ -53,7 +53,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Interfaces
         /// <exception cref="ConsensusErrors.StakeTimeViolation">Thrown in case transaction time is lower than it's own UTXO timestamp.</exception>
         /// <exception cref="ConsensusErrors.StakeHashInvalidTarget">Thrown in case PoS hash doesn't meet target protocol.</exception>
         /// <returns><c>true</c> if the coin stake satisfies the weighted target, otherwise <c>false</c>.</returns>
-        bool CheckStakeKernelHash(PosRuleContext context, uint headerBits, uint256 prevStakeModifier, UnspentOutputs stakingCoins, OutPoint prevout, uint transactionTime);
+        bool CheckStakeKernelHash(PosRuleContext context, uint headerBits, uint256 prevStakeModifier, UnspentOutput stakingCoins, OutPoint prevout, uint transactionTime);
 
         /// <summary>
         /// Checks if provided transaction is a valid coinstake transaction.
@@ -130,7 +130,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Interfaces
         /// <param name="txToInN">Index of the transaction's input.</param>
         /// <param name="flagScriptVerify">Script verification flags.</param>
         /// <returns><c>true</c> if signature is valid.</returns>
-        bool VerifySignature(UnspentOutputs coin, Transaction txTo, int txToInN, ScriptVerify flagScriptVerify);
+        bool VerifySignature(UnspentOutput coin, Transaction txTo, int txToInN, ScriptVerify flagScriptVerify);
 
         /// <summary>
         /// Returns <c>true</c> if provided coins were confirmed in less than <paramref name="targetDepth"/> number of blocks.
@@ -139,7 +139,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Interfaces
         /// <param name="referenceChainedHeader">Chained block from which we are counting the depth.</param>
         /// <param name="targetDepth">The target depth.</param>
         /// <returns><c>true</c> if the coins were spent within N blocks from <see cref="referenceChainedHeader"/>, <c>false</c> otherwise.</returns>
-        bool IsConfirmedInNPrevBlocks(UnspentOutputs coins, ChainedHeader referenceChainedHeader, long targetDepth);
+        bool IsConfirmedInNPrevBlocks(UnspentOutput coins, ChainedHeader referenceChainedHeader, long targetDepth);
 
         /// <summary>
         /// Gets the required target depth according to the previous chained header and the consensus options.

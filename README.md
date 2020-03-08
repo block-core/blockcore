@@ -1,12 +1,27 @@
-[![Build Status](https://github.com/block-core/blockcore/workflows/Build/badge.svg)](https://github.com/block-core/blockcore/actions)   [![Integration Test Status](https://github.com/block-core/blockcore/workflows/Integration%20Test/badge.svg)](https://github.com/block-core/blockcore/actions)
 
-Blockcore
-===============
+<p align="center">
+  <p align="center">
+    <img src="https://user-images.githubusercontent.com/5221349/72841405-93c2ce80-3c96-11ea-844b-3e1ff782b1ae.png" height="100" alt="Blockcore" />
+  </p>
+  <h3 align="center">
+    About Blockcore
+  </h3>
+  <p align="center">
+    Open source .NET Core Bitcoin based blockchain node in C# 
+  </p>
+  <p align="center">
+      <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Build/badge.svg" /></a>
+      <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Integration%20Test/badge.svg" /></a>
+      <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Publish%20Packages/badge.svg" /></a>
+  </p>
+</p>
+ 
 
-https://blockcore.net
 
-Bitcoin Implementation in C#
+Introduction
 ----------------------------
+
+### Bitcoin Implementation in C#
 
 **What is Blockcore?**
 
@@ -53,6 +68,7 @@ There is a lot to do and we welcome contributions from developers and testers wh
 
 You can find tasks on the [issues](https://github.com/block-core/blockcore/issues) tab or visit us on [discord](https://discord.gg/TXx4Rm3).
 
-Testing
+Other Points
 -------
 * [Testing Guidelines](Documentation/testing-guidelines.md)
+* [Official Website](http://blockcore.net/)

@@ -17,7 +17,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         public PosColdStakingRuleTest()
         {
             (this.ruleContext as UtxoRuleContext).UnspentOutputSet = new UnspentOutputSet();
-            (this.ruleContext as UtxoRuleContext).UnspentOutputSet.SetCoins(new UnspentOutputs[0]);
+            (this.ruleContext as UtxoRuleContext).UnspentOutputSet.SetCoins(new UnspentOutput[0]);
 
             this.ruleContext.ValidationContext.BlockToValidate = this.network.Consensus.ConsensusFactory.CreateBlock();
         }
@@ -53,7 +53,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
 
             // Record the spendable outputs.
             var posRuleContext = this.ruleContext as PosRuleContext;
-            posRuleContext.UnspentOutputSet.Update(prevTransaction, 0);
+            posRuleContext.UnspentOutputSet.Update(this.network, prevTransaction, 0);
 
             // Create cold coin stake transaction.
             Transaction coinstakeTransaction = this.network.CreateTransaction();

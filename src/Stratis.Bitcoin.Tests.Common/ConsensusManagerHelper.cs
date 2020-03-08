@@ -53,7 +53,7 @@ namespace Stratis.Bitcoin.Tests.Common
                 chainIndexer = new ChainIndexer(network);
 
             if (inMemoryCoinView == null)
-                inMemoryCoinView = new InMemoryCoinView(chainIndexer.Tip.HashBlock);
+                inMemoryCoinView = new InMemoryCoinView(new HashHeightPair(chainIndexer.Tip));
 
             var connectionManagerSettings = new ConnectionManagerSettings(nodeSettings);
 

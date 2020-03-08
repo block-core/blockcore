@@ -75,13 +75,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             // be in ConnectBlock because they require the UTXO set.
             for (int i = 0; i < transaction.Inputs.Count; i++)
             {
-                prevheights[i] = (int)view.AccessCoins(transaction.Inputs[i].PrevOut.Hash).Height;
+                prevheights[i] = (int)view.AccessCoins(transaction.Inputs[i].PrevOut).Coins.Height;
             }
 
             return transaction.CheckSequenceLocks(prevheights, index, context.Flags.LockTimeFlags);
         }
         /// <inheritdoc/>
-        public override void CheckMaturity(UnspentOutputs coins, int spendHeight)
+        public override void CheckMaturity(UnspentOutput coins, int spendHeight)
         {
             base.CheckCoinbaseMaturity(coins, spendHeight);
         }

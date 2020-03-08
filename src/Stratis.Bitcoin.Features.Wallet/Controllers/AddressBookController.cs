@@ -15,6 +15,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Controllers
     /// <summary>
     /// Controller providing operations on a wallet.
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
     public class AddressBookController : Controller

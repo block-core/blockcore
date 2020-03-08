@@ -96,15 +96,15 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
         }
 
         /// <inheritdoc />
-        public override void CheckMaturity(UnspentOutputs coins, int spendHeight)
+        public override void CheckMaturity(UnspentOutput coins, int spendHeight)
         {
             base.CheckCoinbaseMaturity(coins, spendHeight);
 
-            if (coins.IsCoinstake)
+            if (coins.Coins.IsCoinstake)
             {
-                if ((spendHeight - coins.Height) < this.consensus.CoinbaseMaturity)
+                if ((spendHeight - coins.Coins.Height) < this.consensus.CoinbaseMaturity)
                 {
-                    this.Logger.LogDebug("Coinstake transaction height {0} spent at height {1}, but maturity is set to {2}.", coins.Height, spendHeight, this.consensus.CoinbaseMaturity);
+                    this.Logger.LogDebug("Coinstake transaction height {0} spent at height {1}, but maturity is set to {2}.", coins.Coins.Height, spendHeight, this.consensus.CoinbaseMaturity);
                     this.Logger.LogTrace("(-)[COINSTAKE_PREMATURE_SPENDING]");
                     ConsensusErrors.BadTransactionPrematureCoinstakeSpending.Throw();
                 }
@@ -112,13 +112,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
         }
 
         /// <inheritdoc />
-        protected override void CheckInputValidity(Transaction transaction, UnspentOutputs coins)
+        protected override void CheckInputValidity(Transaction transaction, UnspentOutput coins)
         {
             // TODO: Keep this check to avoid a network split
             if (transaction is IPosTransactionWithTime posTrx)
             {
                 // Transaction timestamp earlier than input transaction - main.cpp, CTransaction::ConnectInputs
-                if (coins.Time > posTrx.Time)
+                if (coins.Coins.Time > posTrx.Time)
                     ConsensusErrors.BadTransactionEarlyTimestamp.Throw();
             }
         }
@@ -171,7 +171,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             // Record proof hash value.
             blockStake.HashProof = posRuleContext.HashProofOfStake;
 
-            int lastCheckpointHeight = this.Parent.Checkpoints.GetLastCheckpointHeight();
+            int lastCheckpointHeight = this.Parent.Checkpoints.LastCheckpointHeight;
             if (chainedHeader.Height > lastCheckpointHeight)
             {
                 // Compute stake modifier.

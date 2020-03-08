@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NBitcoin.DataEncoders;
 
 namespace NBitcoin
 {
-    public class uint256
+    public class uint256 : IEquatable<uint256>, IComparable<uint256>, IComparable
     {
         public class MutableUint256 : IBitcoinSerializable
         {
@@ -37,12 +38,13 @@ namespace NBitcoin
             {
                 if (stream.Serializing)
                 {
-                    byte[] b = this.Value.ToBytes();
+                    Span<byte> b = stackalloc byte[WIDTH_BYTE];
+                    this.Value.ToBytes(b);
                     stream.ReadWrite(ref b);
                 }
                 else
                 {
-                    var b = new byte[WIDTH_BYTE];
+                    Span<byte> b = stackalloc byte[WIDTH_BYTE];
                     stream.ReadWrite(ref b);
                     this._Value = new uint256(b);
                 }
@@ -200,7 +202,9 @@ namespace NBitcoin
 
         public override string ToString()
         {
-            return Encoder.EncodeData(ToBytes().Reverse().ToArray());
+            var bytes = ToBytes();
+            Array.Reverse(bytes);
+            return Encoder.EncodeData(bytes);
         }
 
         public uint256(ulong b)
@@ -234,6 +238,23 @@ namespace NBitcoin
             this.pn6 = Utils.ToUInt32(vch, 4 * 6, true);
             this.pn7 = Utils.ToUInt32(vch, 4 * 7, true);
 
+        }
+
+        public uint256(ReadOnlySpan<byte> bytes)
+        {
+            if (bytes.Length != WIDTH_BYTE)
+            {
+                throw new FormatException("the byte array should be 32 bytes long");
+            }
+
+            this.pn0 = Utils.ToUInt32(bytes, 4 * 0, true);
+            this.pn1 = Utils.ToUInt32(bytes, 4 * 1, true);
+            this.pn2 = Utils.ToUInt32(bytes, 4 * 2, true);
+            this.pn3 = Utils.ToUInt32(bytes, 4 * 3, true);
+            this.pn4 = Utils.ToUInt32(bytes, 4 * 4, true);
+            this.pn5 = Utils.ToUInt32(bytes, 4 * 5, true);
+            this.pn6 = Utils.ToUInt32(bytes, 4 * 6, true);
+            this.pn7 = Utils.ToUInt32(bytes, 4 * 7, true);
         }
 
         public uint256(string str)
@@ -274,6 +295,22 @@ namespace NBitcoin
         {
             var item = obj as uint256;
             return this == item;
+        }
+
+        public bool Equals(uint256 other)
+        {
+            return this == other;
+        }
+
+        public int CompareTo(uint256 other)
+        {
+            return Comparison(this, other);
+        }
+
+        public int CompareTo(object obj)
+        {
+            return obj is uint256 v ? CompareTo(v) :
+                   obj is null ? CompareTo(null as uint256) : throw new ArgumentException($"Object is not an instance of uint256", nameof(obj));
         }
 
         public static bool operator ==(uint256 a, uint256 b)
@@ -319,11 +356,12 @@ namespace NBitcoin
 
         public static int Comparison(uint256 a, uint256 b)
         {
-            if (a == null)
-                throw new ArgumentNullException("a");
-            if (b == null)
-                throw new ArgumentNullException("b");
-
+            if (a is null && b is null)
+                return 0;
+            if (a is null && !(b is null))
+                return -1;
+            if (!(a is null) && b is null)
+                return 1;
             if (a.pn7 < b.pn7)
                 return -1;
             if (a.pn7 > b.pn7)
@@ -383,17 +421,48 @@ namespace NBitcoin
         public byte[] ToBytes(bool lendian = true)
         {
             var arr = new byte[WIDTH_BYTE];
-            Buffer.BlockCopy(Utils.ToBytes(this.pn0, true), 0, arr, 4 * 0, 4);
-            Buffer.BlockCopy(Utils.ToBytes(this.pn1, true), 0, arr, 4 * 1, 4);
-            Buffer.BlockCopy(Utils.ToBytes(this.pn2, true), 0, arr, 4 * 2, 4);
-            Buffer.BlockCopy(Utils.ToBytes(this.pn3, true), 0, arr, 4 * 3, 4);
-            Buffer.BlockCopy(Utils.ToBytes(this.pn4, true), 0, arr, 4 * 4, 4);
-            Buffer.BlockCopy(Utils.ToBytes(this.pn5, true), 0, arr, 4 * 5, 4);
-            Buffer.BlockCopy(Utils.ToBytes(this.pn6, true), 0, arr, 4 * 6, 4);
-            Buffer.BlockCopy(Utils.ToBytes(this.pn7, true), 0, arr, 4 * 7, 4);
+            this.ToBytes(arr);
             if (!lendian)
                 Array.Reverse(arr);
             return arr;
+        }
+
+        public void ToBytes(byte[] output)
+        {
+            Buffer.BlockCopy(Utils.ToBytes(this.pn0, true), 0, output, 4 * 0, 4);
+            Buffer.BlockCopy(Utils.ToBytes(this.pn1, true), 0, output, 4 * 1, 4);
+            Buffer.BlockCopy(Utils.ToBytes(this.pn2, true), 0, output, 4 * 2, 4);
+            Buffer.BlockCopy(Utils.ToBytes(this.pn3, true), 0, output, 4 * 3, 4);
+            Buffer.BlockCopy(Utils.ToBytes(this.pn4, true), 0, output, 4 * 4, 4);
+            Buffer.BlockCopy(Utils.ToBytes(this.pn5, true), 0, output, 4 * 5, 4);
+            Buffer.BlockCopy(Utils.ToBytes(this.pn6, true), 0, output, 4 * 6, 4);
+            Buffer.BlockCopy(Utils.ToBytes(this.pn7, true), 0, output, 4 * 7, 4);
+        }
+
+        public void ToBytes(Span<byte> output, bool lendian = true)
+        {
+            if(output.Length < WIDTH_BYTE)
+                throw new ArgumentException(message: $"The array should be at least of size {WIDTH_BYTE}", paramName: nameof(output));
+
+            Span<byte> initial = output;
+            Utils.ToBytes(this.pn0, true, output);
+            output = output.Slice(4);
+            Utils.ToBytes(this.pn1, true, output);
+            output = output.Slice(4);
+            Utils.ToBytes(this.pn2, true, output);
+            output = output.Slice(4);
+            Utils.ToBytes(this.pn3, true, output);
+            output = output.Slice(4);
+            Utils.ToBytes(this.pn4, true, output);
+            output = output.Slice(4);
+            Utils.ToBytes(this.pn5, true, output);
+            output = output.Slice(4);
+            Utils.ToBytes(this.pn6, true, output);
+            output = output.Slice(4);
+            Utils.ToBytes(this.pn7, true, output);
+
+            if(!lendian)
+                initial.Reverse();
         }
 
         public MutableUint256 AsBitcoinSerializable()
@@ -430,7 +499,7 @@ namespace NBitcoin
         }
     }
 
-    public class uint160
+    public class uint160 : IComparable<uint160>, IEquatable<uint160>, IComparable
     {
         public class MutableUint160 : IBitcoinSerializable
         {
@@ -617,6 +686,23 @@ namespace NBitcoin
             return this == item;
         }
 
+        public bool Equals(uint160 other)
+        {
+            return this == other;
+        }
+
+
+        public int CompareTo(uint160 other)
+        {
+            return Comparison(this, other);
+        }
+
+        public int CompareTo(object obj)
+        {
+            return obj is uint160 v ? CompareTo(v) :
+                   obj is null ? CompareTo(null as uint160) : throw new ArgumentException($"Object is not an instance of uint160", nameof(obj));
+        }
+
         public static bool operator ==(uint160 a, uint160 b)
         {
             if (ReferenceEquals(a, b))
@@ -657,6 +743,12 @@ namespace NBitcoin
 
         private static int Comparison(uint160 a, uint160 b)
         {
+            if (a is null && b is null)
+                return 0;
+            if (a is null && !(b is null))
+                return -1;
+            if (!(a is null) && b is null)
+                return 1;
             if (a.pn4 < b.pn4)
                 return -1;
             if (a.pn4 > b.pn4)

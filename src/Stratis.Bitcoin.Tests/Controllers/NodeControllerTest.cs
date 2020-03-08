@@ -364,8 +364,8 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
-            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
+            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
             string txid = txId.ToString();
@@ -385,8 +385,8 @@ namespace Stratis.Bitcoin.Tests.Controllers
         public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionNotFound_ReturnsNullAsync()
         {
             var txId = new uint256(1243124);
-            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync((UnspentOutputs)null)
+            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
+                .ReturnsAsync((UnspentOutput)null)
                 .Verifiable();
             string txid = txId.ToString();
             uint vout = 0;
@@ -419,8 +419,8 @@ namespace Stratis.Bitcoin.Tests.Controllers
         public async Task GetTxOutAsync_IncludeMempool_UnspentTransactionNotFound_ReturnsNullAsync()
         {
             var txId = new uint256(1243124);
-            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync((UnspentOutputs)null)
+            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
+                .ReturnsAsync((UnspentOutput)null)
                 .Verifiable();
             this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
                 this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
@@ -458,8 +458,8 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
-            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
+            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
             this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
@@ -486,8 +486,8 @@ namespace Stratis.Bitcoin.Tests.Controllers
         {
             var txId = new uint256(1243124);
             Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
-            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
+            var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
+            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
             this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
@@ -507,54 +507,6 @@ namespace Stratis.Bitcoin.Tests.Controllers
             Assert.Equal(3, resultModel.Confirmations);
             Assert.Equal(new ScriptPubKey(transaction.Outputs[0].ScriptPubKey, this.network).Hex, resultModel.ScriptPubKey.Hex);
             Assert.Equal(transaction.Outputs[0].Value, resultModel.Value);
-        }
-
-        [Fact]
-        public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionFound_VOutNotFound_ReturnsModelAsync()
-        {
-            var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
-            this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync(unspentOutputs)
-                .Verifiable();
-            string txid = txId.ToString();
-            uint vout = 13;
-            bool includeMemPool = false;
-
-            var json = (JsonResult)await this.controller.GetTxOutAsync(txid, vout, includeMemPool).ConfigureAwait(false);
-            var resultModel = (GetTxOutModel)json.Value;
-
-            this.getUnspentTransaction.Verify();
-            Assert.Equal(this.chainIndexer.Tip.HashBlock, resultModel.BestBlock);
-            Assert.True(resultModel.Coinbase);
-            Assert.Equal(3, resultModel.Confirmations);
-            Assert.Null(resultModel.ScriptPubKey);
-            Assert.Null(resultModel.Value);
-        }
-
-        [Fact]
-        public async Task GetTxOutAsync_IncludeInMempool_UnspentTransactionFound_VOutNotFound_ReturnsModelAsync()
-        {
-            var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
-            var unspentOutputs = new UnspentOutputs(1, transaction);
-            this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(txId))
-                .ReturnsAsync(unspentOutputs)
-                .Verifiable();
-            string txid = txId.ToString();
-            uint vout = 13;
-            bool includeMemPool = true;
-
-            var json = (JsonResult)await this.controller.GetTxOutAsync(txid, vout, includeMemPool).ConfigureAwait(false);
-            var resultModel = (GetTxOutModel)json.Value;
-
-            this.pooledGetUnspentTransaction.Verify();
-            Assert.Equal(this.chainIndexer.Tip.HashBlock, resultModel.BestBlock);
-            Assert.True(resultModel.Coinbase);
-            Assert.Equal(3, resultModel.Confirmations);
-            Assert.Null(resultModel.ScriptPubKey);
-            Assert.Null(resultModel.Value);
         }
 
         [Fact]

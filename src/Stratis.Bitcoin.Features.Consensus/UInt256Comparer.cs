@@ -12,4 +12,15 @@ namespace Stratis.Bitcoin.Features.Consensus
             return 0;
         }
     }
+
+    public class OutPointComparer : IComparer<OutPoint>
+    {
+        public int Compare(OutPoint x, OutPoint y)
+        {
+            if (x < y) return -1;
+            if (x > y) return 1;
+            return 0;
+        }
+    }
+
 }

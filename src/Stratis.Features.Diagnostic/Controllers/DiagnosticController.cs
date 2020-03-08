@@ -17,6 +17,7 @@ namespace Stratis.Features.Diagnostic.Controllers
     /// <summary>
     /// Controller providing diagnostic operations on fullnode.
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]/[action]")]
     public class DiagnosticController : FeatureController

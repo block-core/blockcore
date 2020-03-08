@@ -58,6 +58,11 @@ namespace Stratis.Bitcoin
 
         private readonly AsyncManualResetEvent queueUpdatedEvent;
 
+        public FinalizedBlockInfoRepository(HashHeightPair finalizedBlockInfo)
+        {
+            this.finalizedBlockInfo = finalizedBlockInfo;
+        }
+
         public FinalizedBlockInfoRepository(IKeyValueRepository keyValueRepo, ILoggerFactory loggerFactory, IAsyncProvider asyncProvider)
         {
             Guard.NotNull(keyValueRepo, nameof(keyValueRepo));

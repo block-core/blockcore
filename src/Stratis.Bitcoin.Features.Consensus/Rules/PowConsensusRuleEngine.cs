@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.AsyncWork;
@@ -34,7 +35,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.UtxoSet = utxoSet;
-            this.prefetcher = new CoinviewPrefetcher(this.UtxoSet, chainIndexer, loggerFactory, asyncProvider);
+            this.prefetcher = new CoinviewPrefetcher(this.UtxoSet, chainIndexer, loggerFactory, asyncProvider, checkpoints);
         }
 
         /// <inheritdoc />
@@ -45,7 +46,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
         }
 
         /// <inheritdoc />
-        public override uint256 GetBlockHash()
+        public override HashHeightPair GetBlockHash()
         {
             return this.UtxoSet.GetTipHash();
         }
@@ -66,15 +67,15 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
         {
             base.Initialize(chainTip);
 
-            var breezeCoinView = (DBreezeCoinView)((CachedCoinView)this.UtxoSet).Inner;
+            var coindb = ((CachedCoinView)this.UtxoSet).ICoindb;
 
-            breezeCoinView.Initialize();
+            coindb.Initialize();
 
-            uint256 consensusTipHash = breezeCoinView.GetTipHash();
+            HashHeightPair consensusTipHash = coindb.GetTipHash();
 
             while (true)
             {
-                ChainedHeader pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash);
+                ChainedHeader pendingTip = chainTip.FindAncestorOrSelf(consensusTipHash.Hash);
 
                 if (pendingTip != null)
                     break;
@@ -82,7 +83,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
                 this.logger.LogInformation("Rewinding coin db from {0}", consensusTipHash);
                 // In case block store initialized behind, rewind until or before the block store tip.
                 // The node will complete loading before connecting to peers so the chain will never know if a reorg happened.
-                consensusTipHash = breezeCoinView.Rewind();
+                consensusTipHash = coindb.Rewind();
             }
         }
 
@@ -111,7 +112,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
                 cache.Flush();
             }
 
-            ((DBreezeCoinView)((CachedCoinView)this.UtxoSet).Inner).Dispose();
+            ((IDisposable)((CachedCoinView)this.UtxoSet).ICoindb).Dispose();
         }
     }
 }

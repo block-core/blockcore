@@ -33,7 +33,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
         protected override void BeforeTest()
         {
             this.nodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, this.CurrentTest.DisplayName));
-            this.network = new BitcoinRegTestOverrideCoinbaseMaturity(1);
+            this.network = new BitcoinRegTestOverrideCoinbaseMaturity(1, "regtest1");
         }
 
         protected override void AfterTest()

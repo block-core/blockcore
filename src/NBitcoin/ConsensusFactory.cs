@@ -11,30 +11,14 @@ namespace NBitcoin
     public class ConsensusFactory
     {
         /// <summary>
-        /// A dictionary for types assignable from <see cref="BlockHeader"/>.
-        /// </summary>
-        private readonly ConcurrentDictionary<Type, bool> isAssignableFromBlockHeader = new ConcurrentDictionary<Type, bool>();
-
-        /// <summary>
         /// The <see cref="BlockHeader"/> type.
         /// </summary>
         private readonly TypeInfo blockHeaderType = typeof(BlockHeader).GetTypeInfo();
-
-
-        /// <summary>
-        /// A dictionary for types assignable from <see cref="Block"/>.
-        /// </summary>
-        private readonly ConcurrentDictionary<Type, bool> isAssignableFromBlock = new ConcurrentDictionary<Type, bool>();
 
         /// <summary>
         /// The <see cref="Block"/> type.
         /// </summary>
         private readonly TypeInfo blockType = typeof(Block).GetTypeInfo();
-
-        /// <summary>
-        /// A dictionary for types assignable from <see cref="Transaction"/>.
-        /// </summary>
-        private readonly ConcurrentDictionary<Type, bool> isAssignableFromTransaction = new ConcurrentDictionary<Type, bool>();
 
         /// <summary>
         /// The <see cref="Transaction"/> type.
@@ -52,9 +36,8 @@ namespace NBitcoin
         /// <returns><c>true</c> if it is assignable.</returns>
         protected bool IsBlockHeader<T>()
         {
-            return this.IsAssignable<T>(this.blockHeaderType, this.isAssignableFromBlockHeader);
+            return this.blockHeaderType.IsAssignableFrom(typeof(T).GetTypeInfo());
         }
-
 
         /// <summary>
         /// Check if the generic type is assignable from <see cref="Block"/>.
@@ -63,7 +46,7 @@ namespace NBitcoin
         /// <returns><c>true</c> if it is assignable.</returns>
         protected bool IsBlock<T>()
         {
-            return this.IsAssignable<T>(this.blockType, this.isAssignableFromBlock);
+            return this.blockType.IsAssignableFrom(typeof(T).GetTypeInfo());
         }
 
         /// <summary>
@@ -73,25 +56,7 @@ namespace NBitcoin
         /// <returns><c>true</c> if it is assignable.</returns>
         protected bool IsTransaction<T>()
         {
-            return this.IsAssignable<T>(this.transactionType, this.isAssignableFromTransaction);
-        }
-
-        /// <summary>
-        /// Check weather a type is assignable within the collection of types in the give dictionary.
-        /// </summary>
-        /// <typeparam name="T">The generic type to check.</typeparam>
-        /// <param name="type">The type to compare against.</param>
-        /// <param name="cache">A collection of already checked types.</param>
-        /// <returns><c>true</c> if it is assignable.</returns>
-        protected bool IsAssignable<T>(TypeInfo type, ConcurrentDictionary<Type, bool> cache)
-        {
-            if (!cache.TryGetValue(typeof(T), out bool isAssignable))
-            {
-                isAssignable = type.IsAssignableFrom(typeof(T).GetTypeInfo());
-                cache.TryAdd(typeof(T), isAssignable);
-            }
-
-            return isAssignable;
+            return this.transactionType.IsAssignableFrom(typeof(T).GetTypeInfo());
         }
 
         /// <summary>

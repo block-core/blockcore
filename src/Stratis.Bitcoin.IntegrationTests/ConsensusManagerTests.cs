@@ -77,9 +77,9 @@ namespace Stratis.Bitcoin.IntegrationTests
 
         public class BitcoinOverrideRegTest : BitcoinRegTest
         {
-            public BitcoinOverrideRegTest() : base()
+            public BitcoinOverrideRegTest(string name = null) : base()
             {
-                this.Name = Guid.NewGuid().ToString();
+                this.Name = name ?? Guid.NewGuid().ToString();
             }
         }
 
@@ -317,7 +317,7 @@ namespace Stratis.Bitcoin.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var syncerNetwork = new BitcoinOverrideRegTest();
+                var syncerNetwork = new BitcoinOverrideRegTest("regtet1");
 
                 // Inject a rule that will fail at block 15 of the new chain.
                 syncerNetwork.Consensus.ConsensusRules.FullValidationRules.Insert(1, typeof(FailValidation15_2));
@@ -362,7 +362,7 @@ namespace Stratis.Bitcoin.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var syncerNetwork = new BitcoinOverrideRegTest();
+                var syncerNetwork = new BitcoinOverrideRegTest("regtest1");
 
                 // Inject a rule that will fail at block 11 of the new chain
                 syncerNetwork.Consensus.ConsensusRules.FullValidationRules.Insert(1, typeof(FailValidation11_2));

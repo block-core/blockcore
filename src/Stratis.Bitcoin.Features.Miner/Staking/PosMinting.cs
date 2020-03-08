@@ -458,8 +458,8 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 .Where(utxo => utxo.Transaction.Amount >= this.MinimumStakingCoinValue) // exclude dust from stake process
                 .ToList();
 
-            FetchCoinsResponse fetchedCoinSet = this.coinView.FetchCoins(stakableUtxos.Select(t => t.Transaction.Id).Distinct().ToArray(), cancellationToken);
-            Dictionary<uint256, UnspentOutputs> utxoByTransaction = fetchedCoinSet.UnspentOutputs.Where(utxo => utxo != null).ToDictionary(utxo => utxo.TransactionId, utxo => utxo);
+            FetchCoinsResponse fetchedCoinSet = this.coinView.FetchCoins(stakableUtxos.Select(t => t.ToOutPoint()).Distinct().ToArray());
+            Dictionary<OutPoint, UnspentOutput> utxoByTransaction = fetchedCoinSet.UnspentOutputs.Where(utxo => utxo.Value.Coins != null).ToDictionary(utxo => utxo.Key, utxo => utxo.Value);
             fetchedCoinSet = null; // allow GC to collect as soon as possible.
 
             for (int i = 0; i < stakableUtxos.Count; i++)
@@ -472,22 +472,22 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                     throw new OperationCanceledException(cancellationToken);
                 }
 
-                UnspentOutputs coinSet = utxoByTransaction.TryGet(stakableUtxo.Transaction.Id);
-                if ((coinSet == null) || (stakableUtxo.Transaction.Index >= coinSet.Outputs.Length))
+                UnspentOutput coinSet = utxoByTransaction.TryGet(stakableUtxo.ToOutPoint());
+                if (coinSet?.Coins == null)
                     continue;
 
-                TxOut utxo = coinSet.Outputs[stakableUtxo.Transaction.Index];
+                TxOut utxo = coinSet.Coins.TxOut;
                 if ((utxo == null) || (utxo.Value < this.MinimumStakingCoinValue))
                     continue;
 
-                uint256 hashBlock = this.chainIndexer.GetHeader((int)coinSet.Height)?.HashBlock;
+                uint256 hashBlock = this.chainIndexer.GetHeader((int)coinSet.Coins.Height)?.HashBlock;
                 if (hashBlock == null)
                     continue;
 
                 var utxoStakeDescription = new UtxoStakeDescription
                 {
                     TxOut = utxo,
-                    OutPoint = new OutPoint(coinSet.TransactionId, stakableUtxo.Transaction.Index),
+                    OutPoint = coinSet.OutPoint,
                     Address = stakableUtxo.Address,
                     HashBlock = hashBlock,
                     UtxoSet = coinSet,
@@ -640,7 +640,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             }
 
             long ourWeight = stakingUtxoDescriptions.Sum(s => s.TxOut.Value);
-            long expectedTime = StakeValidator.TargetSpacingSeconds * this.networkWeight / ourWeight;
+            long expectedTime = ((uint)this.network.Consensus.TargetSpacing.TotalSeconds) * this.networkWeight / ourWeight;
             decimal ourPercent = this.networkWeight != 0 ? 100.0m * (decimal)ourWeight / (decimal)this.networkWeight : 0;
 
             this.logger.LogInformation("Node staking with {0} ({1:0.00} % of the network weight {2}), est. time to find new block is {3}.", new Money(ourWeight), ourPercent, new Money(this.networkWeight), TimeSpan.FromSeconds(expectedTime));
@@ -859,7 +859,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
 
                     try
                     {
-                        var prevoutStake = new OutPoint(utxoStakeInfo.UtxoSet.TransactionId, utxoStakeInfo.OutPoint.N);
+                        var prevoutStake = utxoStakeInfo.OutPoint;// new OutPoint(utxoStakeInfo.UtxoSet.TransactionId, utxoStakeInfo.OutPoint.N);
 
                         var contextInformation = new PosRuleContext(BlockStake.Load(block));
 
@@ -975,7 +975,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             foreach (UtxoStakeDescription utxoStakeDescription in utxoStakeDescriptions)
             {
                 // Must wait until coinbase is safely deep enough in the chain before valuing it.
-                if ((utxoStakeDescription.UtxoSet.IsCoinbase || utxoStakeDescription.UtxoSet.IsCoinstake) && (await this.GetBlocksCountToMaturityAsync(utxoStakeDescription).ConfigureAwait(false) > 0))
+                if ((utxoStakeDescription.UtxoSet.Coins.IsCoinbase || utxoStakeDescription.UtxoSet.Coins.IsCoinstake) && (await this.GetBlocksCountToMaturityAsync(utxoStakeDescription).ConfigureAwait(false) > 0))
                 {
                     immature += utxoStakeDescription.TxOut.Value;
                     continue;
@@ -1029,9 +1029,9 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                     continue;
                 }
 
-                if (utxoStakeDescription.UtxoSet.Time > spendTime)
+                if (utxoStakeDescription.UtxoSet.Coins.Time > spendTime)
                 {
-                    this.logger.LogDebug("UTXO '{0}' can't be added because its time {1} is greater than coinstake time {2}.", utxoStakeDescription.OutPoint, utxoStakeDescription.UtxoSet.Time, spendTime);
+                    this.logger.LogDebug("UTXO '{0}' can't be added because its time {1} is greater than coinstake time {2}.", utxoStakeDescription.OutPoint, utxoStakeDescription.UtxoSet.Coins.Time, spendTime);
                     continue;
                 }
 
@@ -1067,7 +1067,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
         private async Task<int> GetBlocksCountToMaturityAsync(UtxoStakeDescription utxoStakeDescription)
         {
             // The concept of maturity only applies to coinbase and coinstake outputs, so normal outputs do not have this restriction.
-            if (!(utxoStakeDescription.UtxoSet.IsCoinbase || utxoStakeDescription.UtxoSet.IsCoinstake))
+            if (!(utxoStakeDescription.UtxoSet.Coins.IsCoinbase || utxoStakeDescription.UtxoSet.Coins.IsCoinstake))
                 return 0;
 
             // Using CoinbaseMaturity here is not strictly correct. Due to the ProvenHeaderCoinstakeRule enforcing a unilateral prevOut depth equivalent
@@ -1095,7 +1095,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             ChainedHeader chainedBlock = this.chainIndexer.GetHeader(utxoStakeDescription.HashBlock);
 
             if (chainedBlock == null)
-                return await this.mempoolLock.ReadAsync(() => this.mempool.Exists(utxoStakeDescription.UtxoSet.TransactionId) ? 0 : -1).ConfigureAwait(false);
+                return await this.mempoolLock.ReadAsync(() => this.mempool.Exists(utxoStakeDescription.UtxoSet.OutPoint.Hash) ? 0 : -1).ConfigureAwait(false);
 
             // Add 1 because a transaction is considered to have 1 confirmation when it is in a block.
             return this.chainIndexer.Tip.Height - chainedBlock.Height + 1;

@@ -11,12 +11,19 @@ using Stratis.Bitcoin.Utilities;
 
 namespace Stratis.Bitcoin.Features.MemoryPool
 {
+    // TODO: Break this component in two.
+    // The MempoolCoinView mixes functionality of fetching outputs from store and looking in the mempool.
+    // It maybe be better to separate this in two differnet components, the whole notion (taken from bitcoin core)
+    // of using a backing coinview (in this case for mempool) is not so relevant in the C# iplementation
+
     /// <summary>
     /// Memory pool coin view.
     /// Provides coin view representation of memory pool transactions via a backed coin view.
     /// </summary>
-    public class MempoolCoinView : ICoinView, IBackedCoinView
+    public class MempoolCoinView : ICoinView
     {
+        private readonly Network network;
+
         /// <summary>Transaction memory pool for managing transactions in the memory pool.</summary>
         /// <remarks>All access to this object has to be protected by <see cref="mempoolLock"/>.</remarks>
         private readonly ITxMempool memPool;
@@ -34,8 +41,9 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         /// <param name="memPool">Transaction memory pool for managing transactions in the memory pool.</param>
         /// <param name="mempoolLock">A lock for managing asynchronous access to memory pool.</param>
         /// <param name="mempoolValidator">Memory pool validator for validating transactions.</param>
-        public MempoolCoinView(ICoinView inner, ITxMempool memPool, SchedulerLock mempoolLock, IMempoolValidator mempoolValidator)
+        public MempoolCoinView(Network network, ICoinView inner, ITxMempool memPool, SchedulerLock mempoolLock, IMempoolValidator mempoolValidator)
         {
+            this.network = network;
             this.Inner = inner;
             this.memPool = memPool;
             this.mempoolLock = mempoolLock;
@@ -53,32 +61,33 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         /// </summary>
         public ICoinView Inner { get; }
 
-        /// <inheritdoc />
-        public void SaveChanges(IList<UnspentOutputs> unspentOutputs, IEnumerable<TxOut[]> originalOutputs, uint256 oldBlockHash,
-            uint256 nextBlockHash, int height, List<RewindData> rewindDataList = null)
+        public void SaveChanges(IList<UnspentOutput> unspentOutputs, HashHeightPair HashHeightPair,
+            HashHeightPair nextBlockHash, List<RewindData> rewindDataList = null)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public uint256 GetTipHash(CancellationToken cancellationToken = default(CancellationToken))
+        public HashHeightPair GetTipHash()
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public FetchCoinsResponse FetchCoins(uint256[] txIds, CancellationToken cancellationToken = default(CancellationToken))
+        public FetchCoinsResponse FetchCoins(OutPoint[] txIds)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public uint256 Rewind()
+        public HashHeightPair Rewind()
         {
             throw new NotImplementedException();
         }
 
         public RewindData GetRewindData(int height)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CacheCoins(OutPoint[] utxos)
         {
             throw new NotImplementedException();
         }
@@ -90,32 +99,42 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         /// <param name="trx">Memory pool transaction.</param>
         public void LoadViewLocked(Transaction trx)
         {
+            // fetch outputs forn disk
+            OutPoint[] outputs = trx.Inputs.Select(n => n.PrevOut).ToArray();
+            FetchCoinsResponse coins = this.Inner.FetchCoins(outputs);
+
             // lookup all ids (duplicate ids are ignored in case a trx spends outputs from the same parent).
             List<uint256> ids = trx.Inputs.Select(n => n.PrevOut.Hash).Distinct().Concat(new[] { trx.GetHash() }).ToList();
-            FetchCoinsResponse coins = this.Inner.FetchCoins(ids.ToArray());
 
             // find coins currently in the mempool
-            List<Transaction> mempoolcoins = this.memPool.MapTx.Values.Where(t => ids.Contains(t.TransactionHash)).Select(s => s.Transaction).ToList();
+            foreach (uint256 trxid in ids)
+            {
+                if (this.memPool.MapTx.TryGetValue(trxid, out TxMempoolEntry entry))
+                {
+                    foreach (IndexedTxOut txOut in entry.Transaction.Outputs.AsIndexedOutputs())
+                    {
+                        // If an output was fetched form disk with empty coins but it 
+                        // was found mempool then override the output with whats in mempool
+                        
+                        var outpoint = new OutPoint(trxid, txOut.N);
+                        var found = coins.UnspentOutputs.TryGetValue(outpoint, out UnspentOutput unspentOutput);
+                        if (!found || unspentOutput?.Coins == null)
+                        {
+                            if (unspentOutput?.Coins == null)
+                                coins.UnspentOutputs.Remove(outpoint);
 
-            IEnumerable<UnspentOutputs> memOutputs = mempoolcoins.Select(s => new UnspentOutputs(TxMempool.MempoolHeight, s));
-            coins = new FetchCoinsResponse(coins.UnspentOutputs.Concat(memOutputs).ToArray(), coins.BlockHash);
+                            coins.UnspentOutputs.Add(outpoint, new UnspentOutput(outpoint, new Coins(TxMempool.MempoolHeight, txOut.TxOut, entry.Transaction.IsCoinBase, this.network.Consensus.IsProofOfStake ? entry.Transaction.IsCoinStake : false)));
+                        }
+                    }
+                }
+            }
 
             // the UTXO set might have been updated with a recently received block
             // but the block has not yet arrived to the mempool and remove the pending trx
             // from the pool (a race condition), block validation doesn't lock the mempool.
             // its safe to ignore duplicats on the UTXO set as duplicates mean a trx is in
             // a block and the block will soon remove the trx from the pool.
-            this.Set.TrySetCoins(coins.UnspentOutputs);
-        }
-
-        /// <summary>
-        /// Gets the unspent outputs for a given transaction id.
-        /// </summary>
-        /// <param name="txid">Transaction identifier.</param>
-        /// <returns>The unspent outputs.</returns>
-        public UnspentOutputs GetCoins(uint256 txid)
-        {
-            return this.Set.AccessCoins(txid);
+            this.Set.TrySetCoins(coins.UnspentOutputs.Values.ToArray());
         }
 
         /// <summary>
@@ -123,12 +142,12 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         /// </summary>
         /// <param name="txid">Transaction identifier.</param>
         /// <returns>Whether coins exist.</returns>
-        public bool HaveCoins(uint256 txid)
+        public bool HaveTransaction(uint256 txid)
         {
             if (this.memPool.Exists(txid))
                 return true;
 
-            return this.Set.AccessCoins(txid) != null;
+            return this.Set.GetCoins(txid).Any();
         }
 
         /// <summary>
@@ -145,13 +164,15 @@ namespace Stratis.Bitcoin.Features.MemoryPool
             double dResult = 0.0;
             foreach (TxIn txInput in tx.Inputs)
             {
-                UnspentOutputs coins = this.Set.AccessCoins(txInput.PrevOut.Hash);
-                Guard.Assert(coins != null);
-                if (!coins.IsAvailable(txInput.PrevOut.N)) continue;
-                if (coins.Height <= nHeight)
+                UnspentOutput coins = this.Set.AccessCoins(txInput.PrevOut);
+                
+                if (coins == null)
+                    continue;
+
+                if (coins.Coins.Height <= nHeight)
                 {
-                    dResult += (double)coins.Outputs[txInput.PrevOut.N].Value.Satoshi * (nHeight - coins.Height);
-                    inChainInputValue += coins.Outputs[txInput.PrevOut.N].Value;
+                    dResult += (double)coins.Coins.TxOut.Value.Satoshi * (nHeight - coins.Coins.Height);
+                    inChainInputValue += coins.Coins.TxOut.Value;
                 }
             }
             return (this.ComputePriority(tx, dResult), inChainInputValue);
@@ -181,8 +202,8 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         {
             foreach (TxIn txInput in tx.Inputs)
             {
-                UnspentOutputs coins = this.Set.AccessCoins(txInput.PrevOut.Hash);
-                if (coins.IsCoinbase)
+                UnspentOutput coins = this.Set.AccessCoins(txInput.PrevOut);
+                if (coins.Coins.IsCoinbase)
                     return true;
             }
 
@@ -190,13 +211,11 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         }
 
         /// <summary>
-        /// Whether the transaction has inputs.
+        /// Check if an output exists.
         /// </summary>
-        /// <param name="tx">Memory pool transaction.</param>
-        /// <returns>Whether the transaction has inputs.</returns>
-        public bool HaveInputs(Transaction tx)
+        public bool HaveCoins(OutPoint outPoint)
         {
-            return this.Set.HaveInputs(tx);
+            return this.Set.AccessCoins(outPoint)?.Coins != null;
         }
 
         /// <summary>

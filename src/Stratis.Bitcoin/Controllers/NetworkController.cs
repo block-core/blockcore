@@ -17,6 +17,7 @@ namespace Stratis.Bitcoin.Controllers
     /// <summary>
     /// Provides methods that interact with the network elements of the full node.
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
     public sealed class NetworkController : Controller

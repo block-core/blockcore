@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NBitcoin.Rules;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Consensus.Rules
 {
@@ -55,7 +54,6 @@ namespace Stratis.Bitcoin.Consensus.Rules
         /// The rule can verify that other rules are present using the <see cref="IConsensusRuleEngine.Rules"/>.
         /// The rule can internally initialize its state.
         /// </summary>
-        [NoTrace]
         public virtual void Initialize()
         {
         }

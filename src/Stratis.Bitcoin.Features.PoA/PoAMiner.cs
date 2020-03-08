@@ -17,7 +17,6 @@ using Stratis.Bitcoin.Features.Wallet.Interfaces;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Mining;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.PoA
 {
@@ -341,7 +340,6 @@ namespace Stratis.Bitcoin.Features.PoA
             blockTemplate.Block.Transactions[0].AddOutput(Money.Zero, votingOutputScript);
         }
 
-        [NoTrace]
         private void AddComponentStats(StringBuilder log)
         {
             log.AppendLine();

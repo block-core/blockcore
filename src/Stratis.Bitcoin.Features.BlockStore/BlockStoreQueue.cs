@@ -13,7 +13,6 @@ using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Primitives;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.BlockStore
 {
@@ -172,7 +171,6 @@ namespace Stratis.Bitcoin.Features.BlockStore
                 {
                     this.logger.LogInformation("Reindex in process... {0}/{1} blocks processed.", newChainedHeader.Height, this.storeTip.Height);
                 }
-
             }
         }
 
@@ -438,7 +436,6 @@ namespace Stratis.Bitcoin.Features.BlockStore
             this.logger.LogWarning("Block store tip recovered to block '{0}'.", newTip);
         }
 
-        [NoTrace]
         private void AddComponentStats(StringBuilder log)
         {
             if (this.storeTip != null)

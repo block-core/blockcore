@@ -6,7 +6,6 @@ using DBreeze;
 using DBreeze.DataTypes;
 using FluentAssertions;
 using NBitcoin;
-using NBitcoin.BitcoinCore;
 using Stratis.Bitcoin.Tests.Common;
 using Stratis.Bitcoin.Utilities;
 using Xunit;

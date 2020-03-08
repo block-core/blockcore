@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Configuration.Logging;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Utilities
 {
@@ -14,7 +12,6 @@ namespace Stratis.Bitcoin.Utilities
     /// the logging output will not go to the console even if the logging
     /// level is at or above the minimum logging level for the console.
     /// </remarks>
-    [NoTrace]
     public class PrefixLogger : ILogger
     {
         /// <summary>Internal NLog logger instance.</summary>

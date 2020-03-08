@@ -1,6 +1,5 @@
 ﻿using System;
 using Stratis.Bitcoin.Utilities.Extensions;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Utilities
 {
@@ -44,7 +43,6 @@ namespace Stratis.Bitcoin.Utilities
     }
 
     /// <inheritdoc />
-    [NoTrace]
     public class DateTimeProvider : IDateTimeProvider
     {
         /// <summary>Static instance of the object to prevent the need of creating new instance.</summary>

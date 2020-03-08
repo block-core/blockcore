@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.RPC;
 using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 

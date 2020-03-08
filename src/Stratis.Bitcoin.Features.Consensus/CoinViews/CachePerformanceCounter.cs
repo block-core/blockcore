@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading;
 using Stratis.Bitcoin.Configuration.Logging;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 {
@@ -94,7 +93,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Adds new sample to the number of missed cache queries.
         /// </summary>
         /// <param name="count">Number of missed queries to add.</param>
-        [NoTrace]
         public void AddMissCount(long count)
         {
             Interlocked.Add(ref this.missCount, count);
@@ -104,7 +102,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Adds new sample to the number of hit cache queries.
         /// </summary>
         /// <param name="count">Number of hit queries to add.</param>
-        [NoTrace]
         public void AddHitCount(long count)
         {
             Interlocked.Add(ref this.hitCount, count);
@@ -114,7 +111,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Adds new sample to the number of missed cache queries.
         /// </summary>
         /// <param name="count">Number of missed queries to add.</param>
-        [NoTrace]
         public void AddCacheMissCount(long count)
         {
             Interlocked.Add(ref this.missCountCache, count);
@@ -124,7 +120,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Adds new sample to the number of hit cache queries.
         /// </summary>
         /// <param name="count">Number of hit queries to add.</param>
-        [NoTrace]
         public void AddCacheHitCount(long count)
         {
             Interlocked.Add(ref this.hitCountCache, count);
@@ -134,7 +129,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Adds new sample to the number of utxo that never got flushed.
         /// </summary>
         /// <param name="count">Number of hit queries to add.</param>
-        [NoTrace]
         public void AddUtxoSkipDiskCount(long count)
         {
             Interlocked.Add(ref this.utxoSkipDisk, count);
@@ -144,10 +138,9 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Creates a snapshot of the current state of the performance counter.
         /// </summary>
         /// <returns>Newly created snapshot.</returns>
-        [NoTrace]
         public CachePerformanceSnapshot Snapshot()
         {
-            var snap = new CachePerformanceSnapshot(this.missCount, this.hitCount, this.missCountCache,this.hitCountCache, this.utxoSkipDisk)
+            var snap = new CachePerformanceSnapshot(this.missCount, this.hitCount, this.missCountCache, this.hitCountCache, this.utxoSkipDisk)
             {
                 Start = this.Start,
                 // TODO: Would it not be better for these two guys to be part of the constructor? Either implicitly or explicitly.
@@ -220,7 +213,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             }
         }
 
-        [NoTrace]
         public CachePerformanceSnapshot(long missCount, long hitCount, long missCountCache, long hitCountCache, long utxoSkipDisk)
         {
             this.missCount = missCount;
@@ -241,7 +233,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <returns>Snapshot of the difference between the two performance counter snapshots.</returns>
         /// <remarks>The two snapshots should be taken from a single performance counter.
         /// Otherwise the start times of the snapshots will be different, which is not allowed.</remarks>
-        [NoTrace]
         public static CachePerformanceSnapshot operator -(CachePerformanceSnapshot end, CachePerformanceSnapshot start)
         {
             if (end.Start != start.Start)
@@ -265,7 +256,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public override string ToString()
         {
             long total = this.TotalMissCount + this.TotalHitCount;
@@ -278,7 +268,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             {
                 if (totalCache > 0) builder.AppendLine("Prefetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + ((decimal)this.TotalHitCountCache * 100m / totalCache).ToString("0.00") + "% miss:" + ((decimal)this.TotalMissCountCache * 100m / totalCache).ToString("0.00") + "%");
                 if (total > 0) builder.AppendLine("Fetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + ((decimal)this.TotalHitCount * 100m / total).ToString("0.00") + "% miss:" + ((decimal)this.TotalMissCount * 100m / total).ToString("0.00") + "%");
-                if (totalInsert > 0)  builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoSkipDisk).ToString() + "(" + ((decimal)this.TotalUtxoSkipDisk * 100m / totalInsert).ToString("0.00") + "%)");
+                if (totalInsert > 0) builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoSkipDisk).ToString() + "(" + ((decimal)this.TotalUtxoSkipDisk * 100m / totalInsert).ToString("0.00") + "%)");
             }
 
             builder.AppendLine("========================");

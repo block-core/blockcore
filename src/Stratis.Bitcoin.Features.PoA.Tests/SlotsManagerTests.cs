@@ -4,7 +4,6 @@ using Moq;
 using NBitcoin;
 using Stratis.Bitcoin.Configuration;
 using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 

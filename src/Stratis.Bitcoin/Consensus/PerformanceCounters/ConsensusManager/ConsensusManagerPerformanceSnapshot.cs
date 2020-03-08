@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading;
 using NBitcoin;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
 {
@@ -28,7 +27,6 @@ namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
             this.chainIndex = chainIndex;
         }
 
-        [NoTrace]
         public override string ToString()
         {
             var builder = new StringBuilder();

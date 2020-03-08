@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Stratis.Bitcoin.Signals;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.AsyncWork
 {
@@ -247,7 +246,6 @@ namespace Stratis.Bitcoin.AsyncWork
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public string GetStatistics(bool faultyOnly)
         {
             var taskInformations = new List<AsyncTaskInfo>();
@@ -320,7 +318,6 @@ namespace Stratis.Bitcoin.AsyncWork
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public List<(string loopName, TaskStatus status)> GetAll()
         {
             var taskInformation = new List<AsyncTaskInfo>();

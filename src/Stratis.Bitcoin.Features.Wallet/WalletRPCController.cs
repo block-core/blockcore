@@ -17,7 +17,6 @@ using Stratis.Bitcoin.Features.Wallet.Models;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Primitives;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Wallet
 {
@@ -75,7 +74,6 @@ namespace Stratis.Bitcoin.Features.Wallet
 
         [ActionName("walletpassphrase")]
         [ActionDescription("Stores the wallet decryption key in memory for the indicated number of seconds. Issuing the walletpassphrase command while the wallet is already unlocked will set a new unlock time that overrides the old one.")]
-        [NoTrace]
         public bool UnlockWallet(string passphrase, int timeout)
         {
             Guard.NotEmpty(passphrase, nameof(passphrase));
@@ -264,7 +262,6 @@ namespace Stratis.Bitcoin.Features.Wallet
                 if (transaction.Confirmations < targetConfirmations)
                     continue;
 
-
                 ListSinceBlockTransactionCategoryModel category = GetListSinceBlockTransactionCategoryModel(transaction);
 
                 model.Transactions.Add(new ListSinceBlockTransactionModel
@@ -372,7 +369,6 @@ namespace Stratis.Bitcoin.Features.Wallet
 
                 isGenerated = transactionFromStore.IsCoinBase || transactionFromStore.IsCoinStake;
                 hex = transactionFromStore.ToHex();
-
             }
             else if (transactionFromWallet != null)
             {
@@ -764,7 +760,6 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             if (estimateMode.Equals("ECONOMICAL", StringComparison.InvariantCultureIgnoreCase))
                 context.FeeType = FeeType.Low;
-
             else if (estimateMode.Equals("CONSERVATIVE", StringComparison.InvariantCultureIgnoreCase))
                 context.FeeType = FeeType.High;
 

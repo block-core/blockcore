@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Reflection;
+﻿using System.Reflection;
 using NBitcoin.DataEncoders;
 
 namespace NBitcoin

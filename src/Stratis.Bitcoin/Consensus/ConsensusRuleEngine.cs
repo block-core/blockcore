@@ -11,7 +11,6 @@ using Stratis.Bitcoin.Configuration.Settings;
 using Stratis.Bitcoin.Consensus.PerformanceCounters.Rules;
 using Stratis.Bitcoin.Consensus.Rules;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Consensus
 {
@@ -112,7 +111,6 @@ namespace Stratis.Bitcoin.Consensus
 
         /// TODO: this method needs to be deleted once all rules use dependency injection
         /// <inheritdoc />
-        [NoTrace]
         public ConsensusRuleEngine SetupRulesEngineParent()
         {
             this.SetupConsensusRules(this.consensusRules.HeaderValidationRules.Select(x => x as ConsensusRuleBase));
@@ -126,7 +124,6 @@ namespace Stratis.Bitcoin.Consensus
             return this;
         }
 
-        [NoTrace]
         private void SetupConsensusRules(IEnumerable<ConsensusRuleBase> rules)
         {
             foreach (ConsensusRuleBase rule in rules)
@@ -290,7 +287,6 @@ namespace Stratis.Bitcoin.Consensus
         /// <inheritdoc />
         public abstract Task<RewindState> RewindAsync();
 
-        [NoTrace]
         public T GetRule<T>() where T : ConsensusRuleBase
         {
             object rule = this.consensusRules.HeaderValidationRules.OfType<T>().SingleOrDefault();

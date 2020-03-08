@@ -1,9 +1,9 @@
 ﻿using NBitcoin;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.PoA
 {
 #pragma warning disable 618
+
     public class PoABlockHeader : BlockHeader
 #pragma warning restore 618
     {
@@ -15,7 +15,6 @@ namespace Stratis.Bitcoin.Features.PoA
             set => this.blockSignature = value;
         }
 
-        [NoTrace]
         public override void ReadWrite(BitcoinStream stream)
         {
             base.ReadWrite(stream);

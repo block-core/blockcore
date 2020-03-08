@@ -20,7 +20,6 @@ using Stratis.Bitcoin.Primitives;
 using Stratis.Bitcoin.Signals;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Consensus
 {
@@ -680,7 +679,7 @@ namespace Stratis.Bitcoin.Consensus
             // Add peers that needed to be banned as a result of a failure to connect blocks.
             // Otherwise they get lost as we are returning a different ConnnectBlocksResult.
             // We also need to set the ban reason and ban time otherwise it is not known why
-            // connecting the new chain failed and hence why the peer is being disconnected in 
+            // connecting the new chain failed and hence why the peer is being disconnected in
             // peer banning.
             reconnectionResult.BanReason = connectBlockResult.BanReason;
             reconnectionResult.BanDurationSeconds = connectBlockResult.BanDurationSeconds;
@@ -1396,7 +1395,6 @@ namespace Stratis.Bitcoin.Consensus
             return isConsideredSynced;
         }
 
-        [NoTrace]
         private void AddInlineStats(StringBuilder log)
         {
             lock (this.peerLock)
@@ -1418,13 +1416,11 @@ namespace Stratis.Bitcoin.Consensus
             log.AppendLine(consensusLog);
         }
 
-        [NoTrace]
         private void AddBenchStats(StringBuilder benchLog)
         {
             benchLog.AppendLine(this.performanceCounter.TakeSnapshot().ToString());
         }
 
-        [NoTrace]
         private void AddComponentStats(StringBuilder log)
         {
             log.AppendLine();
@@ -1463,7 +1459,6 @@ namespace Stratis.Bitcoin.Consensus
 
         /// <summary>Formats the big number.</summary>
         /// <remarks><c>123456789</c> => <c>123,456,789</c>.</remarks>
-        [NoTrace]
         private string FormatBigNumber(long number)
         {
             return $"{number:#,##0}";

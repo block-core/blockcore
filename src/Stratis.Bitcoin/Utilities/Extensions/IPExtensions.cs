@@ -2,14 +2,12 @@
 using System.Linq;
 using System.Net;
 using NBitcoin;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Utilities.Extensions
 {
     public static class IPExtensions
     {
         /// <summary>Maps an end point to IPv6 if is not already mapped.</summary>
-        [NoTrace]
         public static IPEndPoint MapToIpv6(this IPEndPoint endPointv4)
         {
             if (endPointv4.Address.IsIPv4MappedToIPv6)
@@ -21,14 +19,12 @@ namespace Stratis.Bitcoin.Utilities.Extensions
         }
 
         /// <summary>Match the end point with another by IP and port.</summary>
-        [NoTrace]
         public static bool Match(this IPEndPoint endPoint, IPEndPoint matchWith)
         {
             return endPoint.MatchIpOnly(matchWith) && endPoint.Port == matchWith.Port;
         }
 
         /// <summary>Match the IP address only (the port is ignored).</summary>
-        [NoTrace]
         public static bool MatchIpOnly(this IPEndPoint endPoint, IPEndPoint matchWith)
         {
             return endPoint.MapToIpv6().Address.ToString() == matchWith.MapToIpv6().Address.ToString();

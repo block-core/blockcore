@@ -9,7 +9,6 @@ using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 {
@@ -293,7 +292,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     }
                 }
 
-                foreach(CacheItem item in itemsToRemove)
+                foreach (CacheItem item in itemsToRemove)
                 {
                     this.logger.LogDebug("Transaction Id '{0}' selected to be removed from the cache, CacheItem:'{1}'.", item.OutPoint, item.Coins);
                     this.cachedUtxoItems.Remove(item.OutPoint);
@@ -316,7 +315,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             if (!force)
             {
                 // Check if periodic flush is reuired.
-                // Ideally this will flush less frequent and always be behind 
+                // Ideally this will flush less frequent and always be behind
                 // blockstore which is currently set to 17 sec.
 
                 DateTime now = this.dateTimeProvider.GetUtcNow();
@@ -459,7 +458,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     {
                         // DELETE COINS
 
-                        // In cases of an output spent in the same block 
+                        // In cases of an output spent in the same block
                         // it wont exist in cash or in disk so its safe to remove it
                         if (cacheItem.Coins == null)
                         {
@@ -521,8 +520,8 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                             this.logger.LogDebug("Coin override alllowed for utxo '{0}'.", cacheItem.OutPoint);
 
-                            // Deduct the crurrent script size form the 
-                            // total cache size, it will be added again later. 
+                            // Deduct the crurrent script size form the
+                            // total cache size, it will be added again later.
                             this.cacheSizeBytes -= cacheItem.GetScriptSize;
 
                             // Clear this in order to calculate the cache sie
@@ -542,7 +541,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         cacheItem.Coins = output.Coins;
                         this.cacheSizeBytes += cacheItem.GetScriptSize;
 
-                        // Mark the cache item as dirty so it get persisted 
+                        // Mark the cache item as dirty so it get persisted
                         // to disk and not evicted form cache
 
                         cacheItem.IsDirty = true;
@@ -563,14 +562,14 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 
                 // Remove rewind data form the back of a moving window.
                 // The closer we get to the tip we keep a longer rewind data window.
-                // Anything bellow last checkpoint we keep the minimal of 10 
+                // Anything bellow last checkpoint we keep the minimal of 10
                 // (random low number) rewind data items.
                 // Beyond last checkpoint:
                 // - For POS we keep a window of MaxReorg.
                 // - For POW we keep 100 items (possibly better is an algo that grows closer to tip)
 
                 // A moving window of information needed to rewind the node to a previous block.
-                // When cache is flushed the rewind data will allow to rewind the node up to the 
+                // When cache is flushed the rewind data will allow to rewind the node up to the
                 // number of rewind blocks.
                 // TODO: move rewind data to use block store.
                 // Rewind data can go away all togetehr if the node uses the blocks in block store
@@ -591,7 +590,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                         // parameter of evern a network parameter.
 
                         // For POW assume BTC where a rewind data of 100 is more then enough.
-                        rewindDataWindow = 100; 
+                        rewindDataWindow = 100;
                     }
                 }
 
@@ -653,7 +652,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             return this.coindb.GetRewindData(height);
         }
 
-        [NoTrace]
         private void AddBenchStats(StringBuilder log)
         {
             log.AppendLine("======CachedCoinView Bench======");
@@ -676,7 +674,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             log.AppendLine("Cache size".PadRight(20) + cache.BytesToMegaBytes() + " MB");
             log.AppendLine("Rewind data size".PadRight(20) + rewind.BytesToMegaBytes() + " MB");
             log.AppendLine("Total cache size".PadRight(20) + (cache + rewind).BytesToMegaBytes() + " MB / " + this.consensusSettings.MaxCoindbCacheInMB + " MB (" + filledPercentage + "%)");
-
 
             CachePerformanceSnapshot snapShot = this.performanceCounter.Snapshot();
 

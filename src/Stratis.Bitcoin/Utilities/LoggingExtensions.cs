@@ -1,13 +1,11 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Utilities
 {
     /// <summary>
     /// Extension methods for classes and interfaces related to logging.
     /// </summary>
-    [NoTrace]
     public static class LoggingExtensions
     {
         /// <summary>
@@ -57,22 +55,29 @@ namespace Stratis.Bitcoin.Utilities
             {
                 case "trace":
                     return NLog.LogLevel.Trace;
+
                 case "debug":
                     return NLog.LogLevel.Debug;
+
                 case "info":
                 case "information":
                     return NLog.LogLevel.Info;
+
                 case "warn":
                 case "warning":
                     return NLog.LogLevel.Warn;
+
                 case "error":
                     return NLog.LogLevel.Error;
+
                 case "fatal":
                 case "critical":
                 case "crit":
                     return NLog.LogLevel.Fatal;
+
                 case "off":
                     return NLog.LogLevel.Off;
+
                 default:
                     throw new Exception($"Failed converting {logLevel} to a member of NLog.LogLevel.");
             }

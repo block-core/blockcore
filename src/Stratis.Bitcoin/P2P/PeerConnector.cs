@@ -12,7 +12,6 @@ using Stratis.Bitcoin.Configuration.Settings;
 using Stratis.Bitcoin.Connection;
 using Stratis.Bitcoin.P2P.Peer;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P
 {
@@ -195,7 +194,6 @@ namespace Stratis.Bitcoin.P2P
         }
 
         /// <inheritdoc/>
-        [NoTrace]
         public void StartConnectAsync()
         {
             if (!this.CanStartConnect)
@@ -284,7 +282,6 @@ namespace Stratis.Bitcoin.P2P
         /// <summary>
         /// Determines how often the connector should try and connect to an address from it's list.
         /// </summary>
-        [NoTrace]
         protected virtual TimeSpan CalculateConnectionInterval()
         {
             return this.ConnectorPeers.Count < this.ConnectionSettings.InitialConnectionTarget ? TimeSpans.Ms100 : TimeSpans.Second;

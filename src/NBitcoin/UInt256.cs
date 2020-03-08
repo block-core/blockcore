@@ -273,18 +273,7 @@ namespace NBitcoin
         public override bool Equals(object obj)
         {
             var item = obj as uint256;
-            if (item == null)
-                return false;
-            bool equals = true;
-            equals &= this.pn0 == item.pn0;
-            equals &= this.pn1 == item.pn1;
-            equals &= this.pn2 == item.pn2;
-            equals &= this.pn3 == item.pn3;
-            equals &= this.pn4 == item.pn4;
-            equals &= this.pn5 == item.pn5;
-            equals &= this.pn6 == item.pn6;
-            equals &= this.pn7 == item.pn7;
-            return equals;
+            return this == item;
         }
 
         public static bool operator ==(uint256 a, uint256 b)
@@ -625,15 +614,7 @@ namespace NBitcoin
         public override bool Equals(object obj)
         {
             var item = obj as uint160;
-            if (item == null)
-                return false;
-            bool equals = true;
-            equals &= this.pn0 == item.pn0;
-            equals &= this.pn1 == item.pn1;
-            equals &= this.pn2 == item.pn2;
-            equals &= this.pn3 == item.pn3;
-            equals &= this.pn4 == item.pn4;
-            return equals;
+            return this == item;
         }
 
         public static bool operator ==(uint160 a, uint160 b)

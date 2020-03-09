@@ -16,9 +16,6 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
     /// <summary>
     /// RPC controller for calls related to PoW mining and PoS minting.
     /// </summary>
-    [ApiVersion("1")]
-    [Route("api/[controller]")]
-    [Controller]
     public class MiningRpcController : FeatureController
     {
         /// <summary>Instance logger.</summary>
@@ -51,7 +48,7 @@ namespace Stratis.Bitcoin.Features.Miner.Controllers
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.walletManager = walletManager;
             this.powMining = powMining;
-       }
+        }
 
         /// <summary>
         /// Tries to mine one or more blocks.

@@ -21,8 +21,6 @@ using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Wallet
 {
-    [ApiVersion("1")]
-    [Route("api/[controller]")]
     public class WalletRPCController : FeatureController
     {
         /// <summary>Provides access to the block store database.</summary>
@@ -264,7 +262,6 @@ namespace Stratis.Bitcoin.Features.Wallet
                 if (transaction.Confirmations < targetConfirmations)
                     continue;
 
-
                 ListSinceBlockTransactionCategoryModel category = GetListSinceBlockTransactionCategoryModel(transaction);
 
                 model.Transactions.Add(new ListSinceBlockTransactionModel
@@ -372,7 +369,6 @@ namespace Stratis.Bitcoin.Features.Wallet
 
                 isGenerated = transactionFromStore.IsCoinBase || transactionFromStore.IsCoinStake;
                 hex = transactionFromStore.ToHex();
-
             }
             else if (transactionFromWallet != null)
             {
@@ -764,7 +760,6 @@ namespace Stratis.Bitcoin.Features.Wallet
 
             if (estimateMode.Equals("ECONOMICAL", StringComparison.InvariantCultureIgnoreCase))
                 context.FeeType = FeeType.Low;
-
             else if (estimateMode.Equals("CONSERVATIVE", StringComparison.InvariantCultureIgnoreCase))
                 context.FeeType = FeeType.High;
 

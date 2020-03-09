@@ -4,7 +4,6 @@ using NBitcoin;
 using Stratis.Bitcoin.Configuration;
 using Stratis.Bitcoin.P2P.Peer;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P.Protocol.Behaviors
 {
@@ -55,7 +54,6 @@ namespace Stratis.Bitcoin.P2P.Protocol.Behaviors
             this.Logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
         }
 
-        [NoTrace]
         protected Task OnMessageReceivedAsync(INetworkPeer peer, IncomingMessage message)
         {
             int enforceMinProtocolVersionAtBlockHeight = this.Network.Consensus.Options.EnforceMinProtocolVersionAtBlockHeight;
@@ -80,14 +78,12 @@ namespace Stratis.Bitcoin.P2P.Protocol.Behaviors
             return Task.CompletedTask;
         }
 
-        [NoTrace]
         protected override void AttachCore()
         {
             this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
             this.CallbacksRegistered = true;
         }
 
-        [NoTrace]
         protected override void DetachCore()
         {
             if (this.CallbacksRegistered)
@@ -96,7 +92,6 @@ namespace Stratis.Bitcoin.P2P.Protocol.Behaviors
             }
         }
 
-        [NoTrace]
         public override object Clone()
         {
             return new EnforcePeerVersionCheckBehavior(this.ChainIndexer, this.NodeSettings, this.Network, this.LoggerFactory);

@@ -12,7 +12,6 @@ using Stratis.Bitcoin.P2P.Protocol.Behaviors;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P
 {
@@ -66,7 +65,6 @@ namespace Stratis.Bitcoin.P2P
             this.addrPayloadSent = false;
         }
 
-        [NoTrace]
         protected override void AttachCore()
         {
             this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
@@ -175,14 +173,12 @@ namespace Stratis.Bitcoin.P2P
             return Task.CompletedTask;
         }
 
-        [NoTrace]
         protected override void DetachCore()
         {
             this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
             this.AttachedPeer.StateChanged.Unregister(this.OnStateChangedAsync);
         }
 
-        [NoTrace]
         public override object Clone()
         {
             return new PeerAddressManagerBehaviour(this.dateTimeProvider, this.peerAddressManager, this.peerBanning, this.loggerFactory) { Mode = this.Mode };

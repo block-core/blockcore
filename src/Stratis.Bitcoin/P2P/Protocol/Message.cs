@@ -7,7 +7,6 @@ using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P.Protocol
 {
@@ -80,7 +79,6 @@ namespace Stratis.Bitcoin.P2P.Protocol
             return payload != null;
         }
 
-        [NoTrace]
         public void ReadWrite(BitcoinStream stream)
         {
             if ((this.Payload == null) && stream.Serializing)
@@ -176,7 +174,6 @@ namespace Stratis.Bitcoin.P2P.Protocol
             return checksum == Hashes.Hash256(payload, 0, length).GetLow32();
         }
 
-        [NoTrace]
         public override string ToString()
         {
             return string.Format("{0}: {1}", this.Command, this.Payload);

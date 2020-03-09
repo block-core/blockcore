@@ -10,7 +10,6 @@ using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Consensus.Rules;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Consensus.Rules
 {
@@ -39,7 +38,6 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public override RuleContext CreateRuleContext(ValidationContext validationContext)
         {
             return new PowRuleContext(validationContext, this.DateTimeProvider.GetTimeOffset());

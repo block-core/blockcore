@@ -11,7 +11,6 @@ using Stratis.Bitcoin.P2P.Peer;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P
 {
@@ -59,14 +58,12 @@ namespace Stratis.Bitcoin.P2P
         }
 
         /// <inheritdoc/>
-        [NoTrace]
         protected override void OnStartConnect()
         {
             this.CurrentParameters.PeerAddressManagerBehaviour().Mode = PeerAddressManagerBehaviourMode.None;
         }
 
         /// <inheritdoc/>
-        [NoTrace]
         protected override TimeSpan CalculateConnectionInterval()
         {
             return TimeSpans.Second;

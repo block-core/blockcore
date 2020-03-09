@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using FluentAssertions;
 using Moq;
 using NBitcoin;
-using NBitcoin.BitcoinCore;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
 using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
 using Stratis.Bitcoin.Networks;

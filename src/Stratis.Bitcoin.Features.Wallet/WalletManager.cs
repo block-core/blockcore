@@ -16,7 +16,6 @@ using Stratis.Bitcoin.Features.Wallet.Interfaces;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
-using TracerAttributes;
 
 [assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Wallet.Tests")]
 
@@ -104,6 +103,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         // 2. the list of addresses contained in our wallet for checking whether a transaction is being paid to the wallet.
         // 3. a mapping of all inputs with their corresponding transactions, to facilitate rapid lookup
         private Dictionary<OutPoint, TransactionData> outpointLookup;
+
         protected internal ScriptToAddressLookup scriptToAddressLookup;
         private Dictionary<OutPoint, TransactionData> inputLookup;
 
@@ -399,7 +399,6 @@ namespace Stratis.Bitcoin.Features.Wallet
             this.privateKeyCache.Remove(cacheKey);
         }
 
-        [NoTrace]
         private SecureString CacheSecret(string name, string walletPassword, TimeSpan duration)
         {
             Wallet wallet = this.GetWalletByName(name);
@@ -1854,7 +1853,6 @@ namespace Stratis.Bitcoin.Features.Wallet
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public ExtKey GetExtKey(WalletAccountReference accountReference, string password = "", bool cache = false)
         {
             Wallet wallet = this.GetWalletByName(accountReference.WalletName);

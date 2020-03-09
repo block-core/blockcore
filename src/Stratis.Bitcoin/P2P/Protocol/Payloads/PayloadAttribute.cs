@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P.Protocol.Payloads
 {
@@ -126,7 +125,6 @@ namespace Stratis.Bitcoin.P2P.Protocol.Payloads
         /// </summary>
         /// <param name="type">A type that represents a <see cref="Payload"/></param>
         /// <returns>True if the type is registered as a usable payload.</returns>
-        [NoTrace]
         public bool IsPayloadRegistered(Type type)
         {
             return this.typeToName.ContainsKey(type);

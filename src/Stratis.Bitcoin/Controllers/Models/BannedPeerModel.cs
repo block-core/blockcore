@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using Newtonsoft.Json;
-using Stratis.Bitcoin.Controllers.Converters;
 
 namespace Stratis.Bitcoin.Controllers.Models
 {

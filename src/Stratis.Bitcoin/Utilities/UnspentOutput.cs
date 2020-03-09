@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using NBitcoin;
-using NBitcoin.BitcoinCore;
 
 namespace Stratis.Bitcoin.Utilities
 {

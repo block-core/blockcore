@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading;
 using Stratis.Bitcoin.Configuration.Logging;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Consensus.CoinViews
 {
@@ -89,7 +88,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public override string ToString()
         {
             return this.Snapshot().ToString();
@@ -99,7 +97,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Adds sample for database insert operation to the performance counter.
         /// </summary>
         /// <param name="count">Time in ticks it took the database to perform the insert operation.</param>
-        [NoTrace]
         public void AddInsertTime(long count)
         {
             Interlocked.Add(ref this.insertTime, count);
@@ -109,7 +106,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Increases the number of inserted entities in the performance counter.
         /// </summary>
         /// <param name="count">Number of newly inserted entities to add.</param>
-        [NoTrace]
         public void AddInsertedEntities(long count)
         {
             Interlocked.Add(ref this.insertedEntities, count);
@@ -119,7 +115,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Adds sample for database query operation to the performance counter.
         /// </summary>
         /// <param name="count">Time in ticks it took the database to perform the query operation.</param>
-        [NoTrace]
         public void AddQueryTime(long count)
         {
             Interlocked.Add(ref this.queryTime, count);
@@ -129,7 +124,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Increases the number of queried entities in the performance counter.
         /// </summary>
         /// <param name="count">Number of newly queried entities to add.</param>
-        [NoTrace]
         public void AddQueriedEntities(long count)
         {
             Interlocked.Add(ref this.queriedEntities, count);
@@ -139,7 +133,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// Creates a snapshot of the current state of the performance counter.
         /// </summary>
         /// <returns>Newly created snapshot.</returns>
-        [NoTrace]
         public BackendPerformanceSnapshot Snapshot()
         {
             var snap = new BackendPerformanceSnapshot(this.insertedEntities, this.insertTime, this.queriedEntities, this.queryTime)
@@ -234,7 +227,6 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
         /// <returns>Snapshot of the difference between the two performance counter snapshots.</returns>
         /// <remarks>The two snapshots should be taken from a single performance counter.
         /// Otherwise the start times of the snapshots will be different, which is not allowed.</remarks>
-        [NoTrace]
         public static BackendPerformanceSnapshot operator -(BackendPerformanceSnapshot end, BackendPerformanceSnapshot start)
         {
             if (end.Start != start.Start)
@@ -256,14 +248,12 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
             return snapshot;
         }
 
-        [NoTrace]
         private string TimespanToString(TimeSpan timespan)
         {
             return timespan.ToString("c");
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public override string ToString()
         {
             var builder = new StringBuilder();

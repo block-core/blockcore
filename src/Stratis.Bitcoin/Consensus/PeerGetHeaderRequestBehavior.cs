@@ -9,7 +9,6 @@ using Stratis.Bitcoin.P2P.Protocol;
 using Stratis.Bitcoin.P2P.Protocol.Behaviors;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Consensus
 {
@@ -65,19 +64,16 @@ namespace Stratis.Bitcoin.Consensus
             this.peerBanning = peerBanning;
         }
 
-        [NoTrace]
         public override object Clone()
         {
             return new RateLimitingBehavior(this.dateTimeProvider, this.loggerFactory, this.peerBanning);
         }
 
-        [NoTrace]
         protected override void AttachCore()
         {
             this.AttachedPeer.MessageReceived.Register(this.OnMessageReceived, true);
         }
 
-        [NoTrace]
         protected override void DetachCore()
         {
             this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceived);
@@ -88,7 +84,6 @@ namespace Stratis.Bitcoin.Consensus
         /// </summary>
         /// <param name="peer">Peer from which the message was received.</param>
         /// <param name="message">Received message to process.</param>
-        [NoTrace]
         private Task OnMessageReceived(INetworkPeer peer, IncomingMessage message)
         {
             switch (message.Message.Payload)

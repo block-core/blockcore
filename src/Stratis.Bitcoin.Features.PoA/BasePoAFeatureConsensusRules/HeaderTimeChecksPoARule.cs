@@ -2,7 +2,6 @@
 using NBitcoin;
 using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Consensus.Rules;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules
 {
@@ -19,7 +18,6 @@ namespace Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules
         private ISlotsManager slotsManager;
 
         /// <inheritdoc />
-        [NoTrace]
         public override void Initialize()
         {
             base.Initialize();

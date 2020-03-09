@@ -14,7 +14,6 @@ using Stratis.Bitcoin.P2P.Protocol;
 using Stratis.Bitcoin.P2P.Protocol.Behaviors;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P.Peer
 {
@@ -117,6 +116,7 @@ namespace Stratis.Bitcoin.P2P.Peer
 
         /// <summary>Tracker for endpoints known to be self. </summary>
         private readonly ISelfEndpointTracker selfEndpointTracker;
+
         private readonly IAsyncProvider asyncProvider;
 
         /// <summary>Instance logger.</summary>
@@ -950,7 +950,6 @@ namespace Stratis.Bitcoin.P2P.Peer
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public T Behavior<T>() where T : INetworkPeerBehavior
         {
             return this.Behaviors.OfType<T>().FirstOrDefault();

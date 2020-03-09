@@ -1,5 +1,4 @@
 ﻿using NBitcoin;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P.Protocol.Payloads
 {
@@ -18,7 +17,6 @@ namespace Stratis.Bitcoin.P2P.Protocol.Payloads
             this.obj = obj;
         }
 
-        [NoTrace]
         public override void ReadWriteCore(BitcoinStream stream)
         {
             stream.ReadWrite(ref this.obj);

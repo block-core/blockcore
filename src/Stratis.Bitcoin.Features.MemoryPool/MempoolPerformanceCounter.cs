@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.MemoryPool
 {
@@ -93,7 +92,6 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         /// Gets string representation of memory pool counter.
         /// </summary>
         /// <returns>String representation.</returns>
-        [NoTrace]
         public override string ToString()
         {
             var benchLogs = new StringBuilder();

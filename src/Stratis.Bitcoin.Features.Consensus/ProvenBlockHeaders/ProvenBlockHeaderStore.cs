@@ -8,7 +8,6 @@ using NBitcoin;
 using Stratis.Bitcoin.Features.Consensus.CoinViews;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
 {
@@ -311,7 +310,6 @@ namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
             }
         }
 
-        [NoTrace]
         private void AddBenchStats(StringBuilder benchLog)
         {
             if (this.TipHashHeight != null)
@@ -329,7 +327,6 @@ namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
             }
         }
 
-        [NoTrace]
         private void AddComponentStats(StringBuilder log)
         {
             if (this.TipHashHeight == null)
@@ -352,7 +349,6 @@ namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
             log.AppendLine("======ProvenBlockHeaderStore======");
             log.AppendLine($"Batch Size: {Math.Round(totalBatchInMb, 2)} Mb ({count} headers)");
             log.AppendLine($"Cache Size: {Math.Round(totalCacheInMb, 2)}/{Math.Round(totalMaxCacheInMb, 2)} MB");
-
         }
 
         /// <inheritdoc />

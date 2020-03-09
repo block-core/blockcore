@@ -5,7 +5,6 @@ using NBitcoin;
 using Newtonsoft.Json;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.JsonConverters;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.Wallet
 {
@@ -255,7 +254,6 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <param name="password">The password used to encrypt/decrypt sensitive info.</param>
         /// <param name="address">The address to get the private key for.</param>
         /// <returns>The extended private key.</returns>
-        [NoTrace]
         public ISecret GetExtendedPrivateKeyForAddress(string password, HdAddress address)
         {
             Guard.NotEmpty(password, nameof(password));
@@ -763,10 +761,10 @@ namespace Stratis.Bitcoin.Features.Wallet
                 // Generate the P2PKH address corresponding to the pubkey.
                 BitcoinPubKeyAddress address = pubkey.GetAddress(network);
                 BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(network);
-                
-               // Add the new address details to the list of addresses.
-               var newAddress = new HdAddress
-               {
+
+                // Add the new address details to the list of addresses.
+                var newAddress = new HdAddress
+                {
                     Index = i,
                     HdPath = HdOperations.CreateHdPath((int)this.GetCoinType(), this.Index, isChange, i),
                     ScriptPubKey = address.ScriptPubKey,
@@ -870,7 +868,7 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <remarks>This is typically only used for mining, as the valid script types for mining are constrained.
         /// Block explorers often depict the P2PKH address as the 'address' of a P2PK scriptPubKey, which is not
         /// actually correct. A P2PK scriptPubKey does not have a defined address format.
-        /// 
+        ///
         /// The script itself is of the format: {pubkey} OP_CHECKSIG</remarks>
         [JsonProperty(PropertyName = "pubkey")]
         [JsonConverter(typeof(ScriptJsonConverter))]
@@ -919,7 +917,6 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <returns>
         ///   <c>true</c> if it is a change address; otherwise, <c>false</c>.
         /// </returns>
-        [NoTrace]
         public bool IsChangeAddress()
         {
             return HdOperations.IsChangeAddress(this.HdPath);
@@ -929,7 +926,6 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// List all spendable transactions in an address.
         /// </summary>
         /// <returns>List of spendable transactions.</returns>
-        [NoTrace]
         public IEnumerable<TransactionData> UnspentTransactions()
         {
             if (this.Transactions == null)
@@ -1056,7 +1052,6 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// <summary>
         /// Determines whether this transaction is confirmed.
         /// </summary>
-        [NoTrace]
         public bool IsConfirmed()
         {
             return this.BlockHeight != null;
@@ -1066,18 +1061,16 @@ namespace Stratis.Bitcoin.Features.Wallet
         /// Indicates whether an output has been spent.
         /// </summary>
         /// <returns>A value indicating whether an output has been spent.</returns>
-        [NoTrace]
         public bool IsSpent()
         {
             return this.SpendingDetails != null;
         }
 
         /// <summary>
-        /// Checks if the output is not spent, with the option to choose whether only confirmed ones are considered. 
+        /// Checks if the output is not spent, with the option to choose whether only confirmed ones are considered.
         /// </summary>
         /// <param name="confirmedOnly">A value indicating whether we only want confirmed amount.</param>
         /// <returns>The total amount that has not been spent.</returns>
-        [NoTrace]
         public Money GetUnspentAmount(bool confirmedOnly)
         {
             // The spendable balance is 0 if the output is spent or it needs to be confirmed to be considered.

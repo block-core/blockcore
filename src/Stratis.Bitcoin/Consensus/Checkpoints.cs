@@ -4,7 +4,6 @@ using System.Linq;
 using NBitcoin;
 using Stratis.Bitcoin.Configuration.Settings;
 using Stratis.Bitcoin.Utilities;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Consensus
 {
@@ -89,7 +88,6 @@ namespace Stratis.Bitcoin.Consensus
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public int GetLastCheckpointHeight()
         {
             Dictionary<int, CheckpointInfo> checkpoints = this.GetCheckpoints();
@@ -100,7 +98,6 @@ namespace Stratis.Bitcoin.Consensus
         /// Gets the last checkpoint.
         /// </summary>
         /// <returns>Last <see cref="CheckpointInfo"/> or null.</returns>
-        [NoTrace]
         public CheckpointInfo GetLastCheckpoint(out int height)
         {
             var checkpoints = this.GetCheckpoints();
@@ -117,7 +114,6 @@ namespace Stratis.Bitcoin.Consensus
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public bool CheckHardened(int height, uint256 hash)
         {
             CheckpointInfo checkpoint;
@@ -127,7 +123,6 @@ namespace Stratis.Bitcoin.Consensus
         }
 
         /// <inheritdoc />
-        [NoTrace]
         public CheckpointInfo GetCheckpoint(int height)
         {
             CheckpointInfo checkpoint;
@@ -135,7 +130,6 @@ namespace Stratis.Bitcoin.Consensus
             return checkpoint;
         }
 
-        [NoTrace]
         private Dictionary<int, CheckpointInfo> GetCheckpoints()
         {
             if (this.consensusSettings == null || !this.consensusSettings.UseCheckpoints)

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using NBitcoin;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.Features.PoA.Payloads
 {
@@ -28,7 +27,6 @@ namespace Stratis.Bitcoin.Features.PoA.Payloads
             this.headers = new List<PoABlockHeader>(headers);
         }
 
-        [NoTrace]
         public override void ReadWriteCore(BitcoinStream stream)
         {
             stream.ReadWrite(ref this.headers);

@@ -1,6 +1,5 @@
 ﻿using NBitcoin;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using TracerAttributes;
 
 namespace Stratis.Bitcoin.P2P.Protocol
 {
@@ -9,12 +8,16 @@ namespace Stratis.Bitcoin.P2P.Protocol
         Error = 0,
         MSG_TX = 1,
         MSG_BLOCK = 2,
+
         // Nodes may always request a MSG_FILTERED_BLOCK/MSG_CMPCT_BLOCK in a getdata, however,
         // MSG_FILTERED_BLOCK/MSG_CMPCT_BLOCK should not appear in any invs except as a part of getdata.
         MSG_FILTERED_BLOCK = 3,
+
         MSG_CMPCT_BLOCK,
+
         // The following can only occur in getdata. Invs always use TX or BLOCK.
         MSG_TYPE_MASK = 0xffffffff >> 2,
+
         MSG_WITNESS_FLAG = 1 << 30,
         MSG_WITNESS_BLOCK = MSG_BLOCK | MSG_WITNESS_FLAG,
         MSG_WITNESS_TX = MSG_TX | MSG_WITNESS_FLAG,
@@ -52,7 +55,6 @@ namespace Stratis.Bitcoin.P2P.Protocol
             this.Hash = hash;
         }
 
-        [NoTrace]
         public override void ReadWriteCore(BitcoinStream stream)
         {
             stream.ReadWrite(ref this.type);

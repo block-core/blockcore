@@ -303,12 +303,12 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 var exception = act.Should().Throw<FlurlHttpException>().Which;
                 var response = exception.Call.Response;
 
-                ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
-                List<ErrorModel> errors = errorResponse.Errors;
+                ErrorResponseLists errorResponse = JsonConvert.DeserializeObject<ErrorResponseLists>(await response.Content.ReadAsStringAsync());
+                ErrorModel errors = errorResponse.Errors;
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                errors.Should().ContainSingle();
-                errors.First().Message.Should().Be($"One of the query parameters '{nameof(RemoveTransactionsModel.DeleteAll)}', '{nameof(RemoveTransactionsModel.TransactionsIds)}' or '{nameof(RemoveTransactionsModel.FromDate)}' must be set.");
+                errors.DeleteAll.Should().ContainSingle();
+                errors.DeleteAll.First().Should().Be($"One of the query parameters '{nameof(RemoveTransactionsModel.DeleteAll)}', '{nameof(RemoveTransactionsModel.TransactionsIds)}' or '{nameof(RemoveTransactionsModel.FromDate)}' must be set.");
             }
         }
 
@@ -369,19 +369,19 @@ namespace Stratis.Bitcoin.IntegrationTests.Wallet
                 FlurlHttpException exception4 = act4.Should().Throw<FlurlHttpException>().Which;
                 HttpResponseMessage response4 = exception4.Call.Response;
 
-                ErrorResponse errorResponse1 = JsonConvert.DeserializeObject<ErrorResponse>(await response1.Content.ReadAsStringAsync());
-                ErrorResponse errorResponse2 = JsonConvert.DeserializeObject<ErrorResponse>(await response2.Content.ReadAsStringAsync());
-                ErrorResponse errorResponse3 = JsonConvert.DeserializeObject<ErrorResponse>(await response3.Content.ReadAsStringAsync());
-                ErrorResponse errorResponse4 = JsonConvert.DeserializeObject<ErrorResponse>(await response4.Content.ReadAsStringAsync());
+                ErrorResponseLists errorResponse1 = JsonConvert.DeserializeObject<ErrorResponseLists>(await response1.Content.ReadAsStringAsync());
+                ErrorResponseLists errorResponse2 = JsonConvert.DeserializeObject<ErrorResponseLists>(await response2.Content.ReadAsStringAsync());
+                ErrorResponseLists errorResponse3 = JsonConvert.DeserializeObject<ErrorResponseLists>(await response3.Content.ReadAsStringAsync());
+                ErrorResponseLists errorResponse4 = JsonConvert.DeserializeObject<ErrorResponseLists>(await response4.Content.ReadAsStringAsync());
 
                 response1.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 response1.StatusCode.Should().Be(response2.StatusCode);
                 response2.StatusCode.Should().Be(response3.StatusCode);
                 response3.StatusCode.Should().Be(response4.StatusCode);
 
-                List<ErrorModel> errors = errorResponse1.Errors;
-                errors.Should().ContainSingle();
-                errors.First().Message.Should().Be($"Only one out of the query parameters '{nameof(RemoveTransactionsModel.DeleteAll)}', '{nameof(RemoveTransactionsModel.TransactionsIds)}' or '{nameof(RemoveTransactionsModel.FromDate)}' can be set.");
+                ErrorModel errors = errorResponse1.Errors;
+                errors.DeleteAll.Should().ContainSingle();
+                errors.DeleteAll.First().Should().Be($"Only one out of the query parameters '{nameof(RemoveTransactionsModel.DeleteAll)}', '{nameof(RemoveTransactionsModel.TransactionsIds)}' or '{nameof(RemoveTransactionsModel.FromDate)}' can be set.");
                 errorResponse1.Should().BeEquivalentTo(errorResponse2);
                 errorResponse2.Should().BeEquivalentTo(errorResponse3);
                 errorResponse3.Should().BeEquivalentTo(errorResponse4);

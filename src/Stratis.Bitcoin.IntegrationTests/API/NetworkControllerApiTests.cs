@@ -116,7 +116,7 @@ namespace Stratis.Bitcoin.IntegrationTests.API
                 peerBanning.BanAndDisconnectPeer(nodeB_EndPoint);
                 Assert.True(peerBanning.IsBanned(nodeB_EndPoint));
 
-                await $"http://localhost:{nodeA.ApiPort}/api".AppendPathSegment("network/clearbanned").PostJsonAsync(null);
+                await $"http://localhost:{nodeA.ApiPort}/api".AppendPathSegment("network/clearbanned").PostJsonAsync(true);
 
                 Assert.False(peerBanning.IsBanned(nodeB_EndPoint));
             }

@@ -25,9 +25,6 @@ namespace Stratis.Bitcoin.Utilities.JsonErrors
 
         [JsonProperty(PropertyName = "status")]
         public int Status { get; set; }
-
-        [JsonProperty(PropertyName = "traceId")]
-        public string TraceId { get; set; }
     }
 
     public class ErrorModel
@@ -52,5 +49,9 @@ namespace Stratis.Bitcoin.Utilities.JsonErrors
 
         [JsonProperty(PropertyName = "feeType")]
         public List<string> FeeType { get; set; }
+
+        [JsonProperty(PropertyName = "deleteAll")]
+        public List<string> DeleteAll { get; set; }
+        
     }
 }

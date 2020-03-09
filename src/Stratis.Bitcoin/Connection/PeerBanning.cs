@@ -151,7 +151,6 @@ namespace Stratis.Bitcoin.Connection
                     this.logger.LogDebug("Peer '{0}' was un-banned.", peer.Endpoint);
                 }
             }
-        
         }
 
         /// <inheritdoc />

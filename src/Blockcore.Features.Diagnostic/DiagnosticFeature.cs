@@ -17,7 +17,7 @@ namespace Blockcore.Features.Diagnostic
     /// by the full node and uses reflection whenever it needs to access information not meant to be publicly exposed.</para>
     /// <para>It exposes <see cref="DiagnosticController"/>, an API controller that allow to query for information using the API feature, when available.</para>
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Builder.Feature.FullNodeFeature" />
+    /// <seealso cref="Blockcore.Builder.Feature.FullNodeFeature" />
     public class DiagnosticFeature : FullNodeFeature
     {
         private readonly ISignals signals;

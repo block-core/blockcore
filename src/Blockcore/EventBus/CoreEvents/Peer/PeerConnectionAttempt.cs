@@ -5,7 +5,7 @@ namespace Blockcore.EventBus.CoreEvents
     /// <summary>
     /// Event that is published whenever the node tries to connect to a peer.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="Blockcore.EventBus.EventBase" />
     public class PeerConnectionAttempt : PeerEventBase
     {
         public bool Inbound { get; }

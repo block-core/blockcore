@@ -6,7 +6,7 @@ namespace Blockcore.P2P.Protocol.Payloads
     /// <summary>
     /// Proven headers payload which contains list of up to 2000 proven headers.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.P2P.Protocol.Payloads.Payload" />
+    /// <seealso cref="Blockcore.P2P.Protocol.Payloads.Payload" />
     [Payload("provhdr")]
     public class ProvenHeadersPayload : Payload
     {

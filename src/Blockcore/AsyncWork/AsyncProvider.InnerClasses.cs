@@ -18,7 +18,7 @@ namespace Blockcore.AsyncWork
         /// <summary>
         /// Class that holds the status of running or faulted async delegate created by the BackgroundWorkProvider
         /// </summary>
-        /// <seealso cref="Stratis.Bitcoin.AsyncWork.AsyncProvider.IAsyncTaskInfoSetter" />
+        /// <seealso cref="Blockcore.AsyncWork.AsyncProvider.IAsyncTaskInfoSetter" />
         internal class AsyncTaskInfo : IAsyncTaskInfoSetter
         {
             internal enum AsyncTaskType

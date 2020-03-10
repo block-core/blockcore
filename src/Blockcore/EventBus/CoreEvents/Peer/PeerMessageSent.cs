@@ -6,7 +6,7 @@ namespace Blockcore.EventBus.CoreEvents
     /// <summary>
     /// A peer message has been sent successfully.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="Blockcore.EventBus.EventBase" />
     public class PeerMessageSent : PeerEventBase
     {
         /// <summary>

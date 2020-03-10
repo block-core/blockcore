@@ -5,7 +5,7 @@ namespace Blockcore.EventBus.CoreEvents
     /// <summary>
     /// Event that is published whenever a peer connection attempt failed.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="Blockcore.EventBus.EventBase" />
     public class PeerConnectionAttemptFailed : PeerEventBase
     {
         public bool Inbound { get; }

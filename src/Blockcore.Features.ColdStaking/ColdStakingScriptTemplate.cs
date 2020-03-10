@@ -86,7 +86,7 @@ namespace Blockcore.Features.ColdStaking
         /// them elsewhere. This behavior is enforced by the <see cref="OP_CHECKCOLDSTAKEVERIFY"/>
         /// opcode within the script flow related to hot wallet key usage. It sets the <see cref="PosTransaction.IsColdCoinStake"/>
         /// flag if the transaction spending an output, which contains this instruction, is a coinstake
-        /// transaction. If this flag is set then further rules are enforced by <see cref="Stratis.Bitcoin.Features.Consensus.Rules.CommonRules.PosColdStakingRule"/>.
+        /// transaction. If this flag is set then further rules are enforced by <see cref="Blockcore.Features.Consensus.Rules.CommonRules.PosColdStakingRule"/>.
         /// </remarks>
         /// <param name="hotPubKeyHash">The hot wallet public key hash to use.</param>
         /// <param name="coldPubKeyHash">The cold wallet public key hash to use.</param>

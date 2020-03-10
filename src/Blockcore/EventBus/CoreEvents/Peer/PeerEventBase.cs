@@ -5,7 +5,7 @@ namespace Blockcore.EventBus.CoreEvents
     /// <summary>
     /// Base peer event.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="Blockcore.EventBus.EventBase" />
     public abstract class PeerEventBase : EventBase
     {
         /// <summary>

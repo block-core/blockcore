@@ -9,7 +9,7 @@
         public uint256 Hash { get; private set; }
 
         /// <summary>Stake modifier V2 value of the checkpointed block.</summary>
-        /// <remarks>Stratis only.</remarks>
+        /// <remarks>Pos only.</remarks>
         public uint256 StakeModifierV2 { get; private set; }
 
         /// <summary>

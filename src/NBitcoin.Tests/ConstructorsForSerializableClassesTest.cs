@@ -26,7 +26,7 @@ namespace NBitcoin.Tests
             };
 
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(x => x.FullName.Contains("Stratis") || x.FullName.Contains("NBitcoin"))
+                .Where(x => x.FullName.Contains("Blockcore") || x.FullName.Contains("NBitcoin"))
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(IBitcoinSerializable).IsAssignableFrom(p) && !p.IsInterface && p.IsClass);
 

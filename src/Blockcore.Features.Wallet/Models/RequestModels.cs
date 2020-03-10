@@ -238,7 +238,7 @@ namespace Blockcore.Features.Wallet.Models
     /// A class containing the necessary parameters for a request to get the maximum
     /// spendable amount for a specific wallet account.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="Blockcore.Features.Wallet.Models.RequestModel" />
     public class WalletMaximumBalanceRequest : RequestModel
     {
         public WalletMaximumBalanceRequest()
@@ -274,7 +274,7 @@ namespace Blockcore.Features.Wallet.Models
     /// <summary>
     /// Model object to use as input to the Api request for getting the balance for an address.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="Blockcore.Features.Wallet.Models.RequestModel" />
     public class ReceivedByAddressRequest : RequestModel
     {
 
@@ -292,7 +292,7 @@ namespace Blockcore.Features.Wallet.Models
     /// <summary>
     /// A class containing the necessary parameters for a transaction fee estimate request.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="Blockcore.Features.Wallet.Models.RequestModel" />
     public class TxFeeEstimateRequest : RequestModel
     {
         public TxFeeEstimateRequest()
@@ -723,7 +723,7 @@ namespace Blockcore.Features.Wallet.Models
     /// <summary>
     /// A class containing the necessary parameters to perform an add address book entry request.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="Blockcore.Features.Wallet.Models.RequestModel" />
     public class AddressBookEntryRequest : RequestModel
     {
         /// <summary>
@@ -744,7 +744,7 @@ namespace Blockcore.Features.Wallet.Models
     /// <summary>
     /// A class containing the necessary parameters to perform a spendable transactions request.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="Blockcore.Features.Wallet.Models.RequestModel" />
     public class SpendableTransactionsRequest : RequestModel
     {
         public SpendableTransactionsRequest()

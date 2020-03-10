@@ -14,7 +14,7 @@ namespace Blockcore.Features.BlockStore
     /// The goal of this behavior is to ensure that we have always a Proven Header for each block signaled, because our node
     /// must be able to serve a Proven Header for every block we announce
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.BlockStore.BlockStoreSignaled" />
+    /// <seealso cref="Blockcore.Features.BlockStore.BlockStoreSignaled" />
     public class ProvenHeadersBlockStoreSignaled : BlockStoreSignaled
     {
         private readonly Network network;

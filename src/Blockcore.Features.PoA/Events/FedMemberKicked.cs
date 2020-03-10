@@ -5,7 +5,7 @@ namespace Blockcore.Features.PoA.Events
     /// <summary>
     /// Event that is executed when federation member is kicked.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="Blockcore.EventBus.EventBase" />
     public class FedMemberKicked : EventBase
     {
         public IFederationMember KickedMember { get; }

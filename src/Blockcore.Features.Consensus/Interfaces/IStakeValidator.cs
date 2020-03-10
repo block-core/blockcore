@@ -8,7 +8,7 @@ namespace Blockcore.Features.Consensus.Interfaces
 {
     /// <summary>
     /// Provides functionality for checking validity of PoS blocks.
-    /// See <see cref="Stratis.Bitcoin.Features.Miner.PosMinting"/> for more information about PoS solutions.
+    /// See <see cref="Blockcore.Features.Miner.PosMinting"/> for more information about PoS solutions.
     /// </summary>
     public interface IStakeValidator
     {

@@ -13,7 +13,7 @@ namespace Blockcore.Features.Wallet
     /// <summary>
     /// A handler that has various functionalities related to transaction operations.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Interfaces.IWalletTransactionHandler" />
+    /// <seealso cref="Blockcore.Features.Wallet.Interfaces.IWalletTransactionHandler" />
     /// <remarks>
     /// This will uses the <see cref="IWalletFeePolicy" /> and the <see cref="TransactionBuilder" />.
     /// TODO: Move also the broadcast transaction to this class

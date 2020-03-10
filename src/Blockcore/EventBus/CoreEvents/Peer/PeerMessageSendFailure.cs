@@ -6,7 +6,7 @@ namespace Blockcore.EventBus.CoreEvents
     /// <summary>
     /// A peer message failed to be sent.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="Blockcore.EventBus.EventBase" />
     public class PeerMessageSendFailure : PeerEventBase
     {
         /// <summary>

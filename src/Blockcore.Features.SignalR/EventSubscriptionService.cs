@@ -9,7 +9,7 @@ using Blockcore.Signals;
 namespace Blockcore.Features.SignalR
 {
     /// <summary>
-    /// This class subscribes to Stratis.Bitcoin.EventBus messages and proxy's them
+    /// This class subscribes to Blockcore.EventBus messages and proxy's them
     /// to SignalR messages.
     /// </summary>
     public class EventSubscriptionService : IEventsSubscriptionService, IDisposable

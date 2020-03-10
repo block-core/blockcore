@@ -1,13 +1,13 @@
 {
   "profiles": {
-    "Stratis.BitcoinD": {
+    "BitcoinD": {
       "commandName": "Project"
     },
-    "Stratis.BitcoinD Test": {
+    "BitcoinD Test": {
       "commandName": "Project",
       "commandLineArgs": "-testnet"
     },
-    "Stratis.BitcoinD Test with RPC": {
+    "BitcoinD Test with RPC": {
       "commandName": "Project",
       "commandLineArgs": "-testnet -server -rpcpassword=rpcpassword -rpcuser=rpcuser"
     }

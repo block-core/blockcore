@@ -29,7 +29,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
     /// </list>
     /// </summary>
     /// <remarks>(*) - denotes rules that are expensive to execute.</remarks>
-    /// <seealso cref="T:Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules.ProvenHeaderRuleBase" />
+    /// <seealso cref="T:Blockcore.Features.Consensus.Rules.ProvenHeaderRules.ProvenHeaderRuleBase" />
     public class ProvenHeaderCoinstakeRule : ProvenHeaderRuleBase
     {
         /// <summary>The stake validator.</summary>
@@ -121,7 +121,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 
             UnspentOutput prevUtxo = null;
 
-            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] {txIn.PrevOut});
+            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] { txIn.PrevOut });
             prevUtxo = coins.UnspentOutputs[txIn.PrevOut];
             if (prevUtxo?.Coins == null)
             {

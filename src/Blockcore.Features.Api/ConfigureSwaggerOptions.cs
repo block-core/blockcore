@@ -17,8 +17,8 @@ namespace Blockcore.Features.Api
     /// </remarks>
     public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {
-        private const string ApiXmlFilename = "Stratis.Bitcoin.Api.xml";
-        private const string WalletXmlFilename = "Stratis.Bitcoin.LightWallet.xml";
+        private const string ApiXmlFilename = "Blockcore.Features.Api.xml";
+        private const string WalletXmlFilename = "Blockcore.Features.LightWallet.xml";
 
         private readonly IApiVersionDescriptionProvider provider;
 
@@ -58,13 +58,13 @@ namespace Blockcore.Features.Api
             options.DescribeAllEnumsAsStrings();
         }
 
-        static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+        private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
             var info = new OpenApiInfo()
             {
-                Title = "Stratis Node API",
+                Title = "Blockcore Node API",
                 Version = description.ApiVersion.ToString(),
-                Description = "Access to the Stratis Node's core features."
+                Description = "Access to the blockcore node's core features."
             };
 
             if (info.Version.Contains("dev"))

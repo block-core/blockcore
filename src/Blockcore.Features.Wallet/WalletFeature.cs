@@ -30,7 +30,7 @@ namespace Blockcore.Features.Wallet
     /// <summary>
     /// Wallet feature for the full node.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Builder.Feature.FullNodeFeature" />
+    /// <seealso cref="Blockcore.Builder.Feature.FullNodeFeature" />
     public class WalletFeature : BaseWalletFeature
     {
         private readonly IWalletSyncManager walletSyncManager;

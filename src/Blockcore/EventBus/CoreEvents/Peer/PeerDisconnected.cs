@@ -6,7 +6,7 @@ namespace Blockcore.EventBus.CoreEvents
     /// <summary>
     /// Event that is published whenever a peer disconnects from the node.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="Blockcore.EventBus.EventBase" />
     public class PeerDisconnected : PeerEventBase
     {
         public bool Inbound { get; }

@@ -1,0 +1,306 @@
+﻿using System;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
+
+namespace Blockcore.P2P
+{
+    /// <summary>Contract for <see cref="PeerConnector"/>.</summary>
+    public interface IPeerConnector : IDisposable
+    {
+        /// <summary>The collection of peers the connector is currently connected to.</summary>
+        NetworkPeerCollection ConnectorPeers { get; }
+
+        /// <summary>Peer connector initialization as called by the <see cref="ConnectionManager"/>.</summary>
+        void Initialize(IConnectionManager connectionManager);
+
+        /// <summary>The maximum amount of peers the node can connect to (defaults to 8).</summary>
+        int MaxOutboundConnections { get; set; }
+
+        /// <summary>Specification of requirements the <see cref="PeerConnector"/> has when connecting to other peers.</summary>
+        NetworkPeerRequirement Requirements { get; }
+
+        /// <summary>
+        /// Starts an asynchronous loop that connects to peers in one second intervals.
+        /// <para>
+        /// If the maximum amount of connections has been reached (<see cref="MaxOutboundConnections"/>), the action gets skipped.
+        /// </para>
+        /// </summary>
+        void StartConnectAsync();
+    }
+
+    /// <summary>
+    /// Connects to peers asynchronously.
+    /// </summary>
+    public abstract class PeerConnector : IPeerConnector
+    {
+        /// <summary>The async loop we need to wait upon before we can dispose of this connector.</summary>
+        private IAsyncLoop asyncLoop;
+
+        /// <summary>Factory for creating background async loop tasks.</summary>
+        private readonly IAsyncProvider asyncProvider;
+
+        /// <summary>Provider of time functions.</summary>
+        private readonly IDateTimeProvider dateTimeProvider;
+
+        /// <summary>
+        /// Collection of connected peers that is managed by the <see cref="Connection.ConnectionManager"/>.
+        /// </summary>
+        protected IConnectionManager ConnectionManager { get; private set; }
+
+        /// <inheritdoc/>
+        public NetworkPeerCollection ConnectorPeers { get; private set; }
+
+        /// <summary>The parameters cloned from the connection manager.</summary>
+        public NetworkPeerConnectionParameters CurrentParameters { get; private set; }
+
+        /// <summary>Logger factory to create loggers.</summary>
+        private readonly ILoggerFactory loggerFactory;
+
+        /// <summary>Instance logger.</summary>
+        private readonly ILogger logger;
+
+        /// <inheritdoc/>
+        public int MaxOutboundConnections { get; set; }
+
+        /// <summary>Global application life cycle control - triggers when application shuts down.</summary>
+        protected INodeLifetime NodeLifetime { get; private set; }
+
+        /// <summary>User defined connection settings.</summary>
+        public ConnectionManagerSettings ConnectionSettings { get; private set; }
+
+        /// <summary>The network the node is running on.</summary>
+        private readonly Network network;
+
+        /// <summary>Peer address manager instance, see <see cref="IPeerAddressManager"/>.</summary>
+        protected IPeerAddressManager PeerAddressManager { get; private set; }
+
+        /// <summary>Tracker for endpoints known to be self.</summary>
+        private readonly ISelfEndpointTracker selfEndpointTracker;
+
+        /// <summary>Factory for creating P2P network peers.</summary>
+        private readonly INetworkPeerFactory networkPeerFactory;
+
+        /// <inheritdoc/>
+        public NetworkPeerRequirement Requirements { get; internal set; }
+
+        /// <summary>Default time interval between making a connection attempt.</summary>
+        private readonly TimeSpan connectionInterval;
+
+        /// <summary>Maintains a list of connected peers and ensures their proper disposal.</summary>
+        private readonly NetworkPeerDisposer networkPeerDisposer;
+
+        /// <summary>Constructor for dependency injection.</summary>
+        protected PeerConnector(
+            IAsyncProvider asyncProvider,
+            IDateTimeProvider dateTimeProvider,
+            ILoggerFactory loggerFactory,
+            Network network,
+            INetworkPeerFactory networkPeerFactory,
+            INodeLifetime nodeLifetime,
+            NodeSettings nodeSettings,
+            ConnectionManagerSettings connectionSettings,
+            IPeerAddressManager peerAddressManager,
+            ISelfEndpointTracker selfEndpointTracker)
+        {
+            this.asyncProvider = asyncProvider;
+            this.ConnectorPeers = new NetworkPeerCollection();
+            this.dateTimeProvider = dateTimeProvider;
+            this.loggerFactory = loggerFactory;
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.network = network;
+            this.networkPeerFactory = networkPeerFactory;
+            this.NodeLifetime = nodeLifetime;
+            this.ConnectionSettings = connectionSettings;
+            this.PeerAddressManager = peerAddressManager;
+            this.networkPeerDisposer = new NetworkPeerDisposer(this.loggerFactory, this.asyncProvider, this.OnPeerDisposed);
+            this.selfEndpointTracker = selfEndpointTracker;
+            this.Requirements = new NetworkPeerRequirement { MinVersion = nodeSettings.MinProtocolVersion ?? nodeSettings.ProtocolVersion };
+
+            this.connectionInterval = this.CalculateConnectionInterval();
+        }
+
+        /// <inheritdoc/>
+        public void Initialize(IConnectionManager connectionManager)
+        {
+            this.ConnectionManager = connectionManager;
+
+            this.CurrentParameters = connectionManager.Parameters.Clone();
+
+            this.OnInitialize();
+        }
+
+        /// <summary>
+        /// Adds a peer to the <see cref="ConnectorPeers"/>.
+        /// <para>
+        /// This will only happen if the peer successfully handshaked with another.
+        /// </para>
+        /// </summary>
+        /// <param name="peer">Peer to be added.</param>
+        private void AddPeer(INetworkPeer peer)
+        {
+            Guard.NotNull(peer, nameof(peer));
+
+            this.ConnectorPeers.Add(peer);
+
+            if (this.asyncLoop != null)
+                this.asyncLoop.RepeatEvery = this.CalculateConnectionInterval();
+        }
+
+        /// <summary>
+        /// Removes a given peer from the <see cref="ConnectorPeers"/>.
+        /// <para>
+        /// This will happen if the peer state changed to "disconnecting", "failed" or "offline".
+        /// </para>
+        /// </summary>
+        /// <param name="peer">Peer to be removed.</param>
+        private void RemovePeer(INetworkPeer peer)
+        {
+            this.ConnectorPeers.Remove(peer);
+
+            if (this.asyncLoop != null)
+                this.asyncLoop.RepeatEvery = this.CalculateConnectionInterval();
+        }
+
+        /// <summary>Determines whether or not a connector can be started.</summary>
+        public abstract bool CanStartConnect { get; }
+
+        /// <summary>Initialization logic specific to each concrete implementation of this class.</summary>
+        protected abstract void OnInitialize();
+
+        /// <summary>Start up logic specific to each concrete implementation of this class.</summary>
+        protected abstract void OnStartConnect();
+
+        /// <summary>Connect logic specific to each concrete implementation of this class.</summary>
+        public abstract Task OnConnectAsync();
+
+        /// <summary>
+        /// <c>true</c> if the peer is already connected.
+        /// </summary>
+        /// <param name="ipEndpoint">The endpoint to check.</param>
+        private bool IsPeerConnected(IPEndPoint ipEndpoint)
+        {
+            return this.ConnectionManager.ConnectedPeers.FindByEndpoint(ipEndpoint) != null;
+        }
+
+        /// <inheritdoc/>
+        public void StartConnectAsync()
+        {
+            if (!this.CanStartConnect)
+                return;
+
+            this.OnStartConnect();
+
+            this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{this.GetType().Name}.{nameof(this.ConnectAsync)}", async token =>
+            {
+                if (!this.PeerAddressManager.Peers.Any() || (this.ConnectorPeers.Count >= this.MaxOutboundConnections))
+                    return;
+
+                await this.OnConnectAsync().ConfigureAwait(false);
+            },
+            this.NodeLifetime.ApplicationStopping,
+            repeatEvery: this.connectionInterval);
+        }
+
+        /// <summary>Attempts to connect to a random peer.</summary>
+        public async Task ConnectAsync(PeerAddress peerAddress)
+        {
+            if (this.selfEndpointTracker.IsSelf(peerAddress.Endpoint))
+            {
+                this.logger.LogDebug("Connect aborted: {0} is self.", peerAddress.Endpoint);
+                return;
+            }
+
+            if (this.IsPeerConnected(peerAddress.Endpoint))
+            {
+                this.logger.LogDebug("Connect aborted: {0} is already connected.", peerAddress.Endpoint);
+                return;
+            }
+
+            if (peerAddress.IsBanned(this.dateTimeProvider.GetUtcNow()))
+            {
+                this.logger.LogDebug("Connect aborted: {0} is banned until {1}.", peerAddress.Endpoint, peerAddress.BanUntil);
+                return;
+            }
+
+            INetworkPeer peer = null;
+
+            try
+            {
+                using (CancellationTokenSource timeoutTokenSource = CancellationTokenSource.CreateLinkedTokenSource(this.NodeLifetime.ApplicationStopping))
+                {
+                    this.PeerAddressManager.PeerAttempted(peerAddress.Endpoint, this.dateTimeProvider.GetUtcNow());
+
+                    NetworkPeerConnectionParameters clonedConnectParameters = this.CurrentParameters.Clone();
+                    timeoutTokenSource.CancelAfter(5000);
+                    clonedConnectParameters.ConnectCancellation = timeoutTokenSource.Token;
+
+                    peer = await this.networkPeerFactory.CreateConnectedNetworkPeerAsync(peerAddress.Endpoint, clonedConnectParameters, this.networkPeerDisposer).ConfigureAwait(false);
+
+                    await peer.VersionHandshakeAsync(this.Requirements, timeoutTokenSource.Token).ConfigureAwait(false);
+                    this.AddPeer(peer);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                if (this.NodeLifetime.ApplicationStopping.IsCancellationRequested)
+                {
+                    this.logger.LogDebug("Peer {0} connection canceled because application is stopping.", peerAddress.Endpoint);
+                    peer?.Disconnect("Application stopping");
+                }
+                else
+                {
+                    this.logger.LogDebug("Peer {0} connection timeout.", peerAddress.Endpoint);
+                    peerAddress.SetHandshakeAttempted(this.dateTimeProvider.GetUtcNow());
+                    peer?.Disconnect("Connection timeout");
+                }
+            }
+            catch (NBitcoin.Protocol.ProtocolException)
+            {
+                this.logger.LogDebug("Handshake rejected by peer '{0}'.", peerAddress.Endpoint);
+                peerAddress.SetHandshakeAttempted(this.dateTimeProvider.GetUtcNow());
+                peer?.Disconnect("Error while handshaking");
+            }
+            catch (Exception exception)
+            {
+                this.logger.LogDebug("Exception occurred while connecting: {0}", exception is SocketException ? exception.Message : exception.ToString());
+                peerAddress.SetHandshakeAttempted(this.dateTimeProvider.GetUtcNow());
+                peer?.Disconnect("Error while connecting", exception);
+            }
+        }
+
+        /// <summary>
+        /// Determines how often the connector should try and connect to an address from it's list.
+        /// </summary>
+        protected virtual TimeSpan CalculateConnectionInterval()
+        {
+            return this.ConnectorPeers.Count < this.ConnectionSettings.InitialConnectionTarget ? TimeSpans.Ms100 : TimeSpans.Second;
+        }
+
+        /// <summary>
+        /// Callback that is called before the peer is disposed.
+        /// </summary>
+        /// <param name="peer">Peer that is being disposed.</param>
+        private void OnPeerDisposed(INetworkPeer peer)
+        {
+            this.RemovePeer(peer);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.asyncLoop?.Dispose();
+            this.networkPeerDisposer.Dispose();
+        }
+    }
+}

@@ -6,7 +6,7 @@ using NBitcoin.DataEncoders;
 using NBitcoin.Networks;
 using NBitcoin.OpenAsset;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

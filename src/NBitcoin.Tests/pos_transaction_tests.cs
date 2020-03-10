@@ -12,7 +12,7 @@ using NBitcoin.OpenAsset;
 using NBitcoin.Policy;
 using NBitcoin.Stealth;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

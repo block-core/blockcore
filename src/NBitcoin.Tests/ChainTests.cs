@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

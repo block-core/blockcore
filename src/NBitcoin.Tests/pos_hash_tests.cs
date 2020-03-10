@@ -2,7 +2,7 @@
 using HashLib;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 using Hashes = NBitcoin.Crypto.Hashes;
 

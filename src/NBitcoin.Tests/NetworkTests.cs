@@ -6,9 +6,9 @@ using System.Threading;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Networks;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Networks.Deployments;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Networks;
+using Blockcore.Networks.Deployments;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

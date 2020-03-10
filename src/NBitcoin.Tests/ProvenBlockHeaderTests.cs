@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

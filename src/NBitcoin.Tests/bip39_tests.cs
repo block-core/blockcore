@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

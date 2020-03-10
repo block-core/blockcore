@@ -2,7 +2,7 @@
 using System.Linq;
 using NBitcoin.DataEncoders;
 using NBitcoin.Stealth;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

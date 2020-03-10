@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Stratis.CirrusPegD": {
-      "commandName": "Project",
-      "commandLineArgs": "-mainchain"
-    }
-  }
-}

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     /// <summary>
     /// Provider of information about which pubkey should be used at which timestamp

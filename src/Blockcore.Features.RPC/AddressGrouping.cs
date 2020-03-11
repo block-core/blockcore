@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public class AddressGrouping
     {

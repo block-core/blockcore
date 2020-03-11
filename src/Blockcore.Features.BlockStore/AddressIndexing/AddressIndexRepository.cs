@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Controllers.Models;
+using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.BlockStore.AddressIndexing
+namespace Blockcore.Features.BlockStore.AddressIndexing
 {
     /// <summary>Repository for <see cref="AddressIndexerData"/> items with cache layer built in.</summary>
     public class AddressIndexRepository : MemorySizeCache<string, AddressIndexerData>

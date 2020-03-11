@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Interfaces
+namespace Blockcore.Interfaces
 {
     /// <summary>
     /// Interface to insert and retrieve <see cref="ProvenBlockHeader"/> items from the database repository.

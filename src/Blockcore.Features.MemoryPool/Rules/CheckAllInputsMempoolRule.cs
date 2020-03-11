@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Rules
+namespace Blockcore.Features.MemoryPool.Rules
 {
     /// <summary>
     /// Validate inputs against previous transactions.

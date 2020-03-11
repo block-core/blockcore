@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Utilities.ModelStateErrors
+namespace Blockcore.Utilities.ModelStateErrors
 {
     public static class ModelStateErrors
     {

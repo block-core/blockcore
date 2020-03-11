@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Configuration;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.MemoryPool.Fee;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.MemoryPool.Fee;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Tests
+namespace Blockcore.Features.MemoryPool.Tests
 {
     /// <summary>
     /// Unit tests for memory pool manager.

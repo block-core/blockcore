@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Features.Miner.Staking
+﻿namespace Blockcore.Features.Miner.Staking
 {
     /// <summary>
     /// Credentials to wallet that contains the private key for the staking UTXO.

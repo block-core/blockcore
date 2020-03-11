@@ -1,10 +1,10 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
+﻿using Blockcore.Base;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public class InitialBlockDownloadStateMock : IInitialBlockDownloadState
     {

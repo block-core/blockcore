@@ -1,8 +1,8 @@
 ﻿using System.Linq;
+using Blockcore.Controllers.Models;
 using NBitcoin;
-using Stratis.Bitcoin.Controllers.Models;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Models
+namespace Blockcore.Features.BlockStore.Models
 {
     public class BlockTransactionDetailsModel : BlockModel
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// Collection of guard methods.

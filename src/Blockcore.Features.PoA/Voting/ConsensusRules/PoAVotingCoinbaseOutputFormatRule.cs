@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting.ConsensusRules
+namespace Blockcore.Features.PoA.Voting.ConsensusRules
 {
     /// <summary>Validates <see cref="VotingData"/> collection format if voting output is present in the coinbase transaction.</summary>
     public class PoAVotingCoinbaseOutputFormatRule : PartialValidationConsensusRule

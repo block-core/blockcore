@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     public class WalletModel
     {

@@ -1,19 +1,20 @@
 ﻿using System;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Consensus;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Networks;
+using Blockcore.Networks.Deployments;
+using Blockcore.Utilities.Extensions;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Networks.Deployments;
-using Stratis.Bitcoin.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     /// <summary>
     /// Prevent network being matched by name and replaced with a different network
-    /// in the <see cref="Configuration.NodeSettings" /> constructor.
+    /// in the <see cref="NodeSettings" /> constructor.
     /// </summary>
     public class StratisOverrideRegTest : StratisRegTest
     {

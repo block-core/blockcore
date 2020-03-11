@@ -4,6 +4,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Controllers.Models;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
+using Blockcore.Utilities.ModelStateErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -11,24 +24,11 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
-using Stratis.Bitcoin.Utilities.ModelStateErrors;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = NLog.LogLevel;
 using Target = NBitcoin.Target;
 
-namespace Stratis.Bitcoin.Controllers
+namespace Blockcore.Controllers
 {
     /// <summary>
     /// Provides methods that interact with the full node.

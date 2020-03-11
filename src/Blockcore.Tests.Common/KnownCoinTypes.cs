@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Tests.Common
+﻿namespace Blockcore.Tests.Common
 {
     /// <summary>
     /// The type of coin, as specified in BIP44.

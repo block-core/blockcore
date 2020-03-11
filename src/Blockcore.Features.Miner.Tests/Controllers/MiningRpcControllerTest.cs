@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security;
+using Blockcore.Base;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Features.Miner.Controllers;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Miner.Staking;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Tests.Wallet.Common;
 using Moq;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Features.Miner.Controllers;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Models;
-using Stratis.Bitcoin.Features.Miner.Staking;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Tests.Wallet.Common;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests.Controllers
+namespace Blockcore.Features.Miner.Tests.Controllers
 {
     public class MiningRpcControllerTest : LogsTestBase, IClassFixture<MiningRPCControllerFixture>
     {

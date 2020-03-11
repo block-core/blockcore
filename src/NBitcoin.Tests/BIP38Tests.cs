@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

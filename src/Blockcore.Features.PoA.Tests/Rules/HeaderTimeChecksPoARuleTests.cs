@@ -1,17 +1,17 @@
 ﻿using System;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests.Rules
+namespace Blockcore.Features.PoA.Tests.Rules
 {
     public class HeaderTimeChecksPoARuleTests : PoATestsBase
     {

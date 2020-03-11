@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     public class Payload : IBitcoinSerializable
     {

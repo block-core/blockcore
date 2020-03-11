@@ -5,17 +5,17 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.EventBus.CoreEvents.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.P2P.Peer
+namespace Blockcore.P2P.Peer
 {
     /// <summary>
     /// State of the network connection to a peer.

@@ -1,8 +1,8 @@
 ﻿using System;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Track the height and time at which transaction was final.

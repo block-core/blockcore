@@ -1,15 +1,16 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.IntegrationTests.Common.TestNetworks;
+using Blockcore.Networks;
+using Blockcore.Primitives;
+using Blockcore.Tests.Common;
 using NBitcoin;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Common.ReadyData;
-using Stratis.Bitcoin.IntegrationTests.Common.TestNetworks;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     public class ConsensusManagerFailedReorgTests
     {

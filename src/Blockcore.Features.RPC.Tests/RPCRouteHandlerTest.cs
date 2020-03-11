@@ -11,7 +11,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests
+namespace Blockcore.Features.RPC.Tests
 {
     public class RPCRouteHandlerTest
     {

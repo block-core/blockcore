@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Networks;
 using NBitcoin;
-using Stratis.Bitcoin.Networks;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.TestNetworks
+namespace Blockcore.IntegrationTests.Common.TestNetworks
 {
     /// <summary>
     /// Allows us to test syncing blocks around the switch from PoW to PoS.

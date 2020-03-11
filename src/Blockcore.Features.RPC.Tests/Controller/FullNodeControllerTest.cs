@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.RPC.Controllers;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Features.RPC.Models;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Tests.Wallet.Common;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.RPC.Controllers;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.Features.RPC.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Tests.Wallet.Common;
-using Stratis.Bitcoin.Utilities;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
+namespace Blockcore.Features.RPC.Tests.Controller
 {
     public class FullNodeControllerTest : LogsTestBase
     {

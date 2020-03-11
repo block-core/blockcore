@@ -3,28 +3,29 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.Controllers;
+using Blockcore.Controllers.Models;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Tests.Wallet.Common;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Tests.Wallet.Common;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Controllers
+namespace Blockcore.Tests.Controllers
 {
     public class NodeControllerTest : LogsTestBase
     {

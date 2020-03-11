@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Features.MemoryPool.Interfaces;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Rules
+namespace Blockcore.Features.MemoryPool.Rules
 {
     /// <summary>
     /// Check that the transaction doesn't have an excessive number of sigops.

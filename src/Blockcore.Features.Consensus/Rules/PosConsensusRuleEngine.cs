@@ -1,17 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Interfaces;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules
+namespace Blockcore.Features.Consensus.Rules
 {
     /// <summary>
     /// Extension of consensus rules that provide access to a PoS store.

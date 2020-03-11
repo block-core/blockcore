@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.Controllers;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Controller providing operations on the Mempool.

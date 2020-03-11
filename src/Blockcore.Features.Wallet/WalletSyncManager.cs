@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     public class WalletSyncManager : IWalletSyncManager, IDisposable
     {

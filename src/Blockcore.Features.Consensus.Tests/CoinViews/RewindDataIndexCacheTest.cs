@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
-using Xunit;
-using Stratis.Bitcoin.Consensus;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
+using Xunit;
+
+namespace Blockcore.Features.Consensus.Tests.CoinViews
 {
     public class RewindDataIndexCacheTest : LogsTestBase
     {
@@ -145,8 +146,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
             {
                 OutputsToRestore = new List<RewindDataOutput>()
                 {
-                    new RewindDataOutput(new OutPoint(new uint256(index), 0), new Utilities.Coins(0, new TxOut(), false)),
-                    new RewindDataOutput(new OutPoint(new uint256(index++), 1), new Utilities.Coins(0, new TxOut(), false)),
+                    new RewindDataOutput(new OutPoint(new uint256(index), 0), new Coins(0, new TxOut(), false)),
+                    new RewindDataOutput(new OutPoint(new uint256(index++), 1), new Coins(0, new TxOut(), false)),
                 }
             });
         }

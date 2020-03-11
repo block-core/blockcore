@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Features.RPC;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using NBitcoin;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     /// <summary>
     /// Bitcoin test fixture for RPC tests.

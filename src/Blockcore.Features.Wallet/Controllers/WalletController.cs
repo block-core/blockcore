@@ -5,19 +5,19 @@ using System.Linq;
 using System.Net;
 using System.Security;
 using System.Text;
+using Blockcore.Connection;
+using Blockcore.Features.Wallet.Broadcasting;
+using Blockcore.Features.Wallet.Helpers;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
+using Blockcore.Utilities.ModelStateErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.Wallet.Broadcasting;
-using Stratis.Bitcoin.Features.Wallet.Helpers;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
-using Stratis.Bitcoin.Utilities.ModelStateErrors;
 
-namespace Stratis.Bitcoin.Features.Wallet.Controllers
+namespace Blockcore.Features.Wallet.Controllers
 {
     /// <summary>
     /// Controller providing operations on a wallet.

@@ -1,11 +1,11 @@
 ﻿using System;
+using Blockcore.Configuration;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
 using FluentAssertions;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests
+namespace Blockcore.Features.Miner.Tests
 {
     public class MinerSettingsTest : LogsTestBase
     {

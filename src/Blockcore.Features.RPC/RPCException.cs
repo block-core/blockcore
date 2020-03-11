@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     /// <summary>
     /// RPC error code thrown by the <see cref="RPCClient"/>.

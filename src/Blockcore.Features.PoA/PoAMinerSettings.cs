@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Configuration;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     public class PoAMinerSettings
     {

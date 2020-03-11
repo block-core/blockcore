@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+﻿namespace Blockcore.P2P.Protocol.Payloads
 {
     /// <summary>
     /// Ask for the mempool, followed by inv messages.

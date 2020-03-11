@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Features.Miner.Staking;
+using Blockcore.Mining;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Miner.Staking;
-using Stratis.Bitcoin.Mining;
 
-namespace Stratis.Bitcoin.Features.Miner.Interfaces
+namespace Blockcore.Features.Miner.Interfaces
 {
     /// <summary>
     /// <see cref="PosMinting"/> is used in order to generate new blocks. It involves a sort of lottery, similar to proof-of-work,

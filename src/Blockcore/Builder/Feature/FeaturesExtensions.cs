@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Stratis.Bitcoin.Builder.Feature
+namespace Blockcore.Builder.Feature
 {
     /// <summary>
     /// Extensions to features collection.

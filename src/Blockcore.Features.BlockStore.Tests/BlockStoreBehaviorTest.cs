@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Tests
+namespace Blockcore.Features.BlockStore.Tests
 {
     public class BlockStoreBehaviorTest
     {

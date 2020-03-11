@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
 #pragma warning disable 618
 

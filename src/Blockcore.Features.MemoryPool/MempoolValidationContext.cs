@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// A state used when validating a new transaction.

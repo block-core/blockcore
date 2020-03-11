@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.P2P.Peer;
+using Blockcore.AsyncWork;
+using Blockcore.P2P.Peer;
 
-namespace Stratis.Bitcoin.P2P.Protocol
+namespace Blockcore.P2P.Protocol
 {
     /// <summary>
     /// Represents a callback routine to be called when a new message arrives to the listener.

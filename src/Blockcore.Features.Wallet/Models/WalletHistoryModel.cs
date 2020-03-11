@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     public class WalletHistoryModel
     {

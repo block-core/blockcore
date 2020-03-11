@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     /// <summary>
     /// An attribute that enables mapping between command names and P2P netowrk types.

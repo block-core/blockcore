@@ -2,7 +2,7 @@
 using System.IO;
 using Newtonsoft.Json.Linq;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     //{"code":-32601,"message":"Method not found"}
     public class RPCError

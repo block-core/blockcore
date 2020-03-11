@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public class NodeConfigParameters : Dictionary<string, string>
     {

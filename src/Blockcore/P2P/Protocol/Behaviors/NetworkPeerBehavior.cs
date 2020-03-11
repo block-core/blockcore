@@ -1,8 +1,8 @@
 ﻿using System;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Behaviors
+namespace Blockcore.P2P.Protocol.Behaviors
 {
     public interface INetworkPeerBehavior : IDisposable
     {

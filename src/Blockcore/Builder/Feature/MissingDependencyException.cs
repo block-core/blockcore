@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Builder.Feature
+namespace Blockcore.Builder.Feature
 {
     /// <summary>
     /// Exception thrown when feature dependencies are missing.

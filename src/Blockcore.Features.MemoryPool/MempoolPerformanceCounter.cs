@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Memory performance counter for tracking memory pool performance.

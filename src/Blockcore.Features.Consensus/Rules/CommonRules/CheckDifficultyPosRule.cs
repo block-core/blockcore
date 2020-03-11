@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>
     /// Calculate the difficulty for a POS block and check that it is correct.

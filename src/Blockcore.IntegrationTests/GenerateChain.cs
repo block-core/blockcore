@@ -1,12 +1,14 @@
 ﻿using System.IO;
 using System.IO.Compression;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 using NBitcoin;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common
+namespace Blockcore.IntegrationTests
 {
     public class GenerateChain
     {

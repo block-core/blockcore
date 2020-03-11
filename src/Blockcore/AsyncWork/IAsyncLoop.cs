@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Stratis.Bitcoin.AsyncWork
+namespace Blockcore.AsyncWork
 {
     /// <summary>
     /// Allows running application defined in a loop with specific timing.

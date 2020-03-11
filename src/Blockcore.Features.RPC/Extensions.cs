@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public static class Extensions
     {

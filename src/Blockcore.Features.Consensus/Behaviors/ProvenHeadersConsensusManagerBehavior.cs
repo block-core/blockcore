@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.Consensus.Behaviors
+namespace Blockcore.Features.Consensus.Behaviors
 {
     /// <summary>
     /// Behavior that takes care of proven headers protocol. It also keeps the notion of peer's consensus tip.

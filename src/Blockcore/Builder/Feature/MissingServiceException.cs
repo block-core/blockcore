@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Builder.Feature
+namespace Blockcore.Builder.Feature
 {
     /// <summary>
     /// Exception thrown when a required service has not been registered into <see cref="IFullNodeServiceProvider"/>.

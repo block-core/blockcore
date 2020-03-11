@@ -1,10 +1,10 @@
 ﻿using System;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>Checks if <see cref="Block"/> time stamp is ahead of current consensus and not more then two hours in the future.</summary>
     public class HeaderTimeChecksRule : HeaderValidationConsensusRule

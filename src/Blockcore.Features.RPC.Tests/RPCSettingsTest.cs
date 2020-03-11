@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Configuration;
+using Blockcore.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests
+namespace Blockcore.Features.RPC.Tests
 {
     public class RPCSettingsTest : TestBase
     {

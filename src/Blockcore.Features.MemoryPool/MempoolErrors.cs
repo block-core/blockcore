@@ -1,7 +1,7 @@
 ﻿using System;
-using Stratis.Bitcoin.Consensus;
+using Blockcore.Consensus;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Exception thrown when memory pool exception occurs.

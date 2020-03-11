@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+namespace Blockcore.Features.PoA.Tests
 {
     public class SlotsManagerTests
     {

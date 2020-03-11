@@ -2,17 +2,17 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.P2P
+namespace Blockcore.P2P
 {
     /// <summary>
     /// The connector used to connect to peers specified with the -connect argument

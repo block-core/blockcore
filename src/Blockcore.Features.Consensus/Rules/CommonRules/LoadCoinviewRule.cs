@@ -1,14 +1,14 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>
     /// Push the modified <see cref="UnspentOutputSet"/> back to the underline cache.

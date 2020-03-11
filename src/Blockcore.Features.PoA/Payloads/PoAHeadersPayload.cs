@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using Blockcore.P2P.Protocol.Payloads;
 using NBitcoin;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.Features.PoA.Payloads
+namespace Blockcore.Features.PoA.Payloads
 {
     /// <summary>
     /// Block headers received as a response to getheaders messages.

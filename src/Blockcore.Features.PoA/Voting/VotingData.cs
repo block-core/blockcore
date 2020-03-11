@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting
+namespace Blockcore.Features.PoA.Voting
 {
     /// <summary>
     /// Type of vote that determines actions that will take place in case

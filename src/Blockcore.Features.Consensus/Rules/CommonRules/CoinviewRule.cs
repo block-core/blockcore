@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>
     /// The proof of work coinview update rules. Validates the UTXO set is correctly spent and creating new outputs.

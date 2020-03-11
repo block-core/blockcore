@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.AsyncWork;
 
-namespace Stratis.Bitcoin.P2P.Peer
+namespace Blockcore.P2P.Peer
 {
     /// <summary>Maintains a list of connected peers and ensures their proper disposal.</summary>
     /// <remarks>

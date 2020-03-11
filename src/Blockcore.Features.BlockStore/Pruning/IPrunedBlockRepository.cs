@@ -1,7 +1,7 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Utilities;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Pruning
+namespace Blockcore.Features.BlockStore.Pruning
 {
     /// <summary>
     /// Prunes and compacts the block store database by deleting blocks lower than a certain height and recreating the database file on disk.

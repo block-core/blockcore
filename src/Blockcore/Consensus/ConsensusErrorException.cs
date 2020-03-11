@@ -1,7 +1,7 @@
 ﻿using System;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// An exception that is used when consensus breaking errors are found.

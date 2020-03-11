@@ -4,16 +4,16 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.P2P
+namespace Blockcore.P2P
 {
     /// <summary>
     /// Contract for <see cref="PeerDiscovery"/>.

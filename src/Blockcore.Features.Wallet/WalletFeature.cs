@@ -2,23 +2,24 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Logging;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet.Broadcasting;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 using NBitcoin.Policy;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet.Broadcasting;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// Common base class for any feature replacing the <see cref="WalletFeature" />.
@@ -30,14 +31,14 @@ namespace Stratis.Bitcoin.Features.Wallet
     /// <summary>
     /// Wallet feature for the full node.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Builder.Feature.FullNodeFeature" />
+    /// <seealso cref="FullNodeFeature" />
     public class WalletFeature : BaseWalletFeature
     {
         private readonly IWalletSyncManager walletSyncManager;
 
         private readonly IWalletManager walletManager;
 
-        private readonly Signals.ISignals signals;
+        private readonly ISignals signals;
 
         private readonly IConnectionManager connectionManager;
 
@@ -58,7 +59,7 @@ namespace Stratis.Bitcoin.Features.Wallet
             IWalletSyncManager walletSyncManager,
             IWalletManager walletManager,
             IAddressBookManager addressBookManager,
-            Signals.ISignals signals,
+            ISignals signals,
             IConnectionManager connectionManager,
             BroadcasterBehavior broadcasterBehavior,
             INodeStats nodeStats)

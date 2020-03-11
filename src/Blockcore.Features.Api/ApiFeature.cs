@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
 
-namespace Stratis.Bitcoin.Features.Api
+namespace Blockcore.Features.Api
 {
     /// <summary>
     /// Provides an Api to the full node

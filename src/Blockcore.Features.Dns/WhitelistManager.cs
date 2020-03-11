@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.P2P;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// Responsible for managing the whitelist used by the DNS server as a master file.

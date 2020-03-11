@@ -1,11 +1,11 @@
 ﻿using System.Net;
 
-namespace Stratis.Bitcoin.EventBus.CoreEvents
+namespace Blockcore.EventBus.CoreEvents.Peer
 {
     /// <summary>
     /// Event that is published whenever a peer connection attempt failed.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="EventBase" />
     public class PeerConnectionAttemptFailed : PeerEventBase
     {
         public bool Inbound { get; }

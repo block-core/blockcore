@@ -1,8 +1,8 @@
 using System;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
 
-namespace Stratis.Bitcoin.Features.SignalR.Events
+namespace Blockcore.Features.SignalR.Events
 {
     public class TransactionReceivedClientEvent : IClientEvent
     {

@@ -1,12 +1,12 @@
 ﻿using System;
+using Blockcore.Base;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.Consensus;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
 
-namespace Stratis.Bitcoin.Controllers
+namespace Blockcore.Controllers
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class ActionDescription : Attribute

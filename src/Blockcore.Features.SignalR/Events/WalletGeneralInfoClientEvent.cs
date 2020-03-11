@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.Features.Wallet.Models;
+using Blockcore.EventBus;
+using Blockcore.Features.Wallet.Models;
 
-namespace Stratis.Bitcoin.Features.SignalR.Events
+namespace Blockcore.Features.SignalR.Events
 {
     /// <summary>
     /// Marker type for Client

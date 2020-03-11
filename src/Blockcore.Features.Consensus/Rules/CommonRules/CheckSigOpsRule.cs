@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     public class CheckSigOpsRule : PartialValidationConsensusRule
     {

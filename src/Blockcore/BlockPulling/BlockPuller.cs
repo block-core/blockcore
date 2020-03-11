@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Configuration;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.BlockPulling
+namespace Blockcore.BlockPulling
 {
     /// <summary>
     /// Thread-safe block puller which allows downloading blocks from all chains that the node is aware of.

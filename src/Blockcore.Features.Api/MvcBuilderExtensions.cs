@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Blockcore.Builder.Feature;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Builder.Feature;
 
-namespace Stratis.Bitcoin.Features.Api
+namespace Blockcore.Features.Api
 {
     public static class MvcBuilderExtensions
     {

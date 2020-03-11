@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace Stratis.Bitcoin.Features.Miner.Staking
+namespace Blockcore.Features.Miner.Staking
 {
     /// <summary>
     /// Information needed by the coinstake worker for finding the kernel.

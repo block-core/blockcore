@@ -1,11 +1,12 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Xunit;
-using Stratis.Bitcoin.Base;
+﻿using Blockcore.Base;
+using Blockcore.Features.Consensus;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Interfaces;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+using Xunit;
+
+namespace Blockcore.IntegrationTests.RPC
 {
     public class ConsensusActionTests : BaseRPCControllerTest
     {

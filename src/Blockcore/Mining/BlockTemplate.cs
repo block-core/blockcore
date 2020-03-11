@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Mining
+namespace Blockcore.Mining
 {
     public sealed class BlockTemplate
     {

@@ -1,8 +1,8 @@
 ﻿using System;
+using Blockcore.Utilities;
 using ConcurrentCollections;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.P2P.Protocol
+namespace Blockcore.P2P.Protocol
 {
     /// <summary>
     /// Binding between <see cref="MessageProducer{T}"/> and <see cref="IMessageListener{T}"/>.

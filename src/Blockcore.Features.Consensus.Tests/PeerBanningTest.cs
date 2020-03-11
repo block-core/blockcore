@@ -4,21 +4,21 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Networks;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests
+namespace Blockcore.Features.Consensus.Tests
 {
     public class PeerBanningTest : TestBase
     {

@@ -1,9 +1,9 @@
 ﻿using System.IO;
+using Blockcore.Configuration;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+namespace Blockcore.Features.PoA.Tests
 {
     public class KeyToolTests
     {

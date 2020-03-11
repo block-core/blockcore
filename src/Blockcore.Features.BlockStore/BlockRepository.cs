@@ -3,17 +3,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Blockcore.Configuration;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.DataTypes;
 using DBreeze.Exceptions;
 using DBreeze.Utils;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.BlockStore
+namespace Blockcore.Features.BlockStore
 {
     /// <summary>
     /// <see cref="IBlockRepository"/> is the interface to all the logics interacting with the blocks stored in the database.

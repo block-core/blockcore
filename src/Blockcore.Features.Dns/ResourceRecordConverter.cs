@@ -5,7 +5,7 @@ using DNS.Protocol.ResourceRecords;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// Defines a <see cref="JsonConverter"/> implementation for an <see cref="IResourceRecord"/> object.

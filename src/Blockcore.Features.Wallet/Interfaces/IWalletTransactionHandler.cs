@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Wallet.Interfaces
+namespace Blockcore.Features.Wallet.Interfaces
 {
     public interface IWalletTransactionHandler
     {

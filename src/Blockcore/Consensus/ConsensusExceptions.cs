@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     public class ConsensusException : Exception
     {

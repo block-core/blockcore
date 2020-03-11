@@ -1,9 +1,9 @@
 ﻿using System;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     /// <summary>
     /// Class containing details of a transaction successfully removed from the wallet.

@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using Blockcore.Controllers;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Features.RPC.Controllers
+namespace Blockcore.Features.RPC.Controllers
 {
     /// <summary>
     /// Controller providing API operations on the RPC feature.

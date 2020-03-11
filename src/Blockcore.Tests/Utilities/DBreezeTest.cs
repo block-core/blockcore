@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.DataTypes;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Utilities
+namespace Blockcore.Tests.Utilities
 {
     /// <summary>
     /// Tests of DBreeze database and <see cref="DBreezeSerializer"/> class.
@@ -64,9 +64,9 @@ namespace Stratis.Bitcoin.Tests.Utilities
         {
             Network network = KnownNetworks.StratisRegTest;
             Block genesis = network.GetGenesis();
-            var coins = new Bitcoin.Utilities.Coins(0, genesis.Transactions[0].Outputs.First(), true);
+            var coins = new Coins(0, genesis.Transactions[0].Outputs.First(), true);
 
-            var result = (Bitcoin.Utilities.Coins)this.dbreezeSerializer.Deserialize(coins.ToBytes(KnownNetworks.StratisRegTest.Consensus.ConsensusFactory), typeof(Bitcoin.Utilities.Coins));
+            var result = (Coins)this.dbreezeSerializer.Deserialize(coins.ToBytes(KnownNetworks.StratisRegTest.Consensus.ConsensusFactory), typeof(Coins));
 
             Assert.Equal(coins.IsCoinbase, result.IsCoinbase);
             Assert.Equal(coins.Height, result.Height);

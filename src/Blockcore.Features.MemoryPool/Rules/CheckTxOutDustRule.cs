@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Features.MemoryPool.Interfaces;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Policy;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Rules
+namespace Blockcore.Features.MemoryPool.Rules
 {
     /// <summary>
     /// This rule ensures that the transaction does not contain any outputs which are considered dust.

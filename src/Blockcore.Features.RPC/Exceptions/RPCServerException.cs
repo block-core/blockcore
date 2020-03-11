@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Features.RPC.Exceptions
+namespace Blockcore.Features.RPC.Exceptions
 {
     public class RPCServerException : Exception
     {

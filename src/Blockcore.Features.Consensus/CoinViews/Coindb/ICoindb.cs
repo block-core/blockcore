@@ -1,11 +1,11 @@
 ﻿
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
-{
-    using System.Collections.Generic;
-    using NBitcoin;
-    using Stratis.Bitcoin.Utilities;
+using System.Collections.Generic;
+using Blockcore.Utilities;
+using NBitcoin;
 
+namespace Blockcore.Features.Consensus.CoinViews.Coindb
+{
     /// <summary>
     /// Database of UTXOs.
     /// </summary>

@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// This class is used to identify a <see cref="HdAddress" /> given a <see cref="Script" /> (scriptPubKey).

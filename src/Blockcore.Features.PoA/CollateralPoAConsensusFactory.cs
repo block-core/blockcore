@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     public class CollateralPoAConsensusFactory : PoAConsensusFactory
     {

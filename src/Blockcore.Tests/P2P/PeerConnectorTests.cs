@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.Signals;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.P2P
+namespace Blockcore.Tests.P2P
 {
     public sealed class PeerConnectorTests : LogsTestBase
     {

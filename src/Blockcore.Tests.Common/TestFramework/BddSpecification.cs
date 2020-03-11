@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace Stratis.Bitcoin.Tests.Common.TestFramework
+namespace Blockcore.Tests.Common.TestFramework
 {
     [DebuggerStepThrough]
     public abstract class BddSpecification : IDisposable

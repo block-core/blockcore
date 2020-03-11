@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Mining;
 using NBitcoin;
-using Stratis.Bitcoin.Mining;
 
-namespace Stratis.Bitcoin.Features.Miner
+namespace Blockcore.Features.Miner
 {
     /// <inheritdoc/>
     public sealed class BlockProvider : IBlockProvider

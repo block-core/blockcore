@@ -7,7 +7,7 @@ using FluentAssertions.Common;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.API
+namespace Blockcore.IntegrationTests.API
 {
     public class AllControllersTests
     {

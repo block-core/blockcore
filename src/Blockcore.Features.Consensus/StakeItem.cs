@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     public class StakeItem
     {

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests
+namespace Blockcore.Features.Consensus.Tests
 {
     /// <summary>
     /// Tests of <see cref="TimeSyncBehavior"/> and <see cref="TimeSyncBehaviorState"/> classes.

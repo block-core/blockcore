@@ -5,21 +5,21 @@ using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Wallet
+namespace Blockcore.IntegrationTests.Wallet
 {
     public class WalletOperationsFixture : IDisposable
     {

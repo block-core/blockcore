@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
+namespace Blockcore.Consensus.PerformanceCounters.ConsensusManager
 {
     /// <summary>Snapshot of <see cref="ConsensusManager"/> performance.</summary>
     public class ConsensusManagerPerformanceSnapshot

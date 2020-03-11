@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.RPC;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Networks;
+using Blockcore.P2P;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities.Extensions;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Connectivity
+namespace Blockcore.IntegrationTests.Connectivity
 {
     public class ConnectivityTests
     {

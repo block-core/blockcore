@@ -1,11 +1,12 @@
-﻿using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Tests.Common;
+﻿using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.RPC;
+using Blockcore.Tests.Common;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     public class RPCSettingsTest : TestBase
     {

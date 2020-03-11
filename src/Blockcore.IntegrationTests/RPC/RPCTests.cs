@@ -1,18 +1,18 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     /// <summary>
     /// Stratis test fixture for RPC tests.

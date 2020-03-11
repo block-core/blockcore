@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.P2P.Protocol
+﻿namespace Blockcore.P2P.Protocol
 {
     /// <summary>
     /// A type takes context information about a <see cref="Message"/>.

@@ -1,10 +1,10 @@
 ﻿using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// Configuration related to the wallet.

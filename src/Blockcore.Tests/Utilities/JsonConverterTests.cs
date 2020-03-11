@@ -1,12 +1,12 @@
 ﻿using System;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.OpenAsset;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Utilities
+namespace Blockcore.Tests.Utilities
 {
     public class JsonConverterTests
     {

@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Interfaces
+namespace Blockcore.Interfaces
 {
     /// <summary>
     /// A reader for extracting an address from a Script

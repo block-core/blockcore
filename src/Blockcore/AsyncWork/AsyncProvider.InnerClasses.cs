@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Stratis.Bitcoin.AsyncWork
+namespace Blockcore.AsyncWork
 {
     public partial class AsyncProvider : IAsyncProvider
     {
@@ -18,7 +18,7 @@ namespace Stratis.Bitcoin.AsyncWork
         /// <summary>
         /// Class that holds the status of running or faulted async delegate created by the BackgroundWorkProvider
         /// </summary>
-        /// <seealso cref="Stratis.Bitcoin.AsyncWork.AsyncProvider.IAsyncTaskInfoSetter" />
+        /// <seealso cref="IAsyncTaskInfoSetter" />
         internal class AsyncTaskInfo : IAsyncTaskInfoSetter
         {
             internal enum AsyncTaskType

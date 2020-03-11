@@ -2,27 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Base.Deployments.Models;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Controllers;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Features.RPC.ModelBinders;
+using Blockcore.Features.RPC.Models;
+using Blockcore.Interfaces;
+using Blockcore.Primitives;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Base.Deployments.Models;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.Features.RPC.ModelBinders;
-using Stratis.Bitcoin.Features.RPC.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.RPC.Controllers
+namespace Blockcore.Features.RPC.Controllers
 {
     /// <summary>
     /// A <see cref="FeatureController"/> that implements several RPC methods for the full node.
@@ -64,7 +65,7 @@ namespace Stratis.Bitcoin.Features.RPC.Controllers
             Network network = null,
             ChainIndexer chainIndexer = null,
             IChainState chainState = null,
-            Connection.IConnectionManager connectionManager = null,
+            IConnectionManager connectionManager = null,
             IConsensusManager consensusManager = null,
             IBlockStore blockStore = null,
             IInitialBlockDownloadState ibdState = null,

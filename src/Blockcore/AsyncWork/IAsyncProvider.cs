@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.AsyncWork
+namespace Blockcore.AsyncWork
 {
     public interface IAsyncProvider
     {

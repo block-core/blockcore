@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Blockcore.Connection;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Controllers
+namespace Blockcore.Tests.Connection
 {
     // API methods call the RPC methods, so can indirectly test RPC through API.
     public class ConnectionManagerControllerTest : LogsTestBase

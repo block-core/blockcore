@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Tests.Common;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Base
+namespace Blockcore.Tests.Base
 {
     public class ConsensusManagerBehaviorTests
     {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Stratis.Bitcoin.Configuration
+namespace Blockcore.Configuration
 {
     /// <summary>
     /// Description of network interface on which the node listens.

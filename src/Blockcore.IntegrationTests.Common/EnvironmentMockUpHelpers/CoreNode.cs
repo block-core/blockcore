@@ -7,33 +7,34 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.IntegrationTests.Common.Runners;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Primitives;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.IntegrationTests.Common.Runners;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public class CoreNode
     {

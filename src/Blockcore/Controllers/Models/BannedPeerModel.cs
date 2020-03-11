@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Controllers.Models
+namespace Blockcore.Controllers.Models
 {
     /// <summary>
     /// Class representing a banned peer.

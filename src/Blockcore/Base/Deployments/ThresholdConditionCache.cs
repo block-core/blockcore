@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Base.Deployments.Models;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments.Models;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Base.Deployments
+namespace Blockcore.Base.Deployments
 {
     /// <summary>
     /// This class tracks the current activation state of each BIP9 deployment.

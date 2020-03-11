@@ -5,13 +5,13 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Controllers
+namespace Blockcore.Controllers
 {
     public interface IRestApiClientBase
     {

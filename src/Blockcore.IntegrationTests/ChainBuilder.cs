@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     public class ChainBuilder
     {

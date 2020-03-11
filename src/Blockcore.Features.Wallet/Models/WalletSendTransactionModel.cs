@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     /// <summary>
     /// A model class to be returned when the user sends a transaction successfully.

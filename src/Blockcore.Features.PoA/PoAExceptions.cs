@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     public class NotAFederationMemberException : Exception
     {

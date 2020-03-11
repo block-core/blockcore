@@ -2,26 +2,26 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Miner.Staking;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.Mining;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Staking;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Mining;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 
-namespace Stratis.Bitcoin.Features.Miner
+namespace Blockcore.Features.Miner
 {
     /// <summary>
     /// Provides an ability to mine or stake.

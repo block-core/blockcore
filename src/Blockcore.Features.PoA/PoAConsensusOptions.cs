@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     public class PoAConsensusOptions : ConsensusOptions
     {

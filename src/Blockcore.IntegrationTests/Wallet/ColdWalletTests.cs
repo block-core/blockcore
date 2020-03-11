@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Blockcore.Builder;
+using Blockcore.Features.Api;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.ColdStaking;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Miner;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Controllers;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.ColdStaking;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Controllers;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Wallet
+namespace Blockcore.IntegrationTests.Wallet
 {
     /// <summary>
     /// Contains integration tests for the cold wallet feature.

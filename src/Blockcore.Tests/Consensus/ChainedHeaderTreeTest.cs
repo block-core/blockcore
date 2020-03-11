@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Primitives;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Consensus
+namespace Blockcore.Tests.Consensus
 {
     public class ChainedHeaderTreeTest
     {

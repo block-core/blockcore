@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Stratis.Bitcoin.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Models;
 
-namespace Stratis.Bitcoin.Features.Wallet.Helpers
+namespace Blockcore.Features.Wallet.Helpers
 {
     /// <summary>
     ///  Used for comparing a list of TransactionItemModel to each other.

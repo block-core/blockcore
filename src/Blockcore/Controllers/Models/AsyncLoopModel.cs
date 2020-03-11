@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Controllers.Models
+namespace Blockcore.Controllers.Models
 {
     /// <summary>
     /// A class representing an async loop and its current status.

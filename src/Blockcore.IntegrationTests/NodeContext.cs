@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     public class NodeContext : IDisposable
     {

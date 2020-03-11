@@ -1,7 +1,7 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Utilities;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.Primitives
+namespace Blockcore.Primitives
 {
     /// <summary>
     /// Structure made of a block and its chained header.

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// Responsible for managing the DNS feature.

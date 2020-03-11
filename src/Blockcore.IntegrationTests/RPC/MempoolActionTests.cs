@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Features.MemoryPool;
+using Blockcore.IntegrationTests.Common.Extensions;
 using NBitcoin;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.IntegrationTests.Common;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     public class MempoolActionTests : BaseRPCControllerTest
     {

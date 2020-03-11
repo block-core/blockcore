@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Stratis.Features.Diagnostic.Utils
+namespace Blockcore.Features.Diagnostic.Utils
 {
     /// <summary>
     /// Non locking Concurrent Fixed Size Queue.

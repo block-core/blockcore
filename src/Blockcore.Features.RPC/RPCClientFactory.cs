@@ -1,8 +1,8 @@
 ﻿using System;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     /// <summary>
     /// An interface for a factory that can create <see cref="IRPCClient"/> instances.

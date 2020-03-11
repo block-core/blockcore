@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// Extension methods for NBitcoin's Network class.

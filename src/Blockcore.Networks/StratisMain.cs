@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.Deployments;
+using Blockcore.Networks.Policies;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules;
-using Stratis.Bitcoin.Features.MemoryPool.Rules;
-using Stratis.Bitcoin.Networks.Deployments;
-using Stratis.Bitcoin.Networks.Policies;
 
-namespace Stratis.Bitcoin.Networks
+namespace Blockcore.Networks
 {
     public class StratisMain : Network
     {

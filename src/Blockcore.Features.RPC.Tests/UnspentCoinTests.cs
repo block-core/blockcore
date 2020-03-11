@@ -1,10 +1,9 @@
 ﻿using System;
+using Blockcore.Tests.Common;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace NBitcoin.Tests
+namespace Blockcore.Features.RPC.Tests
 {
     public class UnspentCoinTests
     {

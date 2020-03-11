@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Configuration.Logging;
+using Blockcore.Consensus;
+using Blockcore.Features.PoA.Voting;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.PoA.Voting;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+namespace Blockcore.Features.PoA.Tests
 {
     public class VotingDataEncoderTests
     {

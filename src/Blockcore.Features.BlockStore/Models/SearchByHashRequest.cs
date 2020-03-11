@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Models
+namespace Blockcore.Features.BlockStore.Models
 {
     public abstract class RequestBase
     {

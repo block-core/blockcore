@@ -1,12 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
+namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 {
     /// <inheritdoc />
     public class RewindDataIndexCache : IRewindDataIndexCache

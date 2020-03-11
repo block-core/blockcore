@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Consensus;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Mining;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Mining;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests
+namespace Blockcore.Features.Miner.Tests
 {
     // ========================
     // TODO fix this tests

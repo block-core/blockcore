@@ -1,7 +1,7 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Features.MemoryPool;
+﻿using Blockcore.Features.MemoryPool;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public class TestMemPoolEntryHelper
     {

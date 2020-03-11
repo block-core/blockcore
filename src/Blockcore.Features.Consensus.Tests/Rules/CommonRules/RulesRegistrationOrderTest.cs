@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Networks;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules;
-using Stratis.Bitcoin.Networks;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class ConsensusRulesRegistrationTest
     {

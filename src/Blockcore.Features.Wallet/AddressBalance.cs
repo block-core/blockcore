@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// A class that represents the balance of an address.

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.P2P.Peer;
+using Blockcore.Tests.Common;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Tests.Common;
 
-namespace Stratis.Bitcoin.Tests.Consensus
+namespace Blockcore.Tests.Consensus
 {
     internal static class ConsensusTestExtensions
     {

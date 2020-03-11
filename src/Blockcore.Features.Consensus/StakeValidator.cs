@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Crypto;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     /// <summary>
     /// Provides functionality for verifying validity of PoS block.

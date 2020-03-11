@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public interface IRPCJsonOutputFormatter
     {

@@ -2,17 +2,17 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Tests.Common.Logging;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Tests.Common.Logging;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests
+namespace Blockcore.Features.RPC.Tests
 {
     public class RPCMiddlewareTest : LogsTestBase
     {

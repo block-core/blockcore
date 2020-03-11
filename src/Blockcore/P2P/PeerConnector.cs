@@ -4,16 +4,16 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.P2P
+namespace Blockcore.P2P
 {
     /// <summary>Contract for <see cref="PeerConnector"/>.</summary>
     public interface IPeerConnector : IDisposable

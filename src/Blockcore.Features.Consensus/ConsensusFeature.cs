@@ -1,19 +1,20 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Signals;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     public class ConsensusFeature : FullNodeFeature
     {
@@ -21,7 +22,7 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         private readonly IConnectionManager connectionManager;
 
-        private readonly Signals.ISignals signals;
+        private readonly ISignals signals;
 
         private readonly IConsensusManager consensusManager;
 
@@ -31,7 +32,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             Network network,
             IChainState chainState,
             IConnectionManager connectionManager,
-            Signals.ISignals signals,
+            ISignals signals,
             IConsensusManager consensusManager,
             NodeDeployments nodeDeployments)
         {

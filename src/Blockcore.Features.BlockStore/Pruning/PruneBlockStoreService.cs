@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Pruning
+namespace Blockcore.Features.BlockStore.Pruning
 {
     /// <inheritdoc/>
     public sealed class PruneBlockStoreService : IPruneBlockStoreService

@@ -1,26 +1,27 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Logging;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Features.Miner;
+using Blockcore.Features.PoA.Behaviors;
+using Blockcore.Features.PoA.Voting;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.PoA.Behaviors;
-using Stratis.Bitcoin.Features.PoA.Voting;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     public class PoAFeature : FullNodeFeature
     {

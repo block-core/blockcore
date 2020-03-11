@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Net;
+using Blockcore.Features.ColdStaking.Models;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
+using Blockcore.Utilities.ModelStateErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Features.ColdStaking.Models;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
-using Stratis.Bitcoin.Utilities.ModelStateErrors;
 
-namespace Stratis.Bitcoin.Features.ColdStaking.Controllers
+namespace Blockcore.Features.ColdStaking.Controllers
 {
     /// <summary>
     /// Controller providing operations for cold staking.

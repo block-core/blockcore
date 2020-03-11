@@ -1,7 +1,7 @@
 ﻿using System;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public class DateTimeProviderSet : DateTimeProvider
     {

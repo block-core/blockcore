@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+﻿namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public enum CoreNodeState
     {

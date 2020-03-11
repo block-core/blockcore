@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Controllers.Converters;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Controllers.Converters;
 
-namespace Stratis.Bitcoin.Controllers.Models
+namespace Blockcore.Controllers.Models
 {
     /// <summary>
     /// A class representing a transaction.

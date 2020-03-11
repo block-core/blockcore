@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore.Base.Deployments;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
 using Xunit;
 using static NBitcoin.Transaction;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class SetActivationDeploymentsRuleTest : TestConsensusRulesUnitTestBase
     {

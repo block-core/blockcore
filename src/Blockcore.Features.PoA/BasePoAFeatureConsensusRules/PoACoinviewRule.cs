@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules
+namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {
     public class PoACoinviewRule : CoinViewRule
     {

@@ -9,7 +9,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Dns.Tests
+namespace Blockcore.Features.Dns.Tests
 {
     /// <summary>
     /// Tests for the<see cref="DnsSeedMasterFile"/> class.

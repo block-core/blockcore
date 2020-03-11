@@ -5,7 +5,7 @@ using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json.Linq;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public class RPCScriptSig
     {

@@ -1,8 +1,8 @@
-﻿using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules
+namespace Blockcore.Features.Consensus.Rules
 {
     /// <summary>
     /// Rules that provide easy access to the <see cref="CoinView"/> which is the store for a PoW system.

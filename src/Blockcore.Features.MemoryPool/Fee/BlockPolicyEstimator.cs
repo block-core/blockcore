@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Blockcore.Configuration;
+using Blockcore.Features.MemoryPool.Interfaces;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Fee
+namespace Blockcore.Features.MemoryPool.Fee
 {
     /// <summary>
     /// The BlockPolicyEstimator is used for estimating the feerate needed

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Rules
+namespace Blockcore.Features.MemoryPool.Rules
 {
     // TODO: This is still a large rule, perhaps further split it up according to the public methods
 

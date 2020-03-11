@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public class PeerInfo
     {

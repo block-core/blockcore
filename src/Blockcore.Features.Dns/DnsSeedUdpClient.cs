@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// Defines a class for a UDP client that uses the <see cref="UdpClient"/> class as the underlying UDP client.

@@ -3,7 +3,7 @@ using System.IO;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// This interface defines a DNS masterfile used to cache the whitelisted peers discovered by the DNS Seed service.

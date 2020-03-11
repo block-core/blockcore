@@ -3,25 +3,26 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Builder;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Miner;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Miner.Staking;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Staking;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     public class ProofOfStakeSteps
     {
@@ -100,7 +101,7 @@ namespace Stratis.Bitcoin.IntegrationTests
             }
 
             var minter = this.PremineNodeWithCoins.FullNode.NodeService<IPosMinting>();
-            minter.Stake(new WalletSecret() { WalletName = PremineWallet, WalletPassword = PremineWalletPassword });
+            minter.Stake(new WalletSecret() { WalletName = this.PremineWallet, WalletPassword = this.PremineWalletPassword });
         }
 
         public void PremineNodeWalletHasEarnedCoinsThroughStaking()

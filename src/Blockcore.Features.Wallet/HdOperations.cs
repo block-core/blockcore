@@ -1,8 +1,8 @@
 ﻿using System;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// Class providing helper methods for working with Hierarchical Deterministic (HD) wallets.

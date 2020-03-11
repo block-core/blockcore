@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.SignalR
+namespace Blockcore.Features.SignalR
 {
     public class Program
     {

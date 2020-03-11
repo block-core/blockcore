@@ -2,7 +2,7 @@
 using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.RPC.Models
+namespace Blockcore.Features.RPC.Models
 {
     // Bitcoin Core 0.17.0
     //{

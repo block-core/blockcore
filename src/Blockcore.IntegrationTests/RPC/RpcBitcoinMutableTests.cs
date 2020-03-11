@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Features.RPC;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Tests.Common;
 using NBitcoin;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     // TODO: These tests all need to run against SBFN too
     /// <summary>

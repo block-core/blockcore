@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.Controllers;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.RPC;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.Interfaces;
+using Blockcore.Primitives;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     public class WalletRPCController : FeatureController
     {

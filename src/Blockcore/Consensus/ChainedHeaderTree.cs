@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Base;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus.Validators;
+using Blockcore.Primitives;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus.Validators;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// Tree of chained block headers that are being claimed by the connected peers and the node itself.

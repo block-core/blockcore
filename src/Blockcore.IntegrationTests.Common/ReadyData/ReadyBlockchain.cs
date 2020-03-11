@@ -1,5 +1,5 @@
 ﻿
-namespace Stratis.Bitcoin.IntegrationTests.Common.ReadyData
+namespace Blockcore.IntegrationTests.Common.ReadyData
 {
     /// <summary>
     /// A list of paths to readily available blockchain data in zipped folders.

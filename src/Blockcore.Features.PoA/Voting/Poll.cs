@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting
+namespace Blockcore.Features.PoA.Voting
 {
     /// <summary>Information about active poll.</summary>
     public class Poll : IBitcoinSerializable

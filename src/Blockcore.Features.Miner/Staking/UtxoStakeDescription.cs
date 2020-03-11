@@ -1,8 +1,8 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Features.Wallet;
+using Blockcore.Utilities;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Miner.Staking
+namespace Blockcore.Features.Miner.Staking
 {
     /// <summary>
     /// Information related to UTXO that is required for staking.

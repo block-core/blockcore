@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Blockcore.Features.Wallet;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -9,10 +10,9 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Features.Wallet;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests
+namespace Blockcore.Features.RPC.Tests
 {
     public class RPCParametersValueProviderTest
     {

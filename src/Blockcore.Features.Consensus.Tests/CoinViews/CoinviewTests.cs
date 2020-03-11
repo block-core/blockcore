@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
+namespace Blockcore.Features.Consensus.Tests.CoinViews
 {
     public class CoinviewTests
     {

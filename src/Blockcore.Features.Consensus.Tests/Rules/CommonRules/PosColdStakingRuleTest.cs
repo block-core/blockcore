@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class PosColdStakingRuleTest : PosConsensusRuleUnitTestBase
     {

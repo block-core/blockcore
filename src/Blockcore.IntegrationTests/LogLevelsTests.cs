@@ -4,6 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Blockcore.Controllers.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Networks;
+using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;
@@ -13,14 +18,9 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     /// <summary>
     /// This class tests the 'api/node/loglevels' endpoint.

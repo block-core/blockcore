@@ -1,7 +1,7 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Utilities;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     /// <summary>Interface that contains data that defines a federation member.</summary>
     public interface IFederationMember

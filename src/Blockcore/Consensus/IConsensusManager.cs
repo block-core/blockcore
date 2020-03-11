@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.P2P.Peer;
+using Blockcore.Primitives;
 using NBitcoin;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Primitives;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// TODO add a big nice comment.

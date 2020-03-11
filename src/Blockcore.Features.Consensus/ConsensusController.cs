@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Base.Deployments.Models;
+using Blockcore.Consensus;
+using Blockcore.Controllers;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Base.Deployments.Models;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     /// <summary>
     /// A <see cref="FeatureController"/> that provides API and RPC methods from the consensus loop.

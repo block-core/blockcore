@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Utilities.Extensions
+namespace Blockcore.Utilities.Extensions
 {
     /// <summary>
     /// Extension methods for Version class.

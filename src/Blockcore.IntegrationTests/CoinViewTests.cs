@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Base;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using DBreeze.DataTypes;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Crypto;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     public class CoinViewTests
     {
@@ -44,7 +46,7 @@ namespace Stratis.Bitcoin.IntegrationTests
                 Block genesis = ctx.Network.GetGenesis();
                 var genesisChainedHeader = new ChainedHeader(genesis.Header, ctx.Network.GenesisHash, 0);
                 ChainedHeader chained = this.MakeNext(genesisChainedHeader, ctx.Network);
-                ctx.Coindb.SaveChanges(new UnspentOutput[] { new UnspentOutput(new OutPoint(genesis.Transactions[0], 0), new Utilities.Coins(0, genesis.Transactions[0].Outputs.First(), true)) }, new HashHeightPair(genesisChainedHeader), new HashHeightPair(chained));
+                ctx.Coindb.SaveChanges(new UnspentOutput[] { new UnspentOutput(new OutPoint(genesis.Transactions[0], 0), new Coins(0, genesis.Transactions[0].Outputs.First(), true)) }, new HashHeightPair(genesisChainedHeader), new HashHeightPair(chained));
                 Assert.NotNull(ctx.Coindb.FetchCoins(new[] { new OutPoint(genesis.Transactions[0], 0) }).UnspentOutputs.Values.FirstOrDefault().Coins);
                 Assert.Null(ctx.Coindb.FetchCoins(new[] { new OutPoint() }).UnspentOutputs.Values.FirstOrDefault().Coins);
 
@@ -70,9 +72,9 @@ namespace Stratis.Bitcoin.IntegrationTests
                 ChainedHeader chained = this.MakeNext(genesisChainedHeader, ctx.Network);
                 var dateTimeProvider = new DateTimeProvider();
 
-                var cacheCoinView = new CachedCoinView(this.network, new Checkpoints(), ctx.Coindb, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), new ConsensusSettings(new Configuration.NodeSettings(this.network)));
+                var cacheCoinView = new CachedCoinView(this.network, new Checkpoints(), ctx.Coindb, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), new ConsensusSettings(new NodeSettings(this.network)));
 
-                cacheCoinView.SaveChanges(new UnspentOutput[] { new UnspentOutput(new OutPoint(genesis.Transactions[0], 0), new Utilities.Coins(0, genesis.Transactions[0].Outputs.First(), true)) }, new HashHeightPair(genesisChainedHeader), new HashHeightPair(chained));
+                cacheCoinView.SaveChanges(new UnspentOutput[] { new UnspentOutput(new OutPoint(genesis.Transactions[0], 0), new Coins(0, genesis.Transactions[0].Outputs.First(), true)) }, new HashHeightPair(genesisChainedHeader), new HashHeightPair(chained));
                 Assert.NotNull(cacheCoinView.FetchCoins(new[] { new OutPoint(genesis.Transactions[0], 0) }).UnspentOutputs.Values.FirstOrDefault().Coins);
                 Assert.Null(cacheCoinView.FetchCoins(new[] { new OutPoint() }).UnspentOutputs.Values.FirstOrDefault().Coins);
                 Assert.Equal(new HashHeightPair(chained), cacheCoinView.GetTipHash());
@@ -102,11 +104,11 @@ namespace Stratis.Bitcoin.IntegrationTests
             using (NodeContext nodeContext = NodeContext.Create(this))
             {
                 var dateTimeProvider = new DateTimeProvider();
-                var cacheCoinView = new CachedCoinView(this.network, new Checkpoints(), nodeContext.Coindb, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), new ConsensusSettings(new Configuration.NodeSettings(this.network)));
+                var cacheCoinView = new CachedCoinView(this.network, new Checkpoints(), nodeContext.Coindb, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), new ConsensusSettings(new NodeSettings(this.network)));
                 var tester = new CoinViewTester(cacheCoinView);
 
-                List<(Utilities.Coins, OutPoint)> coinsA = tester.CreateCoins(5);
-                List<(Utilities.Coins, OutPoint)> coinsB = tester.CreateCoins(1);
+                List<(Coins, OutPoint)> coinsA = tester.CreateCoins(5);
+                List<(Coins, OutPoint)> coinsB = tester.CreateCoins(1);
                 tester.NewBlock();
                 cacheCoinView.Flush();
                 Assert.True(tester.Exists(coinsA[2]));
@@ -122,7 +124,7 @@ namespace Stratis.Bitcoin.IntegrationTests
                 tester.NewBlock();
 
                 // Create a new coin set/
-                List<(Utilities.Coins, OutPoint)> coinsC = tester.CreateCoins(1);
+                List<(Coins, OutPoint)> coinsC = tester.CreateCoins(1);
                 tester.NewBlock();
                 Assert.True(tester.Exists(coinsA[0]));
                 Assert.True(tester.Exists(coinsC[0]));
@@ -151,10 +153,10 @@ namespace Stratis.Bitcoin.IntegrationTests
                 Assert.True(tester.Exists(coinsB[0]));
 
                 // Create 7 coins in a new coin set and spend the first coin.
-                List<(Utilities.Coins, OutPoint)> coinsD = tester.CreateCoins(7);
+                List<(Coins, OutPoint)> coinsD = tester.CreateCoins(7);
                 tester.Spend(coinsD[0]);
                 // Create a coin in a new coin set and spend it.
-                List<(Utilities.Coins, OutPoint)> coinsE = tester.CreateCoins(1);
+                List<(Coins, OutPoint)> coinsE = tester.CreateCoins(1);
                 tester.Spend(coinsE[0]);
                 tester.NewBlock();
 

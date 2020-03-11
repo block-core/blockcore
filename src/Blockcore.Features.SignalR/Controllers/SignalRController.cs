@@ -1,11 +1,11 @@
 using System;
 using System.Net;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Features.SignalR.Controllers
+namespace Blockcore.Features.SignalR.Controllers
 {
     /// <summary>
     /// Controller for connecting to SignalR.

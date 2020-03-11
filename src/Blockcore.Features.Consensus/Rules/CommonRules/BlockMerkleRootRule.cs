@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Crypto;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>
     /// This rule will validate that the calculated merkle tree matches the merkle root in the header.

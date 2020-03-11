@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.EventBus
+namespace Blockcore.EventBus
 {
     internal class Subscription<TEventBase> : ISubscription where TEventBase : EventBase
     {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     /// <summary>
     /// Creates different types of valid and invalid blocks.

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Utilities.JsonConverters;
 using LiteDB;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Controllers.Models
+namespace Blockcore.Controllers.Models
 {
     /// <summary>
     ///  A class that contains a list of balances per address as requested.

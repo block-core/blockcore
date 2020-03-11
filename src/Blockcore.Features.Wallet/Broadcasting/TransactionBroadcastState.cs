@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Features.Wallet.Broadcasting
+﻿namespace Blockcore.Features.Wallet.Broadcasting
 {
     public enum TransactionBroadcastState
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.RPC.ModelBinders
+namespace Blockcore.Features.RPC.ModelBinders
 {
     public class DestinationModelBinder : IModelBinder, IModelBinderProvider
     {

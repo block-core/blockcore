@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Primitives;
+using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Tests
+namespace Blockcore.Features.MemoryPool.Tests
 {
     public class BlocksDisconnectedSignaledTest
     {

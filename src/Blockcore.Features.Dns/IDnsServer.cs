@@ -1,7 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.P2P;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// This interface defines a DNS server used by the StratisDnsD daemon to support a DNS Seed service.
@@ -35,7 +36,7 @@ namespace Stratis.Bitcoin.Features.Dns
         /// Swaps in a new version of the cached DNS masterfile used by the DNS server.
         /// </summary>
         /// <remarks>
-        /// The <see cref="DnsFeature"/> object is designed to produce a whitelist of peers from the <see cref="P2P.IPeerAddressManager"/>
+        /// The <see cref="DnsFeature"/> object is designed to produce a whitelist of peers from the <see cref="IPeerAddressManager"/>
         /// object which is then periodically formed into a new masterfile instance and applied to the <see cref="IDnsServer"/> object.  The
         /// masterfile is swapped for efficiency, rather than applying a merge operation to the existing masterfile, or clearing the existing
         /// masterfile and re-adding the peer entries (which could cause some interim DNS resolve requests to fail).

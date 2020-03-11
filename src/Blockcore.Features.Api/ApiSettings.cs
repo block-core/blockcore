@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Timers;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Api
+namespace Blockcore.Features.Api
 {
     /// <summary>
     /// Configuration related to the API interface.

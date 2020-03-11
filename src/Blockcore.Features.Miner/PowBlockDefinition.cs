@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Mining;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Mining;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Miner
+namespace Blockcore.Features.Miner
 {
     public class PowBlockDefinition : BlockDefinition
     {

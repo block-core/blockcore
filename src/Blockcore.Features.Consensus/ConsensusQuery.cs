@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     /// <summary>
     /// A class that provides the ability to query consensus elements.

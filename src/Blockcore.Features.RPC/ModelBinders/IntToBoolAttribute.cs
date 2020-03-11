@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Features.RPC.ModelBinders
+namespace Blockcore.Features.RPC.ModelBinders
 {
     /// <summary>
     /// Marker attribute to force integer conversion to a boolean

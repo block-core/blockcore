@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+﻿namespace Blockcore.P2P.Protocol.Payloads
 {
     [Payload("sendheaders")]
     public class SendHeadersPayload : Payload

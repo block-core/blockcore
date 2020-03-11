@@ -1,16 +1,17 @@
 ﻿using System.IO;
 using System.Linq;
+using Blockcore.Connection;
+using Blockcore.Features.RPC;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using FluentAssertions.Common;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit.Abstractions;
 
-namespace Stratis.Bitcoin.IntegrationTests.Mempool
+namespace Blockcore.IntegrationTests.Mempool
 {
     public partial class MempoolRelaySpecification
     {

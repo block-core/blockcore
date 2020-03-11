@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     /// <summary>
     /// Proven headers payload which contains list of up to 2000 proven headers.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.P2P.Protocol.Payloads.Payload" />
+    /// <seealso cref="Payload" />
     [Payload("provhdr")]
     public class ProvenHeadersPayload : Payload
     {

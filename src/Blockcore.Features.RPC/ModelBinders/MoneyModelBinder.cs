@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.RPC.ModelBinders
+namespace Blockcore.Features.RPC.ModelBinders
 {
     public class MoneyModelBinder : IModelBinder, IModelBinderProvider
     {

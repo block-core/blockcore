@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Wallet;
+using Blockcore.Tests.Common;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Tests.Common;
 
-namespace Stratis.Bitcoin.Tests.Wallet.Common
+namespace Blockcore.Tests.Wallet.Common
 {
     /// <summary>
     /// Helper class containing a bunch of methods used for testing the wallet functionality.

@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.BlockPulling;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.Validators;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Interfaces;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Moq;
 using NBitcoin;
 using NBitcoin.Crypto;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.BlockPulling;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Consensus.Validators;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     /// <summary>
     /// Test cases related to the <see cref="PosCoinviewRule"/>.
@@ -34,7 +36,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
         /// <returns>The constructed consensus manager.</returns>
         private async Task<ConsensusManager> CreateConsensusManagerAsync(Dictionary<OutPoint, UnspentOutput> unspentOutputs)
         {
-            this.consensusSettings = new ConsensusSettings(Configuration.NodeSettings.Default(this.network));
+            this.consensusSettings = new ConsensusSettings(NodeSettings.Default(this.network));
             var initialBlockDownloadState = new InitialBlockDownloadState(this.chainState.Object, this.network, this.consensusSettings, new Checkpoints(), this.loggerFactory.Object, DateTimeProvider.Default);
             var signals = new Signals.Signals(this.loggerFactory.Object, null);
             var asyncProvider = new AsyncProvider(this.loggerFactory.Object, signals, new Mock<INodeLifetime>().Object);

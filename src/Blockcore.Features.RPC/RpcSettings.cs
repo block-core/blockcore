@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     /// <summary>
     /// Configuration related to RPC interface.

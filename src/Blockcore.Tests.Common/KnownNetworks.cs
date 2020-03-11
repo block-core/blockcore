@@ -1,8 +1,8 @@
-﻿using NBitcoin;
+﻿using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Networks;
-using Stratis.Bitcoin.Networks;
 
-namespace Stratis.Bitcoin.Tests.Common
+namespace Blockcore.Tests.Common
 {
     public static class KnownNetworks
     {

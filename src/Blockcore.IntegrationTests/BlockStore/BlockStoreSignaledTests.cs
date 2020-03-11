@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Connection;
+using Blockcore.Features.BlockStore;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.Networks;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Common.ReadyData;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.BlockStore
+namespace Blockcore.IntegrationTests.BlockStore
 {
     /// <summary>
     /// Used for recording messages coming into a test node. Does not respond to them in any way.

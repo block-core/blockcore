@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Blockcore.Utilities;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// This class defines a DNS masterfile used to cache the whitelisted peers discovered by the DNS Seed service that supports saving

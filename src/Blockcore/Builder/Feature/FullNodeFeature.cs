@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Stratis.Bitcoin.Builder.Feature
+namespace Blockcore.Builder.Feature
 {
     /// <summary>
     /// Defines methods for features that are managed by the FullNode.

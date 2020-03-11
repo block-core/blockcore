@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Tests.Utilities
+namespace Blockcore.Tests.Utilities
 {
     public class NodeTcpListenerStub : IDisposable
     {

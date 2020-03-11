@@ -1,7 +1,7 @@
 ﻿using System;
-using Stratis.Bitcoin.Utilities.Extensions;
+using Blockcore.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// Providing date time functionality.

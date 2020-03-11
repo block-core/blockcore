@@ -1,10 +1,10 @@
-﻿using Stratis.Bitcoin.Tests.Common.TestFramework;
+﻿using Blockcore.Tests.Common.TestFramework;
 using Xunit;
 
 // Disable warnings about "this" qualifier to make the Specification more readable
 // ReSharper disable ArrangeThisQualifier
 
-namespace Stratis.Bitcoin.IntegrationTests.BlockStore
+namespace Blockcore.IntegrationTests.BlockStore
 {
     public partial class RetrieveFromBlockStoreSpecification : BddSpecification
     {

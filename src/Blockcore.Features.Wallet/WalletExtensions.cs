@@ -1,7 +1,7 @@
 ﻿using System;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     public static class WalletExtensions
     {

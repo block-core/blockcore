@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Stratis.Features.Diagnostic.PeerDiagnostic;
+using Blockcore.Features.Diagnostic.PeerDiagnostic;
 
-namespace Stratis.Features.Diagnostic.Controllers.Models
+namespace Blockcore.Features.Diagnostic.Controllers.Models
 {
     public class PeerStatisticsModel
     {

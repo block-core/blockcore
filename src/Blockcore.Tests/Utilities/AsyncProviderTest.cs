@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Utilities
+namespace Blockcore.Tests.Utilities
 {
     /// <summary>
     /// Tests of <see cref="AsyncQueue{T}"/> class.
@@ -27,7 +27,7 @@ namespace Stratis.Bitcoin.Tests.Utilities
             var mockLoggerFactory = new Mock<ILoggerFactory>();
             mockLoggerFactory.Setup(l => l.CreateLogger(It.IsAny<string>())).Returns(this.mockLogger.Object).Verifiable();
 
-            var signals = new Bitcoin.Signals.Signals(mockLoggerFactory.Object, null);
+            var signals = new Blockcore.Signals.Signals(mockLoggerFactory.Object, null);
             var nodeLifetime = new Mock<INodeLifetime>().Object;
 
             this.asyncProvider = new AsyncProvider(mockLoggerFactory.Object, signals, nodeLifetime);

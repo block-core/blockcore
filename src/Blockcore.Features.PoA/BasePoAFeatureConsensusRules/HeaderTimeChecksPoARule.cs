@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules
+namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {
     /// <summary>
     /// Ensures that timestamp of current block is greater than timestamp of previous block,

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Tests.Common;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Consensus
+namespace Blockcore.Tests.Consensus
 {
     public class CheckPointsTest
     {

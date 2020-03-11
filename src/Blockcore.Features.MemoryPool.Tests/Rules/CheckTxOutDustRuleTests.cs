@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Features.MemoryPool.Rules;
-using Stratis.Bitcoin.Networks;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Tests.Rules
+namespace Blockcore.Features.MemoryPool.Tests.Rules
 {
     public sealed class CheckTxOutDustRuleTests
     {

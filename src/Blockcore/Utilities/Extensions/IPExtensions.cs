@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Utilities.Extensions
+namespace Blockcore.Utilities.Extensions
 {
     public static class IPExtensions
     {

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.PoA.Events;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.PoA.Events;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting
+namespace Blockcore.Features.PoA.Voting
 {
     /// <summary>
     /// Automatically schedules addition of voting data that votes for kicking federation member that

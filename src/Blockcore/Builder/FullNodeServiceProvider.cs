@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Builder.Feature;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Builder
+namespace Blockcore.Builder
 {
     /// <summary>
     /// Provider of access to services and features registered with the full node.

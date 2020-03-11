@@ -1,6 +1,6 @@
 ﻿using System.Security;
 
-namespace Stratis.Bitcoin.Utilities.Extensions
+namespace Blockcore.Utilities.Extensions
 {
     public static class StringExtensions
     {

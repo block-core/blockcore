@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Blockcore.P2P.Protocol.Payloads;
 using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.P2P.Protocol
+namespace Blockcore.P2P.Protocol
 {
     public class Message : IBitcoinSerializable
     {

@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Consensus.Rules;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules
+namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {
     /// <summary>
     /// Checks that signature from header we wanted to download block data for

@@ -3,30 +3,30 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base.Deployments;
+using Blockcore.BlockPulling;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.Validators;
+using Blockcore.Controllers;
+using Blockcore.EventBus;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Rules;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.BlockPulling;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Consensus.Validators;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
 
 [assembly: InternalsVisibleTo("Blockcore.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Tests.Common")]
@@ -34,7 +34,7 @@ using Stratis.Bitcoin.Utilities;
 [assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.IntegrationTests")]
 
-namespace Stratis.Bitcoin.Base
+namespace Blockcore.Base
 {
     /// <summary>
     /// Base node services, these are the services a node has to have.

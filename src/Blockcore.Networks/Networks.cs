@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Networks
+namespace Blockcore.Networks
 {
     public static class Networks
     {

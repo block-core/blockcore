@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.Primitives;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.BlockStore
+namespace Blockcore.Features.BlockStore
 {
     /// <summary>
     /// Saves blocks to the database in batches, removes reorged blocks from the database.

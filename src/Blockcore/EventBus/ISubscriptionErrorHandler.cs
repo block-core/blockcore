@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.EventBus
+namespace Blockcore.EventBus
 {
     public interface ISubscriptionErrorHandler
     {

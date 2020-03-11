@@ -1,9 +1,9 @@
 ﻿using System;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.CoinViews
+namespace Blockcore.Features.Consensus.Tests.CoinViews
 {
     public class BackendPerformanceCounterTest
     {

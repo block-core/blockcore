@@ -4,6 +4,12 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Features.RPC.Controllers;
+using Blockcore.Features.RPC.Models;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +21,10 @@ using Moq;
 using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.RPC.Controllers;
-using Stratis.Bitcoin.Features.RPC.Models;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities.JsonErrors;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
+namespace Blockcore.Features.RPC.Tests.Controller
 {
     public class RPCControllerTest : LogsTestBase
     {

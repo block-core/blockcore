@@ -2,11 +2,11 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Controllers;
+using Blockcore.Controllers.Models;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.Controllers.Models;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Controllers
+namespace Blockcore.Features.BlockStore.Controllers
 {
     /// <summary>Rest client for <see cref="BlockStoreController"/>.</summary>
     public interface IBlockStoreClient : IRestApiClientBase

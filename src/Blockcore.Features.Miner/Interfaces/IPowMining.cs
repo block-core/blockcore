@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Miner.Interfaces
+namespace Blockcore.Features.Miner.Interfaces
 {
     public interface IPowMining
     {

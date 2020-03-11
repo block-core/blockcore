@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Interfaces;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.Utils;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.ProvenBlockHeaders
+namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
 {
     public class ProvenBlockHeaderRepositoryTests : LogsTestBase
     {

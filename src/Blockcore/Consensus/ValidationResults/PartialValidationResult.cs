@@ -1,6 +1,6 @@
-﻿using Stratis.Bitcoin.Primitives;
+﻿using Blockcore.Primitives;
 
-namespace Stratis.Bitcoin.Consensus.ValidationResults
+namespace Blockcore.Consensus.ValidationResults
 {
     /// <summary>
     /// Feedback specific to a partial block validation.

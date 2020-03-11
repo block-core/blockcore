@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
 using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews.Coindb
 {
     /// <summary>
     /// Persistent implementation of coinview using dBreeze database.
@@ -110,7 +110,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                 foreach (OutPoint outPoint in utxos)
                 {
                     byte[] row = this.leveldb.Get(new byte[] { coinsTable }.Concat(outPoint.ToBytes()).ToArray());
-                    Utilities.Coins outputs = row != null ? this.dBreezeSerializer.Deserialize<Utilities.Coins>(row) : null;
+                    Coins outputs = row != null ? this.dBreezeSerializer.Deserialize<Coins>(row) : null;
 
                     this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
 

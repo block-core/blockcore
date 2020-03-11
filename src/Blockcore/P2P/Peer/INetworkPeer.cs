@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.P2P.Peer
+namespace Blockcore.P2P.Peer
 {
     /// <summary>
     /// Represents a counterparty of the node on the network. This is usually another node, but it can be

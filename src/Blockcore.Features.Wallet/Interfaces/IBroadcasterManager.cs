@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Wallet.Broadcasting;
 using NBitcoin;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Wallet.Broadcasting;
 
-namespace Stratis.Bitcoin.Features.Wallet.Interfaces
+namespace Blockcore.Features.Wallet.Interfaces
 {
     public interface IBroadcasterManager
     {

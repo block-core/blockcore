@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>Calculates average value of last N added samples every time new sample is added.</summary>
     /// <remarks>

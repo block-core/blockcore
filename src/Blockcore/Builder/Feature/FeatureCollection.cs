@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Stratis.Bitcoin.Builder.Feature
+namespace Blockcore.Builder.Feature
 {
     /// <summary>
     /// Defines methods for collection of features of the FullNode.

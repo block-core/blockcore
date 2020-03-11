@@ -1,12 +1,12 @@
 ﻿using System.Linq;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.BlockStore.Pruning;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Configuration;
+using Blockcore.Features.BlockStore.Pruning;
+using Blockcore.Networks;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Tests
+namespace Blockcore.Features.BlockStore.Tests
 {
     public sealed class PruneBlockRepositoryTests : LogsTestBase
     {

@@ -1,8 +1,9 @@
 ﻿using System.Linq;
+using Blockcore.Utilities.Extensions;
 using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Controllers.Models
+namespace Blockcore.Controllers.Models
 {
     public class BlockModel
     {

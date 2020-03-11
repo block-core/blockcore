@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Models;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Features.Miner.Controllers
+namespace Blockcore.Features.Miner.Controllers
 {
     /// <summary>
     /// Controller providing operations on mining feature.

@@ -2,7 +2,7 @@
 using System.Linq;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews
 {
     public class CoinviewHelper
     {

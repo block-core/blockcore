@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Interfaces
+﻿namespace Blockcore.Interfaces
 {
     /// <summary>
     /// An interface used to retrieve unspent transactions from a pooled source

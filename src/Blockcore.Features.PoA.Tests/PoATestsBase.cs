@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.PoA.Voting;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.PoA.Voting;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+
+namespace Blockcore.Features.PoA.Tests
 {
     public class PoATestsBase
     {

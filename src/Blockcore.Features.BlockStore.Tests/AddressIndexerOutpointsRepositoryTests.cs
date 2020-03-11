@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Blockcore.Configuration.Logging;
+using Blockcore.Features.BlockStore.AddressIndexing;
 using LiteDB;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Features.BlockStore.AddressIndexing;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Tests
+namespace Blockcore.Features.BlockStore.Tests
 {
     public class AddressIndexerOutpointsRepositoryTests
     {

@@ -1,9 +1,9 @@
-﻿using Stratis.Bitcoin.Tests.Common.TestFramework;
+﻿using Blockcore.Tests.Common.TestFramework;
 using Xunit;
 
 // ReSharper disable ArrangeThisQualifier
 
-namespace Stratis.Bitcoin.IntegrationTests.BlockStore
+namespace Blockcore.IntegrationTests.BlockStore
 {
     public partial class ProofOfWorkSpendingSpecification : BddSpecification
     {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders
+namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 {
     /// <summary>
     /// Manages the persistence of <see cref="ProvenBlockHeader"/> items.

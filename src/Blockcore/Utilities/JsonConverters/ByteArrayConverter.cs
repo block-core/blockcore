@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Utilities.JsonConverters
+namespace Blockcore.Utilities.JsonConverters
 {
     /// <summary>
     /// Converter used to convert <see cref="byte"/> arrays to and from JSON.

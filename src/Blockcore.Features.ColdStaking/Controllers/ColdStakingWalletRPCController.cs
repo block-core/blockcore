@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Blockcore.Consensus;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
 
-namespace Stratis.Bitcoin.Features.ColdStaking.Controllers
+namespace Blockcore.Features.ColdStaking.Controllers
 {
     /// <summary> All functionality is in WalletRPCController, just inherit the functionality in this feature.</summary>
     [ApiVersion("1")]

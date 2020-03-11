@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Rules;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// An engine that enforce the execution and validation of consensus rule.

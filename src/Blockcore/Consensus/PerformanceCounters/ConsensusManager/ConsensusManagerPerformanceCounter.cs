@@ -1,8 +1,8 @@
 ﻿using System;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager
+namespace Blockcore.Consensus.PerformanceCounters.ConsensusManager
 {
     public class ConsensusManagerPerformanceCounter
     {

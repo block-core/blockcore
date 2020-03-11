@@ -1,9 +1,9 @@
 ﻿using System.Threading;
+using Blockcore.Consensus;
+using Blockcore.Primitives;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Primitives;
 
-namespace Stratis.Bitcoin.Interfaces
+namespace Blockcore.Interfaces
 {
     public interface IBlockStoreQueue : IBlockStore
     {

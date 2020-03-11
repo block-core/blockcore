@@ -2,14 +2,14 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.Features.Wallet.Broadcasting
+namespace Blockcore.Features.Wallet.Broadcasting
 {
     public class BroadcasterBehavior : NetworkPeerBehavior
     {

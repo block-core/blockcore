@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Features.Wallet
+﻿namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// The type of coin, as specified in BIP44.

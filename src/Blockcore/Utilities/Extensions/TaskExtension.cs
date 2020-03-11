@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Stratis.Bitcoin
+namespace Blockcore.Utilities.Extensions
 {
     public static class TaskExtensions
     {

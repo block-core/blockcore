@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Tests.Common;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.NodeConfiguration
+namespace Blockcore.Tests.NodeConfiguration
 {
     public class ConsensusSettingsTest
     {

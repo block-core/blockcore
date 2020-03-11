@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Behaviors
+namespace Blockcore.Features.Consensus.Behaviors
 {
     public class ProvenHeadersReservedSlotsBehavior : NetworkPeerBehavior
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Base.Deployments.Models
+namespace Blockcore.Base.Deployments.Models
 {
     /// <summary>
     /// Class representing information about the current activation state of a deployment.

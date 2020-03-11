@@ -3,32 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Miner.Staking;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Mining;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Tests.Wallet.Common;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Interfaces;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Models;
-using Stratis.Bitcoin.Features.Miner.Staking;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Mining;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Tests.Wallet.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests
+namespace Blockcore.Features.Miner.Tests
 {
     public class PosMintingTest : LogsTestBase
     {
@@ -228,7 +228,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
                 .Select(t => 
                 new UnspentOutput(
                     new OutPoint( t.Transaction.Id, 0), 
-                    new Utilities.Coins(0, new TxOut(t.Transaction.Amount ?? Money.Zero, t.Address.ScriptPubKey), 
+                    new Coins(0, new TxOut(t.Transaction.Amount ?? Money.Zero, t.Address.ScriptPubKey), 
                     false, 
                     false, 
                     milliseconds550MinutesAgo)))
@@ -569,7 +569,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
                 TxOut = new TxOut(new Money(100), new Mock<IDestination>().Object),
                 OutPoint = new OutPoint(uint256.One, 0),
                 HashBlock = chainTip.Previous.HashBlock,
-                UtxoSet = new UnspentOutput(new OutPoint(uint256.One, 0), new Utilities.Coins(1, new TxOut(), false, isCoinstake, chainTip.Header.Time))
+                UtxoSet = new UnspentOutput(new OutPoint(uint256.One, 0), new Coins(1, new TxOut(), false, isCoinstake, chainTip.Header.Time))
             };
 
             descriptions.Add(utxoDescription);

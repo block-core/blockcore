@@ -4,7 +4,7 @@ using NBitcoin;
 using NBitcoin.OpenAsset;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Utilities.JsonConverters
+namespace Blockcore.Utilities.JsonConverters
 {
     /// <summary>
     /// Converter used to convert an <see cref="AssetId"/> to and from JSON.

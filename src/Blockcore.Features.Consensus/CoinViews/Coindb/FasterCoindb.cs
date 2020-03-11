@@ -1,18 +1,17 @@
-﻿namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
+using FASTER.core;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
+using NBitcoin.Crypto;
+
+namespace Blockcore.Features.Consensus.CoinViews.Coindb
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-
-    using FASTER.core;
-    using Microsoft.Extensions.Logging;
-    using NBitcoin;
-    using NBitcoin.Crypto;
-    using Stratis.Bitcoin.Configuration;
-    using Stratis.Bitcoin.Utilities;
-
     public class FasterCoindb : ICoindb, IStakdb, IDisposable
     {
         /// <summary>Database key under which the block hash of the coin view's current tip is stored.</summary>
@@ -238,7 +237,7 @@
                             context.FinalizeRead(ref addStatus, ref output);
                         }
 
-                        Utilities.Coins outputs = addStatus == Status.OK ? this.dBreezeSerializer.Deserialize<Utilities.Coins>(output.value.value) : null;
+                        Coins outputs = addStatus == Status.OK ? this.dBreezeSerializer.Deserialize<Coins>(output.value.value) : null;
 
                         this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
 

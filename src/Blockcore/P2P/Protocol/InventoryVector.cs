@@ -1,7 +1,7 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
+﻿using Blockcore.P2P.Protocol.Payloads;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.P2P.Protocol
+namespace Blockcore.P2P.Protocol
 {
     public enum InventoryType : uint
     {

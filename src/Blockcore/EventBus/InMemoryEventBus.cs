@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.EventBus
+namespace Blockcore.EventBus
 {
     public class InMemoryEventBus : IEventBus
     {

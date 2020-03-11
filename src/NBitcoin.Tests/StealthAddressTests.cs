@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Tests.Common;
 using NBitcoin.DataEncoders;
 using NBitcoin.Stealth;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

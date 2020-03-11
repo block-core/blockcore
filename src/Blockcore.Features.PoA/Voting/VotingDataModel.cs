@@ -1,7 +1,7 @@
 ﻿using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting
+namespace Blockcore.Features.PoA.Voting
 {
     public class VotingDataModel
     {

@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Consensus;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Tests.Wallet.Common;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonConverters;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
 using NBitcoin.Protocol;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Tests.Wallet.Common;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Wallet.Tests
+namespace Blockcore.Features.Wallet.Tests
 {
     public class WalletManagerTest : LogsTestBase, IClassFixture<WalletFixture>
     {

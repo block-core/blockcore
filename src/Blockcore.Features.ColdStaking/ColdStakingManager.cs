@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.ColdStaking.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.IntegrationTests")]
 
-namespace Stratis.Bitcoin.Features.ColdStaking
+namespace Blockcore.Features.ColdStaking
 {
     /// <summary>
     /// The manager class for implementing cold staking as covered in more detail in the remarks of
@@ -159,7 +159,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         /// </summary>
         /// <remarks>
         /// <para>In order to keep track of cold staking addresses and balances we are using <see cref="HdAccount"/>'s
-        /// with indexes starting from the value defined in <see cref="Wallet.Wallet.SpecialPurposeAccountIndexesStart"/>.
+        /// with indexes starting from the value defined in <see cref="Wallet.SpecialPurposeAccountIndexesStart"/>.
         /// </para><para>
         /// We are using two such accounts, one when the wallet is in the role of cold wallet, and another one when
         /// the wallet is in the role of hot wallet. For this reason we specify the required account when calling this
@@ -188,7 +188,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking
         /// </summary>
         /// <remarks>
         /// <para>In order to keep track of cold staking addresses and balances we are using <see cref="HdAccount"/>'s
-        /// with indexes starting from the value defined in <see cref="Wallet.Wallet.SpecialPurposeAccountIndexesStart"/>.
+        /// with indexes starting from the value defined in <see cref="Wallet.SpecialPurposeAccountIndexesStart"/>.
         /// </para><para>
         /// We are using two such accounts, one when the wallet is in the role of cold wallet, and another one when
         /// the wallet is in the role of hot wallet. For this reason we specify the required account when calling this

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Interfaces
+namespace Blockcore.Interfaces
 {
     /// <summary>
     /// An interface used to retrieve unspent transactions

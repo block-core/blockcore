@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Mining;
+using Blockcore.Networks.Deployments;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Mining;
-using Stratis.Bitcoin.Networks.Deployments;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests
+namespace Blockcore.Features.Miner.Tests
 {
     public class PowBlockAssemblerTest : LogsTestBase
     {
@@ -401,7 +401,7 @@ namespace Stratis.Bitcoin.Features.Miner.Tests
             var powConsensusRules = new PowConsensusRuleEngine(this.testNet,
                     this.LoggerFactory.Object, this.dateTimeProvider.Object, chainIndexer,
                     new NodeDeployments(this.testNet, chainIndexer), new ConsensusSettings(new NodeSettings(this.testNet)), new Checkpoints(),
-                    new Mock<ICoinView>().Object, new Mock<IChainState>().Object, new InvalidBlockHashStore(dateTimeProvider), new NodeStats(dateTimeProvider, LoggerFactory.Object), asyncProvider, consensusRulesContainer);
+                    new Mock<ICoinView>().Object, new Mock<IChainState>().Object, new InvalidBlockHashStore(dateTimeProvider), new NodeStats(dateTimeProvider, this.LoggerFactory.Object), asyncProvider, consensusRulesContainer);
 
             powConsensusRules.SetupRulesEngineParent();
             this.consensusManager.SetupGet(x => x.ConsensusRules).Returns(powConsensusRules);

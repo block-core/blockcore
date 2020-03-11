@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Connection
+namespace Blockcore.Tests.Connection
 {
     public class ConnectionManagerSettingsTest : LogsTestBase
     {

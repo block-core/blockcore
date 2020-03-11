@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Models
+namespace Blockcore.Features.BlockStore.Models
 {
     public sealed class AddressIndexerTipModel
     {

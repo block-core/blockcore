@@ -1,7 +1,7 @@
 ﻿using NBitcoin;
 using Newtonsoft.Json.Linq;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public class UnspentTransaction
     {

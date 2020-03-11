@@ -1,8 +1,8 @@
-﻿using NBitcoin;
+﻿using Blockcore.Utilities.JsonConverters;
+using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     public class WalletBuildTransactionModel
     {

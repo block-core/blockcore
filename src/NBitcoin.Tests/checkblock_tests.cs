@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using Blockcore.Tests.Common;
 using NBitcoin.DataEncoders;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

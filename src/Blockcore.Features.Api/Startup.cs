@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Blockcore.Utilities.JsonConverters;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace Stratis.Bitcoin.Features.Api
+namespace Blockcore.Features.Api
 {
     public class Startup
     {
@@ -75,7 +76,7 @@ namespace Stratis.Bitcoin.Features.Api
                     }
                 })
                 // add serializers for NBitcoin objects
-                .AddNewtonsoftJson(options => Utilities.JsonConverters.Serializer.RegisterFrontConverters(options.SerializerSettings))
+                .AddNewtonsoftJson(options => Serializer.RegisterFrontConverters(options.SerializerSettings))
                 .AddControllers(this.fullNode.Services.Features, services);
 
             // Enable API versioning.

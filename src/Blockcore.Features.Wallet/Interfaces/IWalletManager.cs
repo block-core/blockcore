@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
 
-namespace Stratis.Bitcoin.Features.Wallet.Interfaces
+namespace Blockcore.Features.Wallet.Interfaces
 {
     /// <summary>
     /// Interface for a manager providing operations on wallets.

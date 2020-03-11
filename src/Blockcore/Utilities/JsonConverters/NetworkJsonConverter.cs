@@ -4,7 +4,7 @@ using NBitcoin;
 using NBitcoin.Networks;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Utilities.JsonConverters
+namespace Blockcore.Utilities.JsonConverters
 {
     /// <summary>
     /// Converter used to convert the name of a network in JSON to the corresponding <see cref="Network"/>.

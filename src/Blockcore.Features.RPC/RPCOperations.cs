@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Features.RPC
+﻿namespace Blockcore.Features.RPC
 {
     //from rpcserver.h
     public enum RPCOperations

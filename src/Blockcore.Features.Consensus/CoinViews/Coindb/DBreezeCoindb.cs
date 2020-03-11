@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.DataTypes;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews.Coindb
 {
     /// <summary>
     /// Persistent implementation of coinview using dBreeze database.
@@ -111,7 +111,7 @@ namespace Stratis.Bitcoin.Features.Consensus.CoinViews
                     foreach (OutPoint outPoint in utxos)
                     {
                         Row<byte[], byte[]> row = transaction.Select<byte[], byte[]>("Coins", outPoint.ToBytes());
-                        Utilities.Coins outputs = row.Exists ? this.dBreezeSerializer.Deserialize<Utilities.Coins>(row.Value) : null;
+                        Coins outputs = row.Exists ? this.dBreezeSerializer.Deserialize<Coins>(row.Value) : null;
 
                         this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
 

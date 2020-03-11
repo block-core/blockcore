@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.AsyncWork;
+using Blockcore.Connection;
+using Blockcore.Features.SignalR.Events;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.SignalR.Events;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Features.Wallet.Models;
 
-namespace Stratis.Bitcoin.Features.SignalR.Broadcasters
+namespace Blockcore.Features.SignalR.Broadcasters
 {
     /// <summary>
     /// Broadcasts current staking information to SignalR clients

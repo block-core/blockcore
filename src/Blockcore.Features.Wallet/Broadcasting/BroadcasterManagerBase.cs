@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using ConcurrentCollections;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet.Broadcasting
+namespace Blockcore.Features.Wallet.Broadcasting
 {
     public abstract class BroadcasterManagerBase : IBroadcasterManager
     {

@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Signals;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Peer behavior for memory pool.
@@ -51,7 +52,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         private readonly IInitialBlockDownloadState initialBlockDownloadState;
 
         /// <summary>Peer notifications available to subscribe to.</summary>
-        private readonly Signals.ISignals signals;
+        private readonly ISignals signals;
 
         /// <summary>Instance logger for the memory pool behavior component.</summary>
         private readonly ILogger logger;
@@ -96,7 +97,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
             MempoolOrphans orphans,
             IConnectionManager connectionManager,
             IInitialBlockDownloadState initialBlockDownloadState,
-            Signals.ISignals signals,
+            ISignals signals,
             ILoggerFactory loggerFactory,
             Network network)
         {

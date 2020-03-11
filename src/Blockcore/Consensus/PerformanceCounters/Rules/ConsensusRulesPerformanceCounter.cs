@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Blockcore.Consensus.Rules;
+using Blockcore.Utilities;
 using NBitcoin.Rules;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Consensus.PerformanceCounters.Rules
+namespace Blockcore.Consensus.PerformanceCounters.Rules
 {
     /// <summary>Measures rules average execution time.</summary>
     public class ConsensusRulesPerformanceCounter

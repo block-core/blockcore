@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Blockcore.Tests.Common;
 using NBitcoin.BitcoinCore;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Crypto;
@@ -12,7 +13,6 @@ using NBitcoin.OpenAsset;
 using NBitcoin.Policy;
 using NBitcoin.Stealth;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

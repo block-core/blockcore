@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Miner.Staking
+namespace Blockcore.Features.Miner.Staking
 {
     /// <summary>
     /// Information about coinstake transaction and its private key.

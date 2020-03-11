@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.Controllers;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Connection
+namespace Blockcore.Connection
 {
     /// <summary>
     /// A <see cref="FeatureController"/> that implements API and RPC methods for the connection manager.

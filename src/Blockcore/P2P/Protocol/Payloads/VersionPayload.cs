@@ -5,7 +5,7 @@ using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     [Flags]
     public enum NetworkPeerServices : ulong

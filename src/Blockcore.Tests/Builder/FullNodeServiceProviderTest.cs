@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
 using Moq;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Builder
+namespace Blockcore.Tests.Builder
 {
     public class FullNodeServiceProviderTest
     {

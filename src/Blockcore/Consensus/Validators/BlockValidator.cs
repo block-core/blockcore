@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Consensus.Validators
+namespace Blockcore.Consensus.Validators
 {
     /// <summary>
     /// A callback that is invoked when <see cref="IPartialValidator.StartPartialValidation"/> completes validation of a block.

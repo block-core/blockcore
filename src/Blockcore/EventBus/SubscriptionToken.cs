@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.EventBus
+namespace Blockcore.EventBus
 {
     /// <summary>
     /// Represents a subscription token.

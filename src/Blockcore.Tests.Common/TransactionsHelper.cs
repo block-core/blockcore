@@ -1,10 +1,10 @@
 ﻿using System;
+using Blockcore.Base.Deployments;
+using Blockcore.Utilities;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Tests.Common
+namespace Blockcore.Tests.Common
 {
     public class TransactionsHelper
     {

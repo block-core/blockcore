@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Utilities
+namespace Blockcore.Tests.Utilities
 {
     public class MemorySizeCacheTest
     {

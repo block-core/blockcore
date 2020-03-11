@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// A wallet.

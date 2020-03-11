@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
-using Stratis.Bitcoin.Utilities.Extensions;
+using Blockcore.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Utilities.Extensions
+namespace Blockcore.Tests.Utilities.Extensions
 {
     public class IPExtensionsTest
     {

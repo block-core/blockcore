@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Controllers.Converters;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Controllers.Converters;
 
-namespace Stratis.Bitcoin.Controllers.Models
+namespace Blockcore.Controllers.Models
 {
     /// <summary>
     /// Class representing the status of the currently running node.

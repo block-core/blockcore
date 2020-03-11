@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>Calculate the difficulty of a POS network for both Pow/POS blocks.</summary>
     public class CheckDifficultyHybridRule : FullValidationConsensusRule

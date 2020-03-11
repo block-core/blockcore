@@ -1,9 +1,9 @@
 ﻿using System;
+using Blockcore.Configuration;
+using Blockcore.Features.Wallet.Interfaces;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     public class WalletFeePolicy : IWalletFeePolicy
     {

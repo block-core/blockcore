@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Blockcore.AsyncWork;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.SignalR.Broadcasters
+namespace Blockcore.Features.SignalR.Broadcasters
 {
     /// <summary>
     /// Base class for all SignalR Broadcasters

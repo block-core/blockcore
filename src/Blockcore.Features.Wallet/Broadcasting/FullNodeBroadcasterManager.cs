@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet.Broadcasting
+namespace Blockcore.Features.Wallet.Broadcasting
 {
     public class FullNodeBroadcasterManager : BroadcasterManagerBase
     {

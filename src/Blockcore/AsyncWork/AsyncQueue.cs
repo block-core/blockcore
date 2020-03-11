@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.AsyncWork;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.AsyncWork
 {
     /// <summary>
     /// Async queue is a thread-safe queue that can operate in callback mode or blocking dequeue mode.

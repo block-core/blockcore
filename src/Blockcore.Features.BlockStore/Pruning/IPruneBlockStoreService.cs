@@ -1,7 +1,7 @@
 ﻿using System;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Pruning
+namespace Blockcore.Features.BlockStore.Pruning
 {
     /// <summary>
     /// This service starts an async loop task that periodically deletes from the blockstore.

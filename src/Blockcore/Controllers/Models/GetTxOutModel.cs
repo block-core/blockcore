@@ -1,9 +1,9 @@
-﻿using NBitcoin;
+﻿using Blockcore.Utilities;
+using Blockcore.Utilities.JsonConverters;
+using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Controllers.Models
+namespace Blockcore.Controllers.Models
 {
     /// <summary>
     /// A model returned by a gettxout request

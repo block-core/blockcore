@@ -1,8 +1,8 @@
 ﻿using System.IO;
+using Blockcore.Configuration;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     public class KeyTool
     {

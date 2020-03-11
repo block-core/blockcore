@@ -1,8 +1,8 @@
 ﻿using System;
+using Blockcore.Features.Wallet;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Wallet;
 
-namespace Stratis.Bitcoin.Features.ColdStaking
+namespace Blockcore.Features.ColdStaking
 {
     /// <summary>
     /// This class extends the <see cref="ScriptToAddressLookup"/> base class by handling cold staking scripts.

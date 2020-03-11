@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Controllers.Models
+﻿namespace Blockcore.Controllers.Models
 {
     /// <summary>
     /// Represents the model that will ban and disconnect a connected peer.

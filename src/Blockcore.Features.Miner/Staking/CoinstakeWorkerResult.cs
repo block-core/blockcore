@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Stratis.Bitcoin.Features.Miner.Staking
+namespace Blockcore.Features.Miner.Staking
 {
     /// <summary>
     /// Result of a task of coinstake worker that looks for kernel.

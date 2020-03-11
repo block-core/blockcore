@@ -1,10 +1,10 @@
 ﻿using System.Linq;
+using Blockcore.Configuration;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     public class AddressBookManager : IAddressBookManager
     {

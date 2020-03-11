@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Utilities.JsonConverters;
 using DBreeze;
 using DBreeze.DataTypes;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>Allows saving and loading single values to and from key-value storage.</summary>
     public interface IKeyValueRepository : IDisposable

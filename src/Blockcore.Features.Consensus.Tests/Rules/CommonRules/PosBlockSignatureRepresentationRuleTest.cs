@@ -1,11 +1,11 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Tests.Common;
+using NBitcoin;
 using NBitcoin.Crypto;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class PosBlockSignatureRepresentationRuleTest : TestPosConsensusRulesUnitTestBase
     {

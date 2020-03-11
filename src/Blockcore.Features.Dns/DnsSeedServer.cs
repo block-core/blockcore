@@ -6,16 +6,17 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.P2P;
+using Blockcore.Utilities;
 using DNS.Client;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
 using DNS.Protocol.Utils;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// This class defines a DNS server based on 3rd party library https://github.com/kapetan/dns.
@@ -250,7 +251,7 @@ namespace Stratis.Bitcoin.Features.Dns
         /// Swaps in a new version of the cached DNS masterfile used by the DNS server.
         /// </summary>
         /// <remarks>
-        /// The <see cref="DnsFeature"/> object is designed to produce a whitelist of peers from the <see cref="P2P.IPeerAddressManager"/>
+        /// The <see cref="DnsFeature"/> object is designed to produce a whitelist of peers from the <see cref="IPeerAddressManager"/>
         /// object which is then periodically formed into a new masterfile instance and applied to the <see cref="IDnsServer"/> object.  The
         /// masterfile is swapped for efficiency, rather than applying a merge operation to the existing masterfile, or clearing the existing
         /// masterfile and re-adding the peer entries (which could cause some interim DNS resolve requests to fail).

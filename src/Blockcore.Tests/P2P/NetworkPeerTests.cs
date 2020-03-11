@@ -1,9 +1,9 @@
-﻿using NBitcoin.Protocol;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
+﻿using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using NBitcoin.Protocol;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.P2P
+namespace Blockcore.Tests.P2P
 {
     public sealed class NetworkPeerTests
     {

@@ -1,11 +1,12 @@
 ﻿using System;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.Miner;
+using Blockcore.Signals;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     /// <summary>
     /// This date time provider substitutes the node's usual DTP when running certain
@@ -40,7 +41,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
         }
 
         /// <summary>
-        /// This gets called when the Transaction's time gets set in <see cref="Features.Miner.PowBlockDefinition"/>.
+        /// This gets called when the Transaction's time gets set in <see cref="PowBlockDefinition"/>.
         /// </summary>
         public DateTime GetAdjustedTime()
         {
@@ -48,9 +49,9 @@ namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
         }
 
         /// <summary>
-        /// This gets called when the Block Header's time gets set in <see cref="Features.Miner.PowBlockDefinition"/>.
+        /// This gets called when the Block Header's time gets set in <see cref="PowBlockDefinition"/>.
         /// <para>
-        /// Please see the <see cref="Features.Miner.PowBlockDefinition.UpdateHeaders"/> method.
+        /// Please see the <see cref="PowBlockDefinition.UpdateHeaders"/> method.
         /// </para>
         /// <para>
         /// Add 5 seconds to the time so that the block header's time stamp is after

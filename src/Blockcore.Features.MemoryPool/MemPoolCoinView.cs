@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     // TODO: Break this component in two.
     // The MempoolCoinView mixes functionality of fetching outputs from store and looking in the mempool.

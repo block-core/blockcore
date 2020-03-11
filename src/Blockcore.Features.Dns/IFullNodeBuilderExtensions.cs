@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration.Logging;
+﻿using Blockcore.Builder;
+using Blockcore.Configuration.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// Extension methods for <see cref="IFullNodeBuilder"/>.

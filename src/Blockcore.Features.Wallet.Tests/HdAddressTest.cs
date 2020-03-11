@@ -4,7 +4,7 @@ using System.Linq;
 using NBitcoin;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Wallet.Tests
+namespace Blockcore.Features.Wallet.Tests
 {
     public class HdAddressTest
     {

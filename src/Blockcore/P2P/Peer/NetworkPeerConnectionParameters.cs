@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.P2P.Peer
+namespace Blockcore.P2P.Peer
 {
     public class NetworkPeerConnectionParameters
     {

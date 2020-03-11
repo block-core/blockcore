@@ -1,7 +1,7 @@
 ﻿using System;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Miner
+namespace Blockcore.Features.Miner
 {
     /// <summary>
     /// Semi- immutable settings to be used by <see cref="BlockDefinition"/>.

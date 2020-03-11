@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 
-namespace Stratis.Bitcoin.Features.Api
+namespace Blockcore.Features.Api
 {
     public class CertificateStore : ICertificateStore
     {

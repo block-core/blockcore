@@ -2,39 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.ColdStaking.Controllers;
+using Blockcore.Features.ColdStaking.Models;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Features.Consensus.Rules;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Fee;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Networks.Deployments;
+using Blockcore.Networks.Policies;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
 using NBitcoin.Policy;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.ColdStaking.Controllers;
-using Stratis.Bitcoin.Features.ColdStaking.Models;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Interfaces;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Features.Consensus.Rules;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.MemoryPool.Fee;
-using Stratis.Bitcoin.Features.MemoryPool.Rules;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Networks.Policies;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.ColdStaking.Tests
+namespace Blockcore.Features.ColdStaking.Tests
 {
     /// <summary>
     /// This class tests the functionality provided by the <see cref="ColdStakingController"/>.
@@ -326,11 +327,11 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             ErrorModel error2 = errorResponse1.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error1.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error1.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error1.Description);
             Assert.StartsWith("The cold staking account does not exist.", error1.Message);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error2.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error2.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error2.Description);
             Assert.StartsWith("The cold staking account does not exist.", error2.Message);
         }
 
@@ -401,7 +402,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
 
             ErrorModel error = errorResponse.Errors[0];
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("You can't use this wallet as both hot wallet and cold wallet.", error.Message);
         }
 
@@ -433,7 +434,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
 
             ErrorModel error = errorResponse.Errors[0];
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("The hot and cold wallet addresses could not be found in the corresponding accounts.", error.Message);
         }
 
@@ -486,12 +487,12 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             ErrorModel error2 = errorResponse2.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error1.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error1.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error1.Description);
             // TODO: Restore this line.
             // Assert.StartsWith($"Can't find wallet account '{coldWalletAccountName}'.", error1.Message);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error2.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error2.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error2.Description);
             // TODO: Restore this line.
             // Assert.StartsWith($"Can't find wallet account '{hotWalletAccountName}'.", error2.Message);
         }
@@ -953,8 +954,8 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             this.unspentOutputs[new OutPoint(prevTran, 0)] = new UnspentOutput(new OutPoint(prevTran, 0), new Coins(1, prevTran.Outputs[0], false, false));
 
             // activate segwit
-            BIP9DeploymentsParameters current = this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit];
-            this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit] =
+            BIP9DeploymentsParameters current = this.Network.Consensus.BIP9Deployments[StratisBIP9Deployments.Segwit];
+            this.Network.Consensus.BIP9Deployments[StratisBIP9Deployments.Segwit] =
                 new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, BIP9DeploymentsParameters.AlwaysActive, BIP9DeploymentsParameters.AlwaysActive);
 
             // Verify that the transaction would be accepted to the memory pool.
@@ -962,7 +963,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             Assert.True(this.mempoolManager.Validator.AcceptToMemoryPool(state, transaction).GetAwaiter().GetResult(), "Transaction failed mempool validation.");
 
             // Revert back changes
-            this.Network.Consensus.BIP9Deployments[Stratis.Bitcoin.Networks.Deployments.StratisBIP9Deployments.Segwit] = current;
+            this.Network.Consensus.BIP9Deployments[StratisBIP9Deployments.Segwit] = current;
         }
 
         /// <summary>
@@ -1001,10 +1002,9 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             ErrorModel error = errorResponse.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("You can't send the money to a cold staking cold wallet account.", error.Message);
         }
-
 
         /// <summary>
         /// Confirms that trying to withdraw money from a non-existent cold staking account will raise an error.
@@ -1036,7 +1036,7 @@ namespace Stratis.Bitcoin.Features.ColdStaking.Tests
             ErrorModel error = errorResponse.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Features)}.{nameof(Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("The cold wallet account does not exist.", error.Message);
         }
     }

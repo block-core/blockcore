@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Blockcore.Base;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Validators;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Validators;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     /// <summary>Test-only implementation of <see cref="TestChainedHeaderTree"/> that exposes inner structures.</summary>
     internal class TestChainedHeaderTree : ChainedHeaderTree

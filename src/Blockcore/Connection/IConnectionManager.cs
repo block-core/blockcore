@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.Connection
+namespace Blockcore.Connection
 {
     public interface IConnectionManager : IDisposable
     {

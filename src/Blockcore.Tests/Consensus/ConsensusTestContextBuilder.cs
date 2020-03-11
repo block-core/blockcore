@@ -1,7 +1,7 @@
 ﻿using System;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Tests.Consensus
+namespace Blockcore.Tests.Consensus
 {
     public sealed class TestContextBuilder
     {

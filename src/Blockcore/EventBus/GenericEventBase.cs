@@ -1,12 +1,12 @@
-﻿namespace Stratis.Bitcoin.EventBus
+﻿namespace Blockcore.EventBus
 {
     /// <summary>
     /// Basic implementation of a generic <see cref="EventBase"/> that exposes a typed Content property.
     /// This is abstract to force to create a specific event.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="EventBase" />
     /// <typeparam name="TContent">The type of the content.</typeparam>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="EventBase" />
     public abstract class GenericEventBase<TContent> : EventBase
     {
         /// <summary>

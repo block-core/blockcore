@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.API
+namespace Blockcore.IntegrationTests.API
 {
     public partial class ApiSpecification
     {

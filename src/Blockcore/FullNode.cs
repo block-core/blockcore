@@ -2,20 +2,20 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin
+namespace Blockcore
 {
     /// <summary>
     /// Node providing all supported features of the blockchain and its network.

@@ -1,8 +1,8 @@
 ﻿using System;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Filters
+namespace Blockcore.P2P.Protocol.Filters
 {
     /// <summary>
     /// Contract to intercept sent and received messages.

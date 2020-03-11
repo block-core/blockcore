@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// Represents an immutable instance of a transaction outout.

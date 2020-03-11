@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.Controllers.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Networks;
+using Blockcore.P2P;
+using Blockcore.Tests.Common;
 using Flurl;
 using Flurl.Http;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.API
+namespace Blockcore.IntegrationTests.API
 {
     public sealed class NetworkControllerApiTests
     {

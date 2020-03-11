@@ -3,7 +3,7 @@ using System.Linq;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 
-namespace Stratis.Bitcoin.Features.Wallet.Controllers
+namespace Blockcore.Features.Wallet.Controllers
 {
     /// <summary>
     /// Stratis X has a version prefix starting xq5h. Full node has a version prefix xpub for extended public key. 

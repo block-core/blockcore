@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.PoA.Payloads;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.PoA.Payloads;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA.Behaviors
+namespace Blockcore.Features.PoA.Behaviors
 {
     public class PoAConsensusManagerBehavior : ConsensusManagerBehavior
     {

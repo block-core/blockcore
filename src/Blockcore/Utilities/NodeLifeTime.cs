@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// Allows consumers to perform cleanup during a graceful shutdown.

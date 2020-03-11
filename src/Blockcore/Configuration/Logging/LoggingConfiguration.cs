@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Blockcore.Configuration.Settings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using NLog;
@@ -10,10 +11,9 @@ using NLog.Config;
 using NLog.Extensions.Logging;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
-using Stratis.Bitcoin.Configuration.Settings;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Stratis.Bitcoin.Configuration.Logging
+namespace Blockcore.Configuration.Logging
 {
     /// <summary>
     /// An extension of the <see cref="LoggerFactory"/> that allows access to some internal components.
@@ -50,7 +50,7 @@ namespace Stratis.Bitcoin.Configuration.Logging
                     .AddFilter("System", LogLevel.Warning)
                     .AddFilter("Microsoft", LogLevel.Warning)
                     .AddFilter("Microsoft.AspNetCore", LogLevel.Error)
-                    .AddFilter<ConsoleLoggerProvider>("Stratis.Bitcoin.*", LogLevel.Information)
+                    .AddFilter<ConsoleLoggerProvider>($"{nameof(Blockcore)}.*", LogLevel.Information)
                     .AddConsole();
 
                 builder.SetMinimumLevel(LogLevel.Debug);
@@ -85,7 +85,7 @@ namespace Stratis.Bitcoin.Configuration.Logging
             // { "libevent", "" },
             // { "lock", "" },
             // { "mempoolrej", "" },
-            { "net", $"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Connection)}.*" },
+            { "net", $"{nameof(Blockcore)}.{nameof(Connection)}.*" },
             // { "proxy", "" },
             // { "prune", "" },
             // { "rand", "" },
@@ -96,8 +96,8 @@ namespace Stratis.Bitcoin.Configuration.Logging
             // { "zmq", "" },
 
             // Short Names
-            { "configuration", $"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(Configuration)}.*" },
-            { "fullnode", $"{nameof(Stratis)}.{nameof(Bitcoin)}.{nameof(FullNode)}" }
+            { "configuration", $"{nameof(Blockcore)}.{nameof(Configuration)}.*" },
+            { "fullnode", $"{nameof(Blockcore)}.{nameof(FullNode)}" },
         };
 
         public static void RegisterFeatureNamespace<T>(string key)
@@ -205,7 +205,7 @@ namespace Stratis.Bitcoin.Configuration.Logging
             LogManager.Configuration.AddTarget(mainTarget);
 
             // Default logging level is Info for all components.
-            var defaultRule = new LoggingRule($"{nameof(Stratis)}.*", settings.LogLevel, mainTarget);
+            var defaultRule = new LoggingRule($"{nameof(Blockcore)}.*", settings.LogLevel, mainTarget);
 
             if (settings.DebugArgs.Any() && settings.DebugArgs[0] != "1")
             {
@@ -263,7 +263,7 @@ namespace Stratis.Bitcoin.Configuration.Logging
                     if (settings.DebugArgs[0] == "1")
                     {
                         // Increase all logging to Debug.
-                        builder.AddFilter<ConsoleLoggerProvider>($"{nameof(Stratis)}.{nameof(Bitcoin)}", Microsoft.Extensions.Logging.LogLevel.Debug);
+                        builder.AddFilter<ConsoleLoggerProvider>($"{nameof(Blockcore)}", Microsoft.Extensions.Logging.LogLevel.Debug);
                     }
                     else
                     {

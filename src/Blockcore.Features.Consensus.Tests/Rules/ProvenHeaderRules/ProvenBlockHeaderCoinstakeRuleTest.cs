@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
 using NBitcoin;
 using NBitcoin.Crypto;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 using uint256 = NBitcoin.uint256;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
+namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
 {
     public class ProvenBlockHeaderCoinstakeRuleTest : TestPosConsensusRulesUnitTestBase
     {

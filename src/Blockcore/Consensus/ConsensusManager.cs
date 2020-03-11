@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.BlockPulling;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus.PerformanceCounters.ConsensusManager;
+using Blockcore.Consensus.ValidationResults;
+using Blockcore.Consensus.Validators;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.Primitives;
+using Blockcore.Signals;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.BlockPulling;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus.PerformanceCounters.ConsensusManager;
-using Stratis.Bitcoin.Consensus.ValidationResults;
-using Stratis.Bitcoin.Consensus.Validators;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     /// <inheritdoc cref="IConsensusManager"/>
     public class ConsensusManager : IConsensusManager

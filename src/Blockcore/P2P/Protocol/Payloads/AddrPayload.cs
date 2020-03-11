@@ -2,7 +2,7 @@
 using NBitcoin;
 using NBitcoin.Protocol;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     /// <summary>
     /// An available peer address in the bitcoin network is announce (unsollicited or after a getaddr).

@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Features.Miner;
+using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
+using Blockcore.Mining;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules;
-using Stratis.Bitcoin.Mining;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     public class PoABlockDefinition : BlockDefinition
     {

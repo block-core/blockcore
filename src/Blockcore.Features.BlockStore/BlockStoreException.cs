@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stratis.Bitcoin.Features.BlockStore
+namespace Blockcore.Features.BlockStore
 {
     public class BlockStoreException : Exception
     {

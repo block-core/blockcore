@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Networks;
+using Blockcore.P2P;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using FluentAssertions;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.P2P
+namespace Blockcore.Tests.P2P
 {
     public sealed class PeerAddressManagerTests : LogsTestBase
     {

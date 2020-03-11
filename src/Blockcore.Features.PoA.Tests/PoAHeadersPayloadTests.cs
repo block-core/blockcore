@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Blockcore.Features.PoA.Payloads;
 using NBitcoin;
-using Stratis.Bitcoin.Features.PoA.Payloads;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+namespace Blockcore.Features.PoA.Tests
 {
     public class PoAHeadersPayloadTests
     {

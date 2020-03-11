@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Miner.Models;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Features.Miner.Models;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests.Models
+namespace Blockcore.Features.RPC.Tests.Models
 {
     /// <summary>
     /// Tests of <see cref="GetStakingInfoModel"/> class.

@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
+namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 {
     /// <summary>
     /// Rule to check if the coinstake inside proven header is valid:
@@ -29,7 +29,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
     /// </list>
     /// </summary>
     /// <remarks>(*) - denotes rules that are expensive to execute.</remarks>
-    /// <seealso cref="T:Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules.ProvenHeaderRuleBase" />
+    /// <seealso cref="T:Blockcore.Features.Consensus.Rules.ProvenHeaderRules.ProvenHeaderRuleBase" />
     public class ProvenHeaderCoinstakeRule : ProvenHeaderRuleBase
     {
         /// <summary>The stake validator.</summary>

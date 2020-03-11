@@ -1,10 +1,10 @@
 ﻿using System;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Utilities
+namespace Blockcore.Tests.Utilities
 {
     public class NetworkHelpersTest
     {

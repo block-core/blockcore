@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.PoA.Voting;
+using Blockcore.Primitives;
+using Blockcore.Tests.Common;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.PoA.Voting;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+namespace Blockcore.Features.PoA.Tests
 {
     public class VotingManagerTests : PoATestsBase
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 using static NBitcoin.OpcodeType;
 
-namespace Stratis.Bitcoin.Features.ColdStaking
+namespace Blockcore.Features.ColdStaking
 {
     /// <summary>
     /// Script template for the cold staking script.

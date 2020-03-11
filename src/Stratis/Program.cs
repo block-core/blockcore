@@ -1,24 +1,24 @@
 using System;
 using System.Threading.Tasks;
+using Blockcore;
+using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.Features.Api;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.ColdStaking;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Diagnostic;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Miner;
+using Blockcore.Features.RPC;
+using Blockcore.Features.SignalR;
+using Blockcore.Features.SignalR.Broadcasters;
+using Blockcore.Features.SignalR.Events;
+using Blockcore.Networks;
+using Blockcore.Utilities;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.ColdStaking;
-using Stratis.Bitcoin.Features.SignalR;
-using Stratis.Bitcoin.Features.SignalR.Broadcasters;
-using Stratis.Bitcoin.Features.SignalR.Events;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Features.Diagnostic;
 
-namespace Stratis.StratisD
+namespace StratisD
 {
     public class Program
     {

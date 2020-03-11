@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.IntegrationTests.Common;
+using Blockcore.Features.Api;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.IntegrationTests.Common.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.API
+namespace Blockcore.IntegrationTests.API
 {
     public partial class ApiSpecification
     {

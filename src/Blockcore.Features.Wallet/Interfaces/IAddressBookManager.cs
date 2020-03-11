@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Features.Wallet.Interfaces
+﻿namespace Blockcore.Features.Wallet.Interfaces
 {
     /// <summary>
     /// An interface providing operations on an address book.

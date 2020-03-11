@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Configuration;
+using Blockcore.Consensus;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.Interfaces;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests.Controller
+namespace Blockcore.Features.RPC.Tests.Controller
 {
     public class WalletRPCControllerTests : LogsTestBase
     {

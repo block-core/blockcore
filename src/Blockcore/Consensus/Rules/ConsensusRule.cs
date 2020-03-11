@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NBitcoin.Rules;
 
-namespace Stratis.Bitcoin.Consensus.Rules
+namespace Blockcore.Consensus.Rules
 {
     public class ConsensusRulesContainer
     {

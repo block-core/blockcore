@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Blockcore.BlockPulling;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.BlockPulling;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.BlockPulling
+namespace Blockcore.Tests.BlockPulling
 {
     public class BlockPullerTests
     {

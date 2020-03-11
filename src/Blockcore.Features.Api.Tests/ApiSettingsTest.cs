@@ -1,14 +1,13 @@
 ﻿using System;
+using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.Features.Consensus;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Api.Tests
+namespace Blockcore.Features.Api.Tests
 {
     /// <summary>
     /// Tests the settings for the API features.

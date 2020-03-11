@@ -4,18 +4,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration.Settings;
+using Blockcore.EventBus.CoreEvents.Peer;
+using Blockcore.Interfaces;
+using Blockcore.Signals;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.P2P.Peer
+namespace Blockcore.P2P.Peer
 {
     public class NetworkPeerServer : IDisposable
     {

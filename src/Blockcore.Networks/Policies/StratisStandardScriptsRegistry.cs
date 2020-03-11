@@ -3,7 +3,7 @@ using System.Linq;
 using NBitcoin;
 using NBitcoin.BitcoinCore;
 
-namespace Stratis.Bitcoin.Networks.Policies
+namespace Blockcore.Networks.Policies
 {
     /// <summary>
     /// Stratis-specific standard transaction definitions.

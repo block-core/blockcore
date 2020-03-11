@@ -2,22 +2,22 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Stratis.Bitcoin.Tests.P2P
+namespace Blockcore.Tests.P2P
 {
     public sealed class NetworkPeerServerTests : LogsTestBase
     {

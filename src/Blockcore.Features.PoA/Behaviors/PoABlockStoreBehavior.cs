@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Base;
+using Blockcore.Consensus;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.PoA.Payloads;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.PoA.Payloads;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
 
-namespace Stratis.Bitcoin.Features.PoA.Behaviors
+namespace Blockcore.Features.PoA.Behaviors
 {
     public class PoABlockStoreBehavior : BlockStoreBehavior
     {

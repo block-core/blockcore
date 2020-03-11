@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests
+namespace Blockcore.Features.RPC.Tests
 {
     public class RPCJsonMvcOptionsSetupTest
     {

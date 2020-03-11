@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Blockcore.EventBus;
+using Blockcore.Signals;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.Signals;
 
-namespace Stratis.Bitcoin.Features.SignalR
+namespace Blockcore.Features.SignalR
 {
     /// <summary>
     /// This class subscribes to Stratis.Bitcoin.EventBus messages and proxy's them

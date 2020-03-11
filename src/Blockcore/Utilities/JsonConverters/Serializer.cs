@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Stratis.Bitcoin.Utilities.JsonConverters
+namespace Blockcore.Utilities.JsonConverters
 {
     /// <summary>
     /// Class providing method used to serialize/deserialize domain objects to and from JSON.

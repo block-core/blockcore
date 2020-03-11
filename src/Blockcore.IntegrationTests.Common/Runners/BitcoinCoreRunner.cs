@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Tests.Common;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.Runners
+namespace Blockcore.IntegrationTests.Common.Runners
 {
     public sealed class BitcoinCoreRunner : NodeRunner
     {

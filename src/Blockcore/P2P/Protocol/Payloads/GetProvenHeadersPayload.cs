@@ -1,13 +1,13 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     /// <inheritdoc />
     /// <summary>
     /// Get proven headers payload which requests proven headers using a similar mechanism as
     /// the getheaders protocol message.
     /// </summary>
-    /// <seealso cref="T:Stratis.Bitcoin.P2P.Protocol.Payloads.Payload" />
+    /// <seealso cref="T:Blockcore.P2P.Protocol.Payloads.Payload" />
     [Payload("getprovhdr")]
     public class GetProvenHeadersPayload : GetHeadersPayload
     {

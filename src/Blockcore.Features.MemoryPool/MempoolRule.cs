@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Features.MemoryPool.Interfaces;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     public abstract class MempoolRule : IMempoolRule
     {

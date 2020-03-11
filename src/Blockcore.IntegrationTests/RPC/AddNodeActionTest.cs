@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net.Sockets;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.IntegrationTests.Common;
+using Blockcore.Connection;
+using Blockcore.IntegrationTests.Common.Extensions;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     public class AddNodeActionTest : BaseRPCControllerTest
     {

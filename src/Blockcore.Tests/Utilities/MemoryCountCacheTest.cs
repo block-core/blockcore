@@ -1,8 +1,8 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Utilities;
+using NBitcoin;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Utilities
+namespace Blockcore.Tests.Utilities
 {
     public class MemoryCountCacheTest
     {

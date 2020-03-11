@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration;
+﻿using Blockcore.Base;
+using Blockcore.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Stratis.Bitcoin.Builder
+namespace Blockcore.Builder
 {
     /// <summary>
     /// A class providing extension methods for <see cref="IFullNodeBuilder"/>.

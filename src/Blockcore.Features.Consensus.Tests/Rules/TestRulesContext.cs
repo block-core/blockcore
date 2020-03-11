@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Features.Consensus.Rules;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Rules;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Interfaces;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Features.Consensus.Rules;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
 using Xunit.Sdk;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules
+namespace Blockcore.Features.Consensus.Tests.Rules
 {
     /// <summary>
     /// Concrete instance of the test chain.

@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.MemoryPool.Fee;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Interfaces;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Features.MemoryPool.Fee;
-using Stratis.Bitcoin.Features.MemoryPool.Rules;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Tests
+namespace Blockcore.Features.MemoryPool.Tests
 {
     public class MempoolPersistenceTest : IDisposable
     {
@@ -296,7 +296,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool.Tests
             var consensusRulesContainer = new ConsensusRulesContainer();
             foreach (var ruleType in this.network.Consensus.ConsensusRules.HeaderValidationRules)
                 consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
-            foreach (var ruleType in network.Consensus.ConsensusRules.FullValidationRules)
+            foreach (var ruleType in this.network.Consensus.ConsensusRules.FullValidationRules)
             {
                 FullValidationConsensusRule rule = null;
                 if (ruleType == typeof(FlushCoinviewRule))

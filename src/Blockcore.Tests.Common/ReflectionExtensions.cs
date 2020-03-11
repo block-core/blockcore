@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Stratis.Bitcoin.Tests.Common
+namespace Blockcore.Tests.Common
 {
     /// <summary>Extension methods for using reflection to get / set member values.</summary>
     public static class ReflectionExtensions

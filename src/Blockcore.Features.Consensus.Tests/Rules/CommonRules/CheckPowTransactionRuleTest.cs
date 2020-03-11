@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class CheckPowTransactionRuleTest : TestConsensusRulesUnitTestBase
     {

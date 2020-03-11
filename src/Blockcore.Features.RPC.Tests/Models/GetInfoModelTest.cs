@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.RPC.Models;
 using NBitcoin;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Features.RPC.Models;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests.Models
+namespace Blockcore.Features.RPC.Tests.Models
 {
     public class GetInfoModelTest
     {

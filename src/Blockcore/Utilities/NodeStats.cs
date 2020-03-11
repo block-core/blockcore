@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     public interface INodeStats
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Stratis.Bitcoin.Utilities.JsonErrors
+namespace Blockcore.Utilities.JsonErrors
 {
     public class ErrorResult : ObjectResult
     {

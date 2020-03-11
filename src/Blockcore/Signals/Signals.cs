@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.EventBus;
+﻿using Blockcore.EventBus;
+using Microsoft.Extensions.Logging;
 
-namespace Stratis.Bitcoin.Signals
+namespace Blockcore.Signals
 {
     public interface ISignals : IEventBus
     {

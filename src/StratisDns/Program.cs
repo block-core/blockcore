@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore;
+using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.Features.Api;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.Dns;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Miner;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.Networks;
+using Blockcore.Utilities;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Dns;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.StratisDnsD
+namespace StratisDnsD
 {
     /// <summary>
     /// Main entry point.

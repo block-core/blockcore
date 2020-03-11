@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.ColdStaking
+namespace Blockcore.Features.ColdStaking
 {
     /// <summary>
     /// The scriptSig parameters used for cold staking script.

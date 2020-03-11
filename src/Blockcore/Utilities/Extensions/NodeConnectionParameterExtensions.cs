@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
 
-namespace Stratis.Bitcoin.Utilities.Extensions
+namespace Blockcore.Utilities.Extensions
 {
     public static class NodeConnectionParameterExtensions
     {

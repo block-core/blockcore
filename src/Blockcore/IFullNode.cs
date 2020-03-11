@@ -1,9 +1,9 @@
 ﻿using System;
+using Blockcore.Builder;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Hosting;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin
+namespace Blockcore
 {
     /// <summary>
     /// Contract for the full node built by full node builder.

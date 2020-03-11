@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Blockcore.Base;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Builder
+namespace Blockcore.Builder
 {
     /// <summary>
     /// Exception thrown by FullNodeBuilder.Build.

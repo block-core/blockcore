@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Base;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.BlockStore
+namespace Blockcore.Features.BlockStore
 {
     /// <inheritdoc />
     public class ProvenHeadersBlockStoreBehavior : BlockStoreBehavior

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
-using Stratis.Features.Diagnostic.Utils;
+using Blockcore.Features.Diagnostic.Utils;
 
-namespace Stratis.Features.Diagnostic.PeerDiagnostic
+namespace Blockcore.Features.Diagnostic.PeerDiagnostic
 {
     /// <summary>
     /// Holds peer statistics.

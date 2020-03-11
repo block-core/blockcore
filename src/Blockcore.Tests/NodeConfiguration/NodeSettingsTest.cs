@@ -1,13 +1,13 @@
 ﻿using System.IO;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Features.Api;
+using Blockcore.Features.RPC;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.NodeConfiguration
+namespace Blockcore.Tests.NodeConfiguration
 {
     public class NodeSettingsTest : TestBase
     {

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Configuration;
+using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.DataTypes;
 using DBreeze.Utils;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting
+namespace Blockcore.Features.PoA.Voting
 {
     public class PollsRepository : IDisposable
     {

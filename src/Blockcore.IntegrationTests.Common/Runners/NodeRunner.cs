@@ -2,7 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.Runners
+
+namespace Blockcore.IntegrationTests.Common.Runners
 {
     public abstract class NodeRunner
     {

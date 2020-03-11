@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using NBitcoin.Rules;
 
-namespace Stratis.Bitcoin.Consensus.PerformanceCounters.Rules
+namespace Blockcore.Consensus.PerformanceCounters.Rules
 {
     /// <summary>Snapshot of rule's performance.</summary>
     public class ConsensusRulesPerformanceSnapshot

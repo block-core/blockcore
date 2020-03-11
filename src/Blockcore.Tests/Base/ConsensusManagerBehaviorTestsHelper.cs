@@ -4,24 +4,24 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Tests.Base
+namespace Blockcore.Tests.Base
 {
     public class ConsensusManagerBehaviorTestsHelper
     {
@@ -150,7 +150,7 @@ namespace Stratis.Bitcoin.Tests.Base
         {
             var peer = new Mock<INetworkPeer>();
 
-            var signals = new Bitcoin.Signals.Signals(this.loggerFactory, null);
+            var signals = new Blockcore.Signals.Signals(this.loggerFactory, null);
             var asyncProvider = new AsyncProvider(this.loggerFactory, signals, new NodeLifetime());
 
             var connection = new NetworkPeerConnection(KnownNetworks.StratisMain, peer.Object, new TcpClient(), 0, (message, token) => Task.CompletedTask,

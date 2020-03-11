@@ -1,20 +1,21 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Primitives;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Signals
+namespace Blockcore.Tests.Signals
 {
     public class SignalsTest
     {
-        private readonly Bitcoin.Signals.ISignals signals;
+        private readonly ISignals signals;
 
         public SignalsTest()
         {
-            this.signals = new Bitcoin.Signals.Signals(new LoggerFactory(), null);
+            this.signals = new Blockcore.Signals.Signals(new LoggerFactory(), null);
         }
 
         [Fact]

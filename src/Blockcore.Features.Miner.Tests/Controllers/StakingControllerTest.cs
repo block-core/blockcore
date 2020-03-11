@@ -1,24 +1,25 @@
 ﻿using System;
+using Blockcore.Base;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Features.Miner.Controllers;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Miner.Staking;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Tests.Wallet.Common;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Features.Miner.Controllers;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Models;
-using Stratis.Bitcoin.Features.Miner.Staking;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Tests.Wallet.Common;
-using Stratis.Bitcoin.Utilities.JsonErrors;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests.Controllers
+namespace Blockcore.Features.Miner.Tests.Controllers
 {
     public class StakingControllerTest : LogsTestBase
     {

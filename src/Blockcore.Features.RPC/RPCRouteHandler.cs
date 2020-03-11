@@ -1,14 +1,14 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public interface IRPCRouteHandler : IRouter
     {

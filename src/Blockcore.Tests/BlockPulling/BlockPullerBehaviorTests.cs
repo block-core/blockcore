@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.BlockPulling;
+using Blockcore.Configuration.Logging;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Moq;
-using Stratis.Bitcoin.BlockPulling;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.BlockPulling
+namespace Blockcore.Tests.BlockPulling
 {
     public class BlockPullerBehaviorTests
     {

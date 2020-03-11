@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Interfaces;
+﻿using Blockcore.Base;
+using Blockcore.Interfaces;
 
-namespace Stratis.Bitcoin.Features.BlockStore
+namespace Blockcore.Features.BlockStore
 {
     /// <inheritdoc/>
     public sealed class BlockStoreQueueFlushCondition : IBlockStoreQueueFlushCondition

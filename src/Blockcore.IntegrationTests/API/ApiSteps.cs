@@ -7,31 +7,32 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using AspNetCore.Http.Extensions;
+using Blockcore.Connection;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.Api;
+using Blockcore.Features.Miner.Controllers;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Miner.Models;
+using Blockcore.Features.RPC.Models;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Controllers;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.IntegrationTests.Common.TestNetworks;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.TestFramework;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using NBitcoin;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.Miner.Controllers;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Models;
-using Stratis.Bitcoin.Features.RPC.Models;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Controllers;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Common.TestNetworks;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.TestFramework;
 using Xunit.Abstractions;
 
-namespace Stratis.Bitcoin.IntegrationTests.API
+namespace Blockcore.IntegrationTests.API
 {
     public partial class ApiSpecification : BddSpecification
     {

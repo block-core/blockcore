@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Validators;
+using Blockcore.Primitives;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus.Validators;
-using Stratis.Bitcoin.Primitives;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Consensus
+namespace Blockcore.Tests.Consensus
 {
     public class ConsensusManagerTests
     {
@@ -159,7 +160,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var result = builder.TestConsensusManager.ConsensusManager.HeadersPresented(peer.Object, headerTree, true);
 
             var callbackCalled = false;
-            var callback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; });
+            var callback = new OnBlockDownloadedCallback(d => { callbackCalled = true; });
 
             // setup the callback
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.HashBlock, callback);
@@ -187,7 +188,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             builder.TestConsensusManager.AddExpectedBlockSize(additionalHeaders2.HashBlock, additionalHeaders2.Block.BlockSize.Value);
 
             var callbackCalled = false;
-            var callback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; });
+            var callback = new OnBlockDownloadedCallback(d => { callbackCalled = true; });
 
             // setup the callback
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.HashBlock, callback);
@@ -213,7 +214,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             builder.TestConsensusManager.ClearExpectedBlockSizes();
 
             var callbackCalled = false;
-            var callback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; });
+            var callback = new OnBlockDownloadedCallback(d => { callbackCalled = true; });
 
             // setup the callback
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.HashBlock, callback);
@@ -238,7 +239,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var result = builder.TestConsensusManager.ConsensusManager.HeadersPresented(peer.Object, headerTree, true);
 
             var callbackCalled = false;
-            var callback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; });
+            var callback = new OnBlockDownloadedCallback(d => { callbackCalled = true; });
 
             // setup the callback
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.HashBlock, callback);
@@ -263,7 +264,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var result = builder.TestConsensusManager.ConsensusManager.HeadersPresented(peer.Object, headerTree, true);
 
             var callbackCalled = false;
-            var callback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; });
+            var callback = new OnBlockDownloadedCallback(d => { callbackCalled = true; });
 
             // setup the callback
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.HashBlock, callback);
@@ -272,10 +273,10 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             // setup validation to fail.
             builder.IntegrityValidator.Setup(i => i.VerifyBlockIntegrity(additionalHeaders, additionalHeaders.Block))
-                .Returns(new Bitcoin.Consensus.ValidationContext()
+                .Returns(new ValidationContext()
                 {
                     BanDurationSeconds = 3000,
-                    Error = Bitcoin.Consensus.ConsensusErrors.BadBlockSignature
+                    Error = ConsensusErrors.BadBlockSignature
                 });
 
             builder.blockPullerBlockDownloadCallback(additionalHeaders.HashBlock, additionalHeaders.Block, peer.Object.Connection.Id);
@@ -304,8 +305,8 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             var callback1Called = false;
             var callback2Called = false;
-            var callback1 = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callback1Called = true; });
-            var callback2 = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callback2Called = true; });
+            var callback1 = new OnBlockDownloadedCallback(d => { callback1Called = true; });
+            var callback2 = new OnBlockDownloadedCallback(d => { callback2Called = true; });
 
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.HashBlock, callback1, callback2);
 
@@ -340,9 +341,9 @@ namespace Stratis.Bitcoin.Tests.Consensus
             ChainedHeaderBlock calledWith1 = null;
             ChainedHeaderBlock calledWith2 = null;
             ChainedHeaderBlock calledWith3 = null;
-            var callback1 = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callback1Called = true; calledWith1 = d; });
-            var callback2 = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callback2Called = true; calledWith2 = d; });
-            var callback3 = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callback3Called = true; calledWith3 = d; });
+            var callback1 = new OnBlockDownloadedCallback(d => { callback1Called = true; calledWith1 = d; });
+            var callback2 = new OnBlockDownloadedCallback(d => { callback2Called = true; calledWith2 = d; });
+            var callback3 = new OnBlockDownloadedCallback(d => { callback3Called = true; calledWith3 = d; });
 
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.HashBlock, callback1, callback2);
             builder.TestConsensusManager.SetupCallbackByBlocksRequestedHash(additionalHeaders.Previous.HashBlock, callback3);
@@ -448,7 +449,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             var callbackCalled = false;
             ChainedHeaderBlock calledWith = null;
-            var blockDownloadedCallback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; calledWith = d; });
+            var blockDownloadedCallback = new OnBlockDownloadedCallback(d => { callbackCalled = true; calledWith = d; });
 
             var blockHashes = new List<uint256>()
              {
@@ -475,7 +476,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             var callbackCalled = false;
             ChainedHeaderBlock calledWith = null;
-            var blockDownloadedCallback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; calledWith = d; });
+            var blockDownloadedCallback = new OnBlockDownloadedCallback(d => { callbackCalled = true; calledWith = d; });
 
             builder.TestConsensusManager.ConsensusManager.GetOrDownloadBlocks(blockHashes, blockDownloadedCallback);
 
@@ -491,7 +492,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
 
             var callbackCalled = false;
             ChainedHeaderBlock calledWith = null;
-            var blockDownloadedCallback = new Bitcoin.Consensus.OnBlockDownloadedCallback(d => { callbackCalled = true; calledWith = d; });
+            var blockDownloadedCallback = new OnBlockDownloadedCallback(d => { callbackCalled = true; calledWith = d; });
 
             var blockHashes = new List<uint256>()
              {
@@ -529,12 +530,12 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var additionalHeaders = builder.ExtendAChain(1, builder.InitialChainTip);
 
             builder.PartialValidator.Setup(p => p.ValidateAsync(It.Is<ChainedHeader>(c => c.Block == additionalHeaders.Block), additionalHeaders.Block))
-                .ReturnsAsync(new Bitcoin.Consensus.ValidationContext()
+                .ReturnsAsync(new ValidationContext()
                 {
-                    Error = Bitcoin.Consensus.ConsensusErrors.BadBlockSignature
+                    Error = ConsensusErrors.BadBlockSignature
                 });
 
-            Assert.Throws<Bitcoin.Consensus.ConsensusException>(() => builder.TestConsensusManager.ConsensusManager.BlockMinedAsync(additionalHeaders.Block).GetAwaiter().GetResult());
+            Assert.Throws<ConsensusException>(() => builder.TestConsensusManager.ConsensusManager.BlockMinedAsync(additionalHeaders.Block).GetAwaiter().GetResult());
             Assert.Equal(builder.InitialChainTip, builder.TestConsensusManager.ConsensusManager.Tip);
         }
 
@@ -547,12 +548,12 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var additionalHeaders = builder.ExtendAChain(1, builder.InitialChainTip, validationState: ValidationState.FullyValidated);
 
             builder.PartialValidator.Setup(p => p.ValidateAsync(It.Is<ChainedHeader>(c => c.Block == additionalHeaders.Block), additionalHeaders.Block))
-                .ReturnsAsync(new Bitcoin.Consensus.ValidationContext()
+                .ReturnsAsync(new ValidationContext()
                 {
                     ChainedHeaderToValidate = additionalHeaders
                 });
 
-            Assert.Throws<Bitcoin.Consensus.ConsensusException>(() => builder.TestConsensusManager.ConsensusManager.BlockMinedAsync(additionalHeaders.Block).GetAwaiter().GetResult());
+            Assert.Throws<ConsensusException>(() => builder.TestConsensusManager.ConsensusManager.BlockMinedAsync(additionalHeaders.Block).GetAwaiter().GetResult());
             Assert.Equal(builder.InitialChainTip, builder.TestConsensusManager.ConsensusManager.Tip);
         }
 
@@ -564,13 +565,13 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var additionalHeaders = builder.ExtendAChain(1, builder.InitialChainTip);
 
             builder.PartialValidator.Setup(p => p.ValidateAsync(It.Is<ChainedHeader>(c => c.Block == additionalHeaders.Block), additionalHeaders.Block))
-                .ReturnsAsync(new Bitcoin.Consensus.ValidationContext()
+                .ReturnsAsync(new ValidationContext()
                 {
                     ChainedHeaderToValidate = additionalHeaders
                 });
 
             builder.FullValidator.Setup(p => p.ValidateAsync(It.Is<ChainedHeader>(c => c.Block == additionalHeaders.Block), additionalHeaders.Block))
-                .ReturnsAsync(new Bitcoin.Consensus.ValidationContext()
+                .ReturnsAsync(new ValidationContext()
                 {
                     ChainedHeaderToValidate = additionalHeaders
                 });
@@ -589,17 +590,17 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var additionalHeaders = builder.ExtendAChain(1, builder.InitialChainTip);
 
             builder.PartialValidator.Setup(p => p.ValidateAsync(It.Is<ChainedHeader>(c => c.Block == additionalHeaders.Block), additionalHeaders.Block))
-                .ReturnsAsync(new Bitcoin.Consensus.ValidationContext()
+                .ReturnsAsync(new ValidationContext()
                 {
                     ChainedHeaderToValidate = additionalHeaders
                 });
             builder.FullValidator.Setup(p => p.ValidateAsync(It.Is<ChainedHeader>(c => c.Block == additionalHeaders.Block), additionalHeaders.Block))
-                .ReturnsAsync(new Bitcoin.Consensus.ValidationContext()
+                .ReturnsAsync(new ValidationContext()
                 {
-                    Error = Bitcoin.Consensus.ConsensusErrors.BadBlockSignature
+                    Error = ConsensusErrors.BadBlockSignature
                 });
 
-            Assert.Throws<Bitcoin.Consensus.ConsensusException>(() => builder.TestConsensusManager.ConsensusManager.BlockMinedAsync(additionalHeaders.Block).GetAwaiter().GetResult());
+            Assert.Throws<ConsensusException>(() => builder.TestConsensusManager.ConsensusManager.BlockMinedAsync(additionalHeaders.Block).GetAwaiter().GetResult());
             Assert.Equal(builder.InitialChainTip, builder.TestConsensusManager.ConsensusManager.Tip);
         }
 
@@ -619,12 +620,12 @@ namespace Stratis.Bitcoin.Tests.Consensus
             builder.PartialValidator.Setup(p => p.StartPartialValidation(It.IsAny<ChainedHeader>(), It.IsAny<Block>(), It.IsAny<OnPartialValidationCompletedAsyncCallback>()))
                 .Callback<ChainedHeader, Block, OnPartialValidationCompletedAsyncCallback>((header, block, callback) =>
                 {
-                    callback(new Bitcoin.Consensus.ValidationContext()
+                    callback(new ValidationContext()
                     {
                         BanDurationSeconds = 3000,
                         BlockToValidate = block,
                         ChainedHeaderToValidate = header,
-                        Error = Bitcoin.Consensus.ConsensusErrors.BadTransactionScriptError
+                        Error = ConsensusErrors.BadTransactionScriptError
                     });
 
                 });

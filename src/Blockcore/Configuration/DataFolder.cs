@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using System.Net;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Configuration
+namespace Blockcore.Configuration
 {
     /// <summary>
     /// Contains path locations to folders and files on disk.

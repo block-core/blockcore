@@ -1,12 +1,13 @@
 ﻿using System.Net;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.Utilities.Extensions;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Networks;
+using Blockcore.P2P;
+using Blockcore.Utilities.Extensions;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.P2P
+namespace Blockcore.Tests.P2P
 {
     public class SelfEndpointTrackerTests
     {
@@ -18,7 +19,7 @@ namespace Stratis.Bitcoin.Tests.P2P
         {
             this.extendedLoggerFactory = new ExtendedLoggerFactory();
             this.selfEndpointTracker = new SelfEndpointTracker(this.extendedLoggerFactory,
-                new Configuration.Settings.ConnectionManagerSettings(NodeSettings.Default(new StratisRegTest())));
+                new ConnectionManagerSettings(NodeSettings.Default(new StratisRegTest())));
         }
 
         [Fact]

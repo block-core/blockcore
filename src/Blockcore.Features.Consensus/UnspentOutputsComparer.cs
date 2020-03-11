@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     public class UnspentOutputsComparer : IComparer<UnspentOutput>
     {

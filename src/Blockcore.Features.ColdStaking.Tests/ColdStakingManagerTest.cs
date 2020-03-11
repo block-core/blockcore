@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Consensus;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Tests.Wallet.Common;
+using Blockcore.Utilities;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Tests.Wallet.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.ColdStaking.Tests
+namespace Blockcore.Features.ColdStaking.Tests
 {
     public class ColdStakingManagerTest : LogsTestBase, IClassFixture<WalletFixture>
     {

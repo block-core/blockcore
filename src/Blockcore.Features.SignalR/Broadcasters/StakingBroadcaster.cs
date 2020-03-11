@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using Blockcore.AsyncWork;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.SignalR.Events;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.SignalR.Events;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.SignalR.Broadcasters
+namespace Blockcore.Features.SignalR.Broadcasters
 {
     /// <summary>
     /// Broadcasts current staking information to SignalR clients

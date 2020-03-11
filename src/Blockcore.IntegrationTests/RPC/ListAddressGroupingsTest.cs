@@ -1,19 +1,20 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Controllers;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.IntegrationTests.Wallet;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Controllers;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Wallet;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     public sealed class ListAddressGroupingsTest
     {

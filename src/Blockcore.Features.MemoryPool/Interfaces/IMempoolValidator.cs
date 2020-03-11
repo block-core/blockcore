@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Interfaces
+namespace Blockcore.Features.MemoryPool.Interfaces
 {
     /// <summary>
     /// Public interface for the memory pool validator.

@@ -4,7 +4,7 @@ using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Utilities.JsonConverters
+namespace Blockcore.Utilities.JsonConverters
 {
     /// <summary>
     /// Converter used to convert a <see cref="Key"/> or a <see cref="PubKey"/> to and from JSON.

@@ -2,7 +2,7 @@
 using NBitcoin;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+namespace Blockcore.Features.PoA.Tests
 {
     public class CollateralPoAConsensusFactoryTests
     {

@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Tests.Common.TestFramework;
+﻿using Blockcore.Tests.Common.TestFramework;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Mempool
+namespace Blockcore.IntegrationTests.Mempool
 {
     public partial class MempoolRelaySpecification : BddSpecification
     {

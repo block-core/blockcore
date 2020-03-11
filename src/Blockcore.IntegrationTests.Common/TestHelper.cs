@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using Blockcore.Consensus;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Miner;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Controllers;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.IntegrationTests.Common.Runners;
+using Blockcore.P2P.Peer;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Controllers;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Common.Runners;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common
+namespace Blockcore.IntegrationTests.Common
 {
     public class TestHelper
     {

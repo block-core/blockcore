@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Blockcore.Tests.Common;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.Networks;
 using NBitcoin.OpenAsset;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

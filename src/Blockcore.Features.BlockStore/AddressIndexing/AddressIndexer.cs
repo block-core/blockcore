@@ -7,21 +7,21 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Consensus;
+using Blockcore.Controllers.Models;
+using Blockcore.Interfaces;
+using Blockcore.Primitives;
+using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Utilities;
 using FileMode = LiteDB.FileMode;
 using Script = NBitcoin.Script;
 
-namespace Stratis.Bitcoin.Features.BlockStore.AddressIndexing
+namespace Blockcore.Features.BlockStore.AddressIndexing
 {
     /// <summary>Component that builds an index of all addresses and deposits\withdrawals that happened to\from them.</summary>
     public interface IAddressIndexer : IDisposable

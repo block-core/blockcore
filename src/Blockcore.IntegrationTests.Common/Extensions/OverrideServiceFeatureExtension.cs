@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common
+namespace Blockcore.IntegrationTests.Common.Extensions
 {
     public static class OverrideServiceFeatureExtension
     {

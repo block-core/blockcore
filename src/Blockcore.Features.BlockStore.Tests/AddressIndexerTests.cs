@@ -2,24 +2,24 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Consensus;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.Networks;
+using Blockcore.Primitives;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using LiteDB;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.BlockStore.AddressIndexing;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Primitives;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 using FileMode = LiteDB.FileMode;
 using Script = NBitcoin.Script;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Tests
+namespace Blockcore.Features.BlockStore.Tests
 {
     public class AddressIndexerTests
     {

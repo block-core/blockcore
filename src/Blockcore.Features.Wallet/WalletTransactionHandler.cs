@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Policy;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// A handler that has various functionalities related to transaction operations.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Interfaces.IWalletTransactionHandler" />
+    /// <seealso cref="IWalletTransactionHandler" />
     /// <remarks>
     /// This will uses the <see cref="IWalletFeePolicy" /> and the <see cref="TransactionBuilder" />.
     /// TODO: Move also the broadcast transaction to this class

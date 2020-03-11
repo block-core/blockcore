@@ -1,13 +1,13 @@
-﻿using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
+﻿using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.RPC;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     /// <summary>
     /// Base class for RPC tests.

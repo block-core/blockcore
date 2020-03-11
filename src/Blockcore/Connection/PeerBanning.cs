@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Connection
+namespace Blockcore.Connection
 {
     /// <summary>
     /// Contract for network peer banning provider.

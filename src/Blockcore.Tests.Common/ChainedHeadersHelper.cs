@@ -2,7 +2,7 @@
 using System.Threading;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Tests.Common
+namespace Blockcore.Tests.Common
 {
     public static class ChainedHeadersHelper
     {

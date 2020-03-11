@@ -1,22 +1,22 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Logging;
+using Blockcore.Connection;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.MemoryPool.Fee;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool.Fee;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.MemoryPool.Tests")]
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Transaction memory pool feature for the Full Node.

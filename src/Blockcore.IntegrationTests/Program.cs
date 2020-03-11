@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Stratis.Bitcoin.IntegrationTests.Wallet;
+using Blockcore.IntegrationTests.Wallet;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     internal class Program
     {

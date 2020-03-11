@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.RPC.Models
+namespace Blockcore.Features.RPC.Models
 {
     /// <summary>
     /// This model defines a list item returned by the RPC API method "listmethods".

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Miner.Staking;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Miner.Staking;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests
+namespace Blockcore.Features.Miner.Tests
 {
     public class StakeSplittingTests : PosMintingTest
     {

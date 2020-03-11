@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Controllers.Models;
+using Blockcore.Tests.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Models
+namespace Blockcore.Tests.Models
 {
     public class TransactionModelsTest : IDisposable
     {

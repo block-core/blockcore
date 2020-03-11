@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
+using Blockcore.Tests.Common;
 using HashLib;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 using Hashes = NBitcoin.Crypto.Hashes;
 

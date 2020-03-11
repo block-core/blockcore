@@ -1,14 +1,14 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Features.BlockStore.AddressIndexing;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Common.ReadyData;
-using Stratis.Bitcoin.IntegrationTests.Common.TestNetworks;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
+﻿using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.IntegrationTests.Common.TestNetworks;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using NBitcoin;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.BlockStore
+namespace Blockcore.IntegrationTests.BlockStore
 {
     public sealed class AddressIndexerIntegrationTests
     {

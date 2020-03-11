@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Consensus.ValidationResults
+namespace Blockcore.Consensus.ValidationResults
 {
     /// <summary>
     /// Information related to the block full validation process.

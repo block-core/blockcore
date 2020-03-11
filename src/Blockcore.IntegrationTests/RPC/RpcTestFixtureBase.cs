@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.P2P.Peer;
+using Blockcore.Features.RPC;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.P2P.Peer;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     /// <summary>
     /// Abstract base class for RPC Test Fixtures for both Bitcoin and Stratis networks.

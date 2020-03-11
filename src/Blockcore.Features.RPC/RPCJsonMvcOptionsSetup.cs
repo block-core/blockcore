@@ -7,7 +7,7 @@ using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public class RPCJsonMvcOptionsSetup : ConfigureOptions<MvcOptions>
     {

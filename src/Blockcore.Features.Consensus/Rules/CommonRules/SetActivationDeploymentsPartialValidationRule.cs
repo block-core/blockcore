@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Stratis.Bitcoin.Consensus.Rules;
+using Blockcore.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>Set the <see cref="RuleContext.Flags"/> property that defines what deployments have been activated.</summary>
     public class SetActivationDeploymentsPartialValidationRule : PartialValidationConsensusRule

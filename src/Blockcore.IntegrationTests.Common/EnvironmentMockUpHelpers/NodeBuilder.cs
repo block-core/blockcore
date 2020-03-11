@@ -4,21 +4,23 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Blockcore.Builder;
+using Blockcore.Features.Api;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Consensus;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Miner;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.IntegrationTests.Common.Runners;
+using Blockcore.P2P;
+using Blockcore.Tests.Common;
 using NBitcoin;
 using NBitcoin.Protocol;
 using NLog;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Miner;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.IntegrationTests.Common.Runners;
-using Stratis.Bitcoin.Tests.Common;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public class NodeBuilder : IDisposable
     {
@@ -126,7 +128,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
         /// <summary>
         /// Creates a Stratis Proof-of-Work node.
         /// <para>
-        /// <see cref="P2P.PeerDiscovery"/> and <see cref="P2P.PeerConnectorDiscovery"/> are disabled by default.
+        /// <see cref="PeerDiscovery"/> and <see cref="PeerConnectorDiscovery"/> are disabled by default.
         /// </para>
         /// </summary>
         /// <param name="network">The network the node will run on.</param>
@@ -157,7 +159,7 @@ namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
         /// <summary>
         /// Creates a Stratis Proof-of-Stake node.
         /// <para>
-        /// <see cref="P2P.PeerDiscovery"/> and <see cref="P2P.PeerConnectorDiscovery"/> are disabled by default.
+        /// <see cref="PeerDiscovery"/> and <see cref="PeerConnectorDiscovery"/> are disabled by default.
         /// </para>
         /// </summary>
         /// <param name="network">The network the node will run on.</param>

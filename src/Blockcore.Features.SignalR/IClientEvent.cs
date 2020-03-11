@@ -1,7 +1,7 @@
 using System;
-using Stratis.Bitcoin.EventBus;
+using Blockcore.EventBus;
 
-namespace Stratis.Bitcoin.Features.SignalR
+namespace Blockcore.Features.SignalR
 {
     public interface IClientEvent
     {

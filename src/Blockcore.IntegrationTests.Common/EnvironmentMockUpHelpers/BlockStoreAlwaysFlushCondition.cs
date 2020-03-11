@@ -1,6 +1,6 @@
-﻿using Stratis.Bitcoin.Interfaces;
+﻿using Blockcore.Interfaces;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     public class BlockStoreAlwaysFlushCondition : IBlockStoreQueueFlushCondition
     {

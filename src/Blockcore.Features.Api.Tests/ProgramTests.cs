@@ -1,13 +1,13 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using Blockcore.Configuration;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using NSubstitute;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Tests.Common;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Api.Tests
+namespace Blockcore.Features.Api.Tests
 {
     public class ProgramTest
     {

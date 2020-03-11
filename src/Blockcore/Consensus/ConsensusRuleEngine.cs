@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus.PerformanceCounters.Rules;
+using Blockcore.Consensus.Rules;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus.PerformanceCounters.Rules;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     /// <inheritdoc />
     public abstract class ConsensusRuleEngine : IConsensusRuleEngine

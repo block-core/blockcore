@@ -3,7 +3,7 @@ using System.Linq;
 using NBitcoin;
 using NBitcoin.Protocol;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     /// <summary>
     /// Block headers received after a getheaders messages.

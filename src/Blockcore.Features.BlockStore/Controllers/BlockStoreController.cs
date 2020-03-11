@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Net;
+using Blockcore.Base;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.Features.BlockStore.Models;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
+using Blockcore.Utilities.JsonErrors;
+using Blockcore.Utilities.ModelStateErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.BlockStore.AddressIndexing;
-using Stratis.Bitcoin.Features.BlockStore.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.JsonErrors;
-using Stratis.Bitcoin.Utilities.ModelStateErrors;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Controllers
+namespace Blockcore.Features.BlockStore.Controllers
 {
     public static class BlockStoreRouteEndPoint
     {

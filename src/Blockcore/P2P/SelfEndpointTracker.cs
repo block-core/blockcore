@@ -1,10 +1,10 @@
 ﻿using System.Net;
+using Blockcore.Configuration.Settings;
+using Blockcore.Utilities.Extensions;
 using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.P2P
+namespace Blockcore.P2P
 {
     /// <summary>
     /// Tracker for endpoints known to be self.

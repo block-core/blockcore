@@ -2,11 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Blockcore.Tests.Common;
 using NBitcoin.DataEncoders;
 using NBitcoin.Networks;
 using NBitcoin.OpenAsset;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

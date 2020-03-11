@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests.Common.Extensions
 {
     public static class CoreNodeExtensions
     {

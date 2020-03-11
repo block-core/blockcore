@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Configuration;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Behaviors
+namespace Blockcore.P2P.Protocol.Behaviors
 {
     /// <summary>
     /// Sets the minimum supported client version <see cref="this.NodeSettings.MinProtocolVersion"/> to <see cref="this.Network.Consensus.Options.EnforcedMinProtocolVersion"/>

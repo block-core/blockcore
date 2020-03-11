@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Connection;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Broadcasting;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Broadcasting;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.ColdStaking
+namespace Blockcore.Features.ColdStaking
 {
     /// <summary>
     /// Feature for cold staking which eliminates the need to keep the coins in the hot wallet.

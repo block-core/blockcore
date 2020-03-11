@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Interfaces
+﻿namespace Blockcore.Interfaces
 {
     /// <summary>
     /// Determines whether or not <see cref="BlockStoreQueue"/> should flush it's batch to disk.

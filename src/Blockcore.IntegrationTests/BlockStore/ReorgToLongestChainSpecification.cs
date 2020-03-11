@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Tests.Common.TestFramework;
+﻿using Blockcore.Tests.Common.TestFramework;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.BlockStore
+namespace Blockcore.IntegrationTests.BlockStore
 {
     public partial class ReorgToLongestChainSpecification : BddSpecification
     {

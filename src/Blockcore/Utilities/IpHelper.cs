@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     public static class IpHelper
     {

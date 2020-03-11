@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using Moq;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Policy;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Consensus
+namespace Blockcore.Features.Consensus.Tests
 {
     public class StakeValidatorTests : LogsTestBase
     {
@@ -952,7 +951,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             ret.UnspentOutputs.Add(new OutPoint(uint256.One, 0),
                 new UnspentOutput(
                 new OutPoint(uint256.One, 0),
-                new Utilities.Coins(0, new TxOut(), false, false)));
+                new Coins(0, new TxOut(), false, false)));
 
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
@@ -974,7 +973,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             ret.UnspentOutputs.Add(new OutPoint(header.Block.Transactions[0], 0),
                 new UnspentOutput(
                 new OutPoint(header.Block.Transactions[0], 0),
-                new Utilities.Coins((uint)header.Height, new TxOut(), false, false)));
+                new Coins((uint)header.Height, new TxOut(), false, false)));
 
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
@@ -1002,7 +1001,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             ret.UnspentOutputs.Add(new OutPoint(stakableHeader.Block.Transactions[0], 0),
                 new UnspentOutput(
                 new OutPoint(stakableHeader.Block.Transactions[0], 0),
-                new Utilities.Coins((uint)stakableHeader.Height, new TxOut(), false, false)));
+                new Coins((uint)stakableHeader.Height, new TxOut(), false, false)));
 
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
@@ -1034,7 +1033,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             ret.UnspentOutputs.Add(new OutPoint(transaction, 0),
                 new UnspentOutput(
                     new OutPoint(transaction, 0), 
-                    new Utilities.Coins((uint)stakableHeader.Height, transaction.Outputs.First(), false, false)));
+                    new Coins((uint)stakableHeader.Height, transaction.Outputs.First(), false, false)));
 
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(ret);
@@ -1161,7 +1160,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             var coin = new Coin(new OutPoint(tx, 2), tx.Outputs[0]);
             tx.Sign(this.Network, key, coin);
 
-            var unspentOutputs = new UnspentOutput(tx.Inputs[0].PrevOut, new Utilities.Coins(1, tx.Outputs.First(), false, false));
+            var unspentOutputs = new UnspentOutput(tx.Inputs[0].PrevOut, new Coins(1, tx.Outputs.First(), false, false));
             var result = this.stakeValidator.VerifySignature(unspentOutputs, tx, 0, ScriptVerify.None);
 
             Assert.False(result);
@@ -1187,7 +1186,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             // Normal pay-to-compressed-pubkey.
             CreateCreditAndSpend(keystore, scriptPubkey1, ref output1, ref input1);
 
-            var unspentOutputs = new UnspentOutput(new OutPoint(output1.GetHash(), 0), new Utilities.Coins(1, output1.Outputs.First(), false, false));
+            var unspentOutputs = new UnspentOutput(new OutPoint(output1.GetHash(), 0), new Coins(1, output1.Outputs.First(), false, false));
 
             var result = this.stakeValidator.VerifySignature(unspentOutputs, input1, 0, ScriptVerify.Standard);
 

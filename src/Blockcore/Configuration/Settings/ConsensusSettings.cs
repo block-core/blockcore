@@ -1,9 +1,9 @@
 ﻿using System.Text;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Configuration.Settings
+namespace Blockcore.Configuration.Settings
 {
     /// <summary>
     /// Configurable settings for the consensus feature.

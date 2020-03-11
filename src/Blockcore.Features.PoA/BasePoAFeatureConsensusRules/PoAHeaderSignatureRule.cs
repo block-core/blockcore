@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Base;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.PoA.Voting;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.PoA.Voting;
 
-namespace Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules
+namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {
     /// <summary>
     /// Estimates which public key should be used for timestamp of a header being

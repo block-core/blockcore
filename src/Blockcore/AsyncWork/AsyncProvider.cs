@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.AsyncWork
+namespace Blockcore.AsyncWork
 {
     /// <summary>
     /// Provides functionality for creating and tracking asynchronous operations that happen in the background.

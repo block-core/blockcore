@@ -1,7 +1,7 @@
 ﻿using System;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Base.Deployments
+namespace Blockcore.Base.Deployments
 {
     public class DeploymentFlags
     {

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin
+namespace Blockcore
 {
     /// <summary>Provider of the last finalized block's height and hash.</summary>
     /// <remarks>

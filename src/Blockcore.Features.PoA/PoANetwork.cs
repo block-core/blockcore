@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
+using Blockcore.Features.PoA.Policies;
+using Blockcore.Features.PoA.Voting.ConsensusRules;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Features.MemoryPool.Rules;
-using Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules;
-using Stratis.Bitcoin.Features.PoA.Policies;
-using Stratis.Bitcoin.Features.PoA.Voting.ConsensusRules;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     /// <summary>
     /// Example network for PoA consensus.

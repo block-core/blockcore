@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Controllers;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Networks;
+using Blockcore.Tests.Common.TestFramework;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Controllers;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common.TestFramework;
 using Xunit.Abstractions;
 
-namespace Stratis.Bitcoin.IntegrationTests.BlockStore
+namespace Blockcore.IntegrationTests.BlockStore
 {
     public partial class RetrieveFromBlockStoreSpecification : BddSpecification
     {

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Behaviors;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.BlockPulling
+namespace Blockcore.Tests.P2P
 {
     public class EnforcePeerVersionCheckBehaviorTests : LogsTestBase
     {

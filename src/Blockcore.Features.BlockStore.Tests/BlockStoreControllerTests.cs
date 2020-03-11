@@ -1,22 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Blockcore.Base;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.Features.BlockStore.Controllers;
+using Blockcore.Features.BlockStore.Models;
+using Blockcore.Interfaces;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Wallet.Common;
+using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.BlockStore.AddressIndexing;
-using Stratis.Bitcoin.Features.BlockStore.Controllers;
-using Stratis.Bitcoin.Features.BlockStore.Models;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Wallet.Common;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Tests
+namespace Blockcore.Features.BlockStore.Tests
 {
     public class BlockStoreControllerTests
     {

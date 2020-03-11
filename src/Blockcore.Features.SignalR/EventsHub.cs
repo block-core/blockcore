@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-namespace Stratis.Bitcoin.Features.SignalR
+namespace Blockcore.Features.SignalR
 {
     public class EventsHub : Hub
     {

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting
+namespace Blockcore.Features.PoA.Voting
 {
     public interface IPollResultExecutor
     {

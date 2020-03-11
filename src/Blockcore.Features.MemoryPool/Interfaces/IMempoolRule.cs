@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Features.MemoryPool.Interfaces
+﻿namespace Blockcore.Features.MemoryPool.Interfaces
 {
     /// <summary>
     /// Rule to be checked before a transaction is added to the mempool.

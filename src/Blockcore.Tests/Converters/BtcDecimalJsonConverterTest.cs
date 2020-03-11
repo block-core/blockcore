@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Controllers.Converters;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Controllers.Converters;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Stratis.Bitcoin.Tests.Converters
+namespace Blockcore.Tests.Converters
 {
     public class BtcDecimalJsonConverterTest
     {

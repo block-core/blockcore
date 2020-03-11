@@ -4,7 +4,7 @@ using System.IO;
 using NBitcoin;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Common
+namespace Blockcore.Tests.Common
 {
     public static class ConsensusChainIndexerExtensions
     {

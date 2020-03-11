@@ -1,17 +1,18 @@
 ﻿using System;
+using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.BlockStore;
+using Blockcore.Features.Consensus;
+using Blockcore.Tests.Common;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Tests.Common;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Tests
+namespace Blockcore.Features.MemoryPool.Tests
 {
     public class FullNodeBuilderTest
     {

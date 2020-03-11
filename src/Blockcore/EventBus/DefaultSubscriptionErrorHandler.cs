@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 
-namespace Stratis.Bitcoin.EventBus
+namespace Blockcore.EventBus
 {
     /// <summary>
     /// Default implementation of <see cref="ISubscriptionErrorHandler"/> that log the error and re-throw it.

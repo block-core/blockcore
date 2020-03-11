@@ -1,24 +1,24 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Logging;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.Features.BlockStore.Pruning;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.BlockStore.AddressIndexing;
-using Stratis.Bitcoin.Features.BlockStore.Pruning;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Utilities;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.BlockStore.Tests")]
 
-namespace Stratis.Bitcoin.Features.BlockStore
+namespace Blockcore.Features.BlockStore
 {
     public class BlockStoreFeature : FullNodeFeature
     {

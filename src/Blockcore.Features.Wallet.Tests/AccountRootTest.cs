@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Tests.Common;
+﻿using Blockcore.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Wallet.Tests
+namespace Blockcore.Features.Wallet.Tests
 {
     public class AccountRootTest : WalletTestBase
     {

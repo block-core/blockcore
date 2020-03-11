@@ -8,15 +8,15 @@ using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Utilities;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Networks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public class RPCCapabilities
     {
@@ -33,12 +33,12 @@ namespace Stratis.Bitcoin.Features.RPC
             return new RPCCapabilities()
             {
                 Version = newVersion,
-                SupportScanUTXOSet = SupportScanUTXOSet,
-                SupportSegwit = SupportSegwit,
-                SupportSignRawTransactionWith = SupportSignRawTransactionWith,
-                SupportGetNetworkInfo = SupportGetNetworkInfo,
-                SupportEstimateSmartFee = SupportEstimateSmartFee,
-                SupportGenerateToAddress = SupportGenerateToAddress
+                SupportScanUTXOSet = this.SupportScanUTXOSet,
+                SupportSegwit = this.SupportSegwit,
+                SupportSignRawTransactionWith = this.SupportSignRawTransactionWith,
+                SupportGetNetworkInfo = this.SupportGetNetworkInfo,
+                SupportEstimateSmartFee = this.SupportEstimateSmartFee,
+                SupportGenerateToAddress = this.SupportGenerateToAddress
             };
         }
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.P2P.Protocol.Payloads
+namespace Blockcore.P2P.Protocol.Payloads
 {
     /// <summary>
     /// Announce the hash of a transaction or block.

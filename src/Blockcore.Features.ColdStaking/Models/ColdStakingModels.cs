@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Blockcore.Utilities.ValidationAttributes;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities.ValidationAttributes;
 
-namespace Stratis.Bitcoin.Features.ColdStaking.Models
+namespace Blockcore.Features.ColdStaking.Models
 {
     /// <summary>
     /// The data structure used by a client to obtain information related to cold staking.

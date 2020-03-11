@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Features.Dns
+﻿namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// Defines the interface to manage the whitelist.

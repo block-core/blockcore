@@ -1,11 +1,11 @@
-﻿using Stratis.Bitcoin.EventBus;
+﻿using Blockcore.EventBus;
 
-namespace Stratis.Bitcoin.Features.PoA.Events
+namespace Blockcore.Features.PoA.Events
 {
     /// <summary>
     /// Event that is executed when a new federation member is added.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="EventBase" />
     public class FedMemberAdded : EventBase
     {
         public IFederationMember AddedMember { get; }

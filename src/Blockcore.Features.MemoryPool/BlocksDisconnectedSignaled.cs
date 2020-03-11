@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Signals;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Signals;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Mempool observer on disconnected block notifications.

@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Features.RPC.ModelBinders;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Features.RPC.ModelBinders;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public interface IRPCParametersValueProvider : IValueProvider, IValueProviderFactory
     {

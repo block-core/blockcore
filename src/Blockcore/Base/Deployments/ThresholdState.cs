@@ -1,4 +1,4 @@
-﻿namespace Stratis.Bitcoin.Base.Deployments
+﻿namespace Blockcore.Base.Deployments
 {
     public enum ThresholdState
     {

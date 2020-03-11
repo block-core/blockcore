@@ -5,19 +5,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Dns.Tests
+namespace Blockcore.Features.Dns.Tests
 {
     /// <summary>
     /// Tests for the <see cref="DnsSeedServer"/> class.

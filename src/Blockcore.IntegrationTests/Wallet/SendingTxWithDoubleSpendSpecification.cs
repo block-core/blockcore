@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Wallet
+namespace Blockcore.IntegrationTests.Wallet
 {
     public partial class SendingTransactionWithDoubleSpend
     {

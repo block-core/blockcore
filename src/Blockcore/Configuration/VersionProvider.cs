@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using Stratis.Bitcoin.Interfaces;
+using Blockcore.Interfaces;
 
-namespace Stratis.Bitcoin.Configuration
+namespace Blockcore.Configuration
 {
     public class VersionProvider : IVersionProvider
     {

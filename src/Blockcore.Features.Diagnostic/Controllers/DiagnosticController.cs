@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Controllers;
+using Blockcore.Features.Diagnostic.Controllers.Models;
+using Blockcore.Features.Diagnostic.PeerDiagnostic;
+using Blockcore.Features.Diagnostic.Utils;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Controllers;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities.JsonErrors;
-using Stratis.Features.Diagnostic.Controllers.Models;
-using Stratis.Features.Diagnostic.PeerDiagnostic;
-using Stratis.Features.Diagnostic.Utils;
 
-namespace Stratis.Features.Diagnostic.Controllers
+namespace Blockcore.Features.Diagnostic.Controllers
 {
     /// <summary>
     /// Controller providing diagnostic operations on fullnode.

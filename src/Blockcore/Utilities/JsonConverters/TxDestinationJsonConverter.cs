@@ -3,7 +3,7 @@ using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Utilities.JsonConverters
+namespace Blockcore.Utilities.JsonConverters
 {
     /// <summary>
     /// Converter used to convert a <see cref="KeyId"/>, a <see cref="ScriptId"/>, a <see cref="WitKeyId"/> or a <see cref="WitScriptId"/> to and from JSON.

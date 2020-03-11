@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Tests.Common;
 using NBitcoin;
-using Stratis.Bitcoin.Tests.Common;
 
-namespace Stratis.Bitcoin.Features.Wallet.Tests
+namespace Blockcore.Features.Wallet.Tests
 {
     public class WalletTestBase
     {

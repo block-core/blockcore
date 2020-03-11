@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Configuration.Settings;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Consensus
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// Interface of block header hash checkpoint provider.

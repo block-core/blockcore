@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Consensus;
-using Stratis.Bitcoin.Tests.Common;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Features.Consensus;
+using Blockcore.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Builder.Feature
+namespace Blockcore.Tests.Builder.Feature
 {
     /// <summary>
     /// Tests checking for feature dependencies.

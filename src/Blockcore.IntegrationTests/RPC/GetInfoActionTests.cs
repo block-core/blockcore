@@ -1,11 +1,12 @@
-﻿using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.RPC.Controllers;
-using Stratis.Bitcoin.Features.RPC.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.Interfaces;
+﻿using Blockcore.Configuration;
+using Blockcore.Features.RPC.Controllers;
+using Blockcore.Features.RPC.Models;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Interfaces;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     public class GetInfoActionTests : BaseRPCControllerTest
     {

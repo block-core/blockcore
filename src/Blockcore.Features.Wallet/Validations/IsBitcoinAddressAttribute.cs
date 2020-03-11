@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Wallet.Validations
+namespace Blockcore.Features.Wallet.Validations
 {
     public class IsBitcoinAddressAttribute : ValidationAttribute
     {

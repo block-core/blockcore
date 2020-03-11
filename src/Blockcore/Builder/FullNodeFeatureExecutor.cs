@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Builder.Feature;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Builder
+namespace Blockcore.Builder
 {
     /// <summary>
     /// Starts and stops all features registered with a full node.

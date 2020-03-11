@@ -4,18 +4,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Interfaces;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.ProvenBlockHeaders
+namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
 {
     public class ProvenBlockHeaderStoreTests : LogsTestBase
     {

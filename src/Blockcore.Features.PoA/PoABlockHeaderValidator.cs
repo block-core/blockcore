@@ -2,7 +2,7 @@
 using NBitcoin;
 using NBitcoin.Crypto;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     /// <summary>Signs and validates signatures of <see cref="PoABlockHeader"/>.</summary>
     public class PoABlockHeaderValidator

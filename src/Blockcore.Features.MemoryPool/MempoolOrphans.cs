@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.MemoryPool
+namespace Blockcore.Features.MemoryPool
 {
     /// <summary>
     /// Manages memory pool orphan transactions.
@@ -30,7 +31,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
         private readonly ChainIndexer chainIndexer;
 
         /// <summary>Node notifications available to subscribe to.</summary>
-        private readonly Signals.ISignals signals;
+        private readonly ISignals signals;
 
         /// <summary>Coin view of the memory pool.</summary>
         private readonly ICoinView coinView;
@@ -70,7 +71,7 @@ namespace Stratis.Bitcoin.Features.MemoryPool
 
         public MempoolOrphans(
             ChainIndexer chainIndexer,
-            Signals.ISignals signals,
+            ISignals signals,
             IMempoolValidator validator,
             ICoinView coinView,
             IDateTimeProvider dateTimeProvider,

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Blockcore.Features.Wallet.Validations;
+using Blockcore.Utilities.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Stratis.Bitcoin.Features.Wallet.Validations;
-using Stratis.Bitcoin.Utilities.ValidationAttributes;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     /// <summary>
     /// A class containing the necessary parameters for a wallet resynchronization request
@@ -238,7 +238,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
     /// A class containing the necessary parameters for a request to get the maximum
     /// spendable amount for a specific wallet account.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="RequestModel" />
     public class WalletMaximumBalanceRequest : RequestModel
     {
         public WalletMaximumBalanceRequest()
@@ -274,7 +274,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
     /// <summary>
     /// Model object to use as input to the Api request for getting the balance for an address.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="RequestModel" />
     public class ReceivedByAddressRequest : RequestModel
     {
 
@@ -292,7 +292,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
     /// <summary>
     /// A class containing the necessary parameters for a transaction fee estimate request.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="RequestModel" />
     public class TxFeeEstimateRequest : RequestModel
     {
         public TxFeeEstimateRequest()
@@ -723,7 +723,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
     /// <summary>
     /// A class containing the necessary parameters to perform an add address book entry request.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="RequestModel" />
     public class AddressBookEntryRequest : RequestModel
     {
         /// <summary>
@@ -744,7 +744,7 @@ namespace Stratis.Bitcoin.Features.Wallet.Models
     /// <summary>
     /// A class containing the necessary parameters to perform a spendable transactions request.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Features.Wallet.Models.RequestModel" />
+    /// <seealso cref="RequestModel" />
     public class SpendableTransactionsRequest : RequestModel
     {
         public SpendableTransactionsRequest()

@@ -1,13 +1,13 @@
 ﻿using System.Linq;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Consensus;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common
+namespace Blockcore.IntegrationTests.Common.Extensions
 {
     public static class FullNodeTestBuilderExtension
     {

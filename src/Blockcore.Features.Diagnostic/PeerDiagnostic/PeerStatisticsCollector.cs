@@ -4,14 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Features.Diagnostic.Controllers;
-using Event = Stratis.Bitcoin.EventBus.CoreEvents;
+using Blockcore.AsyncWork;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents.Peer;
+using Blockcore.Features.Diagnostic.Controllers;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 
-namespace Stratis.Features.Diagnostic.PeerDiagnostic
+namespace Blockcore.Features.Diagnostic.PeerDiagnostic
 {
     /// <summary>
     /// Subscribe to peer events and keep track of their activities.
@@ -32,7 +32,7 @@ namespace Stratis.Features.Diagnostic.PeerDiagnostic
         private readonly Dictionary<IPEndPoint, PeerStatistics> peersStatistics;
 
         /// <summary>Non blocking queue that consume received peer events to generate peer statistics.</summary>
-        private IAsyncDelegateDequeuer<Event.PeerEventBase> peersEventsQueue;
+        private IAsyncDelegateDequeuer<PeerEventBase> peersEventsQueue;
 
         /// <summary>Holds a list of event subscriptions.</summary>
         private readonly List<SubscriptionToken> eventSubscriptions;
@@ -57,43 +57,43 @@ namespace Stratis.Features.Diagnostic.PeerDiagnostic
                 StartCollecting();
         }
 
-        private void EnqueuePeerEvent(Event.PeerEventBase @event)
+        private void EnqueuePeerEvent(PeerEventBase @event)
         {
             this.peersEventsQueue.Enqueue(@event);
         }
 
-        private Task UpdatePeerStatistics(Event.PeerEventBase peerEvent, CancellationToken cancellation)
+        private Task UpdatePeerStatistics(PeerEventBase peerEvent, CancellationToken cancellation)
         {
             PeerStatistics statistics = GetPeerStatistics(peerEvent.PeerEndPoint);
             switch (peerEvent)
             {
-                case Event.PeerConnected @event:
+                case PeerConnected @event:
                     statistics.Inbound = @event.Inbound;
                     statistics.LogEvent($"Peer Connected");
                     break;
-                case Event.PeerConnectionAttempt @event:
+                case PeerConnectionAttempt @event:
                     statistics.Inbound = @event.Inbound;
                     statistics.LogEvent($"Attempting Connection");
                     break;
-                case Event.PeerConnectionAttemptFailed @event:
+                case PeerConnectionAttemptFailed @event:
                     statistics.Inbound = @event.Inbound;
                     statistics.LogEvent($"Connection attempt FAILED. Reason: {@event.Reason}.");
                     break;
-                case Event.PeerDisconnected @event:
+                case PeerDisconnected @event:
                     statistics.Inbound = @event.Inbound;
                     statistics.LogEvent($"Disconnected. Reason: {@event.Reason}. Exception: {@event.Exception?.ToString()}");
                     break;
-                case Event.PeerMessageReceived @event:
+                case PeerMessageReceived @event:
                     statistics.ReceivedMessages++;
                     statistics.BytesReceived += @event.MessageSize;
                     statistics.LogEvent($"Message Received: {@event.Message.Payload.Command}");
                     break;
-                case Event.PeerMessageSent @event:
+                case PeerMessageSent @event:
                     statistics.SentMessages++;
                     statistics.BytesSent += @event.Size;
                     statistics.LogEvent($"Message Sent: {@event.Message.Payload.Command}");
                     break;
-                case Event.PeerMessageSendFailure @event:
+                case PeerMessageSendFailure @event:
                     statistics.LogEvent($"Message Send Failure: {@event.Message?.Payload.Command}. Exception: {@event.Exception?.ToString()}");
                     break;
             }
@@ -123,16 +123,16 @@ namespace Stratis.Features.Diagnostic.PeerDiagnostic
             {
                 this.peersStatistics.Clear();
 
-                this.peersEventsQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<Event.PeerEventBase>(nameof(this.peersEventsQueue), UpdatePeerStatistics);
+                this.peersEventsQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<PeerEventBase>(nameof(this.peersEventsQueue), UpdatePeerStatistics);
 
-                this.eventSubscriptions.Add(this.signals.Subscribe<Event.PeerConnected>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<Event.PeerConnectionAttempt>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<Event.PeerConnectionAttemptFailed>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<Event.PeerDisconnected>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnected>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnectionAttempt>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnectionAttemptFailed>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerDisconnected>(this.EnqueuePeerEvent));
 
-                this.eventSubscriptions.Add(this.signals.Subscribe<Event.PeerMessageReceived>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<Event.PeerMessageSent>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<Event.PeerMessageSendFailure>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageReceived>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageSent>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageSendFailure>(this.EnqueuePeerEvent));
 
                 this.Enabled = true;
             }

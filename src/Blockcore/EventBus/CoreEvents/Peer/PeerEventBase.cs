@@ -1,11 +1,11 @@
 ﻿using System.Net;
 
-namespace Stratis.Bitcoin.EventBus.CoreEvents
+namespace Blockcore.EventBus.CoreEvents.Peer
 {
     /// <summary>
     /// Base peer event.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.EventBase" />
+    /// <seealso cref="EventBase" />
     public abstract class PeerEventBase : EventBase
     {
         /// <summary>

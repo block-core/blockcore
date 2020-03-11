@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Configuration
+namespace Blockcore.Configuration
 {
     /// <summary>
     /// Exception that is used when a problem in command line or configuration file configuration is found.

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Blockcore.Base;
+using Blockcore.Utilities;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Utilities;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Base
+namespace Blockcore.Tests.Base
 {
     /// <summary>
     /// Tests of <see cref="ChainState"/> class.

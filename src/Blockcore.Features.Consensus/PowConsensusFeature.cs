@@ -1,18 +1,19 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.Signals;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     public class PowConsensusFeature : ConsensusFeature
     {
@@ -34,7 +35,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             ChainIndexer chainIndexer,
             IInitialBlockDownloadState initialBlockDownloadState,
             IPeerBanning peerBanning,
-            Signals.ISignals signals,
+            ISignals signals,
             ILoggerFactory loggerFactory) : base(network, chainState, connectionManager, signals, consensusManager, nodeDeployments)
         {
             this.chainState = chainState;

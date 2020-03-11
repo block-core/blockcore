@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     public abstract class UtxoRuleContext : RuleContext
     {

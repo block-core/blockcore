@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Builder
+namespace Blockcore.Tests.Builder
 {
     public class FullNodeFeatureExecutorTest
     {

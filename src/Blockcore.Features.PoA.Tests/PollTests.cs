@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Blockcore.Features.PoA.Voting;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Features.PoA.Voting;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests
+namespace Blockcore.Features.PoA.Tests
 {
     public class PollTests
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Controllers.Converters
+namespace Blockcore.Controllers.Converters
 {
     public class ToStringJsonConverter : JsonConverter
     {

@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Consensus;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Interfaces
+namespace Blockcore.Interfaces
 {
     /// <summary>
     /// Cache layer for <see cref="ProvenBlockHeader"/>s.
@@ -12,7 +13,7 @@ namespace Stratis.Bitcoin.Interfaces
         /// <summary>
         /// Initializes the <see cref="IProvenBlockHeaderStore"/> at the last common header between <paramref name="chainedHeader"/> and <see cref="IProvenBlockHeaderProvider.TipHashHeight"/>.
         /// </summary>
-        /// <param name="chainedHeader"><see cref="ChainedHeader"/> consensus tip after <see cref="Bitcoin.Consensus.IConsensusManager"/> initialization.</param>
+        /// <param name="chainedHeader"><see cref="ChainedHeader"/> consensus tip after <see cref="IConsensusManager"/> initialization.</param>
         /// <returns>Tip at which store was initialized.</returns>
         Task<ChainedHeader> InitializeAsync(ChainedHeader chainedHeader);
 

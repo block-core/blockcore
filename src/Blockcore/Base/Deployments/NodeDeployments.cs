@@ -1,7 +1,7 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Utilities;
+﻿using Blockcore.Utilities;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.Base.Deployments
+namespace Blockcore.Base.Deployments
 {
     public class NodeDeployments
     {

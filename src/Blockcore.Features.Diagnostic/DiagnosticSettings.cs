@@ -1,11 +1,11 @@
 ﻿using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Features.Diagnostic.PeerDiagnostic;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Features.Diagnostic.PeerDiagnostic;
 
-namespace Stratis.Features.Diagnostic
+namespace Blockcore.Features.Diagnostic
 {
     /// <summary>
     /// Configuration related to the API interface.

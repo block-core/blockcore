@@ -1,7 +1,7 @@
 using System;
 using DBreeze.Exceptions;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     public class DBreezeRetryOptions : RetryOptions
     {

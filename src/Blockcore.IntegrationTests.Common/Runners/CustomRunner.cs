@@ -1,13 +1,14 @@
 ﻿using System;
+using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Configuration;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.P2P;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.Runners
+namespace Blockcore.IntegrationTests.Common.Runners
 {
     public sealed class CustomNodeRunner : NodeRunner
     {

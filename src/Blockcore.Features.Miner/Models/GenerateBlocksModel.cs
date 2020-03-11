@@ -2,7 +2,7 @@
 using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.Miner.Models
+namespace Blockcore.Features.Miner.Models
 {
     /// <summary>
     /// Represents a list of blocks generated through mining, as an API return object.

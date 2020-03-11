@@ -5,6 +5,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.BlockStore.Models;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.Networks;
+using Blockcore.Utilities.JsonErrors;
 using DBreeze.Utils;
 using FluentAssertions;
 using Flurl;
@@ -12,17 +20,9 @@ using Flurl.Http;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.BlockStore.Models;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Common.ReadyData;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Wallet
+namespace Blockcore.IntegrationTests.Wallet
 {
     /// <summary>
     /// This class contains tests that must be run with a fresh node.

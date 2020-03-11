@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.DataTypes;
 using NBitcoin;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.BlockStore.Tests
+namespace Blockcore.Features.BlockStore.Tests
 {
     public class BlockRepositoryTests : LogsTestBase
     {

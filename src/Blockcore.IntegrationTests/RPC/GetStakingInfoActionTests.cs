@@ -1,16 +1,17 @@
 ﻿using System.Threading.Tasks;
-using Stratis.Bitcoin.Features.Miner.Controllers;
-using Stratis.Bitcoin.Features.Miner.Interfaces;
-using Stratis.Bitcoin.Features.Miner.Models;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.Runners;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Features.Miner.Controllers;
+using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.IntegrationTests.Common.Runners;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.RPC
+namespace Blockcore.IntegrationTests.RPC
 {
     /// <summary>
     /// Tests of RPC controller action "getstakinginfo".

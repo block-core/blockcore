@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Rules
+namespace Blockcore.Features.MemoryPool.Rules
 {
     /// <summary>
     /// Validates the transaction with the coin view.

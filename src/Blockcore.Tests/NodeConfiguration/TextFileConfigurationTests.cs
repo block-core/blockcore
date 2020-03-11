@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Configuration;
+﻿using Blockcore.Configuration;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.NodeConfiguration
+namespace Blockcore.Tests.NodeConfiguration
 {
     public class TextFileConfigurationTests
     {

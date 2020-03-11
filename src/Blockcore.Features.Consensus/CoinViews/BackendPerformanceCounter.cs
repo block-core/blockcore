@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Configuration.Logging;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews
 {
     /// <summary>
     /// Performance statistics used to measure the time it takes for the DBreeze backend

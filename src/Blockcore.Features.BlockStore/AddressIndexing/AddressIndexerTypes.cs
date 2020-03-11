@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LiteDB;
 
-namespace Stratis.Bitcoin.Features.BlockStore.AddressIndexing
+namespace Blockcore.Features.BlockStore.AddressIndexing
 {
     public class AddressIndexerTipData
     {

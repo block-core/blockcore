@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Blockcore.Builder.Feature;
+using Blockcore.Features.RPC.ModelBinders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Features.RPC.ModelBinders;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public static class WebHostExtensions
     {

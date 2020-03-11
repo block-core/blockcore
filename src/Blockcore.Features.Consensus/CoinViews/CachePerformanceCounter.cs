@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Configuration.Logging;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews
 {
     /// <summary>
     /// Statistics to measure the hit rate of the cache.

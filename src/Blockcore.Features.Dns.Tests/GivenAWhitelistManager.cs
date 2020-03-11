@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.P2P;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
 using FluentAssertions;
@@ -10,15 +16,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
 using NSubstitute;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Dns.Tests
+namespace Blockcore.Features.Dns.Tests
 {
     /// <summary>
     /// Defines unit tests for the <see cref="WhitelistManager"/> class.
@@ -542,11 +542,11 @@ namespace Stratis.Bitcoin.Features.Dns.Tests
             dnsSettings.DnsHostName = "stratis.test.com";
             var connectionSettings = new ConnectionManagerSettings(nodeSettings);
 
-            peerBanning.IsBanned(bannedEndpoint)
+            this.peerBanning.IsBanned(bannedEndpoint)
                 .Returns(true);
 
             var whitelistManager = new WhitelistManager(datetimeProvider, loggerFactory, peerAddressManager,
-                dnsServer, connectionSettings, dnsSettings, peerBanning);
+                dnsServer, connectionSettings, dnsSettings, this.peerBanning);
 
             // Act.
             whitelistManager.RefreshWhitelist();

@@ -2,7 +2,7 @@
 using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     /// <summary>
     /// A model representing a list of addresses the user has in a wallet account.

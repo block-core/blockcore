@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.MemoryPool.Fee;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.MemoryPool.Fee;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Interfaces
+namespace Blockcore.Features.MemoryPool.Interfaces
 {
     /// <summary>
     /// Memory pool of pending transactions.

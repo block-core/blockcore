@@ -1,10 +1,10 @@
 ﻿using System;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
 
-namespace Stratis.Bitcoin.Builder
+namespace Blockcore.Builder
 {
     /// <summary>
     /// Full node builder allows constructing a full node using specific components.

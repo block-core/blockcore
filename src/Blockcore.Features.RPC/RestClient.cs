@@ -10,7 +10,7 @@ using NBitcoin;
 using NBitcoin.Protocol.Payloads;
 using Newtonsoft.Json.Linq;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public enum RestResponseFormat
     {

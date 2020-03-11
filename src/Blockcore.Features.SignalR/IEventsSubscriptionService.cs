@@ -1,4 +1,4 @@
-namespace Stratis.Bitcoin.Features.SignalR
+namespace Blockcore.Features.SignalR
 {
     public interface IEventsSubscriptionService
     {

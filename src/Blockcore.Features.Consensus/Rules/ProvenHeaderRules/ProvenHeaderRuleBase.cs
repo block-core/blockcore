@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Consensus.Rules;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
+namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 {
     /// <summary>
     /// Base rule to be used by all proven header validation rules.
@@ -11,7 +11,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
     /// <remarks>
     /// We assume that in case normal headers are provided instead of proven headers we should ignore validation.
     /// This should be allowed by the behaviors only for whitelisted nodes.</remarks>
-    /// <seealso cref="Stratis.Bitcoin.Consensus.Rules.HeaderValidationConsensusRule" />
+    /// <seealso cref="HeaderValidationConsensusRule" />
     public abstract class ProvenHeaderRuleBase : HeaderValidationConsensusRule
     {
         /// <summary>Allow access to the POS parent.</summary>

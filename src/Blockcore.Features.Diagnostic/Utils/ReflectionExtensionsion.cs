@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Stratis.Features.Diagnostic.Utils
+namespace Blockcore.Features.Diagnostic.Utils
 {
     internal static class ReflectionExtension
     {

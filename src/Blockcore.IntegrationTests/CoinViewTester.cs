@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.IntegrationTests
+namespace Blockcore.IntegrationTests
 {
     public class CoinViewTester
     {
@@ -20,14 +20,14 @@ namespace Stratis.Bitcoin.IntegrationTests
             this.hash = coinView.GetTipHash();
         }
 
-        public List<(Utilities.Coins, OutPoint)> CreateCoins(int coinCount)
+        public List<(Coins, OutPoint)> CreateCoins(int coinCount)
         {
             var tx = new Transaction();
             tx.Outputs.AddRange(Enumerable.Range(0, coinCount)
                 .Select(t => new TxOut(Money.Zero, new Key()))
                 .ToArray());
 
-            List<(Utilities.Coins, OutPoint)> lst = new List<(Utilities.Coins, OutPoint)>();
+            List<(Coins, OutPoint)> lst = new List<(Coins, OutPoint)>();
             foreach (var trxo in tx.Outputs.AsIndexedOutputs())
             {
                 var output = new UnspentOutput(trxo.ToOutPoint(), new Coins(0, trxo.TxOut, false));
@@ -38,7 +38,7 @@ namespace Stratis.Bitcoin.IntegrationTests
             return lst;
         }
 
-        public bool Exists((Utilities.Coins Coins, OutPoint Outpoint) c)
+        public bool Exists((Coins Coins, OutPoint Outpoint) c)
         {
             FetchCoinsResponse result = this.coinView.FetchCoins(new[] { c.Outpoint });
             if (result.UnspentOutputs.Count == 0)
@@ -46,7 +46,7 @@ namespace Stratis.Bitcoin.IntegrationTests
             return result.UnspentOutputs[c.Outpoint].Coins != null;
         }
 
-        public void Spend((Utilities.Coins Coins, OutPoint Outpoint) c)
+        public void Spend((Coins Coins, OutPoint Outpoint) c)
         {
             UnspentOutput coin = this.pendingCoins.FirstOrDefault(u => u.OutPoint == c.Outpoint);
             if (coin == null)

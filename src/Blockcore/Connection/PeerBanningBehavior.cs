@@ -1,9 +1,9 @@
+using Blockcore.Configuration;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Behaviors;
 using Microsoft.Extensions.Logging;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Behaviors;
 
-namespace Stratis.Bitcoin.Connection
+namespace Blockcore.Connection
 {
     /// <summary>
     /// A behaviour that will manage the lifetime of peers.

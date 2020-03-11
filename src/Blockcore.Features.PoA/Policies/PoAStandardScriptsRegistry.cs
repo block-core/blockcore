@@ -3,7 +3,7 @@ using System.Linq;
 using NBitcoin;
 using NBitcoin.BitcoinCore;
 
-namespace Stratis.Bitcoin.Features.PoA.Policies
+namespace Blockcore.Features.PoA.Policies
 {
     /// <summary>
     /// PoA-specific standard transaction definitions.

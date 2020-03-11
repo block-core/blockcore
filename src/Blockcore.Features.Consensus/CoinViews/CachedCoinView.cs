@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews
 {
     /// <summary>
     /// Cache layer for coinview prevents too frequent updates of the data in the underlying storage.

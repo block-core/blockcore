@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Mining
+namespace Blockcore.Mining
 {
     /// <summary>
     /// The block provider class is called by <see cref="PosMinting"/> and <see cref="PowMining"/>

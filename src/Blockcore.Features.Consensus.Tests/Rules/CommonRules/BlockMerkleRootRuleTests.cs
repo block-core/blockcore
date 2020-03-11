@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class BlockMerkleRootRuleTests
     {

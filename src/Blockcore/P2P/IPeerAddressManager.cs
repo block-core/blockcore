@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Blockcore.Configuration;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
 
-namespace Stratis.Bitcoin.P2P
+namespace Blockcore.P2P
 {
     /// <summary>Contract for <see cref="PeerAddressManager"/>.</summary>
     public interface IPeerAddressManager : IDisposable

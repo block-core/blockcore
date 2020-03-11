@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Builder.Feature
+namespace Blockcore.Tests.Builder.Feature
 {
     public class FeatureCollectionTest
     {

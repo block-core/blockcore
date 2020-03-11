@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Base
+namespace Blockcore.Base
 {
     /// <summary>
     /// Contract of a store of block header hashes that are considered invalid.

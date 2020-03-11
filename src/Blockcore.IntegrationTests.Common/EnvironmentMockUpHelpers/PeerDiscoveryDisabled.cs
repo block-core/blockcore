@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.P2P;
+﻿using Blockcore.Connection;
+using Blockcore.P2P;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers
+namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {
     /// <summary>
     /// To be used with all the test runners to ensure that peer discovery does not run.

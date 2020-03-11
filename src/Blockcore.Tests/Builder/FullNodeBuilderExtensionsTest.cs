@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration;
+using Blockcore.Tests.Common;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.Builder
+namespace Blockcore.Tests.Builder
 {
     public class FullNodeBuilderExtensionsTest
     {

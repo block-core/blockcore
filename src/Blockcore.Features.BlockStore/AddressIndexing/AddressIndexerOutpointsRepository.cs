@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.BlockStore.AddressIndexing
+namespace Blockcore.Features.BlockStore.AddressIndexing
 {
     /// <summary>Repository for <see cref="OutPointData"/> items with cache layer built in.</summary>
     public sealed class AddressIndexerOutpointsRepository : MemoryCache<string, OutPointData>

@@ -1,7 +1,7 @@
-﻿using Stratis.Bitcoin.Features.Miner.Models;
+﻿using Blockcore.Features.Miner.Models;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Miner.Tests.Models
+namespace Blockcore.Features.Miner.Tests.Models
 {
     public class GetStakingInfoModelTest
     {

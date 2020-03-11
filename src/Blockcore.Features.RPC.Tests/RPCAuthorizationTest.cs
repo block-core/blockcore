@@ -2,7 +2,7 @@
 using System.Net;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.RPC.Tests
+namespace Blockcore.Features.RPC.Tests
 {
     public class RPCAuthorizationTest
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Utilities.ValidationAttributes
+namespace Blockcore.Utilities.ValidationAttributes
 {
     /// <summary>
     /// Validation attribute to check whether the data is in the right format to represent <see cref="Money"/>.

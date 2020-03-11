@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Consensus;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules
+namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 {
     /// <summary>
     /// Rule to check if the serialized sizes of the proven header components, such as merkle proof (max 512 bytes),

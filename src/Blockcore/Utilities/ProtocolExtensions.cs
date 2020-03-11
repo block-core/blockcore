@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Stratis.Bitcoin.P2P.Peer;
+using Blockcore.P2P.Peer;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// Extension methods related to the network protocol.

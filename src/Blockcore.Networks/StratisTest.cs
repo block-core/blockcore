@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Blockcore.Networks.Deployments;
+using Blockcore.Networks.Policies;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using Stratis.Bitcoin.Networks.Deployments;
-using Stratis.Bitcoin.Networks.Policies;
 
-namespace Stratis.Bitcoin.Networks
+namespace Blockcore.Networks
 {
     public class StratisTest : StratisMain
     {

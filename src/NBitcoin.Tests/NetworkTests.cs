@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Blockcore.Networks;
+using Blockcore.Networks.Deployments;
+using Blockcore.Tests.Common;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Networks;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Networks.Deployments;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

@@ -1,7 +1,7 @@
 ﻿using System;
-using Stratis.Bitcoin.Networks;
+using Blockcore.Networks;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common.TestNetworks
+namespace Blockcore.IntegrationTests.Common.TestNetworks
 {
     public sealed class BitcoinRegTestNoValidationRules : BitcoinRegTest
     {

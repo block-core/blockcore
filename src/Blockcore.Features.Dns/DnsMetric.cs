@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Stratis.Bitcoin.Features.Dns
+namespace Blockcore.Features.Dns
 {
     /// <summary>
     /// Stores metric values for the <see cref="DnsSeedServer"/> object.

@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Wallet
+namespace Blockcore.Features.Wallet
 {
     /// <summary>
     /// Represents recipients of a payment, used in <see cref="WalletTransactionHandler.BuildTransaction"/>.

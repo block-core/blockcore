@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Rules.ProvenHeaderRules;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.Consensus.Tests.Rules.ProvenHeaderRules
+namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
 {
     public class ProvenBlockHeaderSizeRuleTest : TestPosConsensusRulesUnitTestBase
     {

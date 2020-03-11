@@ -1,6 +1,6 @@
-﻿using Stratis.Bitcoin.Consensus.Rules;
+﻿using Blockcore.Consensus.Rules;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>
     /// Checks if <see cref="BitcoinMain"/> network block's header has a valid block version.

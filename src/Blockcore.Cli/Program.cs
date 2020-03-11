@@ -4,18 +4,18 @@ using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using Blockcore.Configuration;
+using Blockcore.Features.Api;
+using Blockcore.Features.RPC;
+using Blockcore.Utilities.Extensions;
 using Flurl;
 using Flurl.Http;
 using NBitcoin;
 using NBitcoin.Protocol;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Api;
-using Stratis.Bitcoin.Utilities.Extensions;
 
-namespace Stratis.Bitcoin.Cli
+namespace Blockcore.Cli
 {
     public class Program
     {

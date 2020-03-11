@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using NBitcoin;
 
-namespace Stratis.Bitcoin
+namespace Blockcore.Utilities.Extensions
 {
     /// <summary>
     /// TODO: These will move back to BlockSizeRule once has the rules has been migrated.

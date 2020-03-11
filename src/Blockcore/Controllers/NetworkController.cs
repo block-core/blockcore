@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.Connection;
+using Blockcore.Controllers.Models;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.Utilities.Extensions;
+using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.Utilities.Extensions;
-using Stratis.Bitcoin.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Controllers
+namespace Blockcore.Controllers
 {
     /// <summary>
     /// Provides methods that interact with the network elements of the full node.

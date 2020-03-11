@@ -1,8 +1,8 @@
-﻿using NBitcoin;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
+﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
     /// <summary>
     /// Check that the block signature for a POS block is in the canonical format.

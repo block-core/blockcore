@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Blockcore.Base;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.MemoryPool;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Features.Wallet.Interfaces;
-using Stratis.Bitcoin.Interfaces;
 
-namespace Stratis.Bitcoin.IntegrationTests.Common
+namespace Blockcore.IntegrationTests.Common.Extensions
 {
     public static class FullNodeExtensions
     {

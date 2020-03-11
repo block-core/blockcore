@@ -1,7 +1,7 @@
 ﻿using System;
-using Stratis.Bitcoin.Features.MemoryPool;
+using Blockcore.Features.MemoryPool;
 
-namespace Stratis.Bitcoin.Features.Wallet.Broadcasting
+namespace Blockcore.Features.Wallet.Broadcasting
 {
     public class TransactionBroadcastEntry
     {

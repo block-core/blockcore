@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.RPC
+namespace Blockcore.Features.RPC
 {
     public class RPCTransactionRepository : ITransactionRepository
     {

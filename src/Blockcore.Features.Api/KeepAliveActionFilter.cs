@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Timers;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Api
+namespace Blockcore.Features.Api
 {
     /// <summary>
     /// An asynchronous action filter whose role is to reset the keepalive counter.

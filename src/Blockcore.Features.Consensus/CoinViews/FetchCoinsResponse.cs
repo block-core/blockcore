@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews
 {
     /// <summary>
     /// Return value of <see cref="CoinView.FetchCoinsAsync(OutPoint[])"/>,

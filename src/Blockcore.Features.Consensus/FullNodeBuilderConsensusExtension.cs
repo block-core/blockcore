@@ -1,16 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Blockcore.Base;
+using Blockcore.Builder;
+using Blockcore.Configuration.Logging;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Features.Consensus.Rules;
+using Blockcore.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.CoinViews;
-using Stratis.Bitcoin.Features.Consensus.Interfaces;
-using Stratis.Bitcoin.Features.Consensus.ProvenBlockHeaders;
-using Stratis.Bitcoin.Features.Consensus.Rules;
-using Stratis.Bitcoin.Interfaces;
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     /// <summary>
     /// A class providing extension methods for <see cref="IFullNodeBuilder"/>.

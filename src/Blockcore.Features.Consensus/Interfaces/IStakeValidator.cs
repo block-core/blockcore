@@ -1,10 +1,10 @@
 ﻿using System;
+using Blockcore.Consensus;
+using Blockcore.Utilities;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.Consensus.Interfaces
+namespace Blockcore.Features.Consensus.Interfaces
 {
     /// <summary>
     /// Provides functionality for checking validity of PoS blocks.

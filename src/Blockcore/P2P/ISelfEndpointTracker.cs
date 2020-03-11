@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Stratis.Bitcoin.P2P
+namespace Blockcore.P2P
 {
     /// <summary>
     /// Tracker for endpoints known to be self.

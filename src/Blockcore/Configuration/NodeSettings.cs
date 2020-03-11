@@ -4,17 +4,17 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Networks;
 using NBitcoin.Protocol;
 using NLog.Extensions.Logging;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Configuration
+namespace Blockcore.Configuration
 {
     internal static class NormalizeDirectorySeparatorExt
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using DBreeze.Utils;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Utilities
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// Implementation of serialization and deserialization of objects that go into the DBreeze database.

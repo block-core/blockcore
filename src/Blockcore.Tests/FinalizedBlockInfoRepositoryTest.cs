@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
+
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests
+namespace Blockcore.Tests
 {
     public class FinalizedBlockInfoRepositoryTest : TestBase
     {

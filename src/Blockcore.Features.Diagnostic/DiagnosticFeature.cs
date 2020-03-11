@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Logging;
+using Blockcore.Features.Diagnostic.Controllers;
+using Blockcore.Features.Diagnostic.PeerDiagnostic;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
-using Stratis.Features.Diagnostic.Controllers;
-using Stratis.Features.Diagnostic.PeerDiagnostic;
 
-namespace Stratis.Features.Diagnostic
+namespace Blockcore.Features.Diagnostic
 {
     /// <summary>
     /// Feature for diagnostic purpose that allow to have insights about internal details of the fullnode while it's running.
@@ -17,7 +17,7 @@ namespace Stratis.Features.Diagnostic
     /// by the full node and uses reflection whenever it needs to access information not meant to be publicly exposed.</para>
     /// <para>It exposes <see cref="DiagnosticController"/>, an API controller that allow to query for information using the API feature, when available.</para>
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.Builder.Feature.FullNodeFeature" />
+    /// <seealso cref="FullNodeFeature" />
     public class DiagnosticFeature : FullNodeFeature
     {
         private readonly ISignals signals;

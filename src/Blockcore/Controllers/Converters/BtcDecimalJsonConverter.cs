@@ -2,7 +2,7 @@
 using System.Globalization;
 using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Controllers.Converters
+namespace Blockcore.Controllers.Converters
 {
     /// <summary>
     /// Converts a decimal value to a string with the minimum number of decimals used by bitcoin (8).

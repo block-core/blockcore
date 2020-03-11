@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration.Logging;
+using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Tests.Common.Logging
+namespace Blockcore.Tests.Common.Logging
 {
     public class LogsTestBase : TestBase
     {

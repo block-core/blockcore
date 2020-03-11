@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
+using Blockcore.Tests.Common;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Features.PoA.BasePoAFeatureConsensusRules;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.PoA.Tests.Rules
+namespace Blockcore.Features.PoA.Tests.Rules
 {
     public class PoAHeaderDifficultyRuleTests : PoATestsBase
     {

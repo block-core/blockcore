@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Features.PoA.Voting
+namespace Blockcore.Features.PoA.Voting
 {
     public class WhitelistedHashesRepository : IWhitelistedHashesRepository
     {

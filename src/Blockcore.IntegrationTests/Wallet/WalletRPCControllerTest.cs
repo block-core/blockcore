@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.BlockStore.Models;
+using Blockcore.Features.RPC;
+using Blockcore.Features.Wallet.Models;
+using Blockcore.IntegrationTests.Common;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.Interfaces;
+using Blockcore.Networks;
+using Blockcore.Tests.Common;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;
 using NBitcoin;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.BlockStore.Models;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.Wallet.Models;
-using Stratis.Bitcoin.IntegrationTests.Common;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.Common.ReadyData;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Networks;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Wallet
+namespace Blockcore.IntegrationTests.Wallet
 {
     public class WalletRPCControllerTest
     {

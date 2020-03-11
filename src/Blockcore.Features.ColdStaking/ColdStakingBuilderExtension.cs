@@ -2,7 +2,7 @@
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
 
-namespace Stratis.Bitcoin.Features.ColdStaking
+namespace Blockcore.Features.ColdStaking
 {
     /// <summary>
     /// Extends the <see cref="TransactionBuilder" /> functionality to play nice with cold staking script.

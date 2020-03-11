@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using Stratis.Bitcoin.Controllers.Converters;
+﻿using Blockcore.Controllers.Converters;
+using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     [JsonConverter(typeof(ToStringJsonConverter))]
     public class NewAddressModel

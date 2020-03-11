@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Connection
+namespace Blockcore.Connection
 {
     /// <summary>
     /// Data structure for connected peer node.

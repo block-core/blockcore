@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blockcore.Configuration.Settings;
+using Blockcore.Consensus;
+using Blockcore.Interfaces;
+using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.Bitcoin.Base
+namespace Blockcore.Base
 {
     /// <summary>
     /// Provides IBD (Initial Block Download) state.

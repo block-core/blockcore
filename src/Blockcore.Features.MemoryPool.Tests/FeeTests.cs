@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Configuration;
+using Blockcore.Features.MemoryPool.Fee;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.MemoryPool.Fee;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Tests
+namespace Blockcore.Features.MemoryPool.Tests
 {
     public class FeeTests
     {

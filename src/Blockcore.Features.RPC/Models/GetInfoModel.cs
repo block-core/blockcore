@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using Stratis.Bitcoin.Controllers.Converters;
+﻿using Blockcore.Controllers.Converters;
+using Newtonsoft.Json;
 
-namespace Stratis.Bitcoin.Features.RPC.Models
+namespace Blockcore.Features.RPC.Models
 {
     public class GetInfoModel
     {

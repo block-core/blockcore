@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Utilities;
 using NBitcoin;
-using Stratis.Bitcoin.Utilities;
 using ReaderWriterLock = NBitcoin.ReaderWriterLock;
 
-namespace Stratis.Bitcoin.Features.Consensus.CoinViews
+namespace Blockcore.Features.Consensus.CoinViews
 {
     /// <summary>
     /// Coinview that holds all information in the memory, which is used in tests.

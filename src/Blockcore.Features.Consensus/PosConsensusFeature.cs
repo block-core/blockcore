@@ -2,22 +2,23 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.Builder.Feature;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Behaviors;
+using Blockcore.Interfaces;
+using Blockcore.P2P.Peer;
+using Blockcore.Signals;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Features.Consensus.Behaviors;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P.Peer;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]
 
-namespace Stratis.Bitcoin.Features.Consensus
+namespace Blockcore.Features.Consensus
 {
     public class PosConsensusFeature : ConsensusFeature
     {
@@ -43,7 +44,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             ChainIndexer chainIndexer,
             IInitialBlockDownloadState initialBlockDownloadState,
             IPeerBanning peerBanning,
-            Signals.ISignals signals,
+            ISignals signals,
             ILoggerFactory loggerFactory,
             ICheckpoints checkpoints,
             IProvenBlockHeaderStore provenBlockHeaderStore,

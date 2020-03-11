@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
+using Blockcore.Utilities.Extensions;
+using Blockcore.Utilities.JsonConverters;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Utilities.Extensions;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.P2P
+namespace Blockcore.P2P
 {
     /// <summary>
     /// A class which holds data on a peer's (IPEndPoint) attempts, connections and successful handshake events.

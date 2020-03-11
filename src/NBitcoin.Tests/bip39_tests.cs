@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Blockcore.Tests.Common;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json.Linq;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
 namespace NBitcoin.Tests

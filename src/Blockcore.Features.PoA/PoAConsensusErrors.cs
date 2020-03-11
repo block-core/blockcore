@@ -1,6 +1,6 @@
-﻿using Stratis.Bitcoin.Consensus;
+﻿using Blockcore.Consensus;
 
-namespace Stratis.Bitcoin.Features.PoA
+namespace Blockcore.Features.PoA
 {
     /// <summary>Rules that might be thrown by consensus rules that are specific to PoA consensus.</summary>
     public static class PoAConsensusErrors

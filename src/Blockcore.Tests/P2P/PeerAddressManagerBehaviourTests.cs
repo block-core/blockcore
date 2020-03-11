@@ -1,23 +1,23 @@
 ﻿using System.Net;
 using System.Threading;
+using Blockcore.AsyncWork;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Signals;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Logging;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Tests.P2P
+namespace Blockcore.Tests.P2P
 {
     public sealed class PeerAddressManagerBehaviourTests : LogsTestBase
     {
@@ -31,7 +31,7 @@ namespace Stratis.Bitcoin.Tests.P2P
         {
             this.extendedLoggerFactory = ExtendedLoggerFactory.Create();
             this.connectionManagerSettings = new ConnectionManagerSettings(NodeSettings.Default(this.Network));
-            this.signals = new Bitcoin.Signals.Signals(this.extendedLoggerFactory, null);
+            this.signals = new Blockcore.Signals.Signals(this.extendedLoggerFactory, null);
             this.asyncProvider = new AsyncProvider(this.extendedLoggerFactory, this.signals, new NodeLifetime());
 
             this.networkPeerFactory = new NetworkPeerFactory(this.Network,

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Stratis.Bitcoin.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.Wallet.Models
+namespace Blockcore.Features.Wallet.Models
 {
     /// <summary>Model for RPC method gettransaction.</summary>
     public class GetTransactionModel

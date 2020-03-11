@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.MemoryPool.Fee
+namespace Blockcore.Features.MemoryPool.Fee
 {
     /// <summary>
     /// Transation confirmation statistics.

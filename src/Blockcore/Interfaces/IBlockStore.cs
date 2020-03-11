@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Interfaces
+namespace Blockcore.Interfaces
 {
     /// <summary>
     /// Represent access to the store of <see cref="Block"/>.

@@ -5,32 +5,33 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.AsyncWork;
+using Blockcore.Base;
+using Blockcore.Base.Deployments;
+using Blockcore.BlockPulling;
+using Blockcore.Configuration;
+using Blockcore.Configuration.Settings;
+using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.Validators;
+using Blockcore.Features.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Interfaces;
+using Blockcore.P2P;
+using Blockcore.P2P.Peer;
+using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using Stratis.Bitcoin.AsyncWork;
-using Stratis.Bitcoin.Base;
-using Stratis.Bitcoin.Base.Deployments;
-using Stratis.Bitcoin.BlockPulling;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Configuration.Settings;
-using Stratis.Bitcoin.Connection;
-using Stratis.Bitcoin.Consensus;
-using Stratis.Bitcoin.Consensus.Rules;
-using Stratis.Bitcoin.Consensus.Validators;
-using Stratis.Bitcoin.Features.Consensus.Rules;
-using Stratis.Bitcoin.Features.Consensus.Rules.CommonRules;
-using Stratis.Bitcoin.Interfaces;
-using Stratis.Bitcoin.P2P;
-using Stratis.Bitcoin.P2P.Peer;
-using Stratis.Bitcoin.P2P.Protocol.Payloads;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Utilities;
-using Xunit;
-using static Stratis.Bitcoin.Tests.Consensus.ChainedHeaderTreeTest;
 
-namespace Stratis.Bitcoin.Tests.Consensus
+using Xunit;
+using static Blockcore.Tests.Consensus.ChainedHeaderTreeTest;
+
+namespace Blockcore.Tests.Consensus
 {
     public class TestContext
     {
@@ -107,7 +108,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
             this.selfEndpointTracker = new SelfEndpointTracker(this.loggerFactory, connectionSettings);
             this.Network.Consensus.Options = new ConsensusOptions();
 
-            this.signals = new Bitcoin.Signals.Signals(this.loggerFactory, null);
+            this.signals = new Blockcore.Signals.Signals(this.loggerFactory, null);
             this.asyncProvider = new AsyncProvider(this.loggerFactory, this.signals, this.nodeLifetime);
 
             // Dont check PoW of a header in this test.
@@ -354,7 +355,7 @@ namespace Stratis.Bitcoin.Tests.Consensus
         {
             var networkPeer = new Mock<INetworkPeer>();
 
-            var signals = new Bitcoin.Signals.Signals(this.loggerFactory, null);
+            var signals = new Blockcore.Signals.Signals(this.loggerFactory, null);
             var asyncProvider = new AsyncProvider(this.loggerFactory, this.signals, new NodeLifetime());
 
             var connection = new NetworkPeerConnection(this.Network, networkPeer.Object, new TcpClient(), 0, (message, token) => Task.CompletedTask,

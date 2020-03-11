@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Blockcore.Features.RPC;
+using Blockcore.Features.RPC.Exceptions;
+using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.RPC;
+using Blockcore.Tests.Common;
 using NBitcoin;
-using Stratis.Bitcoin.Features.RPC;
-using Stratis.Bitcoin.Features.RPC.Exceptions;
-using Stratis.Bitcoin.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Stratis.Bitcoin.IntegrationTests.RPC;
-using Stratis.Bitcoin.Tests.Common;
 using Xunit;
 
-namespace Stratis.Bitcoin.IntegrationTests.Compatibility
+namespace Blockcore.IntegrationTests.Compatibility
 {
     /// <summary>
     /// stratisX test fixture for RPC tests.

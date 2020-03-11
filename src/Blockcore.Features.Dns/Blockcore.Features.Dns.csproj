@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Stratis Bitcoin Features Dns</Description>
+    <Description>Blockcore Features Dns</Description>
     <AssemblyTitle>Blockcore.Features.Dns</AssemblyTitle>
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>

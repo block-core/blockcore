@@ -79,7 +79,7 @@ namespace Blockcore.Cli
                 {
                     var builder = new StringBuilder();
                     builder.AppendLine("Usage:");
-                    builder.AppendLine(" dotnet run <Stratis.Bitcoin.Cli/Stratis.Bitcoin.Cli.dll> [network-name] [options] [method] <command> [arguments]");
+                    builder.AppendLine(" dotnet run <Blockcore.Cli/Blockcore.Cli.dll> [network-name] [options] [method] <command> [arguments]");
                     builder.AppendLine();
                     builder.AppendLine("Command line arguments:");
                     builder.AppendLine();
@@ -197,9 +197,11 @@ namespace Blockcore.Cli
                         case "POST":
                             httpResponse = CallApiPost(url, commandArgObj);
                             break;
+
                         case "DELETE":
                             httpResponse = CallApiDelete(url, commandArgObj);
                             break;
+
                         default:
                             httpResponse = CallApiGet(url, commandArgObj);
                             break;

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Stratis Bitcoin Features Consensus</Description>
+    <Description>Blockcore Features Consensus</Description>
     <AssemblyTitle>Blockcore.Features.Consensus</AssemblyTitle>
-	  <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <AssemblyName>Blockcore.Features.Consensus</AssemblyName>
     <PackageId>Blockcore.Features.Consensus</PackageId>
@@ -45,5 +45,4 @@
     <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
-
 </Project>

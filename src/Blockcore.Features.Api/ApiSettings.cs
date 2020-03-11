@@ -13,7 +13,7 @@ namespace Blockcore.Features.Api
     /// </summary>
     public class ApiSettings
     {
-        /// <summary>The default port used by the API when the node runs on the Stratis network.</summary>
+        /// <summary>The default port used by the API when the node runs on the network.</summary>
         public const string DefaultApiHost = "http://localhost";
 
         /// <summary>Instance logger.</summary>

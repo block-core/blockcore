@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Stratis.BitcoinD</AssemblyName>
+    <AssemblyName>blockcore.bitcoind</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Stratis.BitcoinD</PackageId>
+    <PackageId>BitcoinD</PackageId>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -31,5 +31,4 @@
     <ProjectReference Include="..\Blockcore.Networks\Blockcore.Networks.csproj" />
     <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
-
 </Project>

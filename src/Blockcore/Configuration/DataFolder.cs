@@ -91,7 +91,7 @@ namespace Blockcore.Configuration
         /// <summary>Path to the folder for <see cref="ProvenBlockHeader"/> items database files.</summary>
         public string ProvenBlockHeaderPath { get; set; }
 
-        /// <summary>Path to Stratis applications</summary>
+        /// <summary>Path to applications</summary>
         public string ApplicationsPath { get; internal set; }
     }
 }

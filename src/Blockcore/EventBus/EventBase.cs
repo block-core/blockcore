@@ -5,7 +5,7 @@ namespace Blockcore.EventBus
     /// <summary>
     /// Basic abstract implementation of <see cref="IEvent"/>.
     /// </summary>
-    /// <seealso cref="Stratis.Bitcoin.EventBus.IEvent" />
+    /// <seealso cref="Blockcore.EventBus.IEvent" />
     public abstract class EventBase
     {
         /// <inheritdoc />

@@ -16,7 +16,7 @@ namespace Blockcore.Features.Consensus
     /// <summary>
     /// Provides functionality for verifying validity of PoS block.
     /// </summary>
-    /// See <see cref="Stratis.Bitcoin.Features.Miner.PosMinting"/> for more information about PoS solutions.
+    /// See <see cref="Blockcore.Features.Miner.PosMinting"/> for more information about PoS solutions.
     /// <remarks>
     /// These are the criteria for a new block to be accepted as a valid POS block at version 3 of the protocol,
     /// which has been active since 6 August 2016 07:03:21 (Unix epoch time > 1470467000). All timestamps

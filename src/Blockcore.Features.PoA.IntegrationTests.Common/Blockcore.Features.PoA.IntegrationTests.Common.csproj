@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
-    <AssemblyName>Stratis.Bitcoin.Features.PoA.IntegrationTests.Common</AssemblyName>
+    <AssemblyName>Blockcore.Features.PoA.IntegrationTests.Common</AssemblyName>
     <PackageId>Blockcore.Features.PoA.IntegrationTests.Common</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -19,9 +19,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.PoA\Stratis.Bitcoin.Features.PoA.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.IntegrationTests.Common\Stratis.Bitcoin.IntegrationTests.Common.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.PoA\Blockcore.Features.PoA.csproj" />
+    <ProjectReference Include="..\Blockcore.IntegrationTests.Common\Blockcore.IntegrationTests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
 </Project>

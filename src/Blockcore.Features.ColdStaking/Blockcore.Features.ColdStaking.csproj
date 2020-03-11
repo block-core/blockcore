@@ -3,7 +3,7 @@
   <PropertyGroup>
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>Stratis.Bitcoin.Features.ColdStaking</AssemblyName>
+    <AssemblyName>Blockcore.Features.ColdStaking</AssemblyName>
     <PackageId>Blockcore.Features.ColdStaking</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
 </Project>

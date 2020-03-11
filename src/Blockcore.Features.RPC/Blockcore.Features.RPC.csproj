@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <Description>Stratis Bitcoin Features RPC</Description>
-    <AssemblyTitle>Stratis.Bitcoin.Features.RPC</AssemblyTitle>
+    <AssemblyTitle>Blockcore.Features.RPC</AssemblyTitle>
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>Stratis.Bitcoin.Features.RPC</AssemblyName>
+    <AssemblyName>Blockcore.Features.RPC</AssemblyName>
     <PackageId>Blockcore.Features.RPC</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -37,8 +37,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Consensus\Stratis.Bitcoin.Features.Consensus.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">

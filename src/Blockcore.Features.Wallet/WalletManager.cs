@@ -17,7 +17,7 @@ using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.Extensions;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Wallet.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Wallet.Tests")]
 
 namespace Stratis.Bitcoin.Features.Wallet
 {

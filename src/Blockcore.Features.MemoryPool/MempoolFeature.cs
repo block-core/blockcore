@@ -14,7 +14,7 @@ using Stratis.Bitcoin.Features.MemoryPool.Interfaces;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Utilities;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.MemoryPool.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.MemoryPool.Tests")]
 
 namespace Stratis.Bitcoin.Features.MemoryPool
 {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Stratis.Bitcoin.Features.Wallet.Tests</AssemblyName>
+    <AssemblyName>Blockcore.Features.Wallet.Tests</AssemblyName>
     <PackageId>Blockcore.Features.Wallet.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
@@ -21,9 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Stratis.Bitcoin.Features.Wallet.Tests\**" />
-    <EmbeddedResource Remove="Stratis.Bitcoin.Features.Wallet.Tests\**" />
-    <None Remove="Stratis.Bitcoin.Features.Wallet.Tests\**" />
+    <Compile Remove="Blockcore.Features.Wallet.Tests\**" />
+    <EmbeddedResource Remove="Blockcore.Features.Wallet.Tests\**" />
+    <None Remove="Blockcore.Features.Wallet.Tests\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,11 +38,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.RPC\Stratis.Bitcoin.Features.RPC.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Common\Stratis.Bitcoin.Tests.Common.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Wallet.Common\Stratis.Bitcoin.Tests.Wallet.Common.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Wallet.Common\Blockcore.Tests.Wallet.Common.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

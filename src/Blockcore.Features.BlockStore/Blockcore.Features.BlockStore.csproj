@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <Description>Stratis Bitcoin Features BlockStore</Description>
-    <AssemblyTitle>Stratis.Bitcoin.Features.BlockStore</AssemblyTitle>
+    <AssemblyTitle>Blockcore.Features.BlockStore</AssemblyTitle>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>Stratis.Bitcoin.Features.BlockStore</AssemblyName>
+    <AssemblyName>Blockcore.Features.BlockStore</AssemblyName>
     <PackageId>Blockcore.Features.BlockStore</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

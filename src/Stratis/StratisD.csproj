@@ -5,7 +5,7 @@
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <AssemblyName>Stratis.StratisD</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Stratis.StratisD</PackageId>    
+    <PackageId>Stratis.StratisD</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -21,18 +21,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Api\Stratis.Bitcoin.Features.Api.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.BlockStore\Stratis.Bitcoin.Features.BlockStore.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.ColdStaking\Stratis.Bitcoin.Features.ColdStaking.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Consensus\Stratis.Bitcoin.Features.Consensus.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.MemoryPool\Stratis.Bitcoin.Features.MemoryPool.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Miner\Stratis.Bitcoin.Features.Miner.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.RPC\Stratis.Bitcoin.Features.RPC.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.SignalR\Stratis.Bitcoin.Features.SignalR.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Networks\Stratis.Bitcoin.Networks.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Features.Diagnostic\Stratis.Features.Diagnostic.csproj" />    
+    <ProjectReference Include="..\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.SignalR\Blockcore.Features.SignalR.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\Blockcore.Networks\Blockcore.Networks.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Diagnostic\Blockcore.Features.Diagnostic.csproj" />
   </ItemGroup>
-
 </Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Stratis.Bitcoin.Features.MemoryPool.Tests</AssemblyName>
+    <AssemblyName>Blockcore.Features.MemoryPool.Tests</AssemblyName>
     <PackageId>Blockcore.Features.MemoryPool.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
@@ -21,9 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Stratis.Bitcoin.Features.MemoryPool.Tests\**" />
-    <EmbeddedResource Remove="Stratis.Bitcoin.Features.MemoryPool.Tests\**" />
-    <None Remove="Stratis.Bitcoin.Features.MemoryPool.Tests\**" />
+    <Compile Remove="Blockcore.Features.MemoryPool.Tests\**" />
+    <EmbeddedResource Remove="Blockcore.Features.MemoryPool.Tests\**" />
+    <None Remove="Blockcore.Features.MemoryPool.Tests\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,12 +37,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.BlockStore\Stratis.Bitcoin.Features.BlockStore.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Consensus\Stratis.Bitcoin.Features.Consensus.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.MemoryPool\Stratis.Bitcoin.Features.MemoryPool.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Miner\Stratis.Bitcoin.Features.Miner.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Common\Stratis.Bitcoin.Tests.Common.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

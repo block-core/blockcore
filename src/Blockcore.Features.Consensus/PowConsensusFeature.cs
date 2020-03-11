@@ -9,8 +9,8 @@ using Stratis.Bitcoin.Connection;
 using Stratis.Bitcoin.Consensus;
 using Stratis.Bitcoin.Interfaces;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Miner.Tests")]
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Consensus.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]
 
 namespace Stratis.Bitcoin.Features.Consensus
 {

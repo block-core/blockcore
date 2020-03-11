@@ -14,7 +14,7 @@ using Stratis.Bitcoin.Features.Wallet.Interfaces;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Bitcoin.Utilities.JsonErrors;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Miner.Tests.Controllers")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests.Controllers")]
 namespace Stratis.Bitcoin.Features.Miner.Controllers
 {
     /// <summary>

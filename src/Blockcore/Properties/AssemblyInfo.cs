@@ -34,4 +34,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("3.0.6.0")]
 [assembly: AssemblyFileVersion("3.0.6.0")]
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Tests")]

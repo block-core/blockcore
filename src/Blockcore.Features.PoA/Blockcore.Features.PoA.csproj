@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <Description>Stratis Bitcoin Features PoA</Description>
-    <AssemblyTitle>Stratis.Bitcoin.Features.PoA</AssemblyTitle>
+    <AssemblyTitle>Blockcore.Features.PoA</AssemblyTitle>
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>Stratis.Bitcoin.Features.PoA</AssemblyName>
+    <AssemblyName>Blockcore.Features.PoA</AssemblyName>
     <PackageId>Blockcore.Features.PoA</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -22,9 +22,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Consensus\Stratis.Bitcoin.Features.Consensus.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Miner\Stratis.Bitcoin.Features.Miner.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
 </Project>

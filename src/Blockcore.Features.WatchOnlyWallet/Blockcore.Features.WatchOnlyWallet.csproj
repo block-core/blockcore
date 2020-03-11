@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <Description>Stratis Bitcoin Features WatchOnlyWallet</Description>
-    <AssemblyTitle>Stratis.Bitcoin.Features.WatchOnlyWallet</AssemblyTitle>
+    <AssemblyTitle>Blockcore.Features.WatchOnlyWallet</AssemblyTitle>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
-    <AssemblyName>Stratis.Bitcoin.Features.WatchOnlyWallet</AssemblyName>
+    <AssemblyName>Blockcore.Features.WatchOnlyWallet</AssemblyName>
     <PackageId>Blockcore.Features.WatchOnlyWallet</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -35,9 +35,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Notifications\Stratis.Bitcoin.Features.Notifications.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

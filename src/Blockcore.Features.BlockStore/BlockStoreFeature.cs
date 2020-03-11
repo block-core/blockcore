@@ -16,7 +16,7 @@ using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.P2P.Protocol.Payloads;
 using Stratis.Bitcoin.Utilities;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.BlockStore.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.BlockStore.Tests")]
 
 namespace Stratis.Bitcoin.Features.BlockStore
 {

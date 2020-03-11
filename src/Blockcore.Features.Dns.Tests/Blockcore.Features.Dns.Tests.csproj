@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Stratis.Bitcoin.Features.Dns.Tests</AssemblyName>
+    <AssemblyName>Blockcore.Features.Dns.Tests</AssemblyName>
     <PackageId>Blockcore.Features.Dns.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
@@ -21,9 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Stratis.Bitcoin.Features.Dns.Tests\**" />
-    <EmbeddedResource Remove="Stratis.Bitcoin.Features.Dns.Tests\**" />
-    <None Remove="Stratis.Bitcoin.Features.Dns.Tests\**" />
+    <Compile Remove="Blockcore.Features.Dns.Tests\**" />
+    <EmbeddedResource Remove="Blockcore.Features.Dns.Tests\**" />
+    <None Remove="Blockcore.Features.Dns.Tests\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,8 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Dns\Stratis.Bitcoin.Features.Dns.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Common\Stratis.Bitcoin.Tests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

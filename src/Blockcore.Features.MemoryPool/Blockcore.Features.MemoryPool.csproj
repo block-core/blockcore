@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <Description>Stratis Bitcoin Features MemoryPool</Description>
-    <AssemblyTitle>Stratis.Bitcoin.Features.MemoryPool</AssemblyTitle>
+    <AssemblyTitle>Blockcore.Features.MemoryPool</AssemblyTitle>
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>Stratis.Bitcoin.Features.MemoryPool</AssemblyName>
+    <AssemblyName>Blockcore.Features.MemoryPool</AssemblyName>
     <PackageId>Blockcore.Features.MemoryPool</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -32,8 +32,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Consensus\Stratis.Bitcoin.Features.Consensus.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

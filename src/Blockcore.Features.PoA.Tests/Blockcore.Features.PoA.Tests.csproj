@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.PoA\Stratis.Bitcoin.Features.PoA.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Common\Stratis.Bitcoin.Tests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.PoA\Blockcore.Features.PoA.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

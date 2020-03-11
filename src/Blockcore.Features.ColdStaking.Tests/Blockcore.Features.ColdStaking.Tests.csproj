@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Stratis.Bitcoin.Features.ColdStaking.Tests</AssemblyName>
+    <AssemblyName>Blockcore.Features.ColdStaking.Tests</AssemblyName>
     <PackageId>Blockcore.Features.ColdStaking.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
@@ -21,9 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Stratis.Bitcoin.Features.ColdStaking.Tests\**" />
-    <EmbeddedResource Remove="Stratis.Bitcoin.Features.ColdStaking.Tests\**" />
-    <None Remove="Stratis.Bitcoin.Features.ColdStaking.Tests\**" />
+    <Compile Remove="Blockcore.Features.ColdStaking.Tests\**" />
+    <EmbeddedResource Remove="Blockcore.Features.ColdStaking.Tests\**" />
+    <None Remove="Blockcore.Features.ColdStaking.Tests\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,11 +36,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.ColdStaking\Stratis.Bitcoin.Features.ColdStaking.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Common\Stratis.Bitcoin.Tests.Common.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Wallet.Common\Stratis.Bitcoin.Tests.Wallet.Common.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Wallet.Common\Blockcore.Tests.Wallet.Common.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

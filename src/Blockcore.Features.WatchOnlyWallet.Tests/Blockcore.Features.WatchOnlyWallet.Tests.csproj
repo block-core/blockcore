@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AssemblyName>Stratis.Bitcoin.Features.WatchOnlyWallet.Tests</AssemblyName>
+    <AssemblyName>Blockcore.Features.WatchOnlyWallet.Tests</AssemblyName>
     <PackageId>Blockcore.Features.WatchOnlyWallet.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
@@ -21,9 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Stratis.Bitcoin.Features.WatchOnlyWallet.Tests\**" />
-    <EmbeddedResource Remove="Stratis.Bitcoin.Features.WatchOnlyWallet.Tests\**" />
-    <None Remove="Stratis.Bitcoin.Features.WatchOnlyWallet.Tests\**" />
+    <Compile Remove="Blockcore.Features.WatchOnlyWallet.Tests\**" />
+    <EmbeddedResource Remove="Blockcore.Features.WatchOnlyWallet.Tests\**" />
+    <None Remove="Blockcore.Features.WatchOnlyWallet.Tests\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,9 +37,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.WatchOnlyWallet\Stratis.Bitcoin.Features.WatchOnlyWallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Tests.Common\Stratis.Bitcoin.Tests.Common.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.WatchOnlyWallet\Blockcore.Features.WatchOnlyWallet.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

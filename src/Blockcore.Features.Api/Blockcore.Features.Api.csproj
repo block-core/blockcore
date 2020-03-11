@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>Stratis.Bitcoin.Features.Api</AssemblyName>
+    <AssemblyName>Blockcore.Features.Api</AssemblyName>
     <OutputType>Library</OutputType>
-    <PackageId>Stratis.Bitcoin.Api</PackageId>
+    <PackageId>Blockcore.Api</PackageId>
 
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <PackageId>Blockcore.Features.Api</PackageId>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
 </Project>

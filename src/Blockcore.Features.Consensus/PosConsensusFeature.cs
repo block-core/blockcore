@@ -14,8 +14,8 @@ using Stratis.Bitcoin.Features.Consensus.Behaviors;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.P2P.Peer;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Miner.Tests")]
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Consensus.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]
 
 namespace Stratis.Bitcoin.Features.Consensus
 {

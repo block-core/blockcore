@@ -20,21 +20,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Api\Stratis.Bitcoin.Features.Api.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.BlockStore\Stratis.Bitcoin.Features.BlockStore.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.ColdStaking\Stratis.Bitcoin.Features.ColdStaking.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Consensus\Stratis.Bitcoin.Features.Consensus.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Dns\Stratis.Bitcoin.Features.Dns.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.LightWallet\Stratis.Bitcoin.Features.LightWallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.MemoryPool\Stratis.Bitcoin.Features.MemoryPool.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Miner\Stratis.Bitcoin.Features.Miner.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Notifications\Stratis.Bitcoin.Features.Notifications.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.PoA\Stratis.Bitcoin.Features.PoA.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.RPC\Stratis.Bitcoin.Features.RPC.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.SmartContracts\Stratis.Bitcoin.Features.SmartContracts.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin.Networks\Stratis.Bitcoin.Networks.csproj" />
-    <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.LightWallet\Blockcore.Features.LightWallet.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.PoA\Blockcore.Features.PoA.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.SmartContracts\Blockcore.Features.SmartContracts.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\Blockcore.Networks\Blockcore.Networks.csproj" />
+    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
     <ProjectReference Include="..\Stratis.Features.FederatedPeg\Stratis.Features.FederatedPeg.csproj" />
     <ProjectReference Include="..\Stratis.Sidechains.Networks\Stratis.Sidechains.Networks.csproj" />
     <ProjectReference Include="..\Stratis.SmartContracts.CLR.Validation\Stratis.SmartContracts.CLR.Validation.csproj" />

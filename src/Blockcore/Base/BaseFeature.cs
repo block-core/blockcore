@@ -28,11 +28,11 @@ using Stratis.Bitcoin.P2P.Protocol.Payloads;
 using Stratis.Bitcoin.Signals;
 using Stratis.Bitcoin.Utilities;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Tests")]
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Tests.Common")]
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.IntegrationTests.Common")]
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Consensus.Tests")]
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.IntegrationTests")]
+[assembly: InternalsVisibleTo("Blockcore.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Tests.Common")]
+[assembly: InternalsVisibleTo("Blockcore.IntegrationTests.Common")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.IntegrationTests")]
 
 namespace Stratis.Bitcoin.Base
 {
@@ -107,6 +107,7 @@ namespace Stratis.Bitcoin.Base
 
         /// <inheritdoc cref="Network"/>
         private readonly Network network;
+
         private readonly INodeStats nodeStats;
         private readonly IProvenBlockHeaderStore provenBlockHeaderStore;
 

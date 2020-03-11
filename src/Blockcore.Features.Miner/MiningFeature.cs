@@ -19,7 +19,7 @@ using Stratis.Bitcoin.Features.RPC;
 using Stratis.Bitcoin.Features.Wallet;
 using Stratis.Bitcoin.Mining;
 
-[assembly: InternalsVisibleTo("Stratis.Bitcoin.Features.Miner.Tests")]
+[assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 
 namespace Stratis.Bitcoin.Features.Miner
 {

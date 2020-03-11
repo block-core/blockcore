@@ -12,9 +12,9 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Stratis.Bitcoin.Features.Miner\Stratis.Bitcoin.Features.Miner.csproj" />
-      <ProjectReference Include="..\Stratis.Bitcoin.Features.Wallet\Stratis.Bitcoin.Features.Wallet.csproj" />
-      <ProjectReference Include="..\Stratis.Bitcoin\Stratis.Bitcoin.csproj" />
+      <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+      <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+      <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
     </ItemGroup>
 
 </Project>

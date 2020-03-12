@@ -3,6 +3,8 @@ name: Integration Test
 on: 
   push:
   pull_request:
+   branches-ignore:
+      - '**'
 
 jobs:
   

@@ -45,14 +45,17 @@ namespace Blockcore.IntegrationTests.API
 
         // BlockStore
         private const string BlockUri = "api/blockstore/block";
+
         private const string GetBlockCountUri = "api/blockstore/getblockcount";
 
         // ConnectionManager
         private const string AddnodeUri = "api/connectionmanager/addnode";
+
         private const string GetPeerInfoUri = "api/connectionmanager/getpeerinfo";
 
         // Consensus
         private const string GetBestBlockHashUri = "api/consensus/getbestblockhash";
+
         private const string GetBlockHashUri = "api/consensus/getblockhash";
 
         // Mempool
@@ -63,6 +66,7 @@ namespace Blockcore.IntegrationTests.API
 
         // Node
         private const string GetBlockHeaderUri = "api/node/getblockheader";
+
         private const string GetRawTransactionUri = "api/node/getrawtransaction";
         private const string GetTxOutUri = "api/node/gettxout";
         private const string StatusUri = "api/node/status";
@@ -70,14 +74,17 @@ namespace Blockcore.IntegrationTests.API
 
         // RPC
         private const string RPCCallByNameUri = "api/rpc/callbyname";
+
         private const string RPCListmethodsUri = "api/rpc/listmethods";
 
         // Staking
         private const string StartStakingUri = "api/staking/startstaking";
+
         private const string GetStakingInfoUri = "api/staking/getstakinginfo";
 
         // Wallet
         private const string AccountUri = "api/wallet/account";
+
         private const string GeneralInfoUri = "api/wallet/general-info";
         private const string BalanceUri = "api/wallet/balance";
         private const string RecoverViaExtPubKeyUri = "api/wallet/recover-via-extpubkey";
@@ -425,7 +432,7 @@ namespace Blockcore.IntegrationTests.API
         {
             var commands = JsonDataSerializer.Instance.Deserialize<List<RpcCommandModel>>(this.responseText);
 
-            commands.Count.Should().Be(32);
+            commands.Count.Should().Be(33);
             commands.Should().Contain(x => x.Command == "stop");
             commands.Should().Contain(x => x.Command == "getrawtransaction <txid> [<verbose>] [<blockhash>]");
             commands.Should().Contain(x => x.Command == "gettxout <txid> <vout> [<includemempool>]");
@@ -471,14 +478,14 @@ namespace Blockcore.IntegrationTests.API
             statusResponse.DataDirectoryPath.Should().Be(statusNode.Settings.DataDir);
 
             List<string> featuresNamespaces = statusResponse.FeaturesData.Select(f => f.Namespace).ToList();
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Base.BaseFeature");
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Features.Api.ApiFeature");
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Features.BlockStore.BlockStoreFeature");
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Features.Consensus.PowConsensusFeature");
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Features.MemoryPool.MempoolFeature");
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Features.Miner.MiningFeature");
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Features.RPC.RPCFeature");
-            featuresNamespaces.Should().Contain("Stratis.Bitcoin.Features.Wallet.WalletFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Base.BaseFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.Api.ApiFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.BlockStore.BlockStoreFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.Consensus.PowConsensusFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.MemoryPool.MempoolFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.Miner.MiningFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.RPC.RPCFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.Wallet.WalletFeature");
 
             statusResponse.FeaturesData.All(f => f.State == "Initialized").Should().BeTrue();
         }

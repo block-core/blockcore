@@ -11,6 +11,7 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;

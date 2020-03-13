@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
@@ -73,7 +74,6 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             var outHeaderRepo = await this.provenBlockHeaderRepository.GetAsync(1).ConfigureAwait(false);
             outHeaderRepo.Should().BeNull();
         }
-
 
         [Fact]
         public async Task AddToPending_Adds_To_Cache_Then_Save_To_DiskAsync()

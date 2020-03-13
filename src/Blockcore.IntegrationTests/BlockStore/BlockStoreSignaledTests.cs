@@ -8,6 +8,7 @@ using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;

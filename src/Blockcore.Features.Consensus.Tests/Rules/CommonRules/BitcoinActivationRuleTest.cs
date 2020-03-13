@@ -1,6 +1,7 @@
 ﻿using System;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Networks.Bitcoin.Rules;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using Xunit;

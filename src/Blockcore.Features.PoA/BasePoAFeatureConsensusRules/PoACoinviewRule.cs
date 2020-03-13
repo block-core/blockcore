@@ -2,13 +2,14 @@
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
 namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {
-    public class PoACoinviewRule : CoinViewRule
+    public class PoACoinviewRule : CheckUtxosetRule
     {
         private PoANetwork network;
 

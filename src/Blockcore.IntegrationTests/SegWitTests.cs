@@ -23,7 +23,9 @@ using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
-using Blockcore.Networks.Deployments;
+using Blockcore.Networks.Bitcoin.Deployments;
+using Blockcore.Networks.Stratis;
+using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
@@ -363,7 +365,7 @@ namespace Blockcore.IntegrationTests
                 // Need the premine to be past coinbase maturity so that we can stake with it.
                 var miner = node.FullNode.NodeService<IPowMining>() as PowMining;
                 List<uint256> res = miner.GenerateBlocks(new ReserveScript(script), 12, int.MaxValue);
-                
+
                 var cancellationToken = new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token;
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetBlockCount() >= 12, cancellationToken: cancellationToken);
                 TestBase.WaitLoop(() => node.FullNode.WalletManager().WalletTipHeight >= 12, cancellationToken: cancellationToken);
@@ -673,7 +675,7 @@ namespace Blockcore.IntegrationTests
                         AccountName = "account 0",
                         AllowUnconfirmed = true,
                         Outpoints = new List<OutpointRequest>() {
-                            new OutpointRequest() { Index = (int)witIndex, TransactionId = witFunds.GetHash().ToString() }, 
+                            new OutpointRequest() { Index = (int)witIndex, TransactionId = witFunds.GetHash().ToString() },
                             new OutpointRequest() { Index = spendable.First().Transaction.Index, TransactionId = spendable.First().Transaction.Id.ToString() }
                         },
                         Recipients = new List<RecipientModel> { new RecipientModel { DestinationAddress = witAddress, Amount = (p2wpkhAmount + Money.Coins(0.5m)).ToString() } },

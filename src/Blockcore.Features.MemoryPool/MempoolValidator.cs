@@ -7,6 +7,7 @@ using Blockcore.Configuration;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
@@ -155,7 +156,7 @@ namespace Blockcore.Features.MemoryPool
         /// <summary>Gets a counter for tracking memory pool performance.</summary>
         public MempoolPerformanceCounter PerformanceCounter { get; }
 
-        /// <summary>Gets the consensus options from the <see cref="CoinViewRule"/></summary>
+        /// <summary>Gets the consensus options from the <see cref="CheckUtxosetRule"/></summary>
         public ConsensusOptions ConsensusOptions => this.network.Consensus.Options;
 
         /// <inheritdoc />
@@ -210,7 +211,7 @@ namespace Blockcore.Features.MemoryPool
         /// <summary>
         /// Validates that the transaction is the final transaction."/>
         /// Validated by comparing the transaction vs chain tip.
-        /// If <see cref="CoinViewRule.StandardLocktimeVerifyFlags"/> flag is set then
+        /// If <see cref="CheckUtxosetRule.StandardLocktimeVerifyFlags"/> flag is set then
         /// use the block time at the end of the block chain for validation.
         /// Otherwise use the current time for the block time.
         /// </summary>

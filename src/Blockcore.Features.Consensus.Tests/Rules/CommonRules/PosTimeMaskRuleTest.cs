@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Networks.Stratis.Rules;
 using NBitcoin;
 using Xunit;
 

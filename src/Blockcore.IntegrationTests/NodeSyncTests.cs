@@ -6,6 +6,8 @@ using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using Xunit;

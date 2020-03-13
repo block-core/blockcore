@@ -13,6 +13,7 @@ using Blockcore.Consensus.Validators;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
@@ -25,7 +26,7 @@ using Xunit;
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     /// <summary>
-    /// Test cases related to the <see cref="PosCoinviewRule"/>.
+    /// Test cases related to the <see cref="CheckPosUtxosetRule"/>.
     /// </summary>
     public class PosCoinViewRuleTests : TestPosConsensusRulesUnitTestBase
     {

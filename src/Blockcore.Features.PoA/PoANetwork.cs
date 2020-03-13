@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
 using Blockcore.Features.PoA.Policies;
@@ -188,7 +189,6 @@ namespace Blockcore.Features.PoA
             // IHeaderValidationConsensusRule
             consensus.ConsensusRules
                 .Register<HeaderTimeChecksPoARule>()
-                .Register<StratisHeaderVersionRule>()
                 .Register<PoAHeaderDifficultyRule>()
                 .Register<PoAHeaderSignatureRule>();
             // ------------------------------------------------------

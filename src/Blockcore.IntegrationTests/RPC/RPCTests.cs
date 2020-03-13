@@ -7,6 +7,7 @@ using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;

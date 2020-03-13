@@ -4,6 +4,7 @@ using System.Net;
 using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
@@ -138,7 +139,6 @@ namespace Blockcore.Features.Consensus.Tests
             var dateTimeProvider = new DateTimeProvider();
             TimeSyncBehaviorState state = this.CreateTimeSyncBehaviorState(dateTimeProvider);
 
-
             for (int i = 0; i < samples.Count; i++)
             {
                 bool used = state.AddTimeData(samples[i].PeerIpAddress, samples[i].InputTimeOffset, samples[i].IsInbound);
@@ -252,7 +252,6 @@ namespace Blockcore.Features.Consensus.Tests
             ///Expectation of whether the sample is used or not. In many cases samples are either included or not and the AddTimeData method returns this information as a bool.
             /// </summary>
             public bool ExpectedIsUsed { get; }
-
 
             /// <summary>
             /// >Expectation of whether the warning has been set to on.

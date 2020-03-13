@@ -10,6 +10,7 @@ using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;

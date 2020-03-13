@@ -1,6 +1,7 @@
 ﻿using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 
-namespace Blockcore.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Networks.Bitcoin.Rules
 {
     /// <summary>
     /// Checks if <see cref="BitcoinMain"/> network block's header has a valid block version.

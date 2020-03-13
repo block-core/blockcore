@@ -2,7 +2,7 @@
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Utilities;
 
-namespace Blockcore.Features.Consensus.Rules
+namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 {
     /// <summary>
     /// Rules that provide easy access to the <see cref="CoinView"/> which is the store for a PoW system.

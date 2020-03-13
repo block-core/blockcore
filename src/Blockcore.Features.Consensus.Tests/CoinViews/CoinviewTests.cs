@@ -10,6 +10,7 @@ using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
@@ -51,9 +52,9 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             this.stakeChainStore = new StakeChainStore(this.network, this.chainIndexer, (IStakdb)this.coindb, this.loggerFactory);
             this.stakeChainStore.Load();
 
-            this.rewindDataIndexCache = new RewindDataIndexCache(this.dateTimeProvider, this.network, new FinalizedBlockInfoRepository(new HashHeightPair()) , new Checkpoints());
+            this.rewindDataIndexCache = new RewindDataIndexCache(this.dateTimeProvider, this.network, new FinalizedBlockInfoRepository(new HashHeightPair()), new Checkpoints());
 
-            this.cachedCoinView = new CachedCoinView(this.network, new Checkpoints(),  this.coindb, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new ConsensusSettings(new NodeSettings(this.network)) , this.stakeChainStore, this.rewindDataIndexCache);
+            this.cachedCoinView = new CachedCoinView(this.network, new Checkpoints(), this.coindb, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new ConsensusSettings(new NodeSettings(this.network)), this.stakeChainStore, this.rewindDataIndexCache);
 
             this.rewindDataIndexCache.Initialize(this.chainIndexer.Height, this.cachedCoinView);
 
@@ -103,7 +104,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
                 Assert.Equal(txPoints.Count, response.UnspentOutputs.Count);
                 var toSpend = new List<UnspentOutput>();
                 foreach (OutPoint outPointToSpend in txPointsToSpend)
-                { 
+                {
                     response.UnspentOutputs[outPointToSpend].Spend();
                     toSpend.Add(response.UnspentOutputs[outPointToSpend]);
                 }

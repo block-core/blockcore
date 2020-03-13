@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
+using Blockcore.Networks.Bitcoin.Rules;
+using Blockcore.Networks.Stratis;
+using Blockcore.Networks.Stratis.Rules;
 using FluentAssertions;
 using NBitcoin;
 using Xunit;
@@ -49,12 +54,11 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             fullValidationRules.Count.Should().Be(6);
 
             fullValidationRules[0].FullName.Should().Be(typeof(SetActivationDeploymentsFullValidationRule).FullName);
-            fullValidationRules[1].FullName.Should().Be(typeof(FetchCoinviewRule).FullName);
+            fullValidationRules[1].FullName.Should().Be(typeof(FetchUtxosetRule).FullName);
             fullValidationRules[2].FullName.Should().Be(typeof(TransactionDuplicationActivationRule).FullName);
-            fullValidationRules[3].FullName.Should().Be(typeof(PowCoinviewRule).FullName);
-            fullValidationRules[4].FullName.Should().Be(typeof(PushCoinviewRule).FullName);
-            fullValidationRules[5].FullName.Should().Be(typeof(FlushCoinviewRule).FullName);
-
+            fullValidationRules[3].FullName.Should().Be(typeof(CheckPowUtxosetPowRule).FullName);
+            fullValidationRules[4].FullName.Should().Be(typeof(PushUtxosetRule).FullName);
+            fullValidationRules[5].FullName.Should().Be(typeof(FlushUtxosetRule).FullName);
         }
 
         [Fact]
@@ -105,7 +109,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             fullValidationRules[1].FullName.Should().Be(typeof(CheckDifficultyHybridRule).FullName);
             fullValidationRules[2].FullName.Should().Be(typeof(LoadCoinviewRule).FullName);
             fullValidationRules[3].FullName.Should().Be(typeof(TransactionDuplicationActivationRule).FullName);
-            fullValidationRules[4].FullName.Should().Be(typeof(PosCoinviewRule).FullName);
+            fullValidationRules[4].FullName.Should().Be(typeof(CheckPosUtxosetRule).FullName);
             fullValidationRules[5].FullName.Should().Be(typeof(PosColdStakingRule).FullName);
             fullValidationRules[6].FullName.Should().Be(typeof(SaveCoinviewRule).FullName);
         }

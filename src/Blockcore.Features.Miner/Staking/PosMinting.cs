@@ -10,6 +10,7 @@ using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.Miner.Interfaces;
@@ -715,7 +716,7 @@ namespace Blockcore.Features.Miner.Staking
             }
 
             // Get reward for newly created block.
-            long reward = fees + this.consensusManager.ConsensusRules.GetRule<PosCoinviewRule>().GetProofOfStakeReward(chainTip.Height + 1);
+            long reward = fees + this.consensusManager.ConsensusRules.GetRule<CheckPosUtxosetRule>().GetProofOfStakeReward(chainTip.Height + 1);
             if (reward <= 0)
             {
                 // TODO: This can't happen unless we remove reward for mined block.

@@ -11,6 +11,7 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using Blockcore.Utilities;
 
 namespace BitcoinD

@@ -11,6 +11,7 @@ using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using Flurl;

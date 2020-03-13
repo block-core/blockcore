@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using NBitcoin;
 
 namespace Blockcore.IntegrationTests.Common.TestNetworks

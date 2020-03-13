@@ -37,6 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
     <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />

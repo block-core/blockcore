@@ -47,10 +47,10 @@ jobs:
       shell: bash
 
     - name: Nuget Pack
-      run: dotnet pack --include-source --include-symbols --version-suffix "${{env.NUGET_RELEASE_TYPE}}${{env.BUILDNUM_FOR_WORKFLOW}}" --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH }}
+      run: dotnet pack --include-source --include-symbols --version-suffix "${{env.NUGET_RELEASE_TYPE}}.${{env.BUILDNUM_FOR_WORKFLOW}}" --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH }}
 
     - name: Nuget Add Source
       run: nuget sources add -name "GPR" -Source "https://nuget.pkg.github.com/${{env.GITHUB_OWNER}}/index.json" -Username "${{env.GITHUB_OWNER}}" -Password ${{secrets.GITHUB_TOKEN}} 
 
     - name: Nuget Push
-      run: nuget push **/*.nupkg -Source "GPR" -SkipDuplicate  
+      run: nuget push **/*.nupkg -Source "GPR" -SkipDuplicate

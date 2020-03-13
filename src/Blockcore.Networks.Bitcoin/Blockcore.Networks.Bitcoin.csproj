@@ -5,8 +5,8 @@
     <AssemblyTitle>Blockcore.Networks</AssemblyTitle>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>Blockcore.Networks</AssemblyName>
-    <PackageId>Blockcore.Networks</PackageId>
+    <AssemblyName>Blockcore.Networks.Bitcoin</AssemblyName>
+    <PackageId>Blockcore.Networks.Bitcoin</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -25,5 +25,9 @@
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Rules\" />
   </ItemGroup>
 </Project>

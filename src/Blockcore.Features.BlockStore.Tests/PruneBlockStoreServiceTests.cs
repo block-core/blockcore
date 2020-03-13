@@ -3,6 +3,7 @@ using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Features.BlockStore.Pruning;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using Moq;

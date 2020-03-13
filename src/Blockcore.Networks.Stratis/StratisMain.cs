@@ -4,14 +4,14 @@ using System.Net;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.MemoryPool.Rules;
-using Blockcore.Networks.Deployments;
-using Blockcore.Networks.Policies;
+using Blockcore.Networks.Stratis.Deployments;
+using Blockcore.Networks.Stratis.Policies;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace Blockcore.Networks
+namespace Blockcore.Networks.Stratis
 {
     public class StratisMain : Network
     {

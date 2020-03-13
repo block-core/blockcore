@@ -1,6 +1,6 @@
 ﻿using NBitcoin;
 
-namespace Blockcore.Networks.Deployments
+namespace Blockcore.Networks.Stratis.Deployments
 {
     /// <summary>
     /// BIP9 deployments for the Stratis network.

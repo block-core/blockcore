@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Features.MemoryPool.Interfaces;
-using Blockcore.Networks.Policies;
+using Blockcore.Networks.Stratis.Policies;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
@@ -1633,7 +1633,7 @@ namespace Blockcore.Features.MemoryPool.Tests.PoS
             Assert.False(isSuccess, "Transaction attempting replacement, that refers to an unconfirmed input, should not have been accepted.");
             Assert.Equal(MempoolErrors.ReplacementAddsUnconfirmed, state.Error);
         }
-        
+
         [Fact]
         public async Task AcceptToMemoryPool_TxPowConsensusCheckInputBadTransactionInBelowOut_ReturnsFalseAsync()
         {
@@ -1744,7 +1744,7 @@ namespace Blockcore.Features.MemoryPool.Tests.PoS
         public async Task AcceptToMemoryPool_MemPoolFull_ReturnsFalseAsync()
         {
             string dataDir = GetTestDirectoryPath(this);
-            
+
             var minerSecret = new BitcoinSecret(new Key(), this.Network);
             ITestChainContext context = await TestChainFactory.CreatePosAsync(this.Network, minerSecret.PubKey.Hash.ScriptPubKey, dataDir);
             IMempoolValidator validator = context.MempoolValidator;

@@ -15,7 +15,7 @@ using NBitcoin.Protocol;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Blockcore.Cli
+namespace Bitcoin.Cli
 {
     public class Program
     {
@@ -108,14 +108,7 @@ namespace Blockcore.Cli
                 // Determine API port.
                 NetworksSelector networksSelector = null;
 
-                if (networkName.Contains("stratis"))
-                {
-                    networksSelector = Networks.Networks.Stratis;
-                }
-                else
-                {
-                    networksSelector = Networks.Networks.Bitcoin;
-                }
+                networksSelector = Blockcore.Networks.Bitcoin.Networks.Bitcoin;
 
                 // API calls require both the contoller name and the method name separated by "/".
                 // If this is not an API call then assume it is an RPC call.

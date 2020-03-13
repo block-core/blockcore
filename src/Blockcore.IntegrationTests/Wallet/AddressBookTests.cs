@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Blockcore.Features.Wallet.Models;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Flurl;

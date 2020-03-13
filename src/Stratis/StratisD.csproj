@@ -20,6 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
     <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
@@ -30,7 +31,6 @@
     <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
     <ProjectReference Include="..\Blockcore.Features.SignalR\Blockcore.Features.SignalR.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Blockcore.Networks\Blockcore.Networks.csproj" />
     <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Diagnostic\Blockcore.Features.Diagnostic.csproj" />
   </ItemGroup>

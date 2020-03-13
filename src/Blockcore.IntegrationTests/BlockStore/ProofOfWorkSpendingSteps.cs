@@ -7,6 +7,7 @@ using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using FluentAssertions;
 using NBitcoin;
 using Xunit.Abstractions;

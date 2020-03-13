@@ -7,6 +7,7 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.P2P;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;

@@ -9,6 +9,8 @@ using Blockcore.Consensus;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
+using Blockcore.Networks.Stratis;
 using Blockcore.Primitives;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;

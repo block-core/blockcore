@@ -5,6 +5,7 @@ using Blockcore.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
@@ -23,7 +24,6 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             // override max reorg to 10
             Type consensusType = typeof(NBitcoin.Consensus);
             consensusType.GetProperty("MaxReorgLength").SetValue(this.Network.Consensus, (uint)10);
-
         }
 
         [Fact]
@@ -128,7 +128,6 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             items.Should().HaveCount(22);
             this.CheckCache(items, 19, 9);
         }
-
 
         private void CheckCache(ConcurrentDictionary<OutPoint, int> items, int tip, int bottom)
         {

@@ -3,6 +3,7 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.P2P;
 using Blockcore.Utilities.Extensions;
 using Xunit;
@@ -113,6 +114,5 @@ namespace Blockcore.Tests.P2P
             Assert.True(this.selfEndpointTracker.MyExternalAddress.Address.Equals(newIpEndpoint3.MapToIpv6().Address));
             Assert.Equal(1, this.selfEndpointTracker.MyExternalAddressPeerScore);
         }
-
     }
 }

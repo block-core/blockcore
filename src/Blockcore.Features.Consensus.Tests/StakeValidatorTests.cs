@@ -4,6 +4,7 @@ using System.Linq;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
@@ -121,7 +122,6 @@ namespace Blockcore.Features.Consensus.Tests
                 .Returns(nonStakeBlockStake)
                 .Returns(stakeBlockStake)
                 .Returns(stakeBlockStake);
-
 
             var result = this.stakeValidator.GetLastPowPosChainedBlock(this.stakeChain.Object, headers.Last(), true);
 
@@ -431,7 +431,6 @@ namespace Blockcore.Features.Consensus.Tests
             this.consensus.Setup(c => c.PowLimit)
                 .Returns(powLimit);
 
-
             var result = this.stakeValidator.GetNextTargetRequired(this.stakeChain.Object, headers.Last(), this.consensus.Object, false);
 
             Assert.Equal(powLimit, result);
@@ -479,7 +478,6 @@ namespace Blockcore.Features.Consensus.Tests
             var powLimit = new Target(new uint256("00000000efff0000000000000000000000000000000000000000000000000000"));
             this.consensus.Setup(c => c.PowLimit)
                 .Returns(powLimit);
-
 
             var result = this.stakeValidator.GetNextTargetRequired(this.stakeChain.Object, headers.Last(), this.consensus.Object, false);
 
@@ -765,7 +763,7 @@ namespace Blockcore.Features.Consensus.Tests
                 UnspentOutputSet = new UnspentOutputSet()
             };
             context.UnspentOutputSet.SetCoins(new UnspentOutput[] { unspentoutputs });
-           
+
             context.ValidationContext = new ValidationContext() { ChainedHeaderToValidate = chainedHeader.Previous };
             chainedHeader.Previous.Header.Time = ((PosTransaction)input1).Time;
 
@@ -891,7 +889,6 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact]
         public void CheckKernel_CoinsNotInCoinView_ThrowsConsensusError()
         {
-
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
              .Returns((FetchCoinsResponse)null);
 
@@ -902,7 +899,6 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact]
         public void CheckKernel_LessThanOneCoinsInCoinView_ThrowsConsensusError()
         {
-
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns(new FetchCoinsResponse());
 
@@ -913,7 +909,6 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact]
         public void CheckKernel_MoreThanOneCoinsInCoinView_ThrowsConsensusError()
         {
-
             var unspentoutputs = new UnspentOutput[]
             {
                 new UnspentOutput(),
@@ -946,7 +941,7 @@ namespace Blockcore.Features.Consensus.Tests
 
         [Fact]
         public void CheckKernel_PrevBlockNotFoundOnConcurrentChain_ThrowsConsensusError()
-        {           
+        {
             var ret = new FetchCoinsResponse();
             ret.UnspentOutputs.Add(new OutPoint(uint256.One, 0),
                 new UnspentOutput(
@@ -1032,7 +1027,7 @@ namespace Blockcore.Features.Consensus.Tests
 
             ret.UnspentOutputs.Add(new OutPoint(transaction, 0),
                 new UnspentOutput(
-                    new OutPoint(transaction, 0), 
+                    new OutPoint(transaction, 0),
                     new Coins((uint)stakableHeader.Height, transaction.Outputs.First(), false, false)));
 
             this.coinView.Setup(c => c.FetchCoins(It.IsAny<OutPoint[]>()))
@@ -1335,6 +1330,7 @@ namespace Blockcore.Features.Consensus.Tests
         {
             internal List<Tuple<Key, PubKey>> _Keys = new List<Tuple<Key, PubKey>>();
             internal List<Script> _Scripts = new List<Script>();
+
             internal void AddKeyPubKey(Key key, PubKey pubkey)
             {
                 this._Keys.Add(Tuple.Create(key, pubkey));
@@ -1389,12 +1385,10 @@ namespace Blockcore.Features.Consensus.Tests
             inputm.Inputs[0].PrevOut.N = 0;
             inputm.Inputs[0].WitScript = new WitScript();
 
-
             inputm.Outputs.Add(new TxOut(0, Script.Empty));
             inputm.Outputs.Add(new TxOut(Money.Satoshis(1), Script.Empty));
             bool ret = SignSignature(keystore, output, inputm);
             Assert.True(ret == success, "couldn't sign");
-
 
             input = this.Network.CreateTransaction(inputm.ToBytes());
             Assert.True(input.Inputs.Count == 1);

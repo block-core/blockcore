@@ -3,6 +3,7 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;

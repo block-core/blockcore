@@ -15,7 +15,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
-using Blockcore.Networks.Deployments;
+using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
@@ -84,7 +84,7 @@ namespace Blockcore.Features.Miner.Tests
                 Assert.Equal(2, blockTemplate.Block.Transactions.Count);
 
                 Transaction resultingTransaction = blockTemplate.Block.Transactions[0];
-               // Assert.Equal((uint)new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc).ToUnixTimestamp(), resultingTransaction.Time);
+                // Assert.Equal((uint)new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc).ToUnixTimestamp(), resultingTransaction.Time);
                 Assert.NotEmpty(resultingTransaction.Inputs);
                 Assert.NotEmpty(resultingTransaction.Outputs);
                 Assert.True(resultingTransaction.IsCoinBase);
@@ -135,7 +135,7 @@ namespace Blockcore.Features.Miner.Tests
             {
                 var newOptions = new ConsensusOptions();
                 this.testNet.Consensus.Options = newOptions;
-                this.testNet.Consensus.BIP9Deployments[0] = new BIP9DeploymentsParameters("Test", 
+                this.testNet.Consensus.BIP9Deployments[0] = new BIP9DeploymentsParameters("Test",
                     19, new DateTimeOffset(new DateTime(2016, 1, 1, 0, 0, 0, DateTimeKind.Utc)),
                     new DateTimeOffset(new DateTime(2018, 1, 1, 0, 0, 0, DateTimeKind.Utc)),
                     2);

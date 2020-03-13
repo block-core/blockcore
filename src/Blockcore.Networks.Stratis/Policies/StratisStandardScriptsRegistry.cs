@@ -3,16 +3,15 @@ using System.Linq;
 using NBitcoin;
 using NBitcoin.BitcoinCore;
 
-namespace Blockcore.Networks.Policies
+namespace Blockcore.Networks.Stratis.Policies
 {
     /// <summary>
-    /// Bitcoin-specific standard transaction definitions.
+    /// Stratis-specific standard transaction definitions.
     /// </summary>
-    public class BitcoinStandardScriptsRegistry : StandardScriptsRegistry
+    public class StratisStandardScriptsRegistry : StandardScriptsRegistry
     {
-        // See MAX_OP_RETURN_RELAY in Bitcoin Core, <script/standard.h.>
-        // 80 bytes of data, +1 for OP_RETURN, +2 for the pushdata opcodes.
-        public const int MaxOpReturnRelay = 83;
+        // See MAX_OP_RETURN_RELAY in stratisX, <script.h>
+        public const int MaxOpReturnRelay = 40;
 
         // Need a network-specific version of the template list
         private readonly List<ScriptTemplate> standardTemplates = new List<ScriptTemplate>
@@ -24,6 +23,8 @@ namespace Blockcore.Networks.Policies
             new TxNullDataTemplate(MaxOpReturnRelay),
             PayToWitTemplate.Instance
         };
+
+        public List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
 
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {

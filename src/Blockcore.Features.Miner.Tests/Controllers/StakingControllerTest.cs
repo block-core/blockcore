@@ -9,6 +9,7 @@ using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Tests.Wallet.Common;

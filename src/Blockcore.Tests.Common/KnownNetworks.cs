@@ -1,4 +1,6 @@
 ﻿using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
+using Blockcore.Networks.Stratis;
 using NBitcoin;
 using NBitcoin.Networks;
 

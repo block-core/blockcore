@@ -13,13 +13,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
-  </PropertyGroup>  
+  </PropertyGroup>
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  
+
   <ItemGroup>
+    <ProjectReference Include="..\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
     <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
@@ -29,8 +30,6 @@
     <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
     <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Blockcore.Networks\Blockcore.Networks.csproj" />
     <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
-
 </Project>

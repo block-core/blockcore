@@ -15,6 +15,8 @@ using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Flurl;
@@ -530,7 +532,7 @@ namespace Blockcore.IntegrationTests
                 // Sync the peers A and B (height 3)
                 TestHelper.ConnectAndSync(minerA, minerB);
 
-                // Miner A will spend the coins 
+                // Miner A will spend the coins
                 WalletSendTransactionModel walletSendTransactionModel = $"http://localhost:{minerA.ApiPort}/api"
                     .AppendPathSegment("wallet/splitcoins")
                     .PostJsonAsync(new SplitCoinsRequest
@@ -721,9 +723,8 @@ namespace Blockcore.IntegrationTests
             });
 
             var dateTimeProvider = minerA.FullNode.NodeService<IDateTimeProvider>();
-            if(txThatSpendCoinstake is IPosTransactionWithTime posTrx)
+            if (txThatSpendCoinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = (uint)dateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
-
 
             Coin spentCoin = new Coin(txWithBigPremine, 0);
             List<ICoin> coins = new List<ICoin> { spentCoin };

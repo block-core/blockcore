@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockcore.Networks.Deployments;
-using Blockcore.Networks.Policies;
+using Blockcore.Networks.Bitcoin.Deployments;
+using Blockcore.Networks.Bitcoin.Policies;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace Blockcore.Networks
+namespace Blockcore.Networks.Bitcoin
 {
     public class BitcoinTest : BitcoinMain
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.MemoryPool.Rules;
-using Blockcore.Networks.Deployments;
-using Blockcore.Networks.Policies;
+using Blockcore.Networks.Bitcoin.Deployments;
+using Blockcore.Networks.Bitcoin.Policies;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 
-namespace Blockcore.Networks
+namespace Blockcore.Networks.Bitcoin
 {
     public class BitcoinMain : Network
     {
@@ -138,7 +138,7 @@ namespace Blockcore.Networks
                 { 550000, new CheckpointInfo(new uint256("0x000000000000000000223b7a2298fb1c6c75fb0efc28a4c56853ff4112ec6bc9"))}, // 14-11-2018,
                 { 610000, new CheckpointInfo(new uint256("0x0000000000000000000a6f607f74db48dae0a94022c10354536394c17672b7f7"))}  // 27-12-2019
             };
-           
+
             this.DNSSeeds = new List<DNSSeedData>
             {
                 new DNSSeedData("bitcoin.sipa.be", "seed.bitcoin.sipa.be"), // Pieter Wuille

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockcore.Networks.Deployments;
-using Blockcore.Networks.Policies;
+using Blockcore.Networks.Stratis.Deployments;
+using Blockcore.Networks.Stratis.Policies;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace Blockcore.Networks
+namespace Blockcore.Networks.Stratis
 {
     public class StratisRegTest : StratisMain
     {

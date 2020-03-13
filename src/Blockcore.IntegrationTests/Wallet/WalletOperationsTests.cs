@@ -9,6 +9,7 @@ using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Models;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;

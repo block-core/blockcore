@@ -8,6 +8,7 @@ using Blockcore.Controllers.Models;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.P2P;
 using Blockcore.Tests.Common;
 using Flurl;
@@ -22,7 +23,7 @@ namespace Blockcore.IntegrationTests.API
         public async Task Can_BanAndDisconnect_Peer_From_ApiAsync()
         {
             using (var builder = NodeBuilder.Create(this))
-                
+
             {
                 var network = new StratisRegTest();
 

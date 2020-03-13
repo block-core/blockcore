@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Features.MemoryPool.Interfaces;
-using Blockcore.Networks.Policies;
+using Blockcore.Networks.Bitcoin.Policies;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
@@ -32,7 +32,7 @@ namespace Blockcore.Features.MemoryPool.Tests
 
             Transaction tx = this.Network.CreateTransaction();
             tx.AddInput(new TxIn(new OutPoint(context.SrcTxs[0].GetHash(), 0), PayToPubkeyHashTemplate.Instance.GenerateScriptPubKey(minerSecret.PubKey)));
-            
+
             var ops = new Op[BitcoinStandardScriptsRegistry.MaxOpReturnRelay];
             ops[0] = OpcodeType.OP_RETURN;
 
@@ -1771,7 +1771,7 @@ namespace Blockcore.Features.MemoryPool.Tests
         public async Task AcceptToMemoryPool_MemPoolFull_ReturnsFalseAsync()
         {
             string dataDir = GetTestDirectoryPath(this);
-            
+
             var minerSecret = new BitcoinSecret(new Key(), this.Network);
             ITestChainContext context = await TestChainFactory.CreateAsync(this.Network, minerSecret.PubKey.Hash.ScriptPubKey, dataDir);
             IMempoolValidator validator = context.MempoolValidator;

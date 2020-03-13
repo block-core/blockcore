@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 
 namespace Blockcore.IntegrationTests.Common.Runners

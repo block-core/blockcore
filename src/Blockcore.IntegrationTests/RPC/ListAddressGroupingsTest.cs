@@ -9,6 +9,7 @@ using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Wallet;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;

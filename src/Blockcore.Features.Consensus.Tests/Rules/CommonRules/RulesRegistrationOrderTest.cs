@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
+using Blockcore.Networks.Stratis;
 using FluentAssertions;
 using NBitcoin;
 using Xunit;
@@ -54,7 +56,6 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             fullValidationRules[3].FullName.Should().Be(typeof(PowCoinviewRule).FullName);
             fullValidationRules[4].FullName.Should().Be(typeof(PushCoinviewRule).FullName);
             fullValidationRules[5].FullName.Should().Be(typeof(FlushCoinviewRule).FullName);
-
         }
 
         [Fact]

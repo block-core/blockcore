@@ -28,6 +28,7 @@ using Blockcore.IntegrationTests.Wallet;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
 using Blockcore.Networks;
+using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using FluentAssertions;

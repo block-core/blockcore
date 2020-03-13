@@ -12,6 +12,7 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Networks;
+using Blockcore.Networks.Stratis;
 using Blockcore.Utilities;
 using NBitcoin.Protocol;
 
@@ -31,7 +32,7 @@ namespace StratisDnsD
         {
             try
             {
-                var nodeSettings = new NodeSettings(networksSelector:Networks.Stratis, protocolVersion:ProtocolVersion.PROVEN_HEADER_VERSION, args:args)
+                var nodeSettings = new NodeSettings(networksSelector: Networks.Stratis, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: args)
                 {
                     MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
                 };

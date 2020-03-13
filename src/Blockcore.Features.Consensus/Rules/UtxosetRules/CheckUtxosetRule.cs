@@ -7,7 +7,7 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 {
     /// <summary>
     /// The proof of work coinview update rules. Validates the UTXO set is correctly spent and creating new outputs.
@@ -16,7 +16,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
     /// <exception cref="ConsensusErrors.BadTransactionNonFinal">Thrown if transaction's height or time is lower then provided by SequenceLock for this block.</exception>
     /// <exception cref="ConsensusErrors.BadBlockSigOps">Thrown if signature operation cost is greater then maximum block signature operation cost.</exception>
     /// <exception cref="ConsensusErrors.BadTransactionScriptError">Thrown if not all inputs are valid (no double spends, scripts & sigs, amounts).</exception>
-    public abstract class CoinViewRule : FullValidationConsensusRule
+    public abstract class CheckUtxosetRule : FullValidationConsensusRule
     {
         /// <summary>Consensus options.</summary>
         public ConsensusOptions ConsensusOptions { get; private set; }

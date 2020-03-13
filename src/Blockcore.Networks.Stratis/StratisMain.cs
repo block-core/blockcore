@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Net;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Networks.Stratis.Policies;
+using Blockcore.Networks.Stratis.Rules;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
@@ -215,7 +217,6 @@ namespace Blockcore.Networks.Stratis
                 new NetworkAddress(IPAddress.Parse("169.1.13.216"), 16178),
                 new NetworkAddress(IPAddress.Parse("213.125.242.234"), 16178),
                 new NetworkAddress(IPAddress.Parse("45.58.55.21"), 16178),
-
             };
 
             this.StandardScriptsRegistry = new StratisStandardScriptsRegistry();
@@ -270,9 +271,9 @@ namespace Blockcore.Networks.Stratis
                 // rules that require the store to be loaded (coinview)
                 .Register<LoadCoinviewRule>()
                 .Register<TransactionDuplicationActivationRule>()
-                .Register<PosCoinviewRule>() // implements BIP68, MaxSigOps and BlockReward calculation
-                                             // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
-                                             // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
+                .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
+                                                 // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
+                                                 // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
                 .Register<PosColdStakingRule>()
                 .Register<SaveCoinviewRule>();
         }

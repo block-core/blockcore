@@ -1,10 +1,11 @@
 ﻿using Blockcore.Consensus;
 using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Networks.Stratis.Rules
 {
     /// <summary>
     /// Checks if <see cref="StratisMain"/> network block's header has a valid block version.

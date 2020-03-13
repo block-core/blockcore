@@ -3,6 +3,7 @@ using System.Linq;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.Miner.Comparers;
@@ -222,7 +223,7 @@ namespace Blockcore.Features.Miner
             this.LastBlockSize = this.BlockSize;
             this.LastBlockWeight = this.BlockWeight;
 
-            var coinviewRule = this.ConsensusManager.ConsensusRules.GetRule<CoinViewRule>();
+            var coinviewRule = this.ConsensusManager.ConsensusRules.GetRule<CheckUtxosetRule>();
             this.coinbase.Outputs[0].Value = this.fees + coinviewRule.GetProofOfWorkReward(this.height);
             this.BlockTemplate.TotalFee = this.fees;
 

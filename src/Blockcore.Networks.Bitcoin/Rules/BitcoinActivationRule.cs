@@ -3,7 +3,7 @@ using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Networks.Bitcoin.Rules
 {
     /// <summary>
     /// Check that a <see cref="BitcoinMain" /> network block has the correct version according to the defined active deployments.

@@ -26,8 +26,4 @@
     <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Rules\" />
-  </ItemGroup>
 </Project>

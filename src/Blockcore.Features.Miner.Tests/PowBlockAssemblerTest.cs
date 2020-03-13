@@ -11,6 +11,7 @@ using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
@@ -388,8 +389,8 @@ namespace Blockcore.Features.Miner.Tests
             foreach (var ruleType in this.Network.Consensus.ConsensusRules.FullValidationRules)
             {
                 FullValidationConsensusRule rule = null;
-                if (ruleType == typeof(FlushCoinviewRule))
-                    rule = new FlushCoinviewRule(new Mock<IInitialBlockDownloadState>().Object);
+                if (ruleType == typeof(FlushUtxosetRule))
+                    rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object);
                 else
                     rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
 

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus;
@@ -8,12 +9,12 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 {
     /// <summary>
     /// Push the modified <see cref="UnspentOutputSet"/> back to the underline cache.
     /// </summary>
-    public class PushCoinviewRule : UtxoStoreConsensusRule
+    public class PushUtxosetRule : UtxoStoreConsensusRule
     {
         /// <inheritdoc />
         public override Task RunAsync(RuleContext context)
@@ -34,11 +35,11 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
     /// <summary>
     /// Track flush operations in a separate rule to better minitor its performance.
     /// </summary>
-    public class FlushCoinviewRule : UtxoStoreConsensusRule
+    public class FlushUtxosetRule : UtxoStoreConsensusRule
     {
         private readonly IInitialBlockDownloadState initialBlockDownloadState;
 
-        public FlushCoinviewRule(IInitialBlockDownloadState initialBlockDownloadState)
+        public FlushUtxosetRule(IInitialBlockDownloadState initialBlockDownloadState)
         {
             this.initialBlockDownloadState = initialBlockDownloadState;
         }
@@ -59,7 +60,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
     /// <summary>
     /// Load a blocks utxos to <see cref="UnspentOutputSet"/> a workable data set.
     /// </summary>
-    public class FetchCoinviewRule : UtxoStoreConsensusRule
+    public class FetchUtxosetRule : UtxoStoreConsensusRule
     {
         /// <inheritdoc />
         public override Task RunAsync(RuleContext context)
@@ -91,7 +92,8 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
     /// <summary>
     /// Legacy class for coins that did not upgrade.
     /// </summary>
-    public class SaveCoinviewRule : PushCoinviewRule
+    [Obsolete("Use PushUtxosetRule instead")]
+    public class SaveCoinviewRule : PushUtxosetRule
     {
         /// <inheritdoc />
         public override Task RunAsync(RuleContext context)
@@ -109,7 +111,8 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
     /// <summary>
     /// Legacy class for coins that did not upgrade.
     /// </summary>
-    public class LoadCoinviewRule : FetchCoinviewRule
+    [Obsolete("Use FetchUtxosetRule instead")]
+    public class LoadCoinviewRule : FetchUtxosetRule
     {
     }
 }

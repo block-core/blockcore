@@ -1,6 +1,7 @@
 ﻿using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -88,7 +89,7 @@ namespace Blockcore.Features.MemoryPool.Rules
                 return true;
 
             // TODO: The original code does not appear to do these checks here. Reevaluate if this needs to be done, or perhaps moved to another rule/method.
-            this.consensusRuleEngine.GetRule<CoinViewRule>().CheckInputs(context.Transaction, context.View.Set, this.chainIndexer.Height + 1);
+            this.consensusRuleEngine.GetRule<CheckUtxosetRule>().CheckInputs(context.Transaction, context.View.Set, this.chainIndexer.Height + 1);
 
             // TODO: Original code has the concept of a script execution cache. This might be worth looking into for performance improvements. Signature checks are expensive.
 

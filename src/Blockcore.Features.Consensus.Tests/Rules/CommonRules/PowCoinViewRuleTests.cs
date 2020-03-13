@@ -11,6 +11,7 @@ using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
@@ -34,12 +35,12 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         private RuleContext ruleContext;
         private UnspentOutputSet coinView;
         private Transaction transactionWithCoinbaseFromPreviousBlock;
-        private readonly CoinViewRule rule;
+        private readonly CheckUtxosetRule rule;
 
         public PowCoinViewRuleTests()
         {
             this.network = KnownNetworks.RegTest;
-            this.rule = new PowCoinviewRule();
+            this.rule = new CheckPowUtxosetPowRule();
         }
 
         [Fact]

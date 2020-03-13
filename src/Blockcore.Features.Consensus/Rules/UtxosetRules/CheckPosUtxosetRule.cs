@@ -7,12 +7,12 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 {
     /// <summary>
     /// Proof of stake override for the coinview rules - BIP68, MaxSigOps and BlockReward checks.
     /// </summary>
-    public sealed class PosCoinviewRule : CoinViewRule
+    public sealed class CheckPosUtxosetRule : CheckUtxosetRule
     {
         /// <summary>Provides functionality for checking validity of PoS blocks.</summary>
         private IStakeValidator stakeValidator;

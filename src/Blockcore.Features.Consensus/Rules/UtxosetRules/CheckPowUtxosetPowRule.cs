@@ -5,10 +5,10 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.Rules.CommonRules
+namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 {
     /// <inheritdoc />
-    public sealed class PowCoinviewRule : CoinViewRule
+    public sealed class CheckPowUtxosetPowRule : CheckUtxosetRule
     {
         /// <summary>Consensus parameters.</summary>
         private IConsensus consensus;
@@ -80,6 +80,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
             return transaction.CheckSequenceLocks(prevheights, index, context.Flags.LockTimeFlags);
         }
+
         /// <inheritdoc/>
         public override void CheckMaturity(UnspentOutput coins, int spendHeight)
         {

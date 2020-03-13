@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
@@ -65,7 +66,7 @@ namespace Blockcore.Features.MemoryPool.Rules
                 context.State.Invalid(MempoolErrors.NonstandardWitness).Throw();
             }
 
-            context.SigOpsCost = this.consensusRules.GetRule<CoinViewRule>().GetTransactionSignatureOperationCost(context.Transaction, context.View.Set, new DeploymentFlags { ScriptFlags = ScriptVerify.Standard });
+            context.SigOpsCost = this.consensusRules.GetRule<CheckUtxosetRule>().GetTransactionSignatureOperationCost(context.Transaction, context.View.Set, new DeploymentFlags { ScriptFlags = ScriptVerify.Standard });
 
             Money nValueIn = context.View.GetValueIn(context.Transaction);
 

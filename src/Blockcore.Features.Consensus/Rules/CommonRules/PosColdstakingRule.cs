@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

@@ -4,7 +4,7 @@
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <Authors>NBitcoin Developers, Stratis Group Ltd. and Blockcore Developers</Authors>    
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.1</VersionPrefix>
     <PackageId>Blockcore.NBitcoin</PackageId>
     <RootNamespace>NBitcoin</RootNamespace>
   </PropertyGroup>

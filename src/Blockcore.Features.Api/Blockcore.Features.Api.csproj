@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <PackageId>Blockcore.Features.Api</PackageId>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.1</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>

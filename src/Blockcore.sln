@@ -100,6 +100,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xds", "Xds", "{CA67EA16-00D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.Xds", "Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj", "{B563D67F-BB87-4907-82B8-DD0476A7CDE6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XdsD", "Xds\XdsD.csproj", "{26F7E924-3087-4AC7-A637-423F89297BA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -254,6 +256,10 @@ Global
 		{B563D67F-BB87-4907-82B8-DD0476A7CDE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B563D67F-BB87-4907-82B8-DD0476A7CDE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B563D67F-BB87-4907-82B8-DD0476A7CDE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26F7E924-3087-4AC7-A637-423F89297BA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26F7E924-3087-4AC7-A637-423F89297BA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26F7E924-3087-4AC7-A637-423F89297BA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26F7E924-3087-4AC7-A637-423F89297BA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -298,6 +304,7 @@ Global
 		{F163E8AD-41F2-42ED-BF37-BE5DD5F53C03} = {78DF115B-2471-41C3-8D9C-360720855CF5}
 		{CA67EA16-00D7-4082-9467-9218D6D3A8C4} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{B563D67F-BB87-4907-82B8-DD0476A7CDE6} = {CA67EA16-00D7-4082-9467-9218D6D3A8C4}
+		{26F7E924-3087-4AC7-A637-423F89297BA2} = {CA67EA16-00D7-4082-9467-9218D6D3A8C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

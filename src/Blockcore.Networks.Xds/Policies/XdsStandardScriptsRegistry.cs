@@ -3,15 +3,16 @@ using System.Linq;
 using NBitcoin;
 using NBitcoin.BitcoinCore;
 
-namespace Blockcore.Networks.Stratis.Policies
+namespace Blockcore.Networks.Xds.Policies
 {
     /// <summary>
-    /// Stratis-specific standard transaction definitions.
+    /// ObsidianX-specific standard transaction definitions.
     /// </summary>
-    public class StratisStandardScriptsRegistry : StandardScriptsRegistry
+    public class XdsStandardScriptsRegistry : StandardScriptsRegistry
     {
-        // See MAX_OP_RETURN_RELAY in stratisX, <script.h>
-        public const int MaxOpReturnRelay = 40;
+        // See MAX_OP_RETURN_RELAY in Bitcoin Core, <script/standard.h.>
+        // 80 bytes of data, +1 for OP_RETURN, +2 for the pushdata opcodes.
+        public const int MaxOpReturnRelay = 83;
 
         // Need a network-specific version of the template list
         private readonly List<ScriptTemplate> standardTemplates = new List<ScriptTemplate>
@@ -23,8 +24,6 @@ namespace Blockcore.Networks.Stratis.Policies
             new TxNullDataTemplate(MaxOpReturnRelay),
             PayToWitTemplate.Instance
         };
-
-        public List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
 
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {

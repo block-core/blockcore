@@ -63,7 +63,7 @@ namespace NBitcoin
         public uint256 MinimumChainWork { get; }
 
         public int MinerConfirmationWindow { get; set; }
-        
+
         /// <inheritdoc />
         public int CoinType { get; }
 
@@ -79,6 +79,9 @@ namespace NBitcoin
 
         /// <inheritdoc />
         public bool PosEmptyCoinbase { get; set; }
+
+        /// <inheritdoc />
+        public bool PosUseTimeFieldInKernalHash { get; set; }
 
         /// <inheritdoc />
         public uint256 DefaultAssumeValid { get; }

@@ -1,14 +1,14 @@
 ﻿using NBitcoin;
 
-namespace Blockcore.Networks.Stratis
+namespace Blockcore.Networks.Xds
 {
     public static class Networks
     {
-        public static NetworksSelector Stratis
+        public static NetworksSelector Xds
         {
             get
             {
-                return new NetworksSelector(() => new StratisMain(), () => new StratisTest(), () => new StratisRegTest());
+                return new NetworksSelector(() => new XdsMain(), () => null, () => null);
             }
         }
     }

@@ -1,17 +1,15 @@
 ﻿using NBitcoin;
 
-namespace Blockcore.Networks.Stratis.Deployments
+namespace Blockcore.Networks.Xds.Deployments
 {
-    /// <summary>
-    /// BIP9 deployments for the Stratis network.
-    /// </summary>
-    public class StratisBIP9Deployments : BIP9DeploymentsArray
+    public class XdsBIP9Deployments : BIP9DeploymentsArray
     {
-        // The position of each deployment in the deployments array. Note that this is decoupled from the actual position of the flag bit for the deployment in the block version.
+        // The position of each deployment in the deployments array.
         public const int TestDummy = 0;
-        public const int CSV = 1;
-        public const int Segwit = 2;
-        public const int ColdStaking = 3;
+
+        public const int ColdStaking = 1;
+        public const int CSV = 2;
+        public const int Segwit = 3;
 
         // The number of deployments.
         public const int NumberOfDeployments = 4;
@@ -19,18 +17,18 @@ namespace Blockcore.Networks.Stratis.Deployments
         /// <summary>
         /// Constructs the BIP9 deployments array.
         /// </summary>
-        public StratisBIP9Deployments() : base(NumberOfDeployments)
+        public XdsBIP9Deployments() : base(NumberOfDeployments)
         {
         }
 
         /// <summary>
         /// Gets the deployment flags to set when the deployment activates.
         /// </summary>
-        /// <param name="deployment">The deployment number.</param>
+        /// <param Command="deployment">The deployment number.</param>
         /// <returns>The deployment flags.</returns>
         public override BIP9DeploymentFlags GetFlags(int deployment)
         {
-            var flags = new BIP9DeploymentFlags();
+            BIP9DeploymentFlags flags = new BIP9DeploymentFlags();
 
             switch (deployment)
             {

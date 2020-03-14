@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <Description>Bitcoin FullNode</Description>
-    <AssemblyTitle>Blockcore.Networks</AssemblyTitle>
+    <AssemblyTitle>Blockcore.Networks.Xds</AssemblyTitle>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>Blockcore.Networks.Stratis</AssemblyName>
-    <PackageId>Blockcore.Networks.Stratis</PackageId>
+    <AssemblyName>Blockcore.Networks.Xds</AssemblyName>
+    <PackageId>Blockcore.Networks.Xds</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

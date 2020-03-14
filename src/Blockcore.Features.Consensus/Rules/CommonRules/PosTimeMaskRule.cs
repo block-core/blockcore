@@ -71,7 +71,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
         /// <returns><c>true</c> if block timestamp is equal to transaction timestamp, <c>false</c> otherwise.</returns>
         private bool CheckCoinStakeTimestamp(long blockTime)
         {
-            return (blockTime & PosConsensusOptions.StakeTimestampMask) == 0;
+            return (blockTime & this.Parent.Network.Consensus.ProofOfStakeTimestampMask) == 0;
         }
     }
 }

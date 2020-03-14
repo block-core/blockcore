@@ -2,7 +2,7 @@
   "profiles": {
     "Xds": {
       "commandName": "Project",
-      "commandLineArgs": ""
+      "commandLineArgs": "-addnode=159.65.148.135"
     }
   }
 }

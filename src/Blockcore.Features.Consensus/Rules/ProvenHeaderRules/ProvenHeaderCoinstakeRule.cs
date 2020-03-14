@@ -121,7 +121,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 
             UnspentOutput prevUtxo = null;
 
-            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] {txIn.PrevOut});
+            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] { txIn.PrevOut });
             prevUtxo = coins.UnspentOutputs[txIn.PrevOut];
             if (prevUtxo?.Coins == null)
             {
@@ -178,7 +178,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                 }
             }
 
-            if ((header.Time & PosConsensusOptions.StakeTimestampMask) != 0)
+            if ((header.Time & this.Parent.Network.Consensus.ProofOfStakeTimestampMask) != 0)
             {
                 this.Logger.LogTrace("(-)[BAD_TIME]");
                 ConsensusErrors.StakeTimeViolation.Throw();

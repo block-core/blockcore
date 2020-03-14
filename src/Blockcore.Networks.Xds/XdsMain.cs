@@ -100,7 +100,7 @@ namespace Blockcore.Networks.Xds
                 premineReward: Money.Coins(0),
                 proofOfWorkReward: Money.Coins(50),
                 targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60),
-                targetSpacing: TimeSpan.FromSeconds(10 * 60),
+                targetSpacing: TimeSpan.FromSeconds(256),
                 powAllowMinDifficultyBlocks: false,
                 posNoRetargeting: false,
                 powNoRetargeting: false,
@@ -110,7 +110,9 @@ namespace Blockcore.Networks.Xds
                 lastPowBlock: 1_000_000_000,
                 proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
                 proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-                proofOfStakeReward: Money.Coins(50));
+                proofOfStakeReward: Money.Coins(50),
+                proofOfStakeTimestampMask: 0x0000003F // 64 sec
+            );
 
             this.StandardScriptsRegistry = new XdsStandardScriptsRegistry();
 

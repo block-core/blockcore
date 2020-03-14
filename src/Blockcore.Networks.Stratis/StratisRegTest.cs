@@ -107,7 +107,8 @@ namespace Blockcore.Networks.Stratis
                 lastPowBlock: 12500,
                 proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
                 proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-                proofOfStakeReward: Money.COIN
+                proofOfStakeReward: Money.COIN,
+                proofOfStakeTimestampMask: 0x0000000F
             );
 
             this.Consensus.PosEmptyCoinbase = true;

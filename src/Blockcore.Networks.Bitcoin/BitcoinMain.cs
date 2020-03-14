@@ -97,7 +97,8 @@ namespace Blockcore.Networks.Bitcoin
                 lastPowBlock: default(int),
                 proofOfStakeLimit: null,
                 proofOfStakeLimitV2: null,
-                proofOfStakeReward: Money.Zero
+                proofOfStakeReward: Money.Zero,
+                proofOfStakeTimestampMask: 0
             );
 
             this.Base58Prefixes = new byte[12][];

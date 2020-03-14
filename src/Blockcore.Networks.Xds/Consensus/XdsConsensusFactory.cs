@@ -31,7 +31,7 @@ namespace Blockcore.Networks.Xds.Consensus
 
         public override Transaction CreateTransaction()
         {
-            return new Transaction();
+            return new XdsTransaction();
         }
 
         public override Transaction CreateTransaction(byte[] bytes)
@@ -39,7 +39,7 @@ namespace Blockcore.Networks.Xds.Consensus
             if (bytes == null)
                 throw new ArgumentNullException(nameof(bytes));
 
-            var transaction = new Transaction();
+            var transaction = new XdsTransaction();
             transaction.ReadWrite(bytes, this);
             return transaction;
         }

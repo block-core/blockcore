@@ -108,7 +108,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             {
                 Flags = BlockFlag.BLOCK_PROOF_OF_STAKE,
                 StakeModifierV2 = 0,
-                StakeTime = (this.chainIndexer.Tip.Header.Time + 60) & ~PosConsensusOptions.StakeTimestampMask
+                StakeTime = (this.chainIndexer.Tip.Header.Time + 60) & ~this.Network.Consensus.ProofOfStakeTimestampMask
             });
         }
 

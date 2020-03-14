@@ -46,7 +46,7 @@ namespace Blockcore.Networks.Bitcoin
             var bip9Deployments = new BitcoinBIP9Deployments
             {
                 [BitcoinBIP9Deployments.TestDummy] = new BIP9DeploymentsParameters("TestDummy", 28, 0, 999999999, BIP9DeploymentsParameters.DefaultRegTestThreshold),
-                [BitcoinBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV",0, 0, 999999999, BIP9DeploymentsParameters.DefaultRegTestThreshold),
+                [BitcoinBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, 0, 999999999, BIP9DeploymentsParameters.DefaultRegTestThreshold),
                 [BitcoinBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive)
             };
 
@@ -81,7 +81,8 @@ namespace Blockcore.Networks.Bitcoin
                 lastPowBlock: default(int),
                 proofOfStakeLimit: null,
                 proofOfStakeLimitV2: null,
-                proofOfStakeReward: Money.Zero
+                proofOfStakeReward: Money.Zero,
+                proofOfStakeTimestampMask: 0
             );
 
             this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (111) };

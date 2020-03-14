@@ -135,7 +135,8 @@ namespace Blockcore.Features.PoA
                 lastPowBlock: 0,
                 proofOfStakeLimit: null,
                 proofOfStakeLimitV2: null,
-                proofOfStakeReward: Money.Zero
+                proofOfStakeReward: Money.Zero,
+                proofOfStakeTimestampMask: 0
             );
 
             // https://en.bitcoin.it/wiki/List_of_address_prefixes

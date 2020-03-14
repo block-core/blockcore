@@ -123,6 +123,10 @@ namespace NBitcoin
         /// </remarks>
         bool PosUseTimeFieldInKernalHash { get; set; }
 
+        /// <summary>A mask for coinstake transaction's timestamp and header's timestamp.</summary>
+        /// <remarks>Used to decrease granularity of timestamp. Supposed to be 2^n-1.</remarks>
+        public uint ProofOfStakeTimestampMask { get; set; }
+
         /// <summary>
         /// An indicator whether this is a Proof Of Stake network.
         /// </summary>

@@ -60,7 +60,7 @@ namespace Blockcore.Networks.Xds.Consensus
             string pszTimestamp = "https://www.blockchain.com/btc/block/611000";
 
             Transaction txNew = CreateTransaction();
-            Debug.Assert(txNew.GetType() == typeof(Transaction));
+            Debug.Assert(txNew.GetType() == typeof(XdsTransaction));
 
             txNew.Version = 1;
 

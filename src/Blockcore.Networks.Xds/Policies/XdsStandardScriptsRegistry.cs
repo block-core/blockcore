@@ -21,9 +21,11 @@ namespace Blockcore.Networks.Xds.Policies
             PayToPubkeyTemplate.Instance,
             PayToScriptHashTemplate.Instance,
             PayToMultiSigTemplate.Instance,
-            new TxNullDataTemplate(MaxOpReturnRelay),
+            new TxNullDataTemplate(MaxOpReturnRelay, minSatoshiFee: 1000),
             PayToWitTemplate.Instance
         };
+
+        public override List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
 
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Blockcore.Controllers;
+using Blockcore.Connection;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
@@ -10,19 +10,16 @@ using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Connection
+namespace Blockcore.Controllers
 {
-    /// <summary>
-    /// A <see cref="FeatureController"/> that implements API and RPC methods for the connection manager.
-    /// </summary>
-    public class ConnectionManagerController : FeatureController
+    public class ConnectionManagerRPCController : FeatureController
     {
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
 
         private readonly IPeerBanning peerBanning;
 
-        public ConnectionManagerController(IConnectionManager connectionManager,
+        public ConnectionManagerRPCController(IConnectionManager connectionManager,
             ILoggerFactory loggerFactory, IPeerBanning peerBanning) : base(connectionManager: connectionManager)
         {
             Guard.NotNull(this.ConnectionManager, nameof(this.ConnectionManager));
@@ -38,29 +35,33 @@ namespace Blockcore.Connection
         /// <returns><c>true</c> if successful.</returns>
         /// <exception cref="ArgumentException">Thrown if unsupported command given.</exception>
         [ActionName("addnode")]
-        [ApiExplorerSettings(IgnoreApi = true)]
         [ActionDescription("Adds a node to the connection manager.")]
-        public bool AddNodeRPC(string endpointStr, string command)
+        public bool AddNode(string endpointStr, string command)
         {
-            IPEndPoint endpoint = endpointStr.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
+            return AddNode(this.ConnectionManager, this.peerBanning, endpointStr, command);
+        }
+
+        public static bool AddNode(IConnectionManager connectionManager, IPeerBanning peerBanning, string endpointStr, string command)
+        {
+            IPEndPoint endpoint = endpointStr.ToIPEndPoint(connectionManager.Network.DefaultPort);
             switch (command)
             {
                 case "add":
-                    if (this.peerBanning.IsBanned(endpoint))
+                    if (peerBanning.IsBanned(endpoint))
                         throw new InvalidOperationException("Can't perform 'add' for a banned peer.");
 
-                    this.ConnectionManager.AddNodeAddress(endpoint);
+                    connectionManager.AddNodeAddress(endpoint);
                     break;
 
                 case "remove":
-                    this.ConnectionManager.RemoveNodeAddress(endpoint);
+                    connectionManager.RemoveNodeAddress(endpoint);
                     break;
 
                 case "onetry":
-                    if (this.peerBanning.IsBanned(endpoint))
+                    if (peerBanning.IsBanned(endpoint))
                         throw new InvalidOperationException("Can't connect to a banned peer.");
 
-                    this.ConnectionManager.ConnectAsync(endpoint).GetAwaiter().GetResult();
+                    connectionManager.ConnectAsync(endpoint).GetAwaiter().GetResult();
                     break;
 
                 default:
@@ -71,44 +72,22 @@ namespace Blockcore.Connection
         }
 
         /// <summary>
-        /// Sends a command to the connection manager.
-        /// </summary>
-        /// <param name="endpoint">The endpoint in string format. Specify an IP address. The default port for the network will be added automatically.</param>
-        /// <param name="command">The command to run. {add, remove, onetry}</param>
-        /// <returns>Json formatted <c>True</c> indicating success. Returns <see cref="IActionResult"/> formatted exception if fails.</returns>
-        /// <remarks>This is an API implementation of an RPC call.</remarks>
-        /// <exception cref="ArgumentException">Thrown if either command not supported/empty or if endpoint is invalid/empty.</exception>
-        [Route("api/[controller]/addnode")]
-        [HttpGet]
-        public IActionResult AddNodeAPI([FromQuery] string endpoint, string command)
-        {
-            try
-            {
-                Guard.NotEmpty(endpoint, nameof(endpoint));
-                Guard.NotEmpty(command, nameof(command));
-
-                return this.Json(this.AddNodeRPC(endpoint, command));
-            }
-            catch (Exception e)
-            {
-                this.logger.LogError("Exception occurred: {0}", e.ToString());
-                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
-            }
-        }
-
-        /// <summary>
         /// RPC implementation of "getpeerinfo".
         /// </summary>
         /// <see cref="https://github.com/bitcoin/bitcoin/blob/0.14/src/rpc/net.cpp"/>
         /// <returns>List of connected peer nodes as <see cref="PeerNodeModel"/>.</returns>
         [ActionName("getpeerinfo")]
-        [ApiExplorerSettings(IgnoreApi = true)]
         [ActionDescription("Gets peer information from the connection manager.")]
-        public List<PeerNodeModel> GetPeerInfoRPC()
+        public List<PeerNodeModel> GetPeerInfo()
+        {
+            return GetPeerInfo(this.ConnectionManager);
+        }
+
+        public static List<PeerNodeModel> GetPeerInfo(IConnectionManager connectionManager)
         {
             var peerList = new List<PeerNodeModel>();
 
-            List<INetworkPeer> peers = this.ConnectionManager.ConnectedPeers.ToList();
+            List<INetworkPeer> peers = connectionManager.ConnectedPeers.ToList();
             foreach (INetworkPeer peer in peers)
             {
                 if ((peer != null) && (peer.RemoteSocketAddress != null))
@@ -145,27 +124,6 @@ namespace Blockcore.Connection
             }
 
             return peerList;
-        }
-
-        /// <summary>
-        /// Gets information about this node.
-        /// </summary>
-        /// <see cref="https://github.com/bitcoin/bitcoin/blob/0.14/src/rpc/net.cpp"/>
-        /// <remarks>This is an API implementation of an RPC call.</remarks>
-        /// <returns>Json formatted <see cref="List{T}<see cref="PeerNodeModel"/>"/> of connected nodes. Returns <see cref="IActionResult"/> formatted error if fails.</returns>
-        [Route("api/[controller]/getpeerinfo")]
-        [HttpGet]
-        public IActionResult GetPeerInfoAPI()
-        {
-            try
-            {
-                return this.Json(this.GetPeerInfoRPC());
-            }
-            catch (Exception e)
-            {
-                this.logger.LogError("Exception occurred: {0}", e.ToString());
-                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
-            }
         }
     }
 }

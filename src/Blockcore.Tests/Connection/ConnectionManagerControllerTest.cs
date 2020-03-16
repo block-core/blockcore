@@ -1,4 +1,5 @@
 ﻿using Blockcore.Connection;
+using Blockcore.Controllers;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities.JsonErrors;
@@ -34,7 +35,7 @@ namespace Blockcore.Tests.Connection
             string endpoint = "0.0.0.0";
             string command = "notarealcommand";
 
-            IActionResult result = this.controller.AddNodeAPI(endpoint, command);
+            IActionResult result = this.controller.AddNode(endpoint, command);
 
             var errorResult = Assert.IsType<ErrorResult>(result);
             var errorResponse = Assert.IsType<ErrorResponse>(errorResult.Value);
@@ -50,7 +51,7 @@ namespace Blockcore.Tests.Connection
             string endpoint = "-1.0.0.0";
             string command = "onetry";
 
-            IActionResult result = this.controller.AddNodeAPI(endpoint, command);
+            IActionResult result = this.controller.AddNode(endpoint, command);
 
             var errorResult = Assert.IsType<ErrorResult>(result);
             var errorResponse = Assert.IsType<ErrorResponse>(errorResult.Value);
@@ -65,7 +66,7 @@ namespace Blockcore.Tests.Connection
             string endpoint = "0.0.0.0";
             string command = "remove";
 
-            var json = (JsonResult)this.controller.AddNodeAPI(endpoint, command);
+            var json = (JsonResult)this.controller.AddNode(endpoint, command);
 
             Assert.True((bool)json.Value);
         }

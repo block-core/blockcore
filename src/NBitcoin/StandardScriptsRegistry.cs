@@ -1,4 +1,5 @@
-﻿using NBitcoin.BitcoinCore;
+﻿using System.Collections.Generic;
+using NBitcoin.BitcoinCore;
 
 namespace NBitcoin
 {
@@ -39,6 +40,11 @@ namespace NBitcoin
         public virtual bool AreInputsStandard(Network network, Transaction tx, CoinsView coinsView)
         {
             return StandardScripts.AreInputsStandard(network, tx, coinsView);
+        }
+
+        public virtual List<ScriptTemplate> GetScriptTemplates
+        {
+            get { return null; }
         }
     }
 }

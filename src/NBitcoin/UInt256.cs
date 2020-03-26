@@ -59,7 +59,7 @@ namespace NBitcoin
 
         private const int EXPECTED_SIZE = 32;
 
-        private const int WIDTH = 256 / 32;
+        private const int WIDTH = 256 / 64;
 
         private const int WIDTH_BYTE = 256 / 8;
 
@@ -144,14 +144,14 @@ namespace NBitcoin
             //account for 0x prefix
             if (hexString.Length < EXPECTED_SIZE * 2)
             {
-                throw new FormatException($"the hex string should be {EXPECTED_SIZE * 2} chars long or {(EXPECTED_SIZE * 2) + 4} if prefixed with 0x.");
+                throw new FormatException($"Invalid Hex String, the hex string should be {EXPECTED_SIZE * 2} chars long or {(EXPECTED_SIZE * 2) + 4} if prefixed with 0x.");
             }
 
-            ReadOnlySpan<char> hexAsSpan = (hexString[0] == '0' && (hexString[1] == 'x' || hexString[1] == 'X')) ? hexString.AsSpan(2) : hexString.AsSpan();
+            ReadOnlySpan<char> hexAsSpan = (hexString[0] == '0' && (hexString[1] == 'x' || hexString[1] == 'X')) ? hexString.Trim().AsSpan(2) : hexString.Trim().AsSpan();
 
             if (hexAsSpan.Length != EXPECTED_SIZE * 2)
             {
-                throw new FormatException($"the hex string should be {EXPECTED_SIZE * 2} chars long or {(EXPECTED_SIZE * 2) + 4} if prefixed with 0x.");
+                throw new FormatException($"Invalid Hex String, the hex string should be {EXPECTED_SIZE * 2} chars long or {(EXPECTED_SIZE * 2) + 4} if prefixed with 0x.");
             }
 
             Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, EXPECTED_SIZE / sizeof(ulong)));
@@ -206,43 +206,52 @@ namespace NBitcoin
             return new uint256(hexString);
         }
 
-        //private uint[] ToArray()
-        //{
-        //    return new ul[] { this.part1, this.part2, this.part3, this.part4, };
-        //}
+        private uint256(ulong[] array)
+        {
+            if (array.Length != WIDTH)
+                throw new ArgumentOutOfRangeException();
+
+            this.part1 = array[0];
+            this.part2 = array[1];
+            this.part3 = array[2];
+            this.part4 = array[3];
+        }
+
+        private ulong[] ToArray()
+        {
+            return new ulong[] { this.part1, this.part2, this.part3, this.part4, };
+        }
 
         public static uint256 operator <<(uint256 a, int shift)
         {
-            throw new NotImplementedException();
-            //    uint[] source = a.ToArray();
-            //    var target = new uint[source.Length];
-            //    int k = shift / 32;
-            //    shift = shift % 32;
-            //    for (int i = 0; i < WIDTH; i++)
-            //    {
-            //        if (i + k + 1 < WIDTH && shift != 0)
-            //            target[i + k + 1] |= (source[i] >> (32 - shift));
-            //        if (i + k < WIDTH)
-            //            target[i + k] |= (target[i] << shift);
-            //    }
-            //    return new uint256(target);
+            ulong[] source = a.ToArray();
+            var target = new ulong[source.Length];
+            int k = shift / 32;
+            shift = shift % 32;
+            for (int i = 0; i < WIDTH; i++)
+            {
+                if (i + k + 1 < WIDTH && shift != 0)
+                    target[i + k + 1] |= (source[i] >> (32 - shift));
+                if (i + k < WIDTH)
+                    target[i + k] |= (target[i] << shift);
+            }
+            return new uint256(target);
         }
 
         public static uint256 operator >>(uint256 a, int shift)
         {
-            throw new NotImplementedException();
-            //    uint[] source = a.ToArray();
-            //    var target = new uint[source.Length];
-            //    int k = shift / 32;
-            //    shift = shift % 32;
-            //    for (int i = 0; i < WIDTH; i++)
-            //    {
-            //        if (i - k - 1 >= 0 && shift != 0)
-            //            target[i - k - 1] |= (source[i] << (32 - shift));
-            //        if (i - k >= 0)
-            //            target[i - k] |= (source[i] >> shift);
-            //    }
-            //    return new uint256(target);
+            ulong[] source = a.ToArray();
+            var target = new ulong[source.Length];
+            int k = shift / 32;
+            shift = shift % 32;
+            for (int i = 0; i < WIDTH; i++)
+            {
+                if (i - k - 1 >= 0 && shift != 0)
+                    target[i - k - 1] |= (source[i] << (32 - shift));
+                if (i - k >= 0)
+                    target[i - k] |= (source[i] >> shift);
+            }
+            return new uint256(target);
         }
 
         public static bool TryParse(string hexString, out uint256? result)
@@ -303,14 +312,15 @@ namespace NBitcoin
 
         public byte[] ToBytes(bool littleEndian = true)
         {
-            var span = this.ToSpan();
+            var output = this.ToSpan().ToArray();
 
             if (!littleEndian)
             {
+                var span = output.AsSpan();
                 span.Reverse();
             }
 
-            return span.ToArray();
+            return output;
         }
 
         //public void ToBytes(Span<byte> output, bool lendian = true)

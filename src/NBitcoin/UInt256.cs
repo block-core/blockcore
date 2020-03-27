@@ -50,18 +50,18 @@ namespace NBitcoin
                 }
                 else
                 {
-                    Span<byte> b = stackalloc byte[WIDTH_BYTE];
+                    Span<byte> b = stackalloc byte[WidthByte];
                     stream.ReadWrite(ref b);
                     this.value = new uint256(b);
                 }
             }
         }
 
-        private const int EXPECTED_SIZE = 32;
+        private const int ExpectedSize = 32;
 
-        private const int WIDTH = 256 / 64;
+        private const int Width = 256 / 64;
 
-        private const int WIDTH_BYTE = 256 / 8;
+        private const int WidthByte = 256 / 8;
 
 #pragma warning disable IDE0044 // Add readonly modifier
         private ulong part1;
@@ -93,12 +93,12 @@ namespace NBitcoin
 
         public uint256(ReadOnlySpan<byte> input)
         {
-            if (input.Length != EXPECTED_SIZE)
+            if (input.Length != ExpectedSize)
             {
                 throw new FormatException("the byte array should be 32 bytes long");
             }
 
-            Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, EXPECTED_SIZE / sizeof(ulong)));
+            Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, ExpectedSize / sizeof(ulong)));
 
             input.CopyTo(dst);
         }
@@ -113,7 +113,7 @@ namespace NBitcoin
 
         public uint256(byte[] payload, bool littleEndian = true)
         {
-            if (payload.Length != WIDTH_BYTE)
+            if (payload.Length != WidthByte)
             {
                 throw new FormatException("the byte array should be 256 byte long");
             }
@@ -125,7 +125,7 @@ namespace NBitcoin
                 input.Reverse();
             }
 
-            Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, EXPECTED_SIZE / sizeof(ulong)));
+            Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, ExpectedSize / sizeof(ulong)));
 
             input.CopyTo(dst);
         }
@@ -142,19 +142,19 @@ namespace NBitcoin
             }
 
             //account for 0x prefix
-            if (hexString.Length < EXPECTED_SIZE * 2)
+            if (hexString.Length < ExpectedSize * 2)
             {
-                throw new FormatException($"Invalid Hex String, the hex string should be {EXPECTED_SIZE * 2} chars long or {(EXPECTED_SIZE * 2) + 4} if prefixed with 0x.");
+                throw new FormatException($"Invalid Hex String, the hex string should be {ExpectedSize * 2} chars long or {(ExpectedSize * 2) + 4} if prefixed with 0x.");
             }
 
             ReadOnlySpan<char> hexAsSpan = (hexString[0] == '0' && (hexString[1] == 'x' || hexString[1] == 'X')) ? hexString.Trim().AsSpan(2) : hexString.Trim().AsSpan();
 
-            if (hexAsSpan.Length != EXPECTED_SIZE * 2)
+            if (hexAsSpan.Length != ExpectedSize * 2)
             {
-                throw new FormatException($"Invalid Hex String, the hex string should be {EXPECTED_SIZE * 2} chars long or {(EXPECTED_SIZE * 2) + 4} if prefixed with 0x.");
+                throw new FormatException($"Invalid Hex String, the hex string should be {ExpectedSize * 2} chars long or {(ExpectedSize * 2) + 4} if prefixed with 0x.");
             }
 
-            Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, EXPECTED_SIZE / sizeof(ulong)));
+            Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, ExpectedSize / sizeof(ulong)));
 
             int i = hexAsSpan.Length - 1;
             int j = 0;
@@ -208,8 +208,10 @@ namespace NBitcoin
 
         private uint256(ulong[] array)
         {
-            if (array.Length != WIDTH)
+            if (array.Length != Width)
+            {
                 throw new ArgumentOutOfRangeException();
+            }
 
             this.part1 = array[0];
             this.part2 = array[1];
@@ -228,11 +230,11 @@ namespace NBitcoin
             var target = new ulong[source.Length];
             int k = shift / 32;
             shift = shift % 32;
-            for (int i = 0; i < WIDTH; i++)
+            for (int i = 0; i < Width; i++)
             {
-                if (i + k + 1 < WIDTH && shift != 0)
+                if (i + k + 1 < Width && shift != 0)
                     target[i + k + 1] |= (source[i] >> (32 - shift));
-                if (i + k < WIDTH)
+                if (i + k < Width)
                     target[i + k] |= (target[i] << shift);
             }
             return new uint256(target);
@@ -244,7 +246,7 @@ namespace NBitcoin
             var target = new ulong[source.Length];
             int k = shift / 32;
             shift = shift % 32;
-            for (int i = 0; i < WIDTH; i++)
+            for (int i = 0; i < Width; i++)
             {
                 if (i - k - 1 >= 0 && shift != 0)
                     target[i - k - 1] |= (source[i] << (32 - shift));
@@ -302,12 +304,12 @@ namespace NBitcoin
 
         public ReadOnlySpan<byte> ToReadOnlySpan()
         {
-            return MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this.part1, EXPECTED_SIZE / sizeof(ulong)));
+            return MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this.part1, ExpectedSize / sizeof(ulong)));
         }
 
         public Span<byte> ToSpan()
         {
-            return MemoryMarshal.CreateSpan(ref Unsafe.As<ulong, byte>(ref this.part1), EXPECTED_SIZE);
+            return MemoryMarshal.CreateSpan(ref Unsafe.As<ulong, byte>(ref this.part1), ExpectedSize);
         }
 
         public byte[] ToBytes(bool littleEndian = true)
@@ -456,9 +458,9 @@ namespace NBitcoin
 
         public override string ToString()
         {
-            return string.Create(EXPECTED_SIZE * 2, this, (dst, src) =>
+            return string.Create(ExpectedSize * 2, this, (dst, src) =>
             {
-                ReadOnlySpan<byte> rawData = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref src.part1, EXPECTED_SIZE / sizeof(ulong)));
+                ReadOnlySpan<byte> rawData = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref src.part1, ExpectedSize / sizeof(ulong)));
 
                 const string HexValues = "0123456789abcdef";
 
@@ -472,19 +474,6 @@ namespace NBitcoin
                     dst[j++] = HexValues[b & 0xF];
                 }
             });
-        }
-
-        public int GetSerializeSize()
-        {
-            return WIDTH_BYTE;
-        }
-
-        public int Size
-        {
-            get
-            {
-                return WIDTH_BYTE;
-            }
         }
 
         public ulong GetLow64()
@@ -535,26 +524,16 @@ namespace NBitcoin
                 }
                 else
                 {
-                    var b = new byte[WIDTH_BYTE];
+                    var b = new byte[WidthByte];
                     stream.ReadWrite(ref b);
                     this._Value = new uint160(b);
                 }
             }
         }
 
-        private static readonly uint160 _Zero = new uint160();
+        public static uint160 Zero { get; } = new uint160();
 
-        public static uint160 Zero
-        {
-            get { return _Zero; }
-        }
-
-        private static readonly uint160 _One = new uint160(1);
-
-        public static uint160 One
-        {
-            get { return _One; }
-        }
+        public static uint160 One { get; } = new uint160(1);
 
         public uint160()
         {
@@ -581,7 +560,7 @@ namespace NBitcoin
             if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                 hex = hex.Substring(2);
             result = null;
-            if (hex.Length != WIDTH_BYTE * 2)
+            if (hex.Length != WidthByte * 2)
                 return false;
             if (!((HexEncoder)Encoders.Hex).IsValid(hex))
                 return false;
@@ -590,7 +569,8 @@ namespace NBitcoin
         }
 
         private static readonly HexEncoder Encoder = new HexEncoder();
-        private const int WIDTH_BYTE = 160 / 8;
+        private const int WidthByte = 160 / 8;
+
         internal readonly UInt32 pn0;
         internal readonly UInt32 pn1;
         internal readonly UInt32 pn2;
@@ -646,7 +626,7 @@ namespace NBitcoin
 
         public uint160(byte[] vch, bool lendian = true)
         {
-            if (vch.Length != WIDTH_BYTE)
+            if (vch.Length != WidthByte)
             {
                 throw new FormatException("the byte array should be 160 byte long");
             }
@@ -674,7 +654,7 @@ namespace NBitcoin
                 str = str.Substring(2);
 
             byte[] bytes = Encoder.DecodeData(str).Reverse().ToArray();
-            if (bytes.Length != WIDTH_BYTE)
+            if (bytes.Length != WidthByte)
                 throw new FormatException("Invalid hex length");
             this.pn0 = Utils.ToUInt32(bytes, 4 * 0, true);
             this.pn1 = Utils.ToUInt32(bytes, 4 * 1, true);
@@ -807,7 +787,7 @@ namespace NBitcoin
 
         public byte[] ToBytes(bool lendian = true)
         {
-            var arr = new byte[WIDTH_BYTE];
+            var arr = new byte[WidthByte];
             Buffer.BlockCopy(Utils.ToBytes(this.pn0, true), 0, arr, 4 * 0, 4);
             Buffer.BlockCopy(Utils.ToBytes(this.pn1, true), 0, arr, 4 * 1, 4);
             Buffer.BlockCopy(Utils.ToBytes(this.pn2, true), 0, arr, 4 * 2, 4);
@@ -825,14 +805,14 @@ namespace NBitcoin
 
         public int GetSerializeSize()
         {
-            return WIDTH_BYTE;
+            return WidthByte;
         }
 
         public int Size
         {
             get
             {
-                return WIDTH_BYTE;
+                return WidthByte;
             }
         }
 

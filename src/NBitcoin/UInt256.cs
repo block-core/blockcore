@@ -120,14 +120,14 @@ namespace NBitcoin
 
             var input = new Span<byte>(payload);
 
-            if (!littleEndian)
-            {
-                input.Reverse();
-            }
-
             Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, ExpectedSize / sizeof(ulong)));
 
             input.CopyTo(dst);
+
+            if (!littleEndian)
+            {
+                dst.Reverse();
+            }
         }
 
         public uint256(byte[] payload) : this(payload, true)

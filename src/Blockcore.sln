@@ -96,6 +96,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stratis", "Stratis", "{0F6F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bitcoin.Cli", "Bitcoin.Cli\Bitcoin.Cli.csproj", "{F163E8AD-41F2-42ED-BF37-BE5DD5F53C03}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Benchmark", "Blockcore.Benchmark\Blockcore.Benchmark.csproj", "{03BE8A1E-81C4-4022-86C6-2FA8938C6208}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -246,6 +248,10 @@ Global
 		{F163E8AD-41F2-42ED-BF37-BE5DD5F53C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F163E8AD-41F2-42ED-BF37-BE5DD5F53C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F163E8AD-41F2-42ED-BF37-BE5DD5F53C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03BE8A1E-81C4-4022-86C6-2FA8938C6208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03BE8A1E-81C4-4022-86C6-2FA8938C6208}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03BE8A1E-81C4-4022-86C6-2FA8938C6208}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03BE8A1E-81C4-4022-86C6-2FA8938C6208}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -288,6 +294,7 @@ Global
 		{78DF115B-2471-41C3-8D9C-360720855CF5} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{0F6F0DC5-EC62-465B-8FC7-F24449CD7359} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{F163E8AD-41F2-42ED-BF37-BE5DD5F53C03} = {78DF115B-2471-41C3-8D9C-360720855CF5}
+		{03BE8A1E-81C4-4022-86C6-2FA8938C6208} = {1B9A916F-DDAC-4675-B424-EDEDC1A58231}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

@@ -25,6 +25,7 @@ namespace Blockcore.Base
     public class ChainRepository : IChainRepository
     {
         private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly IBlockHeaderStore blockHeaderStore;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -34,9 +35,10 @@ namespace Blockcore.Base
 
         private BlockLocator locator;
 
-        public ChainRepository(string folder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
+        public ChainRepository(string folder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer, IBlockHeaderStore blockHeaderStore)
         {
             this.dBreezeSerializer = dBreezeSerializer;
+            this.blockHeaderStore = blockHeaderStore;
             Guard.NotEmpty(folder, nameof(folder));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
@@ -46,8 +48,8 @@ namespace Blockcore.Base
             this.dbreeze = new DBreezeEngine(folder);
         }
 
-        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
-            : this(dataFolder.ChainPath, loggerFactory, dBreezeSerializer)
+        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer, IBlockHeaderStore blockHeaderStore)
+            : this(dataFolder.ChainPath, loggerFactory, dBreezeSerializer, blockHeaderStore)
         {
         }
 
@@ -65,21 +67,22 @@ namespace Blockcore.Base
                     if (!firstRow.Exists)
                         return genesisHeader;
 
-                    BlockHeader previousHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(firstRow.Value);
-                    Guard.Assert(previousHeader.GetHash() == genesisHeader.HashBlock); // can't swap networks
+                    BlockHeader nextHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(firstRow.Value);
+                    Guard.Assert(nextHeader.GetHash() == genesisHeader.HashBlock); // can't swap networks
 
                     foreach (Row<int, byte[]> row in transaction.SelectForwardSkip<int, byte[]>("Chain", 1))
                     {
-                        if ((tip != null) && (previousHeader.HashPrevBlock != tip.HashBlock))
+                        if ((tip != null) && (nextHeader.HashPrevBlock != tip.HashBlock))
                             break;
 
                         BlockHeader blockHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(row.Value);
-                        tip = new ChainedHeader(previousHeader, blockHeader.HashPrevBlock, tip);
-                        previousHeader = blockHeader;
+                        tip = new ChainedHeader(nextHeader, blockHeader.HashPrevBlock, tip);
+                        if (tip.Height == 0) tip.SetBlockHeaderStore(this.blockHeaderStore);
+                        nextHeader = blockHeader;
                     }
 
-                    if (previousHeader != null)
-                        tip = new ChainedHeader(previousHeader, previousHeader.GetHash(), tip);
+                    if (nextHeader != null)
+                        tip = new ChainedHeader(nextHeader, nextHeader.GetHash(), tip);
 
                     if (tip == null)
                         tip = genesisHeader;

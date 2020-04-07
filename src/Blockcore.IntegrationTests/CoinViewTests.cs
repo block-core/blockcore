@@ -279,7 +279,7 @@ namespace Blockcore.IntegrationTests
         [Fact]
         public void CanSaveChainIncrementally()
         {
-            using (var repo = new ChainRepository(TestBase.CreateTestDir(this), this.loggerFactory, this.dBreezeSerializer))
+            using (var repo = new ChainRepository(TestBase.CreateTestDir(this), this.loggerFactory, this.dBreezeSerializer, new MemoryHeaderStore()))
             {
                 var chain = new ChainIndexer(this.regTest);
 

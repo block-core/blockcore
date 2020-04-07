@@ -27,7 +27,7 @@ namespace Blockcore.Tests.Base
             var chain = new ChainIndexer(KnownNetworks.StratisRegTest);
             this.AppendBlock(chain);
 
-            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dBreezeSerializer))
+            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dBreezeSerializer, new MemoryHeaderStore()))
             {
                 repo.SaveAsync(chain).GetAwaiter().GetResult();
             }
@@ -74,7 +74,7 @@ namespace Blockcore.Tests.Base
                     transaction.Commit();
                 }
             }
-            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dBreezeSerializer))
+            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dBreezeSerializer, new MemoryHeaderStore()))
             {
                 var testChain = new ChainIndexer(KnownNetworks.StratisRegTest);
                 testChain.SetTip(repo.LoadAsync(testChain.Genesis).GetAwaiter().GetResult());

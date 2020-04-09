@@ -9,6 +9,7 @@ namespace NBitcoin.Crypto
     public static class Hashes
     {
         #region Hash256
+
         public static uint256 Hash256(byte[] data)
         {
             return Hash256(data, 0, data.Length);
@@ -17,6 +18,17 @@ namespace NBitcoin.Crypto
         public static uint256 Hash256(byte[] data, int count)
         {
             return Hash256(data, 0, count);
+        }
+
+        public static ReadOnlySpan<byte> Hash256(ReadOnlySpan<byte> data)
+        {
+            using (var sha = new SHA256Managed())
+            {
+                Span<byte> result = stackalloc byte[32];
+                sha.TryComputeHash(data, result, out _);
+                sha.TryComputeHash(result, result, out _);
+                return result.ToArray();
+            }
         }
 
         public static uint256 Hash256(byte[] data, int offset, int count)
@@ -37,9 +49,11 @@ namespace NBitcoin.Crypto
             }
 #endif
         }
-        #endregion
+
+        #endregion Hash256
 
         #region Hash160
+
         public static uint160 Hash160(byte[] data)
         {
             return Hash160(data, 0, data.Length);
@@ -54,9 +68,11 @@ namespace NBitcoin.Crypto
         {
             return new uint160(RIPEMD160(SHA256(data, offset, count)));
         }
-        #endregion
+
+        #endregion Hash160
 
         #region RIPEMD160
+
         private static byte[] RIPEMD160(byte[] data)
         {
             return RIPEMD160(data, 0, data.Length);
@@ -83,7 +99,7 @@ namespace NBitcoin.Crypto
 #endif
         }
 
-        #endregion
+        #endregion RIPEMD160
 
         public class SipHasher
         {
@@ -93,6 +109,7 @@ namespace NBitcoin.Crypto
             private ulong v_3;
             private ulong count;
             private ulong tmp;
+
             public SipHasher(ulong k0, ulong k1)
             {
                 this.v_0 = 0x736f6d6570736575UL ^ k0;
@@ -128,11 +145,11 @@ namespace NBitcoin.Crypto
                 ulong c = this.count;
                 int offset = 0;
 
-                while(size-- != 0)
+                while (size-- != 0)
                 {
                     t |= ((ulong)((data[offset++]))) << (int)(8 * (c % 8));
                     c++;
-                    if((c & 7) == 0)
+                    if ((c & 7) == 0)
                     {
                         v3 ^= t;
                         SIPROUND(ref v0, ref v1, ref v2, ref v3);
@@ -156,7 +173,7 @@ namespace NBitcoin.Crypto
             {
                 ulong v0 = this.v_0, v1 = this.v_1, v2 = this.v_2, v3 = this.v_3;
 
-                ulong t = this.tmp | (((ulong) this.count) << 56);
+                ulong t = this.tmp | (((ulong)this.count) << 56);
 
                 v3 ^= t;
                 SIPROUND(ref v0, ref v1, ref v2, ref v3);
@@ -212,16 +229,20 @@ namespace NBitcoin.Crypto
 
             public static ulong GetULong(uint256 val, int position)
             {
-                switch(position)
+                switch (position)
                 {
                     case 0:
-                        return (ulong)val.pn0 + (ulong)((ulong)val.pn1 << 32);
+                        return val.Part1;
+
                     case 1:
-                        return (ulong)val.pn2 + (ulong)((ulong)val.pn3 << 32);
+                        return val.Part2;
+
                     case 2:
-                        return (ulong)val.pn4 + (ulong)((ulong)val.pn5 << 32);
+                        return val.Part3;
+
                     case 3:
-                        return (ulong)val.pn6 + (ulong)((ulong)val.pn7 << 32);
+                        return val.Part4;
+
                     default:
                         throw new ArgumentOutOfRangeException("position should be less than 4", "position");
                 }
@@ -281,11 +302,11 @@ namespace NBitcoin.Crypto
 #endif
         }
 
-
         private static uint rotl32(uint x, byte r)
         {
             return (x << r) | (x >> (32 - r));
         }
+
         private static ulong rotl64(ulong x, byte b)
         {
             return (((x) << (b)) | ((x) >> (64 - (b))));
@@ -300,6 +321,7 @@ namespace NBitcoin.Crypto
             h ^= h >> 16;
             return h;
         }
+
         public static uint MurmurHash3(uint nHashSeed, byte[] vDataToHash)
         {
             // The following is MurmurHash3 (x86_32), see https://gist.github.com/automatonic/3725443
@@ -310,13 +332,13 @@ namespace NBitcoin.Crypto
             uint k1 = 0;
             uint streamLength = 0;
 
-            using(var reader = new BinaryReader(new MemoryStream(vDataToHash)))
+            using (var reader = new BinaryReader(new MemoryStream(vDataToHash)))
             {
                 byte[] chunk = reader.ReadBytes(4);
-                while(chunk.Length > 0)
+                while (chunk.Length > 0)
                 {
                     streamLength += (uint)chunk.Length;
-                    switch(chunk.Length)
+                    switch (chunk.Length)
                     {
                         case 4:
                             /* Get four bytes from the input into an uint */
@@ -335,6 +357,7 @@ namespace NBitcoin.Crypto
                             h1 = rotl32(h1, 13);
                             h1 = h1 * 5 + 0xe6546b64;
                             break;
+
                         case 3:
                             k1 = (uint)
                             (chunk[0]
@@ -345,6 +368,7 @@ namespace NBitcoin.Crypto
                             k1 *= c2;
                             h1 ^= k1;
                             break;
+
                         case 2:
                             k1 = (uint)
                             (chunk[0]
@@ -354,6 +378,7 @@ namespace NBitcoin.Crypto
                             k1 *= c2;
                             h1 ^= k1;
                             break;
+
                         case 1:
                             k1 = (uint)(chunk[0]);
                             k1 *= c1;

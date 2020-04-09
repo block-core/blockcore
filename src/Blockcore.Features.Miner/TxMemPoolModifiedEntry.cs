@@ -7,7 +7,7 @@ namespace Blockcore.Features.Miner
     /// <summary>
     /// Container for tracking updates to ancestor feerate as we include (parent) transactions in a block.
     /// </summary>
-    public sealed class TxMemPoolModifiedEntry:IComparable, ITxMempoolFees
+    public sealed class TxMemPoolModifiedEntry : IComparable, ITxMempoolFees
     {
         public readonly TxMempoolEntry MempoolEntry;
 
@@ -35,7 +35,7 @@ namespace Blockcore.Features.Miner
         /// <returns>Result of comparison function.</returns>
         public int CompareTo(object other)
         {
-            return uint256.Comparison(this.MempoolEntry.TransactionHash, (other as TxMemPoolModifiedEntry).MempoolEntry.TransactionHash);
+            return uint256.CompareTypes(this.MempoolEntry.TransactionHash, (other as TxMemPoolModifiedEntry).MempoolEntry.TransactionHash);
         }
     }
 }

@@ -1343,6 +1343,12 @@ namespace Blockcore.Consensus
 
                 this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", avgSize, maxBlocksToAsk);
 
+                if (maxBlocksToAsk <= 0)
+                {
+                    this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
+                    return;
+                }
+
                 BlockDownloadRequest request = this.toDownloadQueue.Peek();
 
                 if (request.BlocksToDownload.Count <= maxBlocksToAsk)

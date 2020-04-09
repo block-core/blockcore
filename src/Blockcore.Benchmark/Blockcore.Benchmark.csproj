@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.7</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,35 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.11.4" />
-    <PackageReference Include="FASTER" Version="2019.3.16.1" />
-    <PackageReference Include="LiteDB" Version="4.1.4" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.LightWallet\Blockcore.Features.LightWallet.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.PoA\Blockcore.Features.PoA.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.SmartContracts\Blockcore.Features.SmartContracts.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
-    <ProjectReference Include="..\Blockcore.Networks\Blockcore.Networks.csproj" />
-    <ProjectReference Include="..\Blockcore\Blockcore.csproj" />
-    <ProjectReference Include="..\Stratis.Features.FederatedPeg\Stratis.Features.FederatedPeg.csproj" />
-    <ProjectReference Include="..\Stratis.Sidechains.Networks\Stratis.Sidechains.Networks.csproj" />
-    <ProjectReference Include="..\Stratis.SmartContracts.CLR.Validation\Stratis.SmartContracts.CLR.Validation.csproj" />
-    <ProjectReference Include="..\Stratis.SmartContracts.CLR\Stratis.SmartContracts.CLR.csproj" />
-    <ProjectReference Include="..\Stratis.SmartContracts.Core\Stratis.SmartContracts.Core.csproj" />
-    <ProjectReference Include="..\Stratis.SmartContracts.Networks\Stratis.SmartContracts.Networks.csproj" />
-    <ProjectReference Include="..\Stratis.SmartContracts.RuntimeObserver\Stratis.SmartContracts.RuntimeObserver.csproj" />
   </ItemGroup>
-
 </Project>

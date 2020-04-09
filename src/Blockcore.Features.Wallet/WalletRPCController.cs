@@ -419,9 +419,19 @@ namespace Blockcore.Features.Wallet
                 }
             }
 
+            // Get the ColdStaking script template if available.
+            Dictionary<string, ScriptTemplate> templates = this.walletManager.GetValidStakingTemplates();
+            ScriptTemplate coldStakingTemplate = templates.ContainsKey("ColdStaking") ? templates["ColdStaking"] : null;
+
             // Receive transactions details.
             foreach (TransactionData trxInWallet in receivedTransactions)
             {
+                // Skip the details if the script pub key is cold staking.
+                if (coldStakingTemplate != null && coldStakingTemplate.CheckScriptPubKey(trxInWallet.ScriptPubKey))
+                {
+                    continue;
+                }
+
                 GetTransactionDetailsCategoryModel category;
                 if (isGenerated)
                 {

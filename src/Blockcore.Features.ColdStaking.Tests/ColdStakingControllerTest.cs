@@ -545,6 +545,45 @@ namespace Blockcore.Features.ColdStaking.Tests
         }
 
         /// <summary>
+        /// Verify that the ScriptPubKey can be check with the script template.
+        /// </summary>
+        [Fact]
+        public void VerifyThatColdStakeTransactionCanBeFiltered()
+        {
+            this.Initialize();
+            this.CreateMempoolManager();
+
+            this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
+
+            Wallet.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
+
+            Transaction prevTran = this.AddSpendableTransactionToWallet(wallet1);
+
+            IActionResult result = this.coldStakingController.SetupColdStaking(new SetupColdStakingRequest
+            {
+                HotWalletAddress = hotWalletAddress1,
+                ColdWalletAddress = coldWalletAddress2,
+                WalletName = walletName1,
+                WalletAccount = walletAccount,
+                WalletPassword = walletPassword,
+                Amount = "100",
+                Fees = "0.01"
+            });
+
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            var response = Assert.IsType<SetupColdStakingResponse>(jsonResult.Value);
+            var transaction = Assert.IsType<PosTransaction>(this.Network.CreateTransaction(response.TransactionHex));
+
+            Assert.Equal("OP_DUP OP_HASH160 OP_ROT OP_IF OP_CHECKCOLDSTAKEVERIFY 90c582cb91d6b6d777c31c891d4943fed4edac3a OP_ELSE 92dfb829d31cefe6a0731f3432dea41596a278d9 OP_ENDIF OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[1].ScriptPubKey.ToString());
+
+            // Get the ColdStaking script template if available.
+            Dictionary<string, ScriptTemplate> templates = this.coldStakingManager.GetValidStakingTemplates();
+            ScriptTemplate coldStakingTemplate = templates["ColdStaking"];
+
+            Assert.True(coldStakingTemplate.CheckScriptPubKey(transaction.Outputs[1].ScriptPubKey));
+        }
+
+        /// <summary>
         /// Confirms that cold staking setup with the hot wallet will succeed if no issues (as per above test cases) are encountered.
         /// </summary>
         [Fact]

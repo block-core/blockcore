@@ -804,7 +804,7 @@ namespace Blockcore.Consensus
                     this.signals.Publish(new BlockConnected(blockToConnect));
                 }
 
-                this.logger.LogInformation("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
+                this.logger.LogDebug("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
                     blockToConnect.ChainedHeader.Height, blockToConnect.ChainedHeader.HashBlock,
                     dsb.watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.Block.Transactions.Count());
             }

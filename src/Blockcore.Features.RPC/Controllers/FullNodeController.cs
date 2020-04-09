@@ -405,7 +405,7 @@ namespace Blockcore.Features.RPC.Controllers
                 var posBlock = block as PosBlock;
 
                 blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.Network);
-                blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockProof()).ToUInt256().ToString();
+                blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockTarget()).ToUInt256().ToString();
                 blockModel.PosChainTrust = chainedHeader.ChainWork.ToString(); // this should be similar to ChainWork
 
                 if (this.stakeChain != null)

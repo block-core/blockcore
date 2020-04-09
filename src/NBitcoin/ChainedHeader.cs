@@ -86,10 +86,17 @@ namespace NBitcoin
         }
 
         /// <summary>Integer representation of the <see cref="ChainWork"/>.</summary>
-        private BigInteger chainWork;
+        /// <remarks>The chain work field is represented as a byte array to reduce the memory foot print of a BigInteger</remarks>
+        private byte[] chainWork;
 
         /// <summary>Total amount of work in the chain up to and including this block.</summary>
-        public uint256 ChainWork { get { return Target.ToUInt256(this.chainWork); } }
+        public uint256 ChainWork
+        {
+            get
+            {
+                return Target.ToUInt256(this.chainWork);
+            }
+        }
 
         /// <inheritdoc cref="BlockDataAvailabilityState" />
         public BlockDataAvailabilityState BlockDataAvailability { get; set; }
@@ -201,7 +208,7 @@ namespace NBitcoin
         /// <param name="headerHash">The hash of the block's header.</param>
         private ChainedHeader(BlockHeader header, uint256 headerHash)
         {
-            // this.Header = header ?? throw new ArgumentNullException(nameof(header));
+            if (header == null) throw new ArgumentNullException(nameof(header));
             this.HashBlock = headerHash ?? throw new ArgumentNullException(nameof(headerHash));
             this.Next = new List<ChainedHeader>(1);
         }
@@ -211,14 +218,16 @@ namespace NBitcoin
         /// </summary>
         private void CalculateChainWork()
         {
-            this.chainWork = (this.Previous == null ? BigInteger.Zero : this.Previous.chainWork).Add(this.GetBlockProof());
+            BigInteger previousWork = this.Previous == null ? BigInteger.Zero : new BigInteger(this.Previous.chainWork);
+            this.chainWork = previousWork.Add(this.GetBlockTarget()).ToByteArray();
         }
 
         /// <summary>Calculates the amount of work that this block contributes to the total chain work.</summary>
         /// <returns>Amount of work.</returns>
-        public BigInteger GetBlockProof()
+        public BigInteger GetBlockTarget()
         {
             BigInteger target = this.Header.Bits.ToBigInteger();
+
             if ((target.CompareTo(BigInteger.Zero) <= 0) || (target.CompareTo(Pow256) >= 0))
                 return BigInteger.Zero;
 

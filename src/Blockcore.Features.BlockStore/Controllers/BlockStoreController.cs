@@ -129,7 +129,7 @@ namespace Blockcore.Features.BlockStore.Controllers
                     var posBlock = block as PosBlock;
 
                     blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.network);
-                    blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockProof()).ToUInt256().ToString();
+                    blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockTarget()).ToUInt256().ToString();
                     blockModel.PosChainTrust = chainedHeader.ChainWork.ToString(); // this should be similar to ChainWork
                 }
 

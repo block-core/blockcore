@@ -85,6 +85,15 @@ namespace NBitcoin
             }
         }
 
+        /// <summary>
+        /// Represents a proof os stake network proven block header.
+        /// </summary>
+        /// <remarks>
+        /// This is used only on POS networks, an should be short lived,
+        /// after consensus the header should be set to null and loaded from proven header store.
+        /// </remarks>
+        public ProvenBlockHeader ProvenBlockHeader { get; set; }
+
         /// <summary>Integer representation of the <see cref="ChainWork"/>.</summary>
         /// <remarks>The chain work field is represented as a byte array to reduce the memory foot print of a BigInteger</remarks>
         private byte[] chainWork;
@@ -178,6 +187,9 @@ namespace NBitcoin
             }
 
             this.CalculateChainWork();
+
+            if (header is ProvenBlockHeader)
+                this.ProvenBlockHeader = (ProvenBlockHeader)header;
         }
 
         public ChainedHeader(BlockHeader header, uint256 headerHash, int height) : this(header, headerHash)
@@ -199,6 +211,9 @@ namespace NBitcoin
             }
 
             this.CalculateChainWork();
+
+            if (header is ProvenBlockHeader)
+                this.ProvenBlockHeader = (ProvenBlockHeader)header;
         }
 
         /// <summary>
@@ -313,7 +328,7 @@ namespace NBitcoin
         /// <inheritdoc />
         public override string ToString()
         {
-            return this.Height + "-" + this.HashBlock + "-" + this.BlockValidationState + (this.Header is ProvenBlockHeader ? " - PH" : string.Empty);
+            return this.Height + "-" + this.HashBlock + "-" + this.BlockValidationState + (this.ProvenBlockHeader != null ? " - PH" : string.Empty);
         }
 
         /// <summary>
@@ -697,10 +712,9 @@ namespace NBitcoin
         /// </summary>
         /// <param name="newHeader">The new header to set.</param>
         /// <remarks>Use this method very carefully because it could cause race conditions if used at the wrong moment.</remarks>
-        public void SetHeader(BlockHeader newHeader)
+        public void SetHeader(ProvenBlockHeader newHeader)
         {
-            //this.Header = newHeader;
-            this.HeaderStore.StoreHeader(newHeader);
+            this.ProvenBlockHeader = newHeader;
         }
     }
 }

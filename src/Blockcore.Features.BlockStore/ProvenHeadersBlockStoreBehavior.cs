@@ -25,13 +25,13 @@ namespace Blockcore.Features.BlockStore
 
         /// <inheritdoc />
         /// <returns>The <see cref="HeadersPayload"/> instance to announce to the peer, or <see cref="ProvenHeadersPayload"/> if the peers requires it.</returns>
-        protected override Payload BuildHeadersAnnouncePayload(IEnumerable<BlockHeader> headers)
+        protected override Payload BuildHeadersAnnouncePayload(IEnumerable<ChainedHeader> headers)
         {
             // Sanity check. That should never happen.
-            if (!headers.All(x => x is ProvenBlockHeader))
+            if (!headers.All(x => x.ProvenBlockHeader != null))
                 throw new BlockStoreException("UnexpectedError: BlockHeader is expected to be a ProvenBlockHeader");
 
-            var provenHeadersPayload = new ProvenHeadersPayload(headers.Cast<ProvenBlockHeader>().ToArray());
+            var provenHeadersPayload = new ProvenHeadersPayload(headers.Select(s => s.ProvenBlockHeader).ToArray());
 
             return provenHeadersPayload;
         }

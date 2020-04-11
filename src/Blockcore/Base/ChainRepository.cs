@@ -65,7 +65,10 @@ namespace Blockcore.Base
                     Row<int, byte[]> firstRow = transaction.Select<int, byte[]>("Chain", 0);
 
                     if (!firstRow.Exists)
+                    {
+                        genesisHeader.SetBlockHeaderStore(this.blockHeaderStore);
                         return genesisHeader;
+                    }
 
                     BlockHeader nextHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(firstRow.Value);
                     Guard.Assert(nextHeader.GetHash() == genesisHeader.HashBlock); // can't swap networks
@@ -85,7 +88,10 @@ namespace Blockcore.Base
                         tip = new ChainedHeader(nextHeader, nextHeader.GetHash(), tip);
 
                     if (tip == null)
+                    {
+                        genesisHeader.SetBlockHeaderStore(this.blockHeaderStore);
                         tip = genesisHeader;
+                    }
 
                     this.locator = tip.GetLocator();
                     return tip;
@@ -122,16 +128,7 @@ namespace Blockcore.Base
                         BlockHeader header = block.Header;
                         if (header is ProvenBlockHeader)
                         {
-                            // copy the header parameters, untill we dont make PH a normal header we store it in its own repo.
-                            BlockHeader newHeader = chainIndexer.Network.Consensus.ConsensusFactory.CreateBlockHeader();
-                            newHeader.Bits = header.Bits;
-                            newHeader.Time = header.Time;
-                            newHeader.Nonce = header.Nonce;
-                            newHeader.Version = header.Version;
-                            newHeader.HashMerkleRoot = header.HashMerkleRoot;
-                            newHeader.HashPrevBlock = header.HashPrevBlock;
-
-                            header = newHeader;
+                            throw new Exception("Header shouldn to be ProvenBlockHeader");
                         }
 
                         transaction.Insert("Chain", block.Height, this.dBreezeSerializer.Serialize(header));

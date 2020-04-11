@@ -19,9 +19,9 @@ namespace Blockcore.Features.PoA.Behaviors
         }
 
         /// <inheritdoc />
-        protected override Payload BuildHeadersAnnouncePayload(IEnumerable<BlockHeader> headers)
+        protected override Payload BuildHeadersAnnouncePayload(IEnumerable<ChainedHeader> headers)
         {
-            var poaHeaders = headers.Cast<PoABlockHeader>().ToList();
+            var poaHeaders = headers.Select(s => s.Header).Cast<PoABlockHeader>().ToList();
 
             return new PoAHeadersPayload(poaHeaders);
         }

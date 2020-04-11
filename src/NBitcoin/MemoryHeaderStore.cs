@@ -34,6 +34,11 @@ namespace NBitcoin
 
         public bool StoreHeader(BlockHeader blockHeader)
         {
+            if (blockHeader is ProvenBlockHeader)
+            {
+                throw new Exception("Header can not be of type 'ProvenBlockHeader'");
+            }
+
             return this.headers.TryAdd(blockHeader.GetHash(), blockHeader);
         }
     }

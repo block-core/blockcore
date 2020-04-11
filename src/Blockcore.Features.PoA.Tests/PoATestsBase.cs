@@ -56,7 +56,8 @@ namespace Blockcore.Features.PoA.Tests
             this.federationManager = CreateFederationManager(this, this.network, this.loggerFactory, this.signals);
 
             this.chainIndexerMock = new Mock<ChainIndexer>();
-            this.chainIndexerMock.Setup(x => x.Tip).Returns(new ChainedHeader(new BlockHeader(), 0, 0));
+            var header = new BlockHeader();
+            this.chainIndexerMock.Setup(x => x.Tip).Returns(new ChainedHeader(header, header.GetHash(), 0));
             this.slotsManager = new SlotsManager(this.network, this.federationManager, this.chainIndexerMock.Object, this.loggerFactory);
 
             this.poaHeaderValidator = new PoABlockHeaderValidator(this.loggerFactory);

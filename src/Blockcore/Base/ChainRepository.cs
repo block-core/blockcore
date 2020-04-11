@@ -128,7 +128,16 @@ namespace Blockcore.Base
                         BlockHeader header = block.Header;
                         if (header is ProvenBlockHeader)
                         {
-                            throw new Exception("Header shouldn to be ProvenBlockHeader");
+                            // copy the header parameters, untill we dont make PH a normal header we store it in its own repo.
+                            BlockHeader newHeader = chainIndexer.Network.Consensus.ConsensusFactory.CreateBlockHeader();
+                            newHeader.Bits = header.Bits;
+                            newHeader.Time = header.Time;
+                            newHeader.Nonce = header.Nonce;
+                            newHeader.Version = header.Version;
+                            newHeader.HashMerkleRoot = header.HashMerkleRoot;
+                            newHeader.HashPrevBlock = header.HashPrevBlock;
+
+                            header = newHeader;
                         }
 
                         transaction.Insert("Chain", block.Height, this.dBreezeSerializer.Serialize(header));

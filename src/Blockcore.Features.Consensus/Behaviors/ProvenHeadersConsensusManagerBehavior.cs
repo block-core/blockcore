@@ -167,9 +167,9 @@ namespace Blockcore.Features.Consensus.Behaviors
 
             for (int heightIndex = header.Height; heightIndex > fork.Height; heightIndex--)
             {
-                ProvenBlockHeader provenBlockHeader = null;
+                ProvenBlockHeader provenBlockHeader = header.ProvenBlockHeader;
 
-                if (header.ProvenBlockHeader == null)
+                if (provenBlockHeader == null)
                 {
                     provenBlockHeader = this.provenBlockHeaderStore.GetAsync(header.Height).GetAwaiter().GetResult();
 

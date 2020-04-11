@@ -200,20 +200,15 @@ namespace NBitcoin
             {
                 this.BlockDataAvailability = BlockDataAvailabilityState.BlockAvailable;
                 this.BlockValidationState = ValidationState.FullyValidated;
+            }
 
-                this.HeaderStore = new MemoryHeaderStore();
-                this.HeaderStore.StoreHeader(header);
-            }
-            else
-            {
-                this.HeaderStore = this.Previous.HeaderStore;
-                this.HeaderStore.StoreHeader(header);
-            }
+            this.HeaderStore = this.Previous?.HeaderStore ?? new MemoryHeaderStore();
+            this.HeaderStore.StoreHeader(header);
 
             this.CalculateChainWork();
 
             if (header is ProvenBlockHeader)
-                this.ProvenBlockHeader = (ProvenBlockHeader)header;
+                this.ProvenBlockHeader = (ProvenBlockHeader) header;
         }
 
         /// <summary>

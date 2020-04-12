@@ -154,7 +154,7 @@ namespace NBitcoin
     }
 
     /// <summary>
-    ///  Represents a transaction with a time field, such trx are used by POS networks however 
+    ///  Represents a transaction with a time field, such trx are used by POS networks however
     ///  the time field is not really needed anymore for POS consensus so in order to allow a new PoSv4 protocol
     ///  network we make this field encapsolated by an interface, removing the time field will make POS
     ///  transactions have the same serialization format as Bitcoin.
@@ -167,7 +167,7 @@ namespace NBitcoin
     /// <summary>
     /// A Proof Of Stake transaction.
     /// </summary>
-    public class PosTransaction : Transaction , IPosTransactionWithTime
+    public class PosTransaction : Transaction, IPosTransactionWithTime
     {
         private uint nTime = Utils.DateTimeToUnixTime(DateTime.UtcNow);
 
@@ -349,7 +349,7 @@ namespace NBitcoin
 
         public virtual ProvenBlockHeader CreateProvenBlockHeader(PosBlock block)
         {
-            var provenBlockHeader = new ProvenBlockHeader(block);
+            var provenBlockHeader = new ProvenBlockHeader(block, (PosBlockHeader)this.CreateBlockHeader());
 
             // Serialize the size.
             provenBlockHeader.ToBytes(this);
@@ -380,6 +380,7 @@ namespace NBitcoin
     /// A POS block header, this will create a work hash based on the X13 hash algos.
     /// </summary>
 #pragma warning disable 618
+
     public class PosBlockHeader : BlockHeader
 #pragma warning restore 618
     {
@@ -429,6 +430,8 @@ namespace NBitcoin
                 return HashX13.Instance.Hash(ms.ToArray());
             }
         }
+
+        public ProvenBlockHeader ProvenBlockHeader { get; set; }
     }
 
     /// <summary>

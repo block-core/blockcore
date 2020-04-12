@@ -18,9 +18,9 @@ namespace NBitcoin.Tests
         {
             // Setup new header to serialize with some fake properties.
             ProvenBlockHeader provenHeaderToSerialize = CreateNewProvenBlockHeaderMock();
-            provenHeaderToSerialize.BlockTime = new DateTimeOffset(new DateTime(2018, 1, 1));
-            provenHeaderToSerialize.Bits = 1;
-            provenHeaderToSerialize.Nonce = 2;
+            provenHeaderToSerialize.PosBlockHeader.BlockTime = new DateTimeOffset(new DateTime(2018, 1, 1));
+            provenHeaderToSerialize.PosBlockHeader.Bits = 1;
+            provenHeaderToSerialize.PosBlockHeader.Nonce = 2;
 
             // Attempt to serialize it.
             using (var ms = new MemoryStream())
@@ -55,8 +55,8 @@ namespace NBitcoin.Tests
                 provenHeaderToDeserialize.Signature.Signature.Should().BeEquivalentTo(provenHeaderToSerialize.Signature.Signature);
 
                 // Check base properties.
-                provenHeaderToDeserialize.BlockTime.Should().Be(provenHeaderToSerialize.BlockTime);
-                provenHeaderToDeserialize.CurrentVersion.Should().Be(provenHeaderToSerialize.CurrentVersion);
+                provenHeaderToDeserialize.PosBlockHeader.BlockTime.Should().Be(provenHeaderToSerialize.PosBlockHeader.BlockTime);
+                provenHeaderToDeserialize.PosBlockHeader.CurrentVersion.Should().Be(provenHeaderToSerialize.PosBlockHeader.CurrentVersion);
                 provenHeaderToDeserialize.Nonce.Should().Be(provenHeaderToSerialize.Nonce);
                 provenHeaderToDeserialize.Time.Should().Be(provenHeaderToSerialize.Time);
                 provenHeaderToDeserialize.Version.Should().Be(provenHeaderToSerialize.Version);

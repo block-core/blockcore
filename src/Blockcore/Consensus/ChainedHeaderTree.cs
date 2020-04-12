@@ -977,7 +977,8 @@ namespace Blockcore.Consensus
             BlockHeader headerToBeCreated = block.Header;
             if (block is PosBlock posBlock)
             {
-                headerToBeCreated = ((PosConsensusFactory)this.network.Consensus.ConsensusFactory).CreateProvenBlockHeader(posBlock);
+                var provenBlockHeader = ((PosConsensusFactory)this.network.Consensus.ConsensusFactory).CreateProvenBlockHeader(posBlock);
+                headerToBeCreated = provenBlockHeader.PosBlockHeader;
             }
 
             this.CreateNewHeaders(new List<BlockHeader>() { headerToBeCreated }, out bool _);

@@ -27,8 +27,18 @@ namespace NBitcoin
     /// Merkle proof (<see cref="MerkleProof"/>) that proves the coinstake tx is included in a block that is being represented by the provided header.
     /// </para>
     /// </remarks>
-    public class ProvenBlockHeader : PosBlockHeader
+    public class ProvenBlockHeader : IBitcoinSerializable
     {
+        /// <summary>
+        /// Proof Of Stake header.
+        /// </summary>
+        private PosBlockHeader posBlockHeader;
+
+        /// <summary>
+        /// Proof Of Stake header.
+        /// </summary>
+        public PosBlockHeader PosBlockHeader => this.posBlockHeader;
+
         /// <summary>
         /// Coinstake transaction.
         /// </summary>
@@ -61,6 +71,8 @@ namespace NBitcoin
         /// </summary>
         public BlockSignature Signature => this.signature;
 
+        public long PosHeaderSize { get; protected set; }
+
         /// <summary>Gets the size of the merkle proof in bytes, the header must be serialized or deserialized for this property to be set.</summary>
         public long MerkleProofSize { get; protected set; }
 
@@ -71,7 +83,7 @@ namespace NBitcoin
         public long CoinstakeSize { get; protected set; }
 
         /// <summary>Gets the total header size - including the <see cref="BlockHeader.Size"/> - in bytes. <see cref="ProvenBlockHeader"/> must be serialized or deserialized for this property to be set.</summary>
-        public override long HeaderSize => Size + this.MerkleProofSize + this.SignatureSize + this.CoinstakeSize;
+        public long HeaderSize => this.PosHeaderSize + this.MerkleProofSize + this.SignatureSize + this.CoinstakeSize;
 
         /// <summary>
         /// Gets or sets the stake modifier v2.
@@ -86,17 +98,19 @@ namespace NBitcoin
         {
         }
 
-        public ProvenBlockHeader(PosBlock block)
+        public ProvenBlockHeader(PosBlock block, PosBlockHeader posBlockHeader)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
 
             // Copy block header properties.
-            this.HashPrevBlock = block.Header.HashPrevBlock;
-            this.HashMerkleRoot = block.Header.HashMerkleRoot;
-            this.Time = block.Header.Time;
-            this.Bits = block.Header.Bits;
-            this.Nonce = block.Header.Nonce;
-            this.Version = block.Header.Version;
+            this.posBlockHeader = posBlockHeader;
+            this.posBlockHeader.HashPrevBlock = block.Header.HashPrevBlock;
+            this.posBlockHeader.HashMerkleRoot = block.Header.HashMerkleRoot;
+            this.posBlockHeader.Time = block.Header.Time;
+            this.posBlockHeader.Bits = block.Header.Bits;
+            this.posBlockHeader.Nonce = block.Header.Nonce;
+            this.posBlockHeader.Version = block.Header.Version;
+            this.posBlockHeader.ProvenBlockHeader = this;
 
             this.signature = block.BlockSignature;
             this.coinstake = block.GetProtocolTransaction();
@@ -104,10 +118,12 @@ namespace NBitcoin
         }
 
         /// <inheritdoc />
-        public override void ReadWrite(BitcoinStream stream)
+        public void ReadWrite(BitcoinStream stream)
         {
-            base.ReadWrite(stream);
+            this.posBlockHeader.ReadWrite(stream);
             long prev = stream.ProcessedBytes;
+            if (!stream.Serializing)
+                this.posBlockHeader.ProvenBlockHeader = this;
 
             stream.ReadWrite(ref this.merkleProof);
             this.MerkleProofSize = stream.ProcessedBytes - prev;
@@ -124,7 +140,32 @@ namespace NBitcoin
         /// <inheritdoc />
         public override string ToString()
         {
-            return this.GetHash().ToString();
+            return this.posBlockHeader.GetHash().ToString();
         }
+
+        // Helpler methods to support legacy format when ProvenBlockHeader inherited from PosBlockHeader
+
+        public uint256 GetHash()
+        {
+            return this.posBlockHeader.GetHash();
+        }
+
+        public uint256 HashPrevBlock { get { return this.posBlockHeader.HashPrevBlock; } }
+
+        private uint time;
+        public uint Time { get { return this.posBlockHeader.Time; } }
+
+        private uint bits;
+        public Target Bits { get { return this.posBlockHeader.Bits; } }
+
+        protected int version;
+
+        public int Version { get { return this.posBlockHeader.Version; } }
+
+        private uint nonce;
+        public uint Nonce { get { return this.posBlockHeader.Nonce; } }
+
+        private uint256 hashMerkleRoot;
+        public uint256 HashMerkleRoot { get { return this.posBlockHeader.HashMerkleRoot; } }
     }
 }

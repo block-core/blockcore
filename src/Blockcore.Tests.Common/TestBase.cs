@@ -210,12 +210,12 @@ namespace Blockcore.Tests.Common
                 PosBlock block = this.CreatePosBlock();
                 ProvenBlockHeader header = ((PosConsensusFactory)this.Network.Consensus.ConsensusFactory).CreateProvenBlockHeader(block);
 
-                header.Nonce = RandomUtils.GetUInt32();
-                header.HashPrevBlock = startingHeader.HashBlock;
-                header.Bits = Target.Difficulty1;
+                header.PosBlockHeader.Nonce = RandomUtils.GetUInt32();
+                header.PosBlockHeader.HashPrevBlock = startingHeader.HashBlock;
+                header.PosBlockHeader.Bits = Target.Difficulty1;
 
                 ChainedHeader prevHeader = startingHeader;
-                startingHeader = new ChainedHeader(header, header.GetHash(), prevHeader.Height + 1);
+                startingHeader = new ChainedHeader(header.PosBlockHeader, header.GetHash(), prevHeader.Height + 1);
 
                 startingHeader.SetPrivatePropertyValue("Previous", prevHeader);
                 prevHeader.Next.Add(startingHeader);
@@ -232,9 +232,9 @@ namespace Blockcore.Tests.Common
             {
                 ProvenBlockHeader header = ((PosConsensusFactory)this.Network.Consensus.ConsensusFactory).CreateProvenBlockHeader(posBlock);
 
-                header.Nonce = RandomUtils.GetUInt32();
-                header.HashPrevBlock = currentHeader.HashBlock;
-                header.Bits = Target.Difficulty1;
+                header.PosBlockHeader.Nonce = RandomUtils.GetUInt32();
+                header.PosBlockHeader.HashPrevBlock = currentHeader.HashBlock;
+                header.PosBlockHeader.Bits = Target.Difficulty1;
 
                 ChainedHeader prevHeader = currentHeader;
                 currentHeader = new ChainedHeader(header, header.GetHash(), prevHeader);
@@ -267,7 +267,7 @@ namespace Blockcore.Tests.Common
 
             while (currentHeader.Height != 0)
             {
-                headers.Add(currentHeader.Height, currentHeader.Header as ProvenBlockHeader);
+                headers.Add(currentHeader.Height, (currentHeader.Header as PosBlockHeader).ProvenBlockHeader);
 
                 currentHeader = currentHeader.Previous;
             }

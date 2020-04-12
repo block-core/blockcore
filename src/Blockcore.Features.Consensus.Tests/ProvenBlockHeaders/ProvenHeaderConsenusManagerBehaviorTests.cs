@@ -120,7 +120,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             var provenBlockHeadersToVerifyAgainst = new List<ProvenBlockHeader>();
             for (int i = 5; i <= provenHeaderChain.Height; i++)
             {
-                provenBlockHeadersToVerifyAgainst.Add((ProvenBlockHeader)provenHeaderChain.GetAncestor(i).Header);
+                provenBlockHeadersToVerifyAgainst.Add(((PosBlockHeader)provenHeaderChain.GetAncestor(i).Header).ProvenBlockHeader);
             }
 
             //Trigger the event handler

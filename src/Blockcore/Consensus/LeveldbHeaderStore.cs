@@ -23,7 +23,7 @@ namespace NBitcoin
             this.network = network;
             this.ChainIndexer = chainIndexer;
             // this.headers = new Dictionary<uint256, BlockHeader>();
-            this.headers = new MemoryCountCache<uint256, BlockHeader>(501);
+            this.headers = new MemoryCountCache<uint256, BlockHeader>(601);
             this.locker = new object();
 
             // Open a connection to a new DB and create if not found
@@ -55,8 +55,8 @@ namespace NBitcoin
             blockHeader = this.network.Consensus.ConsensusFactory.CreateBlockHeader();
             blockHeader.FromBytes(bytes, this.network.Consensus.ConsensusFactory);
 
-            // If the header is 500 blocks behind tip or one block ahead cache it.
-            if ((chainedHeader.Height > this.ChainIndexer.Height - 500) && (chainedHeader.Height <= this.ChainIndexer.Height + 1))
+            // If the header is 500 blocks behind tip or 100 blocks ahead cache it.
+            if ((chainedHeader.Height > this.ChainIndexer.Height - 500) && (chainedHeader.Height <= this.ChainIndexer.Height + 100))
                 this.headers.AddOrUpdate(hash, blockHeader);
 
             return blockHeader;

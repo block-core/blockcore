@@ -91,7 +91,7 @@ namespace NBitcoin
             this.part4 = b.part4;
         }
 
-        public uint256(ReadOnlySpan<byte> input)
+        public uint256(ReadOnlySpan<byte> input, bool littleEndian = true)
         {
             if (input.Length != ExpectedSize)
             {
@@ -101,6 +101,11 @@ namespace NBitcoin
             Span<byte> dst = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref this.part1, ExpectedSize / sizeof(ulong)));
 
             input.CopyTo(dst);
+
+            if (!littleEndian)
+            {
+                dst.Reverse();
+            }
         }
 
         public uint256(ulong b)

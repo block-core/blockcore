@@ -79,7 +79,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             this.ruleContext = new PowRuleContext { };
             this.ruleContext.ValidationContext = new ValidationContext();
             BlockHeader blockHeader = this.network.Consensus.ConsensusFactory.CreateBlockHeader();
-            this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(blockHeader, new uint256("bcd7d5de8d3bcc7b15e7c8e5fe77c0227cdfa6c682ca13dcf4910616f10fdd06"), HeightOfBlockchain);
+            this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(blockHeader, blockHeader.GetHash(), HeightOfBlockchain);
 
             Block block = this.network.CreateBlock();
             block.Transactions = new List<Transaction>();

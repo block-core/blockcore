@@ -357,7 +357,7 @@ namespace Blockcore.Features.BlockStore
 
             this.logger.LogDebug("Block propagation preferences of the peer '{0}': prefer headers - {1}, prefer headers and IDs - {2}, will{3} revert to 'inv' now.", peer.RemoteSocketEndpoint, this.PreferHeaders, this.preferHeaderAndIDs, revertToInv ? "" : " NOT");
 
-            var headers = new List<BlockHeader>();
+            var headers = new List<ChainedHeader>();
             var inventoryBlockToSend = new List<ChainedHeader>();
 
             try
@@ -373,7 +373,7 @@ namespace Blockcore.Features.BlockStore
                     // We expect peer to answer with getheaders message.
                     if (bestSentHeader == null)
                     {
-                        await peer.SendMessageAsync(this.BuildHeadersAnnouncePayload(new[] { blocksToAnnounce.Last().Header })).ConfigureAwait(false);
+                        await peer.SendMessageAsync(this.BuildHeadersAnnouncePayload(new[] { blocksToAnnounce.Last() })).ConfigureAwait(false);
 
                         this.logger.LogTrace("(-)[SENT_SINGLE_HEADER]");
                         return;
@@ -409,7 +409,7 @@ namespace Blockcore.Features.BlockStore
                         }
 
                         // If we reached here then it means that we've found starting header.
-                        headers.Add(chainedHeader.Header);
+                        headers.Add(chainedHeader);
                     }
                 }
 
@@ -480,9 +480,9 @@ namespace Blockcore.Features.BlockStore
         /// <returns>
         /// The <see cref="HeadersPayload" /> instance to announce to the peer.
         /// </returns>
-        protected virtual Payload BuildHeadersAnnouncePayload(IEnumerable<BlockHeader> headers)
+        protected virtual Payload BuildHeadersAnnouncePayload(IEnumerable<ChainedHeader> headers)
         {
-            return new HeadersPayload(headers);
+            return new HeadersPayload(headers.Select(b => b.Header));
         }
 
         public override object Clone()

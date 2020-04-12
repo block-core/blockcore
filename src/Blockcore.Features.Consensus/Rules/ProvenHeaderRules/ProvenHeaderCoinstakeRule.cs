@@ -121,7 +121,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 
             UnspentOutput prevUtxo = null;
 
-            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] {txIn.PrevOut});
+            FetchCoinsResponse coins = this.PosParent.UtxoSet.FetchCoins(new[] { txIn.PrevOut });
             prevUtxo = coins.UnspentOutputs[txIn.PrevOut];
             if (prevUtxo?.Coins == null)
             {
@@ -245,7 +245,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                 return this.LastCheckpoint.StakeModifierV2;
             }
 
-            var previousProvenHeader = chainedHeader.Previous.Header as ProvenBlockHeader;
+            var previousProvenHeader = chainedHeader.Previous.ProvenBlockHeader;
             if (previousProvenHeader != null)
             {
                 if (previousProvenHeader.StakeModifierV2 == null)

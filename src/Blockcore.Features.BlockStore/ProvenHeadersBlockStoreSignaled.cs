@@ -44,13 +44,13 @@ namespace Blockcore.Features.BlockStore
         {
             int blockHeight = blockPair.ChainedHeader.Height;
 
-            if (blockPair.ChainedHeader.Header is ProvenBlockHeader phHeader)
+            if (blockPair.ChainedHeader.ProvenBlockHeader != null)
             {
                 this.logger.LogDebug("Current header is already a Proven Header.");
 
                 // Add to the store, to be sure we actually store it anyway.
                 // It's ProvenBlockHeaderStore responsibility to prevent us to store it twice.
-                this.provenBlockHeaderStore.AddToPendingBatch(phHeader, new HashHeightPair(phHeader.GetHash(), blockHeight));
+                this.provenBlockHeaderStore.AddToPendingBatch(blockPair.ChainedHeader.ProvenBlockHeader, new HashHeightPair(blockPair.ChainedHeader.HashBlock, blockHeight));
             }
             else
             {

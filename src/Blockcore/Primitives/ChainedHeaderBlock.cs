@@ -38,7 +38,7 @@ namespace Blockcore.Primitives
         /// </summary>
         /// <param name="newHeader">The new header to set.</param>
         /// <remarks>Use this method very carefully because it could cause race conditions if used at the wrong moment.</remarks>
-        public void SetHeader(BlockHeader newHeader)
+        public void SetHeader(ProvenBlockHeader newHeader)
         {
             Guard.NotNull(newHeader, nameof(newHeader));
 

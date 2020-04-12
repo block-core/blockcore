@@ -804,7 +804,7 @@ namespace Blockcore.Consensus
                     this.signals.Publish(new BlockConnected(blockToConnect));
                 }
 
-                this.logger.LogInformation("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
+                this.logger.LogDebug("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
                     blockToConnect.ChainedHeader.Height, blockToConnect.ChainedHeader.HashBlock,
                     dsb.watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.Block.Transactions.Count());
             }
@@ -1342,6 +1342,12 @@ namespace Blockcore.Consensus
                 int maxBlocksToAsk = Math.Min((int)(freeBytes / avgSize), freeSlots);
 
                 this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", avgSize, maxBlocksToAsk);
+
+                if (maxBlocksToAsk <= 0)
+                {
+                    this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
+                    return;
+                }
 
                 BlockDownloadRequest request = this.toDownloadQueue.Peek();
 

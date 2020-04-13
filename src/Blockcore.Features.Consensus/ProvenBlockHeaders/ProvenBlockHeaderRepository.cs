@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Configuration;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
-using DBreeze;
-using DBreeze.DataTypes;
 using DBreeze.Utils;
+using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
@@ -24,9 +24,9 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         private readonly ILogger logger;
 
         /// <summary>
-        /// Access to DBreeze database.
+        /// Access to database.
         /// </summary>
-        private readonly DBreezeEngine dbreeze;
+        private readonly DB leveldb;
 
         /// <summary>
         /// Specification of the network the node runs on - RegTest/TestNet/MainNet.
@@ -36,13 +36,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <summary>
         /// Database key under which the block hash and height of a <see cref="ProvenBlockHeader"/> tip is stored.
         /// </summary>
-        private static readonly byte[] blockHashHeightKey = new byte[0];
+        private static readonly byte[] blockHashHeightKey = new byte[] { 1 };
 
-        /// <summary>
-        /// DBreeze table names.
-        /// </summary>
-        private const string ProvenBlockHeaderTable = "ProvenBlockHeader";
-        private const string BlockHashHeightTable = "BlockHashHeight";
+        private static readonly byte provenBlockHeaderTable = 1;
+        private static readonly byte blockHashHeightTable = 2;
 
         /// <summary>
         /// Current <see cref="ProvenBlockHeader"/> tip.
@@ -85,7 +82,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
             Directory.CreateDirectory(folder);
 
-            this.dbreeze = new DBreezeEngine(folder);
+            // Open a connection to a new DB and create if not found
+            var options = new Options { CreateIfMissing = true };
+            this.leveldb = new DB(options, folder);
+
             this.network = network;
         }
 
@@ -94,21 +94,16 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         {
             Task task = Task.Run(() =>
             {
-                using (DBreeze.Transactions.Transaction transaction = this.dbreeze.GetTransaction())
-                {
-                    this.TipHashHeight = this.GetTipHash(transaction);
+                this.TipHashHeight = this.GetTipHash();
 
-                    if (this.TipHashHeight != null)
-                        return;
+                if (this.TipHashHeight != null)
+                    return;
 
-                    var hashHeight = new HashHeightPair(this.network.GetGenesis().GetHash(), 0);
+                var hashHeight = new HashHeightPair(this.network.GetGenesis().GetHash(), 0);
 
-                    this.SetTip(transaction, hashHeight);
+                this.SetTip(hashHeight);
 
-                    transaction.Commit();
-
-                    this.TipHashHeight = hashHeight;
-                }
+                this.TipHashHeight = hashHeight;
             });
 
             return task;
@@ -119,19 +114,12 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         {
             Task<ProvenBlockHeader> task = Task.Run(() =>
             {
-                using (DBreeze.Transactions.Transaction transaction = this.dbreeze.GetTransaction())
-                {
-                    transaction.SynchronizeTables(ProvenBlockHeaderTable);
+                byte[] row = this.leveldb.Get(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(blockHeight)));
 
-                    transaction.ValuesLazyLoadingIsOn = false;
+                if (row != null)
+                    return this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(row);
 
-                    Row<byte[], byte[]> row = transaction.Select<byte[], byte[]>(ProvenBlockHeaderTable, blockHeight.ToBytes());
-
-                    if (row.Exists)
-                        return this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(row.Value);
-
-                    return null;
-                }
+                return null;
             });
 
             return task;
@@ -149,18 +137,11 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             {
                 this.logger.LogDebug("({0}.Count():{1})", nameof(headers), headers.Count());
 
-                using (DBreeze.Transactions.Transaction transaction = this.dbreeze.GetTransaction())
-                {
-                    transaction.SynchronizeTables(BlockHashHeightTable, ProvenBlockHeaderTable);
+                this.InsertHeaders(headers);
 
-                    this.InsertHeaders(transaction, headers);
+                this.SetTip(newTip);
 
-                    this.SetTip(transaction, newTip);
-
-                    transaction.Commit();
-
-                    this.TipHashHeight = newTip;
-                }
+                this.TipHashHeight = newTip;
             });
 
             return task;
@@ -171,22 +152,26 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// </summary>
         /// <param name="transaction"> Open DBreeze transaction.</param>
         /// <param name="newTip"> Hash height pair of the new block tip.</param>
-        private void SetTip(DBreeze.Transactions.Transaction transaction, HashHeightPair newTip)
+        private void SetTip(HashHeightPair newTip)
         {
             Guard.NotNull(newTip, nameof(newTip));
 
-            transaction.Insert(BlockHashHeightTable, blockHashHeightKey, this.dBreezeSerializer.Serialize(newTip));
+            this.leveldb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dBreezeSerializer.Serialize(newTip));
         }
 
         /// <summary>
         /// Inserts <see cref="ProvenBlockHeader"/> items into to the database.
         /// </summary>
-        /// <param name="transaction"> Open DBreeze transaction.</param>
         /// <param name="headers"> List of <see cref="ProvenBlockHeader"/> items to save.</param>
-        private void InsertHeaders(DBreeze.Transactions.Transaction transaction, SortedDictionary<int, ProvenBlockHeader> headers)
+        private void InsertHeaders(SortedDictionary<int, ProvenBlockHeader> headers)
         {
-            foreach (KeyValuePair<int, ProvenBlockHeader> header in headers)
-                transaction.Insert(ProvenBlockHeaderTable, header.Key.ToBytes(), this.dBreezeSerializer.Serialize(header.Value));
+            using (var batch = new WriteBatch())
+            {
+                foreach (KeyValuePair<int, ProvenBlockHeader> header in headers)
+                    batch.Put(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(header.Key)), this.dBreezeSerializer.Serialize(header.Value));
+
+                this.leveldb.Write(batch);
+            }
 
             // Store the latest ProvenBlockHeader in memory.
             this.provenBlockHeaderTip = headers.Last().Value;
@@ -195,16 +180,15 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <summary>
         /// Retrieves the current <see cref="HashHeightPair"/> tip from disk.
         /// </summary>
-        /// <param name="transaction"> Open DBreeze transaction.</param>
         /// <returns> Hash of blocks current tip.</returns>
-        private HashHeightPair GetTipHash(DBreeze.Transactions.Transaction transaction)
+        private HashHeightPair GetTipHash()
         {
             HashHeightPair tipHash = null;
 
-            Row<byte[], byte[]> row = transaction.Select<byte[], byte[]>(BlockHashHeightTable, blockHashHeightKey);
+            byte[] row = this.leveldb.Get(DBH.Key(blockHashHeightTable, blockHashHeightKey));
 
-            if (row.Exists)
-                tipHash = this.dBreezeSerializer.Deserialize<HashHeightPair>(row.Value);
+            if (row != null)
+                tipHash = this.dBreezeSerializer.Deserialize<HashHeightPair>(row);
 
             return tipHash;
         }
@@ -212,7 +196,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <inheritdoc />
         public void Dispose()
         {
-            this.dbreeze?.Dispose();
+            this.leveldb?.Dispose();
         }
     }
 }

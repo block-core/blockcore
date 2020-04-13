@@ -28,6 +28,8 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// </summary>
         private readonly DB leveldb;
 
+        private object locker;
+
         /// <summary>
         /// Specification of the network the node runs on - RegTest/TestNet/MainNet.
         /// </summary>
@@ -85,6 +87,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             // Open a connection to a new DB and create if not found
             var options = new Options { CreateIfMissing = true };
             this.leveldb = new DB(options, folder);
+            this.locker = new object();
 
             this.network = network;
         }
@@ -114,7 +117,12 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         {
             Task<ProvenBlockHeader> task = Task.Run(() =>
             {
-                byte[] row = this.leveldb.Get(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(blockHeight)));
+                byte[] row = null;
+
+                lock (this.locker)
+                {
+                    row = this.leveldb.Get(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(blockHeight)));
+                }
 
                 if (row != null)
                     return this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(row);
@@ -156,7 +164,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         {
             Guard.NotNull(newTip, nameof(newTip));
 
-            this.leveldb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dBreezeSerializer.Serialize(newTip));
+            lock (this.locker)
+            {
+                this.leveldb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dBreezeSerializer.Serialize(newTip));
+            }
         }
 
         /// <summary>
@@ -170,7 +181,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
                 foreach (KeyValuePair<int, ProvenBlockHeader> header in headers)
                     batch.Put(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(header.Key)), this.dBreezeSerializer.Serialize(header.Value));
 
-                this.leveldb.Write(batch);
+                lock (this.locker)
+                {
+                    this.leveldb.Write(batch);
+                }
             }
 
             // Store the latest ProvenBlockHeader in memory.
@@ -185,7 +199,11 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         {
             HashHeightPair tipHash = null;
 
-            byte[] row = this.leveldb.Get(DBH.Key(blockHashHeightTable, blockHashHeightKey));
+            byte[] row = null;
+            lock (this.locker)
+            {
+                row = this.leveldb.Get(DBH.Key(blockHashHeightTable, blockHashHeightKey));
+            }
 
             if (row != null)
                 tipHash = this.dBreezeSerializer.Deserialize<HashHeightPair>(row);

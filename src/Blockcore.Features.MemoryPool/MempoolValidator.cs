@@ -338,7 +338,7 @@ namespace Blockcore.Features.MemoryPool
 
                 // Remove conflicting transactions from the mempool
                 foreach (TxMempoolEntry it in context.AllConflicting)
-                    this.logger.LogInformation($"Replacing tx {it.TransactionHash} with {context.TransactionHash} for {context.ModifiedFees - context.ConflictingFees} BTC additional fees, {context.EntrySize - context.ConflictingSize} delta bytes");
+                    this.logger.LogDebug($"Replacing tx {it.TransactionHash} with {context.TransactionHash} for {context.ModifiedFees - context.ConflictingFees} BTC additional fees, {context.EntrySize - context.ConflictingSize} delta bytes");
 
                 this.memPool.RemoveStaged(context.AllConflicting, false);
 

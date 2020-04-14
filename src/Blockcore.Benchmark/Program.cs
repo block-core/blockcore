@@ -1,10 +1,11 @@
 ﻿using BenchmarkDotNet.Running;
+using Blockcore.Benchmark.Uint256;
 
-namespace Stratis.Benchmark
+namespace Blockcore.Benchmark
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
 

@@ -39,6 +39,9 @@ namespace Blockcore.Consensus
         /// <summary>The maximum amount of blocks that can be assigned to <see cref="IBlockPuller"/> at the same time.</summary>
         private const int MaxBlocksToAskFromPuller = 10000;
 
+        /// <summary>The maximum amount of blocks that the <see cref="IChainedHeaderTree.UnconsumedBlocksCount"/> can store.</summary>
+        private const int MaxUnconsumedBlocksCount = 10000;
+
         /// <summary>The minimum amount of slots that should be available to trigger asking block puller for blocks.</summary>
         private const int ConsumptionThresholdSlots = MaxBlocksToAskFromPuller / 10;
 
@@ -804,7 +807,7 @@ namespace Blockcore.Consensus
                     this.signals.Publish(new BlockConnected(blockToConnect));
                 }
 
-                this.logger.LogInformation("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
+                this.logger.LogDebug("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
                     blockToConnect.ChainedHeader.Height, blockToConnect.ChainedHeader.HashBlock,
                     dsb.watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.Block.Transactions.Count());
             }
@@ -1322,6 +1325,12 @@ namespace Blockcore.Consensus
                     return;
                 }
 
+                if (this.chainedHeaderTree.UnconsumedBlocksCount > MaxUnconsumedBlocksCount)
+                {
+                    this.logger.LogTrace("(-)[MAX_UNCONSUMED_BLOCKS_REACHED]");
+                    return;
+                }
+
                 long freeBytes = this.maxUnconsumedBlocksDataBytes - this.chainedHeaderTree.UnconsumedBlocksDataBytes - this.expectedBlockDataBytes;
                 this.logger.LogDebug("{0} bytes worth of blocks is available for download.", freeBytes);
 
@@ -1342,6 +1351,12 @@ namespace Blockcore.Consensus
                 int maxBlocksToAsk = Math.Min((int)(freeBytes / avgSize), freeSlots);
 
                 this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", avgSize, maxBlocksToAsk);
+
+                if (maxBlocksToAsk <= 0)
+                {
+                    this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
+                    return;
+                }
 
                 BlockDownloadRequest request = this.toDownloadQueue.Peek();
 

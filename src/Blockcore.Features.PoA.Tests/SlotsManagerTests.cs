@@ -64,7 +64,8 @@ namespace Blockcore.Features.PoA.Tests
             this.network = new TestPoANetwork(new List<PubKey>() { tool.GeneratePrivateKey().PubKey, key.PubKey, tool.GeneratePrivateKey().PubKey });
 
             IFederationManager fedManager = PoATestsBase.CreateFederationManager(this, this.network, new ExtendedLoggerFactory(), new Signals.Signals(new LoggerFactory(), null));
-            this.chainIndexer.Setup(x => x.Tip).Returns(new ChainedHeader(new BlockHeader(), 0, 0));
+            var header = new BlockHeader();
+            this.chainIndexer.Setup(x => x.Tip).Returns(new ChainedHeader(header, header.GetHash(), 0));
             this.slotsManager = new SlotsManager(this.network, fedManager, this.chainIndexer.Object, new LoggerFactory());
 
             List<IFederationMember> federationMembers = fedManager.GetFederationMembers();
@@ -93,10 +94,11 @@ namespace Blockcore.Features.PoA.Tests
             Assert.Equal(thisTurnTimestamp, this.slotsManager.GetMiningTimestamp(thisTurnTimestamp + 1));
 
             // If we are only just past our last timestamp, but we've already mined a block there, then get the NEXT turn's timestamp.
-            this.chainIndexer.Setup(x => x.Tip).Returns(new ChainedHeader(new BlockHeader
+            header = new BlockHeader
             {
                 Time = thisTurnTimestamp
-            }, 0, 0));
+            };
+            this.chainIndexer.Setup(x => x.Tip).Returns(new ChainedHeader(header, header.GetHash(), 0));
             this.slotsManager = new SlotsManager(this.network, fedManager, this.chainIndexer.Object, new LoggerFactory());
             Assert.Equal(nextTurnTimestamp, this.slotsManager.GetMiningTimestamp(thisTurnTimestamp + 1));
 

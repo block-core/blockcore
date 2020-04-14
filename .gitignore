@@ -263,3 +263,5 @@ src/.idea/.idea.Stratis.Bitcoin.FullNode/.idea/
 .DS_Store
 
 *.iml
+/src/.idea
+/src/Blockcore.Benchmark/BenchmarkDotNet.Artifacts/results

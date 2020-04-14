@@ -49,7 +49,7 @@ namespace Blockcore.IntegrationTests.Miners
         }
 
         [Fact]
-        public async Task MiningAndPropagatingPOW_MineBlockNotPushedToConsensusCode_SupercededByBetterBlockOnReorg_InitialBlockRejectedAsync()
+        public async Task MineBlockNotPushedToConsensusCode_SupercededByBetterBlockOnReorg_InitialBlockRejectedAsync()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {

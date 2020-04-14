@@ -5,8 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Configuration;
 using Blockcore.Utilities;
-using DBreeze;
-using DBreeze.DataTypes;
+using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
@@ -25,29 +24,34 @@ namespace Blockcore.Base
     public class ChainRepository : IChainRepository
     {
         private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly IBlockHeaderStore blockHeaderStore;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
 
-        /// <summary>Access to DBreeze database.</summary>
-        private readonly DBreezeEngine dbreeze;
+        /// <summary>Access to database.</summary>
+        private readonly DB leveldb;
 
         private BlockLocator locator;
 
-        public ChainRepository(string folder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
+        public ChainRepository(string folder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer, IBlockHeaderStore blockHeaderStore)
         {
             this.dBreezeSerializer = dBreezeSerializer;
+            this.blockHeaderStore = blockHeaderStore;
             Guard.NotEmpty(folder, nameof(folder));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             Directory.CreateDirectory(folder);
-            this.dbreeze = new DBreezeEngine(folder);
+
+            // Open a connection to a new DB and create if not found
+            var options = new Options { CreateIfMissing = true };
+            this.leveldb = new DB(options, folder);
         }
 
-        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
-            : this(dataFolder.ChainPath, loggerFactory, dBreezeSerializer)
+        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer, IBlockHeaderStore blockHeaderStore)
+            : this(dataFolder.ChainPath, loggerFactory, dBreezeSerializer, blockHeaderStore)
         {
         }
 
@@ -56,37 +60,48 @@ namespace Blockcore.Base
         {
             Task<ChainedHeader> task = Task.Run(() =>
             {
-                using (DBreeze.Transactions.Transaction transaction = this.dbreeze.GetTransaction())
+                ChainedHeader tip = null;
+
+                byte[] firstRow = this.leveldb.Get(BitConverter.GetBytes(0));
+
+                if (firstRow == null)
                 {
-                    transaction.ValuesLazyLoadingIsOn = false;
-                    ChainedHeader tip = null;
-                    Row<int, byte[]> firstRow = transaction.Select<int, byte[]>("Chain", 0);
-
-                    if (!firstRow.Exists)
-                        return genesisHeader;
-
-                    BlockHeader previousHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(firstRow.Value);
-                    Guard.Assert(previousHeader.GetHash() == genesisHeader.HashBlock); // can't swap networks
-
-                    foreach (Row<int, byte[]> row in transaction.SelectForwardSkip<int, byte[]>("Chain", 1))
-                    {
-                        if ((tip != null) && (previousHeader.HashPrevBlock != tip.HashBlock))
-                            break;
-
-                        BlockHeader blockHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(row.Value);
-                        tip = new ChainedHeader(previousHeader, blockHeader.HashPrevBlock, tip);
-                        previousHeader = blockHeader;
-                    }
-
-                    if (previousHeader != null)
-                        tip = new ChainedHeader(previousHeader, previousHeader.GetHash(), tip);
-
-                    if (tip == null)
-                        tip = genesisHeader;
-
-                    this.locator = tip.GetLocator();
-                    return tip;
+                    genesisHeader.SetBlockHeaderStore(this.blockHeaderStore);
+                    return genesisHeader;
                 }
+
+                BlockHeader nextHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(firstRow);
+                Guard.Assert(nextHeader.GetHash() == genesisHeader.HashBlock); // can't swap networks
+
+                int index = 1;
+                while (true)
+                {
+                    byte[] row = this.leveldb.Get(BitConverter.GetBytes(index));
+
+                    if (row == null)
+                        break;
+
+                    if ((tip != null) && (nextHeader.HashPrevBlock != tip.HashBlock))
+                        break;
+
+                    BlockHeader blockHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(row);
+                    tip = new ChainedHeader(nextHeader, blockHeader.HashPrevBlock, tip);
+                    if (tip.Height == 0) tip.SetBlockHeaderStore(this.blockHeaderStore);
+                    nextHeader = blockHeader;
+                    index++;
+                }
+
+                if (nextHeader != null)
+                    tip = new ChainedHeader(nextHeader, nextHeader.GetHash(), tip);
+
+                if (tip == null)
+                {
+                    genesisHeader.SetBlockHeaderStore(this.blockHeaderStore);
+                    tip = genesisHeader;
+                }
+
+                this.locator = tip.GetLocator();
+                return tip;
             });
 
             return task;
@@ -99,7 +114,7 @@ namespace Blockcore.Base
 
             Task task = Task.Run(() =>
             {
-                using (DBreeze.Transactions.Transaction transaction = this.dbreeze.GetTransaction())
+                using (var batch = new WriteBatch())
                 {
                     ChainedHeader fork = this.locator == null ? null : chainIndexer.FindFork(this.locator);
                     ChainedHeader tip = chainIndexer.Tip;
@@ -131,11 +146,11 @@ namespace Blockcore.Base
                             header = newHeader;
                         }
 
-                        transaction.Insert("Chain", block.Height, this.dBreezeSerializer.Serialize(header));
+                        batch.Put(BitConverter.GetBytes(block.Height), this.dBreezeSerializer.Serialize(header));
                     }
 
                     this.locator = tip.GetLocator();
-                    transaction.Commit();
+                    this.leveldb.Write(batch);
                 }
             });
 
@@ -145,7 +160,8 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public void Dispose()
         {
-            this.dbreeze?.Dispose();
+            this.leveldb?.Dispose();
+            (this.blockHeaderStore as IDisposable)?.Dispose();
         }
     }
 }

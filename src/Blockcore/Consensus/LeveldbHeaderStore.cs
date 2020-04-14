@@ -5,7 +5,7 @@ using LevelDB;
 
 namespace NBitcoin
 {
-    public class LeveldbHeaderStore : IBlockHeaderStore
+    public class LeveldbHeaderStore : IBlockHeaderStore, IDisposable
     {
         private readonly Network network;
 
@@ -86,6 +86,11 @@ namespace NBitcoin
             }
 
             return true;
+        }
+
+        public void Dispose()
+        {
+            this.leveldb?.Dispose();
         }
     }
 }

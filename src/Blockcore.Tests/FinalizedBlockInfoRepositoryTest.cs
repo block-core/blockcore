@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.AsyncWork;
+using Blockcore.Consensus;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

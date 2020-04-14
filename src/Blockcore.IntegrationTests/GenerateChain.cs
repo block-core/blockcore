@@ -18,7 +18,7 @@ namespace Blockcore.IntegrationTests
 
         private const string MinerMnemonic = "elevator slight dad hair table forum maze feed trim ignore field mystery";
         private const string ListenerMnemonic = "seminar cool use bleak drink section rent bid language obey skin round";
-        private const string DataPath = @"..\..\..\..\Stratis.Bitcoin.IntegrationTests.Common\ReadyData";
+        private const string DataPath = @"..\..\..\..\Blockcore.IntegrationTests.Common\ReadyData";
 
         public GenerateChain()
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
@@ -9,6 +10,7 @@ using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.Utils;
 using FluentAssertions;
+using LevelDB;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
@@ -20,8 +22,8 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
     {
         private readonly Mock<ILoggerFactory> loggerFactory;
         private readonly DBreezeSerializer dBreezeSerializer;
-        private const string ProvenBlockHeaderTable = "ProvenBlockHeader";
-        private const string BlockHashTable = "BlockHashHeight";
+        private static readonly byte ProvenBlockHeaderTable = 1;
+        private static readonly byte BlockHashHeightTable = 2;
 
         public ProvenBlockHeaderRepositoryTests() : base(KnownNetworks.StratisTest)
         {
@@ -58,14 +60,10 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
                 await repo.PutAsync(items, blockHashHeightPair);
             }
 
-            using (var engine = new DBreezeEngine(folder))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, folder))
             {
-                DBreeze.Transactions.Transaction txn = engine.GetTransaction();
-                txn.SynchronizeTables(ProvenBlockHeaderTable);
-                txn.ValuesLazyLoadingIsOn = false;
-
-                var headerOut = this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(txn.Select<byte[], byte[]>(ProvenBlockHeaderTable, blockHashHeightPair.Height.ToBytes()).Value);
-                var hashHeightPairOut = this.DBreezeSerializer.Deserialize<HashHeightPair>(txn.Select<byte[], byte[]>(BlockHashTable, new byte[0].ToBytes()).Value);
+                var headerOut = this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(engine.Get(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(blockHashHeightPair.Height))));
+                var hashHeightPairOut = this.DBreezeSerializer.Deserialize<HashHeightPair>(engine.Get(DBH.Key(BlockHashHeightTable, new byte[] { 1 })));
 
                 headerOut.Should().NotBeNull();
                 headerOut.GetHash().Should().Be(provenBlockHeaderIn.GetHash());
@@ -93,13 +91,13 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             // Check the ProvenBlockHeader exists in the database.
-            using (var engine = new DBreezeEngine(folder))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, folder))
             {
-                DBreeze.Transactions.Transaction txn = engine.GetTransaction();
-                txn.SynchronizeTables(ProvenBlockHeaderTable);
-                txn.ValuesLazyLoadingIsOn = false;
-
-                var headersOut = txn.SelectDictionary<byte[], byte[]>(ProvenBlockHeaderTable);
+                var headersOut = new Dictionary<byte[], byte[]>();
+                var enumeator = engine.GetEnumerator();
+                while (enumeator.MoveNext())
+                    if (enumeator.Current.Key[0] == ProvenBlockHeaderTable)
+                        headersOut.Add(enumeator.Current.Key, enumeator.Current.Value);
 
                 headersOut.Keys.Count.Should().Be(2);
                 this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(headersOut.First().Value).GetHash().Should().Be(items[0].GetHash());
@@ -116,11 +114,9 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
 
             int blockHeight = 1;
 
-            using (var engine = new DBreezeEngine(folder))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, folder))
             {
-                DBreeze.Transactions.Transaction txn = engine.GetTransaction();
-                txn.Insert<byte[], byte[]>(ProvenBlockHeaderTable, blockHeight.ToBytes(), this.dBreezeSerializer.Serialize(headerIn));
-                txn.Commit();
+                engine.Put(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(blockHeight)), this.dBreezeSerializer.Serialize(headerIn));
             }
 
             // Query the repository for the item that was inserted in the above code.
@@ -138,12 +134,10 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         {
             string folder = CreateTestDir(this);
 
-            using (var engine = new DBreezeEngine(folder))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, folder))
             {
-                DBreeze.Transactions.Transaction txn = engine.GetTransaction();
-                txn.Insert<byte[], byte[]>(ProvenBlockHeaderTable, 1.ToBytes(), this.dBreezeSerializer.Serialize(CreateNewProvenBlockHeaderMock()));
-                txn.Insert<byte[], byte[]>(BlockHashTable, new byte[0], this.DBreezeSerializer.Serialize(new HashHeightPair(new uint256(), 1)));
-                txn.Commit();
+                engine.Put(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(1)), this.dBreezeSerializer.Serialize(CreateNewProvenBlockHeaderMock()));
+                engine.Put(DBH.Key(BlockHashHeightTable, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(new uint256(), 1)));
             }
 
             using (ProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
@@ -159,7 +153,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         }
 
         [Fact]
-        public async Task PutAsync_Add_Ten_ProvenBlockHeaders_Dispose_On_Initialise_Repo_TipHeight_Should_Be_At_Last_Saved_TipAsync()
+        public async Task PutAsync_DisposeOnInitialise_ShouldBeAtLastSavedTipAsync()
         {
             string folder = CreateTestDir(this);
 

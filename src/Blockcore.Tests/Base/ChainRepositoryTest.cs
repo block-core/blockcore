@@ -5,6 +5,7 @@ using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using DBreeze;
 using DBreeze.DataTypes;
+using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Xunit;
@@ -32,12 +33,14 @@ namespace Blockcore.Tests.Base
                 repo.SaveAsync(chain).GetAwaiter().GetResult();
             }
 
-            using (var engine = new DBreezeEngine(dir))
+            using (var engine = new DB(new Options { CreateIfMissing = true }, dir))
             {
                 ChainedHeader tip = null;
-                foreach (Row<int, byte[]> row in engine.GetTransaction().SelectForward<int, byte[]>("Chain"))
+                var itr = engine.GetEnumerator();
+
+                while (itr.MoveNext())
                 {
-                    var blockHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(row.Value);
+                    var blockHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(itr.Current.Value);
 
                     if (tip != null && blockHeader.HashPrevBlock != tip.HashBlock)
                         break;
@@ -54,9 +57,9 @@ namespace Blockcore.Tests.Base
             var chain = new ChainIndexer(KnownNetworks.StratisRegTest);
             ChainedHeader tip = this.AppendBlock(chain);
 
-            using (var engine = new DBreezeEngine(dir))
+            using (var engine = new DB(new Options { CreateIfMissing = true }, dir))
             {
-                using (DBreeze.Transactions.Transaction transaction = engine.GetTransaction())
+                using (var batch = new WriteBatch())
                 {
                     ChainedHeader toSave = tip;
                     var blocks = new List<ChainedHeader>();
@@ -68,10 +71,10 @@ namespace Blockcore.Tests.Base
 
                     foreach (ChainedHeader block in blocks)
                     {
-                        transaction.Insert("Chain", block.Height, this.dBreezeSerializer.Serialize(block.Header));
+                        batch.Put(BitConverter.GetBytes(block.Height), this.dBreezeSerializer.Serialize(block.Header));
                     }
 
-                    transaction.Commit();
+                    engine.Write(batch);
                 }
             }
             using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dBreezeSerializer, new MemoryHeaderStore()))

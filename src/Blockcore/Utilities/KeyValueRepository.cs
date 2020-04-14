@@ -3,8 +3,7 @@ using System.IO;
 using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Utilities.JsonConverters;
-using DBreeze;
-using DBreeze.DataTypes;
+using LevelDB;
 
 namespace Blockcore.Utilities
 {
@@ -32,22 +31,23 @@ namespace Blockcore.Utilities
 
     public class KeyValueRepository : IKeyValueRepository
     {
-        /// <summary>Access to DBreeze database.</summary>
-        private readonly DBreezeEngine dbreeze;
-
-        private const string TableName = "common";
+        /// <summary>Access to database.</summary>
+        private readonly DB leveldb;
 
         private readonly DBreezeSerializer dBreezeSerializer;
 
-        public KeyValueRepository(DataFolder dataFolder, DBreezeSerializer dBreezeSerializer) : this (dataFolder.KeyValueRepositoryPath, dBreezeSerializer)
+        public KeyValueRepository(DataFolder dataFolder, DBreezeSerializer dBreezeSerializer) : this(dataFolder.KeyValueRepositoryPath, dBreezeSerializer)
         {
         }
 
         public KeyValueRepository(string folder, DBreezeSerializer dBreezeSerializer)
         {
             Directory.CreateDirectory(folder);
-            this.dbreeze = new DBreezeEngine(folder);
             this.dBreezeSerializer = dBreezeSerializer;
+
+            // Open a connection to a new DB and create if not found
+            var options = new Options { CreateIfMissing = true };
+            this.leveldb = new DB(options, folder);
         }
 
         /// <inheritdoc />
@@ -55,12 +55,7 @@ namespace Blockcore.Utilities
         {
             byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
-            using (DBreeze.Transactions.Transaction transaction = this.dbreeze.GetTransaction())
-            {
-                transaction.Insert<byte[], byte[]>(TableName, keyBytes, bytes);
-
-                transaction.Commit();
-            }
+            this.leveldb.Put(keyBytes, bytes);
         }
 
         /// <inheritdoc />
@@ -83,17 +78,12 @@ namespace Blockcore.Utilities
         {
             byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
-            using (DBreeze.Transactions.Transaction transaction = this.dbreeze.GetTransaction())
-            {
-                transaction.ValuesLazyLoadingIsOn = false;
+            byte[] row = this.leveldb.Get(keyBytes);
 
-                Row<byte[], byte[]> row = transaction.Select<byte[], byte[]>(TableName, keyBytes);
+            if (row == null)
+                return null;
 
-                if (!row.Exists)
-                    return null;
-
-                return row.Value;
-            }
+            return row;
         }
 
         /// <inheritdoc />
@@ -126,7 +116,7 @@ namespace Blockcore.Utilities
         /// <inheritdoc />
         public void Dispose()
         {
-            this.dbreeze.Dispose();
+            this.leveldb.Dispose();
         }
     }
 }

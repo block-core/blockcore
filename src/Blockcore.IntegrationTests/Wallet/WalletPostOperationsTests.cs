@@ -728,7 +728,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 var script = opReturnOutputFromBlock.ScriptPubKey.Asm;
                 string[] ops = script.Split(" ");
                 ops[0].Should().Be("OP_RETURN");
-                Encoders.Hex.DecodeData(ops[1]).Should().BeEquivalentTo("some data to send".ToBytes());
+                Encoders.Hex.DecodeData(ops[1]).Should().BeEquivalentTo(System.Text.Encoding.UTF8.GetBytes("some data to send"));
             }
         }
 

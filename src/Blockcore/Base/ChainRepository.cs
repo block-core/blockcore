@@ -161,6 +161,7 @@ namespace Blockcore.Base
         public void Dispose()
         {
             this.leveldb?.Dispose();
+            (this.blockHeaderStore as IDisposable)?.Dispose();
         }
     }
 }

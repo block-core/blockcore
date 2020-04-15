@@ -25,6 +25,8 @@ namespace Blockcore.Networks.Bitcoin.Policies
             PayToWitTemplate.Instance
         };
 
+        public override List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
+
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {
             if (!this.standardTemplates.Any(template => (template.Type == scriptTemplate.Type)))

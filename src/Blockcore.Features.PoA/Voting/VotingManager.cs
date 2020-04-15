@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Blockcore.Configuration;
+using Blockcore.Consensus;
 using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Primitives;

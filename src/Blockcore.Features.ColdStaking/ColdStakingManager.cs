@@ -360,7 +360,7 @@ namespace Blockcore.Features.ColdStaking
                 coldPubKeyHash = new BitcoinWitPubKeyAddress(coldWalletAddress, wallet.Network).Hash.AsKeyId();
                 destination = ColdStakingScriptTemplate.Instance.GenerateScriptPubKey(hotPubKeyHash, coldPubKeyHash);
 
-                if(payToScript)
+                if (payToScript)
                 {
                     HdAddress address = coldAddress ?? hotAddress;
                     address.RedeemScript = destination;
@@ -382,7 +382,7 @@ namespace Blockcore.Features.ColdStaking
             }
 
             // Only normal accounts should be allowed.
-            if (!this.GetAccounts(walletName).Any(a => a.Name == walletAccount))
+            if (this.GetAccounts(walletName).All(a => a.Name != walletAccount))
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_ACCOUNT_NOT_FOUND]");
                 throw new WalletException($"Can't find wallet account '{walletAccount}'.");
@@ -403,20 +403,22 @@ namespace Blockcore.Features.ColdStaking
             {
                 // In the case of P2SH and P2WSH, to avoid the possibility of lose of funds
                 // we add an opreturn with the hot and cold key hashes to the setup transaction
-                // this will allow a user to recreate the redeem script of the output in case they lose 
-                // access to one of the keys. 
-                // The special marker will help a wallet that is tracking cold staking accounts to monitor 
-                // the hot and cold keys, if a special marker is found then the keys are in the opreturn are checked 
+                // this will allow a user to recreate the redeem script of the output in case they lose
+                // access to one of the keys.
+                // The special marker will help a wallet that is tracking cold staking accounts to monitor
+                // the hot and cold keys, if a special marker is found then the keys are in the opreturn are checked
                 // against the current wallet, if found and validated the wallet will track that ScriptPubKey
 
                 var opreturnKeys = new List<byte>();
                 opreturnKeys.AddRange(hotPubKeyHash.ToBytes());
                 opreturnKeys.AddRange(coldPubKeyHash.ToBytes());
-              
+
                 context.OpReturnRawData = opreturnKeys.ToArray();
-                //context.OpReturnAmount = Money.Satoshis(1); // mandatory fee must be paid.
-                 
-                // The P2SH and P2WSH hide the cold stake keys in the script hash so the wallet cannot track 
+                var template = this.network.StandardScriptsRegistry.GetScriptTemplates.OfType<TxNullDataTemplate>().First();
+                if (template.MinRequiredSatoshiFee > 0)
+                    context.OpReturnAmount = Money.Satoshis(template.MinRequiredSatoshiFee); // mandatory fee must be paid.
+
+                // The P2SH and P2WSH hide the cold stake keys in the script hash so the wallet cannot track
                 // the ouputs based on the derived keys when the trx is subbmited to the network.
                 // So we add the output script manually.
             }
@@ -611,7 +613,7 @@ namespace Blockcore.Features.ColdStaking
         /// <summary>
         /// The purpose of this method is to try to identify the P2SH and P2WSH that are coldstake outputs for this wallet
         /// We look for an opreturn script that is created when seting up a P2SH and P2WSH cold stake trx
-        /// if we find any then try to find the keys and track the script before calling in to the main wallet.  
+        /// if we find any then try to find the keys and track the script before calling in to the main wallet.
         /// </summary>
         /// <inheritdoc/>
         public override bool ProcessTransaction(Transaction transaction, int? blockHeight = null, Block block = null, bool isPropagated = true)
@@ -628,7 +630,7 @@ namespace Blockcore.Features.ColdStaking
                         if (data[0].Length == 40)
                         {
                             HdAddress address = null;
-                            
+
                             Span<byte> span = data[0].AsSpan();
                             var hotPubKey = new KeyId(span.Slice(0, 20).ToArray());
                             var coldPubKey = new KeyId(span.Slice(20, 20).ToArray());
@@ -642,11 +644,11 @@ namespace Blockcore.Features.ColdStaking
                                 // Find the type of script for the opreturn (P2SH or P2WSH)
                                 foreach (TxOut utxoInner in transaction.Outputs)
                                 {
-                                    if(utxoInner.ScriptPubKey == destination.Hash.ScriptPubKey)
+                                    if (utxoInner.ScriptPubKey == destination.Hash.ScriptPubKey)
                                     {
-                                        if (!this.scriptToAddressLookup.TryGetValue(destination.Hash.ScriptPubKey,out HdAddress _))
+                                        if (!this.scriptToAddressLookup.TryGetValue(destination.Hash.ScriptPubKey, out HdAddress _))
                                             this.scriptToAddressLookup[destination.Hash.ScriptPubKey] = address;
-                                        
+
                                         break;
                                     }
 
@@ -673,9 +675,9 @@ namespace Blockcore.Features.ColdStaking
         {
             base.AddAddressToIndex(address);
 
-            if(address.RedeemScript != null)
+            if (address.RedeemScript != null)
             {
-                // The redeem script has no indication on the script type (P2SH or P2WSH), 
+                // The redeem script has no indication on the script type (P2SH or P2WSH),
                 // so we track both, add both to the indexer then.
 
                 if (!this.scriptToAddressLookup.TryGetValue(address.RedeemScript.Hash.ScriptPubKey, out HdAddress _))

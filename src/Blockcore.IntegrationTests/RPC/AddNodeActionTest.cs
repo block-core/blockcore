@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using Blockcore.Connection;
+using Blockcore.Controllers;
 using Blockcore.IntegrationTests.Common.Extensions;
 
 using Xunit;
@@ -17,12 +18,12 @@ namespace Blockcore.IntegrationTests.RPC
             IFullNode fullNode = this.BuildServicedNode(testDirectory);
             fullNode.Start();
 
-            var controller = fullNode.NodeController<ConnectionManagerController>();
+            var controller = fullNode.NodeController<ConnectionManagerRPCController>();
 
-            Assert.True(controller.AddNodeRPC("0.0.0.0", "add"));
-            Assert.Throws<ArgumentException>(() => { controller.AddNodeRPC("0.0.0.0", "notarealcommand"); });
-            Assert.ThrowsAny<SocketException>(() => { controller.AddNodeRPC("a.b.c.d", "onetry"); });
-            Assert.True(controller.AddNodeRPC("0.0.0.0", "remove"));
+            Assert.True(controller.AddNode("0.0.0.0", "add"));
+            Assert.Throws<ArgumentException>(() => { controller.AddNode("0.0.0.0", "notarealcommand"); });
+            Assert.ThrowsAny<SocketException>(() => { controller.AddNode("a.b.c.d", "onetry"); });
+            Assert.True(controller.AddNode("0.0.0.0", "remove"));
         }
 
         [Fact]
@@ -32,10 +33,10 @@ namespace Blockcore.IntegrationTests.RPC
 
             IFullNode fullNode = this.BuildServicedNode(testDirectory);
 
-            var controller = fullNode.NodeController<ConnectionManagerController>();
+            var controller = fullNode.NodeController<ConnectionManagerRPCController>();
 
             var connectionManager = fullNode.NodeService<IConnectionManager>();
-            controller.AddNodeRPC("0.0.0.0", "add");
+            controller.AddNode("0.0.0.0", "add");
             Assert.Single(connectionManager.ConnectionSettings.RetrieveAddNodes());
         }
     }

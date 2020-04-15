@@ -167,7 +167,7 @@ namespace Blockcore.Features.Consensus
             }
 
             // This is used in tests to allow quickly mining blocks.
-            if (!proofOfStake && consensus.PowNoRetargeting) 
+            if (!proofOfStake && consensus.PowNoRetargeting)
             {
                 this.logger.LogTrace("(-)[NO_POW_RETARGET]:'{0}'", lastPowPosBlock.Header.Bits);
                 return lastPowPosBlock.Header.Bits;
@@ -308,11 +308,6 @@ namespace Blockcore.Features.Consensus
             // Base target.
             BigInteger target = new Target(headerBits).ToBigInteger();
 
-            // TODO: Investigate:
-            // The POS protocol should probably put a limit on the max amount that can be staked
-            // not a hard limit but a limit that allow any amount to be staked with a max weight value.
-            // the max weight should not exceed the max uint256 array size (array size = 32).
-
             // Weighted target.
             long valueIn = stakingCoins.Coins.TxOut.Value.Satoshi;
             BigInteger weight = BigInteger.ValueOf(valueIn);
@@ -326,7 +321,8 @@ namespace Blockcore.Features.Consensus
             {
                 var serializer = new BitcoinStream(ms, true);
                 serializer.ReadWrite(prevStakeModifier);
-                serializer.ReadWrite(stakingCoins.Coins.Time);
+                if (this.network.Consensus.PosUseTimeFieldInKernalHash) // old posv3 time field
+                    serializer.ReadWrite(stakingCoins.Coins.Time);
                 serializer.ReadWrite(prevout.Hash);
                 serializer.ReadWrite(prevout.N);
                 serializer.ReadWrite(transactionTime);
@@ -358,13 +354,6 @@ namespace Blockcore.Features.Consensus
 
             TxIn input = txTo.Inputs[txToInN];
 
-            //if (input.PrevOut.N >= coin.Outputs.Length)
-            //{
-            //    this.logger.LogTrace("(-)[OUTPUT_INCORRECT_LENGTH]");
-            //    return false;
-            //}
-
-            //if (input.PrevOut.Hash != coin.TransactionId)
             if (input.PrevOut.Hash != coin.OutPoint.Hash)
             {
                 this.logger.LogTrace("(-)[INCORRECT_TX]");
@@ -487,4 +476,3 @@ namespace Blockcore.Features.Consensus
         }
     }
 }
-

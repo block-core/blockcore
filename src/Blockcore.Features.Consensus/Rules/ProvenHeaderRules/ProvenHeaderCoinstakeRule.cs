@@ -178,7 +178,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                 }
             }
 
-            if ((header.Time & PosConsensusOptions.StakeTimestampMask) != 0)
+            if ((header.Time & this.Parent.Network.Consensus.ProofOfStakeTimestampMask) != 0)
             {
                 this.Logger.LogTrace("(-)[BAD_TIME]");
                 ConsensusErrors.StakeTimeViolation.Throw();

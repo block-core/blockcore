@@ -63,7 +63,7 @@ namespace NBitcoin
         public uint256 MinimumChainWork { get; }
 
         public int MinerConfirmationWindow { get; set; }
-        
+
         /// <inheritdoc />
         public int CoinType { get; }
 
@@ -79,6 +79,12 @@ namespace NBitcoin
 
         /// <inheritdoc />
         public bool PosEmptyCoinbase { get; set; }
+
+        /// <inheritdoc />
+        public bool PosUseTimeFieldInKernalHash { get; set; }
+
+        /// <inheritdoc />
+        public uint ProofOfStakeTimestampMask { get; set; }
 
         /// <inheritdoc />
         public uint256 DefaultAssumeValid { get; }
@@ -123,7 +129,8 @@ namespace NBitcoin
             int lastPowBlock,
             BigInteger proofOfStakeLimit,
             BigInteger proofOfStakeLimitV2,
-            Money proofOfStakeReward)
+            Money proofOfStakeReward,
+            uint proofOfStakeTimestampMask)
         {
             this.CoinbaseMaturity = coinbaseMaturity;
             this.PremineReward = premineReward;
@@ -158,6 +165,7 @@ namespace NBitcoin
             this.ConsensusFactory = consensusFactory;
             this.ConsensusRules = new ConsensusRules();
             this.MempoolRules = new List<Type>();
+            this.ProofOfStakeTimestampMask = proofOfStakeTimestampMask;
         }
     }
 }

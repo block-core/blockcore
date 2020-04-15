@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Bitcoin FullNode</Description>
-    <AssemblyTitle>Blockcore.Networks</AssemblyTitle>
+    <AssemblyTitle>Blockcore.Networks.Stratis</AssemblyTitle>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <AssemblyName>Blockcore.Networks.Stratis</AssemblyName>

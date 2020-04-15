@@ -7,7 +7,7 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore
+namespace Blockcore.Consensus
 {
     /// <summary>Provider of the last finalized block's height and hash.</summary>
     /// <remarks>

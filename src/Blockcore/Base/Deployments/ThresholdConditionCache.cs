@@ -17,7 +17,7 @@ namespace Blockcore.Base.Deployments
 
         // BIP9 reserves the top 3 bits to identify this (001) and future mechanisms (top bits 010 and 011).
         // When a block nVersion does not have top bits 001, it is treated as if all bits are 0 for the purposes of deployments.
-        private const uint VersionbitsTopMask = 0xE0000000;
+        public const uint VersionbitsTopMask = 0xE0000000;
 
         // Represents bits 001 of the VersionBitsTopMask to indicate that this is a BIP9 version.
         public const uint VersionbitsTopBits = 0x20000000;

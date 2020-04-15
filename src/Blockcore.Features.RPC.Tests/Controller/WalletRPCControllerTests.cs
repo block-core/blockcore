@@ -4,6 +4,7 @@ using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Controllers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Models;
 using Blockcore.Interfaces;
@@ -49,15 +50,15 @@ namespace Blockcore.Features.RPC.Tests.Controller
             this.walletSettings = new WalletSettings(this.nodeSettings);
             this.walletTransactionHandler = new Mock<IWalletTransactionHandler>();
 
-            this.controller = 
+            this.controller =
                 new WalletRPCController(
-                        this.blockStore.Object, 
-                        this.broadCastManager.Object, 
-                        this.chain, 
-                        this.consensusManager.Object, 
-                        this.fullNode.Object, 
+                        this.blockStore.Object,
+                        this.broadCastManager.Object,
+                        this.chain,
+                        this.consensusManager.Object,
+                        this.fullNode.Object,
                         this.LoggerFactory.Object,
-                        this.network, 
+                        this.network,
                         this.scriptAddressReader.Object,
                         this.storeSettings,
                         this.walletManager.Object,

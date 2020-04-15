@@ -68,7 +68,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
                 new Mock<IPeerBanning>().Object, initialBlockDownloadState, this.ChainIndexer, new Mock<IBlockPuller>().Object, new Mock<IBlockStore>().Object,
                 new Mock<IConnectionManager>().Object, new Mock<INodeStats>().Object, new Mock<INodeLifetime>().Object, this.consensusSettings, this.dateTimeProvider.Object);
 
-                // Mock the coinviews "FetchCoinsAsync" method. We will use the "unspentOutputs" dictionary to track spendable outputs.
+            // Mock the coinviews "FetchCoinsAsync" method. We will use the "unspentOutputs" dictionary to track spendable outputs.
             this.coinView.Setup(d => d.FetchCoins(It.IsAny<OutPoint[]>()))
                 .Returns((OutPoint[] txIds) =>
                 {
@@ -106,7 +106,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             {
                 Flags = BlockFlag.BLOCK_PROOF_OF_STAKE,
                 StakeModifierV2 = 0,
-                StakeTime = (this.ChainIndexer.Tip.Header.Time + 60) & ~PosConsensusOptions.StakeTimestampMask
+                StakeTime = (this.ChainIndexer.Tip.Header.Time + 60) & ~this.network.Consensus.ProofOfStakeTimestampMask
             });
 
             // Since we are mocking the chainState ensure that the BlockStoreTip returns a usable value.
@@ -142,7 +142,6 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 
             ConsensusManager consensusManager = await this.CreateConsensusManagerAsync(unspentOutputs);
 
-
             // The keys used by miner 1 and miner 2.
             var minerKey1 = new Key();
             var minerKey2 = new Key();
@@ -166,13 +165,13 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             // Create a previous transaction with scriptPubKey outputs.
             Transaction prevTransaction = this.network.CreateTransaction();
 
-            uint blockTime = (this.ChainIndexer.Tip.Header.Time + 60) & ~PosConsensusOptions.StakeTimestampMask;
+            uint blockTime = (this.ChainIndexer.Tip.Header.Time + 60) & ~this.network.Consensus.ProofOfStakeTimestampMask;
 
             // To avoid violating the transaction timestamp consensus rule
             // we need to ensure that the transaction used for the coinstake's
             // input occurs well before the block time (as the coinstake time
             // is set to the block time)
-            if(prevTransaction is IPosTransactionWithTime posTrx)
+            if (prevTransaction is IPosTransactionWithTime posTrx)
                 posTrx.Time = blockTime - 100;
 
             // Coins sent to miner 2.

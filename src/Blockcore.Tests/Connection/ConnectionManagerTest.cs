@@ -16,7 +16,6 @@ namespace Blockcore.Tests.Connection
     public class ConnectionManagerSettingsTest : LogsTestBase
     {
         private readonly Mock<IConnectionManager> connectionManager;
-        private ConnectionManagerController controller;
         private readonly Mock<ILoggerFactory> mockLoggerFactory;
         private readonly Mock<IPeerBanning> peerBanning;
 
@@ -28,7 +27,6 @@ namespace Blockcore.Tests.Connection
             this.mockLoggerFactory.Setup(i => i.CreateLogger(It.IsAny<string>())).Returns(new Mock<ILogger>().Object);
             this.connectionManager.Setup(i => i.Network)
                 .Returns(KnownNetworks.StratisTest);
-            this.controller = new ConnectionManagerController(this.connectionManager.Object, this.LoggerFactory.Object, this.peerBanning.Object);
         }
 
         [Fact]
@@ -44,7 +42,7 @@ namespace Blockcore.Tests.Connection
             // IPV4: 127.0.0.1:16178 != 0.0.0.0:16178 (both are considered local endpoints)
             endpointA = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 16178);
             endpointB = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 16178);
-            networkEndpoints = new List<IPEndPoint>() { endpointB};
+            networkEndpoints = new List<IPEndPoint>() { endpointB };
             connectionManagerSettings.Port = 16178;
             Assert.False(endpointA.CanBeMappedTo(networkEndpoints, out endpointOut));
 

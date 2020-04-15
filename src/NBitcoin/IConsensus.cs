@@ -114,6 +114,20 @@ namespace NBitcoin
         bool PosEmptyCoinbase { get; set; }
 
         /// <summary>
+        /// POSv4 emits the time field from the pos kernal calculations.
+        /// </summary>
+        /// <remarks>
+        /// POSv3 uses a few fields to create enough randomness so that the kernal cannot be guessed in advance.
+        /// The time field of the utxo that found the stake is one of those parameters.
+        /// However POSv4 removes the time form the kernal hash, the prevout utxo provides enough randomness.
+        /// </remarks>
+        bool PosUseTimeFieldInKernalHash { get; set; }
+
+        /// <summary>A mask for coinstake transaction's timestamp and header's timestamp.</summary>
+        /// <remarks>Used to decrease granularity of timestamp. Supposed to be 2^n-1.</remarks>
+        public uint ProofOfStakeTimestampMask { get; set; }
+
+        /// <summary>
         /// An indicator whether this is a Proof Of Stake network.
         /// </summary>
         bool IsProofOfStake { get; }

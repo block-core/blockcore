@@ -158,7 +158,7 @@ namespace Blockcore.Features.MemoryPool
     /// <summary>
     /// Object used for persisting memory pool transactions.
     /// </summary>
-    internal class MempoolPersistence : IMempoolPersistence
+    public class MempoolPersistence : IMempoolPersistence
     {
         /// <summary>Current memory pool version number for persistence.</summary>
         public const ulong MempoolDumpVersion = 0;

@@ -66,7 +66,6 @@ namespace Blockcore.Features.Miner.Staking
     /// </remarks>
     public class PosMinting : IPosMinting
     {
-
         /// <summary>
         /// Indicates the current state: idle, staking requested, staking in progress and stop staking requested.
         /// </summary>
@@ -133,6 +132,7 @@ namespace Blockcore.Features.Miner.Staking
 
         /// <summary>Factory for creating loggers.</summary>
         private readonly ILoggerFactory loggerFactory;
+
         private readonly MinerSettings minerSettings;
 
         /// <summary>Instance logger.</summary>
@@ -401,7 +401,7 @@ namespace Blockcore.Features.Miner.Staking
                     blockTemplate = null;
                 }
 
-                uint coinstakeTimestamp = (uint)this.dateTimeProvider.GetAdjustedTimeAsUnixTimestamp() & ~PosConsensusOptions.StakeTimestampMask;
+                uint coinstakeTimestamp = (uint)this.dateTimeProvider.GetAdjustedTimeAsUnixTimestamp() & ~this.network.Consensus.ProofOfStakeTimestampMask;
                 if (coinstakeTimestamp <= this.lastCoinStakeSearchTime)
                 {
                     this.logger.LogDebug("Current coinstake time {0} is not greater than last search timestamp {1}.", coinstakeTimestamp, this.lastCoinStakeSearchTime);
@@ -653,7 +653,7 @@ namespace Blockcore.Features.Miner.Staking
 
             // If the time after applying the mask is lower than minimal allowed time,
             // it is simply too early for us to mine, there can't be any valid solution.
-            if ((coinstakeContext.StakeTimeSlot & ~PosConsensusOptions.StakeTimestampMask) < minimalAllowedTime)
+            if ((coinstakeContext.StakeTimeSlot & ~this.network.Consensus.ProofOfStakeTimestampMask) < minimalAllowedTime)
             {
                 this.logger.LogTrace("(-)[TOO_EARLY_TIME_AFTER_LAST_BLOCK]:false");
                 return false;
@@ -735,7 +735,7 @@ namespace Blockcore.Features.Miner.Staking
             int eventuallyStakableUtxosCount = utxoStakeDescriptions.Count;
             Transaction coinstakeTx = this.PrepareCoinStakeTransactions(chainTip.Height, coinstakeContext, coinstakeOutputValue, eventuallyStakableUtxosCount, ourWeight);
 
-            if(coinstakeTx is IPosTransactionWithTime posTrxn)
+            if (coinstakeTx is IPosTransactionWithTime posTrxn)
             {
                 posTrxn.Time = coinstakeContext.StakeTimeSlot;
             }
@@ -853,7 +853,7 @@ namespace Blockcore.Features.Miner.Staking
                     if (txTime < minimalAllowedTime)
                         break;
 
-                    if ((txTime & PosConsensusOptions.StakeTimestampMask) != 0)
+                    if ((txTime & this.network.Consensus.ProofOfStakeTimestampMask) != 0)
                         continue;
 
                     context.Logger.LogDebug("Trying with transaction time {0}.", txTime);
@@ -902,7 +902,7 @@ namespace Blockcore.Features.Miner.Staking
 
                             context.CoinstakeContext.CoinstakeTx.Outputs.Add(new TxOut(0, scriptPubKeyOut));
                             context.Result.KernelCoin = utxoStakeInfo;
-                            
+
                             context.Logger.LogDebug("Kernel accepted, coinstake input is '{0}', stopping work.", prevoutStake);
                         }
                         else context.Logger.LogDebug("Kernel found, but worker #{0} announced its kernel earlier, stopping work.", context.Result.KernelFoundIndex);
@@ -942,9 +942,9 @@ namespace Blockcore.Features.Miner.Staking
                 {
                     if (input.Address.RedeemScript == null)
                         throw new MinerException("Redeem script does not match output");
-                   
+
                     var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, input.Address.RedeemScript);
-                    
+
                     transactionBuilder.AddCoins(scriptCoin);
                 }
                 else
@@ -1177,7 +1177,7 @@ namespace Blockcore.Features.Miner.Staking
 
             if (stakesTime != 0) res = stakeKernelsAvg / stakesTime;
 
-            res *= PosConsensusOptions.StakeTimestampMask + 1;
+            res *= this.network.Consensus.ProofOfStakeTimestampMask + 1;
 
             return res;
         }

@@ -76,7 +76,7 @@ namespace Blockcore.Features.MemoryPool
         public const bool DefaultPermitBareMultisig = true;
 
         /// <summary>Maximum age of our tip in seconds for us to be considered current for fee estimation.</summary>
-        private const int MaxFeeEstimationTipAge = 3 * 60 * 60;
+        public const int MaxFeeEstimationTipAge = 3 * 60 * 60;
 
         /// <summary>A lock for managing asynchronous access to memory pool.</summary>
         private readonly MempoolSchedulerLock mempoolLock;

@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Blockcore.Features.Wallet
+namespace Blockcore.Features.Wallet.Controllers
 {
     public class WalletRPCController : FeatureController
     {

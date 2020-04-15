@@ -24,7 +24,7 @@ namespace Blockcore.Networks.Stratis.Policies
             PayToWitTemplate.Instance
         };
 
-        public List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
+        public override List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
 
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {

@@ -33,6 +33,7 @@ namespace Blockcore.Features.Miner.Controllers
 
         /// <summary>The wallet manager.</summary>
         private readonly IWalletManager walletManager;
+
         private readonly MinerSettings minerSettings;
 
         /// <summary>
@@ -96,9 +97,9 @@ namespace Blockcore.Features.Miner.Controllers
                     IEnumerable<string> errors = this.ModelState.Values.SelectMany(e => e.Errors.Select(m => m.ErrorMessage));
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Formatting error", string.Join(Environment.NewLine, errors));
                 }
-                
+
                 Wallet.Wallet wallet = this.walletManager.GetWallet(request.Name);
-                
+
                 // Check the password
                 try
                 {
@@ -108,7 +109,7 @@ namespace Blockcore.Features.Miner.Controllers
                 {
                     throw new SecurityException(ex.Message);
                 }
-            
+
                 this.fullNode.NodeFeature<MiningFeature>(true).StartStaking(request.Name, request.Password);
 
                 return this.Ok();
@@ -186,7 +187,7 @@ namespace Blockcore.Features.Miner.Controllers
         }
 
         [Route("getStakingNotExpired")]
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetStakingNotExpired(StakingNotExpiredRequest request)
         {
             try

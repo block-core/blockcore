@@ -151,6 +151,11 @@ namespace NBitcoin
             this.HeaderStore = blockHeaderStore;
         }
 
+        public ChainedHeader(ProvenBlockHeader header, uint256 headerHash, ChainedHeader previous) : this(header.PosBlockHeader, headerHash, previous)
+        {
+            // This override is to support proven headers
+        }
+
         public ChainedHeader(BlockHeader header, uint256 headerHash, ChainedHeader previous) : this(header, headerHash)
         {
             if (previous != null)
@@ -188,8 +193,9 @@ namespace NBitcoin
 
             this.CalculateChainWork();
 
-            if (header is ProvenBlockHeader)
-                this.ProvenBlockHeader = (ProvenBlockHeader)header;
+            if (header is PosBlockHeader posBlockHeader)
+                if (posBlockHeader.ProvenBlockHeader != null)
+                    this.ProvenBlockHeader = posBlockHeader.ProvenBlockHeader;
         }
 
         public ChainedHeader(BlockHeader header, uint256 headerHash, int height) : this(header, headerHash)
@@ -207,8 +213,9 @@ namespace NBitcoin
 
             this.CalculateChainWork();
 
-            if (header is ProvenBlockHeader)
-                this.ProvenBlockHeader = (ProvenBlockHeader) header;
+            if (header is PosBlockHeader posBlockHeader)
+                if (posBlockHeader.ProvenBlockHeader != null)
+                    this.ProvenBlockHeader = posBlockHeader.ProvenBlockHeader;
         }
 
         /// <summary>

@@ -77,8 +77,10 @@ namespace Blockcore.Features.Consensus.Behaviors
             switch (message.Message.Payload)
             {
                 case ProvenHeadersPayload provenHeaders:
-                    await this.ProcessHeadersAsync(peer, provenHeaders.Headers.Cast<BlockHeader>().ToList()).ConfigureAwait(false);
-                    break;
+                    {
+                        await this.ProcessHeadersAsync(peer, provenHeaders.Headers.Select(s => s.PosBlockHeader).Cast<BlockHeader>().ToList()).ConfigureAwait(false);
+                        break;
+                    }
 
                 case GetProvenHeadersPayload getHeaders:
                     await this.ProcessGetHeadersAsync(peer, getHeaders).ConfigureAwait(false);
@@ -132,22 +134,6 @@ namespace Blockcore.Features.Consensus.Behaviors
                     return null;
                 }
 
-                for (int i = 0; i < headersPayload.Headers.Count; i++)
-                {
-                    if (headersPayload.Headers[i] is ProvenBlockHeader phHeader)
-                    {
-                        BlockHeader newHeader = this.ChainIndexer.Network.Consensus.ConsensusFactory.CreateBlockHeader();
-                        newHeader.Bits = phHeader.Bits;
-                        newHeader.Time = phHeader.Time;
-                        newHeader.Nonce = phHeader.Nonce;
-                        newHeader.Version = phHeader.Version;
-                        newHeader.HashMerkleRoot = phHeader.HashMerkleRoot;
-                        newHeader.HashPrevBlock = phHeader.HashPrevBlock;
-
-                        headersPayload.Headers[i] = newHeader;
-                    }
-                }
-
                 return headersPayload;
             }
 
@@ -182,12 +168,12 @@ namespace Blockcore.Features.Consensus.Behaviors
                         this.logger.LogTrace("(-)[NO_PH_AVAILABLE]");
                         break;
                     }
-                    else if (provenBlockHeader.GetHash() != header.HashBlock)
+                    else if (provenBlockHeader.PosBlockHeader.GetHash() != header.HashBlock)
                     {
                         // Proven header is in the store, but with a wrong hash.
                         // This can happen in case of reorgs, when the store has not yet been updated.
                         // Without this check, we may send headers that aren't consecutive because are built from different branches, and the other peer may ban us.
-                        this.logger.LogDebug("Stored PH hash is wrong. Expected: {0}, Found: {1}", header.Header.GetHash(), provenBlockHeader.GetHash());
+                        this.logger.LogDebug("Stored PH hash is wrong. Expected: {0}, Found: {1}", header.Header.GetHash(), provenBlockHeader.PosBlockHeader.GetHash());
                         this.logger.LogTrace("(-)[WRONG STORED PH]");
                         break;
                     }

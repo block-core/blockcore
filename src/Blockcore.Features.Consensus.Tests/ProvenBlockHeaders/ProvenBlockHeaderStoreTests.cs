@@ -276,7 +276,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             // items 1-20 on main chain
             foreach (ChainedHeader chainedHeader in chainedHeaders.Skip(1).Take(20))
             {
-                this.provenBlockHeaderStore.AddToPendingBatch(chainedHeader.Header as ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
+                this.provenBlockHeaderStore.AddToPendingBatch((chainedHeader.Header as PosBlockHeader).ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
             }
 
             Assert.Equal(20, this.PendingBatch.Count);
@@ -289,7 +289,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             // 1-10 on main chain then items 10-15 on a fork
             foreach (ChainedHeader chainedHeader in newChainedHeaders.Skip(10).Take(6))
             {
-                this.provenBlockHeaderStore.AddToPendingBatch(chainedHeader.Header as ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
+                this.provenBlockHeaderStore.AddToPendingBatch((chainedHeader.Header as PosBlockHeader).ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
             }
 
             Assert.Equal(15, this.PendingBatch.Count);
@@ -313,7 +313,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             // items 1-20 on main chain
             foreach (ChainedHeader chainedHeader in chainedHeaders.Skip(1).Take(21))
             {
-                this.provenBlockHeaderStore.AddToPendingBatch(chainedHeader.Header as ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
+                this.provenBlockHeaderStore.AddToPendingBatch((chainedHeader.Header as PosBlockHeader).ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
             }
 
             Assert.Equal(20, this.PendingBatch.Count);
@@ -326,7 +326,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             // all items 1-20 are on main chain after a fork
             foreach (ChainedHeader chainedHeader in newChainedHeaders.Skip(10).Take(11))
             {
-                this.provenBlockHeaderStore.AddToPendingBatch(chainedHeader.Header as ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
+                this.provenBlockHeaderStore.AddToPendingBatch((chainedHeader.Header as PosBlockHeader).ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
             }
 
             Assert.Equal(20, this.PendingBatch.Count);
@@ -350,7 +350,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             // Items 1-15 pending
             foreach (ChainedHeader chainedHeader in chainedHeaders.Skip(1).Take(15))
             {
-                this.provenBlockHeaderStore.AddToPendingBatch(chainedHeader.Header as ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
+                this.provenBlockHeaderStore.AddToPendingBatch((chainedHeader.Header as PosBlockHeader).ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
             }
 
             Assert.Equal(15, this.PendingBatch.Count);
@@ -365,7 +365,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             // Add items 16-20
             foreach (ChainedHeader chainedHeader in chainedHeaders.Skip(16).Take(5))
             {
-                this.provenBlockHeaderStore.AddToPendingBatch(chainedHeader.Header as ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
+                this.provenBlockHeaderStore.AddToPendingBatch((chainedHeader.Header as PosBlockHeader).ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
             }
 
             Assert.Equal(5, this.PendingBatch.Count);
@@ -378,7 +378,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             // Add new fork items 10-13, items of the old fork 16-20 are still in the batch.
             foreach (ChainedHeader chainedHeader in newChainedHeaders.Skip(10).Take(3))
             {
-                this.provenBlockHeaderStore.AddToPendingBatch(chainedHeader.Header as ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
+                this.provenBlockHeaderStore.AddToPendingBatch((chainedHeader.Header as PosBlockHeader).ProvenBlockHeader, new HashHeightPair(chainedHeader.HashBlock, chainedHeader.Height));
             }
 
             Assert.Equal(3, this.PendingBatch.Count);

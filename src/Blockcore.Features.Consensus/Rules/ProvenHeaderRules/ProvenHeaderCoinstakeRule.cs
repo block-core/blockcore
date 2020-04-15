@@ -63,7 +63,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                     ConsensusErrors.ProofOfWorkTooHigh.Throw();
                 }
 
-                if (!header.CheckProofOfWork())
+                if (!header.PosBlockHeader.CheckProofOfWork())
                 {
                     this.Logger.LogTrace("(-)[HIGH_HASH]");
                     ConsensusErrors.HighHash.Throw();

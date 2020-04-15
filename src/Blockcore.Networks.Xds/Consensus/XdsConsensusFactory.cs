@@ -21,7 +21,7 @@ namespace Blockcore.Networks.Xds.Consensus
 
         public override ProvenBlockHeader CreateProvenBlockHeader(PosBlock block)
         {
-            var provenBlockHeader = new XdsProvenBlockHeader(block);
+            var provenBlockHeader = new XdsProvenBlockHeader(block, (XdsBlockHeader)this.CreateBlockHeader());
 
             // Serialize the size.
             provenBlockHeader.ToBytes(this);

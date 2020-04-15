@@ -33,7 +33,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
 
             // Setup chained header and move it to the height below proven header activation height.
-            this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), null);
+            this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader.PosBlockHeader, provenBlockHeader.GetHash(), null);
             this.checkpoints.Setup(c => c.GetLastCheckpointHeight()).Returns(100);
 
             // When we run the validation rule, we should not hit any exceptions as rule will be skipped.
@@ -62,7 +62,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), null);
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 10);
-            this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header.SetPrivateVariableValue<Transaction>("coinstake", null);
+            (this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header as PosBlockHeader).ProvenBlockHeader.SetPrivateVariableValue<Transaction>("coinstake", null);
 
             // When we run the validation rule, we should hit coinstake empty exception.
             Action ruleValidation = () => this.consensusRules.RegisterRule<ProvenHeaderCoinstakeRule>().Run(this.ruleContext);
@@ -146,7 +146,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
                 .Returns(res);
 
             // Change coinstake outputs to make it invalid.
-            ((ProvenBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).Coinstake.Outputs.RemoveAt(0);
+            ((PosBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).ProvenBlockHeader.Coinstake.Outputs.RemoveAt(0);
 
             Action ruleValidation = () => this.consensusRules.RegisterRule<ProvenHeaderCoinstakeRule>().Run(this.ruleContext);
             ruleValidation.Should().Throw<ConsensusErrorException>()
@@ -174,7 +174,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
                 .Returns(res);
 
             // Change coinstake time to differ from header time but divisible by 16.
-            ((ProvenBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).Time = 16;
+            ((PosBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).Time = 16;
 
             // When we run the validation rule, we should hit coinstake stake time violation error.
             Action ruleValidation = () => this.consensusRules.RegisterRule<ProvenHeaderCoinstakeRule>().Run(this.ruleContext);
@@ -184,7 +184,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
 
             // Change coinstake time to be the same as header time but not divisible by 16.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header.Time = 50;
-            ((ProvenBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).Time = 50;
+            ((PosBlockHeader)this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header).Time = 50;
 
             // When we run the validation rule, we should hit coinstake stake time violation error.
             ruleValidation.Should().Throw<ConsensusErrorException>()
@@ -204,7 +204,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header with valid coinstake.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
-            provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            provenBlockHeader.PosBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
             if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
@@ -247,7 +247,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header with valid coinstake.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
-            provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            provenBlockHeader.PosBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
             if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
@@ -296,7 +296,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header with valid coinstake.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build();
-            provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            provenBlockHeader.PosBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
             if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
@@ -346,7 +346,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header with valid coinstake.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
-            provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            provenBlockHeader.PosBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
             if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
@@ -402,7 +402,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup proven header with valid coinstake.
             PosBlock posBlock = new PosBlockBuilder(this.network).Build();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
-            provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            provenBlockHeader.PosBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
             if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
@@ -463,7 +463,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             PosBlock posBlock = new PosBlockBuilder(this.network, privateKey).Build();
             posBlock.UpdateMerkleRoot();
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
-            provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            provenBlockHeader.PosBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
             if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
@@ -481,7 +481,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             var unspentOutputs = new UnspentOutput(prevPosBlock.Transactions[1].Inputs[0].PrevOut,
                 new Coins(unspentOutputsHeight, new TxOut(new Money(100), privateKey.PubKey), false));
 
-                res.UnspentOutputs.Add(unspentOutputs.OutPoint, unspentOutputs);
+            res.UnspentOutputs.Add(unspentOutputs.OutPoint, unspentOutputs);
 
             this.coinView
                 .Setup(m => m.FetchCoins(It.IsAny<OutPoint[]>()))
@@ -533,7 +533,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             posBlock.BlockSignature = new BlockSignature { Signature = signature.ToDER() };
 
             ProvenBlockHeader provenBlockHeader = new ProvenBlockHeaderBuilder(posBlock, this.network).Build(prevProvenBlockHeader);
-            provenBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
+            provenBlockHeader.PosBlockHeader.HashPrevBlock = prevProvenBlockHeader.GetHash();
             if (provenBlockHeader.Coinstake is IPosTransactionWithTime posTrx)
                 posTrx.Time = provenBlockHeader.Time;
 
@@ -550,7 +550,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             var res = new FetchCoinsResponse();
             var unspentOutputs = new UnspentOutput(prevPosBlock.Transactions[1].Inputs[0].PrevOut,
                 new Coins(unspentOutputsHeight, new TxOut(new Money(100), privateKey.PubKey), false));
-          
+
             res.UnspentOutputs.Add(unspentOutputs.OutPoint, unspentOutputs);
 
             this.coinView

@@ -120,7 +120,7 @@ namespace NBitcoin
         /// <inheritdoc />
         public void ReadWrite(BitcoinStream stream)
         {
-            this.posBlockHeader.ReadWrite(stream);
+            stream.ReadWrite(ref this.posBlockHeader);
             long prev = stream.ProcessedBytes;
             if (!stream.Serializing)
                 this.posBlockHeader.ProvenBlockHeader = this;

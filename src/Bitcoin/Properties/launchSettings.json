@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Stratis.BitcoinD": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-maxblkmem=5 -dbcache=50"
     },
     "Stratis.BitcoinD Test": {
       "commandName": "Project",

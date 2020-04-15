@@ -62,7 +62,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
             // Setup chained header and move it to the height higher than proven header activation height.
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(provenBlockHeader, provenBlockHeader.GetHash(), null);
             this.ruleContext.ValidationContext.ChainedHeaderToValidate.SetPrivatePropertyValue("Height", this.provenHeadersActivationHeight + 10);
-            this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header.SetPrivateVariableValue<Transaction>("coinstake", null);
+            (this.ruleContext.ValidationContext.ChainedHeaderToValidate.Header as PosBlockHeader).ProvenBlockHeader.SetPrivateVariableValue<Transaction>("coinstake", null);
 
             // When we run the validation rule, we should hit coinstake empty exception.
             Action ruleValidation = () => this.consensusRules.RegisterRule<ProvenHeaderCoinstakeRule>().Run(this.ruleContext);

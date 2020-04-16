@@ -61,7 +61,7 @@ namespace Blockcore.Controllers
                 }, onRetry: this.OnRetry);
         }
 
-        protected async Task<HttpResponseMessage> SendPostRequestAsync<Model>(Model requestModel, string apiMethodName, CancellationToken cancellation) where Model : class
+        protected async Task<HttpResponseMessage> SendPostRequestAsync<TModel>(TModel requestModel, string apiMethodName, CancellationToken cancellation) where TModel : class
         {
             Guard.NotNull(requestModel, nameof(requestModel));
 
@@ -105,22 +105,22 @@ namespace Blockcore.Controllers
             return response;
         }
 
-        protected async Task<Response> SendPostRequestAsync<Model, Response>(Model requestModel, string apiMethodName, CancellationToken cancellation) where Response : class where Model : class
+        protected async Task<TResponse> SendPostRequestAsync<TModel, TResponse>(TModel requestModel, string apiMethodName, CancellationToken cancellation) where TResponse : class where TModel : class
         {
             HttpResponseMessage response = await this.SendPostRequestAsync(requestModel, apiMethodName, cancellation).ConfigureAwait(false);
 
-            return await this.ParseHttpResponseMessageAsync<Response>(response).ConfigureAwait(false);
+            return await this.ParseHttpResponseMessageAsync<TResponse>(response).ConfigureAwait(false);
         }
 
-        public async Task<Response> SendGetRequestAsync<Response>(string apiMethodName, string arguments = null,
-            CancellationToken cancellation = default(CancellationToken)) where Response : class
+        public async Task<TResponse> SendGetRequestAsync<TResponse>(string apiMethodName, string arguments = null,
+            CancellationToken cancellation = default(CancellationToken)) where TResponse : class
         {
             HttpResponseMessage response = await this.SendGetRequestAsync(apiMethodName, arguments, cancellation).ConfigureAwait(false);
 
-            return await this.ParseHttpResponseMessageAsync<Response>(response).ConfigureAwait(false);
+            return await this.ParseHttpResponseMessageAsync<TResponse>(response).ConfigureAwait(false);
         }
 
-        private async Task<Response> ParseHttpResponseMessageAsync<Response>(HttpResponseMessage httpResponse) where Response : class
+        private async Task<TResponse> ParseHttpResponseMessageAsync<TResponse>(HttpResponseMessage httpResponse) where TResponse : class
         {
             if (httpResponse == null)
             {
@@ -149,7 +149,7 @@ namespace Blockcore.Controllers
                 return null;
             }
 
-            Response responseModel = JsonConvert.DeserializeObject<Response>(successJson);
+            TResponse responseModel = JsonConvert.DeserializeObject<TResponse>(successJson);
 
             this.logger.LogTrace("(-)[SUCCESS]");
             return responseModel;

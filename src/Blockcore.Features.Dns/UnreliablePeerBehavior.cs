@@ -117,7 +117,7 @@ namespace Blockcore.Features.Dns
         private bool IsProvenHeaderActivated()
         {
             long currentHeight = this.chainState.ConsensusTip.Height;
-            return (currentHeight >= this.checkpoints.GetLastCheckpointHeight()) && this.network.Consensus.IsProofOfStake;
+            return (currentHeight >= this.checkpoints.LastCheckpointHeight) && this.network.Consensus.IsProofOfStake;
         }
 
         /// <summary>

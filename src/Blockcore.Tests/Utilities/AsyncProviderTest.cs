@@ -18,6 +18,7 @@ namespace Blockcore.Tests.Utilities
     {
         /// <summary>Source of randomness.</summary>
         private Random random = new Random();
+
         private AsyncProvider asyncProvider;
         private Mock<ILogger> mockLogger;
 
@@ -188,7 +189,6 @@ namespace Blockcore.Tests.Utilities
             asyncQueue.Dispose();
             Assert.True(itemsProcessed < itemsToProcess);
         }
-
 
         /// <summary>
         /// Tests that <see cref="AsyncQueue{T}.DequeueAsync(CancellationToken)"/> throws cancellation exception
@@ -424,7 +424,7 @@ namespace Blockcore.Tests.Utilities
             bool firstRun = true;
             bool shouldBeFalse = false;
 
-            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<IDisposable>(this.GetType().Name, async (item, cancellation) =>
+            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<IDisposable>(this.GetType().Name, (item, cancellation) =>
             {
                 if (firstRun)
                 {
@@ -436,6 +436,8 @@ namespace Blockcore.Tests.Utilities
                     // This should not happen.
                     shouldBeFalse = true;
                 }
+
+                return Task.CompletedTask;
             });
 
             asyncQueue.Enqueue(asyncQueue);
@@ -450,11 +452,10 @@ namespace Blockcore.Tests.Utilities
             Assert.False(shouldBeFalse);
         }
 
-
         [Fact]
-        public async Task AsyncProvider_AsyncLoop_ExceptionInLoopThrowsCriticalException()
+        public async Task AsyncProvider_AsyncLoop_ExceptionInLoopThrowsCriticalExceptionAsync()
         {
-            var asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop("TestLoop", async token =>
+            var asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop("TestLoop", token =>
             {
                 throw new Exception("Exception Test.");
             }, CancellationToken.None);

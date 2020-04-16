@@ -89,5 +89,10 @@ namespace Blockcore.Utilities
             hashHeight.ReadWrite(bytes, consensusFactory);
             return hashHeight;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

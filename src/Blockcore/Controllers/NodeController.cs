@@ -343,16 +343,19 @@ namespace Blockcore.Controllers
                 {
                     result.IsValid = true;
                 }
+
                 // P2WSH
                 else if (BitcoinWitScriptAddress.IsValid(address, this.network, out Exception _))
                 {
                     result.IsValid = true;
                 }
+
                 // P2PKH
                 else if (BitcoinPubKeyAddress.IsValid(address, this.network))
                 {
                     result.IsValid = true;
                 }
+
                 // P2SH
                 else if (BitcoinScriptAddress.IsValid(address, this.network))
                 {

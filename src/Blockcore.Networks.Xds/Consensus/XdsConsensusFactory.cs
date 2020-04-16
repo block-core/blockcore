@@ -104,7 +104,7 @@ namespace Blockcore.Networks.Xds.Consensus
                     nonce += 8;
                 }
 
-                var genesisBlock = ComputeGenesisBlock(genesisTime, nonce, genesisBits, genesisVersion, genesisReward, null);
+                Block genesisBlock = ComputeGenesisBlock(genesisTime, nonce, genesisBits, genesisVersion, genesisReward, null);
                 throw new Exception($"Found: Nonce:{nonce}, Hash: {genesisBlock.GetHash()}, Hash Merkle Root: {genesisBlock.Header.HashMerkleRoot}");
             });
         }

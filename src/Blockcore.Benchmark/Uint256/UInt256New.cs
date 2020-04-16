@@ -257,7 +257,7 @@ namespace Blockcore.Benchmark.Uint256.New
             return new uint256(target);
         }
 
-        public static bool TryParse(string hexString, out uint256? result)
+        public static bool TryParse(string hexString, out uint256 result)
         {
             try
             {
@@ -319,7 +319,7 @@ namespace Blockcore.Benchmark.Uint256.New
 
             if (!littleEndian)
             {
-                var span = output.AsSpan();
+                Span<byte> span = output.AsSpan();
                 span.Reverse();
             }
 
@@ -342,17 +342,17 @@ namespace Blockcore.Benchmark.Uint256.New
             return (int)this.part1;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             return this.Equals(obj as uint256);
         }
 
-        public static bool operator !=(uint256? a, uint256? b)
+        public static bool operator !=(uint256 a, uint256 b)
         {
             return !(a == b);
         }
 
-        public static bool operator ==(uint256? a, uint256? b)
+        public static bool operator ==(uint256 a, uint256 b)
         {
             if (ReferenceEquals(a, b))
                 return true;
@@ -363,7 +363,7 @@ namespace Blockcore.Benchmark.Uint256.New
             return a.Equals(b);
         }
 
-        public bool Equals(uint256? other)
+        public bool Equals(uint256 other)
         {
             if (other is null)
                 return false;

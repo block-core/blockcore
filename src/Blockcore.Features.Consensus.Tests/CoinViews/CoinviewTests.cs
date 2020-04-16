@@ -179,7 +179,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             this.cachedCoinView.SaveChanges(unspent, new HashHeightPair(previous), new HashHeightPair(current));
         }
 
-        private async Task ValidateCoinviewIntegrityAsync(List<OutPoint> expectedAvailableOutPoints)
+        private Task ValidateCoinviewIntegrityAsync(List<OutPoint> expectedAvailableOutPoints)
         {
             FetchCoinsResponse result = this.cachedCoinView.FetchCoins(expectedAvailableOutPoints.ToArray());
 
@@ -200,6 +200,8 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             {
                 Assert.Contains(referenceOutPoint, availableOutPoints);
             }
+
+            return Task.CompletedTask;
         }
 
         private void Shuffle<T>(IList<T> list)

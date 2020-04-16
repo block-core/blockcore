@@ -33,7 +33,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
         /// Set to <c>true</c> if the attached peer callbacks have been registered and they should be unregistered,
         /// <c>false</c> if the callbacks are not registered.
         /// </summary>
-        protected bool CallbacksRegistered;
+        protected bool callbacksRegistered;
 
         /// <summary>
         /// Initializes an instance of the object for outbound network peers.
@@ -81,12 +81,12 @@ namespace Blockcore.P2P.Protocol.Behaviors
         protected override void AttachCore()
         {
             this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
-            this.CallbacksRegistered = true;
+            this.callbacksRegistered = true;
         }
 
         protected override void DetachCore()
         {
-            if (this.CallbacksRegistered)
+            if (this.callbacksRegistered)
             {
                 this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
             }

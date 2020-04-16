@@ -132,7 +132,7 @@ namespace Blockcore.Features.Wallet
         /// </summary>
         /// <param name="block">Block to be processed.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        private async Task OnProcessBlockAsync(Block block, CancellationToken cancellationToken)
+        private Task OnProcessBlockAsync(Block block, CancellationToken cancellationToken)
         {
             Guard.NotNull(block, nameof(block));
 
@@ -144,7 +144,7 @@ namespace Blockcore.Features.Wallet
             if (newTip == null)
             {
                 this.logger.LogTrace("(-)[NEW_TIP_REORG]");
-                return;
+                return Task.CompletedTask;
             }
 
             // If the new block's previous hash is not the same as the one we have, there might have been a reorg.
@@ -181,7 +181,7 @@ namespace Blockcore.Features.Wallet
                     if (findTip == null)
                     {
                         this.logger.LogTrace("(-)[NEW_TIP_AHEAD_NOT_IN_WALLET]");
-                        return;
+                        return Task.CompletedTask;
                     }
 
                     this.logger.LogDebug("Wallet tip '{0}' is behind the new tip '{1}'.", this.walletTip, newTip);
@@ -205,7 +205,7 @@ namespace Blockcore.Features.Wallet
                             if (cancellationToken.IsCancellationRequested)
                             {
                                 this.logger.LogTrace("(-)[CANCELLATION_REQUESTED]");
-                                return;
+                                return Task.CompletedTask;
                             }
 
                             nextblock = this.blockStore.GetBlock(next.HashBlock);
@@ -217,7 +217,7 @@ namespace Blockcore.Features.Wallet
                                 if (index > 10)
                                 {
                                     this.logger.LogTrace("(-)[WALLET_CATCHUP_INDEX_MAX]");
-                                    return;
+                                    return Task.CompletedTask;
                                 }
 
                                 // Really ugly hack to let store catch up.
@@ -240,7 +240,7 @@ namespace Blockcore.Features.Wallet
                     if (findTip == null)
                     {
                         this.logger.LogTrace("(-)[NEW_TIP_BEHIND_NOT_IN_WALLET]");
-                        return;
+                        return Task.CompletedTask;
                     }
 
                     this.logger.LogDebug("Wallet tip '{0}' is ahead or equal to the new tip '{1}'.", this.walletTip, newTip);
@@ -250,6 +250,8 @@ namespace Blockcore.Features.Wallet
 
             this.walletTip = newTip;
             this.walletManager.ProcessBlock(block, newTip);
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

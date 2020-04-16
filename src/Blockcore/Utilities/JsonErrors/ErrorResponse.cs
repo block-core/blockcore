@@ -52,6 +52,5 @@ namespace Blockcore.Utilities.JsonErrors
 
         [JsonProperty(PropertyName = "deleteAll")]
         public List<string> DeleteAll { get; set; }
-        
     }
 }

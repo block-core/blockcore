@@ -226,7 +226,7 @@ namespace Blockcore.Features.Wallet.Controllers
 
         [ActionName("listsinceblock")]
         [ActionDescription("Get all transactions in blocks since block 'blockhash', or all transactions if omitted.")]
-        public async Task<ListSinceBlockModel> ListSinceBlockAsync(string blockHash, int targetConfirmations = 1)
+        public Task<ListSinceBlockModel> ListSinceBlockAsync(string blockHash, int targetConfirmations = 1)
         {
             ChainedHeader headerBlock = null;
 
@@ -281,7 +281,7 @@ namespace Blockcore.Features.Wallet.Controllers
 
             model.LastBlock = this.ChainIndexer.Tip.HashBlock;
 
-            return model;
+            return Task.FromResult(model);
         }
 
         private ListSinceBlockTransactionCategoryModel GetListSinceBlockTransactionCategoryModel(GetTransactionModel transaction)

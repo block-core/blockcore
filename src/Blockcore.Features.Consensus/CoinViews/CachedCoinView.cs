@@ -149,7 +149,7 @@ namespace Blockcore.Features.Consensus.CoinViews
             this.cachedRewindData = new Dictionary<int, RewindData>();
             this.random = new Random();
 
-            this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
+            this.lastCheckpointHeight = this.checkpoints.LastCheckpointHeight;
 
             this.MaxCacheSizeBytes = consensusSettings.MaxCoindbCacheInMB * 1024 * 1024;
             this.CacheFlushTimeIntervalSeconds = consensusSettings.CoindbIbdFlushMin * 60;

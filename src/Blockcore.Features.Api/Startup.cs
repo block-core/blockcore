@@ -68,7 +68,9 @@ namespace Blockcore.Features.Api
                 {
                     options.Filters.Add(typeof(LoggingActionFilter));
 
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
                     ServiceProvider serviceProvider = services.BuildServiceProvider();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
                     var apiSettings = (ApiSettings)serviceProvider.GetRequiredService(typeof(ApiSettings));
                     if (apiSettings.KeepaliveTimer != null)
                     {
@@ -110,7 +112,7 @@ namespace Blockcore.Features.Api
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IApiVersionDescriptionProvider provider)
-        { 
+        {
             app.UseStaticFiles();
             app.UseRouting();
 

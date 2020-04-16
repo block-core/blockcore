@@ -152,20 +152,16 @@ namespace NBitcoin
 
         public uint256 HashPrevBlock { get { return this.posBlockHeader.HashPrevBlock; } }
 
-        private uint time;
         public uint Time { get { return this.posBlockHeader.Time; } }
 
-        private uint bits;
         public Target Bits { get { return this.posBlockHeader.Bits; } }
 
         protected int version;
 
         public int Version { get { return this.posBlockHeader.Version; } }
 
-        private uint nonce;
         public uint Nonce { get { return this.posBlockHeader.Nonce; } }
 
-        private uint256 hashMerkleRoot;
         public uint256 HashMerkleRoot { get { return this.posBlockHeader.HashMerkleRoot; } }
     }
 }

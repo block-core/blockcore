@@ -27,7 +27,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 
             Guard.NotNull(this.PosParent, nameof(this.PosParent));
 
-            this.LastCheckpointHeight = this.Parent.Checkpoints.GetLastCheckpointHeight();
+            this.LastCheckpointHeight = this.Parent.Checkpoints.LastCheckpointHeight;
             this.LastCheckpoint = this.Parent.Checkpoints.GetCheckpoint(this.LastCheckpointHeight);
         }
 

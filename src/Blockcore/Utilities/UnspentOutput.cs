@@ -15,6 +15,7 @@ namespace Blockcore.Utilities
 
         // Time and coinstake are pos properties, for POW they will stay default values.
         private bool isCoinstake;
+
         private uint time;
 
         public Coins()
@@ -26,7 +27,7 @@ namespace Blockcore.Utilities
             Guard.NotNull(txOut, nameof(txOut));
 
             this.height = height;
-            this.txOut = txOut;//.Clone();
+            this.txOut = txOut;
             this.isCoinbase = isCoinbase;
             this.isCoinstake = isCoinStake;
             this.time = time;
@@ -42,7 +43,6 @@ namespace Blockcore.Utilities
 
         public uint Time => this.time;
 
-
         public void ReadWrite(BitcoinStream stream)
         {
             if (stream.Serializing)
@@ -54,8 +54,8 @@ namespace Blockcore.Utilities
 
                 stream.ReadWrite(ref this.txOut);
 
-                //var compressedTx = new TxOutCompressor(this.txOut);
-                //stream.ReadWrite(ref compressedTx);
+                // var compressedTx = new TxOutCompressor(this.txOut);
+                // stream.ReadWrite(ref compressedTx);
             }
             else
             {
@@ -66,9 +66,9 @@ namespace Blockcore.Utilities
 
                 stream.ReadWrite(ref this.txOut);
 
-                //var compressed = new TxOutCompressor();
-                //stream.ReadWrite(ref compressed);
-                //this.txOut = compressed.TxOut;
+                // var compressed = new TxOutCompressor();
+                // stream.ReadWrite(ref compressed);
+                // this.txOut = compressed.TxOut;
             }
         }
 

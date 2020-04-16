@@ -131,22 +131,7 @@ namespace Blockcore.Base
                     IOrderedEnumerable<ChainedHeader> orderedChainedHeaders = headers.OrderBy(b => b.Height);
                     foreach (ChainedHeader block in orderedChainedHeaders)
                     {
-                        BlockHeader header = block.Header;
-                        if (header is ProvenBlockHeader)
-                        {
-                            // copy the header parameters, untill we dont make PH a normal header we store it in its own repo.
-                            BlockHeader newHeader = chainIndexer.Network.Consensus.ConsensusFactory.CreateBlockHeader();
-                            newHeader.Bits = header.Bits;
-                            newHeader.Time = header.Time;
-                            newHeader.Nonce = header.Nonce;
-                            newHeader.Version = header.Version;
-                            newHeader.HashMerkleRoot = header.HashMerkleRoot;
-                            newHeader.HashPrevBlock = header.HashPrevBlock;
-
-                            header = newHeader;
-                        }
-
-                        batch.Put(BitConverter.GetBytes(block.Height), this.dBreezeSerializer.Serialize(header));
+                        batch.Put(BitConverter.GetBytes(block.Height), this.dBreezeSerializer.Serialize(block.Header));
                     }
 
                     this.locator = tip.GetLocator();

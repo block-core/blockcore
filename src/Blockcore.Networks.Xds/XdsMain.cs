@@ -176,11 +176,15 @@ namespace Blockcore.Networks.Xds
                 .Register<PosCoinstakeRule>()
                 .Register<SetActivationDeploymentsFullValidationRule>()
                 .Register<CheckDifficultyHybridRule>()
+#pragma warning disable CS0618 // Type or member is obsolete
                 .Register<LoadCoinviewRule>()
+#pragma warning restore CS0618 // Type or member is obsolete
                 .Register<TransactionDuplicationActivationRule>()
                 .Register<XdsPosCoinviewRule>()
                 .Register<PosColdStakingRule>()
+#pragma warning disable CS0618 // Type or member is obsolete
                 .Register<SaveCoinviewRule>();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             consensus.MempoolRules = new List<Type>
             {

@@ -26,6 +26,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// The number of items stored in cache is the sum of inputs used in every transaction in each of those blocks.
         /// </summary>
         private int numberOfBlocksToKeep;
+
         private int lastCheckpoint;
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             this.finalizedBlockInfoRepository = finalizedBlockInfoRepository;
             this.checkpoints = checkpoints;
             this.items = new ConcurrentDictionary<OutPoint, int>();
-            this.lastCheckpoint = this.checkpoints.GetLastCheckpointHeight();
+            this.lastCheckpoint = this.checkpoints.LastCheckpointHeight;
 
             this.performanceCounter = new BackendPerformanceCounter(dateTimeProvider);
         }
@@ -142,7 +143,6 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
                     this.items.TryRemove(item.Key, out int unused);
                 }
             }
-
         }
 
         /// <inheritdoc />

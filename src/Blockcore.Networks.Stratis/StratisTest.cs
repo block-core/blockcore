@@ -131,6 +131,7 @@ namespace Blockcore.Networks.Stratis
             );
 
             this.Consensus.PosEmptyCoinbase = true;
+            this.Consensus.PosUseTimeFieldInKernalHash = true;
 
             this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (65) };
             this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (196) };

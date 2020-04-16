@@ -112,7 +112,6 @@ namespace Blockcore.IntegrationTests.RPC
             }
         }
 
-
         [Fact]
         public async Task GetRawTransactionWithTransactionIndexedInBlockchainVerboseAsync()
         {
@@ -311,7 +310,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
-        public async Task GetRawTransactionWithNonZeroIntegerParameterReperesenting()
+        public async Task GetRawTransactionWithNonZeroIntegerParameterReperesentingAsync()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
@@ -340,7 +339,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
-        public async Task GetRawTransactionWithZeroIntegerParameterReperesenting()
+        public async Task GetRawTransactionWithZeroIntegerParameterReperesentingAsync()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {

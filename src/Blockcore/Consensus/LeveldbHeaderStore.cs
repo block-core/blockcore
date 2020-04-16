@@ -66,20 +66,6 @@ namespace NBitcoin
         {
             ConsensusFactory consensusFactory = this.network.Consensus.ConsensusFactory;
 
-            if (blockHeader is ProvenBlockHeader)
-            {
-                // If ProvenBlockHeader copy the header parameters.
-                BlockHeader newHeader = consensusFactory.CreateBlockHeader();
-                newHeader.Bits = blockHeader.Bits;
-                newHeader.Time = blockHeader.Time;
-                newHeader.Nonce = blockHeader.Nonce;
-                newHeader.Version = blockHeader.Version;
-                newHeader.HashMerkleRoot = blockHeader.HashMerkleRoot;
-                newHeader.HashPrevBlock = blockHeader.HashPrevBlock;
-
-                blockHeader = newHeader;
-            }
-
             lock (this.locker)
             {
                 this.leveldb.Put(blockHeader.GetHash().ToBytes(), blockHeader.ToBytes(consensusFactory));

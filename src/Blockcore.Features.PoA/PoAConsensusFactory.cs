@@ -7,7 +7,9 @@ namespace Blockcore.Features.PoA
         /// <inheritdoc />
         public override Block CreateBlock()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return new Block(this.CreateBlockHeader());
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <inheritdoc />

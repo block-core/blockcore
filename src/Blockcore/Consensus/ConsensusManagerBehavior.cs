@@ -571,7 +571,7 @@ namespace Blockcore.Consensus
         }
 
         /// <summary>Tries to sync the chain with the peer by sending it <see cref="GetHeadersPayload"/> in case peer's state is <see cref="NetworkPeerState.HandShaked"/>.</summary>
-        public async Task ResyncAsync()
+        public Task ResyncAsync()
         {
             if (this.cachedHeaders.Any())
             {
@@ -587,7 +587,7 @@ namespace Blockcore.Consensus
                 if (getHeadersPayload == null)
                 {
                     this.logger.LogDebug("Ignoring sync request, headersPayload is null.");
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 try
@@ -603,6 +603,8 @@ namespace Blockcore.Consensus
             }
             else
                 this.logger.LogDebug("Can't sync. Peer's state is not handshaked or peer was not attached.");
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

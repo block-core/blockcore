@@ -71,7 +71,6 @@ namespace Blockcore.Features.MemoryPool
                     else
                         this.logger.LogDebug("Transaction with hash '{0}' accepted back to mempool.", transaction.GetHash());
                 }
-
             }).ConfigureAwait(false);
         }
 
@@ -96,7 +95,7 @@ namespace Blockcore.Features.MemoryPool
             // Invalid transactions would have spent the coinbase. The other transactions can be put back into the mempool and be fine.
             uint256 coinbaseId = block.Transactions[0].GetHash();
 
-            await this.mempoolLock.WriteAsync(async () =>
+            await this.mempoolLock.WriteAsync(() =>
             {
                 foreach (TxMempoolEntry mempoolEntry in this.mempool.MapTx.SpendsCoinbase.ToList())
                 {
@@ -105,7 +104,6 @@ namespace Blockcore.Features.MemoryPool
                         this.logger.LogDebug("Removing transaction '{0}' from the mempool as it spends the coinbase transaction '{1}'", mempoolEntry.TransactionHash, coinbaseId);
                         this.mempool.RemoveRecursive(mempoolEntry.Transaction);
                     }
-
                 }
             }).ConfigureAwait(false);
         }

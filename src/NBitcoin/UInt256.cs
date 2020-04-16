@@ -261,7 +261,7 @@ namespace NBitcoin
             return new uint256(target);
         }
 
-        public static bool TryParse(string hexString, out uint256? result)
+        public static bool TryParse(string hexString, out uint256 result)
         {
             try
             {
@@ -323,7 +323,7 @@ namespace NBitcoin
 
             if (!littleEndian)
             {
-                var span = output.AsSpan();
+                Span<byte> span = output.AsSpan();
                 span.Reverse();
             }
 
@@ -346,17 +346,17 @@ namespace NBitcoin
             return (int)this.part1;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             return this.Equals(obj as uint256);
         }
 
-        public static bool operator !=(uint256? a, uint256? b)
+        public static bool operator !=(uint256 a, uint256 b)
         {
             return !(a == b);
         }
 
-        public static bool operator ==(uint256? a, uint256? b)
+        public static bool operator ==(uint256 a, uint256 b)
         {
             if (ReferenceEquals(a, b))
                 return true;
@@ -367,7 +367,7 @@ namespace NBitcoin
             return a.Equals(b);
         }
 
-        public bool Equals(uint256? other)
+        public bool Equals(uint256 other)
         {
             if (other is null)
                 return false;
@@ -576,17 +576,17 @@ namespace NBitcoin
         private static readonly HexEncoder Encoder = new HexEncoder();
         private const int WidthByte = 160 / 8;
 
-        internal readonly UInt32 pn0;
-        internal readonly UInt32 pn1;
-        internal readonly UInt32 pn2;
-        internal readonly UInt32 pn3;
-        internal readonly UInt32 pn4;
+        internal readonly uint pn0;
+        internal readonly uint pn1;
+        internal readonly uint pn2;
+        internal readonly uint pn3;
+        internal readonly uint pn4;
 
         public byte GetByte(int index)
         {
             int uintIndex = index / sizeof(uint);
             int byteIndex = index % sizeof(uint);
-            UInt32 value;
+            uint value;
             switch (uintIndex)
             {
                 case 0:
@@ -684,11 +684,11 @@ namespace NBitcoin
             if (other is null)
                 return false;
             bool equals = true;
-            equals &= pn0 == other.pn0;
-            equals &= pn1 == other.pn1;
-            equals &= pn2 == other.pn2;
-            equals &= pn3 == other.pn3;
-            equals &= pn4 == other.pn4;
+            equals &= this.pn0 == other.pn0;
+            equals &= this.pn1 == other.pn1;
+            equals &= this.pn2 == other.pn2;
+            equals &= this.pn3 == other.pn3;
+            equals &= this.pn4 == other.pn4;
             return equals;
         }
 

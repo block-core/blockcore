@@ -373,7 +373,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
             for (int i = 0; i < transaction.Inputs.Count; i++)
             {
                 TxOut prevout = inputs.GetOutputFor(transaction.Inputs[i]);
-                if (prevout.ScriptPubKey.IsPayToScriptHash(this.Parent.Network))
+                if (prevout.ScriptPubKey.IsScriptType(ScriptType.P2SH))
                     sigOps += prevout.ScriptPubKey.GetSigOpCount(this.Parent.Network, transaction.Inputs[i].ScriptSig);
             }
 

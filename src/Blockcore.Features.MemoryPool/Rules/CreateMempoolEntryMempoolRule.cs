@@ -197,7 +197,7 @@ namespace Blockcore.Features.MemoryPool.Rules
                 return true; // Coinbases don't use vin normally.
             }
 
-            for (int i=0; i<tx.Inputs.Count; i++)
+            for (int i = 0; i < tx.Inputs.Count; i++)
             {
                 TxIn txin = tx.Inputs[i];
                 TxOut prev = mapInputs.GetOutputFor(txin);
@@ -270,7 +270,7 @@ namespace Blockcore.Features.MemoryPool.Rules
 
                 // Get the scriptPubKey corresponding to this input.
                 Script prevScript = prev.ScriptPubKey;
-                if (prevScript.IsPayToScriptHash(this.network))
+                if (prevScript.IsScriptType(ScriptType.P2SH))
                 {
                     // If the scriptPubKey is P2SH, we try to extract the redeemScript casually by converting the scriptSig
                     // into a stack. We do not check IsPushOnly nor compare the hash as these will be done later anyway.
@@ -286,7 +286,7 @@ namespace Blockcore.Features.MemoryPool.Rules
                 }
 
                 // Non-witness program must not be associated with any witness.
-                if (!prevScript.IsWitness(this.network))
+                if (!prevScript.IsScriptType(ScriptType.Witness))
                 {
                     this.logger.LogTrace("(-)[WITNESS_MISMATCH]:false");
                     return false;

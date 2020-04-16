@@ -333,7 +333,9 @@ namespace NBitcoin
         /// <inheritdoc />
         public override Block CreateBlock()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return new PosBlock(this.CreateBlockHeader());
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <inheritdoc />
@@ -444,6 +446,7 @@ namespace NBitcoin
         /// </summary>
         private BlockSignature blockSignature = new BlockSignature();
 
+        [Obsolete("Should use Block.Load outside of ConsensusFactories")]
         public PosBlock(BlockHeader blockHeader) : base(blockHeader)
         {
         }

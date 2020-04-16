@@ -210,7 +210,7 @@ namespace Blockcore.P2P.Peer
         /// Check if the client is allowed to connect based on certain criteria.
         /// </summary>
         /// <returns>When criteria is met returns <c>true</c>, to allow connection.</returns>
-        private (bool successful, string reason) AllowClientConnection(TcpClient tcpClient)
+        private (bool Successful, string Reason) AllowClientConnection(TcpClient tcpClient)
         {
             var clientRemoteEndPoint = tcpClient.Client.RemoteEndPoint as IPEndPoint;
 

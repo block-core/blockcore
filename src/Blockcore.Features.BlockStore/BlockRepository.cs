@@ -41,13 +41,6 @@ namespace Blockcore.Features.BlockStore
         void PutBlocks(HashHeightPair newTip, List<Block> blocks);
 
         /// <summary>
-        /// Get the blocks from the database by using block hashes.
-        /// </summary>
-        /// <param name="hashes">A list of unique block hashes.</param>
-        /// <returns>The blocks (or null if not found) in the same order as the hashes on input.</returns>
-        List<Block> GetBlocks(List<uint256> hashes);
-
-        /// <summary>
         /// Wipe out blocks and their transactions then replace with a new block.
         /// </summary>
         /// <param name="newTip">Hash and height of the new repository's tip.</param>

@@ -58,12 +58,14 @@ namespace Blockcore.Features.Consensus.Behaviors
             this.checkpoints = checkpoints;
             this.provenBlockHeaderStore = provenBlockHeaderStore;
 
-            this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
+            this.lastCheckpointHeight = this.checkpoints.LastCheckpointHeight;
             this.lastCheckpointInfo = this.checkpoints.GetCheckpoint(this.lastCheckpointHeight);
 
             this.connectionManagerSettings = connectionManagerSettings;
 
+#pragma warning disable CS0618 // Type or member is obsolete
             this.isGateway = this.connectionManagerSettings.IsGateway;
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <inheritdoc />

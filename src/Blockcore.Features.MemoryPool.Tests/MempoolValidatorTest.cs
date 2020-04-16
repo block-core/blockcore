@@ -1032,7 +1032,7 @@ namespace Blockcore.Features.MemoryPool.Tests
         }
 
         [Fact]
-        public async Task AcceptToMemoryPool_NonStandardBareMultiSig_ReturnsFalse()
+        public async Task AcceptToMemoryPool_NonStandardBareMultiSig_ReturnsFalseAsync()
         {
             string dataDir = GetTestDirectoryPath(this);
 
@@ -1684,7 +1684,7 @@ namespace Blockcore.Features.MemoryPool.Tests
         }
 
         [Fact(Skip = "Not clear how to test this without triggering In Below Out check instead.")]
-        public async Task AcceptToMemoryPool_TxPowConsensusCheckInputNegativeFee_ReturnsFalseAsync()
+        public void AcceptToMemoryPool_TxPowConsensusCheckInputNegativeFee_ReturnsFalseAsync()
         {
             // TODO: Execute failure case for CheckAllInputs CheckInputs PowCoinViewRule.CheckInputs NegativeFee
         }

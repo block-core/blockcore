@@ -455,7 +455,7 @@ namespace Blockcore.P2P.Peer
         /// for parsing the message from binary data. That method need stream to read from, so to achieve that we create a memory stream from our data,
         /// which is not efficient. This should be improved.
         /// </remarks>
-        private async Task<(Message message, int rawMessageSize)> ReadAndParseMessageAsync(ProtocolVersion protocolVersion, CancellationToken cancellation)
+        private async Task<(Message Message, int RawMessageSize)> ReadAndParseMessageAsync(ProtocolVersion protocolVersion, CancellationToken cancellation)
         {
             Message message = null;
 
@@ -465,7 +465,7 @@ namespace Blockcore.P2P.Peer
                 message = Message.ReadNext(memoryStream, this.network, protocolVersion, cancellation, this.payloadProvider, out PerformanceCounter counter);
             }
 
-            return(message, rawMessage.Length);
+            return (message, rawMessage.Length);
         }
 
         /// <inheritdoc />

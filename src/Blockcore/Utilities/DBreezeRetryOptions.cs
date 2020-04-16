@@ -10,6 +10,8 @@ namespace Blockcore.Utilities
         {
         }
 
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
         public static RetryOptions Default => new DBreezeRetryOptions();
+#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
     }
 }

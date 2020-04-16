@@ -69,12 +69,14 @@ namespace Blockcore.IntegrationTests
             }
         }
 
-        private async Task ProcessMessageAsync(INetworkPeer peer, IncomingMessage message)
+        private Task ProcessMessageAsync(INetworkPeer peer, IncomingMessage message)
         {
             if (!this.receivedMessageTracker.ContainsKey(message.Message.Payload.Command))
                 this.receivedMessageTracker[message.Message.Payload.Command] = new List<IncomingMessage>();
 
             this.receivedMessageTracker[message.Message.Payload.Command].Add(message);
+
+            return Task.CompletedTask;
         }
 
         public override object Clone()

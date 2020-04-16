@@ -222,11 +222,15 @@ namespace Blockcore.Features.PoA
                 .Register<SetActivationDeploymentsFullValidationRule>()
 
                 // Rules that require the store to be loaded (coinview)
+#pragma warning disable CS0618 // Type or member is obsolete
                 .Register<LoadCoinviewRule>()
+#pragma warning restore CS0618 // Type or member is obsolete
                 .Register<TransactionDuplicationActivationRule>() // implements BIP30
 
                 .Register<PoACoinviewRule>()
+#pragma warning disable CS0618 // Type or member is obsolete
                 .Register<SaveCoinviewRule>();
+#pragma warning restore CS0618 // Type or member is obsolete
             // ------------------------------------------------------
         }
 

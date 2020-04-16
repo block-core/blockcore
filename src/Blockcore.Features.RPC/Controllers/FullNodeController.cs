@@ -361,7 +361,7 @@ namespace Blockcore.Features.RPC.Controllers
             {
                 var scriptPubKey = BitcoinAddress.Create(address, this.Network).ScriptPubKey;
                 result.ScriptPubKey = scriptPubKey.ToHex();
-                result.IsWitness = scriptPubKey.IsWitness(this.Network);
+                result.IsWitness = scriptPubKey.IsScriptType(ScriptType.Witness);
             }
 
             return result;
@@ -391,7 +391,7 @@ namespace Blockcore.Features.RPC.Controllers
             Block block = chainedHeader.Block ?? this.blockStore?.GetBlock(blockId);
 
             // In rare occasions a block that is found in the
-            // indexer may not have been pushed to the store yet. 
+            // indexer may not have been pushed to the store yet.
             if (block == null)
                 return null;
 
@@ -475,12 +475,12 @@ namespace Blockcore.Features.RPC.Controllers
 
             foreach (var consensusBuriedDeployment in Enum.GetValues(typeof(BuriedDeployments)))
             {
-                bool active = this.ChainIndexer.Height >= this.Network.Consensus.BuriedDeployments[(BuriedDeployments) consensusBuriedDeployment];
+                bool active = this.ChainIndexer.Height >= this.Network.Consensus.BuriedDeployments[(BuriedDeployments)consensusBuriedDeployment];
                 blockchainInfo.SoftForks.Add(new SoftForks
                 {
                     Id = consensusBuriedDeployment.ToString().ToLower(),
                     Version = (int)consensusBuriedDeployment + 2, // hack to get the deployment number similar to bitcoin core without changing the enums
-                    Status = new SoftForksStatus {Status = active}
+                    Status = new SoftForksStatus { Status = active }
                 });
             }
 
@@ -491,7 +491,7 @@ namespace Blockcore.Features.RPC.Controllers
             ThresholdState[] thresholdStates = ruleEngine.NodeDeployments.BIP9.GetStates(this.ChainIndexer.Tip.Previous);
             List<ThresholdStateModel> metrics = ruleEngine.NodeDeployments.BIP9.GetThresholdStateMetrics(this.ChainIndexer.Tip.Previous, thresholdStates);
 
-            foreach (ThresholdStateModel metric in metrics.Where(m => !m.DeploymentName.ToLower().Contains("test"))) // to remove the test dummy 
+            foreach (ThresholdStateModel metric in metrics.Where(m => !m.DeploymentName.ToLower().Contains("test"))) // to remove the test dummy
             {
                 // TODO: Deployment timeout may not be implemented yet
 
@@ -501,7 +501,7 @@ namespace Blockcore.Features.RPC.Controllers
                 if (metric.TimeTimeOut?.Ticks > 0)
                     blockchainInfo.SoftForksBip9.Add(metric.DeploymentName, this.CreateSoftForksBip9(metric, thresholdStates[metric.DeploymentIndex]));
             }
-            
+
             // TODO: Implement blockchainInfo.warnings
             return blockchainInfo;
         }

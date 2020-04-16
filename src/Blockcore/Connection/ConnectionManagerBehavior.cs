@@ -68,7 +68,10 @@ namespace Blockcore.Connection
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
         private async Task OnStateChangedAsync(INetworkPeer peer, NetworkPeerState oldState)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {

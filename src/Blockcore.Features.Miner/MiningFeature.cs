@@ -144,7 +144,9 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc />
         public override Task InitializeAsync()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             if ((this.minerSettings.Mine || this.minerSettings.Stake) && this.connectionManagerSettings.IsGateway)
+#pragma warning restore CS0618 // Type or member is obsolete
                 throw new ConfigurationException("The node cannot be configured as a gateway and mine or stake at the same time.");
 
             if (this.minerSettings.Mine)

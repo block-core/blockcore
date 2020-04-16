@@ -55,7 +55,9 @@ namespace Blockcore.Features.Api
                 options.IncludeXmlComments(walletXmlPath);
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             options.DescribeAllEnumsAsStrings();
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)

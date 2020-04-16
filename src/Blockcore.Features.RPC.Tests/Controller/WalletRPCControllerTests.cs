@@ -26,7 +26,6 @@ namespace Blockcore.Features.RPC.Tests.Controller
         private NodeSettings nodeSettings;
         private WalletSettings walletSettings;
         private readonly StoreSettings storeSettings;
-        private readonly List<ActionDescriptor> descriptors;
 
         private readonly Mock<IBlockStore> blockStore;
         private readonly Mock<IBroadcasterManager> broadCastManager;
@@ -49,6 +48,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             this.walletManager = new Mock<IWalletManager>();
             this.walletSettings = new WalletSettings(this.nodeSettings);
             this.walletTransactionHandler = new Mock<IWalletTransactionHandler>();
+            this.chain = new ChainIndexer();
 
             this.controller =
                 new WalletRPCController(

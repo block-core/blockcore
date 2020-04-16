@@ -20,8 +20,10 @@ namespace Blockcore.Utilities.Extensions
             var tcs = new TaskCompletionSource<bool>();
 
             using (cancellationToken.Register(s => ((TaskCompletionSource<bool>)s).TrySetResult(true), tcs))
+            {
                 if (task != await Task.WhenAny(task, tcs.Task).ConfigureAwait(false))
                     throw new OperationCanceledException(cancellationToken);
+            }
 
             return await task.ConfigureAwait(false);
         }
@@ -39,8 +41,10 @@ namespace Blockcore.Utilities.Extensions
             var tcs = new TaskCompletionSource<bool>();
 
             using (cancellationToken.Register(s => ((TaskCompletionSource<bool>)s).TrySetResult(true), tcs))
+            {
                 if (task != await Task.WhenAny(task, tcs.Task).ConfigureAwait(false))
                     throw new OperationCanceledException(cancellationToken);
+            }
 
             await task.ConfigureAwait(false); // This is needed to rethrow eventual task exception.
         }

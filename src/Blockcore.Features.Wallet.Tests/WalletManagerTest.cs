@@ -2482,7 +2482,6 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetAccountBalancesReturnsCorrectAccountBalances()
         {
-
             // Arrange.
             DataFolder dataFolder = CreateDataFolder(this);
 
@@ -3110,19 +3109,19 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.ProcessTransaction(transaction1);
 
             // The first transaction should be present in the wallet.
-            Assert.True(destinationAddress.Transactions.Any(t => t.Id == transaction1.GetHash()));
+            Assert.Contains(destinationAddress.Transactions, t => t.Id == transaction1.GetHash());
 
             // Now add transaction 2 via block.
             Block block = this.Network.CreateBlock();
             block.AddTransaction(transaction2);
 
             walletManager.ProcessTransaction(transaction2, 10, block);
-            
+
             // The first transaction should no longer be present in the wallet.
-            Assert.False(destinationAddress.Transactions.Any(t => t.Id == transaction1.GetHash()));
+            Assert.DoesNotContain(destinationAddress.Transactions, t => t.Id == transaction1.GetHash());
 
             // The second transaction should be present.
-            Assert.True(destinationAddress.Transactions.Any(t => t.Id == transaction2.GetHash()));
+            Assert.Contains(destinationAddress.Transactions, t => t.Id == transaction2.GetHash());
         }
 
         [Fact]

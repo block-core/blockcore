@@ -318,7 +318,7 @@ namespace Blockcore.AsyncWork
         }
 
         /// <inheritdoc />
-        public List<(string loopName, TaskStatus status)> GetAll()
+        public List<(string LoopName, TaskStatus Status)> GetAll()
         {
             var taskInformation = new List<AsyncTaskInfo>();
 
@@ -363,7 +363,6 @@ namespace Blockcore.AsyncWork
         ///  This method is called when a registered Task throws an unhandled exception.
         /// </summary>
         /// <param name="task">The task causing the exception.</param>
-        /// <param name="state">not used</param>
         private void OnRegisteredTaskUnhandledException(Task task)
         {
             AsyncTaskInfo delegateInfo;

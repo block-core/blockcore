@@ -34,5 +34,9 @@ dotnet_naming_style.end_with_async.required_suffix = Async
 dotnet_naming_style.end_with_async.capitalization  = pascal_case
 
 # .NET formatting settings:
+
+# SA1401: Fields should be private
+dotnet_diagnostic.SA1401.severity = none
+
 [*.{cs,vb}]
 dotnet_sort_system_directives_first = true

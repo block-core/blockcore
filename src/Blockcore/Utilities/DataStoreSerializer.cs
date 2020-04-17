@@ -9,11 +9,11 @@ namespace Blockcore.Utilities
     /// <summary>
     /// Implementation of serialization and deserialization of objects that go into the DBreeze database.
     /// </summary>
-    public class DBreezeSerializer
+    public class DataStoreSerializer
     {
         private readonly ConsensusFactory consensusFactory;
 
-        public DBreezeSerializer(ConsensusFactory consensusFactory)
+        public DataStoreSerializer(ConsensusFactory consensusFactory)
         {
             this.consensusFactory = consensusFactory;
         }

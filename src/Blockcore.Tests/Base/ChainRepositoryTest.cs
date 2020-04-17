@@ -28,7 +28,7 @@ namespace Blockcore.Tests.Base
             var chain = new ChainIndexer(KnownNetworks.StratisRegTest);
             this.AppendBlock(chain);
 
-            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dataStoreSerializer, new MemoryHeaderStore()))
+            using (var repo = new ChainRepository(dir, new LoggerFactory(), new MemoryHeaderStore(), chain.Network))
             {
                 repo.SaveAsync(chain).GetAwaiter().GetResult();
             }
@@ -40,11 +40,11 @@ namespace Blockcore.Tests.Base
 
                 while (itr.MoveNext())
                 {
-                    var blockHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(itr.Current.Value);
+                    var data = new ChainRepository.ChainRepositoryData();
+                    data.FromBytes(itr.Current.Value, this.Network.Consensus.ConsensusFactory);
 
-                    if (tip != null && blockHeader.HashPrevBlock != tip.HashBlock)
-                        break;
-                    tip = new ChainedHeader(blockHeader, blockHeader.GetHash(), tip);
+                    tip = new ChainedHeader(data.Hash, data.Work, tip);
+                    if (tip.Height == 0) tip.SetBlockHeaderStore(new MemoryHeaderStore());
                 }
                 Assert.Equal(tip, chain.Tip);
             }
@@ -71,13 +71,16 @@ namespace Blockcore.Tests.Base
 
                     foreach (ChainedHeader block in blocks)
                     {
-                        batch.Put(BitConverter.GetBytes(block.Height), this.dataStoreSerializer.Serialize(block.Header));
+                        batch.Put(BitConverter.GetBytes(block.Height),
+                            new ChainRepository.ChainRepositoryData()
+                            { Hash = block.HashBlock, Work = block.ChainWorkBytes }
+                                .ToBytes(this.Network.Consensus.ConsensusFactory));
                     }
 
                     engine.Write(batch);
                 }
             }
-            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dataStoreSerializer, new MemoryHeaderStore()))
+            using (var repo = new ChainRepository(dir, new LoggerFactory(), new MemoryHeaderStore(), chain.Network))
             {
                 var testChain = new ChainIndexer(KnownNetworks.StratisRegTest);
                 testChain.SetTip(repo.LoadAsync(testChain.Genesis).GetAwaiter().GetResult());

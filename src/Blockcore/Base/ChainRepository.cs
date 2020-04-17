@@ -23,7 +23,6 @@ namespace Blockcore.Base
 
     public class ChainRepository : IChainRepository
     {
-        private readonly DataStoreSerializer dataStoreSerializer;
         private readonly IBlockHeaderStore blockHeaderStore;
 
         /// <summary>Instance logger.</summary>
@@ -36,12 +35,11 @@ namespace Blockcore.Base
 
         public Network Network { get; }
 
-        public ChainRepository(string folder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer, IBlockHeaderStore blockHeaderStore, Network network)
+        public ChainRepository(string folder, ILoggerFactory loggerFactory, IBlockHeaderStore blockHeaderStore, Network network)
         {
             Guard.NotEmpty(folder, nameof(folder));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            this.dataStoreSerializer = dataStoreSerializer;
             this.blockHeaderStore = blockHeaderStore;
             this.Network = network;
 
@@ -54,8 +52,8 @@ namespace Blockcore.Base
             this.leveldb = new DB(options, folder);
         }
 
-        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer, IBlockHeaderStore blockHeaderStore, Network network)
-            : this(dataFolder.ChainPath, loggerFactory, dataStoreSerializer, blockHeaderStore, network)
+        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, IBlockHeaderStore blockHeaderStore, Network network)
+            : this(dataFolder.ChainPath, loggerFactory, blockHeaderStore, network)
         {
         }
 
@@ -77,7 +75,6 @@ namespace Blockcore.Base
                 ChainRepositoryData data = new ChainRepositoryData();
                 data.FromBytes(firstRow, this.Network.Consensus.ConsensusFactory);
 
-                ///BlockHeader nextHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(firstRow);
                 Guard.Assert(data.Hash == genesisHeader.HashBlock); // can't swap networks
 
                 int index = 0;
@@ -88,21 +85,13 @@ namespace Blockcore.Base
                     if (row == null)
                         break;
 
-                    //if ((tip != null) && (nextHeader.HashPrevBlock != tip.HashBlock))
-                    //    break;
-
                     data = new ChainRepositoryData();
                     data.FromBytes(row, this.Network.Consensus.ConsensusFactory);
 
-                    //BlockHeader blockHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(row);
                     tip = new ChainedHeader(data.Hash, data.Work, tip);
                     if (tip.Height == 0) tip.SetBlockHeaderStore(this.blockHeaderStore);
-                    // nextHeader = blockHeader;
                     index++;
                 }
-
-                //if (nextHeader != null)
-                //    tip = new ChainedHeader(nextHeader, nextHeader.GetHash(), tip);
 
                 if (tip == null)
                 {
@@ -137,7 +126,6 @@ namespace Blockcore.Base
                         toSave = toSave.Previous;
                     }
 
-                    // DBreeze is faster on ordered insert.
                     IOrderedEnumerable<ChainedHeader> orderedChainedHeaders = headers.OrderBy(b => b.Height);
                     foreach (ChainedHeader block in orderedChainedHeaders)
                     {
@@ -160,7 +148,7 @@ namespace Blockcore.Base
             (this.blockHeaderStore as IDisposable)?.Dispose();
         }
 
-        internal class ChainRepositoryData : IBitcoinSerializable
+        public class ChainRepositoryData : IBitcoinSerializable
         {
             public uint256 Hash;
             public byte[] Work;

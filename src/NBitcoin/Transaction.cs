@@ -18,9 +18,9 @@ namespace NBitcoin
                 return (this.hash == uint256.Zero && this.n == uint.MaxValue);
             }
         }
+
         private uint256 hash = uint256.Zero;
         private uint n;
-
 
         public uint256 Hash
         {
@@ -33,6 +33,7 @@ namespace NBitcoin
                 this.hash = value;
             }
         }
+
         public uint N
         {
             get
@@ -51,7 +52,7 @@ namespace NBitcoin
             if (str == null)
                 throw new ArgumentNullException("str");
             string[] splitted = str.Split('-');
-            if(splitted.Length != 2)
+            if (splitted.Length != 2)
                 return false;
 
             uint256 hash;
@@ -77,11 +78,13 @@ namespace NBitcoin
         {
             SetNull();
         }
+
         public OutPoint(uint256 hashIn, uint nIn)
         {
             this.hash = hashIn;
             this.n = nIn;
         }
+
         public OutPoint(uint256 hashIn, int nIn)
         {
             this.hash = hashIn;
@@ -102,6 +105,7 @@ namespace NBitcoin
         {
             this.FromBytes(outpoint.ToBytes());
         }
+
         //IMPLEMENT_SERIALIZE( READWRITE(FLATDATA(*this)); )
 
         public void ReadWrite(BitcoinStream stream)
@@ -109,7 +113,6 @@ namespace NBitcoin
             stream.ReadWrite(ref this.hash);
             stream.ReadWrite(ref this.n);
         }
-
 
         private void SetNull()
         {
@@ -121,6 +124,7 @@ namespace NBitcoin
         {
             return (a.hash < b.hash || (a.hash == b.hash && a.n < b.n));
         }
+
         public static bool operator >(OutPoint a, OutPoint b)
         {
             return (a.hash > b.hash || (a.hash == b.hash && a.n > b.n));
@@ -128,11 +132,11 @@ namespace NBitcoin
 
         public static bool operator ==(OutPoint a, OutPoint b)
         {
-            if(ReferenceEquals(a, null))
+            if (ReferenceEquals(a, null))
             {
                 return ReferenceEquals(b, null);
             }
-            if(ReferenceEquals(b, null))
+            if (ReferenceEquals(b, null))
             {
                 return false;
             }
@@ -143,10 +147,11 @@ namespace NBitcoin
         {
             return !(a == b);
         }
+
         public override bool Equals(object obj)
         {
             var item = obj as OutPoint;
-            if(ReferenceEquals(null, item))
+            if (ReferenceEquals(null, item))
                 return false;
             return item == this;
         }
@@ -165,22 +170,23 @@ namespace NBitcoin
         }
     }
 
-
     public class TxIn : IBitcoinSerializable
     {
         public TxIn()
         {
-
         }
+
         public TxIn(Script scriptSig)
         {
             this.scriptSig = scriptSig;
         }
+
         public TxIn(OutPoint prevout, Script scriptSig)
         {
             this.prevout = prevout;
             this.scriptSig = scriptSig;
         }
+
         public TxIn(OutPoint prevout)
         {
             this.prevout = prevout;
@@ -201,6 +207,7 @@ namespace NBitcoin
                 this.nSequence = value.Value;
             }
         }
+
         public OutPoint PrevOut
         {
             get
@@ -213,7 +220,6 @@ namespace NBitcoin
             }
         }
 
-
         public Script ScriptSig
         {
             get
@@ -225,7 +231,6 @@ namespace NBitcoin
                 this.scriptSig = value;
             }
         }
-
 
         /// <summary>
         /// Try to get the expected scriptPubKey of this TxIn based on its scriptSig and witScript.
@@ -270,7 +275,7 @@ namespace NBitcoin
             stream.ReadWrite(ref this.nSequence);
         }
 
-        #endregion
+        #endregion IBitcoinSerializable Members
 
         public bool IsFrom(Network network, PubKey pubKey)
         {
@@ -369,8 +374,8 @@ namespace NBitcoin
             return n;
         }
 
-
         private TxOut _TxOut = new TxOut();
+
         public TxOut TxOut
         {
             get
@@ -378,10 +383,11 @@ namespace NBitcoin
                 return this._TxOut;
             }
         }
+
         public TxOutCompressor()
         {
-
         }
+
         public TxOutCompressor(TxOut txOut)
         {
             this._TxOut = txOut;
@@ -393,7 +399,7 @@ namespace NBitcoin
         {
             if (stream.Serializing)
             {
-                ulong val = CompressAmount((ulong) this._TxOut.Value.Satoshi);
+                ulong val = CompressAmount((ulong)this._TxOut.Value.Satoshi);
                 stream.ReadWriteAsCompactVarInt(ref val);
             }
             else
@@ -404,10 +410,10 @@ namespace NBitcoin
             }
             var cscript = new ScriptCompressor(this._TxOut.ScriptPubKey);
             stream.ReadWrite(ref cscript);
-            if(!stream.Serializing) this._TxOut.ScriptPubKey = new Script(cscript.ScriptBytes);
+            if (!stream.Serializing) this._TxOut.ScriptPubKey = new Script(cscript.ScriptBytes);
         }
 
-        #endregion
+        #endregion IBitcoinSerializable Members
     }
 
     public class ScriptCompressor : IBitcoinSerializable
@@ -417,7 +423,9 @@ namespace NBitcoin
         // transactions, in which case this value becomes dependent on nVersion
         // and nHeight of the enclosing transaction.
         private const uint nSpecialScripts = 6;
+
         private byte[] _Script;
+
         public byte[] ScriptBytes
         {
             get
@@ -425,13 +433,14 @@ namespace NBitcoin
                 return this._Script;
             }
         }
+
         public ScriptCompressor(Script script)
         {
             this._Script = script.ToBytes(true);
         }
+
         public ScriptCompressor()
         {
-
         }
 
         public Script GetScript()
@@ -485,8 +494,10 @@ namespace NBitcoin
             {
                 case 0x00:
                     return PayToPubkeyHashTemplate.Instance.GenerateScriptPubKey(new KeyId(data.SafeSubarray(0, 20)));
+
                 case 0x01:
                     return PayToScriptHashTemplate.Instance.GenerateScriptPubKey(new ScriptId(data.SafeSubarray(0, 20)));
+
                 case 0x02:
                 case 0x03:
                     byte[] keyPart = data.SafeSubarray(0, 32);
@@ -494,6 +505,7 @@ namespace NBitcoin
                     keyBytes[0] = (byte)nSize;
                     Array.Copy(keyPart, 0, keyBytes, 1, 32);
                     return PayToPubkeyTemplate.Instance.GenerateScriptPubKey(keyBytes);
+
                 case 0x04:
                 case 0x05:
                     var vch = new byte[33];
@@ -506,10 +518,6 @@ namespace NBitcoin
             return null;
         }
 
-
-
-
-
         #region IBitcoinSerializable Members
 
         public void ReadWrite(BitcoinStream stream)
@@ -517,12 +525,12 @@ namespace NBitcoin
             if (stream.Serializing)
             {
                 byte[] compr = Compress();
-                if(compr != null)
+                if (compr != null)
                 {
                     stream.ReadWrite(ref compr);
                     return;
                 }
-                uint nSize = (uint) this._Script.Length + nSpecialScripts;
+                uint nSize = (uint)this._Script.Length + nSpecialScripts;
                 stream.ReadWriteAsCompactVarInt(ref nSize);
                 stream.ReadWrite(ref this._Script);
             }
@@ -552,14 +560,13 @@ namespace NBitcoin
             return 0;
         }
 
-
-
-        #endregion
+        #endregion IBitcoinSerializable Members
     }
 
     public class TxOut : IBitcoinSerializable, IDestination
     {
         private Script publicKey = Script.Empty;
+
         public Script ScriptPubKey
         {
             get
@@ -576,13 +583,12 @@ namespace NBitcoin
 
         public TxOut()
         {
-
         }
 
         public TxOut(Money value, IDestination destination)
         {
             this.Value = value;
-            if(destination != null) this.ScriptPubKey = destination.ScriptPubKey;
+            if (destination != null) this.ScriptPubKey = destination.ScriptPubKey;
         }
 
         public TxOut(Money value, Script scriptPubKey)
@@ -593,6 +599,7 @@ namespace NBitcoin
 
         private readonly static Money NullMoney = new Money(-1);
         private Money _Value = NullMoney;
+
         public Money Value
         {
             get
@@ -606,7 +613,6 @@ namespace NBitcoin
                 this._Value = value;
             }
         }
-
 
         public bool IsDust(FeeRate minRelayTxFee)
         {
@@ -627,11 +633,11 @@ namespace NBitcoin
         {
             long value = this.Value.Satoshi;
             stream.ReadWrite(ref value);
-            if(!stream.Serializing) this._Value = new Money(value);
+            if (!stream.Serializing) this._Value = new Money(value);
             stream.ReadWrite(ref this.publicKey);
         }
 
-        #endregion
+        #endregion IBitcoinSerializable Members
 
         public bool IsTo(IDestination destination)
         {
@@ -692,7 +698,6 @@ namespace NBitcoin
             }
         }
 
-
         public WitScript WitScript
         {
             get
@@ -704,6 +709,7 @@ namespace NBitcoin
                 this.TxIn.WitScript = value;
             }
         }
+
         public Transaction Transaction
         {
             get;
@@ -714,17 +720,20 @@ namespace NBitcoin
         {
             return VerifyScript(network, scriptPubKey, scriptVerify, out ScriptError unused);
         }
+
         public bool VerifyScript(Network network, Script scriptPubKey, out ScriptError error)
         {
-            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int) this.Index, null, out error);
+            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, out error);
         }
+
         public bool VerifyScript(Network network, Script scriptPubKey, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int) this.Index, null, scriptVerify, SigHash.Undefined, out error);
+            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, scriptVerify, SigHash.Undefined, out error);
         }
+
         public bool VerifyScript(Network network, Script scriptPubKey, Money value, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int) this.Index, value, scriptVerify, SigHash.Undefined, out error);
+            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, value, scriptVerify, SigHash.Undefined, out error);
         }
 
         public bool VerifyScript(Network network, ICoin coin, ScriptVerify scriptVerify = ScriptVerify.Standard)
@@ -734,8 +743,9 @@ namespace NBitcoin
 
         public bool VerifyScript(Network network, ICoin coin, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.VerifyScript(network, coin.TxOut.ScriptPubKey, this.Transaction, (int) this.Index, coin.TxOut.Value, scriptVerify, SigHash.Undefined, out error);
+            return Script.VerifyScript(network, coin.TxOut.ScriptPubKey, this.Transaction, (int)this.Index, coin.TxOut.Value, scriptVerify, SigHash.Undefined, out error);
         }
+
         public bool VerifyScript(Network network, ICoin coin, out ScriptError error)
         {
             return VerifyScript(network, coin, ScriptVerify.Standard, out error);
@@ -749,7 +759,7 @@ namespace NBitcoin
 
         public uint256 GetSignatureHash(Network network, ICoin coin, SigHash sigHash = SigHash.All)
         {
-            return Script.SignatureHash(network, coin.GetScriptCode(network), this.Transaction, (int) this.Index, sigHash, coin.TxOut.Value, coin.GetHashVersion(network));
+            return Script.SignatureHash(network, coin.GetScriptCode(network), this.Transaction, (int)this.Index, sigHash, coin.TxOut.Value, coin.GetHashVersion(network));
         }
     }
 
@@ -757,13 +767,13 @@ namespace NBitcoin
     {
         public TxInList()
         {
-
         }
+
         public TxInList(Transaction parent)
             : base(parent)
         {
-
         }
+
         public TxIn this[OutPoint outpoint]
         {
             get
@@ -795,6 +805,7 @@ namespace NBitcoin
             get;
             set;
         }
+
         public uint N
         {
             get;
@@ -806,6 +817,7 @@ namespace NBitcoin
             get;
             set;
         }
+
         public Coin ToCoin()
         {
             return new Coin(this);
@@ -821,17 +833,18 @@ namespace NBitcoin
     {
         public TxOutList()
         {
-
         }
+
         public TxOutList(Transaction parent)
             : base(parent)
         {
-
         }
+
         public IEnumerable<TxOut> To(IDestination destination)
         {
             return this.Where(r => r.IsTo(destination));
         }
+
         public IEnumerable<TxOut> To(Script scriptPubKey)
         {
             return this.Where(r => r.ScriptPubKey == scriptPubKey);
@@ -851,7 +864,7 @@ namespace NBitcoin
         public IEnumerable<Coin> AsCoins()
         {
             uint256 txId = this.Transaction.GetHash();
-            for(int i = 0; i < this.Count; i++)
+            for (int i = 0; i < this.Count; i++)
             {
                 yield return new Coin(new OutPoint(txId, i), this[i]);
             }
@@ -867,11 +880,12 @@ namespace NBitcoin
     public class WitScript
     {
         private byte[][] _Pushes;
+
         public WitScript(string script)
         {
             string[] parts = script.Split(new[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
             this._Pushes = new byte[parts.Length][];
-            for(int i = 0; i < parts.Length; i++)
+            for (int i = 0; i < parts.Length; i++)
             {
                 this._Pushes[i] = Encoders.Hex.DecodeData(parts[i]);
             }
@@ -884,12 +898,12 @@ namespace NBitcoin
         /// <param name="unsafe">If false, make a copy of the input script array</param>
         public WitScript(byte[][] script, bool @unsafe = false)
         {
-            if(@unsafe)
+            if (@unsafe)
                 this._Pushes = script;
             else
             {
                 this._Pushes = script.ToArray();
-                for(int i = 0; i < this._Pushes.Length; i++) this._Pushes[i] = script[i].ToArray();
+                for (int i = 0; i < this._Pushes.Length; i++) this._Pushes[i] = script[i].ToArray();
             }
         }
 
@@ -900,13 +914,12 @@ namespace NBitcoin
         public WitScript(IEnumerable<byte[]> script, bool @unsafe = false)
             : this(script.ToArray(), @unsafe)
         {
-
         }
 
         public WitScript(params Op[] ops)
         {
             var pushes = new List<byte[]>();
-            foreach(Op op in ops)
+            foreach (Op op in ops)
             {
                 if (op.PushData == null)
                     throw new ArgumentException("Non push operation unsupported in WitScript", "ops");
@@ -935,7 +948,7 @@ namespace NBitcoin
         public WitScript(Script scriptSig)
         {
             var pushes = new List<byte[]>();
-            foreach(Op op in scriptSig.ToOps())
+            foreach (Op op in scriptSig.ToOps())
             {
                 if (op.PushData == null)
                     throw new ArgumentException("A WitScript can only contains push operations", "script");
@@ -965,6 +978,7 @@ namespace NBitcoin
 
             this._Pushes = pushes.ToArray();
         }
+
         private static byte[] ReadPush(BitcoinStream stream)
         {
             byte[] push = null;
@@ -1001,25 +1015,26 @@ namespace NBitcoin
         public override bool Equals(object obj)
         {
             var item = obj as WitScript;
-            if(item == null)
+            if (item == null)
                 return false;
             return EqualsCore(item);
         }
 
         private bool EqualsCore(WitScript item)
         {
-            if(this._Pushes.Length != item._Pushes.Length)
+            if (this._Pushes.Length != item._Pushes.Length)
                 return false;
-            for(int i = 0; i < this._Pushes.Length; i++)
+            for (int i = 0; i < this._Pushes.Length; i++)
             {
-                if(!Utils.ArrayEqual(this._Pushes[i], item._Pushes[i]))
+                if (!Utils.ArrayEqual(this._Pushes[i], item._Pushes[i]))
                     return false;
             }
             return true;
         }
+
         public static bool operator ==(WitScript a, WitScript b)
         {
-            if(ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
                 return true;
             if (((object)a == null) || ((object)b == null))
                 return false;
@@ -1030,6 +1045,7 @@ namespace NBitcoin
         {
             return !(a == b);
         }
+
         public static WitScript operator +(WitScript a, WitScript b)
         {
             if (a == null)
@@ -1038,12 +1054,14 @@ namespace NBitcoin
                 return a;
             return new WitScript(a._Pushes.Concat(b._Pushes).ToArray());
         }
+
         public static implicit operator Script(WitScript witScript)
         {
             if (witScript == null)
                 return null;
             return witScript.ToScript();
         }
+
         public override int GetHashCode()
         {
             return Utils.GetHashCode(ToBytes());
@@ -1096,7 +1114,7 @@ namespace NBitcoin
         public TxDestination GetSigner(Network network)
         {
             PayToWitPubkeyHashScriptSigParameters pubKey = PayToWitPubKeyHashTemplate.Instance.ExtractWitScriptParameters(network, this);
-            if(pubKey != null)
+            if (pubKey != null)
             {
                 return pubKey.PublicKey.WitHash;
             }
@@ -1116,6 +1134,7 @@ namespace NBitcoin
     internal class Witness
     {
         private TxInList _Inputs;
+
         public Witness(TxInList inputs)
         {
             this._Inputs = inputs;
@@ -1128,7 +1147,7 @@ namespace NBitcoin
 
         internal void ReadWrite(BitcoinStream stream)
         {
-            for(int i = 0; i < this._Inputs.Count; i++)
+            for (int i = 0; i < this._Inputs.Count; i++)
             {
                 if (stream.Serializing)
                 {
@@ -1172,7 +1191,6 @@ namespace NBitcoin
             }
         }
 
-
         protected TxInList vin;
         protected TxOutList vout;
         protected LockTime nLockTime;
@@ -1210,6 +1228,7 @@ namespace NBitcoin
                 return this.vin;
             }
         }
+
         public TxOutList Outputs
         {
             get
@@ -1237,9 +1256,9 @@ namespace NBitcoin
                 stream.ReadWrite<TxInList, TxIn>(ref this.vin);
 
                 bool hasNoDummy = (this.nVersion & NoDummyInput) != 0 && this.vin.Count == 0;
-                if(witSupported && hasNoDummy) this.nVersion = this.nVersion & ~NoDummyInput;
+                if (witSupported && hasNoDummy) this.nVersion = this.nVersion & ~NoDummyInput;
 
-                if(this.vin.Count == 0 && witSupported && !hasNoDummy)
+                if (this.vin.Count == 0 && witSupported && !hasNoDummy)
                 {
                     /* We read a dummy or an empty vin. */
                     stream.ReadWrite(ref flags);
@@ -1285,7 +1304,7 @@ namespace NBitcoin
                 if (witSupported)
                 {
                     /* Check whether witnesses need to be serialized. */
-                    if(this.HasWitness)
+                    if (this.HasWitness)
                     {
                         flags |= 1;
                     }
@@ -1301,7 +1320,7 @@ namespace NBitcoin
                 this.vin.Transaction = this;
                 stream.ReadWrite<TxOutList, TxOut>(ref this.vout);
                 this.vout.Transaction = this;
-                if((flags & 1) != 0)
+                if ((flags & 1) != 0)
                 {
                     var wit = new Witness(this.Inputs);
                     wit.ReadWrite(stream);
@@ -1310,21 +1329,20 @@ namespace NBitcoin
             stream.ReadWriteStruct(ref this.nLockTime);
         }
 
-        #endregion
-
+        #endregion IBitcoinSerializable Members
 
         public uint256 GetHash()
         {
             uint256 h = null;
-            uint256[] hashes = this._Hashes;
-            if(hashes != null)
+            uint256[] hashes = this.hashes;
+            if (hashes != null)
             {
                 h = hashes[0];
             }
             if (h != null)
                 return h;
 
-            using(var hs = new HashStream())
+            using (var hs = new HashStream())
             {
                 ReadWrite(new BitcoinStream(hs, true)
                 {
@@ -1333,8 +1351,8 @@ namespace NBitcoin
                 h = hs.GetHash();
             }
 
-            hashes = this._Hashes;
-            if(hashes != null)
+            hashes = this.hashes;
+            if (hashes != null)
             {
                 hashes[0] = h;
             }
@@ -1354,30 +1372,31 @@ namespace NBitcoin
         /// <param name="lazily">If true, the hash will be calculated and cached at the first call to GetHash(), else it will be immediately</param>
         public void PrecomputeHash(bool invalidateExisting, bool lazily)
         {
-            this._Hashes = invalidateExisting ? new uint256[2] : _Hashes ?? new uint256[2];
-            if (!lazily && _Hashes[0] == null)
-                _Hashes[0] = GetHash();
-            if (!lazily && _Hashes[1] == null)
-                _Hashes[1] = GetWitHash();
+            this.hashes = invalidateExisting ? new uint256[2] : this.hashes ?? new uint256[2];
+            if (!lazily && this.hashes[0] == null)
+                this.hashes[0] = GetHash();
+            if (!lazily && this.hashes[1] == null)
+                this.hashes[1] = GetWitHash();
         }
 
-        private uint256[] _Hashes = null;
+        private uint256[] hashes
+            = null;
 
         public uint256 GetWitHash()
         {
-            if(!this.HasWitness)
+            if (!this.HasWitness)
                 return GetHash();
 
             uint256 h = null;
-            uint256[] hashes = this._Hashes;
-            if(hashes != null)
+            uint256[] hashes = this.hashes;
+            if (hashes != null)
             {
                 h = hashes[1];
             }
             if (h != null)
                 return h;
 
-            using(var hs = new HashStream())
+            using (var hs = new HashStream())
             {
                 ReadWrite(new BitcoinStream(hs, true)
                 {
@@ -1386,21 +1405,24 @@ namespace NBitcoin
                 h = hs.GetHash();
             }
 
-            hashes = this._Hashes;
-            if(hashes != null)
+            hashes = this.hashes;
+            if (hashes != null)
             {
                 hashes[1] = h;
             }
             return h;
         }
+
         public uint256 GetSignatureHash(Network network, ICoin coin, SigHash sigHash = SigHash.All)
         {
             return this.Inputs.AsIndexedInputs().ToArray()[GetIndex(coin)].GetSignatureHash(network, coin, sigHash);
         }
+
         public TransactionSignature SignInput(Network network, ISecret secret, ICoin coin, SigHash sigHash = SigHash.All)
         {
             return SignInput(network, secret.PrivateKey, coin, sigHash);
         }
+
         public TransactionSignature SignInput(Network network, Key key, ICoin coin, SigHash sigHash = SigHash.All)
         {
             return this.Inputs.AsIndexedInputs().ToArray()[GetIndex(coin)].Sign(network, key, coin, sigHash);
@@ -1408,9 +1430,9 @@ namespace NBitcoin
 
         private int GetIndex(ICoin coin)
         {
-            for(int i = 0; i < this.Inputs.Count; i++)
+            for (int i = 0; i < this.Inputs.Count; i++)
             {
-                if(this.Inputs[i].PrevOut == coin.Outpoint)
+                if (this.Inputs[i].PrevOut == coin.Outpoint)
                     return i;
             }
             throw new ArgumentException("The coin is not being spent by this transaction", "coin");
@@ -1439,7 +1461,7 @@ namespace NBitcoin
         }
 
         /// <summary>
-        /// This flag is used to carry state between the script engine and the 
+        /// This flag is used to carry state between the script engine and the
         /// cold staking rule checks, it should not be used outside of that context.
         /// </summary>
         public bool IsColdCoinStake { get; set; }
@@ -1456,15 +1478,18 @@ namespace NBitcoin
         {
             return AddOutput(new TxOut(money, destination));
         }
+
         public TxOut AddOutput(Money money, Script scriptPubKey)
         {
             return AddOutput(new TxOut(money, scriptPubKey));
         }
+
         public TxOut AddOutput(TxOut @out)
         {
             this.vout.Add(@out);
             return @out;
         }
+
         public TxIn AddInput(TxIn @in)
         {
             this.vin.Add(@in);
@@ -1498,7 +1523,6 @@ namespace NBitcoin
             AddInput(@in);
             return @in;
         }
-
 
         /// <summary>
         /// Sign a specific coin with the given secret
@@ -1605,15 +1629,15 @@ namespace NBitcoin
         public void Sign(Network network, Key key, bool assumeP2SH)
         {
             var coins = new List<Coin>();
-            for(int i = 0; i < this.Inputs.Count; i++)
+            for (int i = 0; i < this.Inputs.Count; i++)
             {
                 TxIn txin = this.Inputs[i];
-                if(Script.IsNullOrEmpty(txin.ScriptSig))
+                if (Script.IsNullOrEmpty(txin.ScriptSig))
                     throw new InvalidOperationException("ScriptSigs should be filled with either previous scriptPubKeys or redeem script (for P2SH)");
                 if (assumeP2SH)
                 {
                     PayToScriptHashSigParameters p2shSig = PayToScriptHashTemplate.Instance.ExtractScriptSigParameters(network, txin.ScriptSig);
-                    if(p2shSig == null)
+                    if (p2shSig == null)
                     {
                         coins.Add(new ScriptCoin(txin.PrevOut, new TxOut()
                         {
@@ -1635,7 +1659,6 @@ namespace NBitcoin
                         ScriptPubKey = txin.ScriptSig
                     }));
                 }
-
             }
             Sign(network, key, coins.ToArray());
         }
@@ -1646,6 +1669,7 @@ namespace NBitcoin
             return new TxPayload(this.Clone());
         }
         */
+
         public static Transaction Parse(string tx, RawFormat format, Network network = null)
         {
             return GetFormatter(format, network).ParseJson(tx);
@@ -1675,9 +1699,11 @@ namespace NBitcoin
                 case RawFormat.Satoshi:
                     formatter = new SatoshiFormatter(network);
                     break;
+
                 case RawFormat.BlockExplorer:
                     formatter = new BlockExplorerFormatter(network);
                     break;
+
                 default:
                     throw new NotSupportedException(rawFormat.ToString());
             }
@@ -1698,15 +1724,15 @@ namespace NBitcoin
         /// <returns>Fee or null if some spent coins are missing or if spentCoins is null</returns>
         public Money GetFee(ICoin[] spentCoins)
         {
-            if(this.IsCoinBase)
+            if (this.IsCoinBase)
                 return Money.Zero;
             spentCoins = spentCoins ?? new ICoin[0];
 
             Money fees = -this.TotalOut;
-            foreach(TxIn input in this.Inputs)
+            foreach (TxIn input in this.Inputs)
             {
                 ICoin coin = spentCoins.FirstOrDefault(s => s.Outpoint == input.PrevOut);
-                if(coin == null)
+                if (coin == null)
                     return null;
                 fees += coin.TxOut.Value;
             }
@@ -1722,7 +1748,7 @@ namespace NBitcoin
         public FeeRate GetFeeRate(int witnessScaleFactor, ICoin[] spentCoins)
         {
             Money fee = GetFee(spentCoins);
-            if(fee == null)
+            if (fee == null)
                 return null;
             return new FeeRate(fee, GetVirtualSize(witnessScaleFactor));
         }
@@ -1739,15 +1765,15 @@ namespace NBitcoin
         {
             uint nBlockTime = Utils.DateTimeToUnixTime(blockTime);
 
-            if(this.nLockTime == 0)
+            if (this.nLockTime == 0)
                 return true;
 
-            if((long) this.nLockTime < ((long) this.nLockTime < LockTime.LOCKTIME_THRESHOLD ? (long)blockHeight : nBlockTime))
+            if ((long)this.nLockTime < ((long)this.nLockTime < LockTime.LOCKTIME_THRESHOLD ? (long)blockHeight : nBlockTime))
                 return true;
 
-            foreach(TxIn txin in this.Inputs)
+            foreach (TxIn txin in this.Inputs)
             {
-                if(!txin.IsFinal)
+                if (!txin.IsFinal)
                     return false;
             }
 
@@ -1758,6 +1784,7 @@ namespace NBitcoin
         public enum LockTimeFlags : int
         {
             None = 0,
+
             /// <summary>
             /// Interpret sequence numbers as relative lock-time constraints.
             /// </summary>
@@ -1768,7 +1795,6 @@ namespace NBitcoin
             /// </summary>
             MedianTimePast = (1 << 1),
         }
-
 
         /// <summary>
         /// Calculates the block height and time which the transaction must be later than
@@ -1797,7 +1823,7 @@ namespace NBitcoin
         /// <returns>Sequence lock of minimum SequenceLock to satisfy</returns>
         public SequenceLock CalculateSequenceLocks(int[] prevHeights, ChainedHeader chainedHeader, LockTimeFlags flags = LockTimeFlags.VerifySequence)
         {
-            if(prevHeights.Length != this.Inputs.Count)
+            if (prevHeights.Length != this.Inputs.Count)
                 throw new ArgumentException("The number of element in prevHeights should be equal to the number of inputs", "prevHeights");
 
             // Will be set to the equivalent height- and time-based nLockTime
@@ -1821,7 +1847,7 @@ namespace NBitcoin
                 return new SequenceLock(nMinHeight, nMinTime);
             }
 
-            for(int txinIndex = 0; txinIndex < this.Inputs.Count; txinIndex++)
+            for (int txinIndex = 0; txinIndex < this.Inputs.Count; txinIndex++)
             {
                 TxIn txin = this.Inputs[txinIndex];
 
@@ -1868,9 +1894,9 @@ namespace NBitcoin
         /// <returns>A new transaction with only the options wanted</returns>
         public Transaction WithOptions(TransactionOptions options, ConsensusFactory consensusFactory)
         {
-            if(options == TransactionOptions.Witness && this.HasWitness)
+            if (options == TransactionOptions.Witness && this.HasWitness)
                 return this;
-            if(options == TransactionOptions.None && !this.HasWitness)
+            if (options == TransactionOptions.None && !this.HasWitness)
                 return this;
             Transaction instance = consensusFactory.CreateTransaction();
             using (var ms = new MemoryStream())
@@ -1906,9 +1932,9 @@ namespace NBitcoin
         public TransactionCheckResult Check()
         {
             // Basic checks that don't depend on any context
-            if(this.Inputs.Count == 0)
+            if (this.Inputs.Count == 0)
                 return TransactionCheckResult.NoInput;
-            if(this.Outputs.Count == 0)
+            if (this.Outputs.Count == 0)
                 return TransactionCheckResult.NoOutput;
             // Size limits
             if (this.GetSerializedSize() > MAX_BLOCK_SIZE)
@@ -1916,7 +1942,7 @@ namespace NBitcoin
 
             // Check for negative or overflow output values
             long nValueOut = 0;
-            foreach(TxOut txout in this.Outputs)
+            foreach (TxOut txout in this.Outputs)
             {
                 if (txout.Value < 0)
                     return TransactionCheckResult.NegativeOutput;
@@ -1929,23 +1955,23 @@ namespace NBitcoin
 
             // Check for duplicate inputs
             var vInOutPoints = new HashSet<OutPoint>();
-            foreach(TxIn txin in this.Inputs)
+            foreach (TxIn txin in this.Inputs)
             {
                 if (vInOutPoints.Contains(txin.PrevOut))
                     return TransactionCheckResult.DuplicateInputs;
                 vInOutPoints.Add(txin.PrevOut);
             }
 
-            if(this.IsCoinBase)
+            if (this.IsCoinBase)
             {
-                if(this.Inputs[0].ScriptSig.Length < 2 || this.Inputs[0].ScriptSig.Length > 100)
+                if (this.Inputs[0].ScriptSig.Length < 2 || this.Inputs[0].ScriptSig.Length > 100)
                     return TransactionCheckResult.CoinbaseScriptTooLarge;
             }
             else
             {
-                foreach(TxIn txin in this.Inputs)
+                foreach (TxIn txin in this.Inputs)
                 {
-                    if(txin.PrevOut.IsNull)
+                    if (txin.PrevOut.IsNull)
                         return TransactionCheckResult.NullInputPrevOut;
                 }
             }

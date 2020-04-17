@@ -23,7 +23,7 @@ namespace Blockcore.Base
 
     public class ChainRepository : IChainRepository
     {
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
         private readonly IBlockHeaderStore blockHeaderStore;
 
         /// <summary>Instance logger.</summary>
@@ -34,12 +34,16 @@ namespace Blockcore.Base
 
         private BlockLocator locator;
 
-        public ChainRepository(string folder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer, IBlockHeaderStore blockHeaderStore)
+        public Network Network { get; }
+
+        public ChainRepository(string folder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer, IBlockHeaderStore blockHeaderStore, Network network)
         {
-            this.dBreezeSerializer = dBreezeSerializer;
-            this.blockHeaderStore = blockHeaderStore;
             Guard.NotEmpty(folder, nameof(folder));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
+
+            this.dataStoreSerializer = dataStoreSerializer;
+            this.blockHeaderStore = blockHeaderStore;
+            this.Network = network;
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
@@ -50,8 +54,8 @@ namespace Blockcore.Base
             this.leveldb = new DB(options, folder);
         }
 
-        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer, IBlockHeaderStore blockHeaderStore)
-            : this(dataFolder.ChainPath, loggerFactory, dBreezeSerializer, blockHeaderStore)
+        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer, IBlockHeaderStore blockHeaderStore, Network network)
+            : this(dataFolder.ChainPath, loggerFactory, dataStoreSerializer, blockHeaderStore, network)
         {
         }
 
@@ -70,10 +74,13 @@ namespace Blockcore.Base
                     return genesisHeader;
                 }
 
-                BlockHeader nextHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(firstRow);
-                Guard.Assert(nextHeader.GetHash() == genesisHeader.HashBlock); // can't swap networks
+                ChainRepositoryData data = new ChainRepositoryData();
+                data.FromBytes(firstRow, this.Network.Consensus.ConsensusFactory);
 
-                int index = 1;
+                ///BlockHeader nextHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(firstRow);
+                Guard.Assert(data.Hash == genesisHeader.HashBlock); // can't swap networks
+
+                int index = 0;
                 while (true)
                 {
                     byte[] row = this.leveldb.Get(BitConverter.GetBytes(index));
@@ -81,18 +88,21 @@ namespace Blockcore.Base
                     if (row == null)
                         break;
 
-                    if ((tip != null) && (nextHeader.HashPrevBlock != tip.HashBlock))
-                        break;
+                    //if ((tip != null) && (nextHeader.HashPrevBlock != tip.HashBlock))
+                    //    break;
 
-                    BlockHeader blockHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(row);
-                    tip = new ChainedHeader(nextHeader, blockHeader.HashPrevBlock, tip);
+                    data = new ChainRepositoryData();
+                    data.FromBytes(row, this.Network.Consensus.ConsensusFactory);
+
+                    //BlockHeader blockHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(row);
+                    tip = new ChainedHeader(data.Hash, data.Work, tip);
                     if (tip.Height == 0) tip.SetBlockHeaderStore(this.blockHeaderStore);
-                    nextHeader = blockHeader;
+                    // nextHeader = blockHeader;
                     index++;
                 }
 
-                if (nextHeader != null)
-                    tip = new ChainedHeader(nextHeader, nextHeader.GetHash(), tip);
+                //if (nextHeader != null)
+                //    tip = new ChainedHeader(nextHeader, nextHeader.GetHash(), tip);
 
                 if (tip == null)
                 {
@@ -131,7 +141,8 @@ namespace Blockcore.Base
                     IOrderedEnumerable<ChainedHeader> orderedChainedHeaders = headers.OrderBy(b => b.Height);
                     foreach (ChainedHeader block in orderedChainedHeaders)
                     {
-                        batch.Put(BitConverter.GetBytes(block.Height), this.dBreezeSerializer.Serialize(block.Header));
+                        var data = new ChainRepositoryData { Hash = block.HashBlock, Work = block.ChainWorkBytes };
+                        batch.Put(BitConverter.GetBytes(block.Height), data.ToBytes(this.Network.Consensus.ConsensusFactory));
                     }
 
                     this.locator = tip.GetLocator();
@@ -147,6 +158,34 @@ namespace Blockcore.Base
         {
             this.leveldb?.Dispose();
             (this.blockHeaderStore as IDisposable)?.Dispose();
+        }
+
+        internal class ChainRepositoryData : IBitcoinSerializable
+        {
+            public uint256 Hash;
+            public byte[] Work;
+
+            public ChainRepositoryData()
+            {
+            }
+
+            public void ReadWrite(BitcoinStream stream)
+            {
+                stream.ReadWrite(ref this.Hash);
+                if (stream.Serializing)
+                {
+                    int len = this.Work.Length;
+                    stream.ReadWrite(ref len);
+                    stream.ReadWrite(ref this.Work);
+                }
+                else
+                {
+                    int len = 0;
+                    stream.ReadWrite(ref len);
+                    this.Work = new byte[len];
+                    stream.ReadWrite(ref this.Work);
+                }
+            }
         }
     }
 }

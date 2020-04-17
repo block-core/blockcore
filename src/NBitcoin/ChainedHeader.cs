@@ -94,16 +94,14 @@ namespace NBitcoin
         /// </remarks>
         public ProvenBlockHeader ProvenBlockHeader { get; set; }
 
-        /// <summary>Integer representation of the <see cref="ChainWork"/>.</summary>
-        /// <remarks>The chain work field is represented as a byte array to reduce the memory foot print of a BigInteger</remarks>
-        private byte[] chainWork;
+        public byte[] ChainWorkBytes { get; private set; }
 
         /// <summary>Total amount of work in the chain up to and including this block.</summary>
         public uint256 ChainWork
         {
             get
             {
-                return Target.ToUInt256(this.chainWork);
+                return Target.ToUInt256(this.ChainWorkBytes);
             }
         }
 
@@ -147,8 +145,44 @@ namespace NBitcoin
                 throw new ArgumentException("IBlockHeaderStore can only be set on the genesis header.");
             }
 
-            blockHeaderStore.StoreHeader(this.HeaderStore.GetHeader(this, this.HashBlock));
+            if (this.HeaderStore != null)
+                blockHeaderStore.StoreHeader(this.HeaderStore.GetHeader(this, this.HashBlock));
             this.HeaderStore = blockHeaderStore;
+        }
+
+        public ChainedHeader(uint256 headerHash, byte[] chainWork, ChainedHeader previous)
+        {
+            this.HashBlock = headerHash ?? throw new ArgumentNullException(nameof(headerHash));
+            this.Next = new List<ChainedHeader>(1);
+
+            if (previous != null)
+                this.Height = previous.Height + 1;
+
+            this.Previous = previous;
+
+            if (previous == null)
+            {
+                if (this.Height != 0)
+                    throw new ArgumentException("Only the genesis block can have no previous block");
+            }
+            else
+            {
+                // Calculates the location of the skip block for this block.
+                this.Skip = this.Previous.GetAncestor(this.GetSkipHeight(this.Height));
+
+                if (this.Previous.HeaderStore == null)
+                    throw new ArgumentException("ChainedHeader.Previous.HeaderStore was not found");
+
+                this.HeaderStore = this.Previous.HeaderStore;
+            }
+
+            if (this.Height == 0)
+            {
+                this.BlockDataAvailability = BlockDataAvailabilityState.BlockAvailable;
+                this.BlockValidationState = ValidationState.FullyValidated;
+            }
+
+            this.ChainWorkBytes = chainWork;
         }
 
         public ChainedHeader(ProvenBlockHeader header, uint256 headerHash, ChainedHeader previous) : this(header.PosBlockHeader, headerHash, previous)
@@ -235,8 +269,8 @@ namespace NBitcoin
         /// </summary>
         private void CalculateChainWork()
         {
-            BigInteger previousWork = this.Previous == null ? BigInteger.Zero : new BigInteger(this.Previous.chainWork);
-            this.chainWork = previousWork.Add(this.GetBlockTarget()).ToByteArray();
+            BigInteger previousWork = this.Previous == null ? BigInteger.Zero : new BigInteger(this.Previous.ChainWorkBytes);
+            this.ChainWorkBytes = previousWork.Add(this.GetBlockTarget()).ToByteArray();
         }
 
         /// <summary>Calculates the amount of work that this block contributes to the total chain work.</summary>

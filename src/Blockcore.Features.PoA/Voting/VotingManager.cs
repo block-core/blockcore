@@ -52,7 +52,7 @@ namespace Blockcore.Features.PoA.Voting
         private bool isInitialized;
 
         public VotingManager(IFederationManager federationManager, ILoggerFactory loggerFactory, ISlotsManager slotsManager, IPollResultExecutor pollResultExecutor,
-            INodeStats nodeStats, DataFolder dataFolder, DBreezeSerializer dBreezeSerializer, ISignals signals, IFinalizedBlockInfoRepository finalizedBlockInfo)
+            INodeStats nodeStats, DataFolder dataFolder, DataStoreSerializer dataStoreSerializer, ISignals signals, IFinalizedBlockInfoRepository finalizedBlockInfo)
         {
             this.federationManager = Guard.NotNull(federationManager, nameof(federationManager));
             this.slotsManager = Guard.NotNull(slotsManager, nameof(slotsManager));
@@ -64,7 +64,7 @@ namespace Blockcore.Features.PoA.Voting
             this.locker = new object();
             this.votingDataEncoder = new VotingDataEncoder(loggerFactory);
             this.scheduledVotingData = new List<VotingData>();
-            this.pollsRepository = new PollsRepository(dataFolder, loggerFactory, dBreezeSerializer);
+            this.pollsRepository = new PollsRepository(dataFolder, loggerFactory, dataStoreSerializer);
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.isInitialized = false;

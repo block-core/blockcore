@@ -25,7 +25,7 @@ namespace Blockcore.IntegrationTests
         protected readonly ILoggerFactory loggerFactory;
         private readonly Network network;
         private readonly Network regTest;
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
         /// <summary>
         /// Initializes logger factory for tests in this class.
@@ -35,7 +35,7 @@ namespace Blockcore.IntegrationTests
             this.loggerFactory = new LoggerFactory();
             this.network = KnownNetworks.Main;
             this.regTest = KnownNetworks.RegTest;
-            this.dBreezeSerializer = new DBreezeSerializer(this.network.Consensus.ConsensusFactory);
+            this.dataStoreSerializer = new DataStoreSerializer(this.network.Consensus.ConsensusFactory);
         }
 
         [Fact]
@@ -279,7 +279,7 @@ namespace Blockcore.IntegrationTests
         [Fact]
         public void CanSaveChainIncrementally()
         {
-            using (var repo = new ChainRepository(TestBase.CreateTestDir(this), this.loggerFactory, this.dBreezeSerializer, new MemoryHeaderStore()))
+            using (var repo = new ChainRepository(TestBase.CreateTestDir(this), this.loggerFactory, this.dataStoreSerializer, new MemoryHeaderStore()))
             {
                 var chain = new ChainIndexer(this.regTest);
 

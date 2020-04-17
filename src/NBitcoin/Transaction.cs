@@ -1373,14 +1373,15 @@ namespace NBitcoin
         public void PrecomputeHash(bool invalidateExisting, bool lazily)
         {
             this.hashes = invalidateExisting ? new uint256[2] : this.hashes ?? new uint256[2];
+
             if (!lazily && this.hashes[0] == null)
-                this.hashes[0] = GetHash();
+                this.hashes[0] = this.GetHash();
+
             if (!lazily && this.hashes[1] == null)
-                this.hashes[1] = GetWitHash();
+                this.hashes[1] = this.GetWitHash();
         }
 
-        private uint256[] hashes
-            = null;
+        private uint256[] hashes = null;
 
         public uint256 GetWitHash()
         {

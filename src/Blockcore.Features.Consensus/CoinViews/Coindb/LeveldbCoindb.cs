@@ -40,21 +40,21 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         /// <summary>Access to dBreeze database.</summary>
         private readonly DB leveldb;
 
-        private DBreezeSerializer dBreezeSerializer;
+        private DataStoreSerializer dataStoreSerializer;
 
         public LeveldbCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
-            ILoggerFactory loggerFactory, INodeStats nodeStats, DBreezeSerializer dBreezeSerializer)
-            : this(network, dataFolder.CoindbPath, dateTimeProvider, loggerFactory, nodeStats, dBreezeSerializer)
+            ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
+            : this(network, dataFolder.CoindbPath, dateTimeProvider, loggerFactory, nodeStats, dataStoreSerializer)
         {
         }
 
         public LeveldbCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider,
-            ILoggerFactory loggerFactory, INodeStats nodeStats, DBreezeSerializer dBreezeSerializer)
+            ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotEmpty(folder, nameof(folder));
 
-            this.dBreezeSerializer = dBreezeSerializer;
+            this.dataStoreSerializer = dataStoreSerializer;
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
@@ -110,7 +110,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                 foreach (OutPoint outPoint in utxos)
                 {
                     byte[] row = this.leveldb.Get(new byte[] { coinsTable }.Concat(outPoint.ToBytes()).ToArray());
-                    Coins outputs = row != null ? this.dBreezeSerializer.Deserialize<Coins>(row) : null;
+                    Coins outputs = row != null ? this.dataStoreSerializer.Deserialize<Coins>(row) : null;
 
                     this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
 
@@ -159,7 +159,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                         var coin = toInsert[i];
                         this.logger.LogDebug("Outputs of transaction ID '{0}' are NOT PRUNABLE and will be inserted into the database. {1}/{2}.", coin.OutPoint, i, toInsert.Count);
 
-                        batch.Put(new byte[] { coinsTable }.Concat(coin.OutPoint.ToBytes()).ToArray(), this.dBreezeSerializer.Serialize(coin.Coins));
+                        batch.Put(new byte[] { coinsTable }.Concat(coin.OutPoint.ToBytes()).ToArray(), this.dataStoreSerializer.Serialize(coin.Coins));
                     }
 
                     if (rewindDataList != null)
@@ -170,7 +170,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                             this.logger.LogDebug("Rewind state #{0} created.", nextRewindIndex);
 
-                            batch.Put(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(nextRewindIndex)).ToArray(), this.dBreezeSerializer.Serialize(rewindData));
+                            batch.Put(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(nextRewindIndex)).ToArray(), this.dataStoreSerializer.Serialize(rewindData));
                         }
                     }
 
@@ -201,7 +201,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                 batch.Delete(BitConverter.GetBytes(current.Height));
 
-                var rewindData = this.dBreezeSerializer.Deserialize<RewindData>(row);
+                var rewindData = this.dataStoreSerializer.Deserialize<RewindData>(row);
 
                 foreach (OutPoint outPoint in rewindData.OutputsToRemove)
                 {
@@ -212,7 +212,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                 foreach (RewindDataOutput rewindDataOutput in rewindData.OutputsToRestore)
                 {
                     this.logger.LogDebug("Outputs of outpoint '{0}' will be restored.", rewindDataOutput.OutPoint);
-                    batch.Put(new byte[] { coinsTable }.Concat(rewindDataOutput.OutPoint.ToBytes()).ToArray(), this.dBreezeSerializer.Serialize(rewindDataOutput.Coins));
+                    batch.Put(new byte[] { coinsTable }.Concat(rewindDataOutput.OutPoint.ToBytes()).ToArray(), this.dataStoreSerializer.Serialize(rewindDataOutput.Coins));
                 }
 
                 res = rewindData.PreviousBlockHash;
@@ -228,7 +228,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         public RewindData GetRewindData(int height)
         {
             byte[] row = this.leveldb.Get(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(height)).ToArray());
-            return row != null ? this.dBreezeSerializer.Deserialize<RewindData>(row) : null;
+            return row != null ? this.dataStoreSerializer.Deserialize<RewindData>(row) : null;
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                 {
                     if (!stakeEntry.InStore)
                     {
-                        batch.Put(new byte[] { stakeTable }.Concat(stakeEntry.BlockId.ToBytes(false)).ToArray(), this.dBreezeSerializer.Serialize(stakeEntry.BlockStake));
+                        batch.Put(new byte[] { stakeTable }.Concat(stakeEntry.BlockId.ToBytes(false)).ToArray(), this.dataStoreSerializer.Serialize(stakeEntry.BlockStake));
                         stakeEntry.InStore = true;
                     }
                 }
@@ -265,7 +265,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                 if (stakeRow != null)
                 {
-                    blockStake.BlockStake = this.dBreezeSerializer.Deserialize<BlockStake>(stakeRow);
+                    blockStake.BlockStake = this.dataStoreSerializer.Deserialize<BlockStake>(stakeRow);
                     blockStake.InStore = true;
                 }
             }

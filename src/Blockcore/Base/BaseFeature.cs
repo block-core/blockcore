@@ -375,7 +375,7 @@ namespace Blockcore.Base
                 .FeatureServices(services =>
                 {
                     services.AddSingleton(fullNodeBuilder.Network.Consensus.ConsensusFactory);
-                    services.AddSingleton<DBreezeSerializer>();
+                    services.AddSingleton<DataStoreSerializer>();
                     services.AddSingleton(fullNodeBuilder.NodeSettings.LoggerFactory);
                     services.AddSingleton(fullNodeBuilder.NodeSettings.DataFolder);
                     services.AddSingleton<INodeLifetime, NodeLifetime>();

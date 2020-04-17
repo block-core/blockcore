@@ -16,7 +16,7 @@ namespace Blockcore.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -59,18 +59,23 @@ namespace Blockcore.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
-        ///
-        ///     .d8888b. 88888888888 8888888b.         d8888 88888888888 8888888  .d8888b. 
-        ///    d88P  Y88b    888     888   Y88b       d88888     888       888   d88P  Y88b
-        ///    Y88b.         888     888    888      d88P888     888       888   Y88b.     
-        ///     &quot;Y888b.      888     888   d88P     d88P 888     888       888    &quot;Y888b.  
-        ///        &quot;Y88b.    888     8888888P&quot;     d88P  888     888       888       &quot;Y88b.
-        ///          &quot;888    888     888 T88b     d88P   888     888       888         &quot;888
-        ///    Y88b  d88P   [rest of string was truncated]&quot;;.
+        ///        --                    
+        ///    ./yNMs                    
+        ///   -MMMMMs                    
+        ///   -MMMMMs                    
+        ///   -MMMMMs                    
+        ///   -MMMMMs    ``              
+        ///   -MMMMMs    /my/.`          
+        ///   -MMMMMs    /MMMNds:.       
+        ///   -MMMMMs    /MMMMMMMmh+-    
+        ///   -MMMMMs    `:sdNMMMMMMM.    _      _   _     _  _   _   _ 
+        ///   -MMMMMs       `-/mMMMMM.   |_) |  / \ /  |/ /  / \ |_) |_ 
+        ///   -MMMMMs          yMMMMM.   |_) |_ \_/ \_ |\ \_ \_/ | \ |_ 
+        ///   -MMMMMs          yMMMMM.                ww [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string AsciiLogo {
+        internal static string Logo {
             get {
-                return ResourceManager.GetString("AsciiLogo", resourceCulture);
+                return ResourceManager.GetString("Logo", resourceCulture);
             }
         }
     }

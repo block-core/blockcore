@@ -21,14 +21,14 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
     public class ProvenBlockHeaderRepositoryTests : LogsTestBase
     {
         private readonly Mock<ILoggerFactory> loggerFactory;
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
         private static readonly byte ProvenBlockHeaderTable = 1;
         private static readonly byte BlockHashHeightTable = 2;
 
         public ProvenBlockHeaderRepositoryTests() : base(KnownNetworks.StratisTest)
         {
             this.loggerFactory = new Mock<ILoggerFactory>();
-            this.dBreezeSerializer = new DBreezeSerializer(this.Network.Consensus.ConsensusFactory);
+            this.dataStoreSerializer = new DataStoreSerializer(this.Network.Consensus.ConsensusFactory);
         }
 
         [Fact]
@@ -62,8 +62,8 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, folder))
             {
-                var headerOut = this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(engine.Get(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(blockHashHeightPair.Height))));
-                var hashHeightPairOut = this.DBreezeSerializer.Deserialize<HashHeightPair>(engine.Get(DBH.Key(BlockHashHeightTable, new byte[] { 1 })));
+                var headerOut = this.dataStoreSerializer.Deserialize<ProvenBlockHeader>(engine.Get(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(blockHashHeightPair.Height))));
+                var hashHeightPairOut = this.DataStoreSerializer.Deserialize<HashHeightPair>(engine.Get(DBH.Key(BlockHashHeightTable, new byte[] { 1 })));
 
                 headerOut.Should().NotBeNull();
                 headerOut.GetHash().Should().Be(provenBlockHeaderIn.GetHash());
@@ -100,8 +100,8 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
                         headersOut.Add(enumeator.Current.Key, enumeator.Current.Value);
 
                 headersOut.Keys.Count.Should().Be(2);
-                this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(headersOut.First().Value).GetHash().Should().Be(items[0].GetHash());
-                this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(headersOut.Last().Value).GetHash().Should().Be(items[1].GetHash());
+                this.dataStoreSerializer.Deserialize<ProvenBlockHeader>(headersOut.First().Value).GetHash().Should().Be(items[0].GetHash());
+                this.dataStoreSerializer.Deserialize<ProvenBlockHeader>(headersOut.Last().Value).GetHash().Should().Be(items[1].GetHash());
             }
         }
 
@@ -116,7 +116,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, folder))
             {
-                engine.Put(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(blockHeight)), this.dBreezeSerializer.Serialize(headerIn));
+                engine.Put(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(blockHeight)), this.dataStoreSerializer.Serialize(headerIn));
             }
 
             // Query the repository for the item that was inserted in the above code.
@@ -136,8 +136,8 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, folder))
             {
-                engine.Put(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(1)), this.dBreezeSerializer.Serialize(CreateNewProvenBlockHeaderMock()));
-                engine.Put(DBH.Key(BlockHashHeightTable, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(new uint256(), 1)));
+                engine.Put(DBH.Key(ProvenBlockHeaderTable, BitConverter.GetBytes(1)), this.dataStoreSerializer.Serialize(CreateNewProvenBlockHeaderMock()));
+                engine.Put(DBH.Key(BlockHashHeightTable, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(new uint256(), 1)));
             }
 
             using (ProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
@@ -180,7 +180,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
 
         private ProvenBlockHeaderRepository SetupRepository(Network network, string folder)
         {
-            var repo = new ProvenBlockHeaderRepository(network, folder, this.LoggerFactory.Object, this.dBreezeSerializer);
+            var repo = new ProvenBlockHeaderRepository(network, folder, this.LoggerFactory.Object, this.dataStoreSerializer);
 
             Task task = repo.InitializeAsync();
 

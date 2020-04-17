@@ -17,7 +17,7 @@ namespace Blockcore.Features.PoA.Voting
 
         private readonly ILogger logger;
 
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
         internal const string TableName = "DataTable";
 
@@ -25,12 +25,12 @@ namespace Blockcore.Features.PoA.Voting
 
         private int highestPollId;
 
-        public PollsRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
-            : this(dataFolder.PollsPath, loggerFactory, dBreezeSerializer)
+        public PollsRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer)
+            : this(dataFolder.PollsPath, loggerFactory, dataStoreSerializer)
         {
         }
 
-        public PollsRepository(string folder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
+        public PollsRepository(string folder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotEmpty(folder, nameof(folder));
 
@@ -38,7 +38,7 @@ namespace Blockcore.Features.PoA.Voting
             this.dbreeze = new DBreezeEngine(folder);
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-            this.dBreezeSerializer = dBreezeSerializer;
+            this.dataStoreSerializer = dataStoreSerializer;
         }
 
         public void Initialize()
@@ -98,7 +98,7 @@ namespace Blockcore.Features.PoA.Voting
                     if (pollToAdd.Id != this.highestPollId + 1)
                         throw new ArgumentException("Id is incorrect. Gaps are not allowed.");
 
-                    byte[] bytes = this.dBreezeSerializer.Serialize(pollToAdd);
+                    byte[] bytes = this.dataStoreSerializer.Serialize(pollToAdd);
 
                     transaction.Insert<byte[], byte[]>(TableName, pollToAdd.Id.ToBytes(), bytes);
 
@@ -120,7 +120,7 @@ namespace Blockcore.Features.PoA.Voting
                 if (!row.Exists)
                     throw new ArgumentException("Value doesn't exist!");
 
-                byte[] bytes = this.dBreezeSerializer.Serialize(poll);
+                byte[] bytes = this.dataStoreSerializer.Serialize(poll);
 
                 transaction.Insert<byte[], byte[]>(TableName, poll.Id.ToBytes(), bytes);
 
@@ -142,7 +142,7 @@ namespace Blockcore.Features.PoA.Voting
                     if (!row.Exists)
                         throw new ArgumentException("Value under provided key doesn't exist!");
 
-                    Poll poll = this.dBreezeSerializer.Deserialize<Poll>(row.Value);
+                    Poll poll = this.dataStoreSerializer.Deserialize<Poll>(row.Value);
 
                     polls.Add(poll);
                 }
@@ -162,7 +162,7 @@ namespace Blockcore.Features.PoA.Voting
                 {
                     Row<byte[], byte[]> row = transaction.Select<byte[], byte[]>(TableName, i.ToBytes());
 
-                    Poll poll = this.dBreezeSerializer.Deserialize<Poll>(row.Value);
+                    Poll poll = this.dataStoreSerializer.Deserialize<Poll>(row.Value);
 
                     polls.Add(poll);
                 }

@@ -86,7 +86,7 @@ namespace Blockcore.Connection
         private readonly IAsyncProvider asyncProvider;
 
         private IConsensusManager consensusManager;
-        
+
         private readonly IAsyncDelegateDequeuer<INetworkPeer> connectedPeersQueue;
 
         /// <summary>Traffic statistics from peers that have been disconnected.</summary>

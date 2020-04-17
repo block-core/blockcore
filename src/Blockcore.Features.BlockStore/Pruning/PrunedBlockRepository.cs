@@ -13,7 +13,7 @@ namespace Blockcore.Features.BlockStore.Pruning
     public class PrunedBlockRepository : IPrunedBlockRepository
     {
         private readonly IBlockRepository blockRepository;
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
         private readonly ILogger logger;
         private static readonly byte[] prunedTipKey = new byte[2];
         private readonly StoreSettings storeSettings;
@@ -21,10 +21,10 @@ namespace Blockcore.Features.BlockStore.Pruning
         /// <inheritdoc />
         public HashHeightPair PrunedTip { get; private set; }
 
-        public PrunedBlockRepository(IBlockRepository blockRepository, DBreezeSerializer dBreezeSerializer, ILoggerFactory loggerFactory, StoreSettings storeSettings)
+        public PrunedBlockRepository(IBlockRepository blockRepository, DataStoreSerializer dataStoreSerializer, ILoggerFactory loggerFactory, StoreSettings storeSettings)
         {
             this.blockRepository = blockRepository;
-            this.dBreezeSerializer = dBreezeSerializer;
+            this.dataStoreSerializer = dataStoreSerializer;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.storeSettings = storeSettings;
         }
@@ -46,7 +46,7 @@ namespace Blockcore.Features.BlockStore.Pruning
 
                 this.PrunedTip = new HashHeightPair(genesis.GetHash(), 0);
 
-                this.blockRepository.Leveldb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dBreezeSerializer.Serialize(this.PrunedTip));
+                this.blockRepository.Leveldb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
             }
 
             if (nodeInitializing)
@@ -110,7 +110,7 @@ namespace Blockcore.Features.BlockStore.Pruning
             {
                 byte[] row = leveldb.Get(DBH.Key(BlockRepository.CommonTableName, prunedTipKey));
                 if (row != null)
-                    this.PrunedTip = this.dBreezeSerializer.Deserialize<HashHeightPair>(row);
+                    this.PrunedTip = this.dataStoreSerializer.Deserialize<HashHeightPair>(row);
             }
         }
 

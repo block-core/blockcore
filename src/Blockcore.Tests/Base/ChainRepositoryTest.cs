@@ -14,11 +14,11 @@ namespace Blockcore.Tests.Base
 {
     public class ChainRepositoryTest : TestBase
     {
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
         public ChainRepositoryTest() : base(KnownNetworks.StratisRegTest)
         {
-            this.dBreezeSerializer = new DBreezeSerializer(this.Network.Consensus.ConsensusFactory);
+            this.dataStoreSerializer = new DataStoreSerializer(this.Network.Consensus.ConsensusFactory);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Blockcore.Tests.Base
             var chain = new ChainIndexer(KnownNetworks.StratisRegTest);
             this.AppendBlock(chain);
 
-            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dBreezeSerializer, new MemoryHeaderStore()))
+            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dataStoreSerializer, new MemoryHeaderStore()))
             {
                 repo.SaveAsync(chain).GetAwaiter().GetResult();
             }
@@ -40,7 +40,7 @@ namespace Blockcore.Tests.Base
 
                 while (itr.MoveNext())
                 {
-                    var blockHeader = this.dBreezeSerializer.Deserialize<BlockHeader>(itr.Current.Value);
+                    var blockHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(itr.Current.Value);
 
                     if (tip != null && blockHeader.HashPrevBlock != tip.HashBlock)
                         break;
@@ -71,13 +71,13 @@ namespace Blockcore.Tests.Base
 
                     foreach (ChainedHeader block in blocks)
                     {
-                        batch.Put(BitConverter.GetBytes(block.Height), this.dBreezeSerializer.Serialize(block.Header));
+                        batch.Put(BitConverter.GetBytes(block.Height), this.dataStoreSerializer.Serialize(block.Header));
                     }
 
                     engine.Write(batch);
                 }
             }
-            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dBreezeSerializer, new MemoryHeaderStore()))
+            using (var repo = new ChainRepository(dir, new LoggerFactory(), this.dataStoreSerializer, new MemoryHeaderStore()))
             {
                 var testChain = new ChainIndexer(KnownNetworks.StratisRegTest);
                 testChain.SetTip(repo.LoadAsync(testChain.Genesis).GetAwaiter().GetResult());

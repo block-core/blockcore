@@ -100,16 +100,16 @@ namespace Blockcore.Features.BlockStore
 
         public DB Leveldb => this.leveldb;
 
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
         private readonly IReadOnlyDictionary<uint256, Transaction> genesisTransactions;
 
         public BlockRepository(Network network, DataFolder dataFolder,
-            ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
-            : this(network, dataFolder.BlockPath, loggerFactory, dBreezeSerializer)
+            ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer)
+            : this(network, dataFolder.BlockPath, loggerFactory, dataStoreSerializer)
         {
         }
 
-        public BlockRepository(Network network, string folder, ILoggerFactory loggerFactory, DBreezeSerializer dBreezeSerializer)
+        public BlockRepository(Network network, string folder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotEmpty(folder, nameof(folder));
@@ -121,7 +121,7 @@ namespace Blockcore.Features.BlockStore
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.network = network;
-            this.dBreezeSerializer = dBreezeSerializer;
+            this.dataStoreSerializer = dataStoreSerializer;
             this.genesisTransactions = network.GetGenesis().Transactions.ToDictionary(k => k.GetHash());
         }
 
@@ -175,7 +175,7 @@ namespace Blockcore.Features.BlockStore
 
                 if (blockRow != null)
                 {
-                    var block = this.dBreezeSerializer.Deserialize<Block>(blockRow);
+                    var block = this.dataStoreSerializer.Deserialize<Block>(blockRow);
                     res = block.Transactions.FirstOrDefault(t => t.GetHash() == trxid);
                 }
             }
@@ -231,7 +231,7 @@ namespace Blockcore.Features.BlockStore
                         return null;
                     }
 
-                    var block = this.dBreezeSerializer.Deserialize<Block>(blockRow);
+                    var block = this.dataStoreSerializer.Deserialize<Block>(blockRow);
                     Transaction tx = block.Transactions.FirstOrDefault(t => t.GetHash() == trxids[i]);
 
                     txes[i] = tx;
@@ -297,7 +297,7 @@ namespace Blockcore.Features.BlockStore
                     byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, blockId.ToBytes()));
                     if (blockRow == null)
                     {
-                        batch.Put(DBH.Key(BlockTableName, blockId.ToBytes()), this.dBreezeSerializer.Serialize(block));
+                        batch.Put(DBH.Key(BlockTableName, blockId.ToBytes()), this.dataStoreSerializer.Serialize(block));
 
                         if (this.TxIndex)
                         {
@@ -336,7 +336,7 @@ namespace Blockcore.Features.BlockStore
                 foreach (ChainedHeader chainedHeader in headers)
                 {
                     byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, chainedHeader.HashBlock.ToBytes()));
-                    Block block = blockRow != null ? this.dBreezeSerializer.Deserialize<Block>(blockRow) : null;
+                    Block block = blockRow != null ? this.dataStoreSerializer.Deserialize<Block>(blockRow) : null;
                     yield return block;
                 }
             }
@@ -371,7 +371,7 @@ namespace Blockcore.Features.BlockStore
                         {
                             if (enumerator.Current.Key[0] == BlockTableName)
                             {
-                                var block = this.dBreezeSerializer.Deserialize<Block>(enumerator.Current.Value);
+                                var block = this.dataStoreSerializer.Deserialize<Block>(enumerator.Current.Value);
                                 foreach (Transaction transaction in block.Transactions)
                                 {
                                     batch.Put(DBH.Key(TransactionTableName, transaction.GetHash().ToBytes()), block.GetHash().ToBytes());
@@ -454,7 +454,7 @@ namespace Blockcore.Features.BlockStore
             {
                 byte[] row = this.leveldb.Get(DBH.Key(CommonTableName, RepositoryTipKey));
                 if (row != null)
-                    this.TipHashAndHeight = this.dBreezeSerializer.Deserialize<HashHeightPair>(row);
+                    this.TipHashAndHeight = this.dataStoreSerializer.Deserialize<HashHeightPair>(row);
             }
 
             return this.TipHashAndHeight;
@@ -463,7 +463,7 @@ namespace Blockcore.Features.BlockStore
         private void SaveTipHashAndHeight(HashHeightPair newTip)
         {
             this.TipHashAndHeight = newTip;
-            this.leveldb.Put(DBH.Key(CommonTableName, RepositoryTipKey), this.dBreezeSerializer.Serialize(newTip));
+            this.leveldb.Put(DBH.Key(CommonTableName, RepositoryTipKey), this.dataStoreSerializer.Serialize(newTip));
         }
 
         /// <inheritdoc />
@@ -561,7 +561,7 @@ namespace Blockcore.Features.BlockStore
                 byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, key.Item2));
                 if (blockRow != null)
                 {
-                    results[key.Item1] = this.dBreezeSerializer.Deserialize<Block>(blockRow);
+                    results[key.Item1] = this.dataStoreSerializer.Deserialize<Block>(blockRow);
 
                     this.logger.LogDebug("Block hash '{0}' loaded from the store.", key.Item1);
                 }

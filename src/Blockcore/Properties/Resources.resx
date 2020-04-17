@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,55 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AsciiLogo" xml:space="preserve">
+  <data name="Logo" xml:space="preserve">
     <value>
-
-     .d8888b. 88888888888 8888888b.         d8888 88888888888 8888888  .d8888b. 
-    d88P  Y88b    888     888   Y88b       d88888     888       888   d88P  Y88b
-    Y88b.         888     888    888      d88P888     888       888   Y88b.     
-     "Y888b.      888     888   d88P     d88P 888     888       888    "Y888b.  
-        "Y88b.    888     8888888P"     d88P  888     888       888       "Y88b.
-          "888    888     888 T88b     d88P   888     888       888         "888
-    Y88b  d88P    888     888  T88b   d8888888888     888       888   Y88b  d88P
-     "Y8888P"     888     888   T88b d88P     888     888     8888888  "Y8888P" 
-
-················································································
-················································································
-······································STRAT·····································
-···································STRATISSTRAT·································
-·······························STRATISS····STRATIS······························
-····························STRATIS···········STRATISS··························
-·························STRATIS··················STRATIS·······················
-·····················STRATISS························STRATISS···················
-··················STRATIS································STRATIS················
-···············STRATIS······································STRATIS·············
-···········STRATIS··············································STRATIS·········
-········STRATIS····················································STRATISS·····
-····STRATISS···························································STRATIS··
-··STRATIS································································STRAT··
-··STRATISST··························································STRATISS···
-··STRA··STRATIS···················································STRATIS·······
-··STRA·····STRATISS············································STRATIS··········
-··STRA·········STRATIS·····································STRATIS··············
-··STRATI··········STRATISS······························STRATIS··········STRAT··
-····STRATIS···········STRATIS·······················STRATIS··········STRATISST··
-·······STRATISS··········STRATISS················STRATIS·········STRATISS··STR··
-···········STRATIS···········STRATIS·········STRATIST·········STRATIST·····STR··
-·····S········STRATIS···········STRATIS··STRATISS··········STRATIS········STRA··
-····STRATIS·······STRATIS···········STRATISST··········STRATISS·········STRATI··
-······STRATIS········STRATIS···········STR··········STRATIS·········STRATIS·····
-·········STRATISS········STRATIS················STRATISS·········STRATIS········
-·············STRATIS········STRATIS··········STRATIS·········STRATIS············
-················STRATIS·········STRATIS··STRATISS·········STRATIS···············
-···················STRATISS········STRATISSTR·········STRATISS··················
-·······················STRATIS········STRA·········STRATIS······················
-··························STRATISS·············STRATISS·························
-······························STRATIS·······STRATIS·····························
-·································STRATISSTRATISS································
-·····································STRATIS····································
-················································································
-
-
-</value>
+        --                    
+    ./yNMs                    
+   -MMMMMs                    
+   -MMMMMs                    
+   -MMMMMs                    
+   -MMMMMs    ``              
+   -MMMMMs    /my/.`          
+   -MMMMMs    /MMMNds:.       
+   -MMMMMs    /MMMMMMMmh+-    
+   -MMMMMs    `:sdNMMMMMMM.    _      _   _     _  _   _   _ 
+   -MMMMMs       `-/mMMMMM.   |_) |  / \ /  |/ /  / \ |_) |_ 
+   -MMMMMs          yMMMMM.   |_) |_ \_/ \_ |\ \_ \_/ | \ |_ 
+   -MMMMMs          yMMMMM.                www.blockcore.net
+   -MMMMMh-`      `:dMMMMM.   
+   -MMMMMMNmy/..+ymMMMMMMM.   {title}
+   `/ymMMMMMMMNNMMMMMMMmy/    
+      `-ohNMMMMMMMMNh+-`      
+          `:smMMds:`          
+              ..
+           </value>
   </data>
 </root>

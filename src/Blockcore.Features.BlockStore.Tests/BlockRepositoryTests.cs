@@ -26,7 +26,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 byte[] blockRow = engine.Get(DBH.Key(BlockRepository.CommonTableName, new byte[0]));
                 bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(BlockRepository.CommonTableName, new byte[1])));
 
-                Assert.Equal(this.Network.GetGenesis().GetHash(), this.DBreezeSerializer.Deserialize<HashHeightPair>(blockRow).Hash);
+                Assert.Equal(this.Network.GetGenesis().GetHash(), this.DataStoreSerializer.Deserialize<HashHeightPair>(blockRow).Hash);
                 Assert.False(txIndexRow);
             }
         }
@@ -38,7 +38,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(new uint256(56), 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(new uint256(56), 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
@@ -51,7 +51,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 byte[] blockRow = engine.Get(DBH.Key(BlockRepository.CommonTableName, new byte[0]));
                 bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(BlockRepository.CommonTableName, new byte[1])));
 
-                Assert.Equal(new HashHeightPair(new uint256(56), 1), this.DBreezeSerializer.Deserialize<HashHeightPair>(blockRow));
+                Assert.Equal(new HashHeightPair(new uint256(56), 1), this.DataStoreSerializer.Deserialize<HashHeightPair>(blockRow));
                 Assert.True(txIndexRow);
             }
         }
@@ -63,7 +63,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
             }
 
@@ -81,7 +81,7 @@ namespace Blockcore.Features.BlockStore.Tests
             using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
                 var blockId = new uint256(8920);
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
@@ -106,7 +106,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
                 engine.Put(DBH.Key(BlockRepository.BlockTableName, block.Header.GetHash().ToBytes()), block.ToBytes());
                 engine.Put(DBH.Key(BlockRepository.TransactionTableName, trans.GetHash().ToBytes()), block.Header.GetHash().ToBytes());
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
@@ -123,7 +123,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
             }
 
@@ -140,7 +140,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
@@ -158,7 +158,7 @@ namespace Blockcore.Features.BlockStore.Tests
             using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
                 engine.Put(DBH.Key(BlockRepository.TransactionTableName, new uint256(26).ToBytes()), new uint256(42).ToBytes());
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
@@ -195,7 +195,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DBreezeSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
                 engine.Put(DBH.Key(BlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
@@ -211,7 +211,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(BlockRepository.BlockTableName);
                 Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(BlockRepository.TransactionTableName);
 
-                Assert.Equal(new HashHeightPair(nextBlockHash, 100), this.DBreezeSerializer.Deserialize<HashHeightPair>(blockHashKeyRow));
+                Assert.Equal(new HashHeightPair(nextBlockHash, 100), this.DataStoreSerializer.Deserialize<HashHeightPair>(blockHashKeyRow));
                 Assert.Equal(2, blockDict.Count);
                 Assert.Equal(3, transDict.Count);
 
@@ -362,7 +362,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(BlockRepository.BlockTableName);
                 Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(BlockRepository.TransactionTableName);
 
-                Assert.Equal(tip, this.DBreezeSerializer.Deserialize<HashHeightPair>(blockHashKeyRow));
+                Assert.Equal(tip, this.DataStoreSerializer.Deserialize<HashHeightPair>(blockHashKeyRow));
                 Assert.Empty(blockDict);
                 Assert.Empty(transDict);
             }
@@ -397,7 +397,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
                 // Block stored as expected.
                 Assert.Single(blockDict);
-                Assert.Equal(block.GetHash(), this.DBreezeSerializer.Deserialize<Block>(blockDict.FirstOrDefault().Value).GetHash());
+                Assert.Equal(block.GetHash(), this.DataStoreSerializer.Deserialize<Block>(blockDict.FirstOrDefault().Value).GetHash());
 
                 // Transaction row in database stored as expected.
                 Assert.Single(transDict);
@@ -437,7 +437,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
                 // Block still stored as expected.
                 Assert.Single(blockDict);
-                Assert.Equal(block.GetHash(), this.DBreezeSerializer.Deserialize<Block>(blockDict.FirstOrDefault().Value).GetHash());
+                Assert.Equal(block.GetHash(), this.DataStoreSerializer.Deserialize<Block>(blockDict.FirstOrDefault().Value).GetHash());
 
                 // No transactions indexed.
                 Assert.Empty(transDict);
@@ -536,7 +536,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
         private IBlockRepository SetupRepository(Network main, string dir)
         {
-            var dBreezeSerializer = new DBreezeSerializer(main.Consensus.ConsensusFactory);
+            var dBreezeSerializer = new DataStoreSerializer(main.Consensus.ConsensusFactory);
 
             var repository = new BlockRepository(main, dir, this.LoggerFactory.Object, dBreezeSerializer);
             repository.Initialize();

@@ -13,7 +13,7 @@ namespace Blockcore.Utilities
         /// <summary>Persists byte array to the database.</summary>
         void SaveBytes(string key, byte[] bytes);
 
-        /// <summary>Persists any object that <see cref="DBreezeSerializer"/> can serialize to the database.</summary>
+        /// <summary>Persists any object that <see cref="DataStoreSerializer"/> can serialize to the database.</summary>
         void SaveValue<T>(string key, T value);
 
         /// <summary>Persists any object to the database. Object is stored as JSON.</summary>
@@ -22,7 +22,7 @@ namespace Blockcore.Utilities
         /// <summary>Loads byte array from the database.</summary>
         byte[] LoadBytes(string key);
 
-        /// <summary>Loads an object that <see cref="DBreezeSerializer"/> can deserialize from the database.</summary>
+        /// <summary>Loads an object that <see cref="DataStoreSerializer"/> can deserialize from the database.</summary>
         T LoadValue<T>(string key);
 
         /// <summary>Loads JSON from the database and deserializes it.</summary>
@@ -34,16 +34,16 @@ namespace Blockcore.Utilities
         /// <summary>Access to database.</summary>
         private readonly DB leveldb;
 
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
-        public KeyValueRepository(DataFolder dataFolder, DBreezeSerializer dBreezeSerializer) : this(dataFolder.KeyValueRepositoryPath, dBreezeSerializer)
+        public KeyValueRepository(DataFolder dataFolder, DataStoreSerializer dataStoreSerializer) : this(dataFolder.KeyValueRepositoryPath, dataStoreSerializer)
         {
         }
 
-        public KeyValueRepository(string folder, DBreezeSerializer dBreezeSerializer)
+        public KeyValueRepository(string folder, DataStoreSerializer dataStoreSerializer)
         {
             Directory.CreateDirectory(folder);
-            this.dBreezeSerializer = dBreezeSerializer;
+            this.dataStoreSerializer = dataStoreSerializer;
 
             // Open a connection to a new DB and create if not found
             var options = new Options { CreateIfMissing = true };
@@ -61,7 +61,7 @@ namespace Blockcore.Utilities
         /// <inheritdoc />
         public void SaveValue<T>(string key, T value)
         {
-            this.SaveBytes(key, this.dBreezeSerializer.Serialize(value));
+            this.SaveBytes(key, this.dataStoreSerializer.Serialize(value));
         }
 
         /// <inheritdoc />
@@ -94,7 +94,7 @@ namespace Blockcore.Utilities
             if (bytes == null)
                 return default(T);
 
-            T value = this.dBreezeSerializer.Deserialize<T>(bytes);
+            T value = this.dataStoreSerializer.Deserialize<T>(bytes);
             return value;
         }
 

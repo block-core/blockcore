@@ -23,7 +23,7 @@ namespace Blockcore.IntegrationTests
             this.Network = network;
             this.FolderName = TestBase.CreateTestDir(caller, name);
             var dateTimeProvider = new DateTimeProvider();
-            var serializer = new DBreezeSerializer(this.Network.Consensus.ConsensusFactory);
+            var serializer = new DataStoreSerializer(this.Network.Consensus.ConsensusFactory);
             //this.Coindb = new DBreezeCoindb(network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
             //this.Coindb = new FasterCoindb(network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
             this.Coindb = new LeveldbCoindb(network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
@@ -63,7 +63,7 @@ namespace Blockcore.IntegrationTests
             ((IDisposable)this.Coindb).Dispose();
             this.cleanList.Remove((IDisposable)this.Coindb);
             var dateTimeProvider = new DateTimeProvider();
-            var serializer = new DBreezeSerializer(this.Network.Consensus.ConsensusFactory);
+            var serializer = new DataStoreSerializer(this.Network.Consensus.ConsensusFactory);
             //this.Coindb = new DBreezeCoindb(this.Network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
             //this.Coindb = new FasterCoindb(this.Network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);
             this.Coindb = new LeveldbCoindb(this.Network, this.FolderName, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), serializer);

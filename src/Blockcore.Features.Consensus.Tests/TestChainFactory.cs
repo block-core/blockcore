@@ -147,7 +147,7 @@ namespace Blockcore.Features.Consensus.Tests
             testChainContext.PartialValidator = new PartialValidator(testChainContext.AsyncProvider, testChainContext.ConsensusRules, testChainContext.LoggerFactory);
             testChainContext.FullValidator = new FullValidator(testChainContext.ConsensusRules, testChainContext.LoggerFactory);
 
-            var dBreezeSerializer = new DBreezeSerializer(network.Consensus.ConsensusFactory);
+            var dBreezeSerializer = new DataStoreSerializer(network.Consensus.ConsensusFactory);
 
             var blockRepository = new BlockRepository(testChainContext.Network, dataFolder, testChainContext.LoggerFactory, dBreezeSerializer);
 

@@ -43,9 +43,9 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             this.loggerFactory = new ExtendedLoggerFactory();
             this.nodeStats = new NodeStats(this.dateTimeProvider, this.loggerFactory);
 
-            //this.coindb = new DBreezeCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DBreezeSerializer(this.network.Consensus.ConsensusFactory));
-            //this.coindb = new FasterCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DBreezeSerializer(this.network.Consensus.ConsensusFactory));
-            this.coindb = new LeveldbCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DBreezeSerializer(this.network.Consensus.ConsensusFactory));
+            //this.coindb = new DBreezeCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DataStoreSerializer(this.network.Consensus.ConsensusFactory));
+            //this.coindb = new FasterCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DataStoreSerializer(this.network.Consensus.ConsensusFactory));
+            this.coindb = new LeveldbCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DataStoreSerializer(this.network.Consensus.ConsensusFactory));
             this.coindb.Initialize();
 
             this.chainIndexer = new ChainIndexer(this.network);

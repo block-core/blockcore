@@ -31,7 +31,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         private BackendPerformanceSnapshot latestPerformanceSnapShot;
 
-        private DBreezeSerializer dBreezeSerializer;
+        private DataStoreSerializer dataStoreSerializer;
 
         private string dataFolder;
 
@@ -39,17 +39,17 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         public IDevice log;
         public IDevice objLog;
 
-        public FasterCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, DBreezeSerializer dBreezeSerializer)
-             : this(network, dataFolder.CoindbPath, dateTimeProvider, loggerFactory, nodeStats, dBreezeSerializer)
+        public FasterCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
+             : this(network, dataFolder.CoindbPath, dateTimeProvider, loggerFactory, nodeStats, dataStoreSerializer)
         {
         }
 
-        public FasterCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, DBreezeSerializer dBreezeSerializer)
+        public FasterCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotEmpty(folder, nameof(folder));
 
-            this.dBreezeSerializer = dBreezeSerializer;
+            this.dataStoreSerializer = dataStoreSerializer;
 
             // Create the coinview folder if it does not exist.
             Directory.CreateDirectory(folder);
@@ -237,7 +237,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                             context.FinalizeRead(ref addStatus, ref output);
                         }
 
-                        Coins outputs = addStatus == Status.OK ? this.dBreezeSerializer.Deserialize<Coins>(output.value.value) : null;
+                        Coins outputs = addStatus == Status.OK ? this.dataStoreSerializer.Deserialize<Coins>(output.value.value) : null;
 
                         this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
 
@@ -297,7 +297,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                         this.logger.LogDebug("Outputs of transaction ID '{0}' are NOT PRUNABLE and will be inserted into the database. {1}/{2}.", coin.OutPoint, i, toInsert.Count);
 
                         var upsertKey = new Types.StoreKey { tableType = "Coins", key = coin.OutPoint.ToBytes() };
-                        var upsertValue = new Types.StoreValue { value = this.dBreezeSerializer.Serialize(coin.Coins) };
+                        var upsertValue = new Types.StoreValue { value = this.dataStoreSerializer.Serialize(coin.Coins) };
                         Types.StoreContext context2 = new Types.StoreContext();
                         var addStatus = session.Upsert(ref upsertKey, ref upsertValue, context2, 1);
 
@@ -314,7 +314,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                             this.logger.LogDebug("Rewind state #{0} created.", nextRewindIndex);
 
                             var upsertKey = new Types.StoreKey { tableType = "Rewind", key = BitConverter.GetBytes(nextRewindIndex) };
-                            var upsertValue = new Types.StoreValue { value = this.dBreezeSerializer.Serialize(rewindData) };
+                            var upsertValue = new Types.StoreValue { value = this.dataStoreSerializer.Serialize(rewindData) };
                             Types.StoreContext context2 = new Types.StoreContext();
                             var addStatus = session.Upsert(ref upsertKey, ref upsertValue, context2, 1);
 
@@ -364,7 +364,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                 if (deleteStatus != Status.OK)
                     throw new Exception();
 
-                var rewindData = this.dBreezeSerializer.Deserialize<RewindData>(output1.value.value);
+                var rewindData = this.dataStoreSerializer.Deserialize<RewindData>(output1.value.value);
 
                 this.SetBlockHash(wrapper, rewindData.PreviousBlockHash);
 
@@ -384,7 +384,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                     this.logger.LogDebug("Outputs of outpoint '{0}' will be restored.", rewindDataOutput.OutPoint);
 
                     var upsertKey = new Types.StoreKey { tableType = "Coins", key = rewindDataOutput.OutPoint.ToBytes() };
-                    var upsertValue = new Types.StoreValue { value = this.dBreezeSerializer.Serialize(rewindDataOutput.Coins) };
+                    var upsertValue = new Types.StoreValue { value = this.dataStoreSerializer.Serialize(rewindDataOutput.Coins) };
                     Types.StoreContext context2 = new Types.StoreContext();
                     addStatus = session.Upsert(ref upsertKey, ref upsertValue, context2, 1);
 

@@ -19,20 +19,20 @@ namespace Blockcore.IntegrationTests.BlockStore
     {
         private readonly ILoggerFactory loggerFactory;
         private readonly Network network;
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
         public BlockStoreTests()
         {
             this.loggerFactory = new LoggerFactory();
 
             this.network = new BitcoinRegTest();
-            this.dBreezeSerializer = new DBreezeSerializer(this.network.Consensus.ConsensusFactory);
+            this.dataStoreSerializer = new DataStoreSerializer(this.network.Consensus.ConsensusFactory);
         }
 
         [Fact]
         public void BlockRepositoryPutBatch()
         {
-            using (var blockRepository = new BlockRepository(this.network, TestBase.CreateDataFolder(this), this.loggerFactory, this.dBreezeSerializer))
+            using (var blockRepository = new BlockRepository(this.network, TestBase.CreateDataFolder(this), this.loggerFactory, this.dataStoreSerializer))
             {
                 blockRepository.SetTxIndex(true);
 

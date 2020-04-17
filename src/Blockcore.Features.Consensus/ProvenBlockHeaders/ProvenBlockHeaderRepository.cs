@@ -48,7 +48,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// </summary>
         private ProvenBlockHeader provenBlockHeaderTip;
 
-        private readonly DBreezeSerializer dBreezeSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
         /// <inheritdoc />
         public HashHeightPair TipHashHeight { get; private set; }
@@ -59,10 +59,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <param name="network">Specification of the network the node runs on - RegTest/TestNet/MainNet.</param>
         /// <param name="folder"><see cref="ProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
         /// <param name="loggerFactory">Factory to create a logger for this type.</param>
-        /// <param name="dBreezeSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
+        /// <param name="dataStoreSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
         public ProvenBlockHeaderRepository(Network network, DataFolder folder, ILoggerFactory loggerFactory,
-            DBreezeSerializer dBreezeSerializer)
-        : this(network, folder.ProvenBlockHeaderPath, loggerFactory, dBreezeSerializer)
+            DataStoreSerializer dataStoreSerializer)
+        : this(network, folder.ProvenBlockHeaderPath, loggerFactory, dataStoreSerializer)
         {
         }
 
@@ -72,13 +72,13 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <param name="network">Specification of the network the node runs on - RegTest/TestNet/MainNet.</param>
         /// <param name="folder"><see cref="ProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
         /// <param name="loggerFactory">Factory to create a logger for this type.</param>
-        /// <param name="dBreezeSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
+        /// <param name="dataStoreSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
         public ProvenBlockHeaderRepository(Network network, string folder, ILoggerFactory loggerFactory,
-            DBreezeSerializer dBreezeSerializer)
+            DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotNull(folder, nameof(folder));
-            this.dBreezeSerializer = dBreezeSerializer;
+            this.dataStoreSerializer = dataStoreSerializer;
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
@@ -125,7 +125,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
                 }
 
                 if (row != null)
-                    return this.dBreezeSerializer.Deserialize<ProvenBlockHeader>(row);
+                    return this.dataStoreSerializer.Deserialize<ProvenBlockHeader>(row);
 
                 return null;
             });
@@ -166,7 +166,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
             lock (this.locker)
             {
-                this.leveldb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dBreezeSerializer.Serialize(newTip));
+                this.leveldb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dataStoreSerializer.Serialize(newTip));
             }
         }
 
@@ -179,7 +179,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             using (var batch = new WriteBatch())
             {
                 foreach (KeyValuePair<int, ProvenBlockHeader> header in headers)
-                    batch.Put(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(header.Key)), this.dBreezeSerializer.Serialize(header.Value));
+                    batch.Put(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(header.Key)), this.dataStoreSerializer.Serialize(header.Value));
 
                 lock (this.locker)
                 {
@@ -206,7 +206,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             }
 
             if (row != null)
-                tipHash = this.dBreezeSerializer.Deserialize<HashHeightPair>(row);
+                tipHash = this.dataStoreSerializer.Deserialize<HashHeightPair>(row);
 
             return tipHash;
         }

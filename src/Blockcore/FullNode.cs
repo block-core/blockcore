@@ -178,7 +178,7 @@ namespace Blockcore
 
             this.AsyncProvider = this.Services.ServiceProvider.GetService<IAsyncProvider>();
 
-            this.logger.LogInformation(Properties.Resources.Logo.Replace("{title}", this.Network.Name + " - Full Consensus Validating Node"));
+            this.logger.LogInformation(Properties.BlockcoreLogo.Logo);
             this.logger.LogInformation("Full node initialized on {0}.", this.Network.Name);
 
             this.State = FullNodeState.Initialized;

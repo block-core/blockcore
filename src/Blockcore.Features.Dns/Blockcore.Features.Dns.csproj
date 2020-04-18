@@ -15,7 +15,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <VersionPrefix>1.0.2</VersionPrefix>
+    <VersionPrefix>1.0.3</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

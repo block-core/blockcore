@@ -146,14 +146,9 @@ namespace NBitcoin
             byte[] salt = Concat(Encoding.UTF8.GetBytes("mnemonic"), Normalize(passphrase));
             byte[] bytes = Normalize(this._Mnemonic);
 
-#if NETCORE
             var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new NBitcoin.BouncyCastle.Crypto.Digests.Sha512Digest());
             mac.Init(new KeyParameter(bytes));
             return Pbkdf2.ComputeDerivedKey(mac, salt, 2048, 64);
-#else
-            return Pbkdf2.ComputeDerivedKey(new HMACSHA512(bytes), salt, 2048, 64);
-#endif
-
         }
 
         internal static byte[] Normalize(string str)

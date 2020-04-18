@@ -29,7 +29,6 @@ namespace NBitcoin.BouncyCastle.Utilities.IO
             }
         }
 
-#if NETCORE
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -38,13 +37,6 @@ namespace NBitcoin.BouncyCastle.Utilities.IO
             }
             base.Dispose(disposing);
         }
-#else
-        public override void Close()
-        {
-            closed = true;
-            base.Close();
-        }
-#endif
 
         public sealed override void Flush()
         {

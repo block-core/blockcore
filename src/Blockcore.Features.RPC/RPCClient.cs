@@ -600,9 +600,6 @@ namespace Blockcore.Features.RPC
 
             HttpWebRequest webRequest = CreateWebRequest();
 
-#if !NETCORE
-            webRequest.ContentLength = bytes.Length;
-#endif
             Stream dataStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false);
             await dataStream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
             await dataStream.FlushAsync().ConfigureAwait(false);
@@ -765,9 +762,7 @@ namespace Blockcore.Features.RPC
                 writer.Flush();
                 string json = writer.ToString();
                 byte[] bytes = Encoding.UTF8.GetBytes(json);
-#if !NETCORE
-                webRequest.ContentLength = bytes.Length;
-#endif
+
                 Stream dataStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false);
                 await dataStream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
                 await dataStream.FlushAsync().ConfigureAwait(false);

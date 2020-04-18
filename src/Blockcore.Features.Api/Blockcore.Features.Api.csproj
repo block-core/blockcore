@@ -1,19 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>Blockcore.Features.Api</AssemblyName>
     <OutputType>Library</OutputType>
-    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <PackageId>Blockcore.Features.Api</PackageId>
-    <VersionPrefix>1.0.3</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
-    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

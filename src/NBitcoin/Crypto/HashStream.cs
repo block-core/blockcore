@@ -103,7 +103,6 @@ namespace NBitcoin.Crypto
                 ProcessBlock();
         }
 
-#if NETCORE
         private BouncyCastle.Crypto.Digests.Sha256Digest sha = new BouncyCastle.Crypto.Digests.Sha256Digest();
         private void ProcessBlock()
         {
@@ -120,34 +119,5 @@ namespace NBitcoin.Crypto
             this.sha.DoFinal(this._Buffer, 0);
             return new uint256(this._Buffer);
         }
-
-#else
-        System.Security.Cryptography.SHA256Managed sha = new System.Security.Cryptography.SHA256Managed();
-        private void ProcessBlock()
-        {
-            sha.TransformBlock(_Buffer, 0, _Pos, _Buffer, 0);
-            _Pos = 0;
-        }
-
-        static readonly byte[] Empty = new byte[0];
-        public uint256 GetHash()
-        {
-            ProcessBlock();
-            sha.TransformFinalBlock(Empty, 0, 0);
-            var hash1 = sha.Hash;
-            Buffer.BlockCopy(sha.Hash, 0, _Buffer, 0, 32);
-            sha.Initialize();
-            sha.TransformFinalBlock(_Buffer, 0, 32);
-            var hash2 = sha.Hash;
-            return new uint256(hash2);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if(disposing)
-                sha.Dispose();
-            base.Dispose(disposing);
-        }
-#endif
     }
 }

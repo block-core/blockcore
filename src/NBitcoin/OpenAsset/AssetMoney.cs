@@ -196,11 +196,8 @@ namespace NBitcoin.OpenAsset
             var m = obj as AssetMoney;
             if(m != null)
                 return this._Quantity.CompareTo(m.Quantity);
-#if !NETCORE
-            return _Quantity.CompareTo(obj);
-#else
+
             return this._Quantity.CompareTo((long)obj);
-#endif
         }
 
         #endregion

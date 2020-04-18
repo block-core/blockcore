@@ -3,22 +3,10 @@
   <PropertyGroup>
     <Description>Blockcore Features PoA</Description>
     <AssemblyTitle>Blockcore.Features.PoA</AssemblyTitle>
-	  <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <AssemblyName>Blockcore.Features.PoA</AssemblyName>
     <PackageId>Blockcore.Features.PoA</PackageId>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <VersionPrefix>1.0.3</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

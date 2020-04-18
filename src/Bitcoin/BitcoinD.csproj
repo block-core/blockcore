@@ -1,14 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>blockcore.bitcoind</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>BitcoinD</PackageId>
-    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <PreBuildEvent></PreBuildEvent>
   </PropertyGroup>
 

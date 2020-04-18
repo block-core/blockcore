@@ -15,8 +15,10 @@
       <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Publish%20Packages/badge.svg" /></a>
   </p>
 </p>
- 
 
+<em>
+Do you want to build your own blockchain based upon Blockcore? Then check out our [blockcore-node repository](https://github.com/block-core/blockcore-node), which is the best starting point for most custom blockchains.
+</em>
 
 Introduction
 ----------------------------

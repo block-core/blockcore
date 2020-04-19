@@ -3,7 +3,7 @@ name: Publish Pre-Release Packages
 on:
   push:
     branches:
-      - master
+      - custom
 
 jobs:
 

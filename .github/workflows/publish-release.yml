@@ -10,7 +10,7 @@ jobs:
 
   publishPackages:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
@@ -25,7 +25,7 @@ jobs:
       with:
         dotnet-version: '3.1.101' 
 
-    - name: Setup NuGet.exe
+    - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
 
     # - name: Set GITHUB_OWNER

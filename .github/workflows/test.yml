@@ -3,6 +3,8 @@ name: Test
 on: 
   schedule:
     - cron:  '0 3 * * *'
+  repository_dispatch:
+    types: [test]
 
 jobs:
   

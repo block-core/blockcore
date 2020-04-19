@@ -6,7 +6,7 @@
     <AssemblyName>Blockcore.Features.Miner</AssemblyName>
     <PackageId>Blockcore.Features.Miner</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-<IsPackable>true</IsPackable>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

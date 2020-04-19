@@ -10,7 +10,7 @@ jobs:
 
   publishPackages:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
@@ -43,7 +43,7 @@ jobs:
     #   shell: bash
 
     - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package" ${{env.SOLUTION_PATH}}
+      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}\package\" ${{env.SOLUTION_PATH}}
 
     - name: Nuget Push
-      run: nuget push ${{github.workspace}}/package/*.nupkg -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate -NoSymbols
+      run: nuget push ${{github.workspace}}\package\*.nupkg -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate -NoSymbols

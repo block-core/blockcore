@@ -13,7 +13,7 @@ jobs:
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
-      BUILD_CONFIGURATION: 'Debug'
+      BUILD_CONFIGURATION: 'Release'
 
     steps:
 
@@ -21,26 +21,28 @@ jobs:
       
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
-                                            
+      with:
+        dotnet-version: '3.1.101' 
+
     - name: Setup NuGet.exe
       uses: NuGet/setup-nuget@v1.0.2
 
-    - name: Set GITHUB_OWNER
-      run: echo "::set-env name=GITHUB_OWNER::$(echo ${{github.repository}} | cut -d "/" -f 1)"
+    # - name: Set GITHUB_OWNER
+    #   run: echo "::set-env name=GITHUB_OWNER::$(echo ${{github.repository}} | cut -d "/" -f 1)"
 
-    - name: Override bash shell PATH (workaround issue - tinyurl.com/w3dbtou)
-      run: echo "::add-path::C:\Program Files\Git\bin"
+    # - name: Override bash shell PATH (workaround issue - tinyurl.com/w3dbtou)
+    #   run: echo "::add-path::C:\Program Files\Git\bin"
     
-    - name: Update Directory.Build.props for Push
-      run: |
-        find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
-        do
-          sed -i 's,</IsPackable>,</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>git://github.com/${{github.repository}}</RepositoryUrl>,g' $file
-        done
-      shell: bash
+    # - name: Update Directory.Build.props for Push
+    #   run: |
+    #     find . -name 'Directory.Build.props' -print0 | while read -d $'\0' file
+    #     do
+    #       sed -i 's,</IsPackable>,</IsPackable>\n\t<RepositoryType>git</RepositoryType>\n\t<RepositoryUrl>git://github.com/${{github.repository}}</RepositoryUrl>,g' $file
+    #     done
+    #   shell: bash
 
     - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package" ${{env.SOLUTION_PATH}}
 
     - name: Nuget Push
-      run: nuget push **/*.nupkg -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate -NoSymbols
+      run: nuget push ${{github.workspace}}/package/*.nupkg -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate -NoSymbols

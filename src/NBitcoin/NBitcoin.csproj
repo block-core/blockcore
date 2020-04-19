@@ -2,6 +2,7 @@
   <PropertyGroup>
     <PackageId>Blockcore.NBitcoin</PackageId>
     <AssemblyName>Blockcore.NBitcoin</AssemblyName>
+    <Description>Modified fork of the original NBitcoin, modified to be useable for a full blockchain implementation.</Description>
     <RootNamespace>NBitcoin</RootNamespace>
     <IsPackable>true</IsPackable>
   </PropertyGroup>

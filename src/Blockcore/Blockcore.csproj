@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyTitle>Blockcore</AssemblyTitle>
-    <Description>The Blockcore node software is a full node software that runs the blockchain network. It is compatible with Bitcoin and utilized by other blockchains at the primary full node.</Description>
+    <Description>The Blockcore node software is a full consensus validating node software that runs a blockchain protocol. It is compatible with Bitcoin and utilized by other blockchains at the primary full node.</Description>
     <AssemblyName>Blockcore</AssemblyName>
     <PackageId>Blockcore.Core</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>

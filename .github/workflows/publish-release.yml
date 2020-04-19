@@ -2,7 +2,9 @@ name: Publish Release Packages
 
 on:
   release:
-    types: [published, edited]
+    types: [published]
+  repository_dispatch:
+    types: [publish-packages]
 
 jobs:
 

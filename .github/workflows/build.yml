@@ -43,7 +43,6 @@ jobs:
     #   run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Nuget Pack
-      if: matrix.os == 'ubuntu-latest'
       run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
 
     - name: Release
@@ -51,7 +50,7 @@ jobs:
       uses: sondreb/action-release@master
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        files: "${{github.workspace}}/package/"
+        folder: "${{github.workspace}}/package/"
         draft: true
         prerelease: true
         body: ''

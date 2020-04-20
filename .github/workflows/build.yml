@@ -54,7 +54,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         folder: "${{github.workspace}}/package/"
         draft: true
-        prerelease: true
+        prerelease: false
         body: ''
         name: "Blockcore ${{env.VERSION}}"
         tag: ${{env.VERSION}}

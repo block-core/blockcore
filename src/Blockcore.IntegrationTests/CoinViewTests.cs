@@ -279,10 +279,11 @@ namespace Blockcore.IntegrationTests
         [Fact]
         public void CanSaveChainIncrementally()
         {
-            using (var repo = new ChainRepository(TestBase.CreateTestDir(this), this.loggerFactory, new MemoryHeaderStore(), this.network))
-            {
-                var chain = new ChainIndexer(this.regTest);
+            var chain = new ChainIndexer(this.regTest);
+            var data = new DataFolder(TestBase.CreateTestDir(this));
 
+            using (var repo = new ChainRepository(this.loggerFactory, new LeveldbHeaderStore(this.network, data, chain), this.network))
+            {
                 chain.SetTip(repo.LoadAsync(chain.Genesis).GetAwaiter().GetResult());
                 Assert.True(chain.Tip == chain.Genesis);
                 chain = new ChainIndexer(this.regTest);

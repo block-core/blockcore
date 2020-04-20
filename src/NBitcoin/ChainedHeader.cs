@@ -81,7 +81,7 @@ namespace NBitcoin
         {
             get
             {
-                return this.HeaderStore.GetHeader(this, this.HashBlock);
+                return this.ChainStore.GetHeader(this, this.HashBlock);
             }
         }
 
@@ -111,7 +111,7 @@ namespace NBitcoin
         /// <inheritdoc cref="ValidationState" />
         public ValidationState BlockValidationState { get; set; }
 
-        public IBlockHeaderStore HeaderStore { get; private set; }
+        public IChainStore ChainStore { get; private set; }
 
         /// <summary>
         /// An indicator that the current instance of <see cref="ChainedHeader"/> has been disconnected from the previous instance.
@@ -136,18 +136,18 @@ namespace NBitcoin
         public List<ChainedHeader> Next { get; private set; }
 
         /// <summary>
-        /// Set a different header store to the default <see cref="MemoryHeaderStore"/>, this can be done only on genesis header (height 0).
+        /// Set a different header store to the default <see cref="NBitcoin.ChainStore"/>, this can be done only on genesis header (height 0).
         /// </summary>
-        public void SetBlockHeaderStore(IBlockHeaderStore blockHeaderStore)
+        public void SetChainStore(IChainStore chainStore)
         {
             if (this.Height != 0)
             {
                 throw new ArgumentException("IBlockHeaderStore can only be set on the genesis header.");
             }
 
-            if (this.HeaderStore != null)
-                blockHeaderStore.StoreHeader(this.HeaderStore.GetHeader(this, this.HashBlock));
-            this.HeaderStore = blockHeaderStore;
+            if (this.ChainStore != null)
+                chainStore.PutHeader(this.ChainStore.GetHeader(this, this.HashBlock));
+            this.ChainStore = chainStore;
         }
 
         public ChainedHeader(uint256 headerHash, byte[] chainWork, ChainedHeader previous)
@@ -170,10 +170,10 @@ namespace NBitcoin
                 // Calculates the location of the skip block for this block.
                 this.Skip = this.Previous.GetAncestor(this.GetSkipHeight(this.Height));
 
-                if (this.Previous.HeaderStore == null)
+                if (this.Previous.ChainStore == null)
                     throw new ArgumentException("ChainedHeader.Previous.HeaderStore was not found");
 
-                this.HeaderStore = this.Previous.HeaderStore;
+                this.ChainStore = this.Previous.ChainStore;
             }
 
             if (this.Height == 0)
@@ -216,13 +216,13 @@ namespace NBitcoin
                 this.BlockDataAvailability = BlockDataAvailabilityState.BlockAvailable;
                 this.BlockValidationState = ValidationState.FullyValidated;
 
-                this.HeaderStore = new MemoryHeaderStore();
-                this.HeaderStore.StoreHeader(header);
+                this.ChainStore = new ChainStore();
+                this.ChainStore.PutHeader(header);
             }
             else
             {
-                this.HeaderStore = this.Previous.HeaderStore;
-                this.HeaderStore.StoreHeader(header);
+                this.ChainStore = this.Previous.ChainStore;
+                this.ChainStore.PutHeader(header);
             }
 
             this.CalculateChainWork();
@@ -242,8 +242,8 @@ namespace NBitcoin
                 this.BlockValidationState = ValidationState.FullyValidated;
             }
 
-            this.HeaderStore = this.Previous?.HeaderStore ?? new MemoryHeaderStore();
-            this.HeaderStore.StoreHeader(header);
+            this.ChainStore = this.Previous?.ChainStore ?? new ChainStore();
+            this.ChainStore.PutHeader(header);
 
             this.CalculateChainWork();
 

@@ -11,7 +11,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/block-core/blockcore</RepositoryUrl>
     <PackageIcon></PackageIcon>
-    <PackageIconUrl>https://www.blockcore.net/assets/icon-64x64.png</PackageIconUrl>
+    <PackageIconUrl>https://www.blockcore.net/assets/blockcore-256x256.png</PackageIconUrl>
     <PackageTags>blockchain;cryptocurrency;crypto;C#;.NET;bitcoin;blockcore</PackageTags>
   </PropertyGroup>
 

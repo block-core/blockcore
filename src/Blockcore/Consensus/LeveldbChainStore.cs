@@ -6,7 +6,7 @@ using LevelDB;
 
 namespace NBitcoin
 {
-    public class LeveldbHeaderStore : IChainStore, IDisposable
+    public class LeveldbChainStore : IChainStore, IDisposable
     {
         private readonly Network network;
 
@@ -22,7 +22,7 @@ namespace NBitcoin
 
         private object locker;
 
-        public LeveldbHeaderStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
+        public LeveldbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
         {
             this.network = network;
             this.ChainIndexer = chainIndexer;

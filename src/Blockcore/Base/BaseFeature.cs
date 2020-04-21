@@ -389,7 +389,7 @@ namespace Blockcore.Base
                     services.AddSingleton<IInvalidBlockHashStore, InvalidBlockHashStore>();
                     services.AddSingleton<IChainState, ChainState>();
                     services.AddSingleton<IChainRepository, ChainRepository>();
-                    services.AddSingleton<IChainStore, LeveldbHeaderStore>();
+                    services.AddSingleton<IChainStore, LeveldbChainStore>();
                     services.AddSingleton<IFinalizedBlockInfoRepository, FinalizedBlockInfoRepository>();
                     services.AddSingleton<ITimeSyncBehaviorState, TimeSyncBehaviorState>();
                     services.AddSingleton<NodeDeployments>();

@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-      <TargetFramework>netcoreapp3.1</TargetFramework>
-      <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-      <VersionPrefix>1.0.3</VersionPrefix>
-      <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <IsPackable>true</IsPackable>
     </PropertyGroup>
     
     <ItemGroup>

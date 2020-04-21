@@ -1,6 +1,35 @@
 <Project>
   <PropertyGroup>
-    <CodeAnalysisRuleset>$(MSBuildThisFileDirectory)None.ruleset</CodeAnalysisRuleset>
+    <Version>1.0.4</Version>
+    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Authors>Blockcore</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <CodeAnalysisRuleset>$(MSBuildThisFileDirectory)None.ruleset</CodeAnalysisRuleset>
+    <PackageProjectUrl>https://www.blockcore.net</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/block-core/blockcore</RepositoryUrl>
+    <PackageIcon></PackageIcon>
+    <PackageIconUrl>https://www.blockcore.net/assets/blockcore-256x256.png</PackageIconUrl>
+    <PackageTags>blockchain;cryptocurrency;crypto;C#;.NET;bitcoin;blockcore</PackageTags>
   </PropertyGroup>
+
+  <Target Name="AddInternalsVisibleTo" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <!-- We don't need this at the moment, so not added. -->
+      <!-- 
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+      </AssemblyAttribute>-->
+
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <_Parameter1>$(PackageId).Tests</_Parameter1>
+      </AssemblyAttribute>
+
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <_Parameter1>$(MSBuildProjectName).Tests</_Parameter1>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
 </Project>

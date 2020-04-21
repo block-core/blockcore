@@ -1,25 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Bitcoin FullNode</Description>
     <AssemblyTitle>Blockcore</AssemblyTitle>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
+    <Description>The Blockcore node software is a full consensus validating node software that runs a blockchain protocol. It is compatible with Bitcoin and utilized by other blockchains at the primary full node.</Description>
     <AssemblyName>Blockcore</AssemblyName>
     <PackageId>Blockcore.Core</PackageId>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <VersionPrefix>1.0.3</VersionPrefix>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <CodeAnalysisRuleSet>..\Blockcore.ruleset</CodeAnalysisRuleSet>
-    <Authors>Stratis Group Ltd. and Blockcore Developers</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +20,6 @@
     <PackageReference Include="LiteDB" Version="4.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="NLog" Version="4.6.8" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.1" />
     <PackageReference Include="Polly" Version="7.2.0" />
@@ -76,10 +63,6 @@
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputType>Library</OutputType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

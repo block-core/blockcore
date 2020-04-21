@@ -47,7 +47,7 @@ namespace NBitcoin.BouncyCastle.Utilities.IO
                 this.s.Position = value;
             }
         }
-#if NETCORE
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -56,13 +56,7 @@ namespace NBitcoin.BouncyCastle.Utilities.IO
             }
             base.Dispose(disposing);
         }
-#else
-        public override void Close()
-        {
-            Platform.Dispose(s);
-            base.Close();
-        }
-#endif
+
         public override void Flush()
         {
             this.s.Flush();

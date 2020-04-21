@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>    
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
+  <PropertyGroup>
+    <PackageId>Blockcore.NBitcoin.Tests</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

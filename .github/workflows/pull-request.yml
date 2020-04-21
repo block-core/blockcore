@@ -1,12 +1,13 @@
-name: Integration Test
+name: Pull Request
 
 on: 
-  push:
   pull_request:
+    branches:
+      - master
 
 jobs:
   
-  integrationTest:
+  buildAndUnitTest:
 
     strategy:
       matrix:
@@ -32,7 +33,7 @@ jobs:
       run: dotnet restore ${{env.SOLUTION_PATH}}
       
     - name: Build
-      run: dotnet build --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
-
-    - name: Integration Test
-      run: dotnet test -v=normal --no-build --filter FullyQualifiedName~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      run: dotnet build -c ${{env.BUILD_CONFIGURATION}} -v m ${{env.SOLUTION_PATH}}
+      
+    - name: Unit Test
+      run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

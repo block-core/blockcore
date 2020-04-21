@@ -25,7 +25,6 @@ namespace Blockcore.Configuration
             this.CoindbPath = Path.Combine(path, "coindb");
             this.AddressManagerFilePath = path;
             this.ChainPath = Path.Combine(path, "chain");
-            this.HeadersPath = Path.Combine(path, "headers");
             this.KeyValueRepositoryPath = Path.Combine(path, "common");
             this.BlockPath = Path.Combine(path, "blocks");
             this.PollsPath = Path.Combine(path, "polls");
@@ -55,8 +54,6 @@ namespace Blockcore.Configuration
         /// <summary>Path to the folder with node's chain repository database files.</summary>
         /// <seealso cref="Base.BaseFeature.StartChain"/>
         public string ChainPath { get; internal set; }
-
-        public string HeadersPath { get; internal set; }
 
         /// <summary>Path to the folder with separated key-value items managed by <see cref="IKeyValueRepository"/>.</summary>
         public string KeyValueRepositoryPath { get; internal set; }

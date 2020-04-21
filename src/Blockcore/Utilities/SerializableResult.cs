@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Blockcore
+namespace Blockcore.Utilities
 {
     /// <summary>
     /// A generic result type that can be serialized.

@@ -14,6 +14,14 @@ namespace Blockcore.Utilities
             return dbkey.ToArray();
         }
 
+        public static byte[] Key(byte table, ReadOnlySpan<byte> key)
+        {
+            Span<byte> dbkey = stackalloc byte[key.Length + 1];
+            dbkey[0] = table;
+            key.CopyTo(dbkey.Slice(1));
+            return dbkey.ToArray();
+        }
+
         public static Dictionary<byte[], byte[]> SelectDictionary(this DB db, byte table)
         {
             var dict = new Dictionary<byte[], byte[]>();

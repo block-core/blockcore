@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Blockcore.Configuration;
 using Blockcore.Utilities;
 using LevelDB;
 
 namespace NBitcoin
 {
-    public class LeveldbHeaderStore : IBlockHeaderStore, IDisposable
+    public class LeveldbHeaderStore : IChainStore, IDisposable
     {
         private readonly Network network;
+
+        internal static readonly byte ChainTableName = 1;
+        internal static readonly byte HeaderTableName = 2;
 
         /// <summary>
         /// Headers that are close to the tip
@@ -28,7 +32,7 @@ namespace NBitcoin
 
             // Open a connection to a new DB and create if not found
             var options = new Options { CreateIfMissing = true };
-            this.leveldb = new DB(options, dataFolder.HeadersPath);
+            this.leveldb = new DB(options, dataFolder.ChainPath);
         }
 
         public ChainIndexer ChainIndexer { get; }
@@ -40,11 +44,11 @@ namespace NBitcoin
                 return blockHeader;
             }
 
-            byte[] bytes = hash.ToBytes();
+            ReadOnlySpan<byte> bytes = hash.ToReadOnlySpan();
 
             lock (this.locker)
             {
-                bytes = this.leveldb.Get(bytes);
+                bytes = this.leveldb.Get(DBH.Key(HeaderTableName, bytes));
             }
 
             if (bytes == null)
@@ -53,7 +57,7 @@ namespace NBitcoin
             }
 
             blockHeader = this.network.Consensus.ConsensusFactory.CreateBlockHeader();
-            blockHeader.FromBytes(bytes, this.network.Consensus.ConsensusFactory);
+            blockHeader.FromBytes(bytes.ToArray(), this.network.Consensus.ConsensusFactory);
 
             // If the header is 500 blocks behind tip or 100 blocks ahead cache it.
             if ((chainedHeader.Height > this.ChainIndexer.Height - 500) && (chainedHeader.Height <= this.ChainIndexer.Height + 100))
@@ -62,16 +66,52 @@ namespace NBitcoin
             return blockHeader;
         }
 
-        public bool StoreHeader(BlockHeader blockHeader)
+        public bool PutHeader(BlockHeader blockHeader)
         {
             ConsensusFactory consensusFactory = this.network.Consensus.ConsensusFactory;
 
             lock (this.locker)
             {
-                this.leveldb.Put(blockHeader.GetHash().ToBytes(), blockHeader.ToBytes(consensusFactory));
+                this.leveldb.Put(DBH.Key(HeaderTableName, blockHeader.GetHash().ToReadOnlySpan()), blockHeader.ToBytes(consensusFactory));
             }
 
             return true;
+        }
+
+        public ChainData GetChainData(int height)
+        {
+            byte[] bytes = null;
+
+            lock (this.locker)
+            {
+                bytes = this.leveldb.Get(DBH.Key(ChainTableName, BitConverter.GetBytes(height)));
+            }
+
+            if (bytes == null)
+            {
+                return null;
+            }
+
+            var data = new ChainData();
+            data.FromBytes(bytes, this.network.Consensus.ConsensusFactory);
+
+            return data;
+        }
+
+        public void PutChainData(IEnumerable<ChainDataItem> items)
+        {
+            using (var batch = new WriteBatch())
+            {
+                foreach (var item in items)
+                {
+                    batch.Put(DBH.Key(ChainTableName, BitConverter.GetBytes(item.Height)), item.Data.ToBytes(this.network.Consensus.ConsensusFactory));
+                }
+
+                lock (this.locker)
+                {
+                    this.leveldb.Write(batch);
+                }
+            }
         }
 
         public void Dispose()

@@ -23,36 +23,23 @@ namespace Blockcore.Base
 
     public class ChainRepository : IChainRepository
     {
-        private readonly DataStoreSerializer dataStoreSerializer;
-        private readonly IBlockHeaderStore blockHeaderStore;
+        private readonly IChainStore chainStore;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
 
-        /// <summary>Access to database.</summary>
-        private readonly DB leveldb;
-
         private BlockLocator locator;
 
-        public ChainRepository(string folder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer, IBlockHeaderStore blockHeaderStore)
+        public Network Network { get; }
+
+        public ChainRepository(ILoggerFactory loggerFactory, IChainStore chainStore, Network network)
         {
-            this.dataStoreSerializer = dataStoreSerializer;
-            this.blockHeaderStore = blockHeaderStore;
-            Guard.NotEmpty(folder, nameof(folder));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
+            this.chainStore = chainStore;
+            this.Network = network;
+
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-
-            Directory.CreateDirectory(folder);
-
-            // Open a connection to a new DB and create if not found
-            var options = new Options { CreateIfMissing = true };
-            this.leveldb = new DB(options, folder);
-        }
-
-        public ChainRepository(DataFolder dataFolder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer, IBlockHeaderStore blockHeaderStore)
-            : this(dataFolder.ChainPath, loggerFactory, dataStoreSerializer, blockHeaderStore)
-        {
         }
 
         /// <inheritdoc />
@@ -62,41 +49,32 @@ namespace Blockcore.Base
             {
                 ChainedHeader tip = null;
 
-                byte[] firstRow = this.leveldb.Get(BitConverter.GetBytes(0));
+                ChainData data = this.chainStore.GetChainData(0);
 
-                if (firstRow == null)
+                if (data == null)
                 {
-                    genesisHeader.SetBlockHeaderStore(this.blockHeaderStore);
+                    genesisHeader.SetChainStore(this.chainStore);
                     return genesisHeader;
                 }
 
-                BlockHeader nextHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(firstRow);
-                Guard.Assert(nextHeader.GetHash() == genesisHeader.HashBlock); // can't swap networks
+                Guard.Assert(data.Hash == genesisHeader.HashBlock); // can't swap networks
 
-                int index = 1;
+                int index = 0;
                 while (true)
                 {
-                    byte[] row = this.leveldb.Get(BitConverter.GetBytes(index));
+                    data = this.chainStore.GetChainData((index));
 
-                    if (row == null)
+                    if (data == null)
                         break;
 
-                    if ((tip != null) && (nextHeader.HashPrevBlock != tip.HashBlock))
-                        break;
-
-                    BlockHeader blockHeader = this.dataStoreSerializer.Deserialize<BlockHeader>(row);
-                    tip = new ChainedHeader(nextHeader, blockHeader.HashPrevBlock, tip);
-                    if (tip.Height == 0) tip.SetBlockHeaderStore(this.blockHeaderStore);
-                    nextHeader = blockHeader;
+                    tip = new ChainedHeader(data.Hash, data.Work, tip);
+                    if (tip.Height == 0) tip.SetChainStore(this.chainStore);
                     index++;
                 }
 
-                if (nextHeader != null)
-                    tip = new ChainedHeader(nextHeader, nextHeader.GetHash(), tip);
-
                 if (tip == null)
                 {
-                    genesisHeader.SetBlockHeaderStore(this.blockHeaderStore);
+                    genesisHeader.SetChainStore(this.chainStore);
                     tip = genesisHeader;
                 }
 
@@ -114,29 +92,26 @@ namespace Blockcore.Base
 
             Task task = Task.Run(() =>
             {
-                using (var batch = new WriteBatch())
+                ChainedHeader fork = this.locator == null ? null : chainIndexer.FindFork(this.locator);
+                ChainedHeader tip = chainIndexer.Tip;
+                ChainedHeader toSave = tip;
+
+                var headers = new List<ChainedHeader>();
+                while (toSave != fork)
                 {
-                    ChainedHeader fork = this.locator == null ? null : chainIndexer.FindFork(this.locator);
-                    ChainedHeader tip = chainIndexer.Tip;
-                    ChainedHeader toSave = tip;
-
-                    var headers = new List<ChainedHeader>();
-                    while (toSave != fork)
-                    {
-                        headers.Add(toSave);
-                        toSave = toSave.Previous;
-                    }
-
-                    // DBreeze is faster on ordered insert.
-                    IOrderedEnumerable<ChainedHeader> orderedChainedHeaders = headers.OrderBy(b => b.Height);
-                    foreach (ChainedHeader block in orderedChainedHeaders)
-                    {
-                        batch.Put(BitConverter.GetBytes(block.Height), this.dataStoreSerializer.Serialize(block.Header));
-                    }
-
-                    this.locator = tip.GetLocator();
-                    this.leveldb.Write(batch);
+                    headers.Add(toSave);
+                    toSave = toSave.Previous;
                 }
+
+                var items = headers.OrderBy(b => b.Height).Select(h => new ChainDataItem
+                {
+                    Height = h.Height,
+                    Data = new ChainData { Hash = h.HashBlock, Work = h.ChainWorkBytes }
+                });
+
+                this.chainStore.PutChainData(items);
+
+                this.locator = tip.GetLocator();
             });
 
             return task;
@@ -145,8 +120,35 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public void Dispose()
         {
-            this.leveldb?.Dispose();
-            (this.blockHeaderStore as IDisposable)?.Dispose();
+            (this.chainStore as IDisposable)?.Dispose();
+        }
+
+        public class ChainRepositoryData : IBitcoinSerializable
+        {
+            public uint256 Hash;
+            public byte[] Work;
+
+            public ChainRepositoryData()
+            {
+            }
+
+            public void ReadWrite(BitcoinStream stream)
+            {
+                stream.ReadWrite(ref this.Hash);
+                if (stream.Serializing)
+                {
+                    int len = this.Work.Length;
+                    stream.ReadWrite(ref len);
+                    stream.ReadWrite(ref this.Work);
+                }
+                else
+                {
+                    int len = 0;
+                    stream.ReadWrite(ref len);
+                    this.Work = new byte[len];
+                    stream.ReadWrite(ref this.Work);
+                }
+            }
         }
     }
 }

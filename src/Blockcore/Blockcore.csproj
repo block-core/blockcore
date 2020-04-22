@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
+    <ProjectReference Include="..\External\NBitcoin\NBitcoin.csproj" />
   </ItemGroup>
 
   <ItemGroup>

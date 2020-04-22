@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -18,7 +18,7 @@
   <Target Name="AddInternalsVisibleTo" BeforeTargets="CoreCompile">
     <ItemGroup>
       <!-- We don't need this at the moment, so not added. -->
-      <!-- 
+      <!--
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <_Parameter1>$(AssemblyName).Tests</_Parameter1>
       </AssemblyAttribute>-->

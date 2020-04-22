@@ -49,7 +49,7 @@ namespace City
             // TODO: Add additional DNS seeds here
             new DNSSeedData("seed.city-chain.org", "seed.city-chain.org"),
             new DNSSeedData("seed.citychain.foundation", "seed.citychain.foundation"),
-            new DNSSeedData("seed.city.blockcore.net", "seed.city.blockcore.net"),
+            new DNSSeedData("city.seed.blockcore.net", "city.seed.blockcore.net"),
          };
 
          public static List<NetworkAddress> Nodes = new List<NetworkAddress>

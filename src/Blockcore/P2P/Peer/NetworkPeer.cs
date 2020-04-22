@@ -352,7 +352,7 @@ namespace Blockcore.P2P.Peer
 
             this.Connection = networkPeerFactory.CreateNetworkPeerConnection(this, client, this.ProcessMessageAsync);
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.Connection.Id}-{peerEndPoint}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Blockcore.P2P.Peer
         {
             this.Connection = networkPeerFactory.CreateNetworkPeerConnection(this, client, this.ProcessMessageAsync);
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.Connection.Id}-{peerEndPoint}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.logger.LogDebug("Connected to peer '{0}'.", this.PeerEndPoint);
 

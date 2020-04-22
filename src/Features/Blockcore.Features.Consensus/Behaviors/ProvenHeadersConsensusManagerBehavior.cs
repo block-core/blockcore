@@ -53,7 +53,7 @@ namespace Blockcore.Features.Consensus.Behaviors
             ConnectionManagerSettings connectionManagerSettings) : base(chainIndexer, initialBlockDownloadState, consensusManager, peerBanning, loggerFactory)
         {
             this.network = network;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.chainState = chainState;
             this.checkpoints = checkpoints;
             this.provenBlockHeaderStore = provenBlockHeaderStore;

@@ -9,18 +9,6 @@ namespace Blockcore.Utilities
     public static class LoggingExtensions
     {
         /// <summary>
-        /// Creates a new <see cref="ILogger"/> instance which prefixes every log with specified string.
-        /// </summary>
-        /// <param name="loggerFactory">Logger factory interface being extended.</param>
-        /// <param name="categoryName">Category name for messages produced by the logger.</param>
-        /// <param name="prefix">String to be put in front of each log of the newly created logger.</param>
-        /// <returns>Newly created logger.</returns>
-        public static ILogger CreateLogger(this ILoggerFactory loggerFactory, string categoryName, string prefix = "")
-        {
-            return new PrefixLogger(loggerFactory, categoryName, prefix);
-        }
-
-        /// <summary>
         /// Converts <see cref="Microsoft.Extensions.Logging.LogLevel"/> to <see cref="NLog.LogLevel"/>.
         /// </summary>
         /// <param name="logLevel">Log level value to convert.</param>

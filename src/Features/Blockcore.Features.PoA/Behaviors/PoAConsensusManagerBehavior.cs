@@ -23,7 +23,7 @@ namespace Blockcore.Features.PoA.Behaviors
             IConsensusManager consensusManager, IPeerBanning peerBanning, ILoggerFactory loggerFactory)
         : base(chainIndexer, initialBlockDownloadState, consensusManager, peerBanning, loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />

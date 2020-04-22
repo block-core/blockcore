@@ -99,7 +99,7 @@ namespace Blockcore.P2P.Peer
             this.loggerFactory = loggerFactory;
             this.payloadProvider = payloadProvider;
             this.asyncProvider = Guard.NotNull(asyncProvider, nameof(asyncProvider));
-            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName, $"[{clientId}-{peer.PeerEndPoint}] ");
+            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.network = network;
             this.dateTimeProvider = dateTimeProvider;
@@ -172,7 +172,7 @@ namespace Blockcore.P2P.Peer
         /// <exception cref="OperationCanceledException">Thrown when the connection attempt was aborted.</exception>
         public async Task ConnectAsync(IPEndPoint endPoint, CancellationToken cancellation)
         {
-            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.Id}-{endPoint}] ");
+            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
 
             try
             {

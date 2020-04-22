@@ -672,7 +672,7 @@ namespace Blockcore.Features.Miner.Staking
                 var cwc = new CoinstakeWorkerContext
                 {
                     Index = workerIndex,
-                    Logger = this.loggerFactory.CreateLogger(this.GetType().FullName, $"[Worker #{workerIndex}] "),
+                    Logger = this.loggerFactory.CreateLogger(this.GetType().FullName),
                     utxoStakeDescriptions = new List<UtxoStakeDescription>(),
                     CoinstakeContext = coinstakeContext,
                     Result = workersResult

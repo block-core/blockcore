@@ -117,7 +117,7 @@ namespace Blockcore.BlockPulling
 
             this.blockPuller = blockPuller;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
         }
 

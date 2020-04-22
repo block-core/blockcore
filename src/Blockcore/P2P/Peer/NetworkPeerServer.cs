@@ -91,7 +91,7 @@ namespace Blockcore.P2P.Peer
             IPeerAddressManager peerAddressManager,
             IDateTimeProvider dateTimeProvider)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{localEndPoint}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.signals = asyncProvider.Signals;
             this.networkPeerFactory = networkPeerFactory;
             this.networkPeerDisposer = new NetworkPeerDisposer(loggerFactory, asyncProvider);

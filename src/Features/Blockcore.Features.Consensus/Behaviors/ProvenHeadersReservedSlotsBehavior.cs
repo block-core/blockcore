@@ -31,7 +31,7 @@ namespace Blockcore.Features.Consensus.Behaviors
         {
             this.connectionManager = connectionManager;
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <summary>

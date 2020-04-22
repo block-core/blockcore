@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Blockcore.Features.ColdStaking.Tests</AssemblyName>
+    <PackageId>Blockcore.Features.ColdStaking.Tests</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Blockcore.Features.ColdStaking.Tests\**" />
+    <EmbeddedResource Remove="Blockcore.Features.ColdStaking.Tests\**" />
+    <None Remove="Blockcore.Features.ColdStaking.Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
+    <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
+    <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
+    <ProjectReference Include="..\Blockcore.Tests.Wallet.Common\Blockcore.Tests.Wallet.Common.csproj" />
+    <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\None.ruleset</CodeAnalysisRuleSet>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
+    <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
+  </ItemGroup>
+</Project>

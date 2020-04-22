@@ -67,11 +67,11 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
             string path;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                path = $"../../../../../External libs/Bitcoin Core/{version}/Windows/bitcoind.exe";
+                path = $"../../../../../Libs/Bitcoin Core/{version}/Windows/bitcoind.exe";
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                path = $"../../../../../External libs/Bitcoin Core/{version}/Linux/bitcoind";
+                path = $"../../../../../Libs/Bitcoin Core/{version}/Linux/bitcoind";
             else
-                path = $"../../../../../External libs/Bitcoin Core/{version}/OSX/bitcoind";
+                path = $"../../../../../Libs/Bitcoin Core/{version}/OSX/bitcoind";
 
             if (File.Exists(path))
                 return path;
@@ -84,11 +84,11 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
             string path;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                path = $"../../../../../External libs/StratisX/{version}/Windows/stratisd.exe";
+                path = $"../../../../../Libs/StratisX/{version}/Windows/stratisd.exe";
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                path = $"../../../../../External libs/StratisX/{version}/Linux/stratisd";
+                path = $"../../../../../Libs/StratisX/{version}/Linux/stratisd";
             else
-                path = $"../../../../../External libs/StratisX/{version}/OSX/stratisd";
+                path = $"../../../../../Libs/StratisX/{version}/OSX/stratisd";
 
             if (File.Exists(path))
                 return path;

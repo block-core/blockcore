@@ -7,6 +7,7 @@ using Blockcore.Configuration;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -79,6 +80,7 @@ namespace Blockcore.Features.ColdStaking
             IScriptAddressReader scriptAddressReader,
             ILoggerFactory loggerFactory,
             IDateTimeProvider dateTimeProvider,
+            ISignals signals = null,
             IBroadcasterManager broadcasterManager = null) : base(
                 loggerFactory,
                 network,
@@ -90,6 +92,7 @@ namespace Blockcore.Features.ColdStaking
                 nodeLifeTime,
                 dateTimeProvider,
                 scriptAddressReader,
+                signals,
                 broadcasterManager
                 )
         {

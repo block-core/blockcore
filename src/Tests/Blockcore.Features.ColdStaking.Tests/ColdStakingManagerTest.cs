@@ -7,6 +7,7 @@ using Blockcore.Consensus;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.Signals;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Tests.Wallet.Common;
 using Blockcore.Utilities;
@@ -190,14 +191,14 @@ namespace Blockcore.Features.ColdStaking.Tests
             var walletSettings = new WalletSettings(new NodeSettings(network: this.Network));
 
             var coldWalletManager = new ColdStakingManager(this.Network, chainInfo.chain, walletSettings, dataFolder, walletFeePolicy.Object,
-                new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<IBroadcasterManager>().Object);
+                new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<ISignals>().Object, new Mock<IBroadcasterManager>().Object);
             coldWalletManager.Wallets.Add(wallet);
             coldWalletManager.Wallets.Add(coldWallet);
             coldWalletManager.LoadKeysLookupLock();
 
             // Create another instance for the hot wallet as it is not allowed to have both wallets on the same instance.
             var hotWalletManager = new ColdStakingManager(this.Network, chainInfo.chain, walletSettings, dataFolder, walletFeePolicy.Object,
-                new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<IBroadcasterManager>().Object);
+                new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<ISignals>().Object, new Mock<IBroadcasterManager>().Object);
             hotWalletManager.Wallets.Add(hotWallet);
             hotWalletManager.LoadKeysLookupLock();
 
@@ -269,7 +270,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             // Wallet manager for the wallet receiving the funds.
             var receivingWalletManager = new ColdStakingManager(this.Network, chainInfo.chain, walletSettings, dataFolder, walletFeePolicy.Object,
-                new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<IBroadcasterManager>().Object);
+                new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<ISignals>().Object, new Mock<IBroadcasterManager>().Object);
             receivingWalletManager.Wallets.Add(withdrawalWallet);
             receivingWalletManager.LoadKeysLookupLock();
 

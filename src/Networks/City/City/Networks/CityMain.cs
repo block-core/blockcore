@@ -4,6 +4,7 @@ using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.City.Consensus;
 using City.Networks.Policies;
 using City.Networks.Rules;
 using NBitcoin;
@@ -49,8 +50,7 @@ namespace City.Networks
 
          Genesis = genesisBlock;
 
-         // Taken from StratisX.
-         var consensusOptions = new PosConsensusOptions(
+         var consensusOptions = new CityPosConsensusOptions(
              maxBlockBaseSize: 1_000_000,
              maxStandardVersion: 2,
              maxStandardTxWeight: 100_000,

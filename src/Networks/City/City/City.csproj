@@ -3,8 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
-    <AssemblyName>City.Networks</AssemblyName>
     <Authors>Blockcore</Authors>
+    <AssemblyTitle>Blockcore.Networks.City</AssemblyTitle>
+    <AssemblyName>Blockcore.Networks.City</AssemblyName>
+    <PackageId>Blockcore.Networks.City</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>

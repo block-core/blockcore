@@ -61,14 +61,14 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
             int heightToSyncTo = tipHeight > this.numberOfBlocksToKeep ? tipHeight - this.numberOfBlocksToKeep : 1;
 
-            if (tipHeight < finalBlock.Height)
-                throw new ConsensusException($"Violation of finality on height { tipHeight } for RewindDataIndex.");
+            if (tipHeight > finalBlock.Height)
+            {
+                if (heightToSyncTo < finalBlock.Height)
+                    heightToSyncTo = finalBlock.Height;
 
-            if (heightToSyncTo < finalBlock.Height)
-                heightToSyncTo = finalBlock.Height;
-
-            if (heightToSyncTo < this.lastCheckpoint)
-                heightToSyncTo = this.lastCheckpoint;
+                if (heightToSyncTo < this.lastCheckpoint)
+                    heightToSyncTo = this.lastCheckpoint;
+            }
 
             for (int rewindHeight = tipHeight; rewindHeight >= heightToSyncTo; rewindHeight--)
             {

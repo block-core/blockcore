@@ -9,4 +9,8 @@
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

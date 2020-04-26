@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NBitcoin;
 
 namespace Dashboard.Data
 {
@@ -10,6 +11,13 @@ namespace Dashboard.Data
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+
+        public WeatherForecastService(Network network)
+        {
+            this.Network = network;
+        }
+
+        public Network Network { get; }
 
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {

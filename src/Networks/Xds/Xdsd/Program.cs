@@ -16,6 +16,7 @@ using Blockcore.Features.SignalR.Broadcasters;
 using Blockcore.Features.SignalR.Events;
 using Blockcore.Networks.Xds;
 using Blockcore.Utilities;
+using Dashboard;
 using NBitcoin.Protocol;
 
 namespace StratisD
@@ -42,7 +43,8 @@ namespace StratisD
                     .AddPowPosMining()
                     .UseApi()
                     .AddRPC()
-                    .UseDiagnosticFeature();
+                    .UseDiagnosticFeature()
+                    .UseUI();
 
                 await nodeBuilder.Build().RunAsync();
             }

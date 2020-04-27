@@ -1,7 +1,20 @@
 ﻿@page "/"
+@using Dashboard.Data
+@inject IndexService IndexService
 
-<h1>Hello, world!</h1>
+<h2>@IndexService.Network.Name node.</h2>
 
-Welcome to your new app.
+@if (IndexService == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    if (IndexService.InitialBlockDownloadState.IsInitialBlockDownload())
+    {
+        <p>In IBD</p>
+    }
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <p>Connected peers: @IndexService.ConnectionManager.ConnectedPeers.Count()</p>
+    <p>Current tip at height: @IndexService.ChainIndexer.Tip.Height</p>
+}

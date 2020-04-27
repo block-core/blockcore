@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Blockcore;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Blockcore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Dashboard
 {
@@ -37,10 +37,12 @@ namespace Dashboard
                         Task.Run(() =>
                         {
                             Task.Delay(TimeSpan.FromSeconds(3)).Wait();
-                            OpenBrowser(dashboardSettings.DashboardUri.ToString());
+                            // OpenBrowser(dashboardSettings.DashboardUri.ToString());
                         });
 #endif
                     }
+
+                    Console.WriteLine("GetCurrentDirectory " + Directory.GetCurrentDirectory());
 
                     webBuilder
                     .UseContentRoot(Directory.GetCurrentDirectory())
@@ -50,6 +52,8 @@ namespace Dashboard
                         {
                             return;
                         }
+
+                        collection.ConfigureOptions(typeof(EditorRCLConfigureOptions));
 
                         // copies all the services defined for the full node to the Api.
                         // also copies over singleton instances already defined
@@ -94,6 +98,37 @@ namespace Dashboard
             else
             {
                 // Do nothing
+            }
+        }
+
+        /// <summary>
+        /// This class will allow to read the wwwroot folder
+        /// which has been set ad an embeded folder in to the dll (in the project file)
+        /// </summary>
+        internal class EditorRCLConfigureOptions : IPostConfigureOptions<StaticFileOptions>
+        {
+            private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment environment;
+
+            public EditorRCLConfigureOptions(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+            {
+                this.environment = environment;
+            }
+
+            public void PostConfigure(string name, StaticFileOptions options)
+            {
+                // Basic initialization in case the options weren't initialized by any other component
+                options.ContentTypeProvider = options.ContentTypeProvider ?? new FileExtensionContentTypeProvider();
+
+                if (options.FileProvider == null && this.environment.WebRootFileProvider == null)
+                {
+                    throw new InvalidOperationException("Missing FileProvider.");
+                }
+
+                options.FileProvider = options.FileProvider ?? this.environment.WebRootFileProvider;
+
+                // Add our provider
+                var filesProvider = new ManifestEmbeddedFileProvider(GetType().Assembly, "wwwroot");
+                options.FileProvider = new CompositeFileProvider(options.FileProvider, filesProvider);
             }
         }
     }

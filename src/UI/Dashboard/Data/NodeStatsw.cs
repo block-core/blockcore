@@ -2,7 +2,14 @@ using System;
 
 namespace Dashboard.Data
 {
-    public class WeatherForecast
+    public class NodeStats
+    {
+        public int ConnectedPeers { get; set; }
+
+        public int ConsensusTip { get; set; }
+    }
+
+    public class NodeStatsw
     {
         public DateTime Date { get; set; }
 

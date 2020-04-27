@@ -3,6 +3,7 @@
 @using Dashboard.Data
 @inject IndexService IndexService
 @inject WalletService WalletService
+@inject NavigationManager NavigationManager
 
 <h2>Wallets</h2>
 
@@ -15,17 +16,37 @@
 else
 {
     <table class="table">
+        <thead>
+            <tr>
+                <th>Wallet/account</th>
+                <th>Confirmed blanace</th>
+                <th>Unconfirmed balance</th>
+            </tr>
+        </thead>
         <tbody>
             @{
-                (string folderPath, IEnumerable<string> filesNames) result = WalletService.WalletManager.GetWalletsFiles();
-
-                foreach (var file in result.filesNames)
+                foreach (var walletName in WalletService.WalletManager.GetWalletsNames())
                 {
-                    <tr>
-                        <td>@file</td>
-                    </tr>
+                    foreach (var account in WalletService.WalletManager.GetAccounts(walletName))
+                    {
+                        var accountBalance = WalletService.WalletManager.GetBalances(walletName, account.Name).Single();
+
+                        <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer" class="table-hover">
+                            <td> @walletName <strong>/</strong>@account.Name</td>
+                            <td>@accountBalance.AmountConfirmed</td>
+                            <td>@accountBalance.AmountUnconfirmed</td>
+                        </tr>
+                    }
                 }
             }
         </tbody>
     </table>
+}
+
+@code
+{
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletaccount/" + walletName + "/" + accountname);
+    }
 }

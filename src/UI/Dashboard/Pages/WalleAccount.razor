@@ -1,0 +1,72 @@
+﻿@page "/walletaccount/{walletname}/{accountname}"
+
+@using Dashboard.Data
+@using Blockcore.Features.Wallet.Controllers;
+@using Blockcore.Features.Wallet.Models;
+
+@inject IndexService IndexService
+@inject WalletService WalletService
+
+<h2>Wallet / Account</h2>
+
+<p>Information about <strong> @walletname\@accountname</strong></p>
+
+@if (IndexService == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    var accountBalance = WalletService.WalletManager.GetBalances(walletname, accountname).Single();
+    <br />
+
+    <p>Amount Confirmed: <strong> @accountBalance.AmountConfirmed</strong></p>
+    <p>Amount Unconfirmed: <strong>@accountBalance.AmountUnconfirmed</strong></p>
+    <p>Spendable Amount: <strong> @accountBalance.SpendableAmount</strong></p>
+
+    <button class="btn btn-primary">Send</button>
+
+    <button class="btn btn-info">Receive</button>
+
+    <br />
+    <br />
+
+    <h3>Wallet History</h3>
+
+    // For now just show last 100 trx of history.
+    var model = WalletModelBuilder.GetHistory(WalletService.WalletManager, IndexService.Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>To Address</th>
+                <th>Amount</th>
+                <th>Confirmed In Block</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var history in model.AccountsHistoryModel)
+            {
+                foreach (var transaction in history.TransactionsHistory)
+                {
+                    <tr>
+                        <td>@transaction.ToAddress</td>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.ConfirmedInBlock</td>
+                        <td>@transaction.Type</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Parameter]
+    public string walletname { get; set; }
+    [Parameter]
+    public string accountname { get; set; }
+
+}

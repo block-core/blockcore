@@ -8,7 +8,10 @@ using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Controllers
 {
-    static internal class WalletControllerHelper
+    /// <summary>
+    /// A helper class to build complex wallet models.
+    /// </summary>
+    public static class WalletModelBuilder
     {
         public static WalletHistoryModel GetHistory(IWalletManager walletManager, Network network, WalletHistoryRequest request)
         {
@@ -24,7 +27,7 @@ namespace Blockcore.Features.Wallet.Controllers
 
                 IEnumerable<FlatHistory> query = accountHistory.History;
 
-                if (!String.IsNullOrEmpty(request.Address))
+                if (!string.IsNullOrEmpty(request.Address))
                 {
                     query = query.Where(x => x.Address.Address == request.Address);
                 }

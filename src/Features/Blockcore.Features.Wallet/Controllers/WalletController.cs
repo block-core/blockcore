@@ -367,7 +367,7 @@ namespace Blockcore.Features.Wallet.Controllers
         /// <summary>
         /// Gets some general information about a wallet. This includes the network the wallet is for,
         /// the creation date and time for the wallet, the height of the blocks the wallet currently holds,
-        /// and the number of connected nodes. 
+        /// and the number of connected nodes.
         /// </summary>
         /// <param name="request">The name of the wallet to get the information for.</param>
         /// <returns>A JSON object containing the wallet information.</returns>
@@ -418,7 +418,7 @@ namespace Blockcore.Features.Wallet.Controllers
 
         /// <summary>
         /// Gets the history of a wallet. This includes the transactions held by the entire wallet
-        /// or a single account if one is specified. 
+        /// or a single account if one is specified.
         /// </summary>
         /// <param name="request">An object containing the parameters used to retrieve a wallet's history.</param>
         /// <returns>A JSON object containing the wallet history.</returns>
@@ -433,189 +433,10 @@ namespace Blockcore.Features.Wallet.Controllers
                 return ModelStateErrors.BuildErrorResponse(this.ModelState);
             }
 
+            WalletHistoryModel model = WalletModelBuilder.GetHistory(this.walletManager, this.network, request);
+
             try
             {
-                var model = new WalletHistoryModel();
-
-                // Get a list of all the transactions found in an account (or in a wallet if no account is specified), with the addresses associated with them.
-                IEnumerable<AccountHistory> accountsHistory = this.walletManager.GetHistory(request.WalletName, request.AccountName);
-
-                foreach (AccountHistory accountHistory in accountsHistory)
-                {
-                    var transactionItems = new List<TransactionItemModel>();
-                    var uniqueProcessedTxIds = new HashSet<uint256>();
-
-                    IEnumerable<FlatHistory> query = accountHistory.History;
-
-                    if (!string.IsNullOrEmpty(request.Address))
-                    {
-                        query = query.Where(x => x.Address.Address == request.Address);
-                    }
-
-                    // Sorting the history items by descending dates. That includes received and sent dates.
-                    List<FlatHistory> items = query
-                                                .OrderBy(o => o.Transaction.IsConfirmed() ? 1 : 0)
-                                                .ThenByDescending(o => o.Transaction.SpendingDetails?.CreationTime ?? o.Transaction.CreationTime)
-                                                .ToList();
-
-                    // Represents a sublist containing only the transactions that have already been spent.
-                    List<FlatHistory> spendingDetails = items.Where(t => t.Transaction.SpendingDetails != null).ToList();
-
-                    // Represents a sublist of transactions associated with receive addresses + a sublist of already spent transactions associated with change addresses.
-                    // In effect, we filter out 'change' transactions that are not spent, as we don't want to show these in the history.
-                    List<FlatHistory> history = items.Where(t => !t.Address.IsChangeAddress() || (t.Address.IsChangeAddress() && t.Transaction.IsSpent())).ToList();
-
-                    // Represents a sublist of 'change' transactions.
-                    List<FlatHistory> allchange = items.Where(t => t.Address.IsChangeAddress()).ToList();
-
-                    foreach (FlatHistory item in history)
-                    {
-                        // Count only unique transactions and limit it to MaxHistoryItemsPerAccount.
-                        int processedTransactions = uniqueProcessedTxIds.Count;
-                        if (processedTransactions >= MaxHistoryItemsPerAccount)
-                        {
-                            break;
-                        }
-
-                        TransactionData transaction = item.Transaction;
-                        HdAddress address = item.Address;
-
-                        // First we look for staking transaction as they require special attention.
-                        // A staking transaction spends one of our inputs into 2 outputs or more, paid to the same address.
-                        if (transaction.SpendingDetails?.IsCoinStake != null && transaction.SpendingDetails.IsCoinStake.Value)
-                        {
-                            // We look for the output(s) related to our spending input.
-                            List<FlatHistory> relatedOutputs = items.Where(h => h.Transaction.Id == transaction.SpendingDetails.TransactionId && h.Transaction.IsCoinStake != null && h.Transaction.IsCoinStake.Value).ToList();
-                            if (relatedOutputs.Any())
-                            {
-                                // Add staking transaction details.
-                                // The staked amount is calculated as the difference between the sum of the outputs and the input and should normally be equal to 1.
-                                var stakingItem = new TransactionItemModel
-                                {
-                                    Type = TransactionItemType.Staked,
-                                    ToAddress = address.Address,
-                                    Amount = relatedOutputs.Sum(o => o.Transaction.Amount) - transaction.Amount,
-                                    Id = transaction.SpendingDetails.TransactionId,
-                                    Timestamp = transaction.SpendingDetails.CreationTime,
-                                    ConfirmedInBlock = transaction.SpendingDetails.BlockHeight,
-                                    BlockIndex = transaction.SpendingDetails.BlockIndex
-                                };
-
-                                transactionItems.Add(stakingItem);
-                                uniqueProcessedTxIds.Add(stakingItem.Id);
-                            }
-
-                            // No need for further processing if the transaction itself is the output of a staking transaction.
-                            if (transaction.IsCoinStake != null)
-                            {
-                                continue;
-                            }
-                        }
-
-                        // If this is a normal transaction (not staking) that has been spent, add outgoing fund transaction details.
-                        if (transaction.SpendingDetails != null && transaction.SpendingDetails.IsCoinStake == null)
-                        {
-                            // Create a record for a 'send' transaction.
-                            uint256 spendingTransactionId = transaction.SpendingDetails.TransactionId;
-                            var sentItem = new TransactionItemModel
-                            {
-                                Type = TransactionItemType.Send,
-                                Id = spendingTransactionId,
-                                Timestamp = transaction.SpendingDetails.CreationTime,
-                                ConfirmedInBlock = transaction.SpendingDetails.BlockHeight,
-                                BlockIndex = transaction.SpendingDetails.BlockIndex,
-                                Amount = Money.Zero
-                            };
-
-                            // If this 'send' transaction has made some external payments, i.e the funds were not sent to another address in the wallet.
-                            if (transaction.SpendingDetails.Payments != null)
-                            {
-                                sentItem.Payments = new List<PaymentDetailModel>();
-                                foreach (PaymentDetails payment in transaction.SpendingDetails.Payments)
-                                {
-                                    sentItem.Payments.Add(new PaymentDetailModel
-                                    {
-                                        DestinationAddress = payment.DestinationAddress,
-                                        Amount = payment.Amount
-                                    });
-
-                                    sentItem.Amount += payment.Amount;
-                                }
-                            }
-
-                            // Get the change address for this spending transaction.
-                            FlatHistory changeAddress = allchange.FirstOrDefault(a => a.Transaction.Id == spendingTransactionId);
-
-                            // Find all the spending details containing the spending transaction id and aggregate the sums.
-                            // This is our best shot at finding the total value of inputs for this transaction.
-                            var inputsAmount = new Money(spendingDetails.Where(t => t.Transaction.SpendingDetails.TransactionId == spendingTransactionId).Sum(t => t.Transaction.Amount));
-
-                            // The fee is calculated as follows: funds in utxo - amount spent - amount sent as change.
-                            sentItem.Fee = inputsAmount - sentItem.Amount - (changeAddress == null ? 0 : changeAddress.Transaction.Amount);
-
-                            // Mined/staked coins add more coins to the total out.
-                            // That makes the fee negative. If that's the case ignore the fee.
-                            if (sentItem.Fee < 0)
-                                sentItem.Fee = 0;
-
-                            transactionItems.Add(sentItem);
-                            uniqueProcessedTxIds.Add(sentItem.Id);
-                        }
-
-                        // We don't show in history transactions that are outputs of staking transactions.
-                        if (transaction.IsCoinStake != null && transaction.IsCoinStake.Value && transaction.SpendingDetails == null)
-                        {
-                            continue;
-                        }
-
-                        // Create a record for a 'receive' transaction.
-                        if (transaction.IsCoinStake == null && !address.IsChangeAddress())
-                        {
-                            // First check if we already have a similar transaction output, in which case we just sum up the amounts
-                            TransactionItemModel existingReceivedItem = this.FindSimilarReceivedTransactionOutput(transactionItems, transaction);
-
-                            if (existingReceivedItem == null)
-                            {
-                                // Add incoming fund transaction details.
-                                var receivedItem = new TransactionItemModel
-                                {
-                                    Type = TransactionItemType.Received,
-                                    ToAddress = address.Address,
-                                    Amount = transaction.Amount,
-                                    Id = transaction.Id,
-                                    Timestamp = transaction.CreationTime,
-                                    ConfirmedInBlock = transaction.BlockHeight,
-                                    BlockIndex = transaction.BlockIndex
-                                };
-
-                                transactionItems.Add(receivedItem);
-                                uniqueProcessedTxIds.Add(receivedItem.Id);
-                            }
-                            else
-                            {
-                                existingReceivedItem.Amount += transaction.Amount;
-                            }
-                        }
-                    }
-
-                    transactionItems = transactionItems.Distinct(new SentTransactionItemModelComparer()).Select(e => e).ToList();
-
-                    // Sort and filter the history items.
-                    List<TransactionItemModel> itemsToInclude = transactionItems.OrderByDescending(t => t.Timestamp)
-                        .Where(x => string.IsNullOrEmpty(request.SearchQuery) || (x.Id.ToString() == request.SearchQuery || x.ToAddress == request.SearchQuery || x.Payments.Any(p => p.DestinationAddress == request.SearchQuery)))
-                        .Skip(request.Skip ?? 0)
-                        .Take(request.Take ?? transactionItems.Count)
-                        .ToList();
-
-                    model.AccountsHistoryModel.Add(new AccountHistoryModel
-                    {
-                        TransactionsHistory = itemsToInclude,
-                        Name = accountHistory.Account.Name,
-                        CoinType = this.coinType,
-                        HdPath = accountHistory.Account.HdPath
-                    });
-                }
-
                 return this.Json(model);
             }
             catch (Exception e)
@@ -761,7 +582,7 @@ namespace Blockcore.Features.Wallet.Controllers
         /// Gets the spendable transactions for an account with the option to specify how many confirmations
         /// a transaction needs to be included.
         /// </summary>
-        /// <param name="request">An object containing the parameters used to retrieve the spendable 
+        /// <param name="request">An object containing the parameters used to retrieve the spendable
         /// transactions for an account.</param>
         /// <returns>A JSON object containing the spendable transactions for an account.</returns>
         [Route("spendable-transactions")]
@@ -806,7 +627,7 @@ namespace Blockcore.Features.Wallet.Controllers
         /// Fee can be estimated by creating a <see cref="TransactionBuildContext"/> with no password
         /// and then building the transaction and retrieving the fee from the context.
         /// </summary>
-        /// <param name="request">An object containing the parameters used to estimate the fee 
+        /// <param name="request">An object containing the parameters used to estimate the fee
         /// for a specific transaction.</param>
         /// <returns>The estimated fee for the transaction.</returns>
         [Route("estimate-txfee")]
@@ -1223,14 +1044,14 @@ namespace Blockcore.Features.Wallet.Controllers
         /// Removes transactions from the wallet.
         /// You might want to remove transactions from a wallet if some unconfirmed transactions disappear
         /// from the blockchain or the transaction fields within the wallet are updated and a refresh is required to
-        /// populate the new fields. 
+        /// populate the new fields.
         /// In one situation, you might notice several unconfirmed transaction in the wallet, which you now know were
         /// never confirmed. You can use this API to correct this by specifying a date and time before the first
         /// unconfirmed transaction thereby removing all transactions after this point. You can also request a resync as
         /// part of the call, which calculates the block height for the earliest removal. The wallet sync manager then
         /// proceeds to resync from there reinstating the confirmed transactions in the wallet. You can also cherry pick
-        /// transactions to remove by specifying their transaction ID. 
-        /// 
+        /// transactions to remove by specifying their transaction ID.
+        ///
         /// <param name="request">An object containing the necessary parameters to remove transactions
         /// from a wallet. The includes several options for specifying the transactions to remove.</param>
         /// <returns>A JSON object containing all removed transactions identified by their
@@ -1485,7 +1306,6 @@ namespace Blockcore.Features.Wallet.Controllers
             }
         }
 
-
         /// <summary>Splits and distributes UTXOs across wallet addresses</summary>
         [HttpPost]
         [Route("distribute-utxos")]
@@ -1696,14 +1516,6 @@ namespace Blockcore.Features.Wallet.Controllers
             {
                 this.walletSyncManager.SyncFromHeight(blockHeightToSyncFrom);
             }
-        }
-
-        private TransactionItemModel FindSimilarReceivedTransactionOutput(List<TransactionItemModel> items, TransactionData transaction)
-        {
-            TransactionItemModel existingTransaction = items.FirstOrDefault(i => i.Id == transaction.Id &&
-                                                                                 i.Type == TransactionItemType.Received &&
-                                                                                 i.ConfirmedInBlock == transaction.BlockHeight);
-            return existingTransaction;
         }
     }
 }

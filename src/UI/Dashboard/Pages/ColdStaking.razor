@@ -1,0 +1,72 @@
+﻿@page "/coldstaking"
+
+@using Dashboard.Data
+@using Blockcore.Features.ColdStaking
+
+@inject IndexService IndexService
+@inject WalletService WalletService
+@inject NavigationManager NavigationManager
+
+<h2>Wallets</h2>
+
+<p>Information about the deployed wallets.</p>
+
+@if (IndexService == null && ColdStakingManager == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Wallet/account</th>
+                <th>Confirmed blanace</th>
+                <th>Unconfirmed balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var walletName in WalletService.WalletManager.GetWalletsNames())
+                {
+                    var coldStakingAccount = ColdStakingManager.GetColdStakingAccount(WalletService.WalletManager.GetWallet(walletName), true);
+                    if (coldStakingAccount != null)
+                    {
+                        var coldAccountBalance = ColdStakingManager.GetBalances(walletName, coldStakingAccount.Name).Single();
+
+                        <tr>
+                            <td> @walletName <strong>/</strong>@coldStakingAccount.Name</td>
+                            <td>@coldAccountBalance.AmountConfirmed</td>
+                            <td>@coldAccountBalance.AmountUnconfirmed</td>
+                        </tr>
+                    }
+
+                    var hotStakingAccount = ColdStakingManager.GetColdStakingAccount(WalletService.WalletManager.GetWallet(walletName), false);
+                    if (hotStakingAccount != null)
+                    {
+                        var hotAccountBalance = ColdStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();
+
+                        <tr>
+                            <td> @walletName <strong>/</strong>@hotStakingAccount.Name</td>
+                            <td>@hotAccountBalance.AmountConfirmed</td>
+                            <td>@hotAccountBalance.AmountUnconfirmed</td>
+                        </tr>
+                    }
+
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    ColdStakingManager ColdStakingManager;
+
+    protected override Task OnInitializedAsync()
+    {
+        ColdStakingManager = WalletService.WalletManager as ColdStakingManager;
+
+        return Task.CompletedTask;
+    }
+}

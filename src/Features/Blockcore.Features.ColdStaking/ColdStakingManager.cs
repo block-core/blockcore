@@ -143,7 +143,7 @@ namespace Blockcore.Features.ColdStaking
         /// </summary>
         /// <param name="walletName">The wallet to return the information for.</param>
         /// <returns>A <see cref="Models.GetColdStakingInfoResponse"/> object containing the information.</returns>
-        internal Models.GetColdStakingInfoResponse GetColdStakingInfo(string walletName)
+        public Models.GetColdStakingInfoResponse GetColdStakingInfo(string walletName)
         {
             Wallet.Wallet wallet = this.GetWalletByName(walletName);
 
@@ -171,7 +171,7 @@ namespace Blockcore.Features.ColdStaking
         /// <param name="wallet">The wallet where we wish to create the account.</param>
         /// <param name="isColdWalletAccount">Indicates whether we need the cold wallet account (versus the hot wallet account).</param>
         /// <returns>The cold staking account or <c>null</c> if the account does not exist.</returns>
-        internal HdAccount GetColdStakingAccount(Wallet.Wallet wallet, bool isColdWalletAccount)
+        public HdAccount GetColdStakingAccount(Wallet.Wallet wallet, bool isColdWalletAccount)
         {
             var coinType = wallet.Network.Consensus.CoinType;
             HdAccount account = wallet.GetAccount(isColdWalletAccount ? ColdWalletAccountName : HotWalletAccountName);
@@ -201,7 +201,7 @@ namespace Blockcore.Features.ColdStaking
         /// <param name="isColdWalletAccount">Indicates whether we need the cold wallet account (versus the hot wallet account).</param>
         /// <param name="walletPassword">The wallet password which will be used to create the account.</param>
         /// <returns>The new or existing cold staking account.</returns>
-        internal HdAccount GetOrCreateColdStakingAccount(string walletName, bool isColdWalletAccount, string walletPassword)
+        public HdAccount GetOrCreateColdStakingAccount(string walletName, bool isColdWalletAccount, string walletPassword)
         {
             Wallet.Wallet wallet = this.GetWalletByName(walletName);
 

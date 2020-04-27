@@ -1,0 +1,31 @@
+﻿@page "/wallets"
+
+@using Dashboard.Data
+@inject IndexService IndexService
+@inject WalletService WalletService
+
+<h2>Wallets</h2>
+
+<p>Information about the deployed wallets.</p>
+
+@if (IndexService == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <tbody>
+            @{
+                (string folderPath, IEnumerable<string> filesNames) result = WalletService.WalletManager.GetWalletsFiles();
+
+                foreach (var file in result.filesNames)
+                {
+                    <tr>
+                        <td>@file</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

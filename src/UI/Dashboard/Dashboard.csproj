@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
   </ItemGroup>
 
   <ItemGroup>

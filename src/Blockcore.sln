@@ -113,7 +113,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "City.Node", "Networks\City\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{E16EB6FD-F9ED-4301-8CD8-F00516F7A2BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard", "UI\Dashboard\Dashboard.csproj", "{8772F75C-D2EA-4584-98B1-F779FDA60232}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard", "UI\Dashboard\Dashboard.csproj", "{8772F75C-D2EA-4584-98B1-F779FDA60232}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -31,7 +31,7 @@ else
                     {
                         var accountBalance = WalletService.WalletManager.GetBalances(walletName, account.Name).Single();
 
-                        <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer" class="table-hover">
+                        <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer">
                             <td> @walletName <strong>/</strong>@account.Name</td>
                             <td>@accountBalance.AmountConfirmed</td>
                             <td>@accountBalance.AmountUnconfirmed</td>

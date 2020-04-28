@@ -8,13 +8,17 @@ namespace Dashboard.Data
 {
     public class WalletService
     {
-        public WalletService(Network network, IWalletManager walletManager)
+        public WalletService(Network network, IWalletManager walletManager, IWalletTransactionHandler walletTransactionHandler, IBroadcasterManager broadcasterManager)
         {
             this.Network = network;
             this.WalletManager = walletManager;
+            this.WalletTransactionHandler = walletTransactionHandler;
+            this.BroadcasterManager = broadcasterManager;
         }
 
         public Network Network { get; }
         public IWalletManager WalletManager { get; }
+        public IWalletTransactionHandler WalletTransactionHandler { get; }
+        public IBroadcasterManager BroadcasterManager { get; }
     }
 }

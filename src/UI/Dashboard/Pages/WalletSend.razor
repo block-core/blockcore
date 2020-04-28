@@ -1,0 +1,190 @@
+﻿@page "/walletsend/{walletname}/{accountname}"
+
+@using Dashboard.Data
+@using Blockcore.Features.Wallet;
+@using Blockcore.Features.Wallet.Controllers;
+@using Blockcore.Features.Wallet.Models;
+@using NBitcoin;
+@using Blockcore.Features.Wallet.Broadcasting;
+
+@inject IndexService IndexService
+@inject WalletService WalletService
+@inject NavigationManager NavigationManager
+
+<button class="btn btn-link" @onclick="() => { NavigateToWalletAccount(walletname, accountname); }">
+    Back to wallet account
+</button>
+<br />
+
+<h3>Send Coins</h3>
+
+<p>Send coins from account <strong> @walletname\@accountname</strong></p>
+
+@{
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">To Address:</span>
+        </div>
+        <input @bind="Address" type="text" class="form-control" placeholder="address" />
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Amount:</span>
+        </div>
+        <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+        <div class="input-group-append">
+            <span class="input-group-text">@IndexService.Network.CoinTicker.ToUpper()</span>
+        </div>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Fee:</span>
+        </div>
+        <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
+        <div class="input-group-append">
+            <span class="input-group-text">Optional (default to low)</span>
+        </div>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Wallet Password:</span>
+        </div>
+        <input @bind="Password" type="password" class="form-control" placeholder="password" />
+    </div>
+
+    <div class="input-group mb-3">
+        <button class="btn btn-primary" @onclick="SendCoins">Send Coins</button>
+    </div>
+    <br />
+
+    <h3>Broadcast Transaction</h3>
+
+    <p>Transaction hash: @SentTransactionHash</p>
+
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Raw Transaction</span>
+        </div>
+        <textarea class="form-control" rows="5">@TransactionHex</textarea>
+    </div>
+    <br />
+    <div class="input-group mb-3">
+        <button class="btn btn-info" @onclick="Broadcast">Broadcast Transaction</button>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="alert-warning">@Alert</div>
+    </div>
+
+}
+
+@code
+{
+    [Parameter]
+    public string walletname { get; set; }
+    [Parameter]
+    public string accountname { get; set; }
+
+    private string Address { get; set; }
+
+    private decimal Amount { get; set; }
+
+    private decimal Fee { get; set; }
+
+    private string Password { get; set; }
+
+    uint256 SentTransactionHash { get; set; }
+
+    string TransactionHex { get; set; }
+
+    string Alert { get; set; }
+
+    protected override void OnInitialized()
+    {
+        this.Fee = new Money(IndexService.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
+    }
+
+    public void EstimateFee()
+    {
+        var recipients = new List<Recipient>();
+        recipients.Add(new Recipient
+        {
+            ScriptPubKey = BitcoinAddress.Create(Address, IndexService.Network).ScriptPubKey,
+            Amount = new Money(Amount, MoneyUnit.BTC)
+        });
+
+        var context = new TransactionBuildContext(IndexService.Network)
+        {
+            AccountReference = new WalletAccountReference(walletname, accountname),
+            FeeType = FeeType.Low,
+            Recipients = recipients,
+            Sign = false
+        };
+
+        this.Fee = WalletService.WalletTransactionHandler.EstimateFee(context).ToDecimal(MoneyUnit.BTC);
+    }
+
+    private void NavigateToWalletAccount(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletaccount/" + walletName + "/" + accountname);
+    }
+
+    private async Task Broadcast()
+    {
+        if (string.IsNullOrEmpty(this.TransactionHex)) { this.Alert = "No trx"; return; }
+
+        this.Alert = string.Empty;
+
+        if (!IndexService.ConnectionManager.ConnectedPeers.Any())
+        {
+            this.Alert = "No peers connected";
+            return;
+        }
+
+        Transaction transaction = IndexService.Network.CreateTransaction(this.TransactionHex);
+
+        await WalletService.BroadcasterManager.BroadcastTransactionAsync(transaction);
+
+        var transactionBroadCastEntry = WalletService.BroadcasterManager.GetTransaction(transaction.GetHash());
+
+        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
+        {
+            this.Alert = "Error occurred: " + transactionBroadCastEntry.ErrorMessage;
+        }
+    }
+
+    private void SendCoins()
+    {
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
+        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "No address"; return; }
+        if (this.Amount == 0) { this.Alert = "No amount"; return; }
+        if (this.Fee == 0) { this.Alert = "No fee"; return; }
+
+        this.Alert = string.Empty;
+
+        var recipients = new List<Recipient>();
+        recipients.Add(new Recipient
+        {
+            ScriptPubKey = BitcoinAddress.Create(Address, IndexService.Network).ScriptPubKey,
+            Amount = new Money(Amount, MoneyUnit.BTC)
+        });
+
+        var context = new TransactionBuildContext(IndexService.Network)
+        {
+            AccountReference = new WalletAccountReference(walletname, accountname),
+            Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
+            WalletPassword = Password,
+            Recipients = recipients,
+            UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
+            FeeType = FeeType.Low
+        };
+
+        Transaction transactionResult = WalletService.WalletTransactionHandler.BuildTransaction(context);
+
+        this.SentTransactionHash = transactionResult.GetHash();
+        this.TransactionHex = transactionResult.ToHex(IndexService.Network);
+    }
+}

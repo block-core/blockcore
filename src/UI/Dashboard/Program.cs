@@ -37,7 +37,7 @@ namespace Dashboard
                         Task.Run(() =>
                         {
                             Task.Delay(TimeSpan.FromSeconds(3)).Wait();
-                            // OpenBrowser(dashboardSettings.DashboardUri.ToString());
+                            OpenBrowser(dashboardSettings.DashboardUri.ToString());
                         });
 #endif
                     }
@@ -107,7 +107,10 @@ namespace Dashboard
         /// </summary>
         internal class EditorRCLConfigureOptions : IPostConfigureOptions<StaticFileOptions>
         {
+#pragma warning disable CS0618 // Type or member is obsolete
+
             private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment environment;
+#pragma warning restore CS0618 // Type or member is obsolete
 
             public EditorRCLConfigureOptions(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
             {

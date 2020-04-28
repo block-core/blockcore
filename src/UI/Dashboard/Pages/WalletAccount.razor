@@ -4,12 +4,17 @@
 @using Blockcore.Features.Wallet.Controllers;
 @using Blockcore.Features.Wallet.Models;
 
+@inject NavigationManager NavigationManager
 @inject IndexService IndexService
 @inject WalletService WalletService
 
-<h2>Wallet / Account</h2>
+<button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
+    Back to wallets
+</button>
+<br />
 
-<p>Information about <strong> @walletname\@accountname</strong></p>
+<h3>Wallet Account</h3>
+<p>Information about <strong>@walletname\@accountname</strong></p>
 
 @if (IndexService == null)
 {
@@ -24,9 +29,8 @@ else
     <p>Amount Unconfirmed: <strong>@accountBalance.AmountUnconfirmed</strong></p>
     <p>Spendable Amount: <strong> @accountBalance.SpendableAmount</strong></p>
 
-    <button class="btn btn-primary">Send</button>
-
-    <button class="btn btn-info">Receive</button>
+    <button @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" class="btn btn-primary">Recieve</button>
+    <button @onclick="() => { NavigateToSendWallet(walletname, accountname); }" class="btn btn-info">Send</button>
 
     <br />
     <br />
@@ -69,4 +73,18 @@ else
     [Parameter]
     public string accountname { get; set; }
 
+    private void NavigateToReceiveWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+    }
+
+    private void NavigateToSendWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+    }
+
+    private void NavigateToWallets()
+    {
+        NavigationManager.NavigateTo("wallets");
+    }
 }

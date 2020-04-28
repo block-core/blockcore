@@ -107,12 +107,9 @@ namespace Dashboard
         /// </summary>
         internal class EditorRCLConfigureOptions : IPostConfigureOptions<StaticFileOptions>
         {
-#pragma warning disable CS0618 // Type or member is obsolete
+            private readonly IWebHostEnvironment environment;
 
-            private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment environment;
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            public EditorRCLConfigureOptions(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+            public EditorRCLConfigureOptions(IWebHostEnvironment environment)
             {
                 this.environment = environment;
             }

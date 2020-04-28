@@ -60,6 +60,10 @@
     </div>
     <br />
 
+    <div class="input-group mb-3">
+        <div class="alert-warning">@Alert</div>
+    </div>
+
     <h3>Broadcast Transaction</h3>
 
     <p>Transaction hash: @SentTransactionHash</p>
@@ -68,7 +72,7 @@
         <div class="input-group-prepend">
             <span class="input-group-text">Raw Transaction</span>
         </div>
-        <textarea class="form-control" rows="5">@TransactionHex</textarea>
+        <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
     </div>
     <br />
     <div class="input-group mb-3">
@@ -76,9 +80,8 @@
     </div>
 
     <div class="input-group mb-3">
-        <div class="alert-warning">@Alert</div>
+        <div class="alert-info">@Success</div>
     </div>
-
 }
 
 @code
@@ -101,6 +104,8 @@
     string TransactionHex { get; set; }
 
     string Alert { get; set; }
+
+    string Success { get; set; }
 
     protected override void OnInitialized()
     {
@@ -153,7 +158,10 @@
         if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
         {
             this.Alert = "Error occurred: " + transactionBroadCastEntry.ErrorMessage;
+            return;
         }
+
+        this.Success = "Coins sent.";
     }
 
     private void SendCoins()
@@ -179,7 +187,7 @@
             WalletPassword = Password,
             Recipients = recipients,
             UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
-            FeeType = FeeType.Low
+            TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
         };
 
         Transaction transactionResult = WalletService.WalletTransactionHandler.BuildTransaction(context);

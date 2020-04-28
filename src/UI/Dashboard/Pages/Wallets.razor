@@ -15,6 +15,13 @@
 }
 else
 {
+
+    <p>Wallet Tip: <strong> @this.WalletService.WalletSyncManager.WalletTip.Height / @IndexService.ChainIndexer.Height</strong></p>
+
+    <button @onclick="NavigateToWalletCreate" class="btn btn-primary">Create Wallet</button>
+    <button @onclick="Resync" class="btn btn-primary">Resync Wallets from genesis</button>
+    <br />
+    <br />
     <table class="table">
         <thead>
             <tr>
@@ -32,7 +39,7 @@ else
                         var accountBalance = WalletService.WalletManager.GetBalances(walletName, account.Name).Single();
 
                         <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer">
-                            <td> @walletName <strong>/</strong>@account.Name</td>
+                            <td> @walletName <strong>/</strong> @account.Name</td>
                             <td>@accountBalance.AmountConfirmed</td>
                             <td>@accountBalance.AmountUnconfirmed</td>
                         </tr>
@@ -48,5 +55,15 @@ else
     private void NavigateToWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletaccount/" + walletName + "/" + accountname);
+    }
+
+    private void NavigateToWalletCreate()
+    {
+        NavigationManager.NavigateTo("walletcrate");
+    }
+
+    private void Resync()
+    {
+        this.WalletService.WalletSyncManager.SyncFromHeight(1);
     }
 }

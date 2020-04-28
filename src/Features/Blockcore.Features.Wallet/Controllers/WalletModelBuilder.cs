@@ -13,6 +13,47 @@ namespace Blockcore.Features.Wallet.Controllers
     /// </summary>
     public static class WalletModelBuilder
     {
+        public static Mnemonic GenerateMnemonic(string language = "English", int wordCount = 12)
+        {
+            Wordlist wordList;
+            switch (language.ToLowerInvariant())
+            {
+                case "english":
+                    wordList = Wordlist.English;
+                    break;
+
+                case "french":
+                    wordList = Wordlist.French;
+                    break;
+
+                case "spanish":
+                    wordList = Wordlist.Spanish;
+                    break;
+
+                case "japanese":
+                    wordList = Wordlist.Japanese;
+                    break;
+
+                case "chinesetraditional":
+                    wordList = Wordlist.ChineseTraditional;
+                    break;
+
+                case "chinesesimplified":
+                    wordList = Wordlist.ChineseSimplified;
+                    break;
+
+                default:
+                    throw new FormatException($"Invalid language '{language}'. Choices are: English, French, Spanish, Japanese, ChineseSimplified and ChineseTraditional.");
+            }
+
+            var count = (WordCount)wordCount;
+
+            // generate the mnemonic
+            var mnemonic = new Mnemonic(wordList, count);
+
+            return mnemonic;
+        }
+
         public static WalletHistoryModel GetHistory(IWalletManager walletManager, Network network, WalletHistoryRequest request)
         {
             var model = new WalletHistoryModel();

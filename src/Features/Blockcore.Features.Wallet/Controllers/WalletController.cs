@@ -87,41 +87,8 @@ namespace Blockcore.Features.Wallet.Controllers
         {
             try
             {
-                Wordlist wordList;
-                switch (language.ToLowerInvariant())
-                {
-                    case "english":
-                        wordList = Wordlist.English;
-                        break;
-
-                    case "french":
-                        wordList = Wordlist.French;
-                        break;
-
-                    case "spanish":
-                        wordList = Wordlist.Spanish;
-                        break;
-
-                    case "japanese":
-                        wordList = Wordlist.Japanese;
-                        break;
-
-                    case "chinesetraditional":
-                        wordList = Wordlist.ChineseTraditional;
-                        break;
-
-                    case "chinesesimplified":
-                        wordList = Wordlist.ChineseSimplified;
-                        break;
-
-                    default:
-                        throw new FormatException($"Invalid language '{language}'. Choices are: English, French, Spanish, Japanese, ChineseSimplified and ChineseTraditional.");
-                }
-
-                var count = (WordCount)wordCount;
-
                 // generate the mnemonic
-                var mnemonic = new Mnemonic(wordList, count);
+                var mnemonic = WalletModelBuilder.GenerateMnemonic(language, wordCount);
                 return this.Json(mnemonic.ToString());
             }
             catch (Exception e)

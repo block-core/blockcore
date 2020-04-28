@@ -37,7 +37,7 @@ namespace Dashboard
                         Task.Run(() =>
                         {
                             Task.Delay(TimeSpan.FromSeconds(3)).Wait();
-                            OpenBrowser(dashboardSettings.DashboardUri.ToString());
+                            //  OpenBrowser(dashboardSettings.DashboardUri.ToString());
                         });
 #endif
                     }

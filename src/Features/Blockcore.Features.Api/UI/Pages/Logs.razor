@@ -1,0 +1,17 @@
+﻿@page "/logs"
+
+@using Dashboard.Data
+@inject IndexService IndexService
+
+<h2>Node logs</h2>
+
+@if (IndexService == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+<textarea class="w-100" rows="50">
+    @(((Blockcore.FullNode)IndexService.FullNode).LastLogOutput)
+</textarea>
+}

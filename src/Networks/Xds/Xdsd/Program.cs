@@ -43,8 +43,8 @@ namespace StratisD
                     .AddPowPosMining()
                     .UseApi()
                     .AddRPC()
-                    .UseDiagnosticFeature()
-                    .UseUI();
+                    .UseDiagnosticFeature();
+                // .UseUI();
 
                 await nodeBuilder.Build().RunAsync();
             }

@@ -18,197 +18,197 @@ using City.Networks.Setup;
 
 namespace City.Networks
 {
-   public class CityMain : Network
-   {
-      public CityMain()
-      {
-         // START MODIFICATIONS OF GENERATED CODE
-         var consensusOptions = new CityPosConsensusOptions(
-             maxBlockBaseSize: 1_000_000,
-             maxStandardVersion: 2,
-             maxStandardTxWeight: 100_000,
-             maxBlockSigopsCost: 20_000,
-             maxStandardTxSigopsCost: 20_000 / 5,
-             witnessScaleFactor: 4
-         );
-         // END MODIFICATIONS
+    public class CityMain : Network
+    {
+        public CityMain()
+        {
+            // START MODIFICATIONS OF GENERATED CODE
+            var consensusOptions = new CityPosConsensusOptions(
+                maxBlockBaseSize: 1_000_000,
+                maxStandardVersion: 2,
+                maxStandardTxWeight: 100_000,
+                maxBlockSigopsCost: 20_000,
+                maxStandardTxSigopsCost: 20_000 / 5,
+                witnessScaleFactor: 4
+            );
+            // END MODIFICATIONS
 
-         CoinSetup setup = CitySetup.Instance.Setup;
-         NetworkSetup network = CitySetup.Instance.Main;
+            CoinSetup setup = CitySetup.Instance.Setup;
+            NetworkSetup network = CitySetup.Instance.Main;
 
-         NetworkType = NetworkType.Mainnet;
-         DefaultConfigFilename = setup.ConfigFileName; // The default name used for the City configuration file.
+            NetworkType = NetworkType.Mainnet;
+            DefaultConfigFilename = setup.ConfigFileName; // The default name used for the City configuration file.
 
-         Name = network.Name;
-         CoinTicker = network.CoinTicker;
-         Magic = ConversionTools.ConvertToUInt32(setup.Magic);
-         RootFolderName = network.RootFolderName;
-         DefaultPort = network.DefaultPort;
-         DefaultRPCPort = network.DefaultRPCPort;
-         DefaultAPIPort = network.DefaultAPIPort;
-         DefaultSignalRPort = network.DefaultSignalRPort;
+            Name = network.Name;
+            CoinTicker = network.CoinTicker;
+            Magic = ConversionTools.ConvertToUInt32(setup.Magic);
+            RootFolderName = network.RootFolderName;
+            DefaultPort = network.DefaultPort;
+            DefaultRPCPort = network.DefaultRPCPort;
+            DefaultAPIPort = network.DefaultAPIPort;
+            DefaultSignalRPort = network.DefaultSignalRPort;
 
-         DefaultMaxOutboundConnections = 16;
-         DefaultMaxInboundConnections = 109;
-         MaxTipAge = 2 * 60 * 60;
-         MinTxFee = 4333;
-         FallbackFee = 4333;
-         MinRelayTxFee = 4333;
-         MaxTimeOffsetSeconds = 25 * 60;
-         DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
+            DefaultMaxOutboundConnections = 16;
+            DefaultMaxInboundConnections = 109;
+            MaxTipAge = 2 * 60 * 60;
+            MinTxFee = 4333;
+            FallbackFee = 4333;
+            MinRelayTxFee = 4333;
+            MaxTimeOffsetSeconds = 25 * 60;
+            DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
-         var consensusFactory = new PosConsensusFactory();
+            var consensusFactory = new PosConsensusFactory();
 
-         GenesisTime = network.GenesisTime;
-         GenesisNonce = network.GenesisNonce;
-         GenesisBits = network.GenesisBits;
-         GenesisVersion = network.GenesisVersion;
-         GenesisReward = network.GenesisReward;
+            GenesisTime = network.GenesisTime;
+            GenesisNonce = network.GenesisNonce;
+            GenesisBits = network.GenesisBits;
+            GenesisVersion = network.GenesisVersion;
+            GenesisReward = network.GenesisReward;
 
-         Block genesisBlock = CreateGenesisBlock(consensusFactory,
-            GenesisTime,
-            GenesisNonce,
-            GenesisBits,
-            GenesisVersion,
-            GenesisReward,
-            setup.GenesisText);
+            Block genesisBlock = CreateGenesisBlock(consensusFactory,
+               GenesisTime,
+               GenesisNonce,
+               GenesisBits,
+               GenesisVersion,
+               GenesisReward,
+               setup.GenesisText);
 
-         Genesis = genesisBlock;
+            Genesis = genesisBlock;
 
-         var buriedDeployments = new BuriedDeploymentsArray
-         {
-            [BuriedDeployments.BIP34] = 0,
-            [BuriedDeployments.BIP65] = 0,
-            [BuriedDeployments.BIP66] = 0
-         };
+            var buriedDeployments = new BuriedDeploymentsArray
+            {
+                [BuriedDeployments.BIP34] = 0,
+                [BuriedDeployments.BIP65] = 0,
+                [BuriedDeployments.BIP66] = 0
+            };
 
-         Consensus = new NBitcoin.Consensus(
-             consensusFactory: consensusFactory,
-             consensusOptions: consensusOptions,
-             coinType: setup.CoinType,
-             hashGenesisBlock: genesisBlock.GetHash(),
-             subsidyHalvingInterval: 24333,
-             majorityEnforceBlockUpgrade: 750,
-             majorityRejectBlockOutdated: 950,
-             majorityWindow: 1000,
-             buriedDeployments: buriedDeployments,
-             bip9Deployments: new NoBIP9Deployments(),
-             bip34Hash: null,
-             minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
-             maxReorgLength: 500,
-             defaultAssumeValid: null,
-             maxMoney: long.MaxValue,
-             coinbaseMaturity: 50,
-             premineHeight: 2,
-             premineReward: Money.Coins(setup.PremineReward),
-             proofOfWorkReward: Money.Coins(setup.PoWBlockReward),
-             targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
-             targetSpacing: setup.TargetSpacing,
-             powAllowMinDifficultyBlocks: false,
-             posNoRetargeting: false,
-             powNoRetargeting: false,
-             powLimit: new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
-             minimumChainWork: null,
-             isProofOfStake: true,
-             lastPowBlock: setup.LastPowBlock,
-             proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-             proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-             proofOfStakeReward: Money.Coins(setup.PoSBlockReward),
-             proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
-         );
+            Consensus = new NBitcoin.Consensus(
+                consensusFactory: consensusFactory,
+                consensusOptions: consensusOptions,
+                coinType: setup.CoinType,
+                hashGenesisBlock: genesisBlock.GetHash(),
+                subsidyHalvingInterval: 24333,
+                majorityEnforceBlockUpgrade: 750,
+                majorityRejectBlockOutdated: 950,
+                majorityWindow: 1000,
+                buriedDeployments: buriedDeployments,
+                bip9Deployments: new NoBIP9Deployments(),
+                bip34Hash: null,
+                minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
+                maxReorgLength: 500,
+                defaultAssumeValid: null,
+                maxMoney: long.MaxValue,
+                coinbaseMaturity: 50,
+                premineHeight: 2,
+                premineReward: Money.Coins(setup.PremineReward),
+                proofOfWorkReward: Money.Coins(setup.PoWBlockReward),
+                targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
+                targetSpacing: setup.TargetSpacing,
+                powAllowMinDifficultyBlocks: false,
+                posNoRetargeting: false,
+                powNoRetargeting: false,
+                powLimit: new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
+                minimumChainWork: null,
+                isProofOfStake: true,
+                lastPowBlock: setup.LastPowBlock,
+                proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+                proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+                proofOfStakeReward: Money.Coins(setup.PoSBlockReward),
+                proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
+            );
 
-         Consensus.PosEmptyCoinbase = CitySetup.Instance.IsPoSv3();
-         Consensus.PosUseTimeFieldInKernalHash = CitySetup.Instance.IsPoSv3();
+            Consensus.PosEmptyCoinbase = CitySetup.Instance.IsPoSv3();
+            Consensus.PosUseTimeFieldInKernalHash = CitySetup.Instance.IsPoSv3();
 
-         // TODO: Set your Base58Prefixes
-         Base58Prefixes = new byte[12][];
-         Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
-         Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
-         Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (byte)network.SecretAddress };
+            // TODO: Set your Base58Prefixes
+            Base58Prefixes = new byte[12][];
+            Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
+            Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
+            Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (byte)network.SecretAddress };
 
-         Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
-         Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
-         Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
-         Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
-         Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
-         Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-         Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
-         Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-         Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
+            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
+            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
+            Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
+            Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
+            Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
+            Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
+            Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
+            Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
+            Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
-         Bech32Encoders = new Bech32Encoder[2];
-         var encoder = new Bech32Encoder(network.CoinTicker);
-         Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
-         Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
+            Bech32Encoders = new Bech32Encoder[2];
+            var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
+            Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
+            Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 
-         Checkpoints = network.Checkpoints;
-         DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-         SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
+            Checkpoints = network.Checkpoints;
+            DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
+            SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
 
-         StandardScriptsRegistry = new CityStandardScriptsRegistry();
+            StandardScriptsRegistry = new CityStandardScriptsRegistry();
 
-         // 64 below should be changed to TargetSpacingSeconds when we move that field.
-         Assert(DefaultBanTimeSeconds <= Consensus.MaxReorgLength * 64 / 2);
+            // 64 below should be changed to TargetSpacingSeconds when we move that field.
+            Assert(DefaultBanTimeSeconds <= Consensus.MaxReorgLength * 64 / 2);
 
-         Assert(Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
-         Assert(Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
+            Assert(Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
+            Assert(Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
 
-         RegisterRules(Consensus);
-         RegisterMempoolRules(Consensus);
-      }
+            RegisterRules(Consensus);
+            RegisterMempoolRules(Consensus);
+        }
 
-      protected void RegisterRules(IConsensus consensus)
-      {
-         consensus.ConsensusRules
-             .Register<HeaderTimeChecksRule>()
-             .Register<HeaderTimeChecksPosRule>()
-             .Register<PosFutureDriftRule>()
-             .Register<CheckDifficultyPosRule>()
-             .Register<CityHeaderVersionRule>()
-             .Register<ProvenHeaderSizeRule>()
-             .Register<ProvenHeaderCoinstakeRule>();
+        protected void RegisterRules(IConsensus consensus)
+        {
+            consensus.ConsensusRules
+                .Register<HeaderTimeChecksRule>()
+                .Register<HeaderTimeChecksPosRule>()
+                .Register<PosFutureDriftRule>()
+                .Register<CheckDifficultyPosRule>()
+                .Register<CityHeaderVersionRule>()
+                .Register<ProvenHeaderSizeRule>()
+                .Register<ProvenHeaderCoinstakeRule>();
 
-         consensus.ConsensusRules
-             .Register<BlockMerkleRootRule>()
-             .Register<PosBlockSignatureRepresentationRule>()
-             .Register<PosBlockSignatureRule>();
+            consensus.ConsensusRules
+                .Register<BlockMerkleRootRule>()
+                .Register<PosBlockSignatureRepresentationRule>()
+                .Register<PosBlockSignatureRule>();
 
-         consensus.ConsensusRules
-             .Register<SetActivationDeploymentsPartialValidationRule>()
-             .Register<PosTimeMaskRule>()
+            consensus.ConsensusRules
+                .Register<SetActivationDeploymentsPartialValidationRule>()
+                .Register<PosTimeMaskRule>()
 
-             // rules that are inside the method ContextualCheckBlock
-             .Register<TransactionLocktimeActivationRule>()
-             .Register<CoinbaseHeightActivationRule>()
-             .Register<WitnessCommitmentsRule>()
-             .Register<BlockSizeRule>()
+                // rules that are inside the method ContextualCheckBlock
+                .Register<TransactionLocktimeActivationRule>()
+                .Register<CoinbaseHeightActivationRule>()
+                .Register<WitnessCommitmentsRule>()
+                .Register<BlockSizeRule>()
 
-             // rules that are inside the method CheckBlock
-             .Register<EnsureCoinbaseRule>()
-             .Register<CheckPowTransactionRule>()
-             .Register<CheckPosTransactionRule>()
-             .Register<CheckSigOpsRule>()
-             .Register<PosCoinstakeRule>();
+                // rules that are inside the method CheckBlock
+                .Register<EnsureCoinbaseRule>()
+                .Register<CheckPowTransactionRule>()
+                .Register<CheckPosTransactionRule>()
+                .Register<CheckSigOpsRule>()
+                .Register<PosCoinstakeRule>();
 
-         consensus.ConsensusRules
-             .Register<SetActivationDeploymentsFullValidationRule>()
+            consensus.ConsensusRules
+                .Register<SetActivationDeploymentsFullValidationRule>()
 
-             .Register<CheckDifficultyHybridRule>()
+                .Register<CheckDifficultyHybridRule>()
 
-             // rules that require the store to be loaded (coinview)
-             .Register<FetchUtxosetRule>()
-             .Register<TransactionDuplicationActivationRule>()
-             .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
-                                              // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
-                                              // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
-             .Register<PosColdStakingRule>()
-             .Register<PushUtxosetRule>()
-             .Register<FlushUtxosetRule>();
-      }
+                // rules that require the store to be loaded (coinview)
+                .Register<FetchUtxosetRule>()
+                .Register<TransactionDuplicationActivationRule>()
+                .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
+                                                 // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
+                                                 // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
+                .Register<PosColdStakingRule>()
+                .Register<PushUtxosetRule>()
+                .Register<FlushUtxosetRule>();
+        }
 
-      protected void RegisterMempoolRules(IConsensus consensus)
-      {
-         consensus.MempoolRules = new List<Type>()
+        protected void RegisterMempoolRules(IConsensus consensus)
+        {
+            consensus.MempoolRules = new List<Type>()
             {
                 typeof(CheckConflictsMempoolRule),
                 typeof(CheckCoinViewMempoolRule),
@@ -221,42 +221,42 @@ namespace City.Networks
                 typeof(CheckAllInputsMempoolRule),
                 typeof(CheckTxOutDustRule)
             };
-      }
+        }
 
-      protected static Block CreateGenesisBlock(ConsensusFactory consensusFactory, uint nTime, uint nNonce, uint nBits, int nVersion, Money genesisReward, string genesisText)
-      {
-         Transaction txNew = consensusFactory.CreateTransaction();
-         txNew.Version = 1;
+        protected static Block CreateGenesisBlock(ConsensusFactory consensusFactory, uint nTime, uint nNonce, uint nBits, int nVersion, Money genesisReward, string genesisText)
+        {
+            Transaction txNew = consensusFactory.CreateTransaction();
+            txNew.Version = 1;
 
-         if (txNew is IPosTransactionWithTime posTx)
-         {
-            posTx.Time = nTime;
-         }
-
-         txNew.AddInput(new TxIn()
-         {
-            ScriptSig = new Script(Op.GetPushOp(0), new Op()
+            if (txNew is IPosTransactionWithTime posTx)
             {
-               Code = (OpcodeType)0x1,
-               PushData = new[] { (byte)42 }
-            }, Op.GetPushOp(Encoders.ASCII.DecodeData(genesisText)))
-         });
+                posTx.Time = nTime;
+            }
 
-         txNew.AddOutput(new TxOut()
-         {
-            Value = genesisReward,
-         });
+            txNew.AddInput(new TxIn()
+            {
+                ScriptSig = new Script(Op.GetPushOp(0), new Op()
+                {
+                    Code = (OpcodeType)0x1,
+                    PushData = new[] { (byte)42 }
+                }, Op.GetPushOp(Encoders.ASCII.DecodeData(genesisText)))
+            });
 
-         Block genesis = consensusFactory.CreateBlock();
-         genesis.Header.BlockTime = Utils.UnixTimeToDateTime(nTime);
-         genesis.Header.Bits = nBits;
-         genesis.Header.Nonce = nNonce;
-         genesis.Header.Version = nVersion;
-         genesis.Transactions.Add(txNew);
-         genesis.Header.HashPrevBlock = uint256.Zero;
-         genesis.UpdateMerkleRoot();
+            txNew.AddOutput(new TxOut()
+            {
+                Value = genesisReward,
+            });
 
-         return genesis;
-      }
-   }
+            Block genesis = consensusFactory.CreateBlock();
+            genesis.Header.BlockTime = Utils.UnixTimeToDateTime(nTime);
+            genesis.Header.Bits = nBits;
+            genesis.Header.Nonce = nNonce;
+            genesis.Header.Version = nVersion;
+            genesis.Transactions.Add(txNew);
+            genesis.Header.HashPrevBlock = uint256.Zero;
+            genesis.UpdateMerkleRoot();
+
+            return genesis;
+        }
+    }
 }

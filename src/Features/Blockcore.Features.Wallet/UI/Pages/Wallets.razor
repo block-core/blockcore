@@ -1,22 +1,19 @@
 ﻿@page "/wallets"
 
-@using Dashboard.Data
-@inject IndexService IndexService
-@inject WalletService WalletService
+@using Blockcore.Features.Wallet.Interfaces
+
+@inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
+@inject NBitcoin.ChainIndexer ChainIndexer
+@inject IWalletSyncManager WalletSyncManager
 
 <h2>Wallets</h2>
 
 <p>Information about the deployed wallets.</p>
 
-@if (IndexService == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
+@{
 
-    <p>Wallet Tip: <strong> @this.WalletService.WalletSyncManager.WalletTip.Height / @IndexService.ChainIndexer.Height</strong></p>
+    <p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
 
     <button @onclick="NavigateToWalletCreate" class="btn btn-primary">Create Wallet</button>
     <button @onclick="Resync" class="btn btn-primary">Resync Wallets from genesis</button>
@@ -32,11 +29,11 @@ else
         </thead>
         <tbody>
             @{
-                foreach (var walletName in WalletService.WalletManager.GetWalletsNames())
+                foreach (var walletName in this.WalletManager.GetWalletsNames())
                 {
-                    foreach (var account in WalletService.WalletManager.GetAccounts(walletName))
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
                     {
-                        var accountBalance = WalletService.WalletManager.GetBalances(walletName, account.Name).Single();
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
 
                         <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer">
                             <td> @walletName <strong>/</strong> @account.Name</td>
@@ -64,6 +61,6 @@ else
 
     private void Resync()
     {
-        this.WalletService.WalletSyncManager.SyncFromHeight(1);
+        this.WalletSyncManager.SyncFromHeight(1);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Blockcore.Utilities.JsonConverters;
-using Dashboard.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -45,7 +44,6 @@ namespace Blockcore.Features.Api
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<IndexService>();
 
             services.Configure<RazorPagesOptions>(options =>
             {

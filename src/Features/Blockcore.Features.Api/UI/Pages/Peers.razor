@@ -1,18 +1,12 @@
 ﻿@page "/peers"
 
-@using Dashboard.Data
-@inject IndexService IndexService
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
 
 <h2>Connected peers</h2>
 
 <p>Information about connected peers.</p>
 
-@if (IndexService == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
+@{
     <table class="table">
         <thead>
             <tr>
@@ -23,7 +17,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var peer in IndexService.ConnectionManager.ConnectedPeers)
+            @foreach (var peer in this.ConnectionManager.ConnectedPeers)
             {
                 <tr>
                     <td>@peer.RemoteSocketEndpoint.ToString()</td>

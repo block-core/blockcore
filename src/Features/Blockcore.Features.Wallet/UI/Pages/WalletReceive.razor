@@ -1,12 +1,9 @@
 ﻿@page "/walletreceive/{walletname}/{accountname}"
 
-@using Dashboard.Data
+@using Blockcore.Features.Wallet.Interfaces
 @using Blockcore.Features.Wallet;
-@using Blockcore.Features.Wallet.Controllers;
-@using Blockcore.Features.Wallet.Models;
 
-@inject IndexService IndexService
-@inject WalletService WalletService
+@inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
 
 <button class="btn btn-link" @onclick="() => { NavigateToWalletAccount(walletname, accountname); }">
@@ -19,7 +16,7 @@
 <p>Generate receive address for <strong> @walletname / @accountname</strong></p>
 
 @{
-    var result = WalletService.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
+    var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
 
     <ul class="list-group">
         <li class="list-group-item">Address: @result.Address</li>

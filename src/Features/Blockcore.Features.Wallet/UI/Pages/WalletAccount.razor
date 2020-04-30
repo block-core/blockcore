@@ -1,12 +1,13 @@
 ﻿@page "/walletaccount/{walletname}/{accountname}"
 
-@using Dashboard.Data
+@using Blockcore.Features.Wallet.Interfaces
 @using Blockcore.Features.Wallet.Controllers;
 @using Blockcore.Features.Wallet.Models;
+@using NBitcoin;
 
 @inject NavigationManager NavigationManager
-@inject IndexService IndexService
-@inject WalletService WalletService
+@inject IWalletManager WalletManager
+@inject Network Network
 
 <button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
     Back to wallets
@@ -16,13 +17,9 @@
 <h3>Wallet Account</h3>
 <p>Information about <strong>@walletname / @accountname</strong></p>
 
-@if (IndexService == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    var accountBalance = WalletService.WalletManager.GetBalances(walletname, accountname).Single();
+@{
+    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+
     <br />
 
     <p>Amount Confirmed: <strong> @accountBalance.AmountConfirmed</strong></p>
@@ -38,7 +35,7 @@ else
     <h3>Wallet History</h3>
 
     // For now just show last 100 trx of history.
-    var model = WalletModelBuilder.GetHistory(WalletService.WalletManager, IndexService.Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+    var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
 
     <table class="table">
         <thead>

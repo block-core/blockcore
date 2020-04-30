@@ -1,4 +1,6 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly">
+﻿@inject IFullNode fullnode
+
+<Router AdditionalAssemblies="@Assemblies()" AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
@@ -8,3 +10,16 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code
+{
+    private IEnumerable<System.Reflection.Assembly> Assemblies()
+    {
+        var ret = fullnode.Services.Features
+            .Where(f => f.GetType().Assembly.FullName != typeof(Program).Assembly.FullName)
+            .Select(f => f.GetType().Assembly);
+
+        foreach (var t in ret)
+            yield return t;
+    }
+}

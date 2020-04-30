@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <Description>Blockcore Features Wallet</Description>
@@ -9,11 +9,13 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Remove="Blockcore.Features.Wallet\**" />
     <EmbeddedResource Remove="Blockcore.Features.Wallet\**" />
     <None Remove="Blockcore.Features.Wallet\**" />
   </ItemGroup>
+-->
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
@@ -35,5 +37,4 @@
     <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
-
 </Project>

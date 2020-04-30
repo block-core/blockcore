@@ -1,13 +1,13 @@
 ﻿@page "/walletcrate"
 
-@using Dashboard.Data
+@using Blockcore.Features.Wallet.Interfaces
 @using Blockcore.Features.Wallet.Controllers;
-@using Blockcore.Features.Wallet.Models;
 @using NBitcoin;
 
 @inject NavigationManager NavigationManager
-@inject IndexService IndexService
-@inject WalletService WalletService
+@inject IWalletManager WalletManager
+@inject Blockcore.Utilities.IDateTimeProvider DateTimeProvider
+@inject IWalletSyncManager WalletSyncManager
 
 <button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
     Back to wallets
@@ -16,12 +16,7 @@
 
 <h3>Create a Wallet</h3>
 
-@if (IndexService == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
+@{
     <div class="input-group">
         <div class="input-group-prepend">
             <span class="input-group-text">Mnemonic</span>
@@ -107,7 +102,7 @@ else
 
         this.Alert = string.Empty;
 
-        var wallet = this.WalletService.WalletManager.RecoverWallet(this.Password, this.WalletName, this.Mnemonic, this.IndexService.DateTimeProvider.GetUtcNow(), passphrase: this.Passphrase);
+        var wallet = this.WalletManager.RecoverWallet(this.Password, this.WalletName, this.Mnemonic, this.DateTimeProvider.GetUtcNow(), passphrase: this.Passphrase);
 
         NavigationManager.NavigateTo("walletaccount/" + WalletName + "/account 0");
     }
@@ -125,10 +120,10 @@ else
 
         var requestMnemonic = new Mnemonic(this.Mnemonic);
 
-        Mnemonic mnemonic = this.WalletService.WalletManager.CreateWallet(this.Password, this.WalletName, this.Passphrase, mnemonic: requestMnemonic);
+        Mnemonic mnemonic = this.WalletManager.CreateWallet(this.Password, this.WalletName, this.Passphrase, mnemonic: requestMnemonic);
 
         // start syncing the wallet from the creation date
-        this.WalletService.WalletSyncManager.SyncFromDate(this.IndexService.DateTimeProvider.GetUtcNow());
+        this.WalletSyncManager.SyncFromDate(this.DateTimeProvider.GetUtcNow());
 
         NavigationManager.NavigateTo("walletaccount/" + WalletName + "/account 0");
     }

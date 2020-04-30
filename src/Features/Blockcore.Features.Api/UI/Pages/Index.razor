@@ -1,20 +1,18 @@
 ﻿@page "/"
-@using Dashboard.Data
-@inject IndexService IndexService
 
-<h2>@IndexService.Network.Name node.</h2>
+@inject NBitcoin.Network Network
+@inject NBitcoin.ChainIndexer ChainIndexer
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
+@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 
-@if (IndexService == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    if (IndexService.InitialBlockDownloadState.IsInitialBlockDownload())
+<h2>@this.Network.Name node.</h2>
+
+@{
+    if (this.InitialBlockDownloadState.IsInitialBlockDownload())
     {
         <p>In IBD</p>
     }
 
-    <p>Connected peers: @IndexService.ConnectionManager.ConnectedPeers.Count()</p>
-    <p>Current tip at height: @IndexService.ChainIndexer.Tip.Height</p>
+    <p>Connected peers: @this.ConnectionManager.ConnectedPeers.Count()</p>
+    <p>Current tip at height: @this.ChainIndexer.Tip.Height</p>
 }

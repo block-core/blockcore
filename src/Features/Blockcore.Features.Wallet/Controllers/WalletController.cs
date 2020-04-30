@@ -400,10 +400,10 @@ namespace Blockcore.Features.Wallet.Controllers
                 return ModelStateErrors.BuildErrorResponse(this.ModelState);
             }
 
-            WalletHistoryModel model = WalletModelBuilder.GetHistory(this.walletManager, this.network, request);
-
             try
             {
+                WalletHistoryModel model = WalletModelBuilder.GetHistory(this.walletManager, this.network, request);
+
                 return this.Json(model);
             }
             catch (Exception e)

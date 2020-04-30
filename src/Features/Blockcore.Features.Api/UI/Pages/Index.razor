@@ -1,0 +1,18 @@
+﻿@page "/"
+
+@inject NBitcoin.Network Network
+@inject NBitcoin.ChainIndexer ChainIndexer
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
+@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+
+<h2>@this.Network.Name node.</h2>
+
+@{
+    if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+    {
+        <p>In IBD</p>
+    }
+
+    <p>Connected peers: @this.ConnectionManager.ConnectedPeers.Count()</p>
+    <p>Current tip at height: @this.ChainIndexer.Tip.Height</p>
+}

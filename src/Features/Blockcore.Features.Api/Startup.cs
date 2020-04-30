@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,15 @@ namespace Blockcore.Features.Api
                 loggingBuilder.AddConfiguration(this.Configuration.GetSection("Logging"));
                 loggingBuilder.AddConsole();
                 loggingBuilder.AddDebug();
+            });
+
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+
+            services.Configure<RazorPagesOptions>(options =>
+            {
+                // The UI elements moved nder the UI folder
+                options.RootDirectory = "/UI/Pages";
             });
 
             // Add service and create Policy to allow Cross-Origin Requests
@@ -124,6 +134,12 @@ namespace Blockcore.Features.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

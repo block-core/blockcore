@@ -1,0 +1,31 @@
+﻿@page "/peers"
+
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
+
+<h2>Connected peers</h2>
+
+<p>Information about connected peers.</p>
+
+@{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ip</th>
+                <th>Inbound</th>
+                <th>Agent</th>
+                <th>Time Offset</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var peer in this.ConnectionManager.ConnectedPeers)
+            {
+                <tr>
+                    <td>@peer.RemoteSocketEndpoint.ToString()</td>
+                    <td>@peer.Inbound</td>
+                    <td>@peer.PeerVersion?.UserAgent</td>
+                    <td>@peer.TimeOffset.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

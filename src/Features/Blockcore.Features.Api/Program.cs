@@ -4,9 +4,13 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Blockcore.Utilities;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
 
 namespace Blockcore.Features.Api
 {
@@ -20,8 +24,8 @@ namespace Blockcore.Features.Api
 
             Uri apiUri = apiSettings.ApiUri;
 
-            X509Certificate2 certificate = apiSettings.UseHttps 
-                ? GetHttpsCertificate(apiSettings.HttpsCertificateFilePath, store) 
+            X509Certificate2 certificate = apiSettings.UseHttps
+                ? GetHttpsCertificate(apiSettings.HttpsCertificateFilePath, store)
                 : null;
 
             webHostBuilder
@@ -48,6 +52,8 @@ namespace Blockcore.Features.Api
                         return;
                     }
 
+                    collection.ConfigureOptions(typeof(EditorRCLConfigureOptions));
+
                     // copies all the services defined for the full node to the Api.
                     // also copies over singleton instances already defined
                     foreach (ServiceDescriptor service in services)
@@ -73,7 +79,7 @@ namespace Blockcore.Features.Api
                 .UseStartup<Startup>();
 
             IWebHost host = webHostBuilder.Build();
-                
+
             host.Start();
 
             return host;
@@ -85,6 +91,37 @@ namespace Blockcore.Features.Api
                 return certificate;
 
             throw new FileLoadException($"Failed to load certificate from path {certificateFilePath}");
+        }
+    }
+
+    /// <summary>
+    /// This class will allow to read the wwwroot folder
+    /// which has been set ad an embeded folder in to the dll (in the project file)
+    /// </summary>
+    internal class EditorRCLConfigureOptions : IPostConfigureOptions<StaticFileOptions>
+    {
+        private readonly IWebHostEnvironment environment;
+
+        public EditorRCLConfigureOptions(IWebHostEnvironment environment)
+        {
+            this.environment = environment;
+        }
+
+        public void PostConfigure(string name, StaticFileOptions options)
+        {
+            // Basic initialization in case the options weren't initialized by any other component
+            options.ContentTypeProvider = options.ContentTypeProvider ?? new FileExtensionContentTypeProvider();
+
+            if (options.FileProvider == null && this.environment.WebRootFileProvider == null)
+            {
+                throw new InvalidOperationException("Missing FileProvider.");
+            }
+
+            options.FileProvider = options.FileProvider ?? this.environment.WebRootFileProvider;
+
+            // Add our provider
+            var filesProvider = new ManifestEmbeddedFileProvider(GetType().Assembly, "UI/wwwroot");
+            options.FileProvider = new CompositeFileProvider(options.FileProvider, filesProvider);
         }
     }
 }

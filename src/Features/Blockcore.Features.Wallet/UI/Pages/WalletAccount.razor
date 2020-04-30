@@ -1,0 +1,87 @@
+﻿@page "/walletaccount/{walletname}/{accountname}"
+
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Features.Wallet.Controllers;
+@using Blockcore.Features.Wallet.Models;
+@using NBitcoin;
+
+@inject NavigationManager NavigationManager
+@inject IWalletManager WalletManager
+@inject Network Network
+
+<button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
+    Back to wallets
+</button>
+<br />
+
+<h3>Wallet Account</h3>
+<p>Information about <strong>@walletname / @accountname</strong></p>
+
+@{
+    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+
+    <br />
+
+    <p>Amount Confirmed: <strong> @accountBalance.AmountConfirmed</strong></p>
+    <p>Amount Unconfirmed: <strong>@accountBalance.AmountUnconfirmed</strong></p>
+    <p>Spendable Amount: <strong> @accountBalance.SpendableAmount</strong></p>
+
+    <button @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" class="btn btn-primary">Recieve</button>
+    <button @onclick="() => { NavigateToSendWallet(walletname, accountname); }" class="btn btn-info">Send</button>
+
+    <br />
+    <br />
+
+    <h3>Wallet History</h3>
+
+    // For now just show last 100 trx of history.
+    var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>To Address</th>
+                <th>Amount</th>
+                <th>Confirmed In Block</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var history in model.AccountsHistoryModel)
+            {
+                foreach (var transaction in history.TransactionsHistory)
+                {
+                    <tr>
+                        <td>@transaction.ToAddress</td>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.ConfirmedInBlock</td>
+                        <td>@transaction.Type</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Parameter]
+    public string walletname { get; set; }
+    [Parameter]
+    public string accountname { get; set; }
+
+    private void NavigateToReceiveWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+    }
+
+    private void NavigateToSendWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+    }
+
+    private void NavigateToWallets()
+    {
+        NavigationManager.NavigateTo("wallets");
+    }
+}

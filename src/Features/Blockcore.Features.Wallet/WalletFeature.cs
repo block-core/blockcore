@@ -12,7 +12,9 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet.Broadcasting;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces;
+using Blockcore.Interfaces.UI;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -178,6 +180,7 @@ namespace Blockcore.Features.Wallet
                         services.AddSingleton<IScriptAddressReader>(new ScriptAddressReader());
                         services.AddSingleton<StandardTransactionPolicy>();
                         services.AddSingleton<IAddressBookManager, AddressBookManager>();
+                        services.AddSingleton<INavigationItem, WalletNavigationItem>();
                     });
             });
 

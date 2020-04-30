@@ -1,0 +1,66 @@
+﻿@page "/wallets"
+
+@using Blockcore.Features.Wallet.Interfaces
+
+@inject IWalletManager WalletManager
+@inject NavigationManager NavigationManager
+@inject NBitcoin.ChainIndexer ChainIndexer
+@inject IWalletSyncManager WalletSyncManager
+
+<h2>Wallets</h2>
+
+<p>Information about the deployed wallets.</p>
+
+@{
+
+    <p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
+
+    <button @onclick="NavigateToWalletCreate" class="btn btn-primary">Create Wallet</button>
+    <button @onclick="Resync" class="btn btn-primary">Resync Wallets from genesis</button>
+    <br />
+    <br />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Wallet/account</th>
+                <th>Confirmed blanace</th>
+                <th>Unconfirmed balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var walletName in this.WalletManager.GetWalletsNames())
+                {
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+                    {
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+
+                        <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer">
+                            <td> @walletName <strong>/</strong> @account.Name</td>
+                            <td>@accountBalance.AmountConfirmed</td>
+                            <td>@accountBalance.AmountUnconfirmed</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletaccount/" + walletName + "/" + accountname);
+    }
+
+    private void NavigateToWalletCreate()
+    {
+        NavigationManager.NavigateTo("walletcrate");
+    }
+
+    private void Resync()
+    {
+        this.WalletSyncManager.SyncFromHeight(1);
+    }
+}

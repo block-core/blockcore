@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Blockcore;
 using Blockcore.Builder;
 using Blockcore.Configuration;
 using Blockcore.Features.Api;
@@ -11,9 +10,6 @@ using Blockcore.Features.Diagnostic;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
-using Blockcore.Features.SignalR;
-using Blockcore.Features.SignalR.Broadcasters;
-using Blockcore.Features.SignalR.Events;
 using Blockcore.Networks.Xds;
 using Blockcore.Utilities;
 using NBitcoin.Protocol;

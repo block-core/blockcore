@@ -6,6 +6,6 @@
 
 @{
 <textarea class="w-100" rows="50">
-    @(((Blockcore.FullNode)this.FullNode).LastLogOutput)
+@(((Blockcore.FullNode)this.FullNode).LastLogOutput.TrimStart(' '));
 </textarea>
 }

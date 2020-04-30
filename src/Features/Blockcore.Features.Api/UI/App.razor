@@ -1,4 +1,5 @@
-﻿@inject IFullNode fullnode
+﻿@using Blockcore.Interfaces.UI;
+@inject IFullNode fullnode
 
 <Router AdditionalAssemblies="@Assemblies()" AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
@@ -15,11 +16,10 @@
 {
     private IEnumerable<System.Reflection.Assembly> Assemblies()
     {
-        var ret = fullnode.Services.Features
-            .Where(f => f.GetType().Assembly.FullName != typeof(Program).Assembly.FullName)
-            .Select(f => f.GetType().Assembly);
+        var items = fullnode.NodeService<IEnumerable<INavigationItem>>();
+        var assemblies = items.Select(f => f.GetType().Assembly);
 
-        foreach (var t in ret)
-            yield return t;
+        foreach (var assembly in assemblies)
+            yield return assembly;
     }
 }

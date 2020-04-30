@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace City.Networks
+namespace City.Networks.Setup
 {
    public class ConversionTools
    {

@@ -64,9 +64,14 @@ namespace Blockcore.Features.Api
         {
             var info = new OpenApiInfo()
             {
-                Title = "Stratis Node API",
+                Title = "Blockcore Node API",
                 Version = description.ApiVersion.ToString(),
-                Description = "Access to the Stratis Node's core features."
+                Description = "Access to the Blockcore Node features.",
+                Contact = new OpenApiContact
+                {
+                    Name = "Blockcore",
+                    Url = new Uri("https://www.blockcore.net/")
+                }
             };
 
             if (info.Version.Contains("dev"))

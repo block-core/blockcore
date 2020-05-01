@@ -14,6 +14,8 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Broadcasting;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.UI;
+using Blockcore.Interfaces.UI;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -196,7 +198,6 @@ namespace Blockcore.Features.ColdStaking
         /// <inheritdoc />
         public override Task InitializeAsync()
         {
-
             return Task.CompletedTask;
         }
 
@@ -243,6 +244,7 @@ namespace Blockcore.Features.ColdStaking
                 {
                     services.RemoveSingleton<IWalletManager>();
                     services.AddSingleton<IWalletManager, ColdStakingManager>();
+                    services.AddSingleton<INavigationItem, ColdStakingNavigationItem>();
                 });
             });
 

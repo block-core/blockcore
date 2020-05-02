@@ -14,20 +14,6 @@ namespace Blockcore.Features.BlockStore.Pruning
         void Initialize();
 
         /// <summary>
-        /// Prunes and compacts the block and transaction database.
-        /// <para>
-        /// The method first prunes by deleting blocks from the block store that are below the <see cref="StoreSettings.AmountOfBlocksToKeep"/> from the store tip.
-        /// </para>
-        /// <para>
-        /// Once this is done the database is compacted by resaving the database file without the deleted references, reducing the file size on disk.
-        /// </para>
-        /// </summary>
-        /// <param name="blockStoreTip">The current tip of the store.</param>
-        /// <param name="network">The network the node is running on.</param>
-        /// <param name="nodeInitializing">Indicates whether or not this method is called from node startup or not.</param>
-        void PruneAndCompactDatabase(ChainedHeader blockStoreTip, Network network, bool nodeInitializing);
-
-        /// <summary> 
         /// The lowest block hash and height that the repository has.
         /// <para>
         /// This also indicated where the node has been pruned up to.
@@ -37,11 +23,16 @@ namespace Blockcore.Features.BlockStore.Pruning
 
         /// <summary>
         /// Sets the pruned tip.
-        /// <para> 
+        /// <para>
         /// It will be saved once the block database has been compacted on node initialization or shutdown.
         /// </para>
         /// </summary>
         /// <param name="tip">The tip to set.</param>
         void UpdatePrunedTip(ChainedHeader tip);
+
+        /// <summary>
+        /// Prepare the pruned tip.
+        /// </summary>
+        void PrepareDatabase();
     }
 }

@@ -22,6 +22,9 @@ namespace Blockcore.Features.BlockStore
         /// <summary> The dbreeze database engine.</summary>
         DB Leveldb { get; }
 
+        /// <summary>Really ugly temporary hack.</summary>
+        object Locker { get; }
+
         /// <summary>
         /// Deletes blocks and indexes for transactions that belong to deleted blocks.
         /// <para>
@@ -82,7 +85,7 @@ namespace Blockcore.Features.BlockStore
 
         private readonly DB leveldb;
 
-        private object locker;
+        public object Locker { get; }
 
         private readonly ILogger logger;
 
@@ -117,7 +120,7 @@ namespace Blockcore.Features.BlockStore
             Directory.CreateDirectory(folder);
             var options = new Options { CreateIfMissing = true };
             this.leveldb = new DB(options, folder);
-            this.locker = new object();
+            this.Locker = new object();
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.network = network;
@@ -130,7 +133,7 @@ namespace Blockcore.Features.BlockStore
         {
             Block genesis = this.network.GetGenesis();
 
-            lock (this.locker)
+            lock (this.Locker)
             {
                 if (this.LoadTipHashAndHeight() == null)
                 {
@@ -161,7 +164,7 @@ namespace Blockcore.Features.BlockStore
             }
 
             Transaction res = null;
-            lock (this.locker)
+            lock (this.Locker)
             {
                 byte[] transactionRow = this.leveldb.Get(DBH.Key(TransactionTableName, trxid.ToBytes()));
 
@@ -194,7 +197,7 @@ namespace Blockcore.Features.BlockStore
 
             Transaction[] txes = new Transaction[trxids.Length];
 
-            lock (this.locker)
+            lock (this.Locker)
             {
                 for (int i = 0; i < trxids.Length; i++)
                 {
@@ -258,7 +261,7 @@ namespace Blockcore.Features.BlockStore
             }
 
             uint256 res = null;
-            lock (this.locker)
+            lock (this.Locker)
             {
                 byte[] transactionRow = this.leveldb.Get(DBH.Key(TransactionTableName, trxid.ToBytes()));
                 if (transactionRow != null)
@@ -293,17 +296,12 @@ namespace Blockcore.Features.BlockStore
                     uint256 blockId = kv.Key;
                     Block block = kv.Value;
 
-                    // If the block is already in store don't write it again.
-                    byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, blockId.ToBytes()));
-                    if (blockRow == null)
-                    {
-                        batch.Put(DBH.Key(BlockTableName, blockId.ToBytes()), this.dataStoreSerializer.Serialize(block));
+                    batch.Put(DBH.Key(BlockTableName, blockId.ToBytes()), this.dataStoreSerializer.Serialize(block));
 
-                        if (this.TxIndex)
-                        {
-                            foreach (Transaction transaction in block.Transactions)
-                                transactions.Add((transaction, block));
-                        }
+                    if (this.TxIndex)
+                    {
+                        foreach (Transaction transaction in block.Transactions)
+                            transactions.Add((transaction, block));
                     }
                 }
 
@@ -331,7 +329,7 @@ namespace Blockcore.Features.BlockStore
 
         public IEnumerable<Block> EnumeratehBatch(List<ChainedHeader> headers)
         {
-            lock (this.locker)
+            lock (this.Locker)
             {
                 foreach (ChainedHeader chainedHeader in headers)
                 {
@@ -345,7 +343,7 @@ namespace Blockcore.Features.BlockStore
         /// <inheritdoc />
         public void ReIndex()
         {
-            lock (this.locker)
+            lock (this.Locker)
             {
                 if (this.TxIndex)
                 {
@@ -411,7 +409,7 @@ namespace Blockcore.Features.BlockStore
 
             // DBreeze is faster if sort ascending by key in memory before insert
             // however we need to find how byte arrays are sorted in DBreeze.
-            lock (this.locker)
+            lock (this.Locker)
             {
                 this.OnInsertBlocks(blocks);
 
@@ -442,7 +440,7 @@ namespace Blockcore.Features.BlockStore
         /// <inheritdoc />
         public void SetTxIndex(bool txIndex)
         {
-            lock (this.locker)
+            lock (this.Locker)
             {
                 this.SaveTxIndex(txIndex);
             }
@@ -472,7 +470,7 @@ namespace Blockcore.Features.BlockStore
             Guard.NotNull(hash, nameof(hash));
 
             Block res = null;
-            lock (this.locker)
+            lock (this.Locker)
             {
                 var results = this.GetBlocksFromHashes(new List<uint256> { hash });
 
@@ -490,7 +488,7 @@ namespace Blockcore.Features.BlockStore
 
             List<Block> blocks;
 
-            lock (this.locker)
+            lock (this.Locker)
             {
                 blocks = this.GetBlocksFromHashes(hashes);
             }
@@ -504,7 +502,7 @@ namespace Blockcore.Features.BlockStore
             Guard.NotNull(hash, nameof(hash));
 
             bool res = false;
-            lock (this.locker)
+            lock (this.Locker)
             {
                 // Lazy loading is on so we don't fetch the whole value, just the row.
                 byte[] key = hash.ToBytes();
@@ -583,7 +581,7 @@ namespace Blockcore.Features.BlockStore
             Guard.NotNull(newTip, nameof(newTip));
             Guard.NotNull(hashes, nameof(hashes));
 
-            lock (this.locker)
+            lock (this.Locker)
             {
                 List<Block> blocks = this.GetBlocksFromHashes(hashes);
                 this.OnDeleteBlocks(blocks.Where(b => b != null).ToList());
@@ -596,7 +594,7 @@ namespace Blockcore.Features.BlockStore
         {
             Guard.NotNull(hashes, nameof(hashes));
 
-            lock (this.locker)
+            lock (this.Locker)
             {
                 List<Block> blocks = this.GetBlocksFromHashes(hashes);
 

@@ -53,7 +53,8 @@ namespace Blockcore.Features.BlockStore.Pruning
                return Task.CompletedTask;
            },
             this.nodeLifetime.ApplicationStopping,
-            repeatEvery: TimeSpans.TenSeconds);
+            repeatEvery: TimeSpans.Minute,
+            startAfter: TimeSpans.Minute);
         }
 
         /// <inheritdoc/>

@@ -82,7 +82,12 @@ namespace Blockcore.Features.Wallet
             // To support pruning the wallet will need to be
             // able to download blocks from peers to catch up.
             if (this.storeSettings.PruningEnabled)
-                throw new WalletException("Wallet can not yet run on a pruned node");
+            {      // throw new WalletException("Wallet can not yet run on a pruned node");
+                this.logger.LogWarning("======================================================================");
+                this.logger.LogWarning("WARNING!!!... Wallet disabled! Wallet can not yet run on a pruned node.");
+                this.logger.LogWarning("======================================================================");
+                return;
+            }
 
             this.logger.LogInformation("WalletSyncManager initialized. Wallet at block {0}.", this.walletManager.LastBlockHeight());
 

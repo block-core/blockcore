@@ -48,6 +48,7 @@ namespace Blockcore.Features.BlockStore
         private readonly IPrunedBlockRepository prunedBlockRepository;
 
         private readonly IAddressIndexer addressIndexer;
+        private readonly IPruneBlockStoreService pruneBlockStoreService;
 
         public BlockStoreFeature(
             Network network,
@@ -62,7 +63,8 @@ namespace Blockcore.Features.BlockStore
             IConsensusManager consensusManager,
             ICheckpoints checkpoints,
             IPrunedBlockRepository prunedBlockRepository,
-            IAddressIndexer addressIndexer)
+            IAddressIndexer addressIndexer,
+            IPruneBlockStoreService pruneBlockStoreService)
         {
             this.network = network;
             this.chainIndexer = chainIndexer;
@@ -77,7 +79,7 @@ namespace Blockcore.Features.BlockStore
             this.checkpoints = checkpoints;
             this.prunedBlockRepository = prunedBlockRepository;
             this.addressIndexer = addressIndexer;
-
+            this.pruneBlockStoreService = pruneBlockStoreService;
             nodeStats.RegisterStats(this.AddInlineStats, StatsType.Inline, this.GetType().Name, 900);
         }
 
@@ -91,6 +93,15 @@ namespace Blockcore.Features.BlockStore
                 builder.Append("BlockStore.Height: ".PadRight(LoggingConfiguration.ColumnLength + 1) + highestBlock.Height.ToString().PadRight(8));
                 builder.Append(" BlockStore.Hash: ".PadRight(LoggingConfiguration.ColumnLength - 1) + highestBlock.HashBlock);
                 log.AppendLine(builder.ToString());
+
+                if (this.storeSettings.PruningEnabled)
+                {
+                    builder = new StringBuilder();
+                    var prunedTip = this.prunedBlockRepository.PrunedTip;
+                    builder.Append("PrunedStore.Height: ".PadRight(LoggingConfiguration.ColumnLength + 1) + prunedTip.Height.ToString().PadRight(8));
+                    builder.Append(" PrunedStore.Hash: ".PadRight(LoggingConfiguration.ColumnLength - 1) + prunedTip.Hash);
+                    log.AppendLine(builder.ToString());
+                }
             }
         }
 
@@ -125,8 +136,10 @@ namespace Blockcore.Features.BlockStore
                 if (this.storeSettings.AmountOfBlocksToKeep < this.network.Consensus.MaxReorgLength)
                     throw new BlockStoreException($"The amount of blocks to prune [{this.storeSettings.AmountOfBlocksToKeep}] (blocks to keep) cannot be less than the node's max reorg length of {this.network.Consensus.MaxReorgLength}.");
 
-                this.logger.LogInformation("Pruning BlockStore...");
-                this.prunedBlockRepository.PruneAndCompactDatabase(this.chainState.BlockStoreTip, this.network, true);
+                this.prunedBlockRepository.PrepareDatabase();
+
+                this.logger.LogInformation("Starting Prunning...");
+                this.pruneBlockStoreService.Initialize();
             }
 
             // Use ProvenHeadersBlockStoreBehavior for PoS Networks
@@ -155,8 +168,8 @@ namespace Blockcore.Features.BlockStore
         {
             if (this.storeSettings.PruningEnabled)
             {
-                this.logger.LogInformation("Pruning BlockStore...");
-                this.prunedBlockRepository.PruneAndCompactDatabase(this.chainState.BlockStoreTip, this.network, false);
+                this.logger.LogInformation("Stopping Prunning...");
+                this.pruneBlockStoreService.Dispose();
             }
 
             this.logger.LogInformation("Stopping BlockStoreSignaled.");
@@ -184,7 +197,6 @@ namespace Blockcore.Features.BlockStore
                     {
                         services.AddSingleton<IBlockStoreQueue, BlockStoreQueue>().AddSingleton<IBlockStore>(provider => provider.GetService<IBlockStoreQueue>());
                         services.AddSingleton<IBlockRepository, BlockRepository>();
-                        services.AddSingleton<IPrunedBlockRepository, PrunedBlockRepository>();
 
                         if (fullNodeBuilder.Network.Consensus.IsProofOfStake)
                             services.AddSingleton<BlockStoreSignaled, ProvenHeadersBlockStoreSignaled>();
@@ -194,6 +206,9 @@ namespace Blockcore.Features.BlockStore
                         services.AddSingleton<StoreSettings>();
                         services.AddSingleton<IBlockStoreQueueFlushCondition, BlockStoreQueueFlushCondition>();
                         services.AddSingleton<IAddressIndexer, AddressIndexer>();
+
+                        services.AddSingleton<IPrunedBlockRepository, PrunedBlockRepository>();
+                        services.AddSingleton<IPruneBlockStoreService, PruneBlockStoreService>();
                     });
             });
 

@@ -1,9 +1,11 @@
 ﻿@page "/"
 
+@inject IFullNode FullNode
 @inject NBitcoin.Network Network
 @inject NBitcoin.ChainIndexer ChainIndexer
 @inject Blockcore.Connection.IConnectionManager ConnectionManager
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+@inject NavigationManager NavigationManager
 
 <h2>@this.Network.Name node.</h2>
 
@@ -15,4 +17,23 @@
 
     <p>Connected peers: @this.ConnectionManager.ConnectedPeers.Count()</p>
     <p>Current tip at height: @this.ChainIndexer.Tip.Height</p>
+    <p>Current tip HAsh: @this.ChainIndexer.Tip.HashBlock</p>
+
+    <hr />
+
+    <button class="btn btn-danger" @onclick="Shutdown">Shutdown</button>
+    <button class="btn btn-secondary" @onclick="NavigateToLogs">Logs</button>
+}
+
+@code
+{
+    private void Shutdown()
+    {
+        this.FullNode?.NodeLifetime.StopApplication();
+    }
+
+    private void NavigateToLogs()
+    {
+        NavigationManager.NavigateTo("logs");
+    }
 }

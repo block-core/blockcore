@@ -14,6 +14,8 @@ using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.UI;
+using Blockcore.Interfaces.UI;
 using Blockcore.Mining;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -257,6 +259,7 @@ namespace Blockcore.Features.Miner
                         services.AddSingleton<BlockDefinition, PosBlockDefinition>();
                         services.AddSingleton<BlockDefinition, PosPowBlockDefinition>();
                         services.AddSingleton<MinerSettings>();
+                        services.AddSingleton<INavigationItem, StakeNavigationItem>();
                     });
             });
 

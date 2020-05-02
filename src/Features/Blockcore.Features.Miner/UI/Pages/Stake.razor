@@ -1,0 +1,162 @@
+﻿@page "/stake"
+
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Features.Miner
+@using Blockcore.Features.Miner.Interfaces
+@using NBitcoin
+
+@inject IWalletManager WalletManager
+@inject NavigationManager NavigationManager
+@inject MiningFeature MiningFeature
+@inject IPosMinting PosMinting
+@inject Network Network
+
+<h2>Staking</h2>
+
+<p>Information about staking.</p>
+
+@{
+    if (this.StakingEnabled)
+    {
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Staking enabled</h4>
+            <p>@this.StakingInfo</p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Staking disabled
+        </div>
+    }
+
+    <hr>
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Wallet/account</th>
+                <th>Blanace</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var walletName in this.WalletManager.GetWalletsNames())
+                {
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+                    {
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+
+                        <tr>
+                            <td @onclick="() => { SetWalletName(walletName); }" style="cursor:pointer"> @walletName <strong>/</strong> @account.Name</td>
+                            <td>@accountBalance.AmountConfirmed</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+
+    if (!this.StakingEnabled)
+    {
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Wallet Name:</span>
+            </div>
+            <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Password:</span>
+            </div>
+            <input @bind="Password" type="password" class="form-control" placeholder="password" />
+        </div>
+
+        <div class="input-group mb-3">
+            <button class="btn btn-info" @onclick="StartStaking">Start Staking</button>
+        </div>
+    }
+    else
+    {
+        <div class="input-group mb-3">
+            <button class="btn btn-secondary" @onclick="StopStaking">Stop Staking</button>
+        </div>
+    }
+
+    <div class="input-group mb-3">
+        <div class="alert-warning">@Alert</div>
+    </div>
+}
+
+@code
+{
+    string Alert { get; set; }
+
+    private string WalletName { get; set; }
+
+    private string Password { get; set; }
+
+    private bool StakingEnabled { get; set; }
+
+    private string StakingInfo { get; set; }
+
+    protected override void OnInitialized()
+    {
+        this.LoadStats();
+    }
+
+    private void LoadStats()
+    {
+        var model = this.PosMinting.GetGetStakingInfoModel();
+
+        this.StakingEnabled = model.Enabled;
+
+        if (this.StakingEnabled)
+        {
+            decimal ourPercent = model.NetStakeWeight != 0 ? 100.0m * (decimal)model.Weight / (decimal)model.NetStakeWeight : 0;
+
+            this.StakingInfo = $"Node staking with {new Money(model.Weight)} ({ourPercent:0.00} % of the network weight {new Money(model.NetStakeWeight)}), " +
+                   $"est. time to find new block is {TimeSpan.FromSeconds(model.ExpectedTime)}.";
+        }
+        else
+        {
+            this.StakingInfo = string.Empty;
+        }
+    }
+
+    private void SetWalletName(string walletName)
+    {
+        this.WalletName = walletName;
+    }
+
+    private void StopStaking()
+    {
+        this.MiningFeature.StopStaking();
+
+        this.LoadStats();
+    }
+
+    private void StartStaking()
+    {
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
+        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "No password"; return; }
+
+        var wallet = this.WalletManager.GetWallet(this.WalletName);
+
+        // Check the password
+        try
+        {
+            NBitcoin.Key.Parse(wallet.EncryptedSeed, this.Password, wallet.Network);
+        }
+        catch (Exception ex)
+        {
+            this.Alert = ex.Message;
+            return;
+        }
+
+        this.MiningFeature.StartStaking(this.WalletName, this.Password);
+
+        this.LoadStats();
+    }
+}

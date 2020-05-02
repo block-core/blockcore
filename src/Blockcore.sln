@@ -111,6 +111,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "City", "Networks\City\City\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "City.Node", "Networks\City\City.Node\City.Node.csproj", "{363B09A7-BA71-4BC2-ABCA-B47065C374E5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xds-ui", "Networks\Xds\Xds-ui\Xds-ui.csproj", "{BB65D763-91F1-49C6-ADE3-255D12D99CBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -281,6 +283,10 @@ Global
 		{363B09A7-BA71-4BC2-ABCA-B47065C374E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{363B09A7-BA71-4BC2-ABCA-B47065C374E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{363B09A7-BA71-4BC2-ABCA-B47065C374E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB65D763-91F1-49C6-ADE3-255D12D99CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB65D763-91F1-49C6-ADE3-255D12D99CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB65D763-91F1-49C6-ADE3-255D12D99CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB65D763-91F1-49C6-ADE3-255D12D99CBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -330,6 +336,7 @@ Global
 		{3AD23CD3-51A4-4DFE-9501-55963B54519A} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{C4D5381C-53D0-419A-A32B-70E38C5A42A4} = {3AD23CD3-51A4-4DFE-9501-55963B54519A}
 		{363B09A7-BA71-4BC2-ABCA-B47065C374E5} = {3AD23CD3-51A4-4DFE-9501-55963B54519A}
+		{BB65D763-91F1-49C6-ADE3-255D12D99CBF} = {CA67EA16-00D7-4082-9467-9218D6D3A8C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

@@ -65,7 +65,7 @@ namespace x42.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
-            Consensus = new NBitcoin.Consensus(
+            this.Consensus = new x42Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
@@ -94,11 +94,17 @@ namespace x42.Networks
                 minimumChainWork: null,
                 isProofOfStake: true,
                 lastPowBlock: setup.LastPowBlock,
-                proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
                 proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
                 proofOfStakeReward: Money.Coins(setup.PoSBlockReward),
-                proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
-            );
+                subsidyLimit: setup.SubsidyLimit,
+                proofOfStakeRewardAfterSubsidyLimit: setup.ProofOfStakeRewardAfterSubsidyLimit,
+                lastProofOfStakeRewardHeight: setup.LastProofOfStakeRewardHeight,
+                proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask,
+                posEmptyCoinbase: x42Setup.Instance.IsPoSv3()
+            )
+            {
+                PosUseTimeFieldInKernalHash = x42Setup.Instance.IsPoSv3()
+            };
 
             Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
             Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };

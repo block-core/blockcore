@@ -45,6 +45,7 @@ namespace x42.Networks
             this.DefaultRPCPort = network.DefaultRPCPort;
             this.DefaultAPIPort = network.DefaultAPIPort;
             this.DefaultSignalRPort = network.DefaultSignalRPort;
+            this.DefaultBanTimeSeconds = 288; // 9 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
             var consensusFactory = new PosConsensusFactory();
 
@@ -72,12 +73,12 @@ namespace x42.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new x42Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),
-                subsidyHalvingInterval: 24333,
+                subsidyHalvingInterval: 210000,
                 majorityEnforceBlockUpgrade: 750,
                 majorityRejectBlockOutdated: 950,
                 majorityWindow: 1000,
@@ -85,9 +86,9 @@ namespace x42.Networks
                 bip9Deployments: new NoBIP9Deployments(),
                 bip34Hash: null,
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
-                maxReorgLength: 500,
+                maxReorgLength: 9,
                 defaultAssumeValid: null,
-                maxMoney: long.MaxValue,
+                maxMoney: Money.Coins(42 * 1000000),
                 coinbaseMaturity: 10,
                 premineHeight: 2,
                 premineReward: Money.Coins(setup.PremineReward),
@@ -100,12 +101,18 @@ namespace x42.Networks
                 powLimit: new Target(new uint256("0000ffff00000000000000000000000000000000000000000000000000000000")),
                 minimumChainWork: null,
                 isProofOfStake: true,
-                lastPowBlock: setup.LastPowBlock,
-                proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+                lastPowBlock: 523,
                 proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
                 proofOfStakeReward: Money.Coins(setup.PoSBlockReward),
-                proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
-            );
+                subsidyLimit: setup.SubsidyLimit,
+                proofOfStakeRewardAfterSubsidyLimit: setup.ProofOfStakeRewardAfterSubsidyLimit,
+                lastProofOfStakeRewardHeight: setup.LastProofOfStakeRewardHeight,
+                proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask,
+                posEmptyCoinbase: x42Setup.Instance.IsPoSv3()
+            )
+            {
+                PosUseTimeFieldInKernalHash = x42Setup.Instance.IsPoSv3()
+            };
 
             this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
             this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };

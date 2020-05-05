@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockcore.Connection;
-using Blockcore.Features.MemoryPool;
-using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using ConcurrentCollections;
 using NBitcoin;
 
-namespace Blockcore.Features.Wallet.Broadcasting
+namespace Blockcore.Connection.Broadcasting
 {
     public abstract class BroadcasterManagerBase : IBroadcasterManager
     {
@@ -45,7 +43,7 @@ namespace Blockcore.Features.Wallet.Broadcasting
         }
 
         /// <summary>Adds or updates a transaction from the collection of transactions to broadcast.</summary>
-        public void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, MempoolError mempoolError = null)
+        public void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string mempoolError = null)
         {
             TransactionBroadcastEntry broadcastEntry = this.Broadcasts.FirstOrDefault(x => x.Transaction.GetHash() == transaction.GetHash());
 

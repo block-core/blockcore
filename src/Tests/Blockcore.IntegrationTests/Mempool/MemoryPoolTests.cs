@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
@@ -10,6 +11,7 @@ using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.IntegrationTests.Wallet;
+using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Stratis;

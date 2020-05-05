@@ -1,4 +1,4 @@
-﻿namespace Blockcore.Features.Wallet.Broadcasting
+﻿namespace Blockcore.Connection.Broadcasting
 {
     public enum TransactionBroadcastState
     {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Configuration;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.RPC.Exceptions;

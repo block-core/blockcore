@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Blockcore.Features.MemoryPool;
-using Blockcore.Features.Wallet.Broadcasting;
+using Blockcore.Connection.Broadcasting;
 using NBitcoin;
 
-namespace Blockcore.Features.Wallet.Interfaces
+namespace Blockcore.Interfaces
 {
     public interface IBroadcasterManager
     {
@@ -14,6 +13,6 @@ namespace Blockcore.Features.Wallet.Interfaces
 
         TransactionBroadcastEntry GetTransaction(uint256 transactionHash);
 
-        void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, MempoolError mempoolError = null);
+        void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string mempoolError = null);
     }
 }

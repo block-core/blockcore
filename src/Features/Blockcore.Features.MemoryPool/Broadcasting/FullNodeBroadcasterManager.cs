@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Connection;
-using Blockcore.Features.MemoryPool;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Utilities;
 using NBitcoin;
 
-namespace Blockcore.Features.Wallet.Broadcasting
+namespace Blockcore.Features.MemoryPool.Broadcasting
 {
     public class FullNodeBroadcasterManager : BroadcasterManagerBase
     {
@@ -32,7 +32,7 @@ namespace Blockcore.Features.Wallet.Broadcasting
 
             if (!await this.mempoolValidator.AcceptToMemoryPool(state, transaction).ConfigureAwait(false))
             {
-                this.AddOrUpdate(transaction, TransactionBroadcastState.CantBroadcast, state.Error);
+                this.AddOrUpdate(transaction, TransactionBroadcastState.CantBroadcast, $"{state.Error.ConsensusError?.Message ?? state.Error.Code}");
             }
             else
             {

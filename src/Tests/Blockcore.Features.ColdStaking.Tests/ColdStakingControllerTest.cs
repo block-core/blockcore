@@ -220,7 +220,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             var walletSettings = new WalletSettings(this.nodeSettings);
             this.loggerFactory = this.nodeSettings.LoggerFactory;
 
-            this.coldStakingManager = new ColdStakingManager(this.Network, new ChainIndexer(this.Network), walletSettings, this.nodeSettings.DataFolder,
+            this.coldStakingManager = new ColdStakingManager(this.Network, new ChainIndexer(this.Network), walletSettings, dataFolder,
                 new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(),
                 this.loggerFactory, DateTimeProvider.Default);
 
@@ -618,7 +618,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             // But not if we use default or specify to only return normal accounts.
             Assert.Single(wallet1.GetAccounts().ToArray()); // Defaults to NormalAccounts
             Assert.Single(wallet1.GetAccounts(Wallet.Wallet.NormalAccounts).ToArray());
-            
+
             // Verify that we actually have an cold staking activation UTXO in the wallet of 202 coins.
             // This should normally not be returned by the GetAllTransactions, and should never be included in balance calculations.
             Assert.True(accounts[0].ExternalAddresses.ToArray()[1].Transactions.ToArray()[0].IsColdCoinStake);

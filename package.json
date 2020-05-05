@@ -1,28 +1,25 @@
 {
-   "name": "blockcore",
-   "license": "MIT",
-   "author": {
-     "name": "Blockcore",
-     "email": "post@blockcore.net",
-     "url": "https://www.blockcore.net"
-   },
-   "description": "",
-   "repository": {
-     "type": "git",
-     "url": "git+https://github.com/block-core/blockcore.git"
-   },
-   "bugs": {
-     "url": "https://github.com/block-core/blockcore/issues"
-   },
-   "homepage": "https://github.com/block-core/blockcore#readme",
-   "scripts": {
-     "version": "node version.js",
-     "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
-   },
-   "private": true,
-   "dependencies": {
-     "conventional-changelog-cli": "2.0.31"
-   },
-   "devDependencies": {}
- }
- 
+  "name": "blockcore",
+  "license": "MIT",
+  "author": {
+    "name": "Blockcore",
+    "email": "post@blockcore.net",
+    "url": "https://www.blockcore.net"
+  },
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/block-core/blockcore.git"
+  },
+  "bugs": {
+    "url": "https://github.com/block-core/blockcore/issues"
+  },
+  "homepage": "https://github.com/block-core/blockcore#readme",
+  "scripts": {
+    "version": "node version.js",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
+  },
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {}
+}

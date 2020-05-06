@@ -117,6 +117,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "x42.Networks", "Networks\x4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "x42.Node", "Networks\x42\x42.Node\x42.Node.csproj", "{8E17F166-F15A-42F7-9407-06CE2A4AA0AF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Node", "Node", "{8820C3A5-74B4-45AB-B80C-2495DFBA4A2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Node", "Node\Blockcore.Node\Blockcore.Node.csproj", "{D0A183FE-C913-4F8F-92EC-BD4502745140}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -295,6 +299,10 @@ Global
 		{8E17F166-F15A-42F7-9407-06CE2A4AA0AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E17F166-F15A-42F7-9407-06CE2A4AA0AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E17F166-F15A-42F7-9407-06CE2A4AA0AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0A183FE-C913-4F8F-92EC-BD4502745140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0A183FE-C913-4F8F-92EC-BD4502745140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0A183FE-C913-4F8F-92EC-BD4502745140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0A183FE-C913-4F8F-92EC-BD4502745140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -347,6 +355,7 @@ Global
 		{88A9A633-DA22-412B-A04C-2A3405D3E2C8} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{36CE71D7-812A-40D7-96B7-8220E8E86643} = {88A9A633-DA22-412B-A04C-2A3405D3E2C8}
 		{8E17F166-F15A-42F7-9407-06CE2A4AA0AF} = {88A9A633-DA22-412B-A04C-2A3405D3E2C8}
+		{D0A183FE-C913-4F8F-92EC-BD4502745140} = {8820C3A5-74B4-45AB-B80C-2495DFBA4A2B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

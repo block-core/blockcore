@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Blockcore</Authors>
+    <AssemblyTitle>Blockcore.Node</AssemblyTitle>
+    <AssemblyName>Blockcore.Node</AssemblyName>
+    <PackageId>Blockcore.Node</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
+    <ProjectReference Include="..\..\Networks\City\City\City.csproj" />
+    <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
+    <ProjectReference Include="..\..\Networks\x42\x42\x42.Networks.csproj" />
+    <ProjectReference Include="..\..\Networks\Xds\Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Diagnostic\Blockcore.Features.Diagnostic.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.SignalR\Blockcore.Features.SignalR.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+  </ItemGroup>
+
+</Project>

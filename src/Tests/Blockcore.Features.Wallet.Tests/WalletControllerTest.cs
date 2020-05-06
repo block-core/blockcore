@@ -7,10 +7,11 @@ using System.Security;
 using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
-using Blockcore.Features.Wallet.Broadcasting;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Features.Wallet.Controllers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Models;
+using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
@@ -1394,7 +1395,7 @@ namespace Blockcore.Features.Wallet.Tests
             HdAddress accountAddress = WalletTestsHelpers.CreateAddress();
             account.InternalAddresses.Add(accountAddress);
 
-            var addressBalance = new AddressBalance { Address = accountAddress.Address, AmountConfirmed = new Money(75000), AmountUnconfirmed = new Money(500000), SpendableAmount = new Money(75000)};
+            var addressBalance = new AddressBalance { Address = accountAddress.Address, AmountConfirmed = new Money(75000), AmountUnconfirmed = new Money(500000), SpendableAmount = new Money(75000) };
 
             var mockWalletManager = new Mock<IWalletManager>();
             mockWalletManager.Setup(w => w.GetAddressBalance(accountAddress.Address)).Returns(addressBalance);
@@ -1674,7 +1675,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void BuildTransactionWithChangeAddressAccountNotInWalletReturnsBadRequest()
         {
             string walletName = "myWallet";
-            
+
             // Create a wallet with no accounts.
             Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
 
@@ -1766,7 +1767,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var mockBroadcasterManager = new Mock<IBroadcasterManager>();
 
-            mockBroadcasterManager.Setup(m => m.GetTransaction(It.IsAny<uint256>())).Returns(new TransactionBroadcastEntry(this.Network.CreateTransaction(transactionHex), TransactionBroadcastState.Broadcasted, null));
+            mockBroadcasterManager.Setup(m => m.GetTransaction(It.IsAny<uint256>())).Returns(new BroadcastTransactionStateChanedEntry(this.Network.CreateTransaction(transactionHex), TransactionBroadcastState.Broadcasted, null));
 
             var connectionManagerMock = new Mock<IConnectionManager>();
             var peers = new List<INetworkPeer>();
@@ -2395,6 +2396,7 @@ namespace Blockcore.Features.Wallet.Tests
     public class TestReadOnlyNetworkPeerCollection : IReadOnlyNetworkPeerCollection
     {
         public event EventHandler<NetworkPeerEventArgs> Added;
+
         public event EventHandler<NetworkPeerEventArgs> Removed;
 
         private List<INetworkPeer> networkPeers;

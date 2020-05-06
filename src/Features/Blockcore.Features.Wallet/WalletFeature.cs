@@ -6,12 +6,13 @@ using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
 using Blockcore.Connection;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
+using Blockcore.Features.MemoryPool.Broadcasting;
 using Blockcore.Features.RPC;
-using Blockcore.Features.Wallet.Broadcasting;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces;
@@ -41,13 +42,7 @@ namespace Blockcore.Features.Wallet
 
         private readonly IWalletManager walletManager;
 
-        private readonly ISignals signals;
-
-        private readonly IConnectionManager connectionManager;
-
         private readonly IAddressBookManager addressBookManager;
-
-        private readonly BroadcasterBehavior broadcasterBehavior;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WalletFeature"/> class.
@@ -62,17 +57,11 @@ namespace Blockcore.Features.Wallet
             IWalletSyncManager walletSyncManager,
             IWalletManager walletManager,
             IAddressBookManager addressBookManager,
-            ISignals signals,
-            IConnectionManager connectionManager,
-            BroadcasterBehavior broadcasterBehavior,
             INodeStats nodeStats)
         {
             this.walletSyncManager = walletSyncManager;
             this.walletManager = walletManager;
             this.addressBookManager = addressBookManager;
-            this.signals = signals;
-            this.connectionManager = connectionManager;
-            this.broadcasterBehavior = broadcasterBehavior;
 
             nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
             nodeStats.RegisterStats(this.AddInlineStats, StatsType.Inline, this.GetType().Name, 800);
@@ -140,8 +129,6 @@ namespace Blockcore.Features.Wallet
             this.walletSyncManager.Start();
             this.addressBookManager.Initialize();
 
-            this.connectionManager.Parameters.TemplateBehaviors.Add(this.broadcasterBehavior);
-
             return Task.CompletedTask;
         }
 
@@ -176,8 +163,6 @@ namespace Blockcore.Features.Wallet
                         services.AddSingleton<IWalletTransactionHandler, WalletTransactionHandler>();
                         services.AddSingleton<IWalletManager, WalletManager>();
                         services.AddSingleton<IWalletFeePolicy, WalletFeePolicy>();
-                        services.AddSingleton<IBroadcasterManager, FullNodeBroadcasterManager>();
-                        services.AddSingleton<BroadcasterBehavior>();
                         services.AddSingleton<WalletSettings>();
                         services.AddSingleton<IScriptAddressReader>(new ScriptAddressReader());
                         services.AddSingleton<StandardTransactionPolicy>();

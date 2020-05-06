@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Controllers;
 using Blockcore.Features.BlockStore;

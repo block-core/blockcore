@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
@@ -37,13 +39,17 @@ namespace Blockcore.Features.Wallet
 
         private readonly IWalletFeePolicy walletFeePolicy;
 
+        protected readonly IConsensusManager ConsensusManager;
+
         public WalletTransactionHandler(
+            IConsensusManager consensusManager,
             ILoggerFactory loggerFactory,
             IWalletManager walletManager,
             IWalletFeePolicy walletFeePolicy,
             Network network,
             StandardTransactionPolicy transactionPolicy)
         {
+            this.ConsensusManager = consensusManager;
             this.network = network;
             this.walletManager = walletManager;
             this.walletFeePolicy = walletFeePolicy;
@@ -393,7 +399,8 @@ namespace Blockcore.Features.Wallet
         protected void AddFee(TransactionBuildContext context)
         {
             Money fee;
-            Money minTrxFee = new Money(this.network.MinTxFee, MoneyUnit.Satoshi);
+            var transactionFeeRule = this.ConsensusManager.ConsensusRules.GetRule<TransactionFeeRule>();
+            Money minTrxFee = transactionFeeRule.GetMinimumTransactionFee(this.network.MinTxFee, context.OpReturnData);
 
             // If the fee hasn't been set manually, calculate it based on the fee type that was chosen.
             if (context.TransactionFee == null)

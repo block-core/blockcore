@@ -123,6 +123,7 @@ namespace x42.Networks
                 proofOfStakeRewardAfterSubsidyLimit: setup.ProofOfStakeRewardAfterSubsidyLimit,
                 lastProofOfStakeRewardHeight: setup.LastProofOfStakeRewardHeight,
                 proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask,
+                minOPReturnFee: 10000,
                 posEmptyCoinbase: x42Setup.Instance.IsPoSv3()
             )
             {

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using NBitcoin;
@@ -23,6 +24,21 @@ namespace x42.Networks.Consensus
             }
 
             return result;
+        }
+
+        /// <inheritdoc />
+        public override Money GetMinimumTransactionFee(long minTxFee, string OpReturnData)
+        {
+            var consensus = (x42Consensus)this.consensus;
+            var minTrxFee = new Money(minTxFee, MoneyUnit.Satoshi);
+
+            // Additional fee for OpReturnData
+            if (!string.IsNullOrEmpty(OpReturnData))
+            {
+                minTrxFee = Math.Max(minTrxFee, consensus.MinOPReturnFee);
+            }
+
+            return minTrxFee;
         }
 
         private bool IsOpReturn(byte[] bytes)

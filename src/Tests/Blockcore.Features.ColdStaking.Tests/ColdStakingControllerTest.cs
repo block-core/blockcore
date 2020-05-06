@@ -16,6 +16,7 @@ using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Features.Consensus.Rules;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Rules;
@@ -74,6 +75,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         private Mock<IStakeChain> stakeChain;
         private Mock<IStakeValidator> stakeValidator;
         private MempoolManager mempoolManager;
+        private Mock<IConsensusManager> consensusManager;
 
         public ColdStakingControllerTest() : base(KnownNetworks.StratisMain)
         {
@@ -82,6 +84,8 @@ namespace Blockcore.Features.ColdStaking.Tests
             var registery = (StratisStandardScriptsRegistry)this.Network.StandardScriptsRegistry;
             registery.GetScriptTemplates.Remove(registery.GetScriptTemplates.OfType<TxNullDataTemplate>().Single()); // remove teh default standard script
             this.Network.StandardScriptsRegistry.RegisterStandardScriptTemplate(TxNullDataTemplate.Instance);
+            this.consensusManager = new Mock<IConsensusManager>();
+            this.consensusManager.Setup(s => s.ConsensusRules.GetRule<TransactionFeeRule>()).Returns(new TransactionFeeRule());
         }
 
         /// <summary>
@@ -224,7 +228,7 @@ namespace Blockcore.Features.ColdStaking.Tests
                 new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(),
                 this.loggerFactory, DateTimeProvider.Default);
 
-            var walletTransactionHandler = new WalletTransactionHandler(this.loggerFactory, this.coldStakingManager,
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.loggerFactory, this.coldStakingManager,
                 new Mock<IWalletFeePolicy>().Object, this.Network, new StandardTransactionPolicy(this.Network));
 
             this.coldStakingController = new ColdStakingController(this.loggerFactory, this.coldStakingManager, walletTransactionHandler);

@@ -8,6 +8,7 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
+using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet.Broadcasting;
@@ -168,6 +169,7 @@ namespace Blockcore.Features.Wallet
                 .DependOn<MempoolFeature>()
                 .DependOn<BlockStoreFeature>()
                 .DependOn<RPCFeature>()
+                .DependOn<ConsensusFeature>()
                 .FeatureServices(services =>
                     {
                         services.AddSingleton<IWalletSyncManager, WalletSyncManager>();

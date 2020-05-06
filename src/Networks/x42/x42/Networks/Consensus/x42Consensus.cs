@@ -154,6 +154,8 @@ namespace x42.Networks.Consensus
         /// <inheritdoc />
         public Money LastProofOfStakeRewardHeight { get; }
 
+        public Money MinOPReturnFee { get; }
+
         public x42Consensus(
             ConsensusFactory consensusFactory,
             ConsensusOptions consensusOptions,
@@ -188,6 +190,7 @@ namespace x42.Networks.Consensus
             Money proofOfStakeRewardAfterSubsidyLimit,
             long subsidyLimit,
             Money lastProofOfStakeRewardHeight,
+            Money minOPReturnFee,
             bool posEmptyCoinbase,
             uint proofOfStakeTimestampMask
             )
@@ -227,6 +230,7 @@ namespace x42.Networks.Consensus
             this.LastProofOfStakeRewardHeight = lastProofOfStakeRewardHeight;
             this.ConsensusRules = new ConsensusRules();
             this.MempoolRules = new List<Type>();
+            this.MinOPReturnFee = minOPReturnFee;
             this.PosEmptyCoinbase = posEmptyCoinbase;
             this.ProofOfStakeTimestampMask = proofOfStakeTimestampMask;
         }

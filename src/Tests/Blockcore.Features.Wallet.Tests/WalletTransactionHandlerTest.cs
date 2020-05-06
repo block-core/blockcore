@@ -5,6 +5,7 @@ using System.Text;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common.Logging;
@@ -25,6 +26,7 @@ namespace Blockcore.Features.Wallet.Tests
         private readonly string costlyOpReturnData;
         private readonly IScriptAddressReader scriptAddressReader;
         private readonly StandardTransactionPolicy standardTransactionPolicy;
+        private readonly Mock<IConsensusManager> consensusManager;
 
         public WalletTransactionHandlerTest()
         {
@@ -36,6 +38,9 @@ namespace Blockcore.Features.Wallet.Tests
             this.blockStore = new Mock<IBlockStore>().Object;
             this.standardTransactionPolicy = new StandardTransactionPolicy(this.Network);
             this.scriptAddressReader = new ScriptAddressReader();
+
+            this.consensusManager = new Mock<IConsensusManager>();
+            this.consensusManager.Setup(s => s.ConsensusRules.GetRule<TransactionFeeRule>()).Returns(new TransactionFeeRule());
         }
 
         [Fact]
@@ -43,7 +48,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             Assert.Throws<WalletException>(() =>
             {
-                var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, new Mock<IWalletManager>().Object, new Mock<IWalletFeePolicy>().Object, this.Network, this.standardTransactionPolicy);
+                var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, new Mock<IWalletManager>().Object, new Mock<IWalletFeePolicy>().Object, this.Network, this.standardTransactionPolicy);
 
                 Transaction result = walletTransactionHandler.BuildTransaction(CreateContext(this.Network, new WalletAccountReference(), "password", new Script(), Money.Zero, FeeType.Medium, 2));
             });
@@ -70,7 +75,7 @@ namespace Blockcore.Features.Wallet.Tests
                 var nodeSettings = new NodeSettings(network: this.Network, args: new string[] { $"-datadir={dataDir}" });
                 var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chain, new WalletSettings(nodeSettings),
                     new DataFolder(nodeSettings.DataDir), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-                var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, new Mock<IWalletFeePolicy>().Object, this.Network, new StandardTransactionPolicy(this.Network));
+                var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, new Mock<IWalletFeePolicy>().Object, this.Network, new StandardTransactionPolicy(this.Network));
 
                 walletManager.Wallets.Add(wallet);
 
@@ -134,7 +139,7 @@ namespace Blockcore.Features.Wallet.Tests
             var nodeSettings = new NodeSettings(network: this.Network, args: new string[] { $"-datadir={dataDir}" });
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chain, new WalletSettings(nodeSettings),
                 new DataFolder(nodeSettings.DataDir), walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, this.scriptAddressReader);
-            var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
 
             walletManager.Wallets.Add(wallet);
 
@@ -346,7 +351,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, this.scriptAddressReader);
-            var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
 
             walletManager.Wallets.Add(wallet);
 
@@ -417,7 +422,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
-            var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
 
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             wallet.AccountsRoot.Add(new AccountRoot()
@@ -441,7 +446,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new ChainIndexer(this.Network), new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, this.scriptAddressReader);
 
-            var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
 
             HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
 
@@ -477,7 +482,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new ChainIndexer(this.Network), new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, this.scriptAddressReader);
 
-            var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
 
             HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
 
@@ -516,7 +521,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new ChainIndexer(this.Network), new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, this.scriptAddressReader);
 
-            var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
 
             HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
 
@@ -551,7 +556,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new ChainIndexer(this.Network), new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, this.scriptAddressReader);
 
-            var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
+            var walletTransactionHandler = new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
             HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
             HdAddress accountAddress1 = WalletTestsHelpers.CreateAddress();
             HdAddress accountAddress2 = WalletTestsHelpers.CreateAddress();
@@ -709,7 +714,7 @@ namespace Blockcore.Features.Wallet.Tests
                 new WalletSettings(NodeSettings.Default(this.Network)), dataFolder,
                 walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, this.scriptAddressReader);
             var walletTransactionHandler =
-                new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
+                new WalletTransactionHandler(this.consensusManager.Object, this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
 
             walletManager.Wallets.Add(wallet);
 

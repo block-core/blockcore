@@ -6,6 +6,8 @@ using System.Net;
 using System.Security;
 using System.Text;
 using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Wallet.Broadcasting;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
@@ -40,6 +42,8 @@ namespace Blockcore.Features.Wallet.Controllers
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         private readonly Network network;
 
+        protected readonly IConsensusManager ConsensusManager;
+
         private readonly IConnectionManager connectionManager;
 
         private readonly ChainIndexer chainIndexer;
@@ -53,6 +57,7 @@ namespace Blockcore.Features.Wallet.Controllers
         private readonly IDateTimeProvider dateTimeProvider;
 
         public WalletController(
+            IConsensusManager consensusManager,
             ILoggerFactory loggerFactory,
             IWalletManager walletManager,
             IWalletTransactionHandler walletTransactionHandler,
@@ -63,6 +68,7 @@ namespace Blockcore.Features.Wallet.Controllers
             IBroadcasterManager broadcasterManager,
             IDateTimeProvider dateTimeProvider)
         {
+            this.ConsensusManager = consensusManager;
             this.walletManager = walletManager;
             this.walletTransactionHandler = walletTransactionHandler;
             this.walletSyncManager = walletSyncManager;
@@ -1394,10 +1400,11 @@ namespace Blockcore.Features.Wallet.Controllers
                         try
                         {
                             Transaction transaction = this.walletTransactionHandler.BuildTransaction(context);
-
+                           
                             // Due to how the code works the line below is probably never used.
                             var transactionSize = transaction.GetSerializedSize();
-                            transactionFee = new FeeRate(this.network.MinTxFee).GetFee(transactionSize);
+                            var transactionFeeRule = this.ConsensusManager.ConsensusRules.GetRule<TransactionFeeRule>();
+                            transactionFee = transactionFeeRule.GetTransactionFee(this.network.MinTxFee, transactionSize, context.OpReturnData);
                         }
                         catch (NotEnoughFundsException ex)
                         {

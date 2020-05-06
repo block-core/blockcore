@@ -2,7 +2,7 @@
 
 namespace Blockcore.Connection.Broadcasting
 {
-    public class TransactionBroadcastEntry
+    public class BroadcastTransactionStateChanedEntry
     {
         public NBitcoin.Transaction Transaction { get; }
 
@@ -12,7 +12,7 @@ namespace Blockcore.Connection.Broadcasting
 
         public string MempoolError { get; set; }
 
-        public TransactionBroadcastEntry(NBitcoin.Transaction transaction, TransactionBroadcastState transactionBroadcastState, string mempoolError)
+        public BroadcastTransactionStateChanedEntry(NBitcoin.Transaction transaction, TransactionBroadcastState transactionBroadcastState, string mempoolError)
         {
             this.Transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
             this.TransactionBroadcastState = transactionBroadcastState;

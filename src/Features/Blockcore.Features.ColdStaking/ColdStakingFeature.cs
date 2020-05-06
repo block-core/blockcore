@@ -17,6 +17,7 @@ using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces.UI;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -54,9 +55,6 @@ namespace Blockcore.Features.ColdStaking
 
         private readonly IAddressBookManager addressBookManager;
 
-        /// <summary>The broadcaster behavior.</summary>
-        private readonly BroadcasterBehavior broadcasterBehavior;
-
         /// <summary>The settings for the node.</summary>
         private readonly NodeSettings nodeSettings;
 
@@ -81,7 +79,6 @@ namespace Blockcore.Features.ColdStaking
         /// <param name="signals">The signals responsible for receiving blocks and transactions from the network.</param>
         /// <param name="chain">The chain of blocks.</param>
         /// <param name="connectionManager">The connection manager.</param>
-        /// <param name="broadcasterBehavior">The broadcaster behavior.</param>
         /// <param name="nodeSettings">The settings for the node.</param>
         /// <param name="walletSettings">The settings for the wallet.</param>
         /// <param name="loggerFactory">The factory used to create instance loggers.</param>
@@ -91,7 +88,6 @@ namespace Blockcore.Features.ColdStaking
             IWalletManager walletManager,
             IAddressBookManager addressBookManager,
             IConnectionManager connectionManager,
-            BroadcasterBehavior broadcasterBehavior,
             NodeSettings nodeSettings,
             WalletSettings walletSettings,
             ILoggerFactory loggerFactory,
@@ -109,7 +105,6 @@ namespace Blockcore.Features.ColdStaking
             this.walletSyncManager = walletSyncManager;
             this.addressBookManager = addressBookManager;
             this.connectionManager = connectionManager;
-            this.broadcasterBehavior = broadcasterBehavior;
             this.nodeSettings = nodeSettings;
             this.walletSettings = walletSettings;
 
@@ -141,7 +136,7 @@ namespace Blockcore.Features.ColdStaking
 
         private void AddInlineStats(StringBuilder benchLogs)
         {
-            var walletManager = this.coldStakingManager;
+            ColdStakingManager walletManager = this.coldStakingManager;
 
             if (walletManager != null)
             {
@@ -213,13 +208,6 @@ namespace Blockcore.Features.ColdStaking
     /// <exception cref="InvalidOperationException">Thrown if this is not a Stratis network.</exception>
     public static class FullNodeBuilderColdStakingExtension
     {
-        // TODO: Move to IServiceCollection helper class.
-        public static bool RemoveSingleton<T>(this IServiceCollection services)
-        {
-            // Remove the service if it exists.
-            return services.Remove(services.Where(sd => sd.ServiceType == typeof(T)).FirstOrDefault());
-        }
-
         public static IFullNodeBuilder UseColdStakingWallet(this IFullNodeBuilder fullNodeBuilder)
         {
             // Ensure that this feature is only used on a Stratis network.

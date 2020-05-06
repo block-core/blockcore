@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Connection.Broadcasting;
+using Blockcore.EventBus;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Signals;
@@ -111,6 +112,8 @@ namespace Blockcore.Features.Wallet
         protected internal ScriptToAddressLookup scriptToAddressLookup;
         private Dictionary<OutPoint, TransactionData> inputLookup;
 
+        private SubscriptionToken broadcastTransactionStateChanged;
+
         public WalletManager(
             ILoggerFactory loggerFactory,
             Network network,
@@ -153,9 +156,9 @@ namespace Blockcore.Features.Wallet
             this.dateTimeProvider = dateTimeProvider;
 
             // register events
-            if (this.broadcasterManager != null)
+            if (this.signals != null)
             {
-                this.broadcasterManager.TransactionStateChanged += this.BroadcasterManager_TransactionStateChanged;
+                this.broadcastTransactionStateChanged = this.signals.Subscribe<TransactionBroadcastEvent>(this.BroadcasterTransactionStateChanged);
             }
 
             this.scriptToAddressLookup = this.CreateAddressFromScriptLookup();
@@ -195,15 +198,15 @@ namespace Blockcore.Features.Wallet
             return new List<BuilderExtension>();
         }
 
-        private void BroadcasterManager_TransactionStateChanged(object sender, TransactionBroadcastEntry transactionEntry)
+        private void BroadcasterTransactionStateChanged(TransactionBroadcastEvent broadcastEntry)
         {
-            if (string.IsNullOrEmpty(transactionEntry.ErrorMessage))
+            if (string.IsNullOrEmpty(broadcastEntry.BroadcastEntry.ErrorMessage))
             {
-                this.ProcessTransaction(transactionEntry.Transaction, null, null, transactionEntry.TransactionBroadcastState == TransactionBroadcastState.Propagated);
+                this.ProcessTransaction(broadcastEntry.BroadcastEntry.Transaction, null, null, broadcastEntry.BroadcastEntry.TransactionBroadcastState == TransactionBroadcastState.Propagated);
             }
             else
             {
-                this.logger.LogDebug("Exception occurred: {0}", transactionEntry.ErrorMessage);
+                this.logger.LogDebug("Exception occurred: {0}", broadcastEntry.BroadcastEntry.ErrorMessage);
                 this.logger.LogTrace("(-)[EXCEPTION]");
             }
         }
@@ -264,9 +267,6 @@ namespace Blockcore.Features.Wallet
         /// <inheritdoc />
         public void Stop()
         {
-            if (this.broadcasterManager != null)
-                this.broadcasterManager.TransactionStateChanged -= this.BroadcasterManager_TransactionStateChanged;
-
             this.asyncLoop?.Dispose();
             this.SaveWallets();
         }

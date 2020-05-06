@@ -5,14 +5,20 @@ using NBitcoin;
 
 namespace Blockcore.Interfaces
 {
+    /// <summary>
+    /// Allow to check a transaction is valid before broadcasting it.
+    /// </summary>
+    public interface IBroadcastCheck
+    {
+        Task<string> CheckTransaction(Transaction transaction);
+    }
+
     public interface IBroadcasterManager
     {
         Task BroadcastTransactionAsync(Transaction transaction);
 
-        event EventHandler<TransactionBroadcastEntry> TransactionStateChanged;
+        BroadcastTransactionStateChanedEntry GetTransaction(uint256 transactionHash);
 
-        TransactionBroadcastEntry GetTransaction(uint256 transactionHash);
-
-        void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string mempoolError = null);
+        void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage = null);
     }
 }

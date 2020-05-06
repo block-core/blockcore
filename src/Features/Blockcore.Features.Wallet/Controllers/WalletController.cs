@@ -777,7 +777,7 @@ namespace Blockcore.Features.Wallet.Controllers
 
                 this.broadcasterManager.BroadcastTransactionAsync(transaction).GetAwaiter().GetResult();
 
-                TransactionBroadcastEntry transactionBroadCastEntry = this.broadcasterManager.GetTransaction(transaction.GetHash());
+                BroadcastTransactionStateChanedEntry transactionBroadCastEntry = this.broadcasterManager.GetTransaction(transaction.GetHash());
 
                 if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
                 {
@@ -1454,7 +1454,7 @@ namespace Blockcore.Features.Wallet.Controllers
                     {
                         this.broadcasterManager.BroadcastTransactionAsync(transaction).GetAwaiter().GetResult();
 
-                        TransactionBroadcastEntry transactionBroadCastEntry = this.broadcasterManager.GetTransaction(transaction.GetHash());
+                        BroadcastTransactionStateChanedEntry transactionBroadCastEntry = this.broadcasterManager.GetTransaction(transaction.GetHash());
 
                         if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
                         {

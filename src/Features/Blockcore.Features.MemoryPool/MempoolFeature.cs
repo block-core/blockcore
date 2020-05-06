@@ -11,6 +11,7 @@ using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -168,9 +169,7 @@ namespace Blockcore.Features.MemoryPool
                         services.AddSingleton<BlocksDisconnectedSignaled>();
                         services.AddSingleton<IMempoolPersistence, MempoolPersistence>();
                         services.AddSingleton<MempoolSettings>();
-
-                        services.RemoveAll<IBroadcasterManager>();
-                        services.AddSingleton<IBroadcasterManager, FullNodeBroadcasterManager>();
+                        services.AddSingleton<IBroadcastCheck, MempoolBroadcastCheck>();
 
                         foreach (var ruleType in fullNodeBuilder.Network.Consensus.MempoolRules)
                             services.AddSingleton(typeof(IMempoolRule), ruleType);

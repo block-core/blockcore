@@ -8,7 +8,6 @@ namespace Blockcore.EventBus
     /// <seealso cref="Blockcore.EventBus.IEvent" />
     public abstract class EventBase
     {
-        /// <inheritdoc />
         public Guid CorrelationId { get; }
 
         public EventBase()

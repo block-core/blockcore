@@ -402,7 +402,8 @@ namespace Blockcore.Base
                     services.AddSingleton<IKeyValueRepository, KeyValueRepository>();
                     services.AddSingleton<ITipsManager, TipsManager>();
                     services.AddSingleton<IAsyncProvider, AsyncProvider>();
-                    services.AddSingleton<IBroadcasterManager, NodeBroadcasterManager>();
+                    services.AddSingleton<IBroadcasterManager, BroadcasterManager>();
+                    services.AddSingleton<IBroadcastCheck, NoCheckBroadcastCheck>();
 
                     // Consensus
                     services.AddSingleton<ConsensusSettings>();

@@ -5,51 +5,53 @@ using System.Threading.Tasks;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Signals;
 using Blockcore.Utilities;
 using ConcurrentCollections;
 using NBitcoin;
 
 namespace Blockcore.Connection.Broadcasting
 {
-    public abstract class BroadcasterManagerBase : IBroadcasterManager
+    public class BroadcasterManager : IBroadcasterManager
     {
-        public event EventHandler<TransactionBroadcastEntry> TransactionStateChanged;
-
-        /// <summary> Connection manager for managing node connections.</summary>
         protected readonly IConnectionManager connectionManager;
+        private readonly ISignals signals;
+        private readonly IEnumerable<IBroadcastCheck> broadcastChecks;
 
-        public BroadcasterManagerBase(IConnectionManager connectionManager)
+        public BroadcasterManager(IConnectionManager connectionManager, ISignals signals, IEnumerable<IBroadcastCheck> broadcastChecks)
         {
             Guard.NotNull(connectionManager, nameof(connectionManager));
 
             this.connectionManager = connectionManager;
-            this.Broadcasts = new ConcurrentHashSet<TransactionBroadcastEntry>();
+            this.signals = signals;
+            this.broadcastChecks = broadcastChecks;
+            this.Broadcasts = new ConcurrentHashSet<BroadcastTransactionStateChanedEntry>();
         }
 
-        public void OnTransactionStateChanged(TransactionBroadcastEntry entry)
+        public void OnTransactionStateChanged(BroadcastTransactionStateChanedEntry entry)
         {
-            this.TransactionStateChanged?.Invoke(this, entry);
+            this.signals.Publish(new TransactionBroadcastEvent(this, entry));
         }
 
         /// <summary>Transactions to broadcast.</summary>
-        private ConcurrentHashSet<TransactionBroadcastEntry> Broadcasts { get; }
+        private ConcurrentHashSet<BroadcastTransactionStateChanedEntry> Broadcasts { get; }
 
         /// <summary>Retrieves a transaction with provided hash from the collection of transactions to broadcast.</summary>
         /// <param name="transactionHash">Hash of the transaction to retrieve.</param>
-        public TransactionBroadcastEntry GetTransaction(uint256 transactionHash)
+        public BroadcastTransactionStateChanedEntry GetTransaction(uint256 transactionHash)
         {
-            TransactionBroadcastEntry txEntry = this.Broadcasts.FirstOrDefault(x => x.Transaction.GetHash() == transactionHash);
+            BroadcastTransactionStateChanedEntry txEntry = this.Broadcasts.FirstOrDefault(x => x.Transaction.GetHash() == transactionHash);
             return txEntry ?? null;
         }
 
         /// <summary>Adds or updates a transaction from the collection of transactions to broadcast.</summary>
-        public void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string mempoolError = null)
+        public void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage = null)
         {
-            TransactionBroadcastEntry broadcastEntry = this.Broadcasts.FirstOrDefault(x => x.Transaction.GetHash() == transaction.GetHash());
+            BroadcastTransactionStateChanedEntry broadcastEntry = this.Broadcasts.FirstOrDefault(x => x.Transaction.GetHash() == transaction.GetHash());
 
             if (broadcastEntry == null)
             {
-                broadcastEntry = new TransactionBroadcastEntry(transaction, transactionBroadcastState, mempoolError);
+                broadcastEntry = new BroadcastTransactionStateChanedEntry(transaction, transactionBroadcastState, errorMessage);
                 this.Broadcasts.Add(broadcastEntry);
                 this.OnTransactionStateChanged(broadcastEntry);
             }
@@ -60,7 +62,28 @@ namespace Blockcore.Connection.Broadcasting
             }
         }
 
-        public abstract Task BroadcastTransactionAsync(Transaction transaction);
+        public async Task BroadcastTransactionAsync(Transaction transaction)
+        {
+            Guard.NotNull(transaction, nameof(transaction));
+
+            if (this.IsPropagated(transaction))
+            {
+                return;
+            }
+
+            foreach (IBroadcastCheck broadcastCheck in this.broadcastChecks)
+            {
+                string error = await broadcastCheck.CheckTransaction(transaction).ConfigureAwait(false);
+
+                if (!string.IsNullOrEmpty(error))
+                {
+                    this.AddOrUpdate(transaction, TransactionBroadcastState.CantBroadcast, error);
+                    return;
+                }
+            }
+
+            await this.PropagateTransactionToPeersAsync(transaction, this.connectionManager.ConnectedPeers.ToList()).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Sends transaction to peers.
@@ -88,7 +111,7 @@ namespace Blockcore.Connection.Broadcasting
         /// <summary>Checks if transaction was propagated to any peers on the network.</summary>
         protected bool IsPropagated(Transaction transaction)
         {
-            TransactionBroadcastEntry broadcastEntry = this.GetTransaction(transaction.GetHash());
+            BroadcastTransactionStateChanedEntry broadcastEntry = this.GetTransaction(transaction.GetHash());
             return (broadcastEntry != null) && (broadcastEntry.TransactionBroadcastState == TransactionBroadcastState.Propagated);
         }
     }

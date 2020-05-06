@@ -1,4 +1,5 @@
-﻿using Blockcore.Consensus;
+﻿using Blockcore.Connection.Broadcasting;
+using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Controllers;

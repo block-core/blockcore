@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;

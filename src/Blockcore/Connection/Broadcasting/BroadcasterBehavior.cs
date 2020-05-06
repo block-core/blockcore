@@ -2,14 +2,14 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.Wallet.Broadcasting
+namespace Blockcore.Connection.Broadcasting
 {
     public class BroadcasterBehavior : NetworkPeerBehavior
     {
@@ -91,7 +91,7 @@ namespace Blockcore.Features.Wallet.Broadcasting
             // if node has transaction we broadcast
             foreach (InventoryVector inv in invPayload.Inventory.Where(x => x.Type == InventoryType.MSG_TX))
             {
-                TransactionBroadcastEntry txEntry = this.broadcasterManager.GetTransaction(inv.Hash);
+                BroadcastTransactionStateChanedEntry txEntry = this.broadcasterManager.GetTransaction(inv.Hash);
                 if (txEntry != null)
                 {
                     this.broadcasterManager.AddOrUpdate(txEntry.Transaction, TransactionBroadcastState.Propagated);
@@ -104,7 +104,7 @@ namespace Blockcore.Features.Wallet.Broadcasting
             // If node asks for transaction we want to broadcast.
             foreach (InventoryVector inv in getDataPayload.Inventory.Where(x => x.Type == InventoryType.MSG_TX))
             {
-                TransactionBroadcastEntry txEntry = this.broadcasterManager.GetTransaction(inv.Hash);
+                BroadcastTransactionStateChanedEntry txEntry = this.broadcasterManager.GetTransaction(inv.Hash);
                 if ((txEntry != null) && (txEntry.TransactionBroadcastState != TransactionBroadcastState.CantBroadcast))
                 {
                     await peer.SendMessageAsync(new TxPayload(txEntry.Transaction)).ConfigureAwait(false);

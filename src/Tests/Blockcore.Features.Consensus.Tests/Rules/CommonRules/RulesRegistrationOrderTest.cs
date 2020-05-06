@@ -33,8 +33,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 
             List<Type> integrityValidationRules = network.Consensus.ConsensusRules.IntegrityValidationRules;
 
-            integrityValidationRules.Count.Should().Be(1);
-            integrityValidationRules[0].FullName.Should().Be(typeof(BlockMerkleRootRule).FullName);
+            integrityValidationRules.Count.Should().Be(2);
+            integrityValidationRules[0].FullName.Should().Be(typeof(TransactionFeeRule).FullName);
+            integrityValidationRules[1].FullName.Should().Be(typeof(BlockMerkleRootRule).FullName);
 
             List<Type> partialValidationRules = network.Consensus.ConsensusRules.PartialValidationRules;
 
@@ -80,10 +81,11 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 
             List<Type> integrityValidationRules = network.Consensus.ConsensusRules.IntegrityValidationRules;
 
-            integrityValidationRules.Count.Should().Be(3);
-            integrityValidationRules[0].FullName.Should().Be(typeof(BlockMerkleRootRule).FullName);
-            integrityValidationRules[1].FullName.Should().Be(typeof(PosBlockSignatureRepresentationRule).FullName);
-            integrityValidationRules[2].FullName.Should().Be(typeof(PosBlockSignatureRule).FullName);
+            integrityValidationRules.Count.Should().Be(4);
+            integrityValidationRules[0].FullName.Should().Be(typeof(TransactionFeeRule).FullName);
+            integrityValidationRules[1].FullName.Should().Be(typeof(BlockMerkleRootRule).FullName);
+            integrityValidationRules[2].FullName.Should().Be(typeof(PosBlockSignatureRepresentationRule).FullName);
+            integrityValidationRules[3].FullName.Should().Be(typeof(PosBlockSignatureRule).FullName);
 
             List<Type> partialValidationRules = network.Consensus.ConsensusRules.PartialValidationRules;
 

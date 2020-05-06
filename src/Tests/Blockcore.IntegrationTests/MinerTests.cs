@@ -172,6 +172,8 @@ namespace Blockcore.IntegrationTests
                 var consensusRulesContainer = new ConsensusRulesContainer();
                 foreach (var ruleType in this.network.Consensus.ConsensusRules.HeaderValidationRules)
                     consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
+                foreach (var ruleType in this.network.Consensus.ConsensusRules.IntegrityValidationRules)
+                    consensusRulesContainer.IntegrityValidationRules.Add(Activator.CreateInstance(ruleType) as IntegrityValidationConsensusRule);
                 foreach (var ruleType in this.network.Consensus.ConsensusRules.FullValidationRules)
                 {
                     FullValidationConsensusRule rule = null;

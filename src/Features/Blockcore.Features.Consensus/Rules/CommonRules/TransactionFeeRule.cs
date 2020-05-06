@@ -10,7 +10,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
         /// <summary>A base skeleton method that is implemented by networks.</summary>
         public override void Run(RuleContext context) { }
 
-        /// True returned if fee is sufficient to add to a block, or otherwise false is returned.</exception>
+        /// True returned if fee for the transaction is too low, otherwise false is returned.</exception>
         public virtual bool IsFeeTooLow(Money fee, Money packageFees, Transaction _)
         {
             bool result = false;

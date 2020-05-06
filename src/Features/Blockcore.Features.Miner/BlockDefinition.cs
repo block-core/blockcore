@@ -410,7 +410,9 @@ namespace Blockcore.Features.Miner
                     packageSigOpsCost = modit.SigOpCostWithAncestors;
                 }
 
-                if (packageFees < this.BlockMinFeeRate.GetFee((int)packageSize))
+                var transactionFeeRule = this.ConsensusManager.ConsensusRules.GetRule<TransactionFeeRule>();
+                bool feeTooLow = transactionFeeRule.IsFeeTooLow(this.BlockMinFeeRate.GetFee((int)packageSize), packageFees, iter.Transaction);
+                if (feeTooLow)
                 {
                     // Everything else we might consider has a lower fee rate
                     return;

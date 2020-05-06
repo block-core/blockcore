@@ -174,6 +174,7 @@ namespace x42.Networks
                 .Register<PosFutureDriftRule>()
                 .Register<CheckDifficultyPosRule>()
                 .Register<x42HeaderVersionRule>()
+                .Register<x42TransactionFeeRule>()
                 .Register<ProvenHeaderSizeRule>()
                 .Register<ProvenHeaderCoinstakeRule>();
 
@@ -201,7 +202,6 @@ namespace x42.Networks
 
             consensus.ConsensusRules
                 .Register<SetActivationDeploymentsFullValidationRule>()
-
                 .Register<CheckDifficultyHybridRule>()
 
                 // rules that require the store to be loaded (coinview)

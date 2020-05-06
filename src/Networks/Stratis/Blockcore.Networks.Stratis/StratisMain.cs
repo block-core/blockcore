@@ -240,6 +240,7 @@ namespace Blockcore.Networks.Stratis
                 .Register<StratisBugFixPosFutureDriftRule>()
                 .Register<CheckDifficultyPosRule>()
                 .Register<StratisHeaderVersionRule>()
+                .Register<TransactionFeeRule>()
                 .Register<ProvenHeaderSizeRule>()
                 .Register<ProvenHeaderCoinstakeRule>();
 

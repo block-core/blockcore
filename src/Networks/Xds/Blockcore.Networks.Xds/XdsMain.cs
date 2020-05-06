@@ -155,6 +155,7 @@ namespace Blockcore.Networks.Xds
                 .Register<PosFutureDriftRule>()
                 .Register<CheckDifficultyPosRule>()
                 .Register<XdsHeaderVersionRule>()
+                .Register<TransactionFeeRule>()
                 .Register<ProvenHeaderSizeRule>()
                 .Register<ProvenHeaderCoinstakeRule>()
                 .Register<BlockMerkleRootRule>()

@@ -170,6 +170,7 @@ namespace Blockcore.Networks.Bitcoin
                 .Register<HeaderTimeChecksRule>()
                 .Register<CheckDifficultyPowRule>()
                 .Register<BitcoinActivationRule>()
+                .Register<TransactionFeeRule>()
                 .Register<BitcoinHeaderVersionRule>();
 
             consensus.ConsensusRules

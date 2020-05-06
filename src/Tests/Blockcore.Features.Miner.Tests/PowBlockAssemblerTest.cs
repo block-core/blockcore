@@ -251,6 +251,7 @@ namespace Blockcore.Features.Miner.Tests
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.testNet, this.key);
                 this.consensusManager.Setup(c => c.Tip).Returns(chainIndexer.GetHeader(5));
+                this.consensusManager.Setup(s => s.ConsensusRules.GetRule<TransactionFeeRule>()).Returns(new TransactionFeeRule());
                 Transaction transaction = CreateTransaction(this.testNet, this.key, 5, new Money(400 * 1000 * 1000), new Key(), new uint256(124124));
                 var txFee = new Money(1000);
                 SetupTxMempool(chainIndexer, newOptions, txFee, transaction);
@@ -384,6 +385,8 @@ namespace Blockcore.Features.Miner.Tests
 
             foreach (var ruleType in this.Network.Consensus.ConsensusRules.HeaderValidationRules)
                 consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
+            foreach (var ruleType in this.Network.Consensus.ConsensusRules.IntegrityValidationRules)
+                consensusRulesContainer.IntegrityValidationRules.Add(Activator.CreateInstance(ruleType) as IntegrityValidationConsensusRule);
             foreach (var ruleType in this.Network.Consensus.ConsensusRules.PartialValidationRules)
                 consensusRulesContainer.PartialValidationRules.Add(Activator.CreateInstance(ruleType) as PartialValidationConsensusRule);
             foreach (var ruleType in this.Network.Consensus.ConsensusRules.FullValidationRules)

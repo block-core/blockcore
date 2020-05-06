@@ -285,6 +285,7 @@ namespace Blockcore.Features.Miner.Tests
 
                 Mock<IConsensusRuleEngine> consensusRuleEngine = new Mock<IConsensusRuleEngine>();
                 consensusRuleEngine.Setup(s => s.GetRule<PosFutureDriftRule>()).Returns(new PosFutureDriftRule());
+                consensusRuleEngine.Setup(s => s.GetRule<TransactionFeeRule>()).Returns(new TransactionFeeRule());
 
                 this.consensusManager.Setup(c => c.ConsensusRules)
                     .Returns(consensusRuleEngine.Object);
@@ -445,6 +446,8 @@ namespace Blockcore.Features.Miner.Tests
 
             foreach (var ruleType in this.Network.Consensus.ConsensusRules.HeaderValidationRules)
                 consensusRulesContainer.HeaderValidationRules.Add(Activator.CreateInstance(ruleType) as HeaderValidationConsensusRule);
+            foreach (var ruleType in this.Network.Consensus.ConsensusRules.IntegrityValidationRules)
+                consensusRulesContainer.IntegrityValidationRules.Add(Activator.CreateInstance(ruleType) as IntegrityValidationConsensusRule);
             foreach (var ruleType in this.Network.Consensus.ConsensusRules.PartialValidationRules)
                 consensusRulesContainer.PartialValidationRules.Add(Activator.CreateInstance(ruleType) as PartialValidationConsensusRule);
             foreach (var ruleType in this.Network.Consensus.ConsensusRules.FullValidationRules)

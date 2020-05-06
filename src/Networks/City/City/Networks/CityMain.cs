@@ -165,6 +165,7 @@ namespace City.Networks
                 .Register<PosFutureDriftRule>()
                 .Register<CheckDifficultyPosRule>()
                 .Register<CityHeaderVersionRule>()
+                .Register<TransactionFeeRule>()
                 .Register<ProvenHeaderSizeRule>()
                 .Register<ProvenHeaderCoinstakeRule>();
 

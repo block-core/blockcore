@@ -568,7 +568,7 @@ namespace Blockcore.Features.Wallet.Tests
                 walletManager.LoadKeysLookupLock();
             });
 
-            Assert.Equal(240, walletManager.scriptToAddressLookup.Count);
+            Assert.Equal(240, walletManager.walletIndex.Values.SelectMany(s => s.ScriptToAddressLookup.Values).Count());
         }
 
         [Fact]
@@ -2782,18 +2782,18 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletManager.LoadKeysLookupLock();
 
-            Assert.NotNull(walletManager.scriptToAddressLookup);
-            Assert.Equal(6, walletManager.scriptToAddressLookup.Count);
+            Assert.NotNull(walletManager.walletIndex);
+            Assert.Equal(6, walletManager.walletIndex.Values.Sum(s => s.ScriptToAddressLookup.Count));
 
             ICollection<HdAddress> externalAddresses = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses;
-            Assert.Equal(externalAddresses.ElementAt(0).Address, walletManager.scriptToAddressLookup[externalAddresses.ElementAt(0).ScriptPubKey].Address);
-            Assert.Equal(externalAddresses.ElementAt(1).Address, walletManager.scriptToAddressLookup[externalAddresses.ElementAt(1).ScriptPubKey].Address);
-            Assert.Equal(externalAddresses.ElementAt(2).Address, walletManager.scriptToAddressLookup[externalAddresses.ElementAt(2).ScriptPubKey].Address);
+            Assert.Equal(externalAddresses.ElementAt(0).Address, walletManager.walletIndex[wallet.Name].ScriptToAddressLookup[externalAddresses.ElementAt(0).ScriptPubKey].Address);
+            Assert.Equal(externalAddresses.ElementAt(1).Address, walletManager.walletIndex[wallet.Name].ScriptToAddressLookup[externalAddresses.ElementAt(1).ScriptPubKey].Address);
+            Assert.Equal(externalAddresses.ElementAt(2).Address, walletManager.walletIndex[wallet.Name].ScriptToAddressLookup[externalAddresses.ElementAt(2).ScriptPubKey].Address);
 
             ICollection<HdAddress> internalAddresses = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses;
-            Assert.Equal(internalAddresses.ElementAt(0).Address, walletManager.scriptToAddressLookup[internalAddresses.ElementAt(0).ScriptPubKey].Address);
-            Assert.Equal(internalAddresses.ElementAt(1).Address, walletManager.scriptToAddressLookup[internalAddresses.ElementAt(1).ScriptPubKey].Address);
-            Assert.Equal(internalAddresses.ElementAt(2).Address, walletManager.scriptToAddressLookup[internalAddresses.ElementAt(2).ScriptPubKey].Address);
+            Assert.Equal(internalAddresses.ElementAt(0).Address, walletManager.walletIndex[wallet.Name].ScriptToAddressLookup[internalAddresses.ElementAt(0).ScriptPubKey].Address);
+            Assert.Equal(internalAddresses.ElementAt(1).Address, walletManager.walletIndex[wallet.Name].ScriptToAddressLookup[internalAddresses.ElementAt(1).ScriptPubKey].Address);
+            Assert.Equal(internalAddresses.ElementAt(2).Address, walletManager.walletIndex[wallet.Name].ScriptToAddressLookup[internalAddresses.ElementAt(2).ScriptPubKey].Address);
         }
 
         [Fact]
@@ -2804,8 +2804,8 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletManager.LoadKeysLookupLock();
 
-            Assert.NotNull(walletManager.scriptToAddressLookup);
-            Assert.Empty(walletManager.scriptToAddressLookup.Values);
+            Assert.NotNull(walletManager.walletIndex);
+            Assert.Empty(walletManager.walletIndex.Values.SelectMany(s => s.ScriptToAddressLookup.Values));
         }
 
         [Fact]
@@ -2926,6 +2926,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
+            walletManager.LoadKeysLookupLock();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
@@ -2970,6 +2971,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
+            walletManager.LoadKeysLookupLock();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
@@ -2997,6 +2999,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
+            walletManager.LoadKeysLookupLock();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
@@ -3137,6 +3140,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
+            walletManager.LoadKeysLookupLock();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 

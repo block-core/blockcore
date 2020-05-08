@@ -563,9 +563,9 @@ namespace Blockcore.Features.Wallet.Tests
 
             Parallel.For(0, 5000, new ParallelOptions { MaxDegreeOfParallelism = 10 }, (int iteration) =>
             {
-                walletManager.LoadKeysLookupLock();
-                walletManager.LoadKeysLookupLock();
-                walletManager.LoadKeysLookupLock();
+                walletManager.LoadKeysLookup();
+                walletManager.LoadKeysLookup();
+                walletManager.LoadKeysLookup();
             });
 
             Assert.Equal(240, walletManager.walletIndex.Values.SelectMany(s => s.ScriptToAddressLookup.Values).Count());
@@ -1438,7 +1438,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
             walletManager.ProcessTransaction(transaction);
 
             HdAddress spentAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0);
@@ -1529,7 +1529,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
             walletManager.ProcessTransaction(transaction);
 
             HdAddress spentAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0);
@@ -1613,7 +1613,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             walletManager.ProcessTransaction(transaction);
 
@@ -1695,7 +1695,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
             walletManager.ProcessTransaction(transaction);
 
             HdAddress spentAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0);
@@ -1778,7 +1778,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             Block block = WalletTestsHelpers.AppendTransactionInNewBlockToChain(chainInfo.chain, transaction);
 
@@ -1874,7 +1874,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             Block block = WalletTestsHelpers.AppendTransactionInNewBlockToChain(chainInfo.chain, transaction);
 
@@ -2276,7 +2276,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
             walletManager.RemoveBlocks(chainedHeader);
 
             Assert.Equal(chainedHeader.GetLocator().Blocks, wallet.BlockLocator);
@@ -2375,7 +2375,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             ChainedHeader chainedBlock = chainInfo.chain.GetHeader(block.GetHash());
             walletManager.WalletTipHash = block.Header.GetHash();
@@ -2780,7 +2780,7 @@ namespace Blockcore.Features.Wallet.Tests
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
 
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             Assert.NotNull(walletManager.walletIndex);
             Assert.Equal(6, walletManager.walletIndex.Values.Sum(s => s.ScriptToAddressLookup.Count));
@@ -2802,7 +2802,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             Assert.NotNull(walletManager.walletIndex);
             Assert.Empty(walletManager.walletIndex.Values.SelectMany(s => s.ScriptToAddressLookup.Values));
@@ -2926,7 +2926,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
@@ -2971,7 +2971,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
@@ -2999,7 +2999,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
@@ -3106,7 +3106,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainInfo.chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, walletFeePolicy.Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
             walletManager.Wallets.Add(wallet);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             // First add transaction 1 via mempool.
             walletManager.ProcessTransaction(transaction1);
@@ -3140,7 +3140,7 @@ namespace Blockcore.Features.Wallet.Tests
             Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
-            walletManager.LoadKeysLookupLock();
+            walletManager.LoadKeysLookup();
 
             HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 

@@ -28,5 +28,10 @@ namespace Blockcore.Features.Wallet
         /// from what the wallet initially detected this will be found inthois list.
         /// </summary>
         public Dictionary<OutPoint, TransactionData> InputLookup { get; internal set; }
+
+        /// <summary>
+        /// A reference to the wallet of the current index.
+        /// </summary>
+        public Wallet Wallet { get; internal set; }
     }
 }

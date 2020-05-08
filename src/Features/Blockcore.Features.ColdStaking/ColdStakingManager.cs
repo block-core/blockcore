@@ -233,7 +233,7 @@ namespace Blockcore.Features.ColdStaking
 
             // Maintain at least one unused address at all times. This will ensure that wallet recovery will also work.
             IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1, false);
-            this.UpdateKeysLookupLocked(wallet, newAddresses);
+            this.UpdateKeysLookup(wallet, newAddresses);
 
             // Save the changes to the file.
             this.SaveWallet(wallet);
@@ -280,7 +280,7 @@ namespace Blockcore.Features.ColdStaking
             {
                 this.logger.LogDebug("No unused address exists on account '{0}'. Adding new address.", account.Name);
                 IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1);
-                this.UpdateKeysLookupLocked(wallet, newAddresses);
+                this.UpdateKeysLookup(wallet, newAddresses);
                 address = newAddresses.First();
             }
 
@@ -588,33 +588,30 @@ namespace Blockcore.Features.ColdStaking
         /// </summary>
         /// <param name="script">The script (possibly a cold staking script) to check.</param>
         /// <param name="accountFilter">The account filter.</param>
-        public override void TransactionFoundInternal(Script script, Func<HdAccount, bool> accountFilter = null)
+        public override void TransactionFoundInternal(Wallet.Wallet wallet, Script script, Func<HdAccount, bool> accountFilter = null)
         {
             if (ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(script, out KeyId hotPubKeyHash, out KeyId coldPubKeyHash))
             {
-                base.TransactionFoundInternal(hotPubKeyHash.ScriptPubKey, a => a.Index == HotWalletAccountIndex);
-                base.TransactionFoundInternal(coldPubKeyHash.ScriptPubKey, a => a.Index == ColdWalletAccountIndex);
+                base.TransactionFoundInternal(wallet, hotPubKeyHash.ScriptPubKey, a => a.Index == HotWalletAccountIndex);
+                base.TransactionFoundInternal(wallet, coldPubKeyHash.ScriptPubKey, a => a.Index == ColdWalletAccountIndex);
 
                 return;
             }
             else if (script.IsScriptType(ScriptType.P2SH) || script.IsScriptType(ScriptType.P2WSH))
             {
-                foreach (KeyValuePair<string, WalletIndex> walletIndexItem in this.walletIndex)
+                if (this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(script, out HdAddress address))
                 {
-                    if (walletIndexItem.Value.ScriptToAddressLookup.TryGetValue(script, out HdAddress address))
+                    if (ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(address.RedeemScript, out hotPubKeyHash, out coldPubKeyHash))
                     {
-                        if (ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(address.RedeemScript, out hotPubKeyHash, out coldPubKeyHash))
-                        {
-                            base.TransactionFoundInternal(hotPubKeyHash.ScriptPubKey, a => a.Index == HotWalletAccountIndex);
-                            base.TransactionFoundInternal(coldPubKeyHash.ScriptPubKey, a => a.Index == ColdWalletAccountIndex);
+                        base.TransactionFoundInternal(wallet, hotPubKeyHash.ScriptPubKey, a => a.Index == HotWalletAccountIndex);
+                        base.TransactionFoundInternal(wallet, coldPubKeyHash.ScriptPubKey, a => a.Index == ColdWalletAccountIndex);
 
-                            return;
-                        }
+                        return;
                     }
                 }
             }
 
-            base.TransactionFoundInternal(script, accountFilter);
+            base.TransactionFoundInternal(wallet, script, accountFilter);
         }
 
         /// <summary>

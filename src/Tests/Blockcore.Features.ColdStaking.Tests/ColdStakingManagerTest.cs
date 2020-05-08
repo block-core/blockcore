@@ -195,13 +195,13 @@ namespace Blockcore.Features.ColdStaking.Tests
                 new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<ISignals>().Object, new Mock<IBroadcasterManager>().Object);
             coldWalletManager.Wallets.Add(wallet);
             coldWalletManager.Wallets.Add(coldWallet);
-            coldWalletManager.LoadKeysLookupLock();
+            coldWalletManager.LoadKeysLookup();
 
             // Create another instance for the hot wallet as it is not allowed to have both wallets on the same instance.
             var hotWalletManager = new ColdStakingManager(this.Network, chainInfo.chain, walletSettings, dataFolder, walletFeePolicy.Object,
                 new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<ISignals>().Object, new Mock<IBroadcasterManager>().Object);
             hotWalletManager.Wallets.Add(hotWallet);
-            hotWalletManager.LoadKeysLookupLock();
+            hotWalletManager.LoadKeysLookup();
 
             // Create a cold staking setup transaction.
             Transaction transaction = this.CreateColdStakingSetupTransaction(wallet, "password", spendingAddress, destinationColdKeys.PubKey, destinationHotKeys.PubKey,
@@ -273,7 +273,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             var receivingWalletManager = new ColdStakingManager(this.Network, chainInfo.chain, walletSettings, dataFolder, walletFeePolicy.Object,
                 new Mock<IAsyncProvider>().Object, new NodeLifetime(), new ScriptAddressReader(), this.LoggerFactory.Object, DateTimeProvider.Default, new Mock<ISignals>().Object, new Mock<IBroadcasterManager>().Object);
             receivingWalletManager.Wallets.Add(withdrawalWallet);
-            receivingWalletManager.LoadKeysLookupLock();
+            receivingWalletManager.LoadKeysLookup();
 
             // Process the transaction in the cold wallet manager.
             coldWalletManager.ProcessTransaction(withdrawalTransaction);

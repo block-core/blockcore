@@ -237,7 +237,7 @@ namespace Blockcore.Features.Wallet
             }
 
             // Load data in memory for faster lookups.
-            this.LoadKeysLookupLock();
+            this.LoadKeysLookup();
 
             // Find the last chain block received by the wallet manager.
             HashHeightPair hashHeightPair = this.LastReceivedBlockInfo();
@@ -288,7 +288,7 @@ namespace Blockcore.Features.Wallet
                 HdAccount account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset());
                 IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
                 IEnumerable<HdAddress> newChangeAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer, true);
-                this.UpdateKeysLookupLocked(wallet, newReceivingAddresses.Concat(newChangeAddresses));
+                this.UpdateKeysLookup(wallet, newReceivingAddresses.Concat(newChangeAddresses));
             }
 
             // If the chain is downloaded, we set the height of the newly created wallet to it.
@@ -373,6 +373,7 @@ namespace Blockcore.Features.Wallet
             }
 
             this.Load(wallet);
+            this.LoadKeysLookup();
 
             return wallet;
         }
@@ -455,7 +456,7 @@ namespace Blockcore.Features.Wallet
 
                 IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
                 IEnumerable<HdAddress> newChangeAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer, true);
-                this.UpdateKeysLookupLocked(wallet, newReceivingAddresses.Concat(newChangeAddresses));
+                this.UpdateKeysLookup(wallet, newReceivingAddresses.Concat(newChangeAddresses));
             }
 
             // If the chain is downloaded, we set the height of the recovered wallet to that of the recovery date.
@@ -496,7 +497,7 @@ namespace Blockcore.Features.Wallet
 
             IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
             IEnumerable<HdAddress> newChangeAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer, true);
-            this.UpdateKeysLookupLocked(wallet, newReceivingAddresses.Concat(newChangeAddresses));
+            this.UpdateKeysLookup(wallet, newReceivingAddresses.Concat(newChangeAddresses));
 
             // If the chain is downloaded, we set the height of the recovered wallet to that of the recovery date.
             // However, if the chain is still downloading when the user restores a wallet,
@@ -557,7 +558,7 @@ namespace Blockcore.Features.Wallet
                 account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset());
                 IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
                 IEnumerable<HdAddress> newChangeAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer, true);
-                this.UpdateKeysLookupLocked(wallet, newReceivingAddresses.Concat(newChangeAddresses));
+                this.UpdateKeysLookup(wallet, newReceivingAddresses.Concat(newChangeAddresses));
             }
 
             // Save the changes to the file.
@@ -630,7 +631,7 @@ namespace Blockcore.Features.Wallet
                 if (diff < 0)
                 {
                     newAddresses = account.CreateAddresses(this.network, Math.Abs(diff), isChange: isChange).ToList();
-                    this.UpdateKeysLookupLocked(wallet, newAddresses);
+                    this.UpdateKeysLookup(wallet, newAddresses);
                     generated = true;
                 }
 
@@ -979,7 +980,7 @@ namespace Blockcore.Features.Wallet
                 this.UpdateLastBlockSyncedHeight(fork);
 
                 // Reload the lookup dictionaries.
-                this.RefreshInputKeysLookupLock();
+                this.RefreshInputKeysLookup();
             }
         }
 
@@ -1107,27 +1108,7 @@ namespace Blockcore.Features.Wallet
                             continue;
                         }
 
-                        // Get the details of the outputs paid out.
-                        IEnumerable<TxOut> paidOutTo = transaction.Outputs.Where(o =>
-                        {
-                            // If script is empty ignore it.
-                            if (o.IsEmpty)
-                                return false;
-
-                            // Check if the destination script is one of the wallet's.
-                            bool found = walletIndexItem.Value.ScriptToAddressLookup.TryGetValue(o.ScriptPubKey, out HdAddress addr);
-
-                            // Include the keys not included in our wallets (external payees).
-                            if (!found)
-                                return true;
-
-                            // Include the keys that are in the wallet but that are for receiving
-                            // addresses (which would mean the user paid itself).
-                            // We also exclude the keys involved in a staking transaction.
-                            return !addr.IsChangeAddress() && !transaction.IsCoinStake;
-                        });
-
-                        this.AddSpendingTransactionToWallet(transaction, paidOutTo, tTx.Id, tTx.Index, blockHeight, block);
+                        this.AddSpendingTransactionToWallet(transaction, tTx, walletIndexItem.Value.Wallet, blockHeight, block);
                         foundSendingTrx = true;
                         this.logger.LogDebug("Transaction '{0}' contained funds sent by the user's wallet(s).", hash);
                     }
@@ -1195,12 +1176,12 @@ namespace Blockcore.Features.Wallet
                 }
 
                 addressTransactions.Add(newTransaction);
-                this.AddInputKeysLookupLocked(wallet, newTransaction);
+                this.AddInputKeysLookup(wallet, newTransaction);
 
                 if (block == null)
                 {
                     // Unconfirmed inputs track for double spends.
-                    this.AddTxLookupLocked(wallet, newTransaction, transaction);
+                    this.AddTxLookup(wallet, newTransaction, transaction);
                 }
             }
             else
@@ -1233,11 +1214,11 @@ namespace Blockcore.Features.Wallet
                 if (block != null)
                 {
                     // Inputs are in a block no need to track them anymore.
-                    this.RemoveTxLookupLocked(wallet, transaction);
+                    this.RemoveTxLookup(wallet, transaction);
                 }
             }
 
-            this.TransactionFoundInternal(script);
+            this.TransactionFoundInternal(wallet, script);
         }
 
         /// <summary>
@@ -1245,62 +1226,53 @@ namespace Blockcore.Features.Wallet
         /// The output will remain in the wallet for history (and reorg).
         /// </summary>
         /// <param name="transaction">The transaction from which details are added.</param>
-        /// <param name="paidToOutputs">A list of payments made out</param>
-        /// <param name="spendingTransactionId">The id of the transaction containing the output being spent, if this is a spending transaction.</param>
-        /// <param name="spendingTransactionIndex">The index of the output in the transaction being referenced, if this is a spending transaction.</param>
+        /// <param name="spentTransaction">The trx output.</param>
+        /// <param name="spentTransactionWallet">The wallet associated with this transaction.</param>
         /// <param name="blockHeight">Height of the block.</param>
         /// <param name="block">The block containing the transaction to add.</param>
-        private void AddSpendingTransactionToWallet(Transaction transaction, IEnumerable<TxOut> paidToOutputs,
-            uint256 spendingTransactionId, int? spendingTransactionIndex, int? blockHeight = null, Block block = null)
+        private void AddSpendingTransactionToWallet(Transaction transaction, TransactionData spentTransaction,
+            Wallet spentTransactionWallet, int? blockHeight = null, Block block = null)
         {
             Guard.NotNull(transaction, nameof(transaction));
-            Guard.NotNull(paidToOutputs, nameof(paidToOutputs));
 
             uint256 transactionHash = transaction.GetHash();
-
-            // Get the transaction being spent.
-            TransactionData spentTransaction = null;
-            Wallet spentTransactionWallet = null;
-
-            foreach (KeyValuePair<string, WalletIndex> walletIndexItem in this.walletIndex)
-            {
-                spentTransaction = walletIndexItem.Value.ScriptToAddressLookup.Values
-                    .Distinct()
-                    .SelectMany(v => v.Transactions)
-                    .SingleOrDefault(t => (t.Id == spendingTransactionId) && (t.Index == spendingTransactionIndex));
-
-                if (spentTransaction != null)
-                {
-                    // Find the wallet that belongs to the spentTransaction;
-                    spentTransactionWallet = this.Wallets.First(f => f.Name == walletIndexItem.Key);
-                    break;
-                }
-            }
-
-            if (spentTransaction == null)
-            {
-                // Strange, why would it be null?
-                this.logger.LogTrace("(-)[TX_NULL]");
-                return;
-            }
 
             // If the details of this spending transaction are seen for the first time.
             if (spentTransaction.SpendingDetails == null)
             {
-                this.logger.LogDebug("Spending UTXO '{0}-{1}' is new.", spendingTransactionId, spendingTransactionIndex);
+                this.logger.LogDebug("Spending UTXO '{0}-{1}' is new.", spentTransaction.Id, spentTransaction.Index);
 
                 var payments = new List<PaymentDetails>();
-                foreach (TxOut paidToOutput in paidToOutputs)
+
+                // Get the details of the outputs paid out.
+                foreach (TxOut paidToOutput in transaction.Outputs)
                 {
+                    // If script is empty ignore it.
+                    if (paidToOutput.IsEmpty)
+                        continue;
+
+                    // Exclude the keys involved in a staking transaction
+                    if (transaction.IsCoinStake)
+                        continue;
+
+                    // Check if the destination script is one of the wallet's.
+                    if (this.walletIndex[spentTransactionWallet.Name].ScriptToAddressLookup.TryGetValue(paidToOutput.ScriptPubKey, out HdAddress addr))
+                    {
+                        // Include the keys that are in the wallet but that are for receiving
+                        // addresses (which would mean the user paid itself).
+                        if (addr.IsChangeAddress())
+                            continue;
+                    }
+                    else
+                    {
+                        // Include the keys not included in our wallets (external payees).
+                    }
+
                     // Figure out how to retrieve the destination address.
                     string destinationAddress = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, paidToOutput.ScriptPubKey);
                     if (string.IsNullOrEmpty(destinationAddress))
-                        foreach (KeyValuePair<string, WalletIndex> walletIndexItem in this.walletIndex)
-                            if (walletIndexItem.Value.ScriptToAddressLookup.TryGetValue(paidToOutput.ScriptPubKey, out HdAddress destination))
-                            {
-                                destinationAddress = destination.Address;
-                                break;
-                            }
+                        if (this.walletIndex[spentTransactionWallet.Name].ScriptToAddressLookup.TryGetValue(paidToOutput.ScriptPubKey, out HdAddress destination))
+                            destinationAddress = destination.Address;
 
                     payments.Add(new PaymentDetails
                     {
@@ -1327,7 +1299,7 @@ namespace Blockcore.Features.Wallet
             }
             else // If this spending transaction is being confirmed in a block.
             {
-                this.logger.LogDebug("Spending transaction ID '{0}' is being confirmed, updating.", spendingTransactionId);
+                this.logger.LogDebug("Spending transaction ID '{0}' is being confirmed, updating.", spentTransaction.Id);
 
                 // Update the block height.
                 if (spentTransaction.SpendingDetails.BlockHeight == null && blockHeight != null)
@@ -1346,34 +1318,36 @@ namespace Blockcore.Features.Wallet
             // If the transaction is spent and confirmed, we remove the UTXO from the lookup dictionary.
             if (spentTransaction.SpendingDetails.BlockHeight != null)
             {
-                this.RemoveInputKeysLookupLock(spentTransactionWallet, spentTransaction);
+                this.RemoveInputKeysLookup(spentTransactionWallet, spentTransaction);
             }
         }
 
-        public virtual void TransactionFoundInternal(Script script, Func<HdAccount, bool> accountFilter = null)
+        public virtual void TransactionFoundInternal(Wallet wallet, Script script, Func<HdAccount, bool> accountFilter = null)
         {
-            foreach (Wallet wallet in this.Wallets)
+            // An address has no knowledge whether its 'change' or not
+            // so we can't use the indexer, iterate over each account
+            // addresses collection to find if its change or not
+            // (this can be optimized by addinga flag to the HdAddress class).
+
+            foreach (HdAccount account in wallet.GetAccounts(accountFilter ?? Wallet.NormalAccounts))
             {
-                foreach (HdAccount account in wallet.GetAccounts(accountFilter ?? Wallet.NormalAccounts))
+                bool isChange;
+                if (account.ExternalAddresses.Any(address => address.ScriptPubKey == script))
                 {
-                    bool isChange;
-                    if (account.ExternalAddresses.Any(address => address.ScriptPubKey == script))
-                    {
-                        isChange = false;
-                    }
-                    else if (account.InternalAddresses.Any(address => address.ScriptPubKey == script))
-                    {
-                        isChange = true;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    IEnumerable<HdAddress> newAddresses = this.AddAddressesToMaintainBuffer(account, isChange);
-
-                    this.UpdateKeysLookupLocked(wallet, newAddresses);
+                    isChange = false;
                 }
+                else if (account.InternalAddresses.Any(address => address.ScriptPubKey == script))
+                {
+                    isChange = true;
+                }
+                else
+                {
+                    continue;
+                }
+
+                IEnumerable<HdAddress> newAddresses = this.AddAddressesToMaintainBuffer(account, isChange);
+
+                this.UpdateKeysLookup(wallet, newAddresses);
             }
         }
 
@@ -1553,7 +1527,7 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// Loads the keys and transactions we're tracking in memory for faster lookups.
         /// </summary>
-        public void LoadKeysLookupLock()
+        public void LoadKeysLookup()
         {
             lock (this.lockObject)
             {
@@ -1590,7 +1564,8 @@ namespace Blockcore.Features.Wallet
                 {
                     InputLookup = new Dictionary<OutPoint, TransactionData>(),
                     OutpointLookup = new Dictionary<OutPoint, TransactionData>(),
-                    ScriptToAddressLookup = this.CreateAddressFromScriptLookup()
+                    ScriptToAddressLookup = this.CreateAddressFromScriptLookup(),
+                    Wallet = wallet
                 };
 
                 this.walletIndex.Add(wallet.Name, walletIndex);
@@ -1615,7 +1590,7 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// Update the keys and transactions we're tracking in memory for faster lookups.
         /// </summary>
-        public void UpdateKeysLookupLocked(Wallet wallet, IEnumerable<HdAddress> addresses)
+        public void UpdateKeysLookup(Wallet wallet, IEnumerable<HdAddress> addresses)
         {
             if (addresses == null || !addresses.Any())
             {
@@ -1634,7 +1609,7 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// Add to the list of unspent outputs kept in memory for faster lookups.
         /// </summary>
-        private void AddInputKeysLookupLocked(Wallet wallet, TransactionData transactionData)
+        private void AddInputKeysLookup(Wallet wallet, TransactionData transactionData)
         {
             Guard.NotNull(transactionData, nameof(transactionData));
 
@@ -1647,7 +1622,7 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// Remove from the list of unspent outputs kept in memory.
         /// </summary>
-        private void RemoveInputKeysLookupLock(Wallet wallet, TransactionData transactionData)
+        private void RemoveInputKeysLookup(Wallet wallet, TransactionData transactionData)
         {
             Guard.NotNull(transactionData, nameof(transactionData));
             Guard.NotNull(transactionData.SpendingDetails, nameof(transactionData.SpendingDetails));
@@ -1661,7 +1636,7 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// Reloads the UTXOs we're tracking in memory for faster lookups.
         /// </summary>
-        public void RefreshInputKeysLookupLock()
+        public void RefreshInputKeysLookup()
         {
             lock (this.lockObject)
             {
@@ -1685,7 +1660,7 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// Add to the mapping of transactions kept in memory for faster lookups.
         /// </summary>
-        private void AddTxLookupLocked(Wallet wallet, TransactionData transactionData, Transaction transaction)
+        private void AddTxLookup(Wallet wallet, TransactionData transactionData, Transaction transaction)
         {
             Guard.NotNull(transaction, nameof(transaction));
             Guard.NotNull(transactionData, nameof(transactionData));
@@ -1699,7 +1674,7 @@ namespace Blockcore.Features.Wallet
             }
         }
 
-        private void RemoveTxLookupLocked(Wallet wallet, Transaction transaction)
+        private void RemoveTxLookup(Wallet wallet, Transaction transaction)
         {
             Guard.NotNull(transaction, nameof(transaction));
 
@@ -1807,7 +1782,7 @@ namespace Blockcore.Features.Wallet
             if (result.Any())
             {
                 // Reload the lookup dictionaries.
-                this.RefreshInputKeysLookupLock();
+                this.RefreshInputKeysLookup();
 
                 this.SaveWallet(wallet);
             }
@@ -1836,7 +1811,7 @@ namespace Blockcore.Features.Wallet
                 }
 
                 // Reload the lookup dictionaries.
-                this.RefreshInputKeysLookupLock();
+                this.RefreshInputKeysLookup();
             }
 
             if (removedTransactions.Any())
@@ -1872,7 +1847,7 @@ namespace Blockcore.Features.Wallet
                 }
 
                 // Reload the lookup dictionaries.
-                this.RefreshInputKeysLookupLock();
+                this.RefreshInputKeysLookup();
             }
 
             if (removedTransactions.Any())

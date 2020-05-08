@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;

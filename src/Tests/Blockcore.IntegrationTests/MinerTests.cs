@@ -22,6 +22,7 @@ using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.Miner;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;

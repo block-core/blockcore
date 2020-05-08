@@ -1,4 +1,6 @@
-﻿namespace Blockcore.Features.Wallet.Interfaces
+﻿using Blockcore.Features.Wallet.AddressBook;
+
+namespace Blockcore.Features.Wallet.Interfaces
 {
     /// <summary>
     /// An interface providing operations on an address book.
@@ -14,7 +16,7 @@
         /// Get the address book.
         /// </summary>
         /// <returns>The address book.</returns>
-        AddressBook GetAddressBook();
+        AddressBook.AddressBook GetAddressBook();
 
         /// <summary>
         /// Add a new entry to the address book.

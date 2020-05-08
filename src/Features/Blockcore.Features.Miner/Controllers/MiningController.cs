@@ -8,6 +8,7 @@ using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;

@@ -6,6 +6,7 @@ using System.Security;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
@@ -98,7 +99,7 @@ namespace Blockcore.Features.Miner.Controllers
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Formatting error", string.Join(Environment.NewLine, errors));
                 }
 
-                Wallet.Wallet wallet = this.walletManager.GetWallet(request.Name);
+                Wallet.Types.Wallet wallet = this.walletManager.GetWallet(request.Name);
 
                 // Check the password
                 try
@@ -164,11 +165,11 @@ namespace Blockcore.Features.Miner.Controllers
                 if (!this.minerSettings.EnforceStakingFlag)
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.Forbidden, "Operation not allowed", "This operation is only allowed if EnforceStakingFlag is true");
 
-                Wallet.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
+                Wallet.Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
 
-                foreach (Wallet.HdAccount account in wallet.GetAccounts(account => true))
+                foreach (HdAccount account in wallet.GetAccounts(account => true))
                 {
-                    foreach (Wallet.HdAddress address in account.GetCombinedAddresses())
+                    foreach (HdAddress address in account.GetCombinedAddresses())
                     {
                         if ((address.Address == request.Address) || address.Bech32Address == request.Address)
                         {
@@ -198,13 +199,13 @@ namespace Blockcore.Features.Miner.Controllers
                 if (!this.minerSettings.EnforceStakingFlag)
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.Forbidden, "Operation not allowed", "This operation is only allowed if EnforceStakingFlag is true");
 
-                Wallet.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
+                Wallet.Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
 
                 GetStakingAddressesModel model = new GetStakingAddressesModel { Addresses = new List<GetStakingAddressesModelItem>() };
 
-                foreach (Wallet.HdAccount account in wallet.GetAccounts(account => true))
+                foreach (HdAccount account in wallet.GetAccounts(account => true))
                 {
-                    foreach (Wallet.HdAddress address in account.GetCombinedAddresses())
+                    foreach (HdAddress address in account.GetCombinedAddresses())
                     {
                         if (address.StakingExpiry != null && address.StakingExpiry > DateTime.UtcNow)
                         {

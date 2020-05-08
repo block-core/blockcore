@@ -8,7 +8,7 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;

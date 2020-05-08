@@ -10,6 +10,7 @@ using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Wallet.Common;
 using Blockcore.Utilities.JsonErrors;

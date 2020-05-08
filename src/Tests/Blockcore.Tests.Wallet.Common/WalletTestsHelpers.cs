@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using Newtonsoft.Json;
@@ -127,9 +129,9 @@ namespace Blockcore.Tests.Wallet.Common
             };
         }
 
-        public static Features.Wallet.Wallet CreateWallet(string name)
+        public static Features.Wallet.Types.Wallet CreateWallet(string name)
         {
-            return new Features.Wallet.Wallet
+            return new Features.Wallet.Types.Wallet
             {
                 Name = name,
                 AccountsRoot = new List<AccountRoot>(),
@@ -137,17 +139,17 @@ namespace Blockcore.Tests.Wallet.Common
             };
         }
 
-        public static Features.Wallet.Wallet GenerateBlankWallet(string name, string password)
+        public static Features.Wallet.Types.Wallet GenerateBlankWallet(string name, string password)
         {
             return GenerateBlankWalletWithExtKey(name, password).wallet;
         }
 
-        public static (Features.Wallet.Wallet wallet, ExtKey key) GenerateBlankWalletWithExtKey(string name, string password)
+        public static (Features.Wallet.Types.Wallet wallet, ExtKey key) GenerateBlankWalletWithExtKey(string name, string password)
         {
             var mnemonic = new Mnemonic("grass industry beef stereo soap employ million leader frequent salmon crumble banana");
             ExtKey extendedKey = mnemonic.DeriveExtKey(password);
 
-            var walletFile = new Features.Wallet.Wallet
+            var walletFile = new Features.Wallet.Types.Wallet
             {
                 Name = name,
                 EncryptedSeed = extendedKey.PrivateKey.GetEncryptedBitcoinSecret(password, KnownNetworks.Main).ToWif(),
@@ -175,12 +177,12 @@ namespace Blockcore.Tests.Wallet.Common
             return block;
         }
 
-        public static Transaction SetupValidTransaction(Features.Wallet.Wallet wallet, string password, HdAddress spendingAddress, PubKey destinationPubKey, HdAddress changeAddress, Money amount, Money fee)
+        public static Transaction SetupValidTransaction(Features.Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, PubKey destinationPubKey, HdAddress changeAddress, Money amount, Money fee)
         {
             return SetupValidTransaction(wallet, password, spendingAddress, destinationPubKey.ScriptPubKey, changeAddress, amount, fee);
         }
 
-        public static Transaction SetupValidTransaction(Features.Wallet.Wallet wallet, string password, HdAddress spendingAddress, Script destinationScript, HdAddress changeAddress, Money amount, Money fee)
+        public static Transaction SetupValidTransaction(Features.Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, Script destinationScript, HdAddress changeAddress, Money amount, Money fee)
         {
             TransactionData spendingTransaction = spendingAddress.Transactions.ElementAt(0);
             var coin = new Coin(spendingTransaction.Id, (uint)spendingTransaction.Index, spendingTransaction.Amount, spendingTransaction.ScriptPubKey);
@@ -206,7 +208,7 @@ namespace Blockcore.Tests.Wallet.Common
 
         public static void AddAddressesToWallet(WalletManager walletManager, int count)
         {
-            foreach (Features.Wallet.Wallet wallet in walletManager.Wallets)
+            foreach (Features.Wallet.Types.Wallet wallet in walletManager.Wallets)
             {
                 wallet.AccountsRoot.Add(new AccountRoot()
                 {
@@ -263,14 +265,14 @@ namespace Blockcore.Tests.Wallet.Common
             return addresses;
         }
 
-        public static (ExtKey ExtKey, string ExtPubKey) GenerateAccountKeys(Features.Wallet.Wallet wallet, string password, string keyPath)
+        public static (ExtKey ExtKey, string ExtPubKey) GenerateAccountKeys(Features.Wallet.Types.Wallet wallet, string password, string keyPath)
         {
             var accountExtKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, password, wallet.Network), wallet.ChainCode);
             string accountExtendedPubKey = accountExtKey.Derive(new KeyPath(keyPath)).Neuter().ToString(wallet.Network);
             return (accountExtKey, accountExtendedPubKey);
         }
 
-        public static (PubKey PubKey, BitcoinPubKeyAddress Address) GenerateAddressKeys(Features.Wallet.Wallet wallet, string accountExtendedPubKey, string keyPath)
+        public static (PubKey PubKey, BitcoinPubKeyAddress Address) GenerateAddressKeys(Features.Wallet.Types.Wallet wallet, string accountExtendedPubKey, string keyPath)
         {
             PubKey addressPubKey = ExtPubKey.Parse(accountExtendedPubKey).Derive(new KeyPath(keyPath)).PubKey;
             BitcoinPubKeyAddress address = addressPubKey.GetAddress(wallet.Network);
@@ -535,11 +537,11 @@ namespace Blockcore.Tests.Wallet.Common
 
     public class WalletFixture : IDisposable
     {
-        private readonly Dictionary<(string, string), Features.Wallet.Wallet> walletsGenerated;
+        private readonly Dictionary<(string, string), Features.Wallet.Types.Wallet> walletsGenerated;
 
         public WalletFixture()
         {
-            this.walletsGenerated = new Dictionary<(string, string), Features.Wallet.Wallet>();
+            this.walletsGenerated = new Dictionary<(string, string), Features.Wallet.Types.Wallet>();
         }
 
         public void Dispose()
@@ -556,19 +558,19 @@ namespace Blockcore.Tests.Wallet.Common
         /// <param name="name">The name.</param>
         /// <param name="password">The password.</param>
         /// <returns>The generated wallet.</returns>
-        public Features.Wallet.Wallet GenerateBlankWallet(string name, string password)
+        public Features.Wallet.Types.Wallet GenerateBlankWallet(string name, string password)
         {
-            if (this.walletsGenerated.TryGetValue((name, password), out Features.Wallet.Wallet existingWallet))
+            if (this.walletsGenerated.TryGetValue((name, password), out Features.Wallet.Types.Wallet existingWallet))
             {
                 string serializedExistingWallet = JsonConvert.SerializeObject(existingWallet, Formatting.None);
-                return JsonConvert.DeserializeObject<Features.Wallet.Wallet>(serializedExistingWallet);
+                return JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
             }
 
-            Features.Wallet.Wallet newWallet = WalletTestsHelpers.GenerateBlankWallet(name, password);
+            Features.Wallet.Types.Wallet newWallet = WalletTestsHelpers.GenerateBlankWallet(name, password);
             this.walletsGenerated.Add((name, password), newWallet);
 
             string serializedNewWallet = JsonConvert.SerializeObject(newWallet, Formatting.None);
-            return JsonConvert.DeserializeObject<Features.Wallet.Wallet>(serializedNewWallet);
+            return JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedNewWallet);
         }
     }
 }

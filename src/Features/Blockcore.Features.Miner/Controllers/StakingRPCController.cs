@@ -72,7 +72,7 @@ namespace Blockcore.Features.Miner.Controllers
             Guard.NotEmpty(walletName, nameof(walletName));
             Guard.NotEmpty(walletPassword, nameof(walletPassword));
 
-            Wallet.Wallet wallet = this.walletManager.GetWallet(walletName);
+            Wallet.Types.Wallet wallet = this.walletManager.GetWallet(walletName);
 
             // Check the password
             try

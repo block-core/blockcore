@@ -6,8 +6,10 @@ using Blockcore.AsyncWork;
 using Blockcore.Connection;
 using Blockcore.Features.SignalR.Events;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -45,7 +47,7 @@ namespace Blockcore.Features.SignalR.Broadcasters
                 WalletGeneralInfoClientEvent clientEvent = null;
                 try
                 {
-                    Wallet.Wallet wallet = this.walletManager.GetWallet(walletName);
+                    Wallet.Types.Wallet wallet = this.walletManager.GetWallet(walletName);
                     IEnumerable<AccountBalance> balances = this.walletManager.GetBalances(walletName);
                     IList<AccountBalanceModel> accountBalanceModels = new List<AccountBalanceModel>();
                     foreach (var balance in balances)

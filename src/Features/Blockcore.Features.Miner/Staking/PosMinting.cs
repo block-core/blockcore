@@ -16,6 +16,7 @@ using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
 using Blockcore.Utilities;
@@ -875,7 +876,7 @@ namespace Blockcore.Features.Miner.Staking
                         {
                             context.Logger.LogDebug("Kernel found with solution hash '{0}'.", contextInformation.HashProofOfStake);
 
-                            Wallet.Wallet wallet = this.walletManager.GetWalletByName(utxoStakeInfo.Secret.WalletName);
+                            Wallet.Types.Wallet wallet = this.walletManager.GetWalletByName(utxoStakeInfo.Secret.WalletName);
                             context.CoinstakeContext.Key = wallet.GetExtendedPrivateKeyForAddress(utxoStakeInfo.Secret.WalletPassword, utxoStakeInfo.Address).PrivateKey;
                             utxoStakeInfo.Key = context.CoinstakeContext.Key;
 

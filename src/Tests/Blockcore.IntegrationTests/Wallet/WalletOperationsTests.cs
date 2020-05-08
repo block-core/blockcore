@@ -6,7 +6,8 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Blockcore.Features.Wallet;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
@@ -166,7 +167,7 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletPath));
+            Features.Wallet.Types.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletPath));
             wallet.IsExtPubKeyWallet.Should().BeFalse();
             wallet.ChainCode.Should().NotBeNullOrEmpty();
             wallet.EncryptedSeed.Should().NotBeNullOrEmpty();
@@ -217,7 +218,7 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletPath));
+            Features.Wallet.Types.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletPath));
             wallet.IsExtPubKeyWallet.Should().BeFalse();
             wallet.ChainCode.Should().NotBeNullOrEmpty();
             wallet.EncryptedSeed.Should().NotBeNullOrEmpty();
@@ -272,7 +273,7 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletPath));
+            Features.Wallet.Types.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletPath));
             wallet.IsExtPubKeyWallet.Should().BeFalse();
             wallet.ChainCode.Should().NotBeNullOrEmpty();
             wallet.EncryptedSeed.Should().NotBeNullOrEmpty();
@@ -323,7 +324,7 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletPath));
+            Features.Wallet.Types.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletPath));
             wallet.IsExtPubKeyWallet.Should().BeFalse();
             wallet.ChainCode.Should().NotBeNullOrEmpty();
             wallet.EncryptedSeed.Should().NotBeNullOrEmpty();
@@ -371,7 +372,7 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletPath));
+            Features.Wallet.Types.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletPath));
             wallet.IsExtPubKeyWallet.Should().BeFalse();
             wallet.ChainCode.Should().NotBeNullOrEmpty();
             wallet.EncryptedSeed.Should().NotBeNullOrEmpty();
@@ -460,12 +461,12 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletWithoutPassphrasePath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet walletWithPassphrase = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletWithPassphrasePath));
+            Features.Wallet.Types.Wallet walletWithPassphrase = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletWithPassphrasePath));
             walletWithPassphrase.IsExtPubKeyWallet.Should().BeFalse();
             walletWithPassphrase.ChainCode.Should().NotBeNullOrEmpty();
             walletWithPassphrase.EncryptedSeed.Should().NotBeNullOrEmpty();
 
-            Features.Wallet.Wallet walletWithoutPassphrase = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletWithoutPassphrasePath));
+            Features.Wallet.Types.Wallet walletWithoutPassphrase = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletWithoutPassphrasePath));
             walletWithoutPassphrase.IsExtPubKeyWallet.Should().BeFalse();
             walletWithoutPassphrase.ChainCode.Should().NotBeNullOrEmpty();
             walletWithoutPassphrase.EncryptedSeed.Should().NotBeNullOrEmpty();
@@ -593,7 +594,7 @@ namespace Blockcore.IntegrationTests.Wallet
             string walletsFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
             string importWalletPath = Path.Combine("Wallet", "Data", "test.wallet.json");
 
-            Features.Wallet.Wallet importedWallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(importWalletPath));
+            Features.Wallet.Types.Wallet importedWallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(importWalletPath));
             importedWallet.Name = walletName;
             File.WriteAllText(Path.Combine(walletsFolderPath, $"{walletName}.wallet.json"), JsonConvert.SerializeObject(importedWallet, Formatting.Indented));
 
@@ -626,7 +627,7 @@ namespace Blockcore.IntegrationTests.Wallet
             string walletsFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
             string importWalletPath = Path.Combine("Wallet", "Data", "test.wallet.json");
 
-            Features.Wallet.Wallet importedWallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(importWalletPath));
+            Features.Wallet.Types.Wallet importedWallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(importWalletPath));
             importedWallet.Name = walletName;
             File.WriteAllText(Path.Combine(walletsFolderPath, $"{walletName}.wallet.json"), JsonConvert.SerializeObject(importedWallet, Formatting.Indented));
 
@@ -770,7 +771,7 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletPath));
+            Features.Wallet.Types.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletPath));
             wallet.IsExtPubKeyWallet.Should().BeFalse();
             wallet.ChainCode.Should().NotBeNullOrEmpty();
             wallet.EncryptedSeed.Should().NotBeNullOrEmpty();
@@ -815,7 +816,7 @@ namespace Blockcore.IntegrationTests.Wallet
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
-            Features.Wallet.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Wallet>(File.ReadAllText(walletPath));
+            Features.Wallet.Types.Wallet wallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(walletPath));
             wallet.IsExtPubKeyWallet.Should().BeFalse();
             wallet.ChainCode.Should().NotBeNullOrEmpty();
             wallet.EncryptedSeed.Should().NotBeNullOrEmpty();

@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Blockcore.Features.Wallet.Types;
+using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests
 {

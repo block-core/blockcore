@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 using Blockcore.Features.Wallet;
-using Blockcore.Features.Wallet.Controllers;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Api.Controllers;
+using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;

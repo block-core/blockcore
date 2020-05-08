@@ -7,6 +7,7 @@ using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
@@ -128,7 +129,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
         [Fact]
         public void StartStaking_InvalidWalletPassword_ReturnsBadRequest()
         {
-            Wallet.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
+            Wallet.Types.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
             this.walletManager.Setup(w => w.GetWallet("myWallet"))
               .Returns(wallet);
 
@@ -169,7 +170,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
         [Fact]
         public void StartStaking_ValidWalletAndPassword_StartsStaking_ReturnsOk()
         {
-            Wallet.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
+            Wallet.Types.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
             this.walletManager.Setup(w => w.GetWallet("myWallet"))
               .Returns(wallet);
 
@@ -191,7 +192,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
         [Fact]
         public void StartStaking_InvalidTimeSyncState_ReturnsBadRequest()
         {
-            Wallet.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
+            Wallet.Types.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
             this.walletManager.Setup(w => w.GetWallet("myWallet"))
                 .Returns(wallet);
 
@@ -220,7 +221,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
         public void StopStaking_Returns_Ok()
         {
             {
-                Wallet.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
+                Wallet.Types.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet", "password1");
                 this.walletManager.Setup(w => w.GetWallet("myWallet"))
                     .Returns(wallet);
 

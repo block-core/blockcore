@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Features.Wallet.Types;
 using NBitcoin;
 
 namespace Blockcore.Features.Wallet
@@ -32,6 +33,6 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// A reference to the wallet of the current index.
         /// </summary>
-        public Wallet Wallet { get; internal set; }
+        public Types.Wallet Wallet { get; internal set; }
     }
 }

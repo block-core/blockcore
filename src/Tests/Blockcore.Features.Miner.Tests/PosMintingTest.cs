@@ -17,6 +17,7 @@ using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
 using Blockcore.Tests.Common;
@@ -212,7 +213,7 @@ namespace Blockcore.Features.Miner.Tests
         public void GenerateBlocks_does_not_use_small_coins()
         {
             var walletSecret = new WalletSecret() { WalletName = "wallet", WalletPassword = "password" };
-            var wallet = new Wallet.Wallet()
+            var wallet = new Wallet.Types.Wallet()
             {
                 Network = this.network
             };
@@ -265,7 +266,7 @@ namespace Blockcore.Features.Miner.Tests
             utxoStakeDescriptions.Select(d => d.TxOut.Value).Should().Contain(expectedAmounts);
         }
 
-        private void AddAccountWithSpendableOutputs(Wallet.Wallet wallet)
+        private void AddAccountWithSpendableOutputs(Wallet.Types.Wallet wallet)
         {
             var account = new HdAccount();
             account.ExternalAddresses.Add(new HdAddress { Index = 1, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(15), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue - 1 } } });

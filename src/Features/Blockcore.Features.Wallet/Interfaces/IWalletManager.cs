@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Features.Wallet.Types;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
 
@@ -105,7 +106,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="password">The user's password.</param>
         /// <param name="name">The name of the wallet.</param>
         /// <returns>The wallet.</returns>
-        Wallet LoadWallet(string password, string name);
+        Types.Wallet LoadWallet(string password, string name);
 
         /// <summary>
         /// Unlocks a wallet for the specified time.
@@ -131,7 +132,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="creationTime">The date and time this wallet was created.</param>
         /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>The recovered wallet.</returns>
-        Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null, int? coinType = null);
+        Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null, int? coinType = null);
 
         /// <summary>
         /// Recovers a wallet using extended public key and account index.
@@ -141,7 +142,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="accountIndex">The account number.</param>
         /// <param name="creationTime">The date and time this wallet was created.</param>
         /// <returns></returns>
-        Wallet RecoverWallet(string name, ExtPubKey extPubKey, int accountIndex, DateTime creationTime);
+        Types.Wallet RecoverWallet(string name, ExtPubKey extPubKey, int accountIndex, DateTime creationTime);
 
         /// <summary>
         /// Deletes a wallet.
@@ -170,7 +171,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// at index (i - 1) contains transactions.
         /// </remarks>
         /// <returns>An unused account.</returns>
-        HdAccount GetUnusedAccount(Wallet wallet, string password);
+        HdAccount GetUnusedAccount(Types.Wallet wallet, string password);
 
         /// <summary>
         /// Gets an address that contains no transaction.
@@ -233,7 +234,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="walletName">The name of the wallet.</param>
         /// <returns></returns>
-        Wallet GetWallet(string walletName);
+        Types.Wallet GetWallet(string walletName);
 
         /// <summary>
         /// Gets a list of accounts.
@@ -274,7 +275,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// Saves the wallet into the file system.
         /// </summary>
         /// <param name="wallet">The wallet to save.</param>
-        void SaveWallet(Wallet wallet);
+        void SaveWallet(Types.Wallet wallet);
 
         /// <summary>
         /// Saves all the loaded wallets into the file system.
@@ -298,7 +299,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="wallet">The wallet to update.</param>
         /// <param name="chainedHeader">The height of the last block synced.</param>
-        void UpdateLastBlockSyncedHeight(Wallet wallet, ChainedHeader chainedHeader);
+        void UpdateLastBlockSyncedHeight(Types.Wallet wallet, ChainedHeader chainedHeader);
 
         /// <summary>
         /// Updates all the loaded wallets with the height of the last block synced.
@@ -311,7 +312,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="walletName">The name of the wallet to get.</param>
         /// <returns>A wallet or null if it doesn't exist</returns>
-        Wallet GetWalletByName(string walletName);
+        Types.Wallet GetWalletByName(string walletName);
 
         /// <summary>
         /// Gets the block locator of the first loaded wallet.

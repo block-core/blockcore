@@ -2,7 +2,7 @@
 using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Wallet;
-using Blockcore.Features.Wallet.Controllers;
+using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
 using Microsoft.AspNetCore.Mvc;

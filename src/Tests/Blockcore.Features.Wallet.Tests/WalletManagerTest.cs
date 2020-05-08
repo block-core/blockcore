@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
+using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
@@ -62,8 +65,8 @@ namespace Blockcore.Features.Wallet.Tests
             Mnemonic mnemonic = walletManager.CreateWallet(password, "mywallet", passphrase);
 
             // assert it has saved it to disk and has been created correctly.
-            var expectedWallet = JsonConvert.DeserializeObject<Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet.json"));
-            Wallet actualWallet = walletManager.Wallets.ElementAt(0);
+            var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet.json"));
+            Types.Wallet actualWallet = walletManager.Wallets.ElementAt(0);
 
             Assert.Equal("mywallet", expectedWallet.Name);
             Assert.Equal(KnownNetworks.StratisMain, expectedWallet.Network);
@@ -174,8 +177,8 @@ namespace Blockcore.Features.Wallet.Tests
             Mnemonic mnemonic = walletManager.CreateWallet(password, "mywallet", passphrase);
 
             // assert it has saved it to disk and has been created correctly.
-            var expectedWallet = JsonConvert.DeserializeObject<Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet.json"));
-            Wallet actualWallet = walletManager.Wallets.ElementAt(0);
+            var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet.json"));
+            Types.Wallet actualWallet = walletManager.Wallets.ElementAt(0);
 
             Assert.Equal("mywallet", expectedWallet.Name);
             Assert.Equal(KnownNetworks.StratisMain, expectedWallet.Network);
@@ -333,14 +336,14 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
 
             File.WriteAllText(Path.Combine(dataFolder.WalletPath, "testWallet.wallet.json"), JsonConvert.SerializeObject(wallet, Formatting.Indented, new ByteArrayConverter()));
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, KnownNetworks.StratisMain, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                                                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
-            Wallet result = walletManager.LoadWallet("password", "testWallet");
+            Types.Wallet result = walletManager.LoadWallet("password", "testWallet");
 
             Assert.Equal("testWallet", result.Name);
             Assert.Equal(this.Network, result.Network);
@@ -375,7 +378,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             ChainIndexer chainIndexer = WalletTestsHelpers.PrepareChainWithBlock();
             // Prepare an existing wallet through this manager and delete the file from disk. Return the created wallet object and mnemonic.
-            (Mnemonic mnemonic, Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, passphrase, walletName, chainIndexer);
+            (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, passphrase, walletName, chainIndexer);
             Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             // create a fresh manager.
@@ -383,11 +386,11 @@ namespace Blockcore.Features.Wallet.Tests
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
             // Try to recover it.
-            Wallet recoveredWallet = walletManager.RecoverWallet(password, walletName, deletedWallet.mnemonic.ToString(), DateTime.Now.AddDays(1), passphrase);
+            Types.Wallet recoveredWallet = walletManager.RecoverWallet(password, walletName, deletedWallet.mnemonic.ToString(), DateTime.Now.AddDays(1), passphrase);
 
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
-            Wallet expectedWallet = deletedWallet.wallet;
+            Types.Wallet expectedWallet = deletedWallet.wallet;
 
             Assert.Equal(expectedWallet.Name, recoveredWallet.Name);
             Assert.Equal(expectedWallet.Network, recoveredWallet.Network);
@@ -466,7 +469,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             ChainIndexer chainIndexer = WalletTestsHelpers.PrepareChainWithBlock();
             // prepare an existing wallet through this manager and delete the file from disk. Return the created wallet object and mnemonic.
-            (Mnemonic mnemonic, Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, password, walletName, chainIndexer);
+            (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, password, walletName, chainIndexer);
             Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             // create a fresh manager.
@@ -474,11 +477,11 @@ namespace Blockcore.Features.Wallet.Tests
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
             // try to recover it.
-            Wallet recoveredWallet = walletManager.RecoverWallet(password, walletName, deletedWallet.mnemonic.ToString(), DateTime.Now.AddDays(1), password);
+            Types.Wallet recoveredWallet = walletManager.RecoverWallet(password, walletName, deletedWallet.mnemonic.ToString(), DateTime.Now.AddDays(1), password);
 
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
-            Wallet expectedWallet = deletedWallet.wallet;
+            Types.Wallet expectedWallet = deletedWallet.wallet;
 
             Assert.Equal(expectedWallet.Name, recoveredWallet.Name);
             Assert.Equal(expectedWallet.Network, recoveredWallet.Network);
@@ -591,7 +594,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "unused" });
             walletManager.Wallets.Add(wallet);
 
@@ -608,7 +611,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
             walletManager.Wallets.Add(wallet);
 
@@ -629,7 +632,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "unused" });
             walletManager.Wallets.Add(wallet);
 
@@ -646,7 +649,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
             walletManager.Wallets.Add(wallet);
 
@@ -663,7 +666,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
 
             HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
@@ -687,7 +690,7 @@ namespace Blockcore.Features.Wallet.Tests
             Network network = this.Network;
             var walletManager = new WalletManager(this.LoggerFactory.Object, network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "unused" });
 
             HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
@@ -710,7 +713,7 @@ namespace Blockcore.Features.Wallet.Tests
             {
                 var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                     CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-                Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+                Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
                 walletManager.Wallets.Add(wallet);
 
                 HdAddress result = walletManager.GetUnusedAddress(new WalletAccountReference("testWallet", "unexistingAccount"));
@@ -736,7 +739,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
@@ -772,7 +775,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             var bob = new BitcoinSecret(new Key(), KnownNetworks.RegTest);
             var alice = new BitcoinSecret(new Key(), KnownNetworks.RegTest);
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
@@ -813,7 +816,7 @@ namespace Blockcore.Features.Wallet.Tests
             Directory.CreateDirectory(dataFolder.WalletPath);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
 
             var extKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, "password", wallet.Network), wallet.ChainCode);
             string accountExtendedPubKey = extKey.Derive(new KeyPath($"m/44'/0'/0'")).Neuter().ToString(wallet.Network);
@@ -841,7 +844,7 @@ namespace Blockcore.Features.Wallet.Tests
             Directory.CreateDirectory(dataFolder.WalletPath);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             var extKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, "password", wallet.Network), wallet.ChainCode);
             string accountExtendedPubKey = extKey.Derive(new KeyPath($"m/44'/0'/0'")).Neuter().ToString(wallet.Network);
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
@@ -886,7 +889,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
@@ -926,7 +929,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
 
             var account = new HdAccount
             {
@@ -968,7 +971,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
 
             var account = new HdAccount
             {
@@ -1005,10 +1008,10 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             walletManager.Wallets.Add(wallet);
 
-            Wallet result = walletManager.GetWallet("myWallet");
+            Types.Wallet result = walletManager.GetWallet("myWallet");
 
             Assert.Equal(wallet.EncryptedSeed, result.EncryptedSeed);
         }
@@ -1029,7 +1032,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "Account 0" });
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "Account 1" });
 
@@ -1047,7 +1050,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             wallet.AccountsRoot.Clear();
             walletManager.Wallets.Add(wallet);
 
@@ -1093,7 +1096,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             wallet.AccountsRoot.ElementAt(0).CoinType = KnownCoinTypes.Stratis;
             walletManager.Wallets.Add(wallet);
 
@@ -1128,7 +1131,7 @@ namespace Blockcore.Features.Wallet.Tests
             ChainIndexer chainIndexer = WalletTestsHelpers.GenerateChainWithHeight(2, this.Network);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             wallet.AccountsRoot.ElementAt(0).CoinType = KnownCoinTypes.Stratis;
             walletManager.Wallets.Add(wallet);
 
@@ -1142,7 +1145,7 @@ namespace Blockcore.Features.Wallet.Tests
             ChainIndexer chainIndexer = WalletTestsHelpers.GenerateChainWithHeight(0, this.Network);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 ExternalAddresses = WalletTestsHelpers.CreateUnspentTransactionsOfBlockHeights(this.Network, 1, 9, 10),
@@ -1165,7 +1168,7 @@ namespace Blockcore.Features.Wallet.Tests
             ChainIndexer chainIndexer = WalletTestsHelpers.GenerateChainWithHeight(10, this.Network);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Name = "First expectation",
@@ -1185,7 +1188,7 @@ namespace Blockcore.Features.Wallet.Tests
                 }
             });
 
-            Wallet wallet2 = this.walletFixture.GenerateBlankWallet("myWallet2", "password");
+            Types.Wallet wallet2 = this.walletFixture.GenerateBlankWallet("myWallet2", "password");
             wallet2.AccountsRoot.ElementAt(0).CoinType = KnownCoinTypes.Stratis;
             wallet2.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
@@ -1193,7 +1196,7 @@ namespace Blockcore.Features.Wallet.Tests
                 InternalAddresses = WalletTestsHelpers.CreateUnspentTransactionsOfBlockHeights(KnownNetworks.StratisMain, 2, 4, 6, 8, 9, 10)
             });
 
-            Wallet wallet3 = this.walletFixture.GenerateBlankWallet("myWallet3", "password");
+            Types.Wallet wallet3 = this.walletFixture.GenerateBlankWallet("myWallet3", "password");
             wallet3.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Name = "Second expectation",
@@ -1232,7 +1235,7 @@ namespace Blockcore.Features.Wallet.Tests
             ChainIndexer chainIndexer = WalletTestsHelpers.GenerateChainWithHeight(10, this.Network);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Name = "First expectation",
@@ -1286,7 +1289,7 @@ namespace Blockcore.Features.Wallet.Tests
             ChainIndexer chainIndexer = WalletTestsHelpers.GenerateChainWithHeight(10, this.Network);
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Name = "First expectation",
@@ -1309,7 +1312,7 @@ namespace Blockcore.Features.Wallet.Tests
                 var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                     CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
-                Wallet wallet = walletManager.GetWalletByName("mywallet");
+                Types.Wallet wallet = walletManager.GetWalletByName("mywallet");
                 Key key = wallet.GetExtendedPrivateKeyForAddress("password", new HdAddress()).PrivateKey;
             });
         }
@@ -1319,7 +1322,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-            (Wallet wallet, ExtKey key) data = WalletTestsHelpers.GenerateBlankWalletWithExtKey("myWallet", "password");
+            (Types.Wallet wallet, ExtKey key) data = WalletTestsHelpers.GenerateBlankWalletWithExtKey("myWallet", "password");
 
             var address = new HdAddress
             {
@@ -1350,7 +1353,7 @@ namespace Blockcore.Features.Wallet.Tests
             {
                 var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                     CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
-                (Wallet wallet, ExtKey key) data = WalletTestsHelpers.GenerateBlankWalletWithExtKey("myWallet", "password");
+                (Types.Wallet wallet, ExtKey key) data = WalletTestsHelpers.GenerateBlankWalletWithExtKey("myWallet", "password");
 
                 var address = new HdAddress
                 {
@@ -1377,7 +1380,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
@@ -1466,7 +1469,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
@@ -1552,7 +1555,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) changeKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "1/0");
@@ -1644,7 +1647,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) changeKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "1/0");
@@ -1717,7 +1720,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
@@ -1813,7 +1816,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
@@ -2245,7 +2248,7 @@ namespace Blockcore.Features.Wallet.Tests
             chainedHeader = WalletTestsHelpers.AppendBlock(this.Network, chainedHeader, concurrentchain).ChainedHeader;
             chainedHeader = WalletTestsHelpers.AppendBlock(this.Network, chainedHeader, concurrentchain).ChainedHeader;
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Name = "First account",
@@ -2312,7 +2315,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
@@ -2415,7 +2418,7 @@ namespace Blockcore.Features.Wallet.Tests
                 DataFolder dataFolder = CreateDataFolder(this);
                 Directory.CreateDirectory(dataFolder.WalletPath);
 
-                Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+                Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
 
                 var chain = new ChainIndexer(wallet.Network);
                 (ChainedHeader ChainedHeader, Block Block) chainResult = WalletTestsHelpers.AppendBlock(this.Network, chain.Genesis, chain);
@@ -2438,7 +2441,7 @@ namespace Blockcore.Features.Wallet.Tests
                 DataFolder dataFolder = CreateDataFolder(this);
                 Directory.CreateDirectory(dataFolder.WalletPath);
 
-                Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+                Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
 
                 var chain = new ChainIndexer(wallet.Network);
                 (ChainedHeader ChainedHeader, Block Block) chainResult = WalletTestsHelpers.AppendBlock(this.Network, chain.Genesis, chain);
@@ -2525,7 +2528,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var accounts = new List<HdAccount> { account, account2 };
 
-            Wallet wallet = WalletTestsHelpers.CreateWallet("myWallet");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("myWallet");
             wallet.AccountsRoot.Add(new AccountRoot());
             wallet.AccountsRoot.Single().Accounts = accounts;
 
@@ -2665,8 +2668,8 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
-            Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
+            Types.Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
@@ -2681,14 +2684,14 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
-            var resultWallet = JsonConvert.DeserializeObject<Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.Equal(wallet.Name, resultWallet.Name);
             Assert.Equal(wallet.EncryptedSeed, resultWallet.EncryptedSeed);
             Assert.Equal(wallet.ChainCode, resultWallet.ChainCode);
             Assert.Equal(wallet.Network, resultWallet.Network);
             Assert.Equal(wallet.AccountsRoot.Count, resultWallet.AccountsRoot.Count);
 
-            var resultWallet2 = JsonConvert.DeserializeObject<Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
+            var resultWallet2 = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
             Assert.Equal(wallet2.Name, resultWallet2.Name);
             Assert.Equal(wallet2.EncryptedSeed, resultWallet2.EncryptedSeed);
             Assert.Equal(wallet2.ChainCode, resultWallet2.ChainCode);
@@ -2701,8 +2704,8 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
-            Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
+            Types.Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
@@ -2717,7 +2720,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
-            var resultWallet = JsonConvert.DeserializeObject<Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.Equal(wallet.Name, resultWallet.Name);
             Assert.Equal(wallet.EncryptedSeed, resultWallet.EncryptedSeed);
             Assert.Equal(wallet.ChainCode, resultWallet.ChainCode);
@@ -2739,8 +2742,8 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetWalletsReturnsLoadedWalletNames()
         {
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
-            Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
+            Types.Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
@@ -2768,7 +2771,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void LoadKeysLookupWithKeysLoadsKeyLookup()
         {
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Name = "First account",
@@ -2829,8 +2832,8 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
-            Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("wallet1", "test");
+            Types.Wallet wallet2 = this.walletFixture.GenerateBlankWallet("wallet2", "test");
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
@@ -2845,14 +2848,14 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
-            var resultWallet = JsonConvert.DeserializeObject<Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.Equal(wallet.Name, resultWallet.Name);
             Assert.Equal(wallet.EncryptedSeed, resultWallet.EncryptedSeed);
             Assert.Equal(wallet.ChainCode, resultWallet.ChainCode);
             Assert.Equal(wallet.Network, resultWallet.Network);
             Assert.Equal(wallet.AccountsRoot.Count, resultWallet.AccountsRoot.Count);
 
-            var resultWallet2 = JsonConvert.DeserializeObject<Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
+            var resultWallet2 = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
             Assert.Equal(wallet2.Name, resultWallet2.Name);
             Assert.Equal(wallet2.EncryptedSeed, resultWallet2.EncryptedSeed);
             Assert.Equal(wallet2.ChainCode, resultWallet2.ChainCode);
@@ -2863,8 +2866,8 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UpdateLastBlockSyncedHeightWithChainedBlockUpdatesWallets()
         {
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
-            Wallet wallet2 = this.walletFixture.GenerateBlankWallet("myWallet2", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet2 = this.walletFixture.GenerateBlankWallet("myWallet2", "password");
 
             var chain = new ChainIndexer(wallet.Network);
             ChainedHeader chainedBlock = WalletTestsHelpers.AppendBlock(this.Network, chain.Genesis, chain).ChainedHeader;
@@ -2878,7 +2881,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.UpdateLastBlockSyncedHeight(chainedBlock);
 
             Assert.Equal(chainedBlock.HashBlock, walletManager.WalletTipHash);
-            foreach (Wallet w in walletManager.Wallets)
+            foreach (Types.Wallet w in walletManager.Wallets)
             {
                 Assert.Equal(chainedBlock.GetLocator().Blocks, w.BlockLocator);
                 Assert.Equal(chainedBlock.Height, w.AccountsRoot.ElementAt(0).LastBlockSyncedHeight);
@@ -2889,8 +2892,8 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UpdateLastBlockSyncedHeightWithWalletAndChainedBlockUpdatesGivenWallet()
         {
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
-            Wallet wallet2 = this.walletFixture.GenerateBlankWallet("myWallet2", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet2 = this.walletFixture.GenerateBlankWallet("myWallet2", "password");
 
             var chain = new ChainIndexer(wallet.Network);
             ChainedHeader chainedBlock = WalletTestsHelpers.AppendBlock(this.Network, chain.Genesis, chain).ChainedHeader;
@@ -2923,7 +2926,7 @@ namespace Blockcore.Features.Wallet.Tests
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
             // Generate a wallet with an account and a few transactions.
-            Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
@@ -2968,7 +2971,7 @@ namespace Blockcore.Features.Wallet.Tests
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
             // Generate a wallet with an account and no transactions.
-            Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
@@ -2996,7 +2999,7 @@ namespace Blockcore.Features.Wallet.Tests
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
             // Generate a wallet with an account and a few transactions.
-            Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
@@ -3039,7 +3042,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
             Directory.CreateDirectory(dataFolder.WalletPath);
 
-            Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
             (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
             (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
@@ -3137,7 +3140,7 @@ namespace Blockcore.Features.Wallet.Tests
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
             // Generate a wallet with an account and a few transactions.
-            Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
@@ -3342,14 +3345,14 @@ namespace Blockcore.Features.Wallet.Tests
                 walletSettings, dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
         }
 
-        private (Mnemonic mnemonic, Wallet wallet) CreateWalletOnDiskAndDeleteWallet(DataFolder dataFolder, string password, string passphrase, string walletName, ChainIndexer chainIndexer)
+        private (Mnemonic mnemonic, Types.Wallet wallet) CreateWalletOnDiskAndDeleteWallet(DataFolder dataFolder, string password, string passphrase, string walletName, ChainIndexer chainIndexer)
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, KnownNetworks.StratisMain, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
             // create the wallet
             Mnemonic mnemonic = walletManager.CreateWallet(password, walletName, passphrase);
-            Wallet wallet = walletManager.Wallets.ElementAt(0);
+            Types.Wallet wallet = walletManager.Wallets.ElementAt(0);
 
             File.Delete(dataFolder.WalletPath + $"/{walletName}.wallet.json");
 

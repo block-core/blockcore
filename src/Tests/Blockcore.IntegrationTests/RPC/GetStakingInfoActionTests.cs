@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Blockcore.Features.Miner.Controllers;
+using Blockcore.Features.Miner.Api.Controllers;
+using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.IntegrationTests.Common.Extensions;

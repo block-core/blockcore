@@ -2,7 +2,7 @@
 using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Blockcore.Features.Miner.Models
+namespace Blockcore.Features.Miner.Api.Models
 {
     /// <summary>
     /// Represents a list of blocks generated through mining, as an API return object.

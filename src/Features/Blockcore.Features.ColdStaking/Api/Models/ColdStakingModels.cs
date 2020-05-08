@@ -2,7 +2,7 @@
 using Blockcore.Utilities.ValidationAttributes;
 using Newtonsoft.Json;
 
-namespace Blockcore.Features.ColdStaking.Models
+namespace Blockcore.Features.ColdStaking.Api.Models
 {
     /// <summary>
     /// The data structure used by a client to obtain information related to cold staking.

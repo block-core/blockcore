@@ -1,6 +1,6 @@
 using System;
 using Blockcore.EventBus;
-using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Miner.Api.Models;
 
 namespace Blockcore.Features.SignalR.Events
 {

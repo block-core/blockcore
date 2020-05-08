@@ -13,7 +13,7 @@ using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
-using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;

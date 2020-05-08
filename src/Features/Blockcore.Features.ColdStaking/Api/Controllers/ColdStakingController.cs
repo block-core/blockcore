@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
-using Blockcore.Features.ColdStaking.Models;
-using Blockcore.Features.Wallet;
+using Blockcore.Features.ColdStaking.Api.Models;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
@@ -12,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.ColdStaking.Controllers
+namespace Blockcore.Features.ColdStaking.Api.Controllers
 {
     /// <summary>
     /// Controller providing operations for cold staking.

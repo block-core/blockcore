@@ -4,7 +4,6 @@ using Blockcore.Controllers;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
@@ -12,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Miner.Controllers
+namespace Blockcore.Features.Miner.Api.Controllers
 {
     /// <summary>
     /// RPC controller for calls related to PoW mining and PoS minting.

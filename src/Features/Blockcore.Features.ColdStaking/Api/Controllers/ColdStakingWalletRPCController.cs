@@ -1,5 +1,4 @@
-﻿using Blockcore.Connection.Broadcasting;
-using Blockcore.Consensus;
+﻿using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Controllers;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.ColdStaking.Controllers
+namespace Blockcore.Features.ColdStaking.Api.Controllers
 {
     /// <summary> All functionality is in WalletRPCController, just inherit the functionality in this feature.</summary>
     [ApiVersion("1")]

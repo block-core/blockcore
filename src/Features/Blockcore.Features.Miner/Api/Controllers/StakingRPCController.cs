@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Security;
 using Blockcore.Controllers;
+using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Miner.Controllers
+namespace Blockcore.Features.Miner.Api.Controllers
 {
     /// <summary>
     /// RPC controller for calls related to PoS minting.

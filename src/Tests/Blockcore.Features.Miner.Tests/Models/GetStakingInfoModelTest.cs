@@ -1,4 +1,4 @@
-﻿using Blockcore.Features.Miner.Models;
+﻿using Blockcore.Features.Miner.Api.Models;
 using Xunit;
 
 namespace Blockcore.Features.Miner.Tests.Models

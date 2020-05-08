@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Blockcore.Features.Miner.Models
+namespace Blockcore.Features.Miner.Api.Models
 {
     public class GetStakingAddressesModel
     {

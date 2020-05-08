@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security;
+using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Miner.Controllers
+namespace Blockcore.Features.Miner.Api.Controllers
 {
     /// <summary>
     /// Controller providing operations on mining feature.

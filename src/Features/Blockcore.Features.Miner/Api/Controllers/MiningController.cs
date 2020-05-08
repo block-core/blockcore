@@ -4,9 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using Blockcore.Consensus;
+using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Miner.Models;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
@@ -16,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests.Controllers")]
-namespace Blockcore.Features.Miner.Controllers
+namespace Blockcore.Features.Miner.Api.Controllers
 {
     /// <summary>
     /// API controller for calls related to PoW mining and PoS minting.

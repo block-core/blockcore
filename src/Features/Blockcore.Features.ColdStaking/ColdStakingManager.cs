@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Connection.Broadcasting;
+using Blockcore.Features.ColdStaking.Api.Controllers;
+using Blockcore.Features.ColdStaking.Api.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
@@ -24,7 +26,7 @@ namespace Blockcore.Features.ColdStaking
     /// <summary>
     /// The manager class for implementing cold staking as covered in more detail in the remarks of
     /// the <see cref="ColdStakingFeature"/> class.
-    /// This class provides the methods used by the <see cref="Controllers.ColdStakingController"/>
+    /// This class provides the methods used by the <see cref="ColdStakingController"/>
     /// which in turn provides the API methods for accessing this functionality.
     /// </summary>
     /// <remarks>
@@ -145,12 +147,12 @@ namespace Blockcore.Features.ColdStaking
         /// Returns information related to cold staking.
         /// </summary>
         /// <param name="walletName">The wallet to return the information for.</param>
-        /// <returns>A <see cref="Models.GetColdStakingInfoResponse"/> object containing the information.</returns>
-        public Models.GetColdStakingInfoResponse GetColdStakingInfo(string walletName)
+        /// <returns>A <see cref="GetColdStakingInfoResponse"/> object containing the information.</returns>
+        public GetColdStakingInfoResponse GetColdStakingInfo(string walletName)
         {
             Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
 
-            var response = new Models.GetColdStakingInfoResponse()
+            var response = new GetColdStakingInfoResponse()
             {
                 ColdWalletAccountExists = this.GetColdStakingAccount(wallet, true) != null,
                 HotWalletAccountExists = this.GetColdStakingAccount(wallet, false) != null

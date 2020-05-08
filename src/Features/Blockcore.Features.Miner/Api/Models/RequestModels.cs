@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Blockcore.Features.Miner.Models
+namespace Blockcore.Features.Miner.Api.Models
 {
     /// <summary>
     /// Base model for requests.

@@ -409,7 +409,7 @@ namespace Blockcore.Features.ColdStaking
 
             if (payToScript)
             {
-                // In the case of P2SH and P2WSH, to avoid the possibility of lose of funds
+                // In the case of P2SH and P2WSH, to avoid the possibility of lose track of funds
                 // we add an opreturn with the hot and cold key hashes to the setup transaction
                 // this will allow a user to recreate the redeem script of the output in case they lose
                 // access to one of the keys.
@@ -670,8 +670,6 @@ namespace Blockcore.Features.ColdStaking
                                             break;
                                         }
                                     }
-
-                                    break;
                                 }
                             }
                         }

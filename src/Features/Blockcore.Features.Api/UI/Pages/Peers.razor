@@ -1,12 +1,17 @@
 ﻿@page "/peers"
 
 @inject Blockcore.Connection.IConnectionManager ConnectionManager
+@inject NavigationManager NavigationManager
 
 <h2>Connected peers</h2>
 
 <p>Information about connected peers.</p>
 
 @{
+    <div class="input-group mb-3">
+        <button class="btn btn-info" @onclick="NavigateToPeernodes">Add nodes</button>
+    </div>
+    <hr />
     <table class="table">
         <thead>
             <tr>
@@ -28,4 +33,12 @@
             }
         </tbody>
     </table>
+}
+
+@code
+{
+    private void NavigateToPeernodes()
+    {
+        NavigationManager.NavigateTo("peers-nodes");
+    }
 }

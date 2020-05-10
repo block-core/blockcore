@@ -7,6 +7,7 @@ using System.Threading;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Features.BlockStore;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Signals;

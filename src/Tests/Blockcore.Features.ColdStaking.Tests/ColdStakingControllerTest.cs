@@ -9,8 +9,8 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Rules;
-using Blockcore.Features.ColdStaking.Controllers;
-using Blockcore.Features.ColdStaking.Models;
+using Blockcore.Features.ColdStaking.Api.Controllers;
+using Blockcore.Features.ColdStaking.Api.Models;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
@@ -20,7 +20,9 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Networks.Stratis.Policies;
 using Blockcore.Signals;
@@ -237,7 +239,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         /// </summary>
         /// <param name="wallet">Wallet to add the transaction to.</param>
         /// <returns>The spendable transaction that was added to the wallet.</returns>
-        private Transaction AddSpendableTransactionToWallet(Wallet.Wallet wallet)
+        private Transaction AddSpendableTransactionToWallet(Wallet.Types.Wallet wallet)
         {
             HdAddress address = wallet.GetAllAddresses().FirstOrDefault();
 
@@ -327,11 +329,11 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error2 = errorResponse1.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error1.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error1.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error1.Description);
             Assert.StartsWith("The cold staking account does not exist.", error1.Message);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error2.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error2.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error2.Description);
             Assert.StartsWith("The cold staking account does not exist.", error2.Message);
         }
 
@@ -402,7 +404,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             ErrorModel error = errorResponse.Errors[0];
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("You can't use this wallet as both hot wallet and cold wallet.", error.Message);
         }
 
@@ -434,7 +436,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             ErrorModel error = errorResponse.Errors[0];
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("The hot and cold wallet addresses could not be found in the corresponding accounts.", error.Message);
         }
 
@@ -487,12 +489,12 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error2 = errorResponse2.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error1.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error1.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error1.Description);
             // TODO: Restore this line.
             // Assert.StartsWith($"Can't find wallet account '{coldWalletAccountName}'.", error1.Message);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error2.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error2.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error2.Description);
             // TODO: Restore this line.
             // Assert.StartsWith($"Can't find wallet account '{hotWalletAccountName}'.", error2.Message);
         }
@@ -508,7 +510,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
-            Wallet.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
+            Wallet.Types.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
 
             Transaction prevTran = this.AddSpendableTransactionToWallet(wallet1);
 
@@ -555,7 +557,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
-            Wallet.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
+            Wallet.Types.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
 
             Transaction prevTran = this.AddSpendableTransactionToWallet(wallet1);
 
@@ -599,7 +601,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
-            Wallet.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
+            Wallet.Types.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
 
             // This will add a normal account to our wallet.
             Transaction trx1 = this.AddSpendableTransactionToWallet(wallet1);
@@ -610,14 +612,14 @@ namespace Blockcore.Features.ColdStaking.Tests
             // THis will add a cold staking transaction to the secondary normal account address. This simulates activation of cold staking onto any normal address.
             Transaction trx3 = this.AddSpendableColdstakingTransactionToNormalWallet(wallet1);
 
-            var accounts = wallet1.GetAccounts(Wallet.Wallet.AllAccounts).ToArray();
+            var accounts = wallet1.GetAccounts(Wallet.Types.Wallet.AllAccounts).ToArray();
 
             // We should have 2 accounts in our wallet.
             Assert.Equal(2, accounts.Length);
 
             // But not if we use default or specify to only return normal accounts.
             Assert.Single(wallet1.GetAccounts().ToArray()); // Defaults to NormalAccounts
-            Assert.Single(wallet1.GetAccounts(Wallet.Wallet.NormalAccounts).ToArray());
+            Assert.Single(wallet1.GetAccounts(Wallet.Types.Wallet.NormalAccounts).ToArray());
 
             // Verify that we actually have an cold staking activation UTXO in the wallet of 202 coins.
             // This should normally not be returned by the GetAllTransactions, and should never be included in balance calculations.
@@ -625,10 +627,10 @@ namespace Blockcore.Features.ColdStaking.Tests
             Assert.Equal(new Money(202, MoneyUnit.BTC), accounts[0].ExternalAddresses.ToArray()[1].Transactions.ToArray()[0].Amount);
 
             Assert.Single(wallet1.GetAllTransactions().ToArray()); // Default to NormalAccounts, should filter out cold staking (trx3) from normal wallet.
-            Assert.Single(wallet1.GetAllTransactions(Wallet.Wallet.NormalAccounts).ToArray());
-            Assert.Single(wallet1.GetAllSpendableTransactions(5, 0, Wallet.Wallet.NormalAccounts).ToArray()); // Default to NormalAccounts
-            Assert.Equal(2, wallet1.GetAllTransactions(Wallet.Wallet.AllAccounts).ToArray().Length);
-            Assert.Equal(2, wallet1.GetAllSpendableTransactions(5, 0, Wallet.Wallet.AllAccounts).ToArray().Length); // Specified AllAccounts, should include cold-staking transaction.
+            Assert.Single(wallet1.GetAllTransactions(Wallet.Types.Wallet.NormalAccounts).ToArray());
+            Assert.Single(wallet1.GetAllSpendableTransactions(5, 0, Wallet.Types.Wallet.NormalAccounts).ToArray()); // Default to NormalAccounts
+            Assert.Equal(2, wallet1.GetAllTransactions(Wallet.Types.Wallet.AllAccounts).ToArray().Length);
+            Assert.Equal(2, wallet1.GetAllSpendableTransactions(5, 0, Wallet.Types.Wallet.AllAccounts).ToArray().Length); // Specified AllAccounts, should include cold-staking transaction.
 
             // Verify balance on normal account
             var balance1 = accounts[0].GetBalances(true);
@@ -658,7 +660,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
-            Wallet.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
+            Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
             Transaction prevTran = this.AddSpendableTransactionToWallet(wallet2);
 
@@ -706,7 +708,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
-            Wallet.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
+            Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
             Transaction prevTran = this.AddSpendableTransactionToWallet(wallet2);
 
@@ -751,7 +753,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
-            Wallet.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
+            Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
             Transaction prevTran = this.AddSpendableTransactionToWallet(wallet2);
 
@@ -839,7 +841,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         /// </summary>
         /// <param name="wallet">Wallet to add the transaction to.</param>
         /// <returns>The spendable transaction that was added to the wallet.</returns>
-        private Transaction AddSpendableColdstakingTransactionToWallet(Wallet.Wallet wallet, bool script = false)
+        private Transaction AddSpendableColdstakingTransactionToWallet(Wallet.Types.Wallet wallet, bool script = false)
         {
             // Get first unused cold staking address.
             this.coldStakingManager.GetOrCreateColdStakingAccount(wallet.Name, true, walletPassword);
@@ -881,7 +883,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         /// </summary>
         /// <param name="wallet">Wallet to add the transaction to.</param>
         /// <returns>The spendable transaction that was added to the wallet.</returns>
-        private Transaction AddSpendableColdstakingTransactionToNormalWallet(Wallet.Wallet wallet, bool script = false)
+        private Transaction AddSpendableColdstakingTransactionToNormalWallet(Wallet.Types.Wallet wallet, bool script = false)
         {
             // This will always be added to the secondary address.
             HdAddress address = wallet.GetAllAddresses().ToArray()[1];
@@ -1101,7 +1103,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error = errorResponse.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("You can't send the money to a cold staking cold wallet account.", error.Message);
         }
 
@@ -1135,7 +1137,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error = errorResponse.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("The cold wallet account does not exist.", error.Message);
         }
     }

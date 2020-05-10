@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Mining;
 using NBitcoin;
@@ -49,7 +50,7 @@ namespace Blockcore.Features.Miner.Interfaces
         /// Constructs model for RPC "getstakinginfo" call.
         /// </summary>
         /// <returns>Staking information RPC response.</returns>
-        Models.GetStakingInfoModel GetGetStakingInfoModel();
+        GetStakingInfoModel GetGetStakingInfoModel();
 
         /// <summary>
         /// Calculates the total balance from all UTXOs in the wallet that are mature.

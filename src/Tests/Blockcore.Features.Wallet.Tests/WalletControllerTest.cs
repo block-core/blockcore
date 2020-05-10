@@ -6,9 +6,11 @@ using System.Net;
 using System.Security;
 using Blockcore.Connection;
 using Blockcore.Connection.Broadcasting;
-using Blockcore.Features.Wallet.Controllers;
+using Blockcore.Features.Wallet.Api.Controllers;
+using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;
@@ -318,7 +320,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void RecoverWalletSuccessfullyReturnsWalletModel()
         {
-            var wallet = new Wallet
+            var wallet = new Types.Wallet
             {
                 Name = "myWallet",
                 Network = NetworkHelpers.GetNetwork("mainnet")
@@ -352,7 +354,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void RecoverWalletWithDatedAfterCurrentSyncHeightDoesNotMoveSyncHeight()
         {
-            var wallet = new Wallet
+            var wallet = new Types.Wallet
             {
                 Name = "myWallet",
                 Network = NetworkHelpers.GetNetwork("mainnet")
@@ -510,7 +512,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         private void RecoverWithExtPubAndCheckSuccessfulResponse(string walletName, string extPubKey)
         {
-            var wallet = new Wallet
+            var wallet = new Types.Wallet
             {
                 Name = walletName,
                 Network = KnownNetworks.StratisMain,
@@ -552,7 +554,7 @@ namespace Blockcore.Features.Wallet.Tests
             string walletName = "myWallet";
             string extPubKey = "xpub661MyMwAqRbcEgnsMFfhjdrwR52TgicebTrbnttywb9zn3orkrzn6MHJrgBmKrd7MNtS6LAim44a6V2gizt3jYVPHGYq1MzAN849WEyoedJ";
 
-            var wallet = new Wallet
+            var wallet = new Types.Wallet
             {
                 Name = walletName,
                 Network = KnownNetworks.StratisMain,
@@ -592,7 +594,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void LoadWalletSuccessfullyReturnsWalletModel()
         {
-            var wallet = new Wallet
+            var wallet = new Types.Wallet
             {
                 Name = "myWallet",
                 Network = NetworkHelpers.GetNetwork("mainnet")
@@ -713,7 +715,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetGeneralInfoSuccessfullyReturnsWalletGeneralInfoModel()
         {
-            var wallet = new Wallet
+            var wallet = new Types.Wallet
             {
                 Name = "myWallet",
                 Network = NetworkHelpers.GetNetwork("mainnet"),
@@ -768,7 +770,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetGeneralInfoWithModelStateErrorReturnsBadRequest()
         {
-            var wallet = new Wallet
+            var wallet = new Types.Wallet
             {
                 Name = "myWallet",
             };
@@ -829,7 +831,7 @@ namespace Blockcore.Features.Wallet.Tests
                     Account = new HdAccount()
                 }
             });
-            mockWalletManager.Setup(w => w.GetWalletByName(walletName)).Returns(new Wallet());
+            mockWalletManager.Setup(w => w.GetWalletByName(walletName)).Returns(new Types.Wallet());
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
             IActionResult result = controller.GetHistory(new WalletHistoryRequest
@@ -856,7 +858,7 @@ namespace Blockcore.Features.Wallet.Tests
             address.Transactions.Add(transaction);
 
             var addresses = new List<HdAddress> { address };
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             var account = new HdAccount { ExternalAddresses = addresses };
             wallet.AccountsRoot.Add(new AccountRoot()
             {
@@ -912,7 +914,7 @@ namespace Blockcore.Features.Wallet.Tests
             address.Transactions.Add(transaction);
 
             var addresses = new List<HdAddress> { address, changeAddress };
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             var account = new HdAccount { ExternalAddresses = addresses };
             wallet.AccountsRoot.Add(new AccountRoot()
             {
@@ -987,7 +989,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var addresses = new List<HdAddress> { address, changeAddress };
 
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             var account = new HdAccount { ExternalAddresses = addresses };
             wallet.AccountsRoot.Add(new AccountRoot()
             {
@@ -1083,7 +1085,7 @@ namespace Blockcore.Features.Wallet.Tests
                 }
             };
 
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             var account = new HdAccount { ExternalAddresses = addresses };
             wallet.AccountsRoot.Add(new AccountRoot()
             {
@@ -1131,7 +1133,7 @@ namespace Blockcore.Features.Wallet.Tests
             string walletName = "myWallet";
             var mockWalletManager = new Mock<IWalletManager>();
             mockWalletManager.Setup(w => w.GetHistory("myWallet", WalletManager.DefaultAccount)).Throws(new InvalidOperationException("Issue retrieving wallets."));
-            mockWalletManager.Setup(w => w.GetWalletByName(walletName)).Returns(new Wallet());
+            mockWalletManager.Setup(w => w.GetWalletByName(walletName)).Returns(new Types.Wallet());
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
             IActionResult result = controller.GetHistory(new WalletHistoryRequest
@@ -1182,7 +1184,7 @@ namespace Blockcore.Features.Wallet.Tests
             changeAddress.Transactions.Add(transaction2);
 
             var addresses = new List<HdAddress> { address, changeAddress, changeAddress2 };
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             var account = new HdAccount { ExternalAddresses = addresses };
             wallet.AccountsRoot.Add(new AccountRoot()
             {
@@ -1580,7 +1582,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var receiveAddresses = new List<HdAddress> { usedReceiveAddress };
             var changeAddresses = new List<HdAddress>();
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 Accounts = new List<HdAccount> {
@@ -1626,7 +1628,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             string walletName = "myWallet";
 
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 Accounts = new List<HdAccount> { new HdAccount
@@ -1672,7 +1674,7 @@ namespace Blockcore.Features.Wallet.Tests
             string walletName = "myWallet";
 
             // Create a wallet with no accounts.
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
 
             var mockWalletManager = new Mock<IWalletManager>();
 
@@ -1957,7 +1959,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void ListAccountsWithValidModelStateReturnsAccounts()
         {
             string walletName = "wallet 1";
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
 
             wallet.AccountsRoot.Add(new AccountRoot()
             {
@@ -2126,7 +2128,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var receiveAddresses = new List<HdAddress> { usedReceiveAddress, unusedReceiveAddress };
             var changeAddresses = new List<HdAddress> { usedChangeAddress, unusedChangeAddress };
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 Accounts = new List<HdAccount> { new HdAccount
@@ -2269,7 +2271,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             // Arrange.
             string walletName = "wallet1";
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             wallet.AccountsRoot.Add(new AccountRoot());
             uint256 trxId1 = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
             uint256 trxId2 = uint256.Parse("a3dd63ec364fcb59043a1cf209285d8e60f1cc06186d4dcbce496cdbb4303401");
@@ -2351,7 +2353,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             // Arrange.
             string walletName = "wallet1";
-            Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
             wallet.AccountsRoot.Add(new AccountRoot());
             uint256 trxId1 = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
             var resultModel = new HashSet<(uint256 trxId, DateTimeOffset creationTime)>();

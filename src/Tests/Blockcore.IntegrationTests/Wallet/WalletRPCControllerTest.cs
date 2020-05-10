@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.RPC;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.ReadyData;

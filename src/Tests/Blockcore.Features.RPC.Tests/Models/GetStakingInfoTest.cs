@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Features.Miner.Models;
+using Blockcore.Features.Miner.Api.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

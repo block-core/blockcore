@@ -144,7 +144,7 @@ namespace NBitcoin.Tests
             Assert.Equal(Utils.UnixTimeToDateTime(1510704000), this.networkMain.Consensus.BIP9Deployments[BitcoinBIP9Deployments.Segwit].Timeout);
             Assert.Equal(0, this.networkMain.Consensus.CoinType);
             Assert.False(this.networkMain.Consensus.IsProofOfStake);
-            Assert.Equal(new uint256("0x0000000000000000000f1c54590ee18d15ec70e68c8cd4cfbadb1b4f11697eee"), this.networkMain.Consensus.DefaultAssumeValid);
+            Assert.Equal(new uint256("0x0000000000000000000304dece599f1d046f5c606deec3d1d49eb24b3231b4a3"), this.networkMain.Consensus.DefaultAssumeValid);
             Assert.Equal(100, this.networkMain.Consensus.CoinbaseMaturity);
             Assert.Equal(0, this.networkMain.Consensus.PremineReward);
             Assert.Equal(0, this.networkMain.Consensus.PremineHeight);

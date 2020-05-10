@@ -17,6 +17,7 @@ using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.Runners;
 using Blockcore.Interfaces;

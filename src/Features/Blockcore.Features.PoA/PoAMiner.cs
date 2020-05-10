@@ -12,6 +12,7 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.PoA.Voting;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
 using Blockcore.Utilities;

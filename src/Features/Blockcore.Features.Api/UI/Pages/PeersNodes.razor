@@ -1,0 +1,45 @@
+﻿@page "/peers-nodes"
+
+@using Blockcore.Utilities.Extensions
+
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
+
+<h2>Connected peers</h2>
+
+<p>Information about connected peers.</p>
+
+@{
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Node ip:</span>
+        </div>
+        <input @bind="NodeIp" type="text" class="form-control" placeholder="node ip" />
+        <div class="input-group-append">
+            <span class="input-group-text">add</span>
+        </div>
+    </div>
+
+    <div class="input-group mb-3">
+        <button class="btn btn-info" @onclick="Addnode">Add node</button>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="alert-warning">@Alert</div>
+    </div>
+}
+
+@code
+{
+    private string NodeIp { get; set; }
+
+    string Alert { get; set; }
+
+    private void Addnode()
+    {
+        var endpoint = this.NodeIp.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
+
+        this.ConnectionManager.AddNodeAddress(endpoint);
+
+        this.Alert = $"node {endpoint} added";
+    }
+}

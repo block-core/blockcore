@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -239,7 +241,7 @@ namespace Blockcore.Features.Wallet
             if (!context.Sign)
                 return;
 
-            Wallet wallet = this.walletManager.GetWalletByName(context.AccountReference.WalletName);
+            Types.Wallet wallet = this.walletManager.GetWalletByName(context.AccountReference.WalletName);
             ExtKey seedExtKey = this.walletManager.GetExtKey(context.AccountReference, context.WalletPassword, context.CacheSecret);
 
             var signingKeys = new HashSet<ISecret>();

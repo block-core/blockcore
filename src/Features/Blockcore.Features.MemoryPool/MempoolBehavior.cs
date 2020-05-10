@@ -347,7 +347,6 @@ namespace Blockcore.Features.MemoryPool
 
                 if (trxInfo != null)
                 {
-                    // TODO: strip block of witness if peer does not support
                     if (peer.IsConnected)
                     {
                         this.logger.LogDebug("Sending transaction '{0}' to peer '{1}'.", item.Hash, peer.RemoteSocketEndpoint);

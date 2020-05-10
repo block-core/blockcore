@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Api.Models;
 
 namespace Blockcore.Features.Wallet.Helpers
 {

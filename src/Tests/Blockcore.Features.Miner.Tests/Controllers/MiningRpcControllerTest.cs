@@ -4,13 +4,15 @@ using System.Security;
 using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
-using Blockcore.Features.Miner.Controllers;
+using Blockcore.Features.Miner.Api.Controllers;
+using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Miner.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Tests.Wallet.Common;
 using Moq;
@@ -208,7 +210,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
 
     public class MiningRPCControllerFixture
     {
-        public readonly Wallet.Wallet wallet;
+        public readonly Wallet.Types.Wallet wallet;
 
         public MiningRPCControllerFixture()
         {

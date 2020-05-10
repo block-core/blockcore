@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.EventBus;
-using Blockcore.Features.Wallet.Models;
+using Blockcore.Features.Wallet.Api.Models;
 
 namespace Blockcore.Features.SignalR.Events
 {

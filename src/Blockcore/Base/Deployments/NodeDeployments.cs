@@ -34,5 +34,16 @@ namespace Blockcore.Base.Deployments
                 return flags;
             }
         }
+
+        public virtual DeploymentFlags GetFlags()
+        {
+            lock (this.BIP9)
+            {
+                ChainedHeader chainedHeader = this.chainIndexer.Tip;
+                ThresholdState[] states = this.BIP9.GetStates(chainedHeader.Previous);
+                var flags = new DeploymentFlags(chainedHeader, states, this.network.Consensus, this.chainIndexer);
+                return flags;
+            }
+        }
     }
 }

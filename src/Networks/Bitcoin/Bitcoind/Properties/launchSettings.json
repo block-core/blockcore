@@ -1,18 +1,18 @@
 {
   "profiles": {
-    "Stratis.BitcoinD": {
+    "BitcoinD": {
       "commandName": "Project",
       "commandLineArgs": ""
     },
-    "Stratis.BitcoinD Low memory": {
+    "BitcoinD Low memory": {
       "commandName": "Project",
       "commandLineArgs": "-maxblkmem=5 -dbcache=50"
     },
-    "Stratis.BitcoinD Test": {
+    "BitcoinD Test": {
       "commandName": "Project",
       "commandLineArgs": "-testnet"
     },
-    "Stratis.BitcoinD Test with RPC": {
+    "BitcoinD Test with RPC": {
       "commandName": "Project",
       "commandLineArgs": "-testnet -server -rpcpassword=rpcpassword -rpcuser=rpcuser"
     }

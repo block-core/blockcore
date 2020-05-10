@@ -33,6 +33,13 @@
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Api\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="AddressBook\" />
+    <Folder Include="Types\" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
     <DocumentationFile></DocumentationFile>

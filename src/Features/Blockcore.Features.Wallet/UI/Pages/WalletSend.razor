@@ -4,6 +4,7 @@
 @using Blockcore.Features.Wallet;
 @using NBitcoin;
 @using Blockcore.Connection.Broadcasting
+@using Blockcore.Features.Wallet.Types
 @using Blockcore.Interfaces
 
 @inject IWalletManager WalletManager
@@ -23,6 +24,15 @@
 <p>Send coins from account <strong> @walletname / @accountname</strong></p>
 
 @{
+
+    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+
+    <br />
+
+    <p>Amount Confirmed: <strong> @accountBalance.AmountConfirmed</strong></p>
+    <p>Amount Unconfirmed: <strong>@accountBalance.AmountUnconfirmed</strong></p>
+    <p>Spendable Amount: <strong> @accountBalance.SpendableAmount</strong></p>
+    <hr />
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">To Address:</span>
@@ -157,7 +167,7 @@
 
         var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
 
-        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
+        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
         {
             this.Alert = "Error occurred: " + transactionBroadCastEntry.ErrorMessage;
             return;

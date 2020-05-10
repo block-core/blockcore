@@ -5,6 +5,7 @@ using Blockcore.Consensus;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;

@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Api\" />
+  </ItemGroup>
 </Project>

@@ -2,8 +2,8 @@
 {
     public enum TransactionBroadcastState
     {
-        CantBroadcast,
-        ToBroadcast,
+        FailedBroadcast,
+        ReadyToBroadcast,
         Broadcasted,
         Propagated
     }

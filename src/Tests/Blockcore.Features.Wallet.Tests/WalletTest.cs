@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using Xunit;
@@ -11,7 +12,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetAccountsWithoutAccountsReturnsEmptyList()
         {
-            var wallet = new Wallet();
+            var wallet = new Types.Wallet();
 
             IEnumerable<HdAccount> result = wallet.GetAccounts();
 
@@ -21,7 +22,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetAllTransactionsReturnsTransactionsFromWallet()
         {
-            var wallet = new Wallet();
+            var wallet = new Types.Wallet();
             AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", KnownCoinTypes.Stratis);
 
             TransactionData transaction1 = CreateTransaction(new uint256(1), new Money(15000), 1);
@@ -42,7 +43,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetAllTransactionsWithoutAccountRootReturnsEmptyList()
         {
-            var wallet = new Wallet();
+            var wallet = new Types.Wallet();
 
             List<TransactionData> result = wallet.GetAllTransactions().ToList();
 
@@ -52,7 +53,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetAllPubKeysReturnsPubkeysFromWallet()
         {
-            var wallet = new Wallet();
+            var wallet = new Types.Wallet();
             AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", KnownCoinTypes.Stratis);
             wallet.AccountsRoot.Add(stratisAccountRoot);
 
@@ -66,7 +67,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void GetAllPubKeysWithoutAccountRootsReturnsEmptyList()
         {
-            var wallet = new Wallet();
+            var wallet = new Types.Wallet();
 
             List<Script> result = wallet.GetAllPubKeys().ToList();
 

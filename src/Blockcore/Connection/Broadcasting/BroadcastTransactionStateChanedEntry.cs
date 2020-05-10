@@ -8,15 +8,15 @@ namespace Blockcore.Connection.Broadcasting
 
         public TransactionBroadcastState TransactionBroadcastState { get; set; }
 
-        public string ErrorMessage => (this.MempoolError == null) ? string.Empty : $"Failed: {this.ErrorMessage}";
+        public string ErrorMessage { get; private set; }
 
-        public string MempoolError { get; set; }
+        public bool CanRespondToGetData { get; set; }
 
-        public BroadcastTransactionStateChanedEntry(NBitcoin.Transaction transaction, TransactionBroadcastState transactionBroadcastState, string mempoolError)
+        public BroadcastTransactionStateChanedEntry(NBitcoin.Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage)
         {
             this.Transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
             this.TransactionBroadcastState = transactionBroadcastState;
-            this.MempoolError = mempoolError;
+            this.ErrorMessage = (errorMessage == null) ? string.Empty : errorMessage;
         }
     }
 }

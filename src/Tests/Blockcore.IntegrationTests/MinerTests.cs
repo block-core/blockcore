@@ -22,6 +22,7 @@ using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.Miner;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
@@ -880,7 +881,7 @@ namespace Blockcore.IntegrationTests
                 broadcaster.BroadcastTransactionAsync(trx).GetAwaiter().GetResult();
                 var entry = broadcaster.GetTransaction(trx.GetHash());
 
-                Assert.Equal(TransactionBroadcastState.ToBroadcast, entry.TransactionBroadcastState);
+                Assert.Equal(TransactionBroadcastState.ReadyToBroadcast, entry.TransactionBroadcastState);
 
                 Assert.NotNull(stratisMiner.FullNode.MempoolManager().GetTransaction(trx.GetHash()).Result);
 

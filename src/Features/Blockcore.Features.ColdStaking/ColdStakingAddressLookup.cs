@@ -1,5 +1,6 @@
 ﻿using System;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Types;
 using NBitcoin;
 
 namespace Blockcore.Features.ColdStaking

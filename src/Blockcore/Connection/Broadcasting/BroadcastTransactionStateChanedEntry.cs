@@ -16,7 +16,7 @@ namespace Blockcore.Connection.Broadcasting
         {
             this.Transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
             this.TransactionBroadcastState = transactionBroadcastState;
-            this.ErrorMessage = (errorMessage == null) ? string.Empty : $"Failed: {errorMessage}";
+            this.ErrorMessage = (errorMessage == null) ? string.Empty : errorMessage;
         }
     }
 }

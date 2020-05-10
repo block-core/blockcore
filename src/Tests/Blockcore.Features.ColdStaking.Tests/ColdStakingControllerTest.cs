@@ -329,11 +329,11 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error2 = errorResponse1.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error1.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error1.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error1.Description);
             Assert.StartsWith("The cold staking account does not exist.", error1.Message);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error2.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error2.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error2.Description);
             Assert.StartsWith("The cold staking account does not exist.", error2.Message);
         }
 
@@ -404,7 +404,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             ErrorModel error = errorResponse.Errors[0];
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("You can't use this wallet as both hot wallet and cold wallet.", error.Message);
         }
 
@@ -436,7 +436,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             ErrorModel error = errorResponse.Errors[0];
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("The hot and cold wallet addresses could not be found in the corresponding accounts.", error.Message);
         }
 
@@ -489,12 +489,12 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error2 = errorResponse2.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error1.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error1.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error1.Description);
             // TODO: Restore this line.
             // Assert.StartsWith($"Can't find wallet account '{coldWalletAccountName}'.", error1.Message);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error2.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error2.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error2.Description);
             // TODO: Restore this line.
             // Assert.StartsWith($"Can't find wallet account '{hotWalletAccountName}'.", error2.Message);
         }
@@ -1103,7 +1103,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error = errorResponse.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("You can't send the money to a cold staking cold wallet account.", error.Message);
         }
 
@@ -1137,7 +1137,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             ErrorModel error = errorResponse.Errors[0];
 
             Assert.Equal((int)HttpStatusCode.BadRequest, error.Status);
-            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(WalletException)}", error.Description);
+            Assert.StartsWith($"{nameof(Blockcore)}.{nameof(Blockcore.Features)}.{nameof(Blockcore.Features.Wallet)}.{nameof(Blockcore.Features.Wallet.Exceptions)}.{nameof(WalletException)}", error.Description);
             Assert.StartsWith("The cold wallet account does not exist.", error.Message);
         }
     }

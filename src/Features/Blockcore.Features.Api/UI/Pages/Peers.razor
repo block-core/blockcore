@@ -18,7 +18,7 @@
                 <th>Ip</th>
                 <th>Inbound</th>
                 <th>Agent</th>
-                <th>Time Offset</th>
+                <th>Version</th>
             </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
                     <td>@peer.RemoteSocketEndpoint.ToString()</td>
                     <td>@peer.Inbound</td>
                     <td>@peer.PeerVersion?.UserAgent</td>
-                    <td>@peer.TimeOffset.Value</td>
+                    <td>@peer.PeerVersion?.Version</td>
                 </tr>
             }
         </tbody>

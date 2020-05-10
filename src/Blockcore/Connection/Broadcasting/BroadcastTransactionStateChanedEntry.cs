@@ -10,6 +10,8 @@ namespace Blockcore.Connection.Broadcasting
 
         public string ErrorMessage { get; private set; }
 
+        public bool CanRespondToGetData { get; set; }
+
         public BroadcastTransactionStateChanedEntry(NBitcoin.Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage)
         {
             this.Transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));

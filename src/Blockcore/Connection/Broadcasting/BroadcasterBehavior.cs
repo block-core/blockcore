@@ -8,35 +8,40 @@ using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.Logging;
+using NBitcoin;
 
 namespace Blockcore.Connection.Broadcasting
 {
     public class BroadcasterBehavior : NetworkPeerBehavior
     {
+        private readonly Network network;
         private readonly IBroadcasterManager broadcasterManager;
 
         /// <summary>Instance logger for the memory pool component.</summary>
         private readonly ILogger logger;
 
         public BroadcasterBehavior(
+            Network network,
             IBroadcasterManager broadcasterManager,
             ILogger logger)
         {
             this.logger = logger;
+            this.network = network;
             this.broadcasterManager = broadcasterManager;
         }
 
         public BroadcasterBehavior(
+            Network network,
             IBroadcasterManager broadcasterManager,
             ILoggerFactory loggerFactory)
-            : this(broadcasterManager, loggerFactory.CreateLogger(typeof(BroadcasterBehavior).FullName))
+            : this(network, broadcasterManager, loggerFactory.CreateLogger(typeof(BroadcasterBehavior).FullName))
         {
         }
 
         /// <inheritdoc />
         public override object Clone()
         {
-            return new BroadcasterBehavior(this.broadcasterManager, this.logger);
+            return new BroadcasterBehavior(this.network, this.broadcasterManager, this.logger);
         }
 
         /// <summary>
@@ -105,10 +110,15 @@ namespace Blockcore.Connection.Broadcasting
             foreach (InventoryVector inv in getDataPayload.Inventory.Where(x => x.Type == InventoryType.MSG_TX))
             {
                 BroadcastTransactionStateChanedEntry txEntry = this.broadcasterManager.GetTransaction(inv.Hash);
-                if ((txEntry != null) && (txEntry.TransactionBroadcastState != TransactionBroadcastState.CantBroadcast))
+                if ((txEntry != null) && (txEntry.TransactionBroadcastState != TransactionBroadcastState.FailedBroadcast))
                 {
-                    await peer.SendMessageAsync(new TxPayload(txEntry.Transaction)).ConfigureAwait(false);
-                    if (txEntry.TransactionBroadcastState == TransactionBroadcastState.ToBroadcast)
+                    if (txEntry.CanRespondToGetData && peer.IsConnected)
+                    {
+                        this.logger.LogDebug("Sending transaction '{0}' to peer '{1}'.", inv.Hash, peer.RemoteSocketEndpoint);
+                        await peer.SendMessageAsync(new TxPayload(txEntry.Transaction.WithOptions(peer.SupportedTransactionOptions, this.network.Consensus.ConsensusFactory))).ConfigureAwait(false);
+                    }
+
+                    if (txEntry.TransactionBroadcastState == TransactionBroadcastState.ReadyToBroadcast)
                     {
                         this.broadcasterManager.AddOrUpdate(txEntry.Transaction, TransactionBroadcastState.Broadcasted);
                     }

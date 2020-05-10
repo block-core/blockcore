@@ -180,7 +180,7 @@
 
             var res = this.BroadcasterManager.GetTransaction(transaction.GetHash());
 
-            if (res.TransactionBroadcastState == Connection.Broadcasting.TransactionBroadcastState.CantBroadcast)
+            if (res.TransactionBroadcastState == Connection.Broadcasting.TransactionBroadcastState.FailedBroadcast)
             {
                 this.Alert = res.ErrorMessage;
                 return;

@@ -167,7 +167,7 @@
 
         var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
 
-        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
+        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
         {
             this.Alert = "Error occurred: " + transactionBroadCastEntry.ErrorMessage;
             return;

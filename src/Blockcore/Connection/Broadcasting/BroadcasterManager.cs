@@ -18,6 +18,10 @@ namespace Blockcore.Connection.Broadcasting
         private readonly ISignals signals;
         private readonly IEnumerable<IBroadcastCheck> broadcastChecks;
 
+        private Dictionary<uint256, BroadcastTransactionStateChanedEntry> Broadcasts { get; }
+
+        public bool CanRespondToTrxGetData { get; set; }
+
         public BroadcasterManager(IConnectionManager connectionManager, ISignals signals, IEnumerable<IBroadcastCheck> broadcastChecks)
         {
             Guard.NotNull(connectionManager, nameof(connectionManager));
@@ -25,7 +29,8 @@ namespace Blockcore.Connection.Broadcasting
             this.connectionManager = connectionManager;
             this.signals = signals;
             this.broadcastChecks = broadcastChecks;
-            this.Broadcasts = new ConcurrentHashSet<BroadcastTransactionStateChanedEntry>();
+            this.Broadcasts = new Dictionary<uint256, BroadcastTransactionStateChanedEntry>();
+            this.CanRespondToTrxGetData = true;
         }
 
         public void OnTransactionStateChanged(BroadcastTransactionStateChanedEntry entry)
@@ -33,26 +38,24 @@ namespace Blockcore.Connection.Broadcasting
             this.signals.Publish(new TransactionBroadcastEvent(this, entry));
         }
 
-        /// <summary>Transactions to broadcast.</summary>
-        private ConcurrentHashSet<BroadcastTransactionStateChanedEntry> Broadcasts { get; }
-
         /// <summary>Retrieves a transaction with provided hash from the collection of transactions to broadcast.</summary>
         /// <param name="transactionHash">Hash of the transaction to retrieve.</param>
         public BroadcastTransactionStateChanedEntry GetTransaction(uint256 transactionHash)
         {
-            BroadcastTransactionStateChanedEntry txEntry = this.Broadcasts.FirstOrDefault(x => x.Transaction.GetHash() == transactionHash);
+            BroadcastTransactionStateChanedEntry txEntry = this.Broadcasts.TryGet(transactionHash);
             return txEntry ?? null;
         }
 
         /// <summary>Adds or updates a transaction from the collection of transactions to broadcast.</summary>
         public void AddOrUpdate(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage = null)
         {
-            BroadcastTransactionStateChanedEntry broadcastEntry = this.Broadcasts.FirstOrDefault(x => x.Transaction.GetHash() == transaction.GetHash());
+            uint256 trxHash = transaction.GetHash();
+            BroadcastTransactionStateChanedEntry broadcastEntry = this.Broadcasts.TryGet(trxHash);
 
             if (broadcastEntry == null)
             {
                 broadcastEntry = new BroadcastTransactionStateChanedEntry(transaction, transactionBroadcastState, errorMessage);
-                this.Broadcasts.Add(broadcastEntry);
+                this.Broadcasts.Add(trxHash, broadcastEntry);
                 this.OnTransactionStateChanged(broadcastEntry);
             }
             else if (broadcastEntry.TransactionBroadcastState != transactionBroadcastState)
@@ -77,30 +80,51 @@ namespace Blockcore.Connection.Broadcasting
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    this.AddOrUpdate(transaction, TransactionBroadcastState.CantBroadcast, error);
+                    this.AddOrUpdate(transaction, TransactionBroadcastState.FailedBroadcast, error);
                     return;
                 }
             }
 
-            await this.PropagateTransactionToPeersAsync(transaction, this.connectionManager.ConnectedPeers.ToList()).ConfigureAwait(false);
+            await this.PropagateTransactionToPeersAsync(transaction).ConfigureAwait(false);
+        }
+
+        public async Task<bool> BroadcastTransactionAsync(uint256 trxHash)
+        {
+            if (this.Broadcasts.TryGetValue(trxHash, out BroadcastTransactionStateChanedEntry entry))
+            {
+                if (entry.TransactionBroadcastState == TransactionBroadcastState.ReadyToBroadcast ||
+                    entry.TransactionBroadcastState == TransactionBroadcastState.Broadcasted)
+                {
+                    // broadacste
+                    await this.PropagateTransactionToPeersAsync(entry.Transaction).ConfigureAwait(false);
+
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
         /// Sends transaction to peers.
         /// </summary>
         /// <param name="transaction">Transaction that will be propagated.</param>
-        /// <param name="peers">Peers to whom we will propagate the transaction.</param>
-        protected async Task PropagateTransactionToPeersAsync(Transaction transaction, List<INetworkPeer> peers)
+        protected async Task PropagateTransactionToPeersAsync(Transaction transaction)
         {
-            this.AddOrUpdate(transaction, TransactionBroadcastState.ToBroadcast);
+            this.AddOrUpdate(transaction, TransactionBroadcastState.ReadyToBroadcast);
 
             var invPayload = new InvPayload(transaction);
+
+            List<INetworkPeer> peers = this.connectionManager.ConnectedPeers.ToList();
 
             foreach (INetworkPeer peer in peers)
             {
                 try
                 {
-                    await peer.SendMessageAsync(invPayload).ConfigureAwait(false);
+                    if (peer.IsConnected)
+                    {
+                        await peer.SendMessageAsync(invPayload).ConfigureAwait(false);
+                    }
                 }
                 catch (OperationCanceledException)
                 {

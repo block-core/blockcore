@@ -780,13 +780,69 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 BroadcastTransactionStateChanedEntry transactionBroadCastEntry = this.broadcasterManager.GetTransaction(transaction.GetHash());
 
-                if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
+                if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
                 {
                     this.logger.LogError("Exception occurred: {0}", transactionBroadCastEntry.ErrorMessage);
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, transactionBroadCastEntry.ErrorMessage, "Transaction Exception");
                 }
 
                 return this.Json(model);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Attemt to send again transactions that are unconfimred in the wallet,
+        /// the trx is require to be in broadcaster or have the trx hex.
+        /// </summary>
+        /// <returns>A JSON object containing information about the re sent transactions.</returns>
+        [Route("resend-unconfirmed-transactions")]
+        [HttpPost]
+        public IActionResult ResendUnconfirmedTransactions()
+        {
+            // checks the request is valid
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            if (!this.connectionManager.ConnectedPeers.Any())
+            {
+                this.logger.LogTrace("(-)[NO_CONNECTED_PEERS]");
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.Forbidden, "Can't send transaction: sending transaction requires at least one connection!", string.Empty);
+            }
+
+            try
+            {
+                foreach (string walletName in this.walletManager.GetWalletsNames())
+                {
+                    foreach (UnspentOutputReference unspentOutput in this.walletManager.GetSpendableTransactionsInWallet(walletName, confirmations: 0))
+                    {
+                        if (unspentOutput.Confirmations == 0)
+                        {
+                            var sent = this.broadcasterManager.BroadcastTransactionAsync(unspentOutput.Transaction.Id).GetAwaiter().GetResult();
+
+                            if (!sent)
+                            {
+                                if (!string.IsNullOrEmpty(unspentOutput.Transaction.Hex))
+                                {
+                                    Transaction trx = this.network.Consensus.ConsensusFactory.CreateTransaction(unspentOutput.Transaction.Hex);
+                                    this.broadcasterManager.BroadcastTransactionAsync(trx).GetAwaiter().GetResult();
+                                }
+                                else
+                                {
+                                    // TODO: implement mempool
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return this.Json(null);
             }
             catch (Exception e)
             {
@@ -1457,7 +1513,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                         BroadcastTransactionStateChanedEntry transactionBroadCastEntry = this.broadcasterManager.GetTransaction(transaction.GetHash());
 
-                        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.CantBroadcast)
+                        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
                         {
                             this.logger.LogError("Exception occurred: {0}", transactionBroadCastEntry.ErrorMessage);
                             return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, transactionBroadCastEntry.ErrorMessage, "Transaction Exception");

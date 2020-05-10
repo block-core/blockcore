@@ -42,6 +42,8 @@ namespace Blockcore.Features.MemoryPool
         /// <summary>Memory pool manager for managing external access to memory pool.</summary>
         private readonly MempoolManager mempoolManager;
 
+        private readonly IBroadcasterManager broadcasterManager;
+
         /// <summary>Instance logger for the memory pool component.</summary>
         private readonly ILogger logger;
 
@@ -61,13 +63,15 @@ namespace Blockcore.Features.MemoryPool
             MempoolBehavior mempoolBehavior,
             MempoolManager mempoolManager,
             ILoggerFactory loggerFactory,
-            INodeStats nodeStats)
+            INodeStats nodeStats,
+            IBroadcasterManager broadcasterManager)
         {
             this.connectionManager = connectionManager;
             this.mempoolSignaled = mempoolSignaled;
             this.blocksDisconnectedSignaled = blocksDisconnectedSignaled;
             this.mempoolBehavior = mempoolBehavior;
             this.mempoolManager = mempoolManager;
+            this.broadcasterManager = broadcasterManager;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
@@ -92,6 +96,9 @@ namespace Blockcore.Features.MemoryPool
             this.mempoolSignaled.Start();
 
             this.blocksDisconnectedSignaled.Initialize();
+
+            // The mempool responds to trx getdata so disbled it form the broadcaster
+            this.broadcasterManager.CanRespondToTrxGetData = false;
         }
 
         /// <summary>

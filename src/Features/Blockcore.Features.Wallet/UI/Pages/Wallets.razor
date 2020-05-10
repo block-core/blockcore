@@ -1,11 +1,16 @@
 ﻿@page "/wallets"
 
 @using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Interfaces
+@using NBitcoin;
 
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
 @inject NBitcoin.ChainIndexer ChainIndexer
 @inject IWalletSyncManager WalletSyncManager
+@inject IBroadcasterManager BroadcasterManager
+@inject Network Network
+@inject IPooledTransaction PooledTransaction
 
 <h2>Wallets</h2>
 
@@ -17,6 +22,8 @@
 
     <button @onclick="NavigateToWalletCreate" class="btn btn-primary">Create Wallet</button>
     <button @onclick="Resync" class="btn btn-primary">Resync Wallets from genesis</button>
+    <button @onclick="Rebroadcast" class="btn btn-primary">Rebroadcast unconfirmed</button>
+
     <br />
     <br />
     <hr />
@@ -63,5 +70,33 @@
     private void Resync()
     {
         this.WalletSyncManager.SyncFromHeight(1);
+    }
+
+    private async Task Rebroadcast()
+    {
+        foreach (string walletName in this.WalletManager.GetWalletsNames())
+        {
+            foreach (var unspentOutput in this.WalletManager.GetSpendableTransactionsInWallet(walletName, confirmations: 0))
+            {
+                if (unspentOutput.Confirmations == 0)
+                {
+                    var sent = await this.BroadcasterManager.BroadcastTransactionAsync(unspentOutput.Transaction.Id);
+
+                    if (!sent)
+                    {
+                        if (!string.IsNullOrEmpty(unspentOutput.Transaction.Hex))
+                        {
+                            var trx = this.Network.Consensus.ConsensusFactory.CreateTransaction(unspentOutput.Transaction.Hex);
+                            this.BroadcasterManager.BroadcastTransactionAsync(trx).GetAwaiter().GetResult();
+                        }
+                    }
+                    else
+                    {
+                        var transaction = await this.PooledTransaction.GetTransaction(unspentOutput.Transaction.Id);
+                        this.BroadcasterManager.BroadcastTransactionAsync(transaction).GetAwaiter().GetResult();
+                    }
+                }
+            }
+        }
     }
 }

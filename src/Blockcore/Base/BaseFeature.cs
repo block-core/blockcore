@@ -215,7 +215,7 @@ namespace Blockcore.Base
             connectionParameters.TemplateBehaviors.Add(new PeerBanningBehavior(this.loggerFactory, this.peerBanning, this.nodeSettings));
             connectionParameters.TemplateBehaviors.Add(new BlockPullerBehavior(this.blockPuller, this.initialBlockDownloadState, this.dateTimeProvider, this.loggerFactory));
             connectionParameters.TemplateBehaviors.Add(new ConnectionManagerBehavior(this.connectionManager, this.loggerFactory));
-            connectionParameters.TemplateBehaviors.Add(new BroadcasterBehavior(this.broadcasterManager, this.loggerFactory));
+            connectionParameters.TemplateBehaviors.Add(new BroadcasterBehavior(this.network, this.broadcasterManager, this.loggerFactory));
 
             this.StartAddressManager(connectionParameters);
 

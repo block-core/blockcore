@@ -881,7 +881,7 @@ namespace Blockcore.IntegrationTests
                 broadcaster.BroadcastTransactionAsync(trx).GetAwaiter().GetResult();
                 var entry = broadcaster.GetTransaction(trx.GetHash());
 
-                Assert.Equal(TransactionBroadcastState.ToBroadcast, entry.TransactionBroadcastState);
+                Assert.Equal(TransactionBroadcastState.ReadyToBroadcast, entry.TransactionBroadcastState);
 
                 Assert.NotNull(stratisMiner.FullNode.MempoolManager().GetTransaction(trx.GetHash()).Result);
 

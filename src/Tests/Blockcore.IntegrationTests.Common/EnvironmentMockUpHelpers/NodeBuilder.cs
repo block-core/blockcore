@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Blockcore.Builder;
-using Blockcore.Features.Api;
+using Blockcore.Features.WebHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;

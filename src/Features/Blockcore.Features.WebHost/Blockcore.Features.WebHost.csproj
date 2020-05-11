@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>Blockcore.Features.Api</AssemblyName>
+    <AssemblyName>Blockcore.Features.WebHost</AssemblyName>
     <OutputType>Library</OutputType>
-    <PackageId>Blockcore.Features.Api</PackageId>
+    <PackageId>Blockcore.Features.WebHost</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>

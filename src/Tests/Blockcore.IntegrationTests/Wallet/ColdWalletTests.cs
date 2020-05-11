@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Blockcore.Builder;
-using Blockcore.Features.Api;
+using Blockcore.Features.WebHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking;
 using Blockcore.Features.Consensus;

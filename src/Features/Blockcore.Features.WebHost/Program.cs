@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.FileProviders;
 
-namespace Blockcore.Features.Api
+namespace Blockcore.Features.WebHost
 {
     public class Program
     {

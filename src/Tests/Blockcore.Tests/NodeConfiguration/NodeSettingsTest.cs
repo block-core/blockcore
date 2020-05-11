@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
-using Blockcore.Features.Api;
+using Blockcore.Features.WebHost;
 using Blockcore.Features.RPC;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;

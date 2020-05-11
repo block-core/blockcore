@@ -6,7 +6,7 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Api
+namespace Blockcore.Features.WebHost
 {
     /// <summary>
     /// Configuration related to the API interface.

@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Api
+namespace Blockcore.Features.WebHost
 {
     /// <summary>
     /// Provides an Api to the full node

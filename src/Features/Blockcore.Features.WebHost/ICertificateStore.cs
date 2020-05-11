@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Blockcore.Features.Api
+namespace Blockcore.Features.WebHost
 {
     /// <summary>
     /// An interface providing operations on certificate repositories.

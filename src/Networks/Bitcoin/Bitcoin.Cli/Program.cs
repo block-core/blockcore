@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using Blockcore.Configuration;
-using Blockcore.Features.Api;
+using Blockcore.Features.WebHost;
 using Blockcore.Features.RPC;
 using Blockcore.Utilities.Extensions;
 using Flurl;

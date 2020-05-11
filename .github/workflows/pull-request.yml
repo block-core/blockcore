@@ -37,3 +37,6 @@ jobs:
       
     - name: Unit Test
       run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+
+    - name: Integration Test
+      run: dotnet test -v=normal --no-build --filter FullyQualifiedName~IntegrationTests -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

@@ -7,7 +7,7 @@ using NSubstitute;
 
 using Xunit;
 
-namespace Blockcore.Features.Api.Tests
+namespace Blockcore.Features.WebHost.Tests
 {
     public class ProgramTest
     {

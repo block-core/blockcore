@@ -9,7 +9,7 @@ using System.Text;
 using AspNetCore.Http.Extensions;
 using Blockcore.Connection;
 using Blockcore.Controllers.Models;
-using Blockcore.Features.Api;
+using Blockcore.Features.WebHost;
 using Blockcore.Features.Miner.Api.Controllers;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
@@ -488,7 +488,7 @@ namespace Blockcore.IntegrationTests.API
 
             List<string> featuresNamespaces = statusResponse.FeaturesData.Select(f => f.Namespace).ToList();
             featuresNamespaces.Should().Contain("Blockcore.Base.BaseFeature");
-            featuresNamespaces.Should().Contain("Blockcore.Features.Api.ApiFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.WebHost.ApiFeature");
             featuresNamespaces.Should().Contain("Blockcore.Features.BlockStore.BlockStoreFeature");
             featuresNamespaces.Should().Contain("Blockcore.Features.Consensus.PowConsensusFeature");
             featuresNamespaces.Should().Contain("Blockcore.Features.MemoryPool.MempoolFeature");

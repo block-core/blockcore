@@ -7,7 +7,7 @@ using FluentAssertions;
 using NBitcoin;
 using Xunit;
 
-namespace Blockcore.Features.Api.Tests
+namespace Blockcore.Features.WebHost.Tests
 {
     /// <summary>
     /// Tests the settings for the API features.

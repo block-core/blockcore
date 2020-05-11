@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Blockcore.Api.Tests</AssemblyName>
-    <PackageId>Blockcore.Features.Api.Tests</PackageId>
+    <AssemblyName>Blockcore.Feeatures.WebHost.Tests</AssemblyName>
+    <PackageId>Blockcore.Features.WebHost.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
@@ -17,7 +17,7 @@
 
   <ItemGroup>
 
-    <ProjectReference Include="..\..\Features\Blockcore.Features.Api\Blockcore.Features.Api.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.WebHost\Blockcore.Features.WebHost.csproj" />
 
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />

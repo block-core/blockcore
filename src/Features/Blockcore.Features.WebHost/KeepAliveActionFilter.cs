@@ -3,7 +3,7 @@ using System.Timers;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Blockcore.Features.Api
+namespace Blockcore.Features.WebHost
 {
     /// <summary>
     /// An asynchronous action filter whose role is to reset the keepalive counter.

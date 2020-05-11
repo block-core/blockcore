@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Blockcore.AsyncWork;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.SignalR.Events;
+using Blockcore.Features.SignalR.Hubs;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 

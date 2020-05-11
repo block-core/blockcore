@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Blockcore.EventBus;
+using Blockcore.Features.SignalR.Hubs;
 using Blockcore.Signals;
 using Microsoft.Extensions.Logging;
 

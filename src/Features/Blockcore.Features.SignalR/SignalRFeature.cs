@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
+using Blockcore.Features.SignalR.Hubs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -120,6 +121,8 @@ namespace Blockcore.Features.SignalR
                     {
                         services.AddSingleton<IEventsSubscriptionService, EventSubscriptionService>();
                         services.AddSingleton<EventsHub>();
+                        services.AddSingleton<NodeHub>();
+                        services.AddSingleton<CommandDispatcher>();
                         services.AddSingleton(fullNodeBuilder);
                         services.AddSingleton(options);
                         services.AddSingleton<SignalRSettings>();

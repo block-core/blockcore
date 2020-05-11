@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.AsyncWork;
+using Blockcore.Features.SignalR.Hubs;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 

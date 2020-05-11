@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Basic UI for Node Web Socket</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.3/signalr.min.js"></script>
+</head>
+
+<body>
+
+    <button onclick="lastBlockHeightFromWalletManager()">Get last block height</button>
+    <br>
+    <button onclick="shutdownNode()">Shut down node</button>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:48335/node")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        var hub = connection.start();
+
+        connection.on("Command", (result) => {
+            console.log(result);
+        });
+
+        function lastBlockHeightFromWalletManager() {
+            // console.log(connection);
+            console.log('Command: WalletManager, Method: LastBlockHeight');
+            connection.invoke("Command", "WalletManager", "LastBlockHeight", "").catch(err => console.error(err));
+        }
+
+        function shutdownNode() {
+            connection.invoke("Command", "NodeLifetime", "StopApplication", "").catch(err => console.error(err));
+        }
+    </script>
+
+</body>
+
+</html>

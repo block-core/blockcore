@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Features.SignalR.Hubs;
 using Blockcore.Utilities.JsonConverters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,7 +21,7 @@ namespace Blockcore.Features.SignalR
                         "CorsPolicy",
                         builder =>
                         {
-                            var allowedDomains = new[] {"http://localhost", "http://localhost:4200"};
+                            var allowedDomains = new[] {"http://localhost", "http://localhost:4200", "http://localhost:8080" };
 
                             builder
                                 .WithOrigins(allowedDomains)
@@ -29,6 +30,7 @@ namespace Blockcore.Features.SignalR
                                 .AllowCredentials();
                         });
                 });
+
             services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
             {
                 var settings = new JsonSerializerSettings();
@@ -48,9 +50,11 @@ namespace Blockcore.Features.SignalR
             }
 
             app.UseCors("CorsPolicy");
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<EventsHub>("/events-hub");
+                endpoints.MapHub<NodeHub>("/node");
             });
         }
     }

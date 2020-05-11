@@ -19,8 +19,8 @@ namespace Blockcore.Features.SignalR
 
             webHostBuilder
                 .UseKestrel(o => o.AllowSynchronousIO = true)
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
+                // .UseContentRoot(Directory.GetCurrentDirectory())
+                // .UseIISIntegration()
                 .UseUrls(uri.ToString())
                 .ConfigureServices(collection =>
                 {

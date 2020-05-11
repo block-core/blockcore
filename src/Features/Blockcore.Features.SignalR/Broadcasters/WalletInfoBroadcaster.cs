@@ -5,6 +5,7 @@ using System.Linq;
 using Blockcore.AsyncWork;
 using Blockcore.Connection;
 using Blockcore.Features.SignalR.Events;
+using Blockcore.Features.SignalR.Hubs;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Exceptions;

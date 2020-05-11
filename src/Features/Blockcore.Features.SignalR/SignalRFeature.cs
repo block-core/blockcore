@@ -52,6 +52,8 @@ namespace Blockcore.Features.SignalR
                 clientEventBroadcaster.Init(eventBroadcasterSettings[clientEventBroadcaster.GetType()]);
             }
 
+            this.logger.LogInformation($"WS listening on: {Environment.NewLine}{this.settings.SignalRUri}");
+
             return Task.CompletedTask;
         }
 
@@ -79,7 +81,7 @@ namespace Blockcore.Features.SignalR
         {
             // Make sure we are releasing the listening ip address / port.
             if (this.webHost == null) return;
-            this.logger.LogInformation("API stopping on URL '{0}'.", this.settings.SignalRUri);
+            this.logger.LogInformation("WS stopping on URL '{0}'.", this.settings.SignalRUri);
             this.webHost.StopAsync(TimeSpan.FromSeconds(SignalRStopTimeoutSeconds)).Wait();
             this.webHost = null;
         }

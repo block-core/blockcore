@@ -52,7 +52,8 @@ namespace Blockcore.Features.Api
 
         public override Task InitializeAsync()
         {
-            this.logger.LogInformation("API starting on URL '{0}'.", this.apiSettings.ApiUri);
+            this.logger.LogInformation($"API listening on: {Environment.NewLine}{this.apiSettings.ApiUri}");
+
             this.webHost = Program.Initialize(this.fullNodeBuilder.Services, this.fullNode, this.apiSettings, this.certificateStore, new WebHostBuilder());
 
             if (this.apiSettings.KeepaliveTimer == null)

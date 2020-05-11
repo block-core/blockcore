@@ -102,7 +102,7 @@ namespace Blockcore.Features.RPC
                 .Build();
 
                 this.fullNode.RPCHost.Start();
-                this.logger.LogInformation("RPC Server listening on: " + Environment.NewLine + string.Join(Environment.NewLine, this.rpcSettings.GetUrls()));
+                this.logger.LogInformation("RPC listening on: " + Environment.NewLine + string.Join(Environment.NewLine, this.rpcSettings.GetUrls()));
             }
             else
             {

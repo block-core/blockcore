@@ -38,6 +38,7 @@ namespace Blockcore.Networks.Xds
             this.DefaultPort = 38333;
             this.DefaultRPCPort = 48333;
             this.DefaultAPIPort = 48334;
+            this.DefaultSignalRPort = 48335;
             this.DefaultMaxOutboundConnections = 16;
             this.DefaultMaxInboundConnections = 109;
             this.MaxTimeOffsetSeconds = 25 * 60;

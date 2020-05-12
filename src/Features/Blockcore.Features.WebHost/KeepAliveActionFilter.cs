@@ -18,7 +18,7 @@ namespace Blockcore.Features.WebHost
         /// Initializes a new instance of the <see cref="KeepaliveActionFilter"/> class.
         /// </summary>
         /// <param name="apiSettings">The API settings.</param>
-        public KeepaliveActionFilter(ApiSettings apiSettings)
+        public KeepaliveActionFilter(WebHostSettings apiSettings)
         {
             if (apiSettings == null)
             {

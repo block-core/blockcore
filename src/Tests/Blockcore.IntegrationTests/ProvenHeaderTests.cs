@@ -39,7 +39,7 @@ namespace Blockcore.IntegrationTests
                 .UsePosConsensus()
                 .UseMempool()
                 .AddRPC()
-                .UseApi()
+                .UseWebHost()
                 .UseTestChainedHeaderTree()
                 .MockIBD()
                 );

@@ -89,7 +89,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 builder
                  .AddPowPosMining()
                  .AddRPC()
-                 .UseApi()
+                 .UseWebHost()
                  .UseTestChainedHeaderTree()
                  .MockIBD();
             });

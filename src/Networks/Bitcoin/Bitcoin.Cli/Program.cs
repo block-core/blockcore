@@ -175,7 +175,7 @@ namespace Bitcoin.Cli
                         MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
                     };
 
-                    var apiSettings = new ApiSettings(nodeSettings);
+                    var apiSettings = new WebHostSettings(nodeSettings);
 
                     string url = $"http://localhost:{apiSettings.ApiPort}/api".AppendPathSegment(command);
 

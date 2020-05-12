@@ -153,7 +153,7 @@ namespace Blockcore.IntegrationTests.API
             this.stratisPosApiNode = this.posNodeBuilder.CreateStratisPosNode(this.posNetwork).Start();
 
             this.stratisPosApiNode.FullNode.NodeService<IPosMinting>(true).Should().NotBeNull();
-            this.apiUri = this.stratisPosApiNode.FullNode.NodeService<ApiSettings>().ApiUri;
+            this.apiUri = this.stratisPosApiNode.FullNode.NodeService<WebHostSettings>().ApiUri;
         }
 
         private void the_proof_of_stake_node_has_passed_LastPOWBlock()
@@ -178,7 +178,7 @@ namespace Blockcore.IntegrationTests.API
             this.firstStratisPowApiNode.Mnemonic = this.firstStratisPowApiNode.Mnemonic;
 
             this.firstStratisPowApiNode.FullNode.Network.Consensus.CoinbaseMaturity = this.maturity;
-            this.apiUri = this.firstStratisPowApiNode.FullNode.NodeService<ApiSettings>().ApiUri;
+            this.apiUri = this.firstStratisPowApiNode.FullNode.NodeService<WebHostSettings>().ApiUri;
         }
 
         private void a_second_proof_of_work_node_with_api_enabled()

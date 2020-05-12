@@ -149,7 +149,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                .AddMining()
                .UseWallet()
                .AddRPC()
-               .UseApi()
+               .UseWebHost()
                .UseTestChainedHeaderTree()
                .MockIBD());
 

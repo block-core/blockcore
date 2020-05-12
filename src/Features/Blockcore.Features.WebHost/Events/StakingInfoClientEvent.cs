@@ -2,7 +2,7 @@ using System;
 using Blockcore.EventBus;
 using Blockcore.Features.Miner.Api.Models;
 
-namespace Blockcore.Features.SignalR.Events
+namespace Blockcore.Features.WebHost.Events
 {
     /// <summary>
     /// Marker type for Client

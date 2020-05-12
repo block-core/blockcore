@@ -42,7 +42,7 @@ namespace Blockcore.Node
             .UseNodeSettings(settings)
             .UseBlockStore()
             .UseMempool()
-            .UseApi()
+            .UseWebHost()
             .AddRPC()
             .UseDiagnosticFeature();
 

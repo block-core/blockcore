@@ -1,7 +1,7 @@
 using System;
 using Blockcore.EventBus;
 
-namespace Blockcore.Features.SignalR
+namespace Blockcore.Features.WebHost
 {
     public interface IClientEvent
     {

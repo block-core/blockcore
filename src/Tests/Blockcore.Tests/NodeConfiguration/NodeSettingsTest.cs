@@ -162,7 +162,7 @@ namespace Blockcore.Tests.NodeConfiguration
 
             var nodeSettings = new NodeSettings(new BitcoinRegTest(), args: new[] { $"-apiport={apiport}" });
 
-            var apiSettings = new ApiSettings(nodeSettings);
+            var apiSettings = new WebHostSettings(nodeSettings);
             var rpcSettings = new RpcSettings(nodeSettings);
             var configurationManagerSettings = new ConnectionManagerSettings(nodeSettings);
 
@@ -186,7 +186,7 @@ namespace Blockcore.Tests.NodeConfiguration
 
             var nodeSettings = new NodeSettings(new BitcoinRegTest(), args: args);
 
-            var apiSettings = new ApiSettings(nodeSettings);
+            var apiSettings = new WebHostSettings(nodeSettings);
             var rpcSettings = new RpcSettings(nodeSettings);
             var configurationManagerSettings = new ConnectionManagerSettings(nodeSettings);
 

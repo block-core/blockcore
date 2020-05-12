@@ -4,9 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.SignalR;
-using Blockcore.Features.SignalR.Broadcasters;
-using Blockcore.Features.SignalR.Events;
 using Blockcore.Utilities;
 
 namespace Blockcore.Node
@@ -25,24 +22,6 @@ namespace Blockcore.Node
 
                 NodeSettings nodeSettings = NetworkSelector.Create(chain, args);
                 IFullNodeBuilder nodeBuilder = NodeBuilder.Create(chain, nodeSettings);
-
-                if (nodeSettings.EnableSignalR)
-                {
-                    nodeBuilder.AddSignalR(options =>
-                    {
-                        options.EventsToHandle = new[]
-                             {
-                            (IClientEvent) new BlockConnectedClientEvent(),
-                            new TransactionReceivedClientEvent()
-                   };
-
-                        options.ClientEventBroadcasters = new[]
-                             {
-                            (Broadcaster: typeof(StakingBroadcaster), ClientEventBroadcasterSettings: new ClientEventBroadcasterSettings { BroadcastFrequencySeconds = 5 }),
-                            (Broadcaster: typeof(WalletInfoBroadcaster), ClientEventBroadcasterSettings: new ClientEventBroadcasterSettings { BroadcastFrequencySeconds = 5 })
-                   };
-                    });
-                }
 
                 IFullNode node = nodeBuilder.Build();
 

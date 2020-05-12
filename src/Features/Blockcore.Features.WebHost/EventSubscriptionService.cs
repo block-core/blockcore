@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Blockcore.EventBus;
+using Blockcore.Features.WebHost.Hubs;
+using Blockcore.Features.WebHost.Options;
 using Blockcore.Signals;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.SignalR
+namespace Blockcore.Features.WebHost
 {
     /// <summary>
     /// This class subscribes to Stratis.Bitcoin.EventBus messages and proxy's them
@@ -14,14 +16,14 @@ namespace Blockcore.Features.SignalR
     /// </summary>
     public class EventSubscriptionService : IEventsSubscriptionService, IDisposable
     {
-        private readonly SignalROptions options;
+        private readonly WebHostFeatureOptions options;
         private readonly ISignals signals;
         private readonly EventsHub eventsHub;
-        private readonly ILogger<SignalRFeature> logger;
+        private readonly ILogger<WebHostFeature> logger;
         private readonly List<SubscriptionToken> subscriptions = new List<SubscriptionToken>();
 
         public EventSubscriptionService(
-            SignalROptions options,
+            WebHostFeatureOptions options,
             ILoggerFactory loggerFactory,
             ISignals signals,
             EventsHub eventsHub)
@@ -29,7 +31,7 @@ namespace Blockcore.Features.SignalR
             this.options = options;
             this.signals = signals;
             this.eventsHub = eventsHub;
-            this.logger = loggerFactory.CreateLogger<SignalRFeature>();
+            this.logger = loggerFactory.CreateLogger<WebHostFeature>();
         }
 
         public void Init()

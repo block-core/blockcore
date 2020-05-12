@@ -13,6 +13,7 @@
     <PackageIcon></PackageIcon>
     <PackageIconUrl>https://www.blockcore.net/assets/blockcore-256x256.png</PackageIconUrl>
     <PackageTags>blockchain;cryptocurrency;crypto;C#;.NET;bitcoin;blockcore</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <Target Name="AddInternalsVisibleTo" BeforeTargets="CoreCompile">

@@ -1,4 +1,4 @@
-namespace Blockcore.Features.SignalR
+namespace Blockcore.Features.WebHost
 {
     public interface IEventsSubscriptionService
     {

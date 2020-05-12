@@ -1,4 +1,6 @@
-namespace Blockcore.Features.SignalR
+using Blockcore.Features.WebHost.Options;
+
+namespace Blockcore.Features.WebHost
 {
     public interface IClientEventBroadcaster
     {

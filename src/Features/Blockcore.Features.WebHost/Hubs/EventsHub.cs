@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.SignalR
+namespace Blockcore.Features.WebHost.Hubs
 {
     public class EventsHub : Hub
     {

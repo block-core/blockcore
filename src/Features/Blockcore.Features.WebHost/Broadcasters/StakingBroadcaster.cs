@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using Blockcore.AsyncWork;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.SignalR.Events;
+using Blockcore.Features.WebHost.Events;
+using Blockcore.Features.WebHost.Hubs;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.SignalR.Broadcasters
+namespace Blockcore.Features.WebHost.Broadcasters
 {
     /// <summary>
-    /// Broadcasts current staking information to SignalR clients
+    /// Broadcasts current staking information to Web Socket clients
     /// </summary>
     public class StakingBroadcaster : ClientBroadcasterBase
     {

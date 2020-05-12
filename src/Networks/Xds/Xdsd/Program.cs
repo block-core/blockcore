@@ -36,7 +36,7 @@ namespace StratisD
                     .UseMempool()
                     .UseColdStakingWallet()
                     .AddPowPosMining()
-                    .UseApi()
+                    .UseWebHost()
                     .AddRPC()
                     .UseDiagnosticFeature();
 

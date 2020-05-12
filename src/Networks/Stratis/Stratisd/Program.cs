@@ -11,9 +11,6 @@ using Blockcore.Features.Diagnostic;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
-using Blockcore.Features.SignalR;
-using Blockcore.Features.SignalR.Broadcasters;
-using Blockcore.Features.SignalR.Events;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Utilities;
@@ -43,33 +40,9 @@ namespace StratisD
                     .UseMempool()
                     .UseColdStakingWallet()
                     .AddPowPosMining()
-                    .UseApi()
+                    .UseWebHost()
                     .AddRPC()
                     .UseDiagnosticFeature();
-
-                if (nodeSettings.EnableSignalR)
-                {
-                    nodeBuilder.AddSignalR(options =>
-                    {
-                        options.EventsToHandle = new[]
-                        {
-                            (IClientEvent) new BlockConnectedClientEvent(),
-                            new TransactionReceivedClientEvent()
-                        };
-
-                        options.ClientEventBroadcasters = new[]
-                        {
-                            (Broadcaster: typeof(StakingBroadcaster), ClientEventBroadcasterSettings: new ClientEventBroadcasterSettings
-                                {
-                                    BroadcastFrequencySeconds = 5
-                                }),
-                            (Broadcaster: typeof(WalletInfoBroadcaster), ClientEventBroadcasterSettings: new ClientEventBroadcasterSettings
-                                {
-                                    BroadcastFrequencySeconds = 5
-                                })
-                        };
-                    });
-                }
 
                 IFullNode node = nodeBuilder.Build();
 

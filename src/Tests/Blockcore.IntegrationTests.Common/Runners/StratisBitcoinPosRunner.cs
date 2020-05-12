@@ -43,7 +43,7 @@ namespace Blockcore.IntegrationTests.Common.Runners
                 .UseWallet()
                 .AddPowPosMining()
                 .AddRPC()
-                .UseApi()
+                .UseWebHost()
                 .UseTestChainedHeaderTree()
                 .MockIBD();
 

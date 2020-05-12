@@ -129,6 +129,7 @@ namespace NBitcoin
         /// <summary>
         /// The default port on which SignalR broadcasts for this network.
         /// </summary>
+        [Obsolete("SignalR has been migrated into WebHost and use same port as API.")]
         public int DefaultSignalRPort { get; protected set; }
 
         /// <summary>

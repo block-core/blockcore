@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.AsyncWork;
+using Blockcore.Features.WebHost.Hubs;
+using Blockcore.Features.WebHost.Options;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.SignalR.Broadcasters
+namespace Blockcore.Features.WebHost.Broadcasters
 {
     /// <summary>
-    /// Base class for all SignalR Broadcasters
+    /// Base class for all Web Socket Broadcasters
     /// </summary>
     public abstract class ClientBroadcasterBase : IClientEventBroadcaster
     {
@@ -31,7 +33,7 @@ namespace Blockcore.Features.SignalR.Broadcasters
 
         public void Init(ClientEventBroadcasterSettings broadcasterSettings)
         {
-            this.logger.LogDebug($"Initialising SignalR Broadcaster {this.GetType().Name}");
+            this.logger.LogDebug($"Initialising Web Socket Broadcaster {this.GetType().Name}");
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop(
                 $"Broadcast {this.GetType().Name}",
                 async token =>

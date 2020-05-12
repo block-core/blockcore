@@ -45,7 +45,7 @@ namespace Blockcore.IntegrationTests
                         .AddMining()
                         .UseWallet()
                         .AddRPC()
-                        .UseApi()
+                        .UseWebHost()
                         .MockIBD());
 
                 var coreNode = nodeBuilder.CreateCustomNode(buildAction, this.network,
@@ -76,7 +76,7 @@ namespace Blockcore.IntegrationTests
                         .AddMining()
                         .UseWallet()
                         .AddRPC()
-                        .UseApi()
+                        .UseWebHost()
                         .MockIBD());
 
                 var coreNode = nodeBuilder.CreateCustomNode(buildAction, this.network, ProtocolVersion.PROTOCOL_VERSION, configParameters: extraParams);

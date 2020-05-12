@@ -60,9 +60,9 @@
       "commandName": "Project",
       "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
     },
-    "XDS (MAIN/LOCAL/RPC/SIGNALR)": {
+    "XDS (MAIN/LOCAL/RPC/UI/API/WS)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableSignalR=true"
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableUI=true -enableAPI=true -enableWS=true"
     }
   }
 }

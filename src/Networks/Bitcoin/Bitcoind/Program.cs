@@ -35,7 +35,7 @@ namespace BitcoinD
                     .AddMining()
                     .AddRPC()
                     .UseWallet()
-                    .UseApi()
+                    .UseWebHost()
                     .Build();
 
                 if (node != null)

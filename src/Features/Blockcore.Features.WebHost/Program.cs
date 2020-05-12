@@ -17,7 +17,7 @@ namespace Blockcore.Features.WebHost
     public class Program
     {
         public static IWebHost Initialize(IEnumerable<ServiceDescriptor> services, FullNode fullNode,
-            ApiSettings apiSettings, ICertificateStore store, IWebHostBuilder webHostBuilder)
+            WebHostSettings apiSettings, ICertificateStore store, IWebHostBuilder webHostBuilder)
         {
             Guard.NotNull(fullNode, nameof(fullNode));
             Guard.NotNull(webHostBuilder, nameof(webHostBuilder));
@@ -43,7 +43,6 @@ namespace Blockcore.Features.WebHost
                         }
                     })
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
                 .UseUrls(apiUri.ToString())
                 .ConfigureServices(collection =>
                 {

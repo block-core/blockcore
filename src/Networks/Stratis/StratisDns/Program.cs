@@ -54,7 +54,7 @@ namespace StratisDnsD
                         .UseMempool()
                         .UseWallet()
                         .AddPowPosMining()
-                        .UseApi()
+                        .UseWebHost()
                         .AddRPC()
                         .UseDns()
                         .Build();
@@ -65,7 +65,7 @@ namespace StratisDnsD
                     node = new FullNodeBuilder()
                         .UseNodeSettings(nodeSettings)
                         .UsePosConsensus()
-                        .UseApi()
+                        .UseWebHost()
                         .AddRPC()
                         .UseDns()
                         .Build();

@@ -4,20 +4,20 @@ using System.IO;
 using System.Linq;
 using Blockcore.AsyncWork;
 using Blockcore.Connection;
-using Blockcore.Features.SignalR.Events;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Models;
-using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.Features.WebHost.Events;
+using Blockcore.Features.WebHost.Hubs;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.SignalR.Broadcasters
+namespace Blockcore.Features.WebHost.Broadcasters
 {
     /// <summary>
-    /// Broadcasts current staking information to SignalR clients
+    /// Broadcasts current staking information to Web Socket clients
     /// </summary>
     public class WalletInfoBroadcaster : ClientBroadcasterBase
     {

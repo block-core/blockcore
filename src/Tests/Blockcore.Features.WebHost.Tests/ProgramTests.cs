@@ -13,14 +13,14 @@ namespace Blockcore.Features.WebHost.Tests
     {
         private readonly X509Certificate2 certificateToUse;
         private readonly ICertificateStore certificateStore;
-        private readonly ApiSettings apiSettings;
+        private readonly WebHostSettings apiSettings;
         private readonly IWebHostBuilder webHostBuilder;
 
         private X509Certificate2 certificateRetrieved;
 
         public ProgramTest()
         {
-            this.apiSettings = new ApiSettings(NodeSettings.Default(KnownNetworks.TestNet)) { UseHttps = true };
+            this.apiSettings = new WebHostSettings(NodeSettings.Default(KnownNetworks.TestNet)) { UseHttps = true };
             this.certificateToUse = new X509Certificate2();
             this.certificateStore = Substitute.For<ICertificateStore>();
             this.webHostBuilder = Substitute.For<IWebHostBuilder>();

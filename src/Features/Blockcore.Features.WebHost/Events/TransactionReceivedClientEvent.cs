@@ -2,7 +2,7 @@ using System;
 using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;
 
-namespace Blockcore.Features.SignalR.Events
+namespace Blockcore.Features.WebHost.Events
 {
     public class TransactionReceivedClientEvent : IClientEvent
     {

@@ -156,9 +156,9 @@
 
     private async Task Setup()
     {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
-        if (string.IsNullOrEmpty(this.ColdWalletAddress)) { this.Alert = "No ColdWalletAddress"; return; }
-        if (string.IsNullOrEmpty(this.HotWalletAddress)) { this.Alert = "No HotWalletAddress"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.ColdWalletAddress)) { this.Alert = "Your cold wallet address is missing"; return; }
+        if (string.IsNullOrEmpty(this.HotWalletAddress)) { this.Alert = "Your hot wallet address is missing"; return; }
 
         this.Alert = string.Empty;
 

@@ -112,8 +112,8 @@
 
     private async Task Withdraw()
     {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
-        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "No Address"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a withdrawal address"; return; }
         this.Alert = string.Empty;
 
         try

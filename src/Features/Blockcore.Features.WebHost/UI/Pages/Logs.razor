@@ -5,7 +5,7 @@
 <h2>Node logs</h2>
 
 @{
-<textarea class="w-100" rows="50">
-@(((Blockcore.FullNode)this.FullNode).LastLogOutput.TrimStart(' '));
-</textarea>
+<pre>
+@(((Blockcore.FullNode)this.FullNode).LastLogOutput.TrimStart(' '))
+</pre>
 }

@@ -35,8 +35,8 @@
     <table class="table table-sm">
         <thead>
             <tr>
-                <th>Wallet/account</th>
-                <th>Blanace</th>
+                <th>Wallet / Account</th>
+                <th>Balance</th>
             </tr>
         </thead>
         <tbody>
@@ -139,8 +139,8 @@
 
     private void StartStaking()
     {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
-        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "No password"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
 
         var wallet = this.WalletManager.GetWallet(this.WalletName);
 

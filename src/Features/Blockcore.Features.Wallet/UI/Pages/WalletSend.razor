@@ -14,11 +14,6 @@
 @inject IWalletTransactionHandler WalletTransactionHandler
 @inject IBroadcasterManager BroadcasterManager
 
-<button class="btn btn-link" @onclick="() => { NavigateToWalletAccount(walletname, accountname); }">
-    Back to wallet account
-</button>
-<br />
-
 <h3>Send Coins: <strong>@walletname / @accountname</strong></h3>
 
 @{

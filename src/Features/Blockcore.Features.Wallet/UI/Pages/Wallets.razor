@@ -21,17 +21,17 @@
     <p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
 
     <button @onclick="NavigateToWalletCreate" class="btn btn-primary">Create Wallet</button>
-    <button @onclick="Resync" class="btn btn-primary">Resync Wallets from genesis</button>
-    <button @onclick="Rebroadcast" class="btn btn-primary">Rebroadcast unconfirmed</button>
-
+    <button @onclick="NavigateToWalletRecover" class="btn btn-primary">Recover Wallet</button>
+    <button @onclick="Resync" class="btn btn-primary">Resync wallets from genesis</button>
+    <button @onclick="Rebroadcast" class="btn btn-primary">Re-broadcast unconfirmed</button>
     <br />
     <br />
     <hr />
     <table class="table">
         <thead>
             <tr>
-                <th>Wallet / account</th>
-                <th>Confirmed blanace</th>
+                <th>Wallet / Account</th>
+                <th>Confirmed balance</th>
                 <th>Unconfirmed balance</th>
             </tr>
         </thead>
@@ -64,9 +64,12 @@
 
     private void NavigateToWalletCreate()
     {
-        NavigationManager.NavigateTo("walletcrate");
+        NavigationManager.NavigateTo("walletcreate");
     }
-
+    private void NavigateToWalletRecover()
+    {
+        NavigationManager.NavigateTo("walletrecover");
+    }
     private void Resync()
     {
         this.WalletSyncManager.SyncFromHeight(1);

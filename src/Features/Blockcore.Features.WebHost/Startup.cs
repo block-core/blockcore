@@ -124,30 +124,7 @@ namespace Blockcore.Features.WebHost
                                }
                            });
 
-                    string[] ApiXmlDocuments = new string[]
-                    {
-                            "Blockcore.xml",
-                            "Blockcore.NBitcoin.xml",
-                            "Blockcore.Features.WebHost.xml",
-                            "Blockcore.Features.Wallet.xml",
-                            "Blockcore.Features.RPC.xml",
-                            "Blockcore.Features.Miner.xml",
-                            "Blockcore.Features.MemoryPool.xml",
-                            "Blockcore.Features.Consensus.xml",
-                            "Blockcore.Features.BlockStore.xml",
-                            "Blockcore.Features.ColdStaking.xml"
-                    };
-
-                    // Include XML documentation files.
-                    string basePath = AppContext.BaseDirectory;
-
-                    foreach (string xmlPath in ApiXmlDocuments.Select(xmlDocument => Path.Combine(basePath, xmlDocument)))
-                    {
-                        if (File.Exists(xmlPath))
-                        {
-                            options.IncludeXmlComments(xmlPath);
-                        }
-                    }
+                    SwaggerApiDocumentationScaffolder.Scaffold(options);
 
 #pragma warning disable CS0618 // Type or member is obsolete
                     options.DescribeAllEnumsAsStrings();

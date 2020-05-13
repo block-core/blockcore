@@ -14,7 +14,7 @@
 @{
     <div class="input-group">
         <div class="input-group-prepend">
-            <span class="input-group-text">Mnemonic</span>
+            <span style="min-width: 15em" class="input-group-text">Mnemonic</span>
         </div>
         <textarea @bind="Mnemonic" class="form-control" rows="2">@Mnemonic</textarea>
     </div>
@@ -22,7 +22,7 @@
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Passphrase (optional):</span>
+            <span style="min-width: 15em" class="input-group-text">Passphrase (optional):</span>
         </div>
         <input @bind="Passphrase" type="password" class="form-control" placeholder="passphrase" />
     </div>
@@ -30,14 +30,14 @@
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Wallet name:</span>
+            <span style="min-width: 15em" class="input-group-text" id="basic-addon1">Wallet name:</span>
         </div>
         <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Wallet Password:</span>
+            <span style="min-width: 15em" class="input-group-text">Wallet Password:</span>
         </div>
         <input @bind="Password" type="password" class="form-control" placeholder="password" />
     </div>

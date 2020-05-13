@@ -20,19 +20,31 @@
 @{
     var accountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
-    <p>Amount Confirmed: <strong> @accountBalance.AmountConfirmed</strong></p>
-    <p>Amount Unconfirmed: <strong>@accountBalance.AmountUnconfirmed</strong></p>
-    <p>Spendable Amount: <strong> @accountBalance.SpendableAmount</strong></p>
-
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Amount Confirmed</th>
+                <th>Amount Unconfirmed</th>
+                <th>Spendable Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+                    <tr>
+                        <td>@accountBalance.AmountConfirmed</td>
+                        <td>@accountBalance.AmountUnconfirmed</td>
+                        <td>@accountBalance.SpendableAmount</td>
+                    </tr>
+        </tbody>
+    </table>
     <hr />
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">ColdWalletAddress:</span>
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">ColdWalletAddress:</span>
         </div>
         <input @bind="ColdWalletAddress" type="text" class="form-control" placeholder="ColdWalletAddress" />
         <div class="input-group-append">
-            <span class="input-group-text">from wallet: @walletname</span>
+            <span style="min-width: 10em" class="input-group-text">from wallet: @walletname</span>
         </div>
     </div>
 
@@ -45,34 +57,34 @@
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">HotWalletAddress:</span>
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">HotWalletAddress:</span>
         </div>
         <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="HotWalletAddress" />
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Amount:</span>
+            <span style="min-width: 10em" class="input-group-text">Amount:</span>
         </div>
         <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
         <div class="input-group-append">
-            <span class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+            <span style="min-width: 10em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
         </div>
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Fee:</span>
+            <span style="min-width: 10em" class="input-group-text">Fee:</span>
         </div>
         <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
         <div class="input-group-append">
-            <span class="input-group-text">Optional (default to low)</span>
+            <span style="min-width: 10em" class="input-group-text">Optional (default to low)</span>
         </div>
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Password:</span>
+            <span style="min-width: 10em" class="input-group-text">Password:</span>
         </div>
         <input @bind="Password" type="password" class="form-control" placeholder="password" />
     </div>

@@ -30,14 +30,14 @@
     <hr />
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Password:</span>
+            <span style="min-width: 10em" class="input-group-text">Password:</span>
         </div>
         <input @bind="Password" type="password" class="form-control" placeholder="password" />
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Address:</span>
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Address:</span>
         </div>
         <input @bind="Address" type="text" class="form-control" placeholder="address" />
         <button class="btn btn-light btn-sm" @onclick="GenerateAddress">Get address from: @walletname</button>
@@ -45,21 +45,21 @@
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Amount:</span>
+            <span style="min-width: 10em" class="input-group-text">Amount:</span>
         </div>
         <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
         <div class="input-group-append">
-            <span class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+            <span style="min-width: 10em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
         </div>
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Fee:</span>
+            <span style="min-width: 10em" class="input-group-text">Fee:</span>
         </div>
         <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
         <div class="input-group-append">
-            <span class="input-group-text">Optional (default to low)</span>
+            <span style="min-width: 10em" class="input-group-text">Optional (default to low)</span>
         </div>
     </div>
 

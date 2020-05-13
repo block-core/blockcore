@@ -1,6 +1,5 @@
 ﻿using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.WebHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking;
 using Blockcore.Features.Consensus;
@@ -9,6 +8,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.WebHost;
 
 namespace Blockcore.Node
 {

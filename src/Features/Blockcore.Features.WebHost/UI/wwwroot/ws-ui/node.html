@@ -42,7 +42,7 @@
 
         var hub = connection.start();
 
-        connection.on("Message", (result) => {
+        connection.on("Echo", (result) => {
             console.log('Received from node: ', result);
 
             var tag = document.createElement("p");
@@ -52,7 +52,7 @@
         });
 
         function echo() {
-            connection.invoke("Message", "Hello World!").catch(err => console.error(err));
+            connection.invoke("Echo", "Hello World!").catch(err => console.error(err));
         }
     </script>
 

@@ -31,8 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,10 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="UI\wwwroot\ws-events\index.html" />
+    <None Remove="UI\wwwroot\ws-ui\index.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Options\" />
     <Folder Include="UI\wwwroot\js\" />
   </ItemGroup>
 </Project>

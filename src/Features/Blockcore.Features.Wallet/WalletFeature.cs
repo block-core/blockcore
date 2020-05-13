@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
@@ -13,6 +14,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Broadcasting;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet.AddressBook;
+using Blockcore.Features.Wallet.Broadcasters;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Features.Wallet.UI;
@@ -168,6 +170,7 @@ namespace Blockcore.Features.Wallet
                         services.AddSingleton<StandardTransactionPolicy>();
                         services.AddSingleton<IAddressBookManager, AddressBookManager>();
                         services.AddSingleton<INavigationItem, WalletNavigationItem>();
+                        services.AddSingleton<IClientEventBroadcaster, WalletInfoBroadcaster>();
                     });
             });
 

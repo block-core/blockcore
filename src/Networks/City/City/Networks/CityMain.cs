@@ -46,7 +46,6 @@ namespace City.Networks
             DefaultPort = network.DefaultPort;
             DefaultRPCPort = network.DefaultRPCPort;
             DefaultAPIPort = network.DefaultAPIPort;
-            DefaultSignalRPort = network.DefaultSignalRPort;
 
             DefaultMaxOutboundConnections = 16;
             DefaultMaxInboundConnections = 109;

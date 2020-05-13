@@ -1,5 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using Blockcore.Broadcasters;
+using Blockcore.EventBus;
+using Blockcore.Features.WebHost.Events;
+using Blockcore.Utilities;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
@@ -9,9 +13,13 @@ namespace Blockcore.Features.WebHost.Hubs
     {
         private readonly ILogger<EventsHub> logger;
 
-        public EventsHub(ILoggerFactory loggerFactory)
+        private readonly IEventsSubscriptionService eventsSubscriptionService;
+
+        public EventsHub(ILoggerFactory loggerFactory, IEventsSubscriptionService eventsSubscriptionService)
         {
             this.logger = loggerFactory.CreateLogger<EventsHub>();
+
+            this.eventsSubscriptionService = eventsSubscriptionService;
         }
 
         public override Task OnConnectedAsync()
@@ -23,22 +31,30 @@ namespace Blockcore.Features.WebHost.Hubs
         public override Task OnDisconnectedAsync(Exception exception)
         {
             this.logger.LogDebug("Client with id {id} disconnected", this.Context.ConnectionId);
+
+            this.eventsSubscriptionService.UnsubscribeAll(this.Context.ConnectionId);
+
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task SendToClientsAsync(IClientEvent @event)
+        public Task Subscribe(params string[] events)
         {
-            // Check if any there are any connected clients
-            if (this.Clients == null) return;
+            foreach (var @event in events)
+            { 
+                this.eventsSubscriptionService.Subscribe(this.Context.ConnectionId, @event);
+            }
 
-            try
+            return Task.CompletedTask;
+        }
+
+        public Task Unsubscribe(params string[] events)
+        {
+            foreach (var @event in events)
             {
-                await this.Clients.All.SendAsync("receiveEvent", @event);
+                this.eventsSubscriptionService.Unsubscribe(this.Context.ConnectionId, @event);
             }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, "Error sending to clients");
-            }
+
+            return Task.CompletedTask;
         }
     }
 }

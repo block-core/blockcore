@@ -17,6 +17,11 @@ namespace Blockcore.Features.WebHost
 {
     public class Startup
     {
+        /// <summary>
+        /// Provides access to the service provider created by the ASP.NET runtime.
+        /// </summary>
+        public static IServiceProvider Provider { get; private set; }
+
         public Startup(IWebHostEnvironment env, IFullNode fullNode)
         {
             this.fullNode = fullNode;
@@ -96,16 +101,6 @@ namespace Blockcore.Features.WebHost
                 services.AddMvc(options =>
                 {
                     options.Filters.Add(typeof(LoggingActionFilter));
-
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-                    ServiceProvider serviceProvider = services.BuildServiceProvider();
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-
-                    var apiSettings = (WebHostSettings)serviceProvider.GetRequiredService(typeof(WebHostSettings));
-                    if (apiSettings.KeepaliveTimer != null)
-                    {
-                        options.Filters.Add(typeof(KeepaliveActionFilter));
-                    }
                 })
                 // add serializers for NBitcoin objects
                 .AddNewtonsoftJson(options => Serializer.RegisterFrontConverters(options.SerializerSettings))
@@ -168,6 +163,9 @@ namespace Blockcore.Features.WebHost
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // This is needed to access context of the hubs.
+            Provider = app.ApplicationServices;
+
             WebHostSettings webHostSettings = fullNode.Services.ServiceProvider.GetService<WebHostSettings>();
 
             app.UseStaticFiles();
@@ -188,7 +186,7 @@ namespace Blockcore.Features.WebHost
 
                 if (webHostSettings.EnableWS)
                 {
-                    endpoints.MapHub<EventsHub>("/events-hub");
+                    endpoints.MapHub<EventsHub>("/ws-events");
                     endpoints.MapHub<NodeHub>("/ws");
                 }
 

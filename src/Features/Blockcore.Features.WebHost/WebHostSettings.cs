@@ -25,9 +25,6 @@ namespace Blockcore.Features.WebHost
         /// <summary>Port of node's API interface.</summary>
         public int ApiPort { get; set; }
 
-        /// <summary>URI to node's API interface.</summary>
-        public Timer KeepaliveTimer { get; private set; }
-
         /// <summary>
         /// If true then the node will add and start the SignalR feature. This should never be enabled if node is accessible to the public.
         /// </summary>
@@ -96,17 +93,6 @@ namespace Blockcore.Features.WebHost
                 this.ApiPort = apiUri.Port;
             }
 
-            // Set the keepalive interval (set in seconds).
-            int keepAlive = config.GetOrDefault("keepalive", 0, this.logger);
-            if (keepAlive > 0)
-            {
-                this.KeepaliveTimer = new Timer
-                {
-                    AutoReset = false,
-                    Interval = keepAlive * 1000
-                };
-            }
-
             this.EnableWS = config.GetOrDefault<bool>("enableWS", false, this.logger);
             this.EnableUI = config.GetOrDefault<bool>("enableUI", true, this.logger);
             this.EnableAPI = config.GetOrDefault<bool>("enableAPI", true, this.logger);
@@ -142,8 +128,6 @@ namespace Blockcore.Features.WebHost
             builder.AppendLine($"#apiuri={ DefaultApiHost }");
             builder.AppendLine($"#Port of node's API interface. Defaults to { network.DefaultAPIPort }.");
             builder.AppendLine($"#apiport={ network.DefaultAPIPort }");
-            builder.AppendLine($"#Keep Alive interval (set in seconds). Default: 0 (no keep alive).");
-            builder.AppendLine($"#keepalive=0");
             builder.AppendLine($"#Use HTTPS protocol on the API. Default is false.");
             builder.AppendLine($"#usehttps=false");
             builder.AppendLine($"#Enable the Web Socket endpoints. Defaults to false.");

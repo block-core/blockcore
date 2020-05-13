@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
-using Blockcore.Features.WebHost.Broadcasters;
+using Blockcore.EventBus;
 using Blockcore.Features.WebHost.Events;
 using Blockcore.Features.WebHost.Hubs;
-using Blockcore.Features.WebHost.Options;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,8 +32,6 @@ namespace Blockcore.Features.WebHost
 
         private readonly WebHostSettings settings;
 
-        private readonly WebHostFeatureOptions featureOptions;
-
         private readonly IEnumerable<IClientEventBroadcaster> eventBroadcasters;
 
         private readonly IEventsSubscriptionService eventsSubscriptionService;
@@ -47,7 +45,6 @@ namespace Blockcore.Features.WebHost
         public WebHostFeature(
             IFullNodeBuilder fullNodeBuilder,
             FullNode fullNode,
-            WebHostFeatureOptions apiFeatureOptions,
             WebHostSettings apiSettings,
             ILoggerFactory loggerFactory,
             ICertificateStore certificateStore,
@@ -56,7 +53,6 @@ namespace Blockcore.Features.WebHost
         {
             this.fullNodeBuilder = fullNodeBuilder;
             this.fullNode = fullNode;
-            this.featureOptions = apiFeatureOptions;
             this.settings = apiSettings;
             this.certificateStore = certificateStore;
             this.eventBroadcasters = eventBroadcasters;
@@ -76,29 +72,11 @@ namespace Blockcore.Features.WebHost
             foreach (IClientEventBroadcaster clientEventBroadcaster in this.eventBroadcasters)
             {
                 // Intialise with specified settings
-                clientEventBroadcaster.Init(eventBroadcasterSettings[clientEventBroadcaster.GetType()]);
+                //clientEventBroadcaster.Init(eventBroadcasterSettings[clientEventBroadcaster.GetType()]);
+                clientEventBroadcaster.Init(new ClientEventBroadcasterSettings { BroadcastFrequencySeconds = 5 });
             }
 
             this.webHost = Program.Initialize(this.fullNodeBuilder.Services, this.fullNode, this.settings, this.certificateStore, new WebHostBuilder());
-
-            if (this.settings.KeepaliveTimer == null)
-            {
-                this.logger.LogTrace("(-)[KEEPALIVE_DISABLED]");
-                return Task.CompletedTask;
-            }
-
-            // Start the keepalive timer, if set.
-            // If the timer expires, the node will shut down.
-            this.settings.KeepaliveTimer.Elapsed += (sender, args) =>
-            {
-                this.logger.LogInformation($"The application will shut down because the keepalive timer has elapsed.");
-
-                this.settings.KeepaliveTimer.Stop();
-                this.settings.KeepaliveTimer.Enabled = false;
-                this.fullNode.NodeLifetime.StopApplication();
-            };
-
-            this.settings.KeepaliveTimer.Start();
 
             return Task.CompletedTask;
         }
@@ -125,14 +103,6 @@ namespace Blockcore.Features.WebHost
         /// <inheritdoc />
         public override void Dispose()
         {
-            // Make sure the timer is stopped and disposed.
-            if (this.settings.KeepaliveTimer != null)
-            {
-                this.settings.KeepaliveTimer.Stop();
-                this.settings.KeepaliveTimer.Enabled = false;
-                this.settings.KeepaliveTimer.Dispose();
-            }
-
             // Make sure we are releasing the listening ip address / port.
             if (this.webHost != null)
             {
@@ -143,52 +113,13 @@ namespace Blockcore.Features.WebHost
         }
     }
 
-    public sealed class WebHostFeatureOptions
-    {
-        public IClientEvent[] EventsToHandle { get; set; }
-
-        public (Type Broadcaster, ClientEventBroadcasterSettings clientEventBroadcasterSettings)[] ClientEventBroadcasters { get; set; }
-    }
-
     /// <summary>
     /// A class providing extension methods for <see cref="IFullNodeBuilder"/>.
     /// </summary>
     public static class ApiFeatureExtension
     {
-        [Obsolete("Use the new UseWebHost()")]
-        public static IFullNodeBuilder UseApi(this IFullNodeBuilder fullNodeBuilder, Action<WebHostFeatureOptions> optionsAction = null)
+        public static IFullNodeBuilder UseWebHost(this IFullNodeBuilder fullNodeBuilder)
         {
-            return UseWebHost(fullNodeBuilder, optionsAction);
-        }
-
-        public static IFullNodeBuilder UseWebHost(this IFullNodeBuilder fullNodeBuilder, Action<WebHostFeatureOptions> optionsAction = null)
-        {
-            // TODO: move the options in to the feature builder
-            var options = new WebHostFeatureOptions();
-            optionsAction?.Invoke(options);
-
-            // If there is no events to handle defined in the options configured by the node, add a few default.
-            if (options.EventsToHandle == null)
-            {
-                options.EventsToHandle = new[]
-                {
-                    (IClientEvent) new BlockConnectedClientEvent(),
-                    new TransactionReceivedClientEvent()
-                };
-            }
-
-            // If there is now client event broadcasters, add the default ones.
-            if (options.ClientEventBroadcasters == null)
-            {
-                options.ClientEventBroadcasters = new[]
-                {
-                    (Broadcaster: typeof(StakingBroadcaster), ClientEventBroadcasterSettings: new ClientEventBroadcasterSettings { BroadcastFrequencySeconds = 5 }),
-                    (Broadcaster: typeof(WalletInfoBroadcaster), ClientEventBroadcasterSettings: new ClientEventBroadcasterSettings { BroadcastFrequencySeconds = 5 })
-                };
-            }
-
-            WebHostFeature.eventBroadcasterSettings = options.ClientEventBroadcasters.ToDictionary(pair => pair.Broadcaster, pair => pair.clientEventBroadcasterSettings);
-
             fullNodeBuilder.ConfigureFeature(features =>
             {
                 features
@@ -196,26 +127,9 @@ namespace Blockcore.Features.WebHost
                 .FeatureServices(services =>
                 {
                     services.AddSingleton(fullNodeBuilder);
-                    services.AddSingleton(options);
                     services.AddSingleton<WebHostSettings>();
                     services.AddSingleton<IEventsSubscriptionService, EventSubscriptionService>();
-                    services.AddSingleton<EventsHub>();
                     services.AddSingleton<ICertificateStore, CertificateStore>();
-
-                    if (null != options.ClientEventBroadcasters)
-                    {
-                        foreach ((Type Broadcaster, ClientEventBroadcasterSettings clientEventBroadcasterSettings) in options.ClientEventBroadcasters)
-                        {
-                            if (typeof(IClientEventBroadcaster).IsAssignableFrom(Broadcaster))
-                            {
-                                services.AddSingleton(typeof(IClientEventBroadcaster), Broadcaster);
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Warning {Broadcaster.Name} is not of type {typeof(IClientEventBroadcaster).Name}");
-                            }
-                        }
-                    }
                 });
             });
 

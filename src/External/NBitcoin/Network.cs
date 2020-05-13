@@ -125,12 +125,6 @@ namespace NBitcoin
         /// The default port on which nodes of this network communicate with external clients.
         /// </summary>
         public int DefaultPort { get; protected set; }
-        
-        /// <summary>
-        /// The default port on which SignalR broadcasts for this network.
-        /// </summary>
-        [Obsolete("SignalR has been migrated into WebHost and use same port as API.")]
-        public int DefaultSignalRPort { get; protected set; }
 
         /// <summary>
         /// The default maximum number of outbound connections a node on this network will form.

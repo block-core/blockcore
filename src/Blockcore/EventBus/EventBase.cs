@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Broadcasters;
 
 namespace Blockcore.EventBus
 {
@@ -20,5 +21,9 @@ namespace Blockcore.EventBus
         {
             return $"{this.CorrelationId.ToString()} - {this.GetType().Name}";
         }
+
+        public string EventName { get { return this.GetType().Name.ToLowerInvariant(); } }
+
+        public string EventType { get { return this.GetType().ToString(); } }
     }
 }

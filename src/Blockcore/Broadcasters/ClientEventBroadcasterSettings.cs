@@ -1,4 +1,4 @@
-﻿namespace Blockcore.Features.WebHost.Options
+﻿namespace Blockcore.Broadcasters
 {
     public class ClientEventBroadcasterSettings
     {

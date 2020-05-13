@@ -24,9 +24,9 @@ namespace Blockcore.Features.WebHost.Hubs
         /// </summary>
         /// <param name="message">Any message to echo back.</param>
         /// <returns>Returns the same message supplied.</returns>
-        public Task Message(string message)
+        public Task Echo(string message)
         {
-            return this.Clients.Caller.SendAsync("Message", message);
+            return this.Clients.Caller.SendAsync("Echo", message);
         }
     }
 }

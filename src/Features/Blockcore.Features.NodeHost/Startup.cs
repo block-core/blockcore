@@ -42,7 +42,7 @@ namespace Blockcore.Features.NodeHost
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            NodeHostSettings webHostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
+            NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             services.AddLogging(loggingBuilder =>
             {
@@ -73,7 +73,7 @@ namespace Blockcore.Features.NodeHost
                     );
                 });
 
-            if (webHostSettings.EnableUI)
+            if (hostSettings.EnableUI)
             {
                 services.AddRazorPages();
 
@@ -86,7 +86,7 @@ namespace Blockcore.Features.NodeHost
                 });
             }
 
-            if (webHostSettings.EnableWS)
+            if (hostSettings.EnableWS)
             {
                 services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
                 {
@@ -96,7 +96,7 @@ namespace Blockcore.Features.NodeHost
                 });
             }
 
-            if (webHostSettings.EnableAPI)
+            if (hostSettings.EnableAPI)
             {
                 services.AddMvc(options =>
                 {
@@ -143,7 +143,7 @@ namespace Blockcore.Features.NodeHost
             // This is needed to access context of the hubs.
             Provider = app.ApplicationServices;
 
-            NodeHostSettings webHostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
+            NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             app.UseStaticFiles();
 
@@ -156,25 +156,25 @@ namespace Blockcore.Features.NodeHost
 
             app.UseEndpoints(endpoints =>
             {
-                if (webHostSettings.EnableAPI)
+                if (hostSettings.EnableAPI)
                 {
                     endpoints.MapControllers();
                 }
 
-                if (webHostSettings.EnableWS)
+                if (hostSettings.EnableWS)
                 {
                     endpoints.MapHub<EventsHub>("/ws-events");
                     endpoints.MapHub<NodeHub>("/ws");
                 }
 
-                if (webHostSettings.EnableUI)
+                if (hostSettings.EnableUI)
                 {
                     endpoints.MapBlazorHub();
                     endpoints.MapFallbackToPage("/_Host");
                 }
             });
 
-            if (webHostSettings.EnableAPI)
+            if (hostSettings.EnableAPI)
             {
                 app.UseSwagger(c =>
                 {

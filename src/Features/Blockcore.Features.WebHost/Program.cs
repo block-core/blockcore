@@ -12,12 +12,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.FileProviders;
 
-namespace Blockcore.Features.WebHost
+namespace Blockcore.Features.NodeHost
 {
     public class Program
     {
         public static IWebHost Initialize(IEnumerable<ServiceDescriptor> services, FullNode fullNode,
-            WebHostSettings apiSettings, ICertificateStore store, IWebHostBuilder webHostBuilder)
+            NodeHostSettings apiSettings, ICertificateStore store, IWebHostBuilder webHostBuilder)
         {
             Guard.NotNull(fullNode, nameof(fullNode));
             Guard.NotNull(webHostBuilder, nameof(webHostBuilder));

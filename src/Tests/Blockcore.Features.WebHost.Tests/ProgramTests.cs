@@ -7,20 +7,20 @@ using NSubstitute;
 
 using Xunit;
 
-namespace Blockcore.Features.WebHost.Tests
+namespace Blockcore.Features.NodeHost.Tests
 {
     public class ProgramTest
     {
         private readonly X509Certificate2 certificateToUse;
         private readonly ICertificateStore certificateStore;
-        private readonly WebHostSettings apiSettings;
+        private readonly NodeHostSettings apiSettings;
         private readonly IWebHostBuilder webHostBuilder;
 
         private X509Certificate2 certificateRetrieved;
 
         public ProgramTest()
         {
-            this.apiSettings = new WebHostSettings(NodeSettings.Default(KnownNetworks.TestNet)) { UseHttps = true };
+            this.apiSettings = new NodeHostSettings(NodeSettings.Default(KnownNetworks.TestNet)) { UseHttps = true };
             this.certificateToUse = new X509Certificate2();
             this.certificateStore = Substitute.For<ICertificateStore>();
             this.webHostBuilder = Substitute.For<IWebHostBuilder>();

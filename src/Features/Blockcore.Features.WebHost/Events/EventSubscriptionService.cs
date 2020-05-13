@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Blockcore.Broadcasters;
 using Blockcore.EventBus;
-using Blockcore.Features.WebHost.Hubs;
+using Blockcore.Features.NodeHost.Hubs;
 using Blockcore.Signals;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Blockcore.Utilities.Extensions;
 
-namespace Blockcore.Features.WebHost.Events
+namespace Blockcore.Features.NodeHost.Events
 {
     /// <summary>
     /// This class subscribes to Stratis.Bitcoin.EventBus messages and proxy's them

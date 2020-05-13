@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Blockcore;
 using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking;
 using Blockcore.Features.Consensus;
@@ -36,7 +36,7 @@ namespace x42.Daemon
                     .UseMempool()
                     .UseColdStakingWallet()
                     .AddPowPosMining()
-                    .UseWebHost()
+                    .UseNodeHost()
                     .AddRPC()
                     .UseDiagnosticFeature();
 

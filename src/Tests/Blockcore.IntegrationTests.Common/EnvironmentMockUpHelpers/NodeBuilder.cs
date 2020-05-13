@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Blockcore.Builder;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
@@ -149,7 +149,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                .AddMining()
                .UseWallet()
                .AddRPC()
-               .UseWebHost()
+               .UseNodeHost()
                .UseTestChainedHeaderTree()
                .MockIBD());
 

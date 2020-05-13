@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Blockcore.Features.WebHost.Hubs;
+using Blockcore.Features.NodeHost.Hubs;
 using Blockcore.Utilities.JsonConverters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +13,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace Blockcore.Features.WebHost
+namespace Blockcore.Features.NodeHost
 {
     public class Startup
     {
@@ -42,7 +42,7 @@ namespace Blockcore.Features.WebHost
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            WebHostSettings webHostSettings = fullNode.Services.ServiceProvider.GetService<WebHostSettings>();
+            NodeHostSettings webHostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             services.AddLogging(loggingBuilder =>
             {
@@ -143,7 +143,7 @@ namespace Blockcore.Features.WebHost
             // This is needed to access context of the hubs.
             Provider = app.ApplicationServices;
 
-            WebHostSettings webHostSettings = fullNode.Services.ServiceProvider.GetService<WebHostSettings>();
+            NodeHostSettings webHostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             app.UseStaticFiles();
 

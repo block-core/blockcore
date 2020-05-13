@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.WebHost.Hubs
+namespace Blockcore.Features.NodeHost.Hubs
 {
     /// <summary>
     /// Node Hub can be used to perform many tasks on the node, including the majority of features available in the REST API.

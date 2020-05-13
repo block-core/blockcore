@@ -1,7 +1,7 @@
 ﻿using Blockcore.Base;
 using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
@@ -41,7 +41,7 @@ namespace Blockcore.IntegrationTests.Common.Runners
                             .AddMining()
                             .UseWallet()
                             .AddRPC()
-                            .UseWebHost()
+                            .UseNodeHost()
                             .UseTestChainedHeaderTree()
                             .MockIBD();
 

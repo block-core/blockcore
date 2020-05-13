@@ -17,7 +17,7 @@
 
   <ItemGroup>
 
-    <ProjectReference Include="..\..\Features\Blockcore.Features.WebHost\Blockcore.Features.WebHost.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.WebHost\Blockcore.Features.NodeHost.csproj" />
 
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />

@@ -6,12 +6,12 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.WebHost
+namespace Blockcore.Features.NodeHost
 {
     /// <summary>
     /// Configuration related to the API interface.
     /// </summary>
-    public class WebHostSettings
+    public class NodeHostSettings
     {
         /// <summary>The default port used by the API when the node runs on the network.</summary>
         public const string DefaultApiHost = "http://localhost";
@@ -31,12 +31,12 @@ namespace Blockcore.Features.WebHost
         public bool EnableWS { get; private set; }
 
         /// <summary>
-        /// If true the node will host a UI available in the WebHost. This should never be enabled if node is accessible to the public.
+        /// If true the node will host a UI available in the NodeHost. This should never be enabled if node is accessible to the public.
         /// </summary>
         public bool EnableUI { get; private set; }
 
         /// <summary>
-        /// If true the node will host a REST API in the WebHost. This should never be enabled if node is accessible to the public.
+        /// If true the node will host a REST API in the NodeHost. This should never be enabled if node is accessible to the public.
         /// </summary>
         public bool EnableAPI { get; private set; }
 
@@ -56,11 +56,11 @@ namespace Blockcore.Features.WebHost
         /// Initializes an instance of the object from the node configuration.
         /// </summary>
         /// <param name="nodeSettings">The node configuration.</param>
-        public WebHostSettings(NodeSettings nodeSettings)
+        public NodeHostSettings(NodeSettings nodeSettings)
         {
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
 
-            this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(WebHostSettings).FullName);
+            this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(NodeHostSettings).FullName);
 
             TextFileConfiguration config = nodeSettings.ConfigReader;
 

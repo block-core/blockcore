@@ -8,7 +8,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 
 namespace Blockcore.Node
 {
@@ -42,7 +42,7 @@ namespace Blockcore.Node
             .UseNodeSettings(settings)
             .UseBlockStore()
             .UseMempool()
-            .UseWebHost()
+            .UseNodeHost()
             .AddRPC()
             .UseDiagnosticFeature();
 

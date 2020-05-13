@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Blockcore.Builder;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
@@ -45,7 +45,7 @@ namespace Blockcore.IntegrationTests
                         .AddMining()
                         .UseWallet()
                         .AddRPC()
-                        .UseWebHost()
+                        .UseNodeHost()
                         .MockIBD());
 
                 var coreNode = nodeBuilder.CreateCustomNode(buildAction, this.network,
@@ -76,7 +76,7 @@ namespace Blockcore.IntegrationTests
                         .AddMining()
                         .UseWallet()
                         .AddRPC()
-                        .UseWebHost()
+                        .UseNodeHost()
                         .MockIBD());
 
                 var coreNode = nodeBuilder.CreateCustomNode(buildAction, this.network, ProtocolVersion.PROTOCOL_VERSION, configParameters: extraParams);

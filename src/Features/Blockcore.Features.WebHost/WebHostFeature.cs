@@ -7,30 +7,30 @@ using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.EventBus;
-using Blockcore.Features.WebHost.Events;
-using Blockcore.Features.WebHost.Hubs;
+using Blockcore.Features.NodeHost.Events;
+using Blockcore.Features.NodeHost.Hubs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.WebHost
+namespace Blockcore.Features.NodeHost
 {
     /// <summary>
     /// Provides an Api to the full node
     /// </summary>
-    public sealed class WebHostFeature : FullNodeFeature
+    public sealed class NodeHostFeature : FullNodeFeature
     {
         internal static Dictionary<Type, ClientEventBroadcasterSettings> eventBroadcasterSettings;
 
-        /// <summary>How long we are willing to wait for the WebHost to stop.</summary>
-        private const int WebHostStopTimeoutSeconds = 10;
+        /// <summary>How long we are willing to wait for the NodeHost to stop.</summary>
+        private const int NodeHostStopTimeoutSeconds = 10;
 
         private readonly IFullNodeBuilder fullNodeBuilder;
 
         private readonly FullNode fullNode;
 
-        private readonly WebHostSettings settings;
+        private readonly NodeHostSettings settings;
 
         private readonly IEnumerable<IClientEventBroadcaster> eventBroadcasters;
 
@@ -42,10 +42,10 @@ namespace Blockcore.Features.WebHost
 
         private readonly ICertificateStore certificateStore;
 
-        public WebHostFeature(
+        public NodeHostFeature(
             IFullNodeBuilder fullNodeBuilder,
             FullNode fullNode,
-            WebHostSettings apiSettings,
+            NodeHostSettings apiSettings,
             ILoggerFactory loggerFactory,
             ICertificateStore certificateStore,
             IEnumerable<IClientEventBroadcaster> eventBroadcasters,
@@ -64,7 +64,7 @@ namespace Blockcore.Features.WebHost
 
         public override Task InitializeAsync()
         {
-            string log = $"WebHost listening on: {Environment.NewLine}{this.settings.ApiUri}{Environment.NewLine}  - UI: {this.settings.EnableUI}{Environment.NewLine}  - API: {this.settings.EnableAPI}{Environment.NewLine}  - WS: {this.settings.EnableWS}";
+            string log = $"NodeHost listening on: {Environment.NewLine}{this.settings.ApiUri}{Environment.NewLine}  - UI: {this.settings.EnableUI}{Environment.NewLine}  - API: {this.settings.EnableAPI}{Environment.NewLine}  - WS: {this.settings.EnableWS}";
             this.logger.LogInformation(log);
 
             this.eventsSubscriptionService.Init();
@@ -87,7 +87,7 @@ namespace Blockcore.Features.WebHost
         /// <param name="network">The network to extract values from.</param>
         public static void PrintHelp(Network network)
         {
-            WebHostSettings.PrintHelp(network);
+            NodeHostSettings.PrintHelp(network);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Blockcore.Features.WebHost
         /// <param name="network">The network to base the defaults off.</param>
         public static void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
         {
-            WebHostSettings.BuildDefaultConfigurationFile(builder, network);
+            NodeHostSettings.BuildDefaultConfigurationFile(builder, network);
         }
 
         /// <inheritdoc />
@@ -107,7 +107,7 @@ namespace Blockcore.Features.WebHost
             if (this.webHost != null)
             {
                 this.logger.LogInformation("API stopping on URL '{0}'.", this.settings.ApiUri);
-                this.webHost.StopAsync(TimeSpan.FromSeconds(WebHostStopTimeoutSeconds)).Wait();
+                this.webHost.StopAsync(TimeSpan.FromSeconds(NodeHostStopTimeoutSeconds)).Wait();
                 this.webHost = null;
             }
         }
@@ -116,18 +116,18 @@ namespace Blockcore.Features.WebHost
     /// <summary>
     /// A class providing extension methods for <see cref="IFullNodeBuilder"/>.
     /// </summary>
-    public static class ApiFeatureExtension
+    public static class NodeHostFeatureExtension
     {
-        public static IFullNodeBuilder UseWebHost(this IFullNodeBuilder fullNodeBuilder)
+        public static IFullNodeBuilder UseNodeHost(this IFullNodeBuilder fullNodeBuilder)
         {
             fullNodeBuilder.ConfigureFeature(features =>
             {
                 features
-                .AddFeature<WebHostFeature>()
+                .AddFeature<NodeHostFeature>()
                 .FeatureServices(services =>
                 {
                     services.AddSingleton(fullNodeBuilder);
-                    services.AddSingleton<WebHostSettings>();
+                    services.AddSingleton<NodeHostSettings>();
                     services.AddSingleton<IEventsSubscriptionService, EventSubscriptionService>();
                     services.AddSingleton<ICertificateStore, CertificateStore>();
                 });

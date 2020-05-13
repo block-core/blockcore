@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.WebHost
+namespace Blockcore.Features.NodeHost
 {
     public class CertificateStore : ICertificateStore
     {

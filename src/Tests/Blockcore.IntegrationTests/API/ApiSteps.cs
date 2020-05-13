@@ -9,7 +9,7 @@ using System.Text;
 using AspNetCore.Http.Extensions;
 using Blockcore.Connection;
 using Blockcore.Controllers.Models;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.Miner.Api.Controllers;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
@@ -153,7 +153,7 @@ namespace Blockcore.IntegrationTests.API
             this.stratisPosApiNode = this.posNodeBuilder.CreateStratisPosNode(this.posNetwork).Start();
 
             this.stratisPosApiNode.FullNode.NodeService<IPosMinting>(true).Should().NotBeNull();
-            this.apiUri = this.stratisPosApiNode.FullNode.NodeService<WebHostSettings>().ApiUri;
+            this.apiUri = this.stratisPosApiNode.FullNode.NodeService<NodeHostSettings>().ApiUri;
         }
 
         private void the_proof_of_stake_node_has_passed_LastPOWBlock()
@@ -178,7 +178,7 @@ namespace Blockcore.IntegrationTests.API
             this.firstStratisPowApiNode.Mnemonic = this.firstStratisPowApiNode.Mnemonic;
 
             this.firstStratisPowApiNode.FullNode.Network.Consensus.CoinbaseMaturity = this.maturity;
-            this.apiUri = this.firstStratisPowApiNode.FullNode.NodeService<WebHostSettings>().ApiUri;
+            this.apiUri = this.firstStratisPowApiNode.FullNode.NodeService<NodeHostSettings>().ApiUri;
         }
 
         private void a_second_proof_of_work_node_with_api_enabled()
@@ -488,7 +488,7 @@ namespace Blockcore.IntegrationTests.API
 
             List<string> featuresNamespaces = statusResponse.FeaturesData.Select(f => f.Namespace).ToList();
             featuresNamespaces.Should().Contain("Blockcore.Base.BaseFeature");
-            featuresNamespaces.Should().Contain("Blockcore.Features.WebHost.ApiFeature");
+            featuresNamespaces.Should().Contain("Blockcore.Features.NodeHost.NodeHostFeature");
             featuresNamespaces.Should().Contain("Blockcore.Features.BlockStore.BlockStoreFeature");
             featuresNamespaces.Should().Contain("Blockcore.Features.Consensus.PowConsensusFeature");
             featuresNamespaces.Should().Contain("Blockcore.Features.MemoryPool.MempoolFeature");

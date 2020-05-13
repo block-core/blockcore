@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Xunit;
@@ -17,7 +17,7 @@ namespace Blockcore.IntegrationTests.API
             this.stratisPosApiNode = this.posNodeBuilder.CreateStratisPosNode(this.posNetwork).Start();
 
             this.stratisPosApiNode.FullNode.NodeService<IPosMinting>(true);
-            this.apiUri = this.stratisPosApiNode.FullNode.NodeService<WebHostSettings>().ApiUri;
+            this.apiUri = this.stratisPosApiNode.FullNode.NodeService<NodeHostSettings>().ApiUri;
 
             // With these tests we still need to create the wallets outside of the builder
             this.stratisPosApiNode.FullNode.WalletManager().CreateWallet(WalletPassword, WalletName, WalletPassphrase);

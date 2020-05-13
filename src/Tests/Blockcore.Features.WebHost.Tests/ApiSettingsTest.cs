@@ -7,7 +7,7 @@ using FluentAssertions;
 using NBitcoin;
 using Xunit;
 
-namespace Blockcore.Features.WebHost.Tests
+namespace Blockcore.Features.NodeHost.Tests
 {
     /// <summary>
     /// Tests the settings for the API features.
@@ -29,11 +29,11 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(network);
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(network.DefaultAPIPort, settings.ApiPort);
-            Assert.Equal(new Uri($"{WebHostSettings.DefaultApiHost}:{network.DefaultAPIPort}"), settings.ApiUri);
+            Assert.Equal(new Uri($"{NodeHostSettings.DefaultApiHost}:{network.DefaultAPIPort}"), settings.ApiUri);
         }
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(network);
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(network.DefaultAPIPort, settings.ApiPort);
-            Assert.Equal(new Uri($"{WebHostSettings.DefaultApiHost}:{network.DefaultAPIPort}"), settings.ApiUri);
+            Assert.Equal(new Uri($"{NodeHostSettings.DefaultApiHost}:{network.DefaultAPIPort}"), settings.ApiUri);
 
             settings.HttpsCertificateFilePath.Should().BeNull();
             settings.UseHttps.Should().BeFalse();
@@ -68,11 +68,11 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(this.Network, args:new[] { $"-apiport={customPort}" });
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(customPort, settings.ApiPort);
-            Assert.Equal(new Uri($"{WebHostSettings.DefaultApiHost}:{customPort}"), settings.ApiUri);
+            Assert.Equal(new Uri($"{NodeHostSettings.DefaultApiHost}:{customPort}"), settings.ApiUri);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}" });
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
 
             // Assert.
@@ -107,7 +107,7 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}" });
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(network.DefaultAPIPort, settings.ApiPort);
@@ -127,7 +127,7 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}", $"-apiport={customPort}" });
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(customPort, settings.ApiPort);
@@ -147,7 +147,7 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}" });
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(customPort, settings.ApiPort);
@@ -164,7 +164,7 @@ namespace Blockcore.Features.WebHost.Tests
             NodeSettings nodeSettings = NodeSettings.Default(KnownNetworks.Main);
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(KnownNetworks.Main.DefaultAPIPort, settings.ApiPort);
@@ -180,7 +180,7 @@ namespace Blockcore.Features.WebHost.Tests
             NodeSettings nodeSettings = NodeSettings.Default(KnownNetworks.TestNet);
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(KnownNetworks.TestNet.DefaultAPIPort, settings.ApiPort);
@@ -196,7 +196,7 @@ namespace Blockcore.Features.WebHost.Tests
             NodeSettings nodeSettings = NodeSettings.Default(KnownNetworks.StratisMain);
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(KnownNetworks.StratisMain.DefaultAPIPort, settings.ApiPort);
@@ -212,7 +212,7 @@ namespace Blockcore.Features.WebHost.Tests
             NodeSettings nodeSettings = NodeSettings.Default(KnownNetworks.StratisTest);
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             Assert.Equal(KnownNetworks.StratisTest.DefaultAPIPort, settings.ApiPort);
@@ -242,7 +242,7 @@ namespace Blockcore.Features.WebHost.Tests
             var nodeSettings = new NodeSettings(KnownNetworks.TestNet, args: new[] { $"-certificatefilepath={certificateFileName}" });
 
             // Act.
-            WebHostSettings settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             settings.HttpsCertificateFilePath.Should().Be(certificateFileName);
@@ -264,14 +264,14 @@ namespace Blockcore.Features.WebHost.Tests
             settingsAction.Should().Throw<ConfigurationException>();
         }
 
-        private static WebHostSettings FullNodeSetup(NodeSettings nodeSettings)
+        private static NodeHostSettings FullNodeSetup(NodeSettings nodeSettings)
         {
             return new FullNodeBuilder()
                 .UseNodeSettings(nodeSettings)
-                .UseWebHost()
+                .UseNodeHost()
                 .UsePowConsensus()
                 .Build()
-                .NodeService<WebHostSettings>();
+                .NodeService<NodeHostSettings>();
         }
     }
 }

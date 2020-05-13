@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
@@ -162,7 +162,7 @@ namespace Blockcore.Tests.NodeConfiguration
 
             var nodeSettings = new NodeSettings(new BitcoinRegTest(), args: new[] { $"-apiport={apiport}" });
 
-            var apiSettings = new WebHostSettings(nodeSettings);
+            var apiSettings = new NodeHostSettings(nodeSettings);
             var rpcSettings = new RpcSettings(nodeSettings);
             var configurationManagerSettings = new ConnectionManagerSettings(nodeSettings);
 
@@ -186,7 +186,7 @@ namespace Blockcore.Tests.NodeConfiguration
 
             var nodeSettings = new NodeSettings(new BitcoinRegTest(), args: args);
 
-            var apiSettings = new WebHostSettings(nodeSettings);
+            var apiSettings = new NodeHostSettings(nodeSettings);
             var rpcSettings = new RpcSettings(nodeSettings);
             var configurationManagerSettings = new ConnectionManagerSettings(nodeSettings);
 

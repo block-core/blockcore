@@ -6,7 +6,7 @@ using Blockcore.Builder.Feature;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blockcore.Features.WebHost
+namespace Blockcore.Features.NodeHost
 {
     public static class MvcBuilderExtensions
     {

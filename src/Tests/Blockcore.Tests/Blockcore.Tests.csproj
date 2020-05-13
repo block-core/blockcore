@@ -30,7 +30,7 @@
     <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
     <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
-    <ProjectReference Include="..\..\Features\Blockcore.Features.WebHost\Blockcore.Features.WebHost.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.WebHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
     <ProjectReference Include="..\Blockcore.Tests.Wallet.Common\Blockcore.Tests.Wallet.Common.csproj" />

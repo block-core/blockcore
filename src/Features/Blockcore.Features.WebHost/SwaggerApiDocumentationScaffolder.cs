@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Blockcore.Utilities.Extensions;
 
 namespace Blockcore.Features.WebHost {
 
@@ -19,22 +20,10 @@ namespace Blockcore.Features.WebHost {
         /// <param name="options">The options.</param>
         public static void Scaffold(SwaggerGenOptions options) {
             IEnumerable<string> files = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(asm => GetLoadableTypes(asm).Any(type => typeof(Controller).IsAssignableFrom(type)))
+                .Where(asm => asm.GetLoadableTypes().Any(type => typeof(Controller).IsAssignableFrom(type)))
                 .Select(asm => Path.ChangeExtension(asm.Location, "xml"));
 
             RegisterFiles(options, files);
-        }
-
-        /// <summary>
-        /// Gets the loadable types, ignoring assembly that can't be loaded for any reason.
-        /// </summary>
-        private static IEnumerable<Type> GetLoadableTypes(this Assembly assembly) {
-            try {
-                return assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException e) {
-                return e.Types.Where(t => t != null);
-            }
         }
 
         private static void RegisterFiles(SwaggerGenOptions options, IEnumerable<string> files) {

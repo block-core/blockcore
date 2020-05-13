@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using Blockcore.Utilities.Extensions;
 
 namespace Blockcore.Features.WebHost.Events
 {
@@ -49,8 +50,7 @@ namespace Blockcore.Features.WebHost.Events
 
             // Get all events that is loaded on the node.
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => baseType.IsAssignableFrom(p));
+                .SelectMany(asm => asm.GetLoadableTypes().Where(t => baseType.IsAssignableFrom(t)));
 
             // Make sure all the events are available to be subscribed to.
             foreach (Type type in types)

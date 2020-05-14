@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Tests", "Tests\Bl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{1B9A916F-DDAC-4675-B424-EDEDC1A58231}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.WebHost.Tests", "Tests\Blockcore.Features.WebHost.Tests\Blockcore.Features.WebHost.Tests.csproj", "{E538B76A-513F-46D5-9F14-E35E79B484CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.NodeHost.Tests", "Tests\Blockcore.Features.NodeHost.Tests\Blockcore.Features.NodeHost.Tests.csproj", "{E538B76A-513F-46D5-9F14-E35E79B484CA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.RPC", "Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj", "{5E0010F1-50B8-4FC5-A9C2-38D7DF73A0D2}"
 EndProject
@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EAE139C2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "Features", "{15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.WebHost", "Features\Blockcore.Features.WebHost\Blockcore.Features.WebHost.csproj", "{FB78D861-F3DF-412D-8A3D-D1756ADA39D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.NodeHost", "Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj", "{FB78D861-F3DF-412D-8A3D-D1756ADA39D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin", "External\NBitcoin\NBitcoin.csproj", "{2051FCAC-D4C7-498D-B935-2E9E6DEA0C29}"
 EndProject
@@ -62,8 +62,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.ColdStaking", "Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj", "{072C5F7C-4B75-46C9-A54D-774DA77ED1D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.ColdStaking.Tests", "Tests\Blockcore.Features.ColdStaking.Tests\Blockcore.Features.ColdStaking.Tests.csproj", "{0FE19EFE-98D7-4243-A8CC-30BCFFFC4499}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.SignalR", "Features\Blockcore.Features.SignalR\Blockcore.Features.SignalR.csproj", "{6BBFFE59-0597-4ADA-A592-CED25C05C01A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Diagnostic", "Features\Blockcore.Features.Diagnostic\Blockcore.Features.Diagnostic.csproj", "{53209209-7239-4FEB-BE8D-B2DF6145BBDA}"
 EndProject
@@ -235,10 +233,6 @@ Global
 		{0FE19EFE-98D7-4243-A8CC-30BCFFFC4499}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FE19EFE-98D7-4243-A8CC-30BCFFFC4499}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FE19EFE-98D7-4243-A8CC-30BCFFFC4499}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BBFFE59-0597-4ADA-A592-CED25C05C01A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BBFFE59-0597-4ADA-A592-CED25C05C01A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BBFFE59-0597-4ADA-A592-CED25C05C01A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BBFFE59-0597-4ADA-A592-CED25C05C01A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{53209209-7239-4FEB-BE8D-B2DF6145BBDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{53209209-7239-4FEB-BE8D-B2DF6145BBDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53209209-7239-4FEB-BE8D-B2DF6145BBDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -334,7 +328,6 @@ Global
 		{A8EDFB26-17B5-48C0-BF38-E521EF5476E4} = {EAE139C2-B19C-4905-9117-8A4068ABD3D2}
 		{072C5F7C-4B75-46C9-A54D-774DA77ED1D1} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
 		{0FE19EFE-98D7-4243-A8CC-30BCFFFC4499} = {EAE139C2-B19C-4905-9117-8A4068ABD3D2}
-		{6BBFFE59-0597-4ADA-A592-CED25C05C01A} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
 		{53209209-7239-4FEB-BE8D-B2DF6145BBDA} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
 		{B69D6038-8731-4DF3-9D93-3045C77CBDE6} = {0F6F0DC5-EC62-465B-8FC7-F24449CD7359}
 		{221FF9A3-4BE5-44CB-91C8-885EFE06CB2E} = {78DF115B-2471-41C3-8D9C-360720855CF5}

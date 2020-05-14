@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Blockcore: Web Socket Events</title>
+    <script src="/js/signalr.js"></script>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .events {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid gray;
+            padding: 1em;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html">Node Events</a> | <strong>Node Commands</strong>
+
+    <h1>Node Commands</h1>
+    <h2>Web Socket Events</h2>
+    <p>Discover the events available for Web Socket on the node.</p>
+
+    <button onclick="echo()">Echo!</button>
+    <br>
+    <p>
+        <a href="../">Go back...</a>
+    </p>
+
+    <div id="events" class="events"></div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ws")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        var hub = connection.start();
+
+        connection.on("Echo", (result) => {
+            console.log('Received from node: ', result);
+
+            var tag = document.createElement("p");
+            var text = document.createTextNode(result);
+            tag.appendChild(text);
+            events.appendChild(tag);
+        });
+
+        function echo() {
+            connection.invoke("Echo", "Hello World!").catch(err => console.error(err));
+        }
+    </script>
+
+</body>
+</html>

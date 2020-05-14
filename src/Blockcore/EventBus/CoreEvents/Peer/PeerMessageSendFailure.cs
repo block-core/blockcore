@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Blockcore.P2P.Protocol;
+using Newtonsoft.Json;
 
 namespace Blockcore.EventBus.CoreEvents.Peer
 {
@@ -14,6 +15,7 @@ namespace Blockcore.EventBus.CoreEvents.Peer
         /// </value>
         public Message Message { get; }
 
+        [JsonIgnore]
         public System.Exception Exception { get; }
 
         public PeerMessageSendFailure(IPEndPoint peerEndPoint, Message message, System.Exception exception) : base(peerEndPoint)

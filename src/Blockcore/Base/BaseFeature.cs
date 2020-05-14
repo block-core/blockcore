@@ -311,8 +311,11 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public override void Dispose()
         {
-            this.logger.LogInformation("Flushing peers.");
-            this.flushAddressManagerLoop.Dispose();
+            if (this.flushAddressManagerLoop != null)
+            {
+                this.logger.LogInformation("Flushing peers.");
+                this.flushAddressManagerLoop.Dispose();
+            }
 
             this.logger.LogInformation("Disposing peer address manager.");
             this.peerAddressManager.Dispose();

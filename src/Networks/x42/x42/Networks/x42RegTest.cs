@@ -37,7 +37,6 @@ namespace x42.Networks
             DefaultPort = network.DefaultPort;
             DefaultRPCPort = network.DefaultRPCPort;
             DefaultAPIPort = network.DefaultAPIPort;
-            DefaultSignalRPort = network.DefaultSignalRPort;
 
             var consensusFactory = new PosConsensusFactory();
 

@@ -44,7 +44,6 @@ namespace x42.Networks
             this.DefaultPort = network.DefaultPort;
             this.DefaultRPCPort = network.DefaultRPCPort;
             this.DefaultAPIPort = network.DefaultAPIPort;
-            this.DefaultSignalRPort = network.DefaultSignalRPort;
             this.DefaultBanTimeSeconds = 288; // 9 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
             var consensusFactory = new PosConsensusFactory();

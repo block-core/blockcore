@@ -45,7 +45,6 @@ namespace x42.Networks
             this.DefaultPort = network.DefaultPort;
             this.DefaultRPCPort = network.DefaultRPCPort;
             this.DefaultAPIPort = network.DefaultAPIPort;
-            this.DefaultSignalRPort = network.DefaultSignalRPort;
 
             this.DefaultMaxOutboundConnections = 16;
             this.DefaultMaxInboundConnections = 109;

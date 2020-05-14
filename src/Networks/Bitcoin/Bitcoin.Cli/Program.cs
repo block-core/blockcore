@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using Blockcore.Configuration;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
 using Blockcore.Utilities.Extensions;
 using Flurl;
@@ -175,7 +175,7 @@ namespace Bitcoin.Cli
                         MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
                     };
 
-                    var apiSettings = new ApiSettings(nodeSettings);
+                    var apiSettings = new NodeHostSettings(nodeSettings);
 
                     string url = $"http://localhost:{apiSettings.ApiPort}/api".AppendPathSegment(command);
 

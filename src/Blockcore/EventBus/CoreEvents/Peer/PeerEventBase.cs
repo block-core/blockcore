@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Newtonsoft.Json;
 
 namespace Blockcore.EventBus.CoreEvents.Peer
 {

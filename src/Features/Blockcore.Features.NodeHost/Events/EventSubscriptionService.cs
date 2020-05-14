@@ -13,11 +13,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Blockcore.Utilities.Extensions;
+using Blockcore.Utilities;
 
 namespace Blockcore.Features.NodeHost.Events
 {
     /// <summary>
-    /// This class subscribes to Stratis.Bitcoin.EventBus messages and proxy's them
+    /// This class subscribes to Blockcore.EventBus.EventBus messages and proxy's them
     /// to SignalR messages.
     /// </summary>
     public class EventSubscriptionService : IEventsSubscriptionService, IDisposable
@@ -59,19 +60,22 @@ namespace Blockcore.Features.NodeHost.Events
             }
         }
 
+        public void SetHub<T>(IHubContext<T> hubContext) where T : Hub
+        {
+            Guard.Assert(hubContext is IHubContext<EventsHub>);
+
+            this.HubContext = (IHubContext<EventsHub>)hubContext;
+        }
+
         private IHubContext<EventsHub> HubContext
         {
             get
             {
-                if (this.hubContext == null)
-                {
-                    if (Startup.Provider != null)
-                    {
-                        this.hubContext = Startup.Provider.GetService<IHubContext<EventsHub>>();
-                    }
-                }
-
                 return this.hubContext;
+            }
+            set
+            {
+                this.hubContext = value;
             }
         }
 
@@ -207,7 +211,6 @@ namespace Blockcore.Features.NodeHost.Events
                     {
                         this.log.LogError(ex, "Failed to send event to consumer.");
                     }
-
                 }
             }
         }

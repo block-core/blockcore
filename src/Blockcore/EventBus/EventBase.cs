@@ -6,7 +6,7 @@ namespace Blockcore.EventBus
     /// <summary>
     /// Basic abstract implementation of <see cref="IEvent"/>.
     /// </summary>
-    /// <seealso cref="Blockcore.EventBus.IEvent" />
+    /// <seealso cref="Blockcore.EventBus.EventBase.IEvent" />
     public abstract class EventBase
     {
         public Guid CorrelationId { get; }

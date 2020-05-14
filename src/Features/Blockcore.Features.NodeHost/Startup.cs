@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Blockcore.Broadcasters;
+using Blockcore.Features.NodeHost.Events;
 using Blockcore.Features.NodeHost.Hubs;
 using Blockcore.Utilities.JsonConverters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,11 +20,6 @@ namespace Blockcore.Features.NodeHost
 {
     public class Startup
     {
-        /// <summary>
-        /// Provides access to the service provider created by the ASP.NET runtime.
-        /// </summary>
-        public static IServiceProvider Provider { get; private set; }
-
         public Startup(IWebHostEnvironment env, IFullNode fullNode)
         {
             this.fullNode = fullNode;
@@ -140,8 +138,9 @@ namespace Blockcore.Features.NodeHost
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // This is needed to access context of the hubs.
-            Provider = app.ApplicationServices;
+            IHubContext<EventsHub> hubContext = app.ApplicationServices.GetService<IHubContext<EventsHub>>();
+            IEventsSubscriptionService eventsSubscriptionService = fullNode.Services.ServiceProvider.GetService<IEventsSubscriptionService>();
+            eventsSubscriptionService.SetHub<EventsHub>(hubContext);
 
             NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 

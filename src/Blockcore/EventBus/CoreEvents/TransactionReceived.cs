@@ -11,7 +11,7 @@ namespace Blockcore.EventBus.CoreEvents
     {
         public Transaction ReceivedTransaction { get; }
 
-        public string TxHash { get; set; }
+        public uint256 TxHash { get; set; }
 
         public bool IsCoinbase { get; set; }
 
@@ -21,7 +21,7 @@ namespace Blockcore.EventBus.CoreEvents
         {
             this.ReceivedTransaction = receivedTransaction;
 
-            this.TxHash = this.ReceivedTransaction.GetHash().ToString();
+            this.TxHash = this.ReceivedTransaction.GetHash();
             this.IsCoinbase = this.ReceivedTransaction.IsCoinBase;
             this.IsCoinstake = this.ReceivedTransaction.IsCoinStake;
         }

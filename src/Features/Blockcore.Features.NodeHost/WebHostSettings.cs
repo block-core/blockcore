@@ -26,7 +26,7 @@ namespace Blockcore.Features.NodeHost
         public int ApiPort { get; set; }
 
         /// <summary>
-        /// If true then the node will add and start the Web Socket feature. This should never be enabled if node is accessible to the public.
+        /// If true then the node will add and start the SignalR feature. This should never be enabled if node is accessible to the public.
         /// </summary>
         public bool EnableWS { get; private set; }
 

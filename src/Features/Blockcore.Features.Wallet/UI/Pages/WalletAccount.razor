@@ -9,11 +9,6 @@
 @inject IWalletManager WalletManager
 @inject Network Network
 
-<button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
-<p>Back to wallets</p>
-</button>
-<br />
-
 <h3>Wallet Account: <strong>@walletname / @accountname</strong></h3>
 @{
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
@@ -49,10 +44,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>To Address</th>
-                <th>Amount</th>
-                <th>Confirmed In Block</th>
                 <th>Type</th>
+                <th>Block</th>
+                <th>Amount</th>
+                <th>To Address</th>
+                <th>TxID</th>
             </tr>
         </thead>
         <tbody>
@@ -61,11 +57,11 @@
                 foreach (var transaction in history.TransactionsHistory)
                 {
                     <tr>
-                        <td>@transaction.</td>
-                        <td>@transaction.ToAddress</td>
-                        <td>@transaction.Amount</td>
-                        <td>@transaction.ConfirmedInBlock</td>
                         <td>@transaction.Type</td>
+                        <td>@transaction.ConfirmedInBlock</td>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.ToAddress</td>
+                        <td>@transaction.Id</td>
                     </tr>
                 }
             }

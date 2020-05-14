@@ -9,45 +9,43 @@
 @inject Blockcore.Utilities.IDateTimeProvider DateTimeProvider
 @inject IWalletSyncManager WalletSyncManager
 
-<button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
-<p>Back to wallets</p>
-</button>
-<br />
-
 <h3>Create a Wallet</h3>
 <p>Create your wallet by generating a Mnemonic & adding an optional phrase. Then give your wallet a name & password.</p>
 @{
+
     <div class="input-group mb-3">
         <button class="btn btn-primary" @onclick="GenerateMnemonic">Generate mnemonic</button>
     </div>
-    <div class="input-group">
+
+    <div class="input-group mb-3" style="max-width: 90%">
         <div class="input-group-prepend">
-            <span class="input-group-text">Mnemonic</span>
+            <span style="min-width: 15em" class="input-group-text"><b>Mnemonic:</b></span>
         </div>
-        <textarea @bind="Mnemonic" class="form-control" rows="2">@Mnemonic</textarea>
+            <textarea @bind="Mnemonic" class="form-control" rows="2">@Mnemonic</textarea>
     </div>
     <p><strong>Important:</strong> The Mnemonic is your wallet and must be kept safe and secure.</p>
 
-    <div class="input-group mb-3">
+    <div class="input-group mb-3" style="max-width: 90%">
         <div class="input-group-prepend">
-            <span class="input-group-text">Passphrase (optional):</span>
+            <span style="min-width: 15em" class="input-group-text"><b>Passphrase (optional):</b></span>
         </div>
-        <input @bind="Passphrase" type="password" class="form-control" placeholder="passphrase" />
+            <input @bind="Passphrase" type="password" class="form-control" placeholder="passphrase" />
     </div>
-    <p><strong>Important:</strong> The Passphrase is permanently linked to the wallet and must be kept safe and secure.</p>
+     <p><strong>Important:</strong> The Passphrase is permanently linked to the wallet and must be kept safe and secure.</p>
 
-    <div class="input-group mb-3">
+
+    <div class="input-group mb-3" style="max-width: 90%">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Wallet name:</span>
+            <span id="basic-addon1" style="min-width: 15em" class="input-group-text"><b>Wallet name:</b></span>
         </div>
-        <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
+            <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
     </div>
 
-    <div class="input-group mb-3">
+    <div class="input-group mb-3" style="max-width: 90%">
         <div class="input-group-prepend">
-            <span class="input-group-text">Wallet Password:</span>
+            <span style="min-width: 15em" class="input-group-text"><b>Wallet Password:</b></span>
         </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="password" />
+            <input @bind="Password" type="password" class="form-control" placeholder="password" />
     </div>
 
     <button class="btn btn-primary" @onclick="CreateWallet">Create wallet</button>

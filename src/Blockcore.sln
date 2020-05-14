@@ -77,7 +77,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{0C6FDC
 		Blockcore.ruleset = Blockcore.ruleset
 		Directory.Build.props = Directory.Build.props
 		None.ruleset = None.ruleset
-		Stratis.ruleset = Stratis.ruleset
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject

@@ -138,10 +138,6 @@ namespace Blockcore.Features.NodeHost
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            IHubContext<EventsHub> hubContext = app.ApplicationServices.GetService<IHubContext<EventsHub>>();
-            IEventsSubscriptionService eventsSubscriptionService = fullNode.Services.ServiceProvider.GetService<IEventsSubscriptionService>();
-            eventsSubscriptionService.SetHub<EventsHub>(hubContext);
-
             NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             app.UseStaticFiles();
@@ -162,6 +158,10 @@ namespace Blockcore.Features.NodeHost
 
                 if (hostSettings.EnableWS)
                 {
+                    IHubContext<EventsHub> hubContext = app.ApplicationServices.GetService<IHubContext<EventsHub>>();
+                    IEventsSubscriptionService eventsSubscriptionService = fullNode.Services.ServiceProvider.GetService<IEventsSubscriptionService>();
+                    eventsSubscriptionService.SetHub(hubContext);
+
                     endpoints.MapHub<EventsHub>("/ws-events");
                     endpoints.MapHub<NodeHub>("/ws");
                 }

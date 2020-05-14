@@ -8,18 +8,17 @@ using Blockcore.Broadcasters;
 using Blockcore.EventBus;
 using Blockcore.Features.NodeHost.Hubs;
 using Blockcore.Signals;
+using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Blockcore.Utilities.Extensions;
-using Blockcore.Utilities;
 
 namespace Blockcore.Features.NodeHost.Events
 {
     /// <summary>
     /// This class subscribes to Blockcore.EventBus.EventBus messages and proxy's them
-    /// to SignalR messages.
+    /// to Web Socket messages.
     /// </summary>
     public class EventSubscriptionService : IEventsSubscriptionService, IDisposable
     {

@@ -35,8 +35,8 @@
     <table class="table table-sm">
         <thead>
             <tr>
-                <th>Wallet/account</th>
-                <th>Blanace</th>
+                <th>Wallet / Account</th>
+                <th>Balance</th>
             </tr>
         </thead>
         <tbody>
@@ -61,14 +61,14 @@
     {
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1">Wallet Name:</span>
+                <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Wallet Name:</span>
             </div>
             <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
         </div>
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text">Password:</span>
+                <span style="min-width: 10em" class="input-group-text">Password:</span>
             </div>
             <input @bind="Password" type="password" class="form-control" placeholder="password" />
         </div>
@@ -139,8 +139,8 @@
 
     private void StartStaking()
     {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
-        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "No password"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
 
         var wallet = this.WalletManager.GetWallet(this.WalletName);
 

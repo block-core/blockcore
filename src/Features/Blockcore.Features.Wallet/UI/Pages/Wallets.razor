@@ -17,21 +17,18 @@
 <p>Information about the deployed wallets.</p>
 
 @{
-
     <p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
 
     <button @onclick="NavigateToWalletCreate" class="btn btn-primary">Create Wallet</button>
-    <button @onclick="Resync" class="btn btn-primary">Resync Wallets from genesis</button>
-    <button @onclick="Rebroadcast" class="btn btn-primary">Rebroadcast unconfirmed</button>
-
-    <br />
-    <br />
-    <hr />
+    <button @onclick="NavigateToWalletRecover" class="btn btn-primary">Recover Wallet</button>
+    <button @onclick="Resync" class="btn btn-primary">Resync wallets from genesis</button>
+    <button @onclick="Rebroadcast" class="btn btn-primary">Re-broadcast unconfirmed</button>
+    <br /><br />
     <table class="table">
         <thead>
             <tr>
-                <th>Wallet / account</th>
-                <th>Confirmed blanace</th>
+                <th>Wallet / Account</th>
+                <th>Confirmed balance</th>
                 <th>Unconfirmed balance</th>
             </tr>
         </thead>
@@ -44,7 +41,7 @@
                         var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
 
                         <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer">
-                            <td> @walletName <strong>/</strong> @account.Name</td>
+                            <td><strong>@walletName / @account.Name</strong></td>
                             <td>@accountBalance.AmountConfirmed</td>
                             <td>@accountBalance.AmountUnconfirmed</td>
                         </tr>
@@ -64,9 +61,12 @@
 
     private void NavigateToWalletCreate()
     {
-        NavigationManager.NavigateTo("walletcrate");
+        NavigationManager.NavigateTo("walletcreate");
     }
-
+    private void NavigateToWalletRecover()
+    {
+        NavigationManager.NavigateTo("walletrecover");
+    }
     private void Resync()
     {
         this.WalletSyncManager.SyncFromHeight(1);

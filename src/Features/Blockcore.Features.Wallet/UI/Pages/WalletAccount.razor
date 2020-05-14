@@ -9,27 +9,31 @@
 @inject IWalletManager WalletManager
 @inject Network Network
 
-<button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
-    Back to wallets
-</button>
-<br />
-
-<h3>Wallet Account</h3>
-<p>Information about <strong>@walletname / @accountname</strong></p>
-
+<h3>Wallet Account: <strong>@walletname / @accountname</strong></h3>
 @{
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
 
     <br />
-
-    <p>Amount Confirmed: <strong> @accountBalance.AmountConfirmed</strong></p>
-    <p>Amount Unconfirmed: <strong>@accountBalance.AmountUnconfirmed</strong></p>
-    <p>Spendable Amount: <strong> @accountBalance.SpendableAmount</strong></p>
-
-    <button @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" class="btn btn-primary">Recieve</button>
+    <button @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" class="btn btn-primary">Receive</button>
     <button @onclick="() => { NavigateToSendWallet(walletname, accountname); }" class="btn btn-info">Send</button>
-
     <br />
+    <br />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Amount Confirmed</th>
+                <th>Amount Unconfirmed</th>
+                <th>Spendable Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+                    <tr>
+                        <td>@accountBalance.AmountConfirmed</td>
+                        <td>@accountBalance.AmountUnconfirmed</td>
+                        <td>@accountBalance.SpendableAmount</td>
+                    </tr>
+        </tbody>
+    </table>
     <br />
 
     <h3>Wallet History</h3>
@@ -40,10 +44,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>To Address</th>
-                <th>Amount</th>
-                <th>Confirmed In Block</th>
                 <th>Type</th>
+                <th>Block</th>
+                <th>Amount</th>
+                <th>To Address</th>
+                <th>TxID</th>
             </tr>
         </thead>
         <tbody>
@@ -52,10 +57,11 @@
                 foreach (var transaction in history.TransactionsHistory)
                 {
                     <tr>
-                        <td>@transaction.ToAddress</td>
-                        <td>@transaction.Amount</td>
-                        <td>@transaction.ConfirmedInBlock</td>
                         <td>@transaction.Type</td>
+                        <td>@transaction.ConfirmedInBlock</td>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.ToAddress</td>
+                        <td>@transaction.Id</td>
                     </tr>
                 }
             }

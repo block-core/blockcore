@@ -1,4 +1,4 @@
-﻿@page "/walletcrate"
+﻿@page "/walletcreate"
 
 @using Blockcore.Features.Wallet.Interfaces
 @using NBitcoin;
@@ -9,50 +9,46 @@
 @inject Blockcore.Utilities.IDateTimeProvider DateTimeProvider
 @inject IWalletSyncManager WalletSyncManager
 
-<button class="btn btn-link" @onclick="() => { NavigateToWallets(); }">
-    Back to wallets
-</button>
-<br />
-
 <h3>Create a Wallet</h3>
-
+<p>Create your wallet by generating a Mnemonic & adding an optional phrase. Then give your wallet a name & password.</p>
 @{
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Mnemonic</span>
-        </div>
-        <textarea @bind="Mnemonic" class="form-control" rows="5">@Mnemonic</textarea>
-    </div>
-    <p><strong>Important:</strong> The Mnemonic is your wallet and must be kept safe and secure.</p>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Passphrase (optional):</span>
-        </div>
-        <input @bind="Passphrase" type="password" class="form-control" placeholder="passphrase" />
-    </div>
-    <p><strong>Important:</strong> The Passphrase is permanently linked to the wallet and must be kept safe and secure.</p>
 
     <div class="input-group mb-3">
         <button class="btn btn-primary" @onclick="GenerateMnemonic">Generate mnemonic</button>
     </div>
 
-    <div class="input-group mb-3">
+    <div class="input-group mb-3" style="max-width: 90%">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Wallet name:</span>
+            <span style="min-width: 15em" class="input-group-text"><b>Mnemonic:</b></span>
         </div>
-        <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
+            <textarea @bind="Mnemonic" class="form-control" rows="2">@Mnemonic</textarea>
+    </div>
+    <p><strong>Important:</strong> The Mnemonic is your wallet and must be kept safe and secure.</p>
+
+    <div class="input-group mb-3" style="max-width: 90%">
+        <div class="input-group-prepend">
+            <span style="min-width: 15em" class="input-group-text"><b>Passphrase (optional):</b></span>
+        </div>
+            <input @bind="Passphrase" type="password" class="form-control" placeholder="passphrase" />
+    </div>
+     <p><strong>Important:</strong> The Passphrase is permanently linked to the wallet and must be kept safe and secure.</p>
+
+
+    <div class="input-group mb-3" style="max-width: 90%">
+        <div class="input-group-prepend">
+            <span id="basic-addon1" style="min-width: 15em" class="input-group-text"><b>Wallet name:</b></span>
+        </div>
+            <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
     </div>
 
-    <div class="input-group mb-3">
+    <div class="input-group mb-3" style="max-width: 90%">
         <div class="input-group-prepend">
-            <span class="input-group-text">Wallet Password:</span>
+            <span style="min-width: 15em" class="input-group-text"><b>Wallet Password:</b></span>
         </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="password" />
+            <input @bind="Password" type="password" class="form-control" placeholder="password" />
     </div>
 
     <button class="btn btn-primary" @onclick="CreateWallet">Create wallet</button>
-    <button class="btn btn-primary" @onclick="RecoverWallet">Recover wallet</button>
 
     <br />
     <div class="input-group mb-3">
@@ -61,13 +57,11 @@
 }
 
 @code {
-
     public string WalletName { get; set; }
     public string AccountName { get; set; }
     public string Mnemonic { get; set; }
     private string Password { get; set; }
     private string Passphrase { get; set; }
-
     string Alert { get; set; }
 
     private void GenerateMnemonic()
@@ -90,28 +84,11 @@
     {
         NavigationManager.NavigateTo("wallets");
     }
-
-    private void RecoverWallet()
-    {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No Password"; return; }
-        if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "No Mnemonic"; return; }
-        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "No WalletName"; return; }
-
-        if (this.Passphrase == null)
-            this.Passphrase = string.Empty;
-
-        this.Alert = string.Empty;
-
-        var wallet = this.WalletManager.RecoverWallet(this.Password, this.WalletName, this.Mnemonic, this.DateTimeProvider.GetUtcNow(), passphrase: this.Passphrase);
-
-        NavigationManager.NavigateTo("walletaccount/" + WalletName + "/account 0");
-    }
-
     private void CreateWallet()
     {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No Password"; return; }
-        if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "No Mnemonic"; return; }
-        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "No WalletName"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "Ensure that you have generated a new Mnemonic"; return; }
+        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
 
         if (this.Passphrase == null)
             this.Passphrase = string.Empty;

@@ -9,7 +9,7 @@
 
 @{
     <div class="input-group mb-3">
-        <button class="btn btn-info" @onclick="NavigateToPeernodes">Add nodes</button>
+        <button class="btn btn-info" @onclick="NavigateToAddNodes">Add nodes</button>
     </div>
     <hr />
     <table class="table">
@@ -37,8 +37,8 @@
 
 @code
 {
-    private void NavigateToPeernodes()
+    private void NavigateToAddNodes()
     {
-        NavigationManager.NavigateTo("peers-nodes");
+        NavigationManager.NavigateTo("add-nodes");
     }
 }

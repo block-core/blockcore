@@ -14,14 +14,7 @@
 @inject IWalletTransactionHandler WalletTransactionHandler
 @inject IBroadcasterManager BroadcasterManager
 
-<button class="btn btn-link" @onclick="() => { NavigateToWalletAccount(walletname, accountname); }">
-    Back to wallet account
-</button>
-<br />
-
-<h3>Send Coins</h3>
-
-<p>Send coins from account <strong> @walletname / @accountname</strong></p>
+<h3>Send Coins: <strong>@walletname / @accountname</strong></h3>
 
 @{
 
@@ -29,40 +22,54 @@
 
     <br />
 
-    <p>Amount Confirmed: <strong> @accountBalance.AmountConfirmed</strong></p>
-    <p>Amount Unconfirmed: <strong>@accountBalance.AmountUnconfirmed</strong></p>
-    <p>Spendable Amount: <strong> @accountBalance.SpendableAmount</strong></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Amount Confirmed</th>
+                <th>Amount Unconfirmed</th>
+                <th>Spendable Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+                    <tr>
+                        <td>@accountBalance.AmountConfirmed</td>
+                        <td>@accountBalance.AmountUnconfirmed</td>
+                        <td>@accountBalance.SpendableAmount</td>
+                    </tr>
+        </tbody>
+    </table>
+
     <hr />
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">To Address:</span>
+            <span style="min-width: 15em" class="input-group-text" id="basic-addon1">To Address:</span>
         </div>
         <input @bind="Address" type="text" class="form-control" placeholder="address" />
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Amount:</span>
+            <span style="min-width: 15em" class="input-group-text">Amount:</span>
         </div>
         <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
         <div class="input-group-append">
-            <span class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+            <span style="min-width: 15em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
         </div>
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Fee:</span>
+            <span style="min-width: 15em" class="input-group-text">Fee:</span>
         </div>
         <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
         <div class="input-group-append">
-            <span class="input-group-text">Optional (default to low)</span>
+            <span style="min-width: 15em" class="input-group-text">Optional (default to low)</span>
         </div>
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">Wallet Password:</span>
+            <span style="min-width: 15em" class="input-group-text">Wallet Password:</span>
         </div>
         <input @bind="Password" type="password" class="form-control" placeholder="password" />
     </div>
@@ -82,7 +89,7 @@
 
     <div class="input-group">
         <div class="input-group-prepend">
-            <span class="input-group-text">Raw Transaction</span>
+            <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
         </div>
         <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
     </div>
@@ -151,13 +158,13 @@
 
     private async Task Broadcast()
     {
-        if (string.IsNullOrEmpty(this.TransactionHex)) { this.Alert = "No trx"; return; }
+        if (string.IsNullOrEmpty(this.TransactionHex)) { this.Alert = "No transaction details, please click send coins first"; return; }
 
         this.Alert = string.Empty;
 
         if (!this.ConnectionManager.ConnectedPeers.Any())
         {
-            this.Alert = "No peers connected";
+            this.Alert = "No peers connected. You need connections before a transaction can be brodcast to the network.";
             return;
         }
 
@@ -169,7 +176,7 @@
 
         if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
         {
-            this.Alert = "Error occurred: " + transactionBroadCastEntry.ErrorMessage;
+            this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
             return;
         }
 
@@ -178,10 +185,10 @@
 
     private void SendCoins()
     {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
-        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "No address"; return; }
-        if (this.Amount == 0) { this.Alert = "No amount"; return; }
-        if (this.Fee == 0) { this.Alert = "No fee"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
+        if (this.Amount == 0) { this.Alert = "Please enter the number of coins you want to send"; return; }
+        if (this.Fee == 0) { this.Alert = "Please ensure you enter a fee"; return; }
 
         this.Alert = string.Empty;
 

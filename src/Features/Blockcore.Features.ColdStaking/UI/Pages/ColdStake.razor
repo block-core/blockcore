@@ -11,11 +11,33 @@
 
 @if (!NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.CheckColdStakeVerify))
 {
-    <h2>Coldstaking is not activated</h2>
+    <h2>Cold staking is not activated</h2>
     return;
 }
 
-<h2>Coldstaking Wallets</h2>
+<h2>Cold staking wallets</h2>
+
+<p>Enable cold staking on an existing wallet.</p>
+
+    <hr />
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Wallet Name:</span>
+        </div>
+        <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span style="min-width: 10em" class="input-group-text">Password:</span>
+        </div>
+        <input @bind="Password" type="password" class="form-control" placeholder="password" />
+    </div>
+
+    <div class="input-group mb-3">
+        <button class="btn btn-info" @onclick="CreateColdStakeAccount">Create account</button>
+    </div>
+    <hr />
 
 <p>Information about the deployed wallets.</p>
 
@@ -23,10 +45,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Wallet / account</th>
-                <th>Confirmed blanace</th>
+                <th>Wallet / Account</th>
+                <th>Confirmed balance</th>
                 <th>Unconfirmed balance</th>
-                <th>Actione</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -66,7 +88,7 @@
                         var hotAccountBalance = ColdStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();
 
                         <tr>
-                            <td> @walletName <strong>/</strong>@hotStakingAccount.Name</td>
+                            <td> @walletName <strong>/</strong> @hotStakingAccount.Name</td>
                             <td>@hotAccountBalance.AmountConfirmed</td>
                             <td>@hotAccountBalance.AmountUnconfirmed</td>
                             <td>
@@ -94,7 +116,7 @@
                             <td>
                                 @if (accountBalance.AmountConfirmed + accountBalance.AmountUnconfirmed > 0)
                                 {
-                                    <button class="btn btn-link btn-sm" @onclick="() => { NavigateToSetup(walletName); }">Setup</button>
+                                    <button class="btn btn-link btn-sm" @onclick="() => { NavigateToSetup(walletName); }">Delegate</button>
                                 }
                             </td>
                         </tr>
@@ -103,26 +125,6 @@
             }
         </tbody>
     </table>
-    <hr />
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Wallet Name:</span>
-        </div>
-        <input @bind="WalletName" type="text" class="form-control" placeholder="wallet name" />
-    </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Password:</span>
-        </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="password" />
-    </div>
-
-    <div class="input-group mb-3">
-        <button class="btn btn-info" @onclick="CreateColdStakeAccount">Create account</button>
-    </div>
-    <hr />
-
 }
 
 @code
@@ -146,8 +148,8 @@
 
     private void CreateColdStakeAccount()
     {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "No password"; return; }
-        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "No WalletName"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
         this.Alert = string.Empty;
 
         this.ColdStakingManager.GetOrCreateColdStakingAccount(this.WalletName, true, this.Password);

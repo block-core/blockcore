@@ -89,9 +89,16 @@ namespace Blockcore.Features.NodeHost
                 services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
                 {
                     var settings = new JsonSerializerSettings();
+
+                    settings.Error = (sender, args) =>
+                    {
+                        args.ErrorContext.Handled = true;
+                    };
+
                     Serializer.RegisterFrontConverters(settings);
                     options.PayloadSerializerSettings = settings;
                     options.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
                 });
             }
 

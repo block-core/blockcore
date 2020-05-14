@@ -43,7 +43,7 @@
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/ws-events")
             .withAutomaticReconnect()
-            .configureLogging(signalR.LogLevel.Debug)
+            .configureLogging(signalR.LogLevel.Information)
             .build();
 
         var hub = connection.start();

@@ -62,20 +62,7 @@ namespace Blockcore.Features.NodeHost.Events
         public void SetHub<T>(IHubContext<T> hubContext) where T : Hub
         {
             Guard.Assert(hubContext is IHubContext<EventsHub>);
-
-            this.HubContext = (IHubContext<EventsHub>)hubContext;
-        }
-
-        private IHubContext<EventsHub> HubContext
-        {
-            get
-            {
-                return this.hubContext;
-            }
-            set
-            {
-                this.hubContext = value;
-            }
+            this.hubContext = (IHubContext<EventsHub>)hubContext;
         }
 
         private void SubscribeToEvent(string name)
@@ -196,7 +183,7 @@ namespace Blockcore.Features.NodeHost.Events
 
         public void OnEvent(EventBase @event)
         {
-            if (this.HubContext != null && @event != null)
+            if (this.hubContext != null && @event != null)
             {
                 ImmutableList<string> consumersToInform = this.consumers.Where(c => c.Value.Events.Contains(@event.EventName)).Select(c => c.Key).ToImmutableList();
 
@@ -204,7 +191,8 @@ namespace Blockcore.Features.NodeHost.Events
                 {
                     try
                     {
-                        this.hubContext.Clients.Clients(consumersToInform).SendAsync("ReceiveEvent", @event).ConfigureAwait(false).GetAwaiter();
+                        //this.hubContext.Clients.Clients(consumersToInform).SendAsync("ReceiveEvent", @event).ConfigureAwait(false).GetAwaiter().GetResult();
+                        this.hubContext.Clients.Clients(consumersToInform).SendAsync("ReceiveEvent", @event).ConfigureAwait(true); // .ConfigureAwait(false).GetAwaiter().GetResult();
                     }
                     catch (Exception ex)
                     {

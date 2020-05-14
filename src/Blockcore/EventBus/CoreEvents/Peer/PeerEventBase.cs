@@ -15,7 +15,6 @@ namespace Blockcore.EventBus.CoreEvents.Peer
         /// <value>
         /// The peer end point.
         /// </value>
-        [JsonIgnore]
         public IPEndPoint PeerEndPoint { get; }
 
         public PeerEventBase(IPEndPoint peerEndPoint)

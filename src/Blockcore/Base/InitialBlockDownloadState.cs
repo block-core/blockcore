@@ -53,13 +53,13 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public bool IsInitialBlockDownload()
         {
-            if (this.lastCheckpointHeight > this.chainState.ConsensusTip.Height)
+            if (this.lastCheckpointHeight > this.chainState.ConsensusTip?.Height)
                 return true;
 
-            if (this.chainState.ConsensusTip.Header.BlockTime < (this.dateTimeProvider.GetUtcNow().AddSeconds(-this.consensusSettings.MaxTipAge)))
+            if (this.chainState.ConsensusTip?.Header.BlockTime < (this.dateTimeProvider.GetUtcNow().AddSeconds(-this.consensusSettings.MaxTipAge)))
                 return true;
 
-            if (this.chainState.ConsensusTip.ChainWork < this.minimumChainWork)
+            if (this.chainState.ConsensusTip?.ChainWork < this.minimumChainWork)
                 return true;
 
             return false;

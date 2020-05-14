@@ -37,11 +37,4 @@
     <EmbeddedResource Include="UI\wwwroot\**\*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="UI\wwwroot\ws-ui\index.html" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="UI\wwwroot\js\" />
-  </ItemGroup>
 </Project>

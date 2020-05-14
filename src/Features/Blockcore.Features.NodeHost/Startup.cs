@@ -91,6 +91,7 @@ namespace Blockcore.Features.NodeHost
                     var settings = new JsonSerializerSettings();
                     Serializer.RegisterFrontConverters(settings);
                     options.PayloadSerializerSettings = settings;
+                    options.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
             }
 
@@ -101,7 +102,10 @@ namespace Blockcore.Features.NodeHost
                     options.Filters.Add(typeof(LoggingActionFilter));
                 })
                 // add serializers for NBitcoin objects
-                .AddNewtonsoftJson(options => Serializer.RegisterFrontConverters(options.SerializerSettings))
+                .AddNewtonsoftJson(options => {
+                    Serializer.RegisterFrontConverters(options.SerializerSettings);
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                })
                 .AddControllers(this.fullNode.Services.Features, services);
 
                 services.AddSwaggerGen(

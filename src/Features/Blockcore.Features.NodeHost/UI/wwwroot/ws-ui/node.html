@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Blockcore: Web Socket Events</title>
-    <script src="http://localhost:48334/js/signalr.js"></script>
+    <script src="/js/signalr.js"></script>
     <style>
         body {
             background-color: white;
@@ -36,7 +36,7 @@
 
     <script>
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://localhost:48334/ws")
+            .withUrl("/ws")
             .configureLogging(signalR.LogLevel.Information)
             .build();
 

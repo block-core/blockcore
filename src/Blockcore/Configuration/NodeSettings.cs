@@ -110,11 +110,6 @@ namespace Blockcore.Configuration
         public FeeRate MinRelayTxFeeRate { get; private set; }
 
         /// <summary>
-        /// If true then the node will add and start the SignalR feature.
-        /// </summary>
-        public bool EnableSignalR { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the object.
         /// </summary>
         /// <param name="network">The network the node runs on - regtest/testnet/mainnet.</param>
@@ -232,8 +227,6 @@ namespace Blockcore.Configuration
                 if (File.Exists(this.ConfigurationFile))
                     this.ReadConfigurationFile();
             }
-
-            this.EnableSignalR = this.ConfigReader.GetOrDefault<bool>("enableSignalR", false, this.Logger);
 
             // Create the custom logger factory.
             this.LoggerFactory.AddFilters(this.Log, this.DataFolder);

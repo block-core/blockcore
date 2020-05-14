@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Blockcore.Base;
+using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
@@ -10,6 +11,7 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.MemoryPool;
+using Blockcore.Features.Miner.Broadcasters;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.RPC;
@@ -260,6 +262,7 @@ namespace Blockcore.Features.Miner
                         services.AddSingleton<BlockDefinition, PosPowBlockDefinition>();
                         services.AddSingleton<MinerSettings>();
                         services.AddSingleton<INavigationItem, StakeNavigationItem>();
+                        services.AddSingleton<IClientEventBroadcaster, StakingBroadcaster>();
                     });
             });
 

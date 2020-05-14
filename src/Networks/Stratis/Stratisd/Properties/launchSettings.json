@@ -15,10 +15,6 @@
       "commandName": "Project",
       "commandLineArgs": "-testnet -server -rpcpassword=rpcpassword -rpcuser=rpcuser"
     },
-    "Stratis.StratisD Test Keepalive 60s": {
-      "commandName": "Project",
-      "commandLineArgs": "-testnet -keepalive=60"
-    },
     "Stratis.StratisD Test No assumevalid": {
       "commandName": "Project",
       "commandLineArgs": "-testnet -assumevalid=0 -checkpoints=false"

@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Blockcore: Web Socket Events</title>
+    <script src="/js/signalr.js"></script>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .events {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid gray;
+            padding: 1em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <strong>Node Events</strong> | <a href="node.html">Node Commands</a>
+
+    <h1>Node Events</h1>
+    <h2>Web Socket Events</h2>
+
+    <button onclick="subscribe()">Add Subscriptions</button>
+    <button onclick="unsubscribe()">Remove Subscriptions</button>
+
+    <p>View source to learn how to listen to events sent from the node. See below a live stream of events received.</p>
+
+    <br>
+    <p>
+        <a href="../">Go back...</a>
+    </p>
+
+    <div id="events" class="events"></div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ws-events")
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        var hub = connection.start();
+        var events = document.getElementById('events');
+
+        connection.on("ReceiveEvent", (result) => {
+            console.log('Event received from node: ', result);
+
+            var tag = document.createElement("p");
+            var text = document.createTextNode(JSON.stringify(result));
+            tag.appendChild(text);
+            events.appendChild(tag);
+        });
+
+        function subscribe() {
+            connection.invoke("Subscribe", [
+                'WalletGeneralInfoClientEvent',
+                'StakingInfoClientEvent',
+
+                'TransactionBroadcastEvent',
+                'BlockConnected',
+                'BlockDisconnected',
+                'PeerConnected',
+                'PeerConnectionAttempt',
+                'PeerConnectionAttemptFailed',
+                'PeerDisconnected',
+                'PeerMessageReceived',
+                'PeerMessageSendFailure',
+                'PeerMessageSent',
+                'TransactionReceived',
+                'TransactionFound']).catch(err => console.error(err));
+        }
+
+        function unsubscribe() {
+            connection.invoke("Unsubscribe", [
+                'WalletGeneralInfoClientEvent',
+                'StakingInfoClientEvent',
+
+                'TransactionBroadcastEvent',
+                'BlockConnected',
+                'BlockDisconnected',
+                'PeerConnected',
+                'PeerConnectionAttempt',
+                'PeerConnectionAttemptFailed',
+                'PeerDisconnected',
+                'PeerMessageReceived',
+                'PeerMessageSendFailure',
+                'PeerMessageSent',
+                'TransactionReceived',
+                'TransactionFound']).catch(err => console.error(err));
+        }
+    </script>
+
+</body>
+
+</html>

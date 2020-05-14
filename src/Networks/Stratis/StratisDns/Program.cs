@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Blockcore;
 using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Dns;
@@ -54,7 +54,7 @@ namespace StratisDnsD
                         .UseMempool()
                         .UseWallet()
                         .AddPowPosMining()
-                        .UseApi()
+                        .UseNodeHost()
                         .AddRPC()
                         .UseDns()
                         .Build();
@@ -65,7 +65,7 @@ namespace StratisDnsD
                     node = new FullNodeBuilder()
                         .UseNodeSettings(nodeSettings)
                         .UsePosConsensus()
-                        .UseApi()
+                        .UseNodeHost()
                         .AddRPC()
                         .UseDns()
                         .Build();

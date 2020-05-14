@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Blockcore.Builder;
-using Blockcore.Features.WebHost;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking;
 using Blockcore.Features.Consensus;
@@ -89,7 +89,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 builder
                  .AddPowPosMining()
                  .AddRPC()
-                 .UseApi()
+                 .UseNodeHost()
                  .UseTestChainedHeaderTree()
                  .MockIBD();
             });

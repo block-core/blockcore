@@ -45,7 +45,8 @@ namespace Blockcore.Broadcasters
                     }
                 },
                 this.nodeLifetime.ApplicationStopping,
-                repeatEvery: TimeSpan.FromSeconds(Math.Max(broadcasterSettings.BroadcastFrequencySeconds, 5)));
+                repeatEvery: TimeSpan.FromSeconds(Math.Max(broadcasterSettings.BroadcastFrequencySeconds, 5)),
+                startAfter: TimeSpans.FiveSeconds);
         }
 
         protected abstract IEnumerable<EventBase> GetMessages();

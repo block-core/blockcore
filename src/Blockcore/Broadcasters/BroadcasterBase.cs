@@ -20,12 +20,13 @@ namespace Blockcore.Broadcasters
         protected readonly ILogger log;
 
         protected ClientBroadcasterBase(
-            IEventsSubscriptionService eventsHub,
             ILoggerFactory loggerFactory,
             INodeLifetime nodeLifetime,
-            IAsyncProvider asyncProvider)
+            IAsyncProvider asyncProvider,
+            IEventsSubscriptionService subscriptionService = null
+            )
         {
-            this.eventsHub = eventsHub;
+            this.eventsHub = subscriptionService;
             this.nodeLifetime = nodeLifetime;
             this.asyncProvider = asyncProvider;
             this.log = loggerFactory.CreateLogger(this.GetType().FullName);

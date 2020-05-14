@@ -32,8 +32,8 @@ namespace Blockcore.Features.Wallet.Broadcasters
             IAsyncProvider asyncProvider,
             INodeLifetime nodeLifetime,
             ChainIndexer chainIndexer,
-            IEventsSubscriptionService eventsHub)
-            : base(eventsHub, loggerFactory, nodeLifetime, asyncProvider)
+            IEventsSubscriptionService subscriptionService = null)
+            : base(loggerFactory, nodeLifetime, asyncProvider, subscriptionService)
         {
             this.walletManager = walletManager;
             this.connectionManager = connectionManager;

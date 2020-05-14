@@ -20,8 +20,8 @@ namespace Blockcore.Features.Miner.Broadcasters
             IPosMinting posMinting,
             INodeLifetime nodeLifetime,
             IAsyncProvider asyncProvider,
-            IEventsSubscriptionService eventsHub)
-            : base(eventsHub, loggerFactory, nodeLifetime, asyncProvider)
+            IEventsSubscriptionService subscriptionService = null)
+            : base(loggerFactory, nodeLifetime, asyncProvider, subscriptionService)
         {
             this.posMinting = posMinting;
         }

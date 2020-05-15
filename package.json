@@ -17,7 +17,7 @@
   "homepage": "https://github.com/block-core/blockcore#readme",
   "scripts": {
     "version": "node version.js",
-    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 1 && git add CHANGELOG.md"
   },
   "private": true,
   "dependencies": {},

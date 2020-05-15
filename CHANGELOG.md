@@ -1,3 +1,26 @@
+##  (2020-05-15)
+
+*   Fix data folder on tests ([93fc2e7](https://github.com/block-core/blockcore/commit/93fc2e7))
+* Add Blockcore.Node project for quick and easy debug of multiple chains (#115) ([e96154e](https://github.com/block-core/blockcore/commit/e96154e)), closes [#115](https://github.com/block-core/blockcore/issues/115)
+* Added x42 to BlockCore. (#109) ([68f7b70](https://github.com/block-core/blockcore/commit/68f7b70)), closes [#109](https://github.com/block-core/blockcore/issues/109)
+* Adding UI for coldstaking (#116) ([0289121](https://github.com/block-core/blockcore/commit/0289121)), closes [#116](https://github.com/block-core/blockcore/issues/116)
+* Fix prunning ([5012a0a](https://github.com/block-core/blockcore/commit/5012a0a))
+* Fix typo ([366e55b](https://github.com/block-core/blockcore/commit/366e55b))
+* Increment version ([576134f](https://github.com/block-core/blockcore/commit/576134f))
+* Migrate SignalR feature into WebHost (#121) ([7917a2f](https://github.com/block-core/blockcore/commit/7917a2f)), closes [#121](https://github.com/block-core/blockcore/issues/121)
+* Move broadcaster from wallet to base and to mempool (#113) ([aaba809](https://github.com/block-core/blockcore/commit/aaba809)), closes [#113](https://github.com/block-core/blockcore/issues/113)
+* Refactor API to WebHost (#117) ([9db4d40](https://github.com/block-core/blockcore/commit/9db4d40)), closes [#117](https://github.com/block-core/blockcore/issues/117)
+* Remove Docker folder as this is no longer in use ([45b0d9c](https://github.com/block-core/blockcore/commit/45b0d9c))
+* Remove package reference to Tracer.Fody ([d748fc2](https://github.com/block-core/blockcore/commit/d748fc2))
+* Remove Scripts folder as it only contains legacy code ([22aefec](https://github.com/block-core/blockcore/commit/22aefec))
+* Remove stratis.ruleset ([e49f3da](https://github.com/block-core/blockcore/commit/e49f3da))
+* UI improvements (#122) ([42a9d88](https://github.com/block-core/blockcore/commit/42a9d88)), closes [#122](https://github.com/block-core/blockcore/issues/122)
+* Unify logging for features ([5f0211e](https://github.com/block-core/blockcore/commit/5f0211e))
+* Update CHANGELOG ([94c3da2](https://github.com/block-core/blockcore/commit/94c3da2))
+* Upgrade packages to latest versions ([42853bb](https://github.com/block-core/blockcore/commit/42853bb))
+
+
+
 ##  (2020-05-04)
 
 * Add contact information in the API documentation ([240d10e](https://github.com/block-core/blockcore/commit/240d10e))

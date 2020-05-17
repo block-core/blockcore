@@ -36,7 +36,7 @@ namespace Blockcore.Configuration
     public class NodeSettings : IDisposable
     {
         /// <summary>The version of the protocol supported by the current implementation of the Full Node.</summary>
-        public const ProtocolVersion SupportedProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION;
+        public const uint SupportedProtocolVersion = NBitcoin.Protocol.ProtocolVersion.SENDHEADERS_VERSION;
 
         /// <summary>A factory responsible for creating a Full Node logger instance.</summary>
         public ILoggerFactory LoggerFactory { get; private set; }
@@ -77,10 +77,10 @@ namespace Blockcore.Configuration
         public TextFileConfiguration ConfigReader { get; private set; }
 
         /// <summary>The version of the protocol supported by the Full Node.</summary>
-        public ProtocolVersion ProtocolVersion { get; private set; }
+        public uint ProtocolVersion { get; private set; }
 
         /// <summary>The lowest version of the protocol which the Full Node supports.</summary>
-        public ProtocolVersion? MinProtocolVersion { get; set; }
+        public uint? MinProtocolVersion { get; set; }
 
         /// <summary>The network which the node is configured to run on. The network can be a "mainnet", "testnet",
         /// or "regtest" network. All three network configurations can be defined, and one is selected at the command
@@ -126,7 +126,7 @@ namespace Blockcore.Configuration
         /// - Alternatively, if the file name is not supplied then a network-specific file
         ///   name would be determined. In this case we first need to determine the network.
         /// </remarks>
-        public NodeSettings(Network network = null, ProtocolVersion protocolVersion = SupportedProtocolVersion,
+        public NodeSettings(Network network = null, uint protocolVersion = SupportedProtocolVersion,
             string agent = "Blockcore", string[] args = null, NetworksSelector networksSelector = null)
         {
             // Create the default logger factory and logger.
@@ -251,7 +251,7 @@ namespace Blockcore.Configuration
         /// <param name="network">Specification of the network the node runs on - regtest/testnet/mainnet.</param>
         /// <param name="protocolVersion">Supported protocol version for which to create the configuration.</param>
         /// <returns>Default node configuration.</returns>
-        public static NodeSettings Default(Network network, ProtocolVersion protocolVersion = SupportedProtocolVersion)
+        public static NodeSettings Default(Network network, uint protocolVersion = SupportedProtocolVersion)
         {
             return new NodeSettings(network, protocolVersion);
         }

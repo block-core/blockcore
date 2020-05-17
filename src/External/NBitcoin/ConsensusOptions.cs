@@ -49,7 +49,7 @@ namespace NBitcoin
         public int EnforceMinProtocolVersionAtBlockHeight { get; set; }
 
         /// <summary>The minimum protocol version which should be used from block height defined in <see cref="EnforceMinProtocolVersionAtBlockHeight"/></summary>
-        public ProtocolVersion? EnforcedMinProtocolVersion { get; set; }
+        public uint? EnforcedMinProtocolVersion { get; set; }
 
         /// <summary>
         /// Initializes the default values. Currently only used for initialising Bitcoin networks and testing.

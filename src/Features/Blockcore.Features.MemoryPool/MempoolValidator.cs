@@ -262,8 +262,7 @@ namespace Blockcore.Features.MemoryPool
         public static int GetTransactionWeight(Transaction tx, ConsensusOptions consensusOptions)
         {
             return tx.GetSerializedSize(
-                       (ProtocolVersion)
-                       ((uint)ProtocolVersion.PROTOCOL_VERSION | ConsensusOptions.SerializeTransactionNoWitness),
+                       (uint)(ProtocolVersion.PROTOCOL_VERSION | ConsensusOptions.SerializeTransactionNoWitness),
                        SerializationType.Network) * (consensusOptions.WitnessScaleFactor - 1) +
                    tx.GetSerializedSize(ProtocolVersion.PROTOCOL_VERSION, SerializationType.Network);
         }

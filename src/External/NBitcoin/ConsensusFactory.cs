@@ -69,39 +69,19 @@ namespace NBitcoin
 
             if (this.IsBlock<T>())
                 result = (T)(object)this.CreateBlock();
-
             else if (this.IsBlockHeader<T>())
                 result = (T)(object)this.CreateBlockHeader();
-
             else if (this.IsTransaction<T>())
                 result = (T)(object)this.CreateTransaction();
 
             return (T)result;
         }
 
-        /// <summary>
-        /// A set of flags representing the capabilities of the protocol.
-        /// </summary>
-        /// <param name="protocolVersion">The version to build the flags from.</param>
-        /// <returns>The <see cref="ProtocolCapabilities"/>.</returns>
-        public virtual ProtocolCapabilities GetProtocolCapabilities(uint protocolVersion)
-        {
-            return new ProtocolCapabilities()
-            {
-                PeerTooOld = protocolVersion < 209U,
-                SupportTimeAddress = protocolVersion >= 31402U,
-                SupportGetBlock = protocolVersion < 32000U || protocolVersion > 32400U,
-                SupportPingPong = protocolVersion > 60000U,
-                SupportMempoolQuery = protocolVersion >= 60002U,
-                SupportReject = protocolVersion >= 70002U,
-                SupportNodeBloom = protocolVersion >= 70011U,
-                SupportSendHeaders = protocolVersion >= 70012U,
-                SupportWitness = protocolVersion >= 70012U,
-                SupportCompactBlocks = protocolVersion >= 70014U,
-                SupportCheckSum = protocolVersion >= 60002,
-                SupportUserAgent = protocolVersion >= 60002
-            };
-        }
+        /// <summary>The version of the protocol supported by the current implementation of the Full Node.</summary>
+        //public Protocol.ProtocolVersion SupportedProtocolVersion { get; set; } = Protocol.ProtocolVersion.SENDHEADERS_VERSION;
+
+        /// <summary>The version of the protocol supported by the Full Node.</summary>
+        public uint ProtocolVersion { get; set; }
 
         /// <summary>
         /// Create a <see cref="Block"/> instance.
@@ -149,152 +129,6 @@ namespace NBitcoin
             var transaction = new Transaction();
             transaction.FromBytes(bytes);
             return transaction;
-        }
-    }
-
-    /// <summary>
-    /// A class with a set of flags representing the capabilities of the protocol.
-    /// </summary>
-    public class ProtocolCapabilities
-    {
-        /// <summary>
-        /// Disconnect from peers older than this protocol version.
-        /// </summary>
-        public bool PeerTooOld
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// nTime field added to CAddress, starting with this version.
-        /// if possible, avoid requesting addresses nodes older than this.
-        /// </summary>
-        public bool SupportTimeAddress
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Support Get Block.
-        /// </summary>
-        public bool SupportGetBlock
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// BIP 0031, pong message, is enabled for all versions AFTER this one.
-        /// </summary>
-        public bool SupportPingPong
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// "mempool" command, enhanced "getdata" behavior starts with this version.
-        /// </summary>
-        public bool SupportMempoolQuery
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// "reject" command.
-        /// </summary>
-        public bool SupportReject
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// "filter*" commands are disabled without NODE_BLOOM after and including this version.
-        /// </summary>
-        public bool SupportNodeBloom
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// "sendheaders" command and announcing blocks with headers starts with this version.
-        /// </summary>
-        public bool SupportSendHeaders
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Version after which witness support potentially exists.
-        /// </summary>
-        public bool SupportWitness
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// short-id-based block download starts with this version.
-        /// </summary>
-        public bool SupportCompactBlocks
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Support checksum at p2p message level.
-        /// </summary>
-        public bool SupportCheckSum
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Support a user agent.
-        /// </summary>
-        public bool SupportUserAgent
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Support all flags.
-        /// </summary>
-        public static ProtocolCapabilities CreateSupportAll()
-        {
-            return new ProtocolCapabilities()
-            {
-                PeerTooOld = false,
-                SupportCheckSum = true,
-                SupportCompactBlocks = true,
-                SupportGetBlock = true,
-                SupportMempoolQuery = true,
-                SupportNodeBloom = true,
-                SupportPingPong = true,
-                SupportReject = true,
-                SupportSendHeaders = true,
-                SupportTimeAddress = true,
-                SupportUserAgent = true,
-                SupportWitness = true
-            };
-        }
-
-        /// <summary>
-        /// Is the set of flags a sub set of a given protocol flags.
-        /// </summary>
-        public bool IsSupersetOf(ProtocolCapabilities capabilities)
-        {
-            return (!capabilities.SupportCheckSum || this.SupportCheckSum) &&
-                (!capabilities.SupportCompactBlocks || this.SupportCompactBlocks) &&
-                (!capabilities.SupportGetBlock || this.SupportGetBlock) &&
-                (!capabilities.SupportMempoolQuery || this.SupportMempoolQuery) &&
-                (!capabilities.SupportNodeBloom || this.SupportNodeBloom) &&
-                (!capabilities.SupportPingPong || this.SupportPingPong) &&
-                (!capabilities.SupportReject || this.SupportReject) &&
-                (!capabilities.SupportSendHeaders || this.SupportSendHeaders) &&
-                (!capabilities.SupportTimeAddress || this.SupportTimeAddress) &&
-                (!capabilities.SupportWitness || this.SupportWitness) &&
-                (!capabilities.SupportUserAgent || this.SupportUserAgent) &&
-                (!capabilities.SupportCheckSum || this.SupportCheckSum);
         }
     }
 }

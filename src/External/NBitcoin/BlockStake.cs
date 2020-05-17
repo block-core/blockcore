@@ -187,9 +187,9 @@ namespace NBitcoin
         {
         }
 
-        public PosTransaction(string hex, ProtocolVersion version = ProtocolVersion.PROTOCOL_VERSION) : this()
+        public PosTransaction(string hex, ConsensusFactory consensusFactory) : this()
         {
-            this.FromBytes(Encoders.Hex.DecodeData(hex), version);
+            this.FromBytes(Encoders.Hex.DecodeData(hex), consensusFactory);
         }
 
         public PosTransaction(byte[] bytes) : this()
@@ -368,7 +368,7 @@ namespace NBitcoin
         /// <inheritdoc />
         public override Transaction CreateTransaction(string hex)
         {
-            return new PosTransaction(hex);
+            return new PosTransaction(hex, this);
         }
 
         /// <inheritdoc />

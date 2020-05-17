@@ -34,7 +34,7 @@ namespace Blockcore.Tests.P2P
             }
         }
 
-        private INetworkPeer CreateNetworkPeer(ProtocolVersion version)
+        private INetworkPeer CreateNetworkPeer(uint version)
         {
             var peerVersion = new VersionPayload
             {
@@ -48,7 +48,7 @@ namespace Blockcore.Tests.P2P
 
             return networkPeer.Object;
         }
-        
+
         private void Disconnected(Mock<INetworkPeer> peer, string reason, Exception exception)
         {
             peer.SetupGet(n => n.State).Returns(NetworkPeerState.Offline);

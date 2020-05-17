@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 #if !NOSOCKET
+
 using System.Net.Sockets;
+
 #endif
+
 using System.Reflection;
 using System.Text;
 using NBitcoin.Protocol;
@@ -21,6 +25,7 @@ namespace NBitcoin
     public class Scope : IDisposable
     {
         private Action close;
+
         public Scope(Action open, Action close)
         {
             this.close = close;
@@ -34,7 +39,7 @@ namespace NBitcoin
             this.close();
         }
 
-        #endregion
+        #endregion IDisposable Members
 
         public static IDisposable Nothing
         {
@@ -53,6 +58,7 @@ namespace NBitcoin
     public partial class BitcoinStream
     {
         private int maxArraySize = 1024 * 1024;
+
         public int MaxArraySize
         {
             get
@@ -67,6 +73,7 @@ namespace NBitcoin
 
         //ReadWrite<T>(ref T data)
         private static MethodInfo readWriteTyped;
+
         static BitcoinStream()
         {
             readWriteTyped = typeof(BitcoinStream)
@@ -84,6 +91,7 @@ namespace NBitcoin
 #endif
 
         private readonly Stream inner;
+
         public Stream Inner
         {
             get
@@ -93,6 +101,7 @@ namespace NBitcoin
         }
 
         private readonly bool serializing;
+
         public bool Serializing
         {
             get
@@ -301,7 +310,7 @@ namespace NBitcoin
 
                 byte[] bytes = new byte[length];
 
-                this.ReadWriteBytes(ref bytes, 0 , bytes.Length);
+                this.ReadWriteBytes(ref bytes, 0, bytes.Length);
 
                 str = Encoding.ASCII.GetString(bytes);
             }
@@ -372,7 +381,6 @@ namespace NBitcoin
             value = valueTemp;
         }
 
-
         private void ReadWriteBytes(ref byte[] data, int offset = 0, int count = -1)
         {
             if (data == null)
@@ -398,11 +406,11 @@ namespace NBitcoin
                 if (read == 0)
                     throw new EndOfStreamException("No more byte to read");
                 this.Counter.AddRead(read);
-
             }
         }
 
         private PerformanceCounter counter;
+
         public PerformanceCounter Counter
         {
             get
@@ -449,8 +457,9 @@ namespace NBitcoin
             });
         }
 
-        private ProtocolVersion protocolVersion = ProtocolVersion.PROTOCOL_VERSION;
-        public ProtocolVersion ProtocolVersion
+        private uint protocolVersion = NBitcoin.Protocol.ProtocolVersion.PROTOCOL_VERSION;
+
+        public uint ProtocolVersion
         {
             get
             {
@@ -463,6 +472,7 @@ namespace NBitcoin
         }
 
         private TransactionOptions transactionSupportedOptions = TransactionOptions.All;
+
         public TransactionOptions TransactionOptions
         {
             get
@@ -480,9 +490,9 @@ namespace NBitcoin
         /// </summary>
         public ConsensusFactory ConsensusFactory { get; set; }
 
-        public IDisposable ProtocolVersionScope(ProtocolVersion version)
+        public IDisposable ProtocolVersionScope(uint version)
         {
-            ProtocolVersion old = this.ProtocolVersion;
+            uint old = this.ProtocolVersion;
             return new Scope(() =>
             {
                 this.ProtocolVersion = version;
@@ -503,7 +513,6 @@ namespace NBitcoin
             this.MaxArraySize = stream.MaxArraySize;
             this.Type = stream.Type;
         }
-
 
         public SerializationType Type
         {

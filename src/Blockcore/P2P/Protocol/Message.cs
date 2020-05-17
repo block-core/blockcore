@@ -179,7 +179,7 @@ namespace Blockcore.P2P.Protocol
             return string.Format("{0}: {1}", this.Command, this.Payload);
         }
 
-        public static Message ReadNext(Stream stream, Network network, ProtocolVersion version, CancellationToken cancellationToken, PayloadProvider payloadProvider, out PerformanceCounter counter)
+        public static Message ReadNext(Stream stream, Network network, uint version, CancellationToken cancellationToken, PayloadProvider payloadProvider, out PerformanceCounter counter)
         {
             var bitStream = new BitcoinStream(stream, false)
             {

@@ -18,7 +18,6 @@ namespace Blockcore.IntegrationTests
 {
     public class ProvenHeaderTests
     {
-
         /// <summary>
         /// Prevent network being matched by name and replaced with a different network
         /// in the <see cref="NodeSettings" /> constructor.
@@ -31,8 +30,7 @@ namespace Blockcore.IntegrationTests
             }
         }
 
-
-        public CoreNode CreateNode(NodeBuilder nodeBuilder, string agent, ProtocolVersion version = ProtocolVersion.ALT_PROTOCOL_VERSION, NodeConfigParameters configParameters = null)
+        public CoreNode CreateNode(NodeBuilder nodeBuilder, string agent, uint version = ProtocolVersion.ALT_PROTOCOL_VERSION, NodeConfigParameters configParameters = null)
         {
             var callback = new Action<IFullNodeBuilder>(builder => builder
                 .UseBlockStore()

@@ -3338,7 +3338,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         private WalletManager CreateWalletManager(DataFolder dataFolder, Network network, params string[] cmdLineArgs)
         {
-            var nodeSettings = new NodeSettings(KnownNetworks.RegTest, ProtocolVersion.PROTOCOL_VERSION, network.Name, cmdLineArgs);
+            var nodeSettings = new NodeSettings(KnownNetworks.RegTest, agent: network.Name, args: cmdLineArgs);
             var walletSettings = new WalletSettings(nodeSettings);
 
             return new WalletManager(this.LoggerFactory.Object, network, new ChainIndexer(network),

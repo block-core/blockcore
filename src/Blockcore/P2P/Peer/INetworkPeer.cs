@@ -54,7 +54,7 @@ namespace Blockcore.P2P.Peer
         /// <summary>
         /// The negotiated protocol version (minimum of supported version between <see cref="MyVersion"/> and the <see cref="PeerVersion"/>).
         /// </summary>
-        ProtocolVersion Version { get; }
+        uint Version { get; }
 
         /// <summary><c>true</c> if the connection to the peer is considered active, <c>false</c> otherwise, including any case of error.</summary>
         bool IsConnected { get; }

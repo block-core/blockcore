@@ -11,16 +11,16 @@ namespace Blockcore.P2P.Protocol.Payloads
     {
         private uint version = (uint)ProtocolVersion.PROTOCOL_VERSION;
 
-        public ProtocolVersion Version
+        public uint Version
         {
             get
             {
-                return (ProtocolVersion)this.version;
+                return this.version;
             }
 
             set
             {
-                this.version = (uint)value;
+                this.version = value;
             }
         }
 

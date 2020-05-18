@@ -337,7 +337,7 @@ namespace Blockcore.P2P.Peer
         /// <returns>Binary message received from the connected counterparty.</returns>
         /// <exception cref="OperationCanceledException">Thrown if the operation was cancelled or the end of the stream was reached.</exception>
         /// <exception cref="ProtocolViolationException">Thrown if the incoming message is too big.</exception>
-        private async Task<byte[]> ReadMessageAsync(ProtocolVersion protocolVersion, CancellationToken cancellation = default(CancellationToken))
+        private async Task<byte[]> ReadMessageAsync(uint protocolVersion, CancellationToken cancellation = default(CancellationToken))
         {
             // First find and read the magic.
             await this.ReadMagicAsync(this.network.MagicBytes, cancellation).ConfigureAwait(false);
@@ -455,7 +455,7 @@ namespace Blockcore.P2P.Peer
         /// for parsing the message from binary data. That method need stream to read from, so to achieve that we create a memory stream from our data,
         /// which is not efficient. This should be improved.
         /// </remarks>
-        private async Task<(Message Message, int RawMessageSize)> ReadAndParseMessageAsync(ProtocolVersion protocolVersion, CancellationToken cancellation)
+        private async Task<(Message Message, int RawMessageSize)> ReadAndParseMessageAsync(uint protocolVersion, CancellationToken cancellation)
         {
             Message message = null;
 

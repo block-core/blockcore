@@ -95,14 +95,11 @@ namespace Blockcore.P2P.Protocol
             length = payloadBytes == null ? 0 : length;
             stream.ReadWrite(ref length);
 
-            if (stream.ProtocolVersion >= ProtocolVersion.MEMPOOL_GD_VERSION)
-            {
-                if (stream.Serializing)
-                    checksum = Hashes.Hash256(payloadBytes, 0, length).GetLow32();
+            if (stream.Serializing)
+                checksum = Hashes.Hash256(payloadBytes, 0, length).GetLow32();
 
-                stream.ReadWrite(ref checksum);
-                hasChecksum = true;
-            }
+            stream.ReadWrite(ref checksum);
+            hasChecksum = true;
 
             if (stream.Serializing)
             {

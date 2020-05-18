@@ -74,6 +74,7 @@ namespace x42.Networks
 
             this.Consensus = new x42Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: this.Consensus.ConsensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),

@@ -96,6 +96,7 @@ namespace Blockcore.Networks.Stratis
 
             this.Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: this.Consensus.ConsensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: 105,
                 hashGenesisBlock: genesisBlock.GetHash(),

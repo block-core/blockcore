@@ -26,24 +26,9 @@
         CADDR_TIME_VERSION = 31402,
 
         /// <summary>
-        /// Only request blocks from nodes outside this range of versions (START).
-        /// </summary>
-        NOBLKS_VERSION_START = 32000,
-
-        /// <summary>
-        /// Only request blocks from nodes outside this range of versions (END).
-        /// </summary>
-        NOBLKS_VERSION_END = 32400,
-
-        /// <summary>
         /// BIP 0031, pong message, is enabled for all versions AFTER this one.
         /// </summary>
         BIP0031_VERSION = 60000,
-
-        /// <summary>
-        /// "mempool" command, enhanced "getdata" behavior starts with this version.
-        /// </summary>
-        MEMPOOL_GD_VERSION = 60002,
 
         /// <summary>
         /// "reject" command.

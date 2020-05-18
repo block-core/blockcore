@@ -343,7 +343,7 @@ namespace Blockcore.P2P.Peer
             await this.ReadMagicAsync(this.network.MagicBytes, cancellation).ConfigureAwait(false);
 
             // Then read the header, which is formed of command, length, and possibly also a checksum.
-            int checksumSize = protocolVersion >= ProtocolVersion.MEMPOOL_GD_VERSION ? Message.ChecksumSize : 0;
+            int checksumSize = Message.ChecksumSize;
             int headerSize = Message.CommandSize + Message.LengthSize + checksumSize;
 
             var messageHeader = new byte[headerSize];

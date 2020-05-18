@@ -154,8 +154,12 @@ namespace x42.Networks.Consensus
         /// <inheritdoc />
         public Money LastProofOfStakeRewardHeight { get; }
 
+        /// <inheritdoc />
+        public ConsensusProtocol ConsensusProtocol { get; }
+
         public x42Consensus(
             ConsensusFactory consensusFactory,
+            ConsensusProtocol consensusProtocol,
             ConsensusOptions consensusOptions,
             int coinType,
             uint256 hashGenesisBlock,
@@ -229,6 +233,7 @@ namespace x42.Networks.Consensus
             this.MempoolRules = new List<Type>();
             this.PosEmptyCoinbase = posEmptyCoinbase;
             this.ProofOfStakeTimestampMask = proofOfStakeTimestampMask;
+            this.ConsensusProtocol = consensusProtocol;
         }
     }
 }

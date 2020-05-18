@@ -112,8 +112,15 @@ namespace Blockcore.Networks.Stratis
                     BIP9DeploymentsParameters.DefaultMainnetThreshold)
             };
 
+            ConsensusProtocol consensusProtocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = (uint)ProtocolVersion.PROVEN_HEADER_VERSION,
+                MinProtocolVersion = (uint)ProtocolVersion.ALT_PROTOCOL_VERSION,
+            };
+
             this.Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: consensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: 105,
                 hashGenesisBlock: genesisBlock.GetHash(),

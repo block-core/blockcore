@@ -74,7 +74,7 @@ namespace Blockcore.Tests.BlockPulling
             VersionPayload version = connectionParameters.CreateVersion(new IPEndPoint(1, 1), new IPEndPoint(1, 1), KnownNetworks.StratisMain, new DateTimeProvider().GetTimeOffset());
 
             if (notSupportedVersion)
-                version.Version = ProtocolVersion.NOBLKS_VERSION_START;
+                version.Version = ProtocolVersion.MIN_PEER_PROTO_VERSION;
             else
                 version.Services = NetworkPeerServices.Network;
 
@@ -188,25 +188,52 @@ namespace Blockcore.Tests.BlockPulling
             return (List<AssignedDownload>)this.puller.InvokeMethod("DistributeHeadersLocked", downloadJob, failedHashes, emptySlots);
         }
 
-        public void Initialize(BlockPuller.OnBlockDownloadedCallback callback) { this.puller.Initialize(callback); }
+        public void Initialize(BlockPuller.OnBlockDownloadedCallback callback)
+        {
+            this.puller.Initialize(callback);
+        }
 
         public void SetCallback(BlockPuller.OnBlockDownloadedCallback callback) => this.puller.SetPrivateVariableValue("onDownloadedCallback", callback);
 
-        public double GetAverageBlockSizeBytes() { return this.puller.GetAverageBlockSizeBytes(); }
+        public double GetAverageBlockSizeBytes()
+        {
+            return this.puller.GetAverageBlockSizeBytes();
+        }
 
-        public void OnIbdStateChanged(bool isIbd) { this.puller.OnIbdStateChanged(isIbd); }
+        public void OnIbdStateChanged(bool isIbd)
+        {
+            this.puller.OnIbdStateChanged(isIbd);
+        }
 
-        public void NewPeerTipClaimed(INetworkPeer peer, ChainedHeader newTip) { this.puller.NewPeerTipClaimed(peer, newTip); }
+        public void NewPeerTipClaimed(INetworkPeer peer, ChainedHeader newTip)
+        {
+            this.puller.NewPeerTipClaimed(peer, newTip);
+        }
 
-        public void PeerDisconnected(int peerId) { this.puller.PeerDisconnected(peerId); }
+        public void PeerDisconnected(int peerId)
+        {
+            this.puller.PeerDisconnected(peerId);
+        }
 
-        public void RequestBlocksDownload(List<ChainedHeader> headers, bool highPriority = false) { this.puller.RequestBlocksDownload(headers, highPriority); }
+        public void RequestBlocksDownload(List<ChainedHeader> headers, bool highPriority = false)
+        {
+            this.puller.RequestBlocksDownload(headers, highPriority);
+        }
 
-        public void PushBlock(uint256 blockHash, Block block, int peerId) { this.puller.PushBlock(blockHash, block, peerId); }
+        public void PushBlock(uint256 blockHash, Block block, int peerId)
+        {
+            this.puller.PushBlock(blockHash, block, peerId);
+        }
 
-        public void RequestPeerServices(NetworkPeerServices services) { this.puller.RequestPeerServices(services); }
+        public void RequestPeerServices(NetworkPeerServices services)
+        {
+            this.puller.RequestPeerServices(services);
+        }
 
-        public void Dispose() { this.puller.Dispose(); }
+        public void Dispose()
+        {
+            this.puller.Dispose();
+        }
     }
 
     /// <summary>Wrapper around <see cref="NetworkPeerBehavior"/> that exposes private methods and properties using reflection.</summary>
@@ -255,7 +282,10 @@ namespace Blockcore.Tests.BlockPulling
 
         public long SpeedBytesPerSecond { get => this.underlyingBehavior.SpeedBytesPerSecond; }
 
-        public void AddSample(long blockSizeBytes, double delaySinceRequestedSeconds) { this.underlyingBehavior.AddSample(blockSizeBytes, delaySinceRequestedSeconds); }
+        public void AddSample(long blockSizeBytes, double delaySinceRequestedSeconds)
+        {
+            this.underlyingBehavior.AddSample(blockSizeBytes, delaySinceRequestedSeconds);
+        }
 
         public void RecalculateQualityScore(long bestSpeedBytesPerSecond)
         {
@@ -273,11 +303,17 @@ namespace Blockcore.Tests.BlockPulling
             this.underlyingBehavior.OnIbdStateChanged(isIbd);
         }
 
+        public override object Clone()
+        {
+            return null;
+        }
 
-        public override object Clone() { return null; }
+        protected override void AttachCore()
+        {
+        }
 
-        protected override void AttachCore() { }
-
-        protected override void DetachCore() { }
+        protected override void DetachCore()
+        {
+        }
     }
 }

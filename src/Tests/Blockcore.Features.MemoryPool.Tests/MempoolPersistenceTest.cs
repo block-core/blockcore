@@ -134,7 +134,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             MempoolManager mempoolManager = CreateTestMempool(settings, out txMemPool);
             Money fee = Money.Satoshis(0.00001m);
 
-            txMemPool.AddUnchecked(tx1_parent.GetHash(), new TxMempoolEntry(tx1_parent, fee, 0, 0.0, 0, tx1_parent.TotalOut + fee, false, 0, null, new ConsensusOptions()));
+            txMemPool.AddUnchecked(tx1_parent.GetHash(), new TxMempoolEntry(tx1_parent, fee, 0, 0.0, 0, tx1_parent.TotalOut + fee, false, 0, null, new ConsensusOptions(), new ConsensusFactory()));
             long expectedTx1FeeDelta = 123;
 
             // age of tx = 5 hours
@@ -171,7 +171,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             MempoolManager mempoolManager = CreateTestMempool(settings, out txMemPool);
             Money fee = Money.Satoshis(0.00001m);
 
-            txMemPool.AddUnchecked(tx1_parent.GetHash(), new TxMempoolEntry(tx1_parent, fee, 0, 0.0, 0, tx1_parent.TotalOut + fee, false, 0, null, new ConsensusOptions()));
+            txMemPool.AddUnchecked(tx1_parent.GetHash(), new TxMempoolEntry(tx1_parent, fee, 0, 0.0, 0, tx1_parent.TotalOut + fee, false, 0, null, new ConsensusOptions(), new ConsensusFactory()));
             long expectedTx1FeeDelta = 123;
 
             // age of tx = 5 hours past expiry
@@ -250,7 +250,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             {
                 int amountSat = 10 * i;
                 Transaction tx = this.MakeRandomTx(amountSat);
-                var entry = new TxMempoolEntry(tx, Money.FromUnit(0.1m, MoneyUnit.MilliBTC), DateTimeOffset.Now.ToUnixTimeSeconds(), i * 100, i, amountSat, i == 0, 10, null, new ConsensusOptions());
+                var entry = new TxMempoolEntry(tx, Money.FromUnit(0.1m, MoneyUnit.MilliBTC), DateTimeOffset.Now.ToUnixTimeSeconds(), i * 100, i, amountSat, i == 0, 10, null, new ConsensusOptions(), new ConsensusFactory());
                 entry.UpdateFeeDelta(numTx - i);
                 entries.Add(entry);
             }

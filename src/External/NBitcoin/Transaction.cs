@@ -291,13 +291,6 @@ namespace NBitcoin
             }
         }
 
-        public TxIn Clone()
-        {
-            TxIn txin = BitcoinSerializableExtensions.Clone(this);
-            txin.WitScript = (this.witScript ?? WitScript.Empty).Clone();
-            return txin;
-        }
-
         public static TxIn CreateCoinbase(int height)
         {
             var txin = new TxIn();

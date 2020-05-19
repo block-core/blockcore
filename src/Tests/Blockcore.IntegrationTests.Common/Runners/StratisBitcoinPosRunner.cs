@@ -14,7 +14,6 @@ using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.Protocol;
 
-
 namespace Blockcore.IntegrationTests.Common.Runners
 {
     public sealed class StratisBitcoinPosRunner : NodeRunner
@@ -30,10 +29,10 @@ namespace Blockcore.IntegrationTests.Common.Runners
 
         public override void BuildNode()
         {
-            var settings = new NodeSettings(this.Network, ProtocolVersion.PROVEN_HEADER_VERSION, this.Agent, args: new string[] { "-conf=stratis.conf", "-datadir=" + this.DataFolder });
+            var settings = new NodeSettings(this.Network, this.Agent, args: new string[] { "-conf=stratis.conf", "-datadir=" + this.DataFolder });
 
             // For stratisX tests we need the minimum protocol version to be 70000.
-            settings.MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION;
+            settings.MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION;
 
             var builder = new FullNodeBuilder()
                 .UseNodeSettings(settings)
@@ -69,7 +68,7 @@ namespace Blockcore.IntegrationTests.Common.Runners
         /// but all the features required for it are enabled.</remarks>
         public static IFullNode BuildStakingNode(string dataDir, bool staking = true)
         {
-            var nodeSettings = new NodeSettings(networksSelector: Networks.Stratis.Networks.Stratis, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: new string[] { $"-datadir={dataDir}", $"-stake={(staking ? 1 : 0)}", "-walletname=dummy", "-walletpassword=dummy" });
+            var nodeSettings = new NodeSettings(networksSelector: Networks.Stratis.Networks.Stratis, args: new string[] { $"-datadir={dataDir}", $"-stake={(staking ? 1 : 0)}", "-walletname=dummy", "-walletpassword=dummy" });
             var fullNodeBuilder = new FullNodeBuilder(nodeSettings);
             IFullNode fullNode = fullNodeBuilder
                                 .UseBlockStore()

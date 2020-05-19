@@ -85,7 +85,7 @@ namespace Blockcore.Features.MemoryPool.Rules
             bool spendsCoinbase = context.View.SpendsCoinBase(context.Transaction);
 
             context.Entry = new TxMempoolEntry(context.Transaction, context.Fees, context.State.AcceptTime, dPriority, this.chainIndexer.Height, inChainInputValue,
-                spendsCoinbase, context.SigOpsCost, context.LockPoints, this.network.Consensus.Options);
+                spendsCoinbase, context.SigOpsCost, context.LockPoints, this.network.Consensus.Options, this.network.Consensus.ConsensusFactory);
             context.EntrySize = (int)context.Entry.GetTxSize();
         }
 

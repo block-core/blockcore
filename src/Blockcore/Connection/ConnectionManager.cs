@@ -134,7 +134,7 @@ namespace Blockcore.Connection
 
             this.Parameters.UserAgent = $"{this.ConnectionSettings.Agent}:{versionProvider.GetVersion()}";
 
-            this.Parameters.Version = this.NodeSettings.Network.Consensus.ConsensusFactory.ProtocolVersion;
+            this.Parameters.Version = this.NodeSettings.Network.Consensus.ConsensusProtocol.ProtocolVersion;
 
             nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name, 1100);
         }

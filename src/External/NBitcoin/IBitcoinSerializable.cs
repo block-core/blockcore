@@ -11,46 +11,47 @@ namespace NBitcoin
 
     public static class BitcoinSerializableExtensions
     {
-        public static void ReadWrite(this IBitcoinSerializable serializable, Stream stream, bool serializing, uint protocolVersion = ProtocolVersion.PROTOCOL_VERSION)
+        public static void ReadWrite(this IBitcoinSerializable serializable, byte[] bytes)
         {
-            serializable.ReadWrite(new BitcoinStream(stream, serializing)
+            using (var stream = new MemoryStream(bytes))
             {
-                ProtocolVersion = protocolVersion
-            });
+                serializable.ReadWrite(new BitcoinStream(stream, false));
+            }
         }
 
-        public static void ReadWrite(this IBitcoinSerializable serializable, Stream stream, bool serializing, ConsensusFactory consensusFactory, uint protocolVersion = ProtocolVersion.PROTOCOL_VERSION)
+        public static void ReadWrite(this IBitcoinSerializable serializable, byte[] bytes, ConsensusFactory consensusFactory)
         {
             if (consensusFactory == null)
                 throw new ArgumentException("{0} cannot be null", nameof(consensusFactory));
 
-            serializable.ReadWrite(new BitcoinStream(stream, serializing)
+            using (var stream = new MemoryStream(bytes))
             {
-                ProtocolVersion = protocolVersion,
-                ConsensusFactory = consensusFactory
-            });
-        }
-
-        public static void ReadWrite(this IBitcoinSerializable serializable, byte[] bytes, uint version = ProtocolVersion.PROTOCOL_VERSION)
-        {
-            using (var ms = new MemoryStream(bytes))
-            {
-                ReadWrite(serializable, ms, false, version);
+                serializable.ReadWrite(new BitcoinStream(stream, false)
+                {
+                    ConsensusFactory = consensusFactory,
+                    ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
+                });
             }
         }
 
-        public static void ReadWrite(this IBitcoinSerializable serializable, byte[] bytes, ConsensusFactory consensusFactory, uint version = ProtocolVersion.PROTOCOL_VERSION)
-        {
-            using (var ms = new MemoryStream(bytes))
-            {
-                ReadWrite(serializable, ms, false, consensusFactory, version);
-            }
-        }
-
-        public static int GetSerializedSize(this IBitcoinSerializable serializable, uint version, SerializationType serializationType)
+        public static int GetSerializedSize(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory, SerializationType serializationType)
         {
             var bitcoinStream = new BitcoinStream(Stream.Null, true)
             {
+                Type = serializationType,
+                ConsensusFactory = consensusFactory,
+                ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
+            };
+            bitcoinStream.ReadWrite(serializable);
+            return (int)bitcoinStream.Counter.WrittenBytes;
+        }
+
+        public static int GetSerializedSize(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory, uint version, SerializationType serializationType)
+        {
+            var bitcoinStream = new BitcoinStream(Stream.Null, true)
+            {
+                ConsensusFactory = consensusFactory,
+                ProtocolVersion = version, // override version
                 Type = serializationType
             };
             bitcoinStream.ReadWrite(serializable);
@@ -63,6 +64,7 @@ namespace NBitcoin
             {
                 TransactionOptions = options
             };
+
             serializable.ReadWrite(bitcoinStream);
             return (int)bitcoinStream.Counter.WrittenBytes;
         }
@@ -73,8 +75,9 @@ namespace NBitcoin
             {
                 var bitcoinStream = new BitcoinStream(memoryStream, true)
                 {
+                    Type = serializationType,
                     ConsensusFactory = network.Consensus.ConsensusFactory,
-                    Type = serializationType
+                    ProtocolVersion = network.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 };
                 bitcoinStream.ReadWrite(serializable);
                 memoryStream.Seek(0, SeekOrigin.Begin);
@@ -83,25 +86,38 @@ namespace NBitcoin
             }
         }
 
-        public static int GetSerializedSize(this IBitcoinSerializable serializable, uint version = ProtocolVersion.PROTOCOL_VERSION)
+        public static int GetSerializedSize(this IBitcoinSerializable serializable)
         {
-            return GetSerializedSize(serializable, version, SerializationType.Disk);
+            var bitcoinStream = new BitcoinStream(Stream.Null, true)
+            {
+                Type = SerializationType.Disk,
+            };
+            bitcoinStream.ReadWrite(serializable);
+            return (int)bitcoinStream.Counter.WrittenBytes;
         }
 
-        public static void FromBytes(this IBitcoinSerializable serializable, byte[] bytes, uint version = ProtocolVersion.PROTOCOL_VERSION)
+        public static int GetSerializedSize(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory)
+        {
+            var bitcoinStream = new BitcoinStream(Stream.Null, true)
+            {
+                Type = SerializationType.Disk,
+                ConsensusFactory = consensusFactory,
+                ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
+            };
+            bitcoinStream.ReadWrite(serializable);
+            return (int)bitcoinStream.Counter.WrittenBytes;
+        }
+
+        public static void FromBytes(this IBitcoinSerializable serializable, byte[] bytes)
         {
             using (var ms = new MemoryStream(bytes))
             {
-                var bitcoinStream = new BitcoinStream(ms, false)
-                {
-                    ProtocolVersion = version
-                };
-
+                var bitcoinStream = new BitcoinStream(ms, false);
                 serializable.ReadWrite(bitcoinStream);
             }
         }
 
-        public static void FromBytes(this IBitcoinSerializable serializable, byte[] bytes, ConsensusFactory consensusFactory, uint version = ProtocolVersion.PROTOCOL_VERSION)
+        public static void FromBytes(this IBitcoinSerializable serializable, byte[] bytes, ConsensusFactory consensusFactory)
         {
             if (consensusFactory == null)
                 throw new ArgumentException("{0} cannot be null", nameof(consensusFactory));
@@ -110,31 +126,43 @@ namespace NBitcoin
             {
                 var bitcoinStream = new BitcoinStream(ms, false)
                 {
-                    ProtocolVersion = version,
-                    ConsensusFactory = consensusFactory
+                    ConsensusFactory = consensusFactory,
+                    ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
                 };
 
                 serializable.ReadWrite(bitcoinStream);
             }
         }
 
-        public static T Clone<T>(this T serializable, uint version = ProtocolVersion.PROTOCOL_VERSION) where T : IBitcoinSerializable, new()
+        public static T Clone<T>(this T serializable, ConsensusFactory consensusFactory) where T : IBitcoinSerializable, new()
         {
-            T instance = new DefaultConsensusFactory().TryCreateNew<T>();
+            T instance = consensusFactory.TryCreateNew<T>();
             if (instance == null)
                 instance = new T();
 
-            instance.FromBytes(serializable.ToBytes(version), version);
+            instance.FromBytes(serializable.ToBytes(consensusFactory), consensusFactory);
             return instance;
         }
 
-        public static byte[] ToBytes(this IBitcoinSerializable serializable, uint version = ProtocolVersion.PROTOCOL_VERSION)
+        public static byte[] ToBytes(this IBitcoinSerializable serializable)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var bms = new BitcoinStream(ms, true);
+
+                serializable.ReadWrite(bms);
+
+                return ToArrayEfficient(ms);
+            }
+        }
+
+        public static byte[] ToBytes(this IBitcoinSerializable serializable, uint version)
         {
             using (var ms = new MemoryStream())
             {
                 var bms = new BitcoinStream(ms, true)
                 {
-                    ProtocolVersion = version
+                    ProtocolVersion = version,
                 };
 
                 serializable.ReadWrite(bms);
@@ -143,7 +171,7 @@ namespace NBitcoin
             }
         }
 
-        public static byte[] ToBytes(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory, uint version = ProtocolVersion.PROTOCOL_VERSION)
+        public static byte[] ToBytes(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory)
         {
             if (consensusFactory == null)
                 throw new ArgumentException("{0} cannot be null", nameof(consensusFactory));
@@ -152,8 +180,8 @@ namespace NBitcoin
             {
                 var bms = new BitcoinStream(ms, true)
                 {
-                    ProtocolVersion = version,
-                    ConsensusFactory = consensusFactory
+                    ConsensusFactory = consensusFactory,
+                    ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
                 };
 
                 serializable.ReadWrite(bms);

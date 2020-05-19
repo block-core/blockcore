@@ -118,8 +118,6 @@ namespace Blockcore.P2P.Protocol
                 {
                     if (!VerifyChecksum(checksum, payloadBytes, length))
                     {
-                        if (NodeServerTrace.Trace.Switch.ShouldTrace(TraceEventType.Verbose))
-                            NodeServerTrace.Trace.TraceEvent(TraceEventType.Verbose, 0, "Invalid message checksum bytes");
                         throw new FormatException("Message checksum invalid");
                     }
                 }
@@ -135,8 +133,6 @@ namespace Blockcore.P2P.Protocol
 
                     Type payloadType = this.payloadProvider.GetCommandType(this.Command);
                     bool unknown = payloadType == typeof(UnknowPayload);
-                    if (unknown)
-                        NodeServerTrace.Trace.TraceEvent(TraceEventType.Warning, 0, "Unknown command received : " + this.Command);
 
                     object payload = this.payloadObject;
                     payloadStream.ReadWrite(payloadType, ref payload);

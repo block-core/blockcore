@@ -20,7 +20,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
             Money inChainValue = (pool != null && pool.HasNoInputsOf(tx)) ? tx.TotalOut : 0;
 
             return new TxMempoolEntry(tx, this.nFee, this.nTime, this.dPriority, this.nHeight,
-                inChainValue, this.spendsCoinbase, this.sigOpCost, this.lp, new ConsensusOptions());
+                inChainValue, this.spendsCoinbase, this.sigOpCost, this.lp, new ConsensusOptions(), new ConsensusFactory());
         }
 
         // Change the default value

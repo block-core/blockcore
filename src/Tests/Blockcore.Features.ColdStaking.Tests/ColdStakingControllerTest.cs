@@ -217,7 +217,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         private void Initialize([System.Runtime.CompilerServices.CallerMemberName] string callingMethod = "")
         {
             DataFolder dataFolder = CreateDataFolder(this, callingMethod);
-            this.nodeSettings = new NodeSettings(this.Network, ProtocolVersion.ALT_PROTOCOL_VERSION);
+            this.nodeSettings = new NodeSettings(this.Network);
             this.dateTimeProvider = DateTimeProvider.Default;
             var walletSettings = new WalletSettings(this.nodeSettings);
             this.loggerFactory = this.nodeSettings.LoggerFactory;

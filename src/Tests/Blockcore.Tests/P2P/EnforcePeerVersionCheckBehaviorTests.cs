@@ -62,8 +62,8 @@ namespace Blockcore.Tests.P2P
             this.Network.Consensus.Options.EnforcedMinProtocolVersion = ProtocolVersion.CIRRUS_VERSION;
 
             // Configure local node version.
-            var nodeSettings = NodeSettings.Default(this.Network, ProtocolVersion.CIRRUS_VERSION);
-            nodeSettings.MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION;
+            var nodeSettings = NodeSettings.Default(this.Network);
+            nodeSettings.MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION;
 
             // Create the ChainIndexer.
             var chain = new ChainIndexer(this.Network);
@@ -76,7 +76,7 @@ namespace Blockcore.Tests.P2P
             var localPeer = CreateNetworkPeer(0);
             behavior.Attach(localPeer);
 
-            var remotePeer = CreateNetworkPeer(ProtocolVersion.ALT_PROTOCOL_VERSION);
+            var remotePeer = CreateNetworkPeer(ProtocolVersion.POS_PROTOCOL_VERSION);
 
             // Set the initial block height to 1.
             for (int i = 0; i < 4; i++)
@@ -92,7 +92,7 @@ namespace Blockcore.Tests.P2P
             Assert.Equal(NetworkPeerState.Offline, localPeer.State);
 
             // New connections established after the hard-fork should be disconnected.
-            remotePeer = CreateNetworkPeer(ProtocolVersion.ALT_PROTOCOL_VERSION);
+            remotePeer = CreateNetworkPeer(ProtocolVersion.POS_PROTOCOL_VERSION);
             behavior.TestOnMessageReceivedAsync(remotePeer, null);
             Assert.Equal(NetworkPeerState.Offline, localPeer.State);
         }
@@ -105,8 +105,8 @@ namespace Blockcore.Tests.P2P
             this.Network.Consensus.Options.EnforcedMinProtocolVersion = ProtocolVersion.CIRRUS_VERSION;
 
             // Configure local node version.
-            var nodeSettings = NodeSettings.Default(this.Network, ProtocolVersion.CIRRUS_VERSION);
-            nodeSettings.MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION;
+            var nodeSettings = NodeSettings.Default(this.Network);
+            nodeSettings.MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION;
 
             // Create the ChainIndexer.
             var chain = new ChainIndexer(this.Network);

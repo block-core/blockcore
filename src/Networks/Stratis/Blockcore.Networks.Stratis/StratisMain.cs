@@ -114,8 +114,8 @@ namespace Blockcore.Networks.Stratis
 
             ConsensusProtocol consensusProtocol = new ConsensusProtocol()
             {
-                ProtocolVersion = (uint)ProtocolVersion.PROVEN_HEADER_VERSION,
-                MinProtocolVersion = (uint)ProtocolVersion.ALT_PROTOCOL_VERSION,
+                ProtocolVersion = ProtocolVersion.PROVEN_HEADER_VERSION,
+                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
             this.Consensus = new NBitcoin.Consensus(

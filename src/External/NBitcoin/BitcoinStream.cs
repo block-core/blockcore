@@ -32,14 +32,10 @@ namespace NBitcoin
             open();
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
             this.close();
         }
-
-        #endregion IDisposable Members
 
         public static IDisposable Nothing
         {
@@ -71,7 +67,6 @@ namespace NBitcoin
             }
         }
 
-        //ReadWrite<T>(ref T data)
         private static MethodInfo readWriteTyped;
 
         static BitcoinStream()
@@ -118,6 +113,7 @@ namespace NBitcoin
         public BitcoinStream(Stream inner, bool serializing)
         {
             this.ConsensusFactory = new DefaultConsensusFactory();
+            this.protocolVersion = this.ConsensusFactory.Protocol.ProtocolVersion;
             this.serializing = serializing;
 #if !NOSOCKET
             this.isNetworkStream = inner is NetworkStream;
@@ -457,7 +453,7 @@ namespace NBitcoin
             });
         }
 
-        private uint protocolVersion = NBitcoin.Protocol.ProtocolVersion.PROTOCOL_VERSION;
+        private uint protocolVersion;
 
         public uint ProtocolVersion
         {
@@ -507,6 +503,8 @@ namespace NBitcoin
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
+
+            this.ConsensusFactory = stream.ConsensusFactory;
             this.ProtocolVersion = stream.ProtocolVersion;
             this.TransactionOptions = stream.TransactionOptions;
             this.IsBigEndian = stream.IsBigEndian;

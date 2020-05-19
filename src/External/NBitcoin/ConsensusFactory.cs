@@ -23,8 +23,11 @@ namespace NBitcoin
         /// </summary>
         private readonly TypeInfo transactionType = typeof(Transaction).GetTypeInfo();
 
+        public ConsensusProtocol Protocol { get; set; }
+
         public ConsensusFactory()
         {
+            this.Protocol = new ConsensusProtocol();
         }
 
         /// <summary>
@@ -128,8 +131,8 @@ namespace NBitcoin
 
     public class ConsensusProtocol
     {
-        public uint ProtocolVersion { get; set; }
+        public uint ProtocolVersion { get; set; } = Protocol.ProtocolVersion.WITNESS_VERSION;
 
-        public uint MinProtocolVersion { get; set; }
+        public uint MinProtocolVersion { get; set; } = Protocol.ProtocolVersion.SENDHEADERS_VERSION;
     }
 }

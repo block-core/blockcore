@@ -25,9 +25,7 @@ namespace StratisD
         {
             try
             {
-                var nodeSettings = new NodeSettings(networksSelector: Networks.Xds,
-                    protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION,
-                    args: args);
+                var nodeSettings = new NodeSettings(networksSelector: Networks.Xds, args: args);
 
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
                     .UseNodeSettings(nodeSettings)

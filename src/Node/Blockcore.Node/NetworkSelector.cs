@@ -16,30 +16,21 @@ namespace Blockcore.Node
                 case "BTC":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Bitcoin.Networks.Bitcoin, args: args);
                     break;
+
                 case "CITY":
-                    nodeSettings = new NodeSettings(networksSelector: City.Networks.Networks.City,
-                        protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: args)
-                    {
-                        MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
-                    };
+                    nodeSettings = new NodeSettings(networksSelector: City.Networks.Networks.City, args: args);
                     break;
+
                 case "STRAT":
-                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Stratis.Networks.Stratis,
-                        protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: args);
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Stratis.Networks.Stratis, args: args);
                     break;
+
                 case "X42":
-                    nodeSettings = new NodeSettings(networksSelector: x42.Networks.Networks.x42,
-                        protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: args)
-                    {
-                        MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
-                    };
+                    nodeSettings = new NodeSettings(networksSelector: x42.Networks.Networks.x42, args: args);
                     break;
+
                 case "XDS":
-                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Xds.Networks.Xds,
-                        protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: args)
-                    {
-                        MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
-                    };
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Xds.Networks.Xds, args: args);
                     break;
             }
 

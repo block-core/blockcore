@@ -225,7 +225,7 @@ namespace Blockcore.BlockPulling
 
             this.networkPeerRequirement = new NetworkPeerRequirement
             {
-                MinVersion = nodeSettings.MinProtocolVersion ?? nodeSettings.Network.Consensus.ConsensusFactory.ProtocolVersion,//.ProtocolVersion,
+                MinVersion = nodeSettings.MinProtocolVersion ?? nodeSettings.Network.Consensus.ConsensusProtocol.ProtocolVersion,
                 RequiredServices = NetworkPeerServices.Network
             };
 

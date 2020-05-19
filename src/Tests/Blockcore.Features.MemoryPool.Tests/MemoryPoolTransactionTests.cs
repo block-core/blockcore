@@ -546,7 +546,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             var options = new ParallelOptions { MaxDegreeOfParallelism = 10 };
             Parallel.ForEach(txs, options, transaction =>
             {
-                var entry = new TxMempoolEntry(transaction, new Money(rand.Next(100)), 0, 0.0, 1, transaction.TotalOut, false, 4, new LockPoints(), new ConsensusOptions());
+                var entry = new TxMempoolEntry(transaction, new Money(rand.Next(100)), 0, 0.0, 1, transaction.TotalOut, false, 4, new LockPoints(), new ConsensusOptions(), new ConsensusFactory());
                 tasks.Add(scheduler.WriteAsync(() => pool.AddUnchecked(transaction.GetHash(), entry)));
             });
 
@@ -572,7 +572,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             Money inChainValue = (pool != null && pool.HasNoInputsOf(tx)) ? tx.TotalOut : 0;
 
             return new TxMempoolEntry(tx, this.nFee, this.nTime, this.dPriority, this.nHeight,
-                inChainValue, this.spendsCoinbase, this.sigOpCost, this.lp, new ConsensusOptions());
+                inChainValue, this.spendsCoinbase, this.sigOpCost, this.lp, new ConsensusOptions(), new ConsensusFactory());
         }
 
         // Change the default value

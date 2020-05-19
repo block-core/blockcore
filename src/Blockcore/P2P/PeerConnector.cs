@@ -125,7 +125,7 @@ namespace Blockcore.P2P
             this.PeerAddressManager = peerAddressManager;
             this.networkPeerDisposer = new NetworkPeerDisposer(this.loggerFactory, this.asyncProvider, this.OnPeerDisposed);
             this.selfEndpointTracker = selfEndpointTracker;
-            this.Requirements = new NetworkPeerRequirement { MinVersion = nodeSettings.MinProtocolVersion ?? nodeSettings.Network.Consensus.ConsensusFactory.ProtocolVersion };
+            this.Requirements = new NetworkPeerRequirement { MinVersion = nodeSettings.MinProtocolVersion ?? nodeSettings.Network.Consensus.ConsensusProtocol.ProtocolVersion };
 
             this.connectionInterval = this.CalculateConnectionInterval();
         }

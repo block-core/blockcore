@@ -69,8 +69,8 @@ namespace Blockcore.Networks.Bitcoin
 
             ConsensusProtocol consensusProtocol = new ConsensusProtocol()
             {
-                ProtocolVersion = (uint)ProtocolVersion.WITNESS_VERSION,
-                MinProtocolVersion = (uint)ProtocolVersion.SENDHEADERS_VERSION,
+                ProtocolVersion = ProtocolVersion.WITNESS_VERSION,
+                MinProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION,
             };
 
             this.Consensus = new NBitcoin.Consensus(

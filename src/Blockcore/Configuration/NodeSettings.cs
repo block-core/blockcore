@@ -35,9 +35,6 @@ namespace Blockcore.Configuration
     /// </summary>
     public class NodeSettings : IDisposable
     {
-        /// <summary>The version of the protocol supported by the current implementation of the Full Node.</summary>
-        public const uint SupportedProtocolVersion = NBitcoin.Protocol.ProtocolVersion.SENDHEADERS_VERSION;
-
         /// <summary>A factory responsible for creating a Full Node logger instance.</summary>
         public ILoggerFactory LoggerFactory { get; private set; }
 
@@ -75,9 +72,6 @@ namespace Blockcore.Configuration
         /// into a single object, which is referenced at runtime.
         /// </summary>
         public TextFileConfiguration ConfigReader { get; private set; }
-
-        /// <summary>The version of the protocol supported by the Full Node.</summary>
-        public uint ProtocolVersion { get; private set; }
 
         /// <summary>The lowest version of the protocol which the Full Node supports.</summary>
         public uint? MinProtocolVersion { get; set; }
@@ -126,8 +120,8 @@ namespace Blockcore.Configuration
         /// - Alternatively, if the file name is not supplied then a network-specific file
         ///   name would be determined. In this case we first need to determine the network.
         /// </remarks>
-        public NodeSettings(Network network = null, uint protocolVersion = SupportedProtocolVersion,
-            string agent = "Blockcore", string[] args = null, NetworksSelector networksSelector = null)
+        public NodeSettings(Network network = null, string agent = "Blockcore",
+            string[] args = null, NetworksSelector networksSelector = null)
         {
             // Create the default logger factory and logger.
             var loggerFactory = ExtendedLoggerFactory.Create();
@@ -135,14 +129,13 @@ namespace Blockcore.Configuration
 
             // Record arguments.
             this.Network = network;
-            this.ProtocolVersion = protocolVersion;
             this.Agent = agent;
             this.ConfigReader = new TextFileConfiguration(args ?? new string[] { });
 
             // Log arguments.
             this.Logger.LogDebug("Arguments: network='{0}', protocolVersion='{1}', agent='{2}', args='{3}'.",
                 this.Network == null ? "(None)" : this.Network.Name,
-                this.ProtocolVersion,
+                this.Network?.Consensus.ConsensusProtocol.ProtocolVersion,
                 this.Agent,
                 args == null ? "(None)" : string.Join(" ", args));
 
@@ -251,9 +244,9 @@ namespace Blockcore.Configuration
         /// <param name="network">Specification of the network the node runs on - regtest/testnet/mainnet.</param>
         /// <param name="protocolVersion">Supported protocol version for which to create the configuration.</param>
         /// <returns>Default node configuration.</returns>
-        public static NodeSettings Default(Network network, uint protocolVersion = SupportedProtocolVersion)
+        public static NodeSettings Default(Network network)
         {
-            return new NodeSettings(network, protocolVersion);
+            return new NodeSettings(network);
         }
 
         /// <summary>

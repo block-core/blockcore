@@ -1,10 +1,5 @@
 ﻿namespace NBitcoin.Protocol
 {
-    public static class BitcoinProtocolVersion
-    {
-        public const uint PROTOCOL_VERSION = 70012;
-    }
-
     /// <summary>
     /// Network protocol versioning.
     /// </summary>
@@ -12,7 +7,10 @@
     {
         public const uint PROTOCOL_VERSION = 70012;
 
-        public const uint ALT_PROTOCOL_VERSION = 70000;
+        /// <summary>
+        /// Represents th protocol version of POS chains that was used before <see cref="ProtocolVersion.PROVEN_HEADER_VERSION"/>
+        /// </summary>
+        public const uint POS_PROTOCOL_VERSION = 70000;
 
         /// <summary>
         /// Initial protocol version; to be increased after version/verack negotiation.

@@ -171,6 +171,10 @@ namespace NBitcoin
             this.MempoolRules = new List<Type>();
             this.ProofOfStakeTimestampMask = proofOfStakeTimestampMask;
             this.ConsensusProtocol = consensusProtocol;
+
+            // this is a small hack to allow acess to protocol verison
+            // form serialization code.
+            this.ConsensusFactory.Protocol = this.ConsensusProtocol;
         }
     }
 }

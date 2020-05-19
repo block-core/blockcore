@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-#if !NOSOCKET
-
 using System.Net.Sockets;
-
-#endif
-
 using System.Reflection;
 using System.Text;
 using NBitcoin.Protocol;
@@ -50,23 +44,11 @@ namespace NBitcoin
         }
     }
 
-    // TODO: Make NetworkOptions required in the constructors of this class.
+    /// <summary>
+    /// A component that performs byte serialization of objects.
+    /// </summary>
     public partial class BitcoinStream
     {
-        private int maxArraySize = 1024 * 1024;
-
-        public int MaxArraySize
-        {
-            get
-            {
-                return this.maxArraySize;
-            }
-            set
-            {
-                this.maxArraySize = value;
-            }
-        }
-
         private static MethodInfo readWriteTyped;
 
         static BitcoinStream()
@@ -81,44 +63,52 @@ namespace NBitcoin
             .First();
         }
 
-#if !NOSOCKET
         private readonly bool isNetworkStream;
-#endif
 
-        private readonly Stream inner;
+        public int MaxArraySize { get; set; }
 
-        public Stream Inner
-        {
-            get
-            {
-                return this.inner;
-            }
-        }
+        public Stream Inner { get; }
 
-        private readonly bool serializing;
+        public bool Serializing { get; }
 
-        public bool Serializing
-        {
-            get
-            {
-                return this.serializing;
-            }
-        }
-
-        /// <summary>
-        /// Gets the total processed bytes for read or write.
-        /// </summary>
         public long ProcessedBytes => this.Serializing ? this.Counter.WrittenBytes : this.Counter.ReadBytes;
 
-        public BitcoinStream(Stream inner, bool serializing)
+        public uint ProtocolVersion { get; private set; }
+
+        public TransactionOptions TransactionOptions { get; set; }
+
+        public ConsensusFactory ConsensusFactory { get; private set; }
+
+        public bool IsBigEndian { get; set; }
+
+        public SerializationType Type { get; set; }
+        public System.Threading.CancellationToken ReadCancellationToken { get; set; }
+
+        public BitcoinStream(Stream inner, bool serializing, ConsensusFactory consensus, uint overrideProtocolVersion)
         {
-            this.ConsensusFactory = new DefaultConsensusFactory();
-            this.protocolVersion = this.ConsensusFactory.Protocol.ProtocolVersion;
-            this.serializing = serializing;
-#if !NOSOCKET
+            this.ConsensusFactory = consensus;
+            this.ProtocolVersion = overrideProtocolVersion;
+            this.TransactionOptions = TransactionOptions.All;
+            this.Serializing = serializing;
+
             this.isNetworkStream = inner is NetworkStream;
-#endif
-            this.inner = inner;
+            this.Inner = inner;
+            this.MaxArraySize = 1024 * 1024;
+        }
+
+        public BitcoinStream(Stream inner, bool serializing, ConsensusFactory consensus)
+            : this(inner, serializing, consensus, consensus.Protocol.ProtocolVersion)
+        {
+        }
+
+        public BitcoinStream(Stream inner, bool serializing, uint overrideProtocolVersion)
+            : this(inner, serializing, new DefaultConsensusFactory(), overrideProtocolVersion)
+        {
+        }
+
+        public BitcoinStream(Stream inner, bool serializing)
+            : this(inner, serializing, new DefaultConsensusFactory())
+        {
         }
 
         public Script ReadWrite(Script data)
@@ -336,22 +326,31 @@ namespace NBitcoin
                 ReadWriteNumberInefficient(ref value, size);
                 return;
             }
+
             Span<byte> bytes = stackalloc byte[size];
             for (int i = 0; i < size; i++)
             {
                 bytes[i] = (byte)(value >> i * 8);
             }
+
             if (this.IsBigEndian)
+            {
                 bytes.Reverse();
+            }
+
             ReadWriteBytes(bytes);
             if (this.IsBigEndian)
+            {
                 bytes.Reverse();
+            }
+
             ulong valueTemp = 0;
             for (int i = 0; i < bytes.Length; i++)
             {
                 var v = (ulong)bytes[i];
                 valueTemp += v << (i * 8);
             }
+
             value = valueTemp;
         }
 
@@ -434,12 +433,6 @@ namespace NBitcoin
             }
         }
 
-        public bool IsBigEndian
-        {
-            get;
-            set;
-        }
-
         public IDisposable BigEndianScope()
         {
             bool old = this.IsBigEndian;
@@ -452,39 +445,6 @@ namespace NBitcoin
                 this.IsBigEndian = old;
             });
         }
-
-        private uint protocolVersion;
-
-        public uint ProtocolVersion
-        {
-            get
-            {
-                return this.protocolVersion;
-            }
-            set
-            {
-                this.protocolVersion = value;
-            }
-        }
-
-        private TransactionOptions transactionSupportedOptions = TransactionOptions.All;
-
-        public TransactionOptions TransactionOptions
-        {
-            get
-            {
-                return this.transactionSupportedOptions;
-            }
-            set
-            {
-                this.transactionSupportedOptions = value;
-            }
-        }
-
-        /// <summary>
-        /// Set the format to use when serializing and deserializing consensus related types.
-        /// </summary>
-        public ConsensusFactory ConsensusFactory { get; set; }
 
         public IDisposable ProtocolVersionScope(uint version)
         {
@@ -512,12 +472,6 @@ namespace NBitcoin
             this.Type = stream.Type;
         }
 
-        public SerializationType Type
-        {
-            get;
-            set;
-        }
-
         public IDisposable SerializationTypeScope(SerializationType value)
         {
             SerializationType old = this.Type;
@@ -528,12 +482,6 @@ namespace NBitcoin
             {
                 this.Type = old;
             });
-        }
-
-        public System.Threading.CancellationToken ReadCancellationToken
-        {
-            get;
-            set;
         }
 
         public void ReadWriteAsVarInt(ref uint val)

@@ -136,10 +136,7 @@ namespace Blockcore.P2P.Protocol
 
                 using (var ms = new MemoryStream(payloadBytes))
                 {
-                    var payloadStream = new BitcoinStream(ms, false)
-                    {
-                        ConsensusFactory = stream.ConsensusFactory
-                    };
+                    var payloadStream = new BitcoinStream(ms, false, stream.ConsensusFactory);
 
                     payloadStream.CopyParameters(stream);
 
@@ -169,8 +166,7 @@ namespace Blockcore.P2P.Protocol
         {
             using (var ms = new MemoryStream())
             {
-                var stream = new BitcoinStream(ms, true);
-                stream.ConsensusFactory = consensusFactory;
+                var stream = new BitcoinStream(ms, true, consensusFactory);
                 this.Payload.ReadWrite(stream);
                 length = (int)ms.Position;
                 return ms.ToArray();
@@ -189,11 +185,9 @@ namespace Blockcore.P2P.Protocol
 
         public static Message ReadNext(Stream stream, Network network, uint version, CancellationToken cancellationToken, PayloadProvider payloadProvider, out PerformanceCounter counter)
         {
-            var bitStream = new BitcoinStream(stream, false)
+            var bitStream = new BitcoinStream(stream, false, network.Consensus.ConsensusFactory, version)
             {
-                ProtocolVersion = version,
                 ReadCancellationToken = cancellationToken,
-                ConsensusFactory = network.Consensus.ConsensusFactory,
             };
 
             if (!network.ReadMagic(stream, cancellationToken, true))

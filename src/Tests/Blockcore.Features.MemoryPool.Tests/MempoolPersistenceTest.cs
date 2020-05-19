@@ -215,10 +215,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                 persistence.DumpToStream(settings.Network, toSave, ms);
                 actualStreamLength = ms.Length;
                 ms.Seek(0, SeekOrigin.Begin);
-                var bitcoinReader = new BitcoinStream(ms, false)
-                {
-                    ConsensusFactory = settings.Network.Consensus.ConsensusFactory
-                };
+                var bitcoinReader = new BitcoinStream(ms, false, settings.Network.Consensus.ConsensusFactory);
 
                 bitcoinReader.ReadWrite(ref actualVersion);
                 bitcoinReader.ReadWrite(ref actualCount);

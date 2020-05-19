@@ -250,11 +250,9 @@ namespace Blockcore.P2P.Peer
 
                 using (var ms = new MemoryStream())
                 {
-                    message.ReadWrite(new BitcoinStream(ms, true)
+                    message.ReadWrite(new BitcoinStream(ms, true, this.network.Consensus.ConsensusFactory, this.peer.Version)
                     {
-                        ProtocolVersion = this.peer.Version,
                         TransactionOptions = this.peer.SupportedTransactionOptions,
-                        ConsensusFactory = this.network.Consensus.ConsensusFactory
                     });
 
                     byte[] bytes = ms.ToArray();

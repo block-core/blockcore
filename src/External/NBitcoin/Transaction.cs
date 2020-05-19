@@ -1895,13 +1895,11 @@ namespace NBitcoin
             Transaction instance = consensusFactory.CreateTransaction();
             using (var ms = new MemoryStream())
             {
-                var bms = new BitcoinStream(ms, true);
-                bms.ConsensusFactory = consensusFactory;
+                var bms = new BitcoinStream(ms, true, consensusFactory);
                 bms.TransactionOptions = options;
-                ReadWrite(bms);
+                this.ReadWrite(bms);
                 ms.Position = 0;
-                bms = new BitcoinStream(ms, false);
-                bms.ConsensusFactory = consensusFactory;
+                bms = new BitcoinStream(ms, false, consensusFactory);
                 bms.TransactionOptions = options;
                 instance.ReadWrite(bms);
                 return instance;

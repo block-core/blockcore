@@ -35,7 +35,9 @@ namespace Blockcore.IntegrationTests.Wallet
         private const string WalletPassword = "password";
         private const string WalletAccountName = "account 0";
 
-        public SendingTransactionOverPolicyByteLimit(ITestOutputHelper outputHelper) : base(outputHelper) { }
+        public SendingTransactionOverPolicyByteLimit(ITestOutputHelper outputHelper) : base(outputHelper)
+        {
+        }
 
         protected override void BeforeTest()
         {
@@ -84,7 +86,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
         private void sending_the_transaction()
         {
-            this.firstNode.FullNode.NodeController<WalletController>().SendTransaction(new SendTransactionRequest(this.transaction.ToHex(this.firstNode.FullNode.Network)));
+            this.firstNode.FullNode.NodeController<WalletController>().SendTransaction(new SendTransactionRequest(this.transaction.ToHex(this.firstNode.FullNode.Network.Consensus.ConsensusFactory)));
         }
 
         private void Node1BuildsTransactionToSendToNode2(int txoutputs)

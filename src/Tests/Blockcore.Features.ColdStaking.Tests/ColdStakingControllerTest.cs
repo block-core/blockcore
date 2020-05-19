@@ -249,7 +249,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             address.Transactions.Add(new TransactionData()
             {
-                Hex = transaction.ToHex(this.Network),
+                Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
                 Id = transaction.GetHash(),
                 BlockHeight = 0,
@@ -863,7 +863,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             address.Transactions.Add(new TransactionData()
             {
-                Hex = transaction.ToHex(this.Network),
+                Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
                 Id = transaction.GetHash(),
                 BlockHeight = 0,
@@ -905,7 +905,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             address.Transactions.Add(new TransactionData()
             {
-                Hex = transaction.ToHex(this.Network),
+                Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
                 Id = transaction.GetHash(),
                 BlockHeight = 0,

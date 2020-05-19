@@ -26,34 +26,28 @@ namespace NBitcoin
 
             using (var stream = new MemoryStream(bytes))
             {
-                serializable.ReadWrite(new BitcoinStream(stream, false)
-                {
-                    ConsensusFactory = consensusFactory,
-                    ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
-                });
+                serializable.ReadWrite(new BitcoinStream(stream, false, consensusFactory));
             }
         }
 
         public static int GetSerializedSize(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory, SerializationType serializationType)
         {
-            var bitcoinStream = new BitcoinStream(Stream.Null, true)
+            var bitcoinStream = new BitcoinStream(Stream.Null, true, consensusFactory)
             {
                 Type = serializationType,
-                ConsensusFactory = consensusFactory,
-                ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
             };
+
             bitcoinStream.ReadWrite(serializable);
             return (int)bitcoinStream.Counter.WrittenBytes;
         }
 
         public static int GetSerializedSize(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory, uint version, SerializationType serializationType)
         {
-            var bitcoinStream = new BitcoinStream(Stream.Null, true)
+            var bitcoinStream = new BitcoinStream(Stream.Null, true, consensusFactory, version)
             {
-                ConsensusFactory = consensusFactory,
-                ProtocolVersion = version, // override version
                 Type = serializationType
             };
+
             bitcoinStream.ReadWrite(serializable);
             return (int)bitcoinStream.Counter.WrittenBytes;
         }
@@ -69,19 +63,19 @@ namespace NBitcoin
             return (int)bitcoinStream.Counter.WrittenBytes;
         }
 
-        public static string ToHex(this IBitcoinSerializable serializable, Network network, SerializationType serializationType = SerializationType.Disk)
+        public static string ToHex(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory, SerializationType serializationType = SerializationType.Disk)
         {
             using (var memoryStream = new MemoryStream())
             {
-                var bitcoinStream = new BitcoinStream(memoryStream, true)
+                var bitcoinStream = new BitcoinStream(memoryStream, true, consensusFactory)
                 {
                     Type = serializationType,
-                    ConsensusFactory = network.Consensus.ConsensusFactory,
-                    ProtocolVersion = network.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 };
+
                 bitcoinStream.ReadWrite(serializable);
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 byte[] bytes = memoryStream.ReadBytes((int)memoryStream.Length);
+
                 return DataEncoders.Encoders.Hex.EncodeData(bytes);
             }
         }
@@ -92,19 +86,20 @@ namespace NBitcoin
             {
                 Type = SerializationType.Disk,
             };
+
             bitcoinStream.ReadWrite(serializable);
             return (int)bitcoinStream.Counter.WrittenBytes;
         }
 
         public static int GetSerializedSize(this IBitcoinSerializable serializable, ConsensusFactory consensusFactory)
         {
-            var bitcoinStream = new BitcoinStream(Stream.Null, true)
+            var bitcoinStream = new BitcoinStream(Stream.Null, true, consensusFactory)
             {
                 Type = SerializationType.Disk,
-                ConsensusFactory = consensusFactory,
-                ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
             };
+
             bitcoinStream.ReadWrite(serializable);
+
             return (int)bitcoinStream.Counter.WrittenBytes;
         }
 
@@ -124,11 +119,7 @@ namespace NBitcoin
 
             using (var ms = new MemoryStream(bytes))
             {
-                var bitcoinStream = new BitcoinStream(ms, false)
-                {
-                    ConsensusFactory = consensusFactory,
-                    ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
-                };
+                var bitcoinStream = new BitcoinStream(ms, false, consensusFactory);
 
                 serializable.ReadWrite(bitcoinStream);
             }
@@ -160,10 +151,7 @@ namespace NBitcoin
         {
             using (var ms = new MemoryStream())
             {
-                var bms = new BitcoinStream(ms, true)
-                {
-                    ProtocolVersion = version,
-                };
+                var bms = new BitcoinStream(ms, true, version);
 
                 serializable.ReadWrite(bms);
 
@@ -178,11 +166,7 @@ namespace NBitcoin
 
             using (var ms = new MemoryStream())
             {
-                var bms = new BitcoinStream(ms, true)
-                {
-                    ConsensusFactory = consensusFactory,
-                    ProtocolVersion = consensusFactory.Protocol.ProtocolVersion,
-                };
+                var bms = new BitcoinStream(ms, true, consensusFactory);
 
                 serializable.ReadWrite(bms);
 

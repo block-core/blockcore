@@ -24,13 +24,13 @@ namespace Blockcore.Features.PoA.Tests
 
             // Serialize.
             var memoryStream = new MemoryStream();
-            var bitcoinSerializeStream = new BitcoinStream(memoryStream, true) { ConsensusFactory = factory };
+            var bitcoinSerializeStream = new BitcoinStream(memoryStream, true, factory);
 
             payload.ReadWriteCore(bitcoinSerializeStream);
 
             // Deserialize.
             memoryStream.Seek(0, SeekOrigin.Begin);
-            var bitcoinDeserializeStream = new BitcoinStream(memoryStream, false) { ConsensusFactory = factory };
+            var bitcoinDeserializeStream = new BitcoinStream(memoryStream, false, factory);
 
             var deserializedPayload = new PoAHeadersPayload();
             deserializedPayload.ReadWriteCore(bitcoinDeserializeStream);

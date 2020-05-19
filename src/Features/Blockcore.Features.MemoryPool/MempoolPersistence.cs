@@ -243,8 +243,7 @@ namespace Blockcore.Features.MemoryPool
         /// <param name="stream">Stream to write transactions to.</param>
         internal void DumpToStream(Network network, IEnumerable<MempoolPersistenceEntry> toSave, Stream stream)
         {
-            var bitcoinWriter = new BitcoinStream(stream, true);
-            bitcoinWriter.ConsensusFactory = network.Consensus.ConsensusFactory;
+            var bitcoinWriter = new BitcoinStream(stream, true, network.Consensus.ConsensusFactory);
 
             bitcoinWriter.ReadWrite(MempoolDumpVersion);
             bitcoinWriter.ReadWrite(toSave.LongCount());
@@ -290,9 +289,9 @@ namespace Blockcore.Features.MemoryPool
 
             ulong version = 0;
             long numEntries = -1;
-            var bitcoinReader = new BitcoinStream(stream, false);
-            bitcoinReader.ConsensusFactory = network.Consensus.ConsensusFactory;
+            var bitcoinReader = new BitcoinStream(stream, false, network.Consensus.ConsensusFactory);
             bool exitWithError = false;
+
             try
             {
                 bitcoinReader.ReadWrite(ref version);

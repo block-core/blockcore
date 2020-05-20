@@ -143,6 +143,7 @@ namespace NBitcoin.Tests
                 return null;
             }
         }
+
         [Fact]
         [Trait("UnitTest", "UnitTest")]
         public void CanExtractTxOutDestinationEasily()
@@ -318,7 +319,6 @@ namespace NBitcoin.Tests
             //Only 0.01 should be covered, not 0.03 so 0.49 goes back to Alice+Bob
             Assert.True(unsigned.Outputs[0].Value == Money.Parse("0.49"));
 
-
             Assert.True(unsigned.Outputs[1].IsTo(carlaKey.PubKey.Hash));
             Assert.True(unsigned.Outputs[1].Value == Money.Parse("0.01"));
 
@@ -448,7 +448,6 @@ namespace NBitcoin.Tests
             //Can issue and send in same transaction
             repo.Transactions.Put(tx.GetHash(), tx);
 
-
             IEnumerable<ColoredCoin> cc = ColoredCoin.Find(tx, repo);
             for (int i = 0; i < 20; i++)
             {
@@ -501,7 +500,6 @@ namespace NBitcoin.Tests
                 new TxOut("1.0", silver.PubKey),
                 new TxOut("1.0", satoshi.PubKey)
             });
-
 
             repo.Transactions.Put(init);
 
@@ -569,7 +567,6 @@ namespace NBitcoin.Tests
 
             repo.Transactions.Put(tx);
 
-
             //Can swap :
             //satoshi wants to send 100 gold to bob
             //bob wants to send 200 silver, 5 gold and 0.9 BTC to satoshi
@@ -587,7 +584,6 @@ namespace NBitcoin.Tests
             Assert.True(txBuilder.Verify(tx));
             repo.Transactions.Put(tx);
             ColoredCoin satoshiCoin = ColoredCoin.Find(tx, repo).First();
-
 
             //Gold receive 2.5 BTC
             tx = this.stratisMain.CreateTransaction();
@@ -668,7 +664,6 @@ namespace NBitcoin.Tests
 
             tx = txBuilder.AddKeys(satoshi, bob).SignTransaction(tx);
             Assert.True(txBuilder.Verify(tx));
-
 
             //Bob send coins to Satoshi, but alice pay for the dust
             Transaction funding =
@@ -817,7 +812,6 @@ namespace NBitcoin.Tests
                     .BuildTransaction(true);
 
             Assert.True(builder.Verify(tx)); //Signed !
-
 
             //Same scenario, Satoshi wants to send money back to Bob
             //However, his keys are spread on two machines
@@ -1067,10 +1061,12 @@ namespace NBitcoin.Tests
                 return new Coin(outpoint, new TxOut(amount, scriptPubKey));
             return new ScriptCoin(outpoint, new TxOut(amount, scriptPubKey.Hash), scriptPubKey);
         }
+
         private Coin RandomCoin(Money amount, Key receiver)
         {
             return RandomCoin(amount, receiver.PubKey.GetAddress(KnownNetworks.Main));
         }
+
         private Coin RandomCoin(Money amount, IDestination receiver)
         {
             OutPoint outpoint = RandOutpoint();
@@ -1170,19 +1166,14 @@ namespace NBitcoin.Tests
         {
             TItem[] before = input.ToArray();
             var ms = new MemoryStream();
-            var bs = new BitcoinStream(ms, true)
-            {
-                ConsensusFactory = this.consensusFactory
-            };
+            var bs = new BitcoinStream(ms, true, this.consensusFactory);
 
             TItem[] before2 = input;
             roundTrip(bs, ref input);
             Array.Clear(input, 0, input.Length);
             ms.Position = 0;
-            bs = new BitcoinStream(ms, false)
-            {
-                ConsensusFactory = this.consensusFactory
-            };
+            bs = new BitcoinStream(ms, false, this.consensusFactory);
+
             roundTrip(bs, ref input);
             if (!(input is byte[])) //Byte serialization reuse the input array
                 Assert.True(before2 != input);
@@ -1213,16 +1204,14 @@ namespace NBitcoin.Tests
             Transaction after2 = null;
 
             var ms = new MemoryStream();
-            var stream = new BitcoinStream(ms, true);
+            var stream = new BitcoinStream(ms, true, this.consensusFactory);
             stream.TransactionOptions = TransactionOptions.None;
-            stream.ConsensusFactory = this.consensusFactory;
             stream.ReadWrite(before);
 
             ms.Position = 0;
 
-            stream = new BitcoinStream(ms, false);
+            stream = new BitcoinStream(ms, false, this.consensusFactory);
             stream.TransactionOptions = TransactionOptions.Witness;
-            stream.ConsensusFactory = this.consensusFactory;
             stream.ReadWrite(ref after2);
 
             Assert.Equal(after2.GetHash(), after.GetHash());
@@ -1288,7 +1277,6 @@ namespace NBitcoin.Tests
             signedTx = builder.BuildTransaction(true);
             AssertEstimatedSize(signedTx, builder);
             Assert.True(builder.Verify(signedTx));
-
 
             //P2SH(P2WPKH)
             previousTx = this.stratisMain.CreateTransaction();
@@ -1761,6 +1749,7 @@ namespace NBitcoin.Tests
         }
 
         private ScriptVerify allowHighS = ScriptVerify.Standard & ~ScriptVerify.LowS;
+
         [Fact]
         [Trait("UnitTest", "UnitTest")]
         public void CanUseLockTime()
@@ -1802,7 +1791,6 @@ namespace NBitcoin.Tests
             spending.Inputs.Add(new TxIn(new OutPoint(funding, 2))); //Alice will not sign
 
             spending.Outputs.Add(new TxOut(Money.Coins(4.0m), bob));
-
 
             TransactionPolicyError[] errors = null;
             var builder = new TransactionBuilder(this.stratisMain);
@@ -1895,6 +1883,7 @@ namespace NBitcoin.Tests
             uint256 h = Script.SignatureHash(this.stratisMain, new Script(Encoders.Hex.DecodeData("76a9141d0f172a0ecb48aee1be1f2687d2963ae33f71a188ac")), tx, 1, SigHash.All, Money.Satoshis(0x23c34600L), HashVersion.Witness);
             Assert.Equal(new uint256(Encoders.Hex.DecodeData("c37af31116d1b27caf68aae9e3ac82f1477929014d5b917657d0eb49478cb670"), true), h);
         }
+
         [Fact]
         [Trait("UnitTest", "UnitTest")]
         public void WitnessHasPushSizeLimit()
@@ -1980,7 +1969,6 @@ namespace NBitcoin.Tests
             var expectedBigInt = new BigInteger(1, Encoders.Hex.DecodeData("c477f9f65c22cce20657faa5b2d1d8122336f851a508a1ed04e479c34985bf96"));
             BigInteger priv = (z1.Multiply(sig2.S).Subtract(z2.Multiply(sig1.S)).Mod(n)).Divide(sig1.R.Multiply(sig1.S.Subtract(sig2.S)).Mod(n));
             Assert.Equal(expectedBigInt.ToString(), priv.ToString());
-
         }
 
         protected virtual BigInteger CalculateE(BigInteger n, byte[] message)
@@ -2015,6 +2003,7 @@ namespace NBitcoin.Tests
                 get;
                 set;
             }
+
             public bool Segwit
             {
                 get;
@@ -2089,7 +2078,6 @@ namespace NBitcoin.Tests
             Assert.True(scriptCoin.IsP2SH);
             Assert.True(scriptCoin.GetHashVersion(this.stratisMain) == HashVersion.Witness);
 
-
             Assert.Throws<ArgumentException>(() => ScriptCoin.Create(this.stratisMain, c, key.PubKey.ScriptPubKey.WitHash.ScriptPubKey));
         }
 
@@ -2122,7 +2110,6 @@ namespace NBitcoin.Tests
             Assert.False(tx.Inputs.AsIndexedInputs().First().VerifyScript(this.stratisMain, coin1, ScriptVerify.Standard, out error));
             Assert.True(error == ScriptError.PushSize);
         }
-
 
         [Fact]
         [Trait("Unstable", "True")]
@@ -2455,7 +2442,6 @@ namespace NBitcoin.Tests
 
                 Transaction tx = this.stratisMain.CreateTransaction((string)test[1]);
 
-
                 for (int i = 0; i < tx.Inputs.Count; i++)
                 {
                     if (!mapprevOutScriptPubKeys.ContainsKey(tx.Inputs[i].PrevOut))
@@ -2481,7 +2467,6 @@ namespace NBitcoin.Tests
         {
             ScriptVerify flags = 0;
             string[] words = strFlags.Split(',');
-
 
             // Note how NOCACHE is not included as it is a runtime-only flag.
             var mapFlagNames = new Dictionary<string, ScriptVerify>();
@@ -2650,7 +2635,6 @@ namespace NBitcoin.Tests
             // Add some keys to the keystore:
             Key[] key = Enumerable.Range(0, 4).Select((_, i) => new Key(i % 2 != 0)).ToArray();
 
-
             // Create some dummy input transactions
             dummyTransactions[0].Outputs.AddRange(Enumerable.Range(0, 2).Select(_ => new TxOut()));
             dummyTransactions[0].Outputs[0].Value = 11 * Money.CENT;
@@ -2659,14 +2643,12 @@ namespace NBitcoin.Tests
             dummyTransactions[0].Outputs[1].ScriptPubKey = dummyTransactions[0].Outputs[1].ScriptPubKey + key[1].PubKey.ToBytes() + OpcodeType.OP_CHECKSIG;
             coinsRet.AddTransaction(this.stratisMain.Consensus, dummyTransactions[0], 0);
 
-
             dummyTransactions[1].Outputs.AddRange(Enumerable.Range(0, 2).Select(_ => new TxOut()));
             dummyTransactions[1].Outputs[0].Value = 21 * Money.CENT;
             dummyTransactions[1].Outputs[0].ScriptPubKey = key[2].PubKey.GetAddress(KnownNetworks.Main).ScriptPubKey;
             dummyTransactions[1].Outputs[1].Value = 22 * Money.CENT;
             dummyTransactions[1].Outputs[1].ScriptPubKey = key[3].PubKey.GetAddress(KnownNetworks.Main).ScriptPubKey;
             coinsRet.AddTransaction(this.stratisMain.Consensus, dummyTransactions[1], 0);
-
 
             return dummyTransactions;
         }
@@ -2675,6 +2657,7 @@ namespace NBitcoin.Tests
         {
             internal List<Tuple<Key, PubKey>> _Keys = new List<Tuple<Key, PubKey>>();
             internal List<Script> _Scripts = new List<Script>();
+
             internal void AddKeyPubKey(Key key, PubKey pubkey)
             {
                 this._Keys.Add(Tuple.Create(key, pubkey));
@@ -2700,7 +2683,7 @@ namespace NBitcoin.Tests
         {
             Transaction outputm = this.stratisMain.CreateTransaction();
             outputm.Version = 1;
-            if(outputm is IPosTransactionWithTime posTrx)
+            if (outputm is IPosTransactionWithTime posTrx)
                 posTrx.Time = Utils.DateTimeToUnixTime(posTimeStamp);
             outputm.Inputs.Add(new TxIn());
             outputm.Inputs[0].PrevOut = new OutPoint();
@@ -3015,7 +2998,6 @@ namespace NBitcoin.Tests
             CheckWithFlag(output1, input1, ScriptVerify.Standard, true);
         }
 
-
         private Script GetScriptForWitness(Script scriptPubKey)
         {
             PubKey pubkey = PayToPubkeyTemplate.Instance.ExtractScriptPubKeyParameters(scriptPubKey);
@@ -3027,7 +3009,6 @@ namespace NBitcoin.Tests
 
             return new Script(OpcodeType.OP_0, Op.GetPushOp(scriptPubKey.WitHash.ToBytes()));
         }
-
 
         [Fact]
         [Trait("Core", "Core")]

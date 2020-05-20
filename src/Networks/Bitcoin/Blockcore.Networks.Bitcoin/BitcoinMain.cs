@@ -9,6 +9,7 @@ using Blockcore.Networks.Bitcoin.Policies;
 using Blockcore.Networks.Bitcoin.Rules;
 using NBitcoin;
 using NBitcoin.DataEncoders;
+using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.Bitcoin
 {
@@ -66,8 +67,15 @@ namespace Blockcore.Networks.Bitcoin
                 [BitcoinBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, 1479168000, 1510704000, BIP9DeploymentsParameters.DefaultMainnetThreshold)
             };
 
+            ConsensusProtocol consensusProtocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.WITNESS_VERSION,
+                MinProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION,
+            };
+
             this.Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: consensusProtocol,
                 consensusOptions: new ConsensusOptions(), // Default - set to Bitcoin params.
                 coinType: 0,
                 hashGenesisBlock: genesisBlock.GetHash(),

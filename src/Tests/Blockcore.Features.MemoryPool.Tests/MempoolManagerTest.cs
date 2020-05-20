@@ -52,7 +52,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                         .ReturnsAsync((MempoolValidationState state, Transaction tx) =>
                         {
                             var consensusOptions = new ConsensusOptions();
-                            mempool.MapTx.Add(new TxMempoolEntry(tx, Money.Zero, 0, 0, 0, Money.Zero, false, 0, null, consensusOptions));
+                            mempool.MapTx.Add(new TxMempoolEntry(tx, Money.Zero, 0, 0, 0, Money.Zero, false, 0, null, consensusOptions, new ConsensusFactory()));
                             return true;
                         }
                         );

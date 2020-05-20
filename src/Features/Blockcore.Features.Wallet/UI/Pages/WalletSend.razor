@@ -31,11 +31,11 @@
             </tr>
         </thead>
         <tbody>
-                    <tr>
-                        <td>@accountBalance.AmountConfirmed</td>
-                        <td>@accountBalance.AmountUnconfirmed</td>
-                        <td>@accountBalance.SpendableAmount</td>
-                    </tr>
+            <tr>
+                <td>@accountBalance.AmountConfirmed</td>
+                <td>@accountBalance.AmountUnconfirmed</td>
+                <td>@accountBalance.SpendableAmount</td>
+            </tr>
         </tbody>
     </table>
 
@@ -212,6 +212,6 @@
         Transaction transactionResult = this.WalletTransactionHandler.BuildTransaction(context);
 
         this.SentTransactionHash = transactionResult.GetHash();
-        this.TransactionHex = transactionResult.ToHex(this.Network);
+        this.TransactionHex = transactionResult.ToHex(this.Network.Consensus.ConsensusFactory);
     }
 }

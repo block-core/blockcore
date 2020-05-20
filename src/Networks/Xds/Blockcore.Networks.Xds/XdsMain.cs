@@ -79,8 +79,15 @@ namespace Blockcore.Networks.Xds
                 [XdsBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive)
             };
 
+            ConsensusProtocol consensusProtocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = (uint)ProtocolVersion.PROVEN_HEADER_VERSION,
+                MinProtocolVersion = (uint)ProtocolVersion.POS_PROTOCOL_VERSION,
+            };
+
             this.Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: consensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: (int)this.GenesisNonce,
                 hashGenesisBlock: this.Genesis.GetHash(),

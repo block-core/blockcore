@@ -9,6 +9,7 @@ using Blockcore.Features.PoA.Policies;
 using Blockcore.Features.PoA.Voting.ConsensusRules;
 using NBitcoin;
 using NBitcoin.DataEncoders;
+using NBitcoin.Protocol;
 
 namespace Blockcore.Features.PoA
 {
@@ -104,8 +105,15 @@ namespace Blockcore.Features.PoA
 
             var bip9Deployments = new NoBIP9Deployments();
 
+            ConsensusProtocol consensusProtocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = (uint)ProtocolVersion.PROVEN_HEADER_VERSION,
+                MinProtocolVersion = (uint)ProtocolVersion.POS_PROTOCOL_VERSION,
+            };
+
             this.Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: consensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: 105,
                 hashGenesisBlock: genesisBlock.GetHash(),

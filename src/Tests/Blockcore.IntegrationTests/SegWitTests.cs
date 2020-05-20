@@ -953,7 +953,7 @@ namespace Blockcore.IntegrationTests
                 };
 
                 CoreNode node1 = builder
-                    .CreateCustomNode(callback, KnownNetworks.StratisRegTest, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION, configParameters: config)
+                    .CreateCustomNode(callback, KnownNetworks.StratisRegTest, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION, configParameters: config)
                     .WithWallet().Start();
 
                 // Connect inbound to the gateway node so that the X node isn't disconnected for not being able to provide witness data

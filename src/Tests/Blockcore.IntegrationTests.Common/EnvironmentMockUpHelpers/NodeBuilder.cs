@@ -183,10 +183,10 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         /// <summary>A helper method to create a node instance with a non-standard set of features enabled. The node can be PoW or PoS, as long as the appropriate features are provided.</summary>
         /// <param name="callback">A callback accepting an instance of <see cref="IFullNodeBuilder"/> that constructs a node with a custom feature set.</param>
         /// <param name="network">The network the node will be running on.</param>
-        /// <param name="protocolVersion">Use <see cref="ProtocolVersion.PROTOCOL_VERSION"/> for BTC PoW-like networks and <see cref="ProtocolVersion.ALT_PROTOCOL_VERSION"/> for Stratis PoS-like networks.</param>
+        /// <param name="protocolVersion">Use <see cref="ProtocolVersion.PROTOCOL_VERSION"/> for BTC PoW-like networks and <see cref="ProtocolVersion.POS_PROTOCOL_VERSION"/> for Stratis PoS-like networks.</param>
         /// <param name="agent">A user agent string to distinguish different node versions from each other.</param>
         /// <param name="configParameters">Use this to pass in any custom configuration parameters used to set up the CoreNode</param>
-        public CoreNode CreateCustomNode(Action<IFullNodeBuilder> callback, Network network, ProtocolVersion protocolVersion = ProtocolVersion.PROTOCOL_VERSION, string agent = "Custom", NodeConfigParameters configParameters = null, ProtocolVersion minProtocolVersion = ProtocolVersion.PROTOCOL_VERSION)
+        public CoreNode CreateCustomNode(Action<IFullNodeBuilder> callback, Network network, uint protocolVersion = ProtocolVersion.PROTOCOL_VERSION, string agent = "Custom", NodeConfigParameters configParameters = null, uint minProtocolVersion = ProtocolVersion.PROTOCOL_VERSION)
         {
             configParameters = configParameters ?? new NodeConfigParameters();
 

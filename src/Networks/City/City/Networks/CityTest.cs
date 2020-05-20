@@ -66,6 +66,7 @@ namespace City.Networks
 
             Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: this.Consensus.ConsensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),

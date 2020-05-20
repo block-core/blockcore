@@ -167,7 +167,7 @@ namespace Blockcore.Features.MemoryPool
             // Use pcoinsTip->HaveCoinsInCache as a quick approximation to exclude
             // requesting or processing some txs which have already been included in a block
             bool isTxPresent = false;
-            lock(this.lockObject)
+            lock (this.lockObject)
             {
                 if (this.chainIndexer.Tip.HashBlock != this.hashRecentRejectsChainTip)
                 {
@@ -274,7 +274,7 @@ namespace Blockcore.Features.MemoryPool
                             // See https://github.com/bitcoin/bitcoin/issues/8279 for details.
 
                             this.AddToRecentRejects(orphanHash);
-                         }
+                        }
                     }
 
                     // TODO: implement sanity checks.
@@ -435,7 +435,7 @@ namespace Blockcore.Features.MemoryPool
                 // have been mined or received.
                 // 100 orphans, each of which is at most 99,999 bytes big is
                 // at most 10 megabytes of orphans and somewhat more byprev index (in the worst case):
-                int sz = MempoolValidator.GetTransactionWeight(tx, this.Validator.ConsensusOptions);
+                int sz = MempoolValidator.GetTransactionWeight(tx, this.chainIndexer.Network.Consensus.ConsensusFactory, this.Validator.ConsensusOptions);
                 if (sz >= this.chainIndexer.Network.Consensus.Options.MaxStandardTxWeight)
                 {
                     this.logger.LogDebug("ignoring large orphan tx (size: {0}, hash: {1})", sz, hash);

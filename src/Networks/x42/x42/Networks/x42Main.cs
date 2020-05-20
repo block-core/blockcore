@@ -14,6 +14,7 @@ using System.Net;
 using x42.Networks.Consensus;
 using x42.Networks.Setup;
 using x42.Networks.Deployments;
+using NBitcoin.Protocol;
 
 namespace x42.Networks
 {
@@ -87,8 +88,15 @@ namespace x42.Networks
                 [x42BIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2020, 3, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 3, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold)
             };
 
+            ConsensusProtocol consensusProtocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.PROVEN_HEADER_VERSION,
+                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
+            };
+
             this.Consensus = new x42Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: consensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),

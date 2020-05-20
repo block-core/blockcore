@@ -15,6 +15,7 @@ using System.Collections.Specialized;
 using System.Net;
 using City.Networks.Consensus;
 using City.Networks.Setup;
+using NBitcoin.Protocol;
 
 namespace City.Networks
 {
@@ -81,8 +82,15 @@ namespace City.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
+            ConsensusProtocol consensusProtocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.PROVEN_HEADER_VERSION,
+                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
+            };
+
             Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: consensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),

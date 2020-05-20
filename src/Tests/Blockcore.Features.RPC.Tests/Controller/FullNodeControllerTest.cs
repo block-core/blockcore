@@ -413,7 +413,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         [Fact]
         public void GetInfo_TestNet_ReturnsInfoModel()
         {
-            this.nodeSettings = new NodeSettings(this.network, protocolVersion: ProtocolVersion.NO_BLOOM_VERSION, args: new[] { "-minrelaytxfeerate=1000" });
+            this.nodeSettings = new NodeSettings(this.network, args: new[] { "-minrelaytxfeerate=1000" });
             this.controller = new FullNodeController(this.LoggerFactory.Object, this.pooledTransaction.Object, this.pooledGetUnspentTransaction.Object, this.getUnspentTransaction.Object, this.networkDifficulty.Object,
                 this.fullNode.Object, this.nodeSettings, this.network, this.chain, this.chainState.Object, this.connectionManager.Object);
 
@@ -431,7 +431,6 @@ namespace Blockcore.Features.RPC.Tests.Controller
             GetInfoModel model = this.controller.GetInfo();
 
             Assert.Equal((uint)14999899, model.Version);
-            Assert.Equal((uint)ProtocolVersion.NO_BLOOM_VERSION, model.ProtocolVersion);
             Assert.Equal(3, model.Blocks);
             Assert.Equal(0, model.TimeOffset);
             Assert.Equal(0, model.Connections);
@@ -494,7 +493,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
                 this.fullNode.Object, this.nodeSettings, this.network, this.chain, this.chainState.Object, this.connectionManager.Object);
             GetInfoModel model = this.controller.GetInfo();
 
-            Assert.Equal((uint)NodeSettings.SupportedProtocolVersion, model.ProtocolVersion);
+            Assert.Equal(this.Network.Consensus.ConsensusProtocol.ProtocolVersion, model.ProtocolVersion);
             Assert.Equal(0, model.RelayFee);
         }
 
@@ -545,7 +544,6 @@ namespace Blockcore.Features.RPC.Tests.Controller
 
             Assert.Null(result);
         }
-
 
         [Fact]
         public void GetBlockHeader_BlockHeaderFound_ReturnsBlockHeaderModel()
@@ -658,7 +656,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             var decodedTx = this.controller.DecodeRawTransaction(transaction.ToHex());
             decodedTx.Should().BeOfType<TransactionVerboseModel>();
 
-            var verboseTx = (TransactionVerboseModel) decodedTx;
+            var verboseTx = (TransactionVerboseModel)decodedTx;
             verboseTx.Weight.Should().Be(verboseTx.VSize * 4 - 3);
             verboseTx.Hex.Should().BeNullOrEmpty();
         }
@@ -673,7 +671,6 @@ namespace Blockcore.Features.RPC.Tests.Controller
 
         private string GetBlockHeaderBits(BlockHeader header)
         {
-
             byte[] bytes = this.GetBytes(header.Bits.ToCompact());
             return Encoders.Hex.EncodeData(bytes);
         }
@@ -692,6 +689,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         public class TestReadOnlyNetworkPeerCollection : IReadOnlyNetworkPeerCollection
         {
             public event EventHandler<NetworkPeerEventArgs> Added;
+
             public event EventHandler<NetworkPeerEventArgs> Removed;
 
             private List<INetworkPeer> networkPeers;

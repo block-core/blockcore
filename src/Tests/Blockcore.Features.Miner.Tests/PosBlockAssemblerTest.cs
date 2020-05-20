@@ -86,7 +86,7 @@ namespace Blockcore.Features.Miner.Tests
                 var datetime = new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc);
                 this.dateTimeProvider.Setup(d => d.GetAdjustedTimeAsUnixTimestamp()).Returns(datetime.ToUnixTimestamp());
                 Transaction transaction = CreateTransaction(this.stratisTest, this.key, 5, new Money(400 * 1000 * 1000), new Key(), new uint256(124124));
-                if(transaction is IPosTransactionWithTime posTrx)
+                if (transaction is IPosTransactionWithTime posTrx)
                     posTrx.Time = Utils.DateTimeToUnixTime(datetime);
                 var txFee = new Money(1000);
 
@@ -189,7 +189,7 @@ namespace Blockcore.Features.Miner.Tests
             {
                 var newOptions = new PosConsensusOptions();
                 this.stratisTest.Consensus.Options = newOptions;
-                this.stratisTest.Consensus.BIP9Deployments[0] = new BIP9DeploymentsParameters("Test",19,
+                this.stratisTest.Consensus.BIP9Deployments[0] = new BIP9DeploymentsParameters("Test", 19,
                     new DateTimeOffset(new DateTime(2016, 1, 1, 0, 0, 0, DateTimeKind.Utc)),
                     new DateTimeOffset(new DateTime(2018, 1, 1, 0, 0, 0, DateTimeKind.Utc)),
                     2);
@@ -233,7 +233,7 @@ namespace Blockcore.Features.Miner.Tests
                 Assert.NotEmpty(result.Block.Transactions);
 
                 Transaction resultingTransaction = result.Block.Transactions[0];
-               // Assert.Equal((uint)new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc).ToUnixTimestamp(), resultingTransaction.Time);
+                // Assert.Equal((uint)new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc).ToUnixTimestamp(), resultingTransaction.Time);
                 Assert.True(resultingTransaction.IsCoinBase);
                 Assert.False(resultingTransaction.IsCoinStake);
                 Assert.Equal(Money.Zero, resultingTransaction.TotalOut);
@@ -488,11 +488,10 @@ namespace Blockcore.Features.Miner.Tests
             var indexedTransactionSet = new TxMempool.IndexedTransactionSet();
             foreach (Transaction transaction in transactions)
             {
-                var txPoolEntry = new TxMempoolEntry(transaction, txFee, txTime, 1, 4, new Money(400000000), false, 2, lockPoints, newOptions);
+                var txPoolEntry = new TxMempoolEntry(transaction, txFee, txTime, 1, 4, new Money(400000000), false, 2, lockPoints, newOptions, chainIndexer.Network.Consensus.ConsensusFactory);
                 indexedTransactionSet.Add(txPoolEntry);
                 resultingTransactionEntries.Add(txPoolEntry);
             }
-
 
             this.mempool.Setup(t => t.MapTx)
                 .Returns(indexedTransactionSet);

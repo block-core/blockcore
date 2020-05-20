@@ -17,38 +17,34 @@ using NBitcoin.Protocol;
 
 namespace City.Daemon
 {
-   public class Program
-   {
-      public static async Task Main(string[] args)
-      {
-         try
-         {
-            var nodeSettings = new NodeSettings(networksSelector: Networks.Networks.City,
-                protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: args)
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            try
             {
-               MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
-            };
+                var nodeSettings = new NodeSettings(networksSelector: Networks.Networks.City, args: args);
 
-            IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-                .UseNodeSettings(nodeSettings)
-                .UseBlockStore()
-                .UsePosConsensus()
-                .UseMempool()
-                .UseColdStakingWallet()
-                .AddPowPosMining()
-                .UseNodeHost()
-                .AddRPC()
-                .UseDiagnosticFeature();
+                IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
+                    .UseNodeSettings(nodeSettings)
+                    .UseBlockStore()
+                    .UsePosConsensus()
+                    .UseMempool()
+                    .UseColdStakingWallet()
+                    .AddPowPosMining()
+                    .UseNodeHost()
+                    .AddRPC()
+                    .UseDiagnosticFeature();
 
-            IFullNode node = nodeBuilder.Build();
+                IFullNode node = nodeBuilder.Build();
 
-            if (node != null)
-               await node.RunAsync();
-         }
-         catch (Exception ex)
-         {
-            Console.WriteLine("There was a problem initializing the node. Details: '{0}'", ex);
-         }
-      }
-   }
+                if (node != null)
+                    await node.RunAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("There was a problem initializing the node. Details: '{0}'", ex);
+            }
+        }
+    }
 }

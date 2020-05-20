@@ -52,6 +52,7 @@ namespace Blockcore.Networks.Bitcoin
 
             this.Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
+                consensusProtocol: this.Consensus.ConsensusProtocol,
                 consensusOptions: new ConsensusOptions(), // Default - set to Bitcoin params.
                 coinType: 0,
                 hashGenesisBlock: genesisBlock.GetHash(),

@@ -30,10 +30,9 @@ namespace Blockcore.Utilities.Extensions
         /// <returns>Serialized size of <paramref name="data"/> in bytes.</returns>
         public static int GetSize(this IBitcoinSerializable data, TransactionOptions options, ConsensusFactory consensusFactory)
         {
-            var bms = new BitcoinStream(Stream.Null, true)
+            var bms = new BitcoinStream(Stream.Null, true, consensusFactory)
             {
                 TransactionOptions = options,
-                ConsensusFactory = consensusFactory
             };
 
             data.ReadWrite(bms);

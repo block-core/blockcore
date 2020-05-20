@@ -80,72 +80,53 @@ namespace Blockcore.Tests.Common
         {
             using (var ms = new MemoryStream(chain))
             {
-               return chainIndexer.Load(ms);
-            }
-        }
+                var bitcoinStream = new BitcoinStream(ms, false, chainIndexer.Network.Consensus.ConsensusFactory);
 
-        public static ChainIndexer Load(this ChainIndexer chainIndexer, Stream stream)
-        {
-            return chainIndexer.Load(new BitcoinStream(stream, false));
-        }
-
-        public static ChainIndexer Load(this ChainIndexer chainIndexer, BitcoinStream stream)
-        {
-            stream.ConsensusFactory = chainIndexer.Network.Consensus.ConsensusFactory;
-
-            try
-            {
-                int height = 0;
-                while (true)
+                try
                 {
-                    uint256.MutableUint256 id = null;
-                    stream.ReadWrite<uint256.MutableUint256>(ref id);
-                    BlockHeader header = null;
-                    stream.ReadWrite(ref header);
-                    if (height == 0)
+                    int height = 0;
+                    while (true)
                     {
-                        Assert.True(header.GetHash() == chainIndexer.Tip.HashBlock);
-                    }
-                    else if (chainIndexer.Tip.HashBlock == header.HashPrevBlock && !(header.IsNull && header.Nonce == 0))
-                    {
-                        chainIndexer.Add(new ChainedHeader(header, id.Value, chainIndexer.Tip));
-                    }
-                    else
-                        break;
+                        uint256.MutableUint256 id = null;
+                        bitcoinStream.ReadWrite<uint256.MutableUint256>(ref id);
+                        BlockHeader header = null;
+                        bitcoinStream.ReadWrite(ref header);
+                        if (height == 0)
+                        {
+                            Assert.True(header.GetHash() == chainIndexer.Tip.HashBlock);
+                        }
+                        else if (chainIndexer.Tip.HashBlock == header.HashPrevBlock && !(header.IsNull && header.Nonce == 0))
+                        {
+                            chainIndexer.Add(new ChainedHeader(header, id.Value, chainIndexer.Tip));
+                        }
+                        else
+                            break;
 
-                    height++;
+                        height++;
+                    }
                 }
-            }
-            catch (EndOfStreamException)
-            {
-            }
+                catch (EndOfStreamException)
+                {
+                }
 
-            return chainIndexer;
+                return chainIndexer;
+            }
         }
 
         public static byte[] ToBytes(this ChainIndexer chainIndexer)
         {
             using (var ms = new MemoryStream())
             {
-                chainIndexer.WriteTo(ms);
+                var stream = new BitcoinStream(ms, true, chainIndexer.Network.Consensus.ConsensusFactory);
+
+                for (int i = 0; i < chainIndexer.Tip.Height + 1; i++)
+                {
+                    ChainedHeader block = chainIndexer.GetHeader(i);
+                    stream.ReadWrite(block.HashBlock.AsBitcoinSerializable());
+                    stream.ReadWrite(block.Header);
+                }
+
                 return ms.ToArray();
-            }
-        }
-
-        public static void WriteTo(this ChainIndexer chainIndexer, Stream stream)
-        {
-            chainIndexer.WriteTo(new BitcoinStream(stream, true));
-        }
-
-        public static void WriteTo(this ChainIndexer chainIndexer, BitcoinStream stream)
-        {
-            stream.ConsensusFactory = chainIndexer.Network.Consensus.ConsensusFactory;
-
-            for (int i = 0; i < chainIndexer.Tip.Height + 1; i++)
-            {
-                ChainedHeader block = chainIndexer.GetHeader(i);
-                stream.ReadWrite(block.HashBlock.AsBitcoinSerializable());
-                stream.ReadWrite(block.Header);
             }
         }
     }

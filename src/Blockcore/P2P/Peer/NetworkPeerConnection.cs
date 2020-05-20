@@ -250,11 +250,9 @@ namespace Blockcore.P2P.Peer
 
                 using (var ms = new MemoryStream())
                 {
-                    message.ReadWrite(new BitcoinStream(ms, true)
+                    message.ReadWrite(new BitcoinStream(ms, true, this.network.Consensus.ConsensusFactory, this.peer.Version)
                     {
-                        ProtocolVersion = this.peer.Version,
                         TransactionOptions = this.peer.SupportedTransactionOptions,
-                        ConsensusFactory = this.network.Consensus.ConsensusFactory
                     });
 
                     byte[] bytes = ms.ToArray();
@@ -337,13 +335,13 @@ namespace Blockcore.P2P.Peer
         /// <returns>Binary message received from the connected counterparty.</returns>
         /// <exception cref="OperationCanceledException">Thrown if the operation was cancelled or the end of the stream was reached.</exception>
         /// <exception cref="ProtocolViolationException">Thrown if the incoming message is too big.</exception>
-        private async Task<byte[]> ReadMessageAsync(ProtocolVersion protocolVersion, CancellationToken cancellation = default(CancellationToken))
+        private async Task<byte[]> ReadMessageAsync(uint protocolVersion, CancellationToken cancellation = default(CancellationToken))
         {
             // First find and read the magic.
             await this.ReadMagicAsync(this.network.MagicBytes, cancellation).ConfigureAwait(false);
 
             // Then read the header, which is formed of command, length, and possibly also a checksum.
-            int checksumSize = protocolVersion >= ProtocolVersion.MEMPOOL_GD_VERSION ? Message.ChecksumSize : 0;
+            int checksumSize = Message.ChecksumSize;
             int headerSize = Message.CommandSize + Message.LengthSize + checksumSize;
 
             var messageHeader = new byte[headerSize];
@@ -455,7 +453,7 @@ namespace Blockcore.P2P.Peer
         /// for parsing the message from binary data. That method need stream to read from, so to achieve that we create a memory stream from our data,
         /// which is not efficient. This should be improved.
         /// </remarks>
-        private async Task<(Message Message, int RawMessageSize)> ReadAndParseMessageAsync(ProtocolVersion protocolVersion, CancellationToken cancellation)
+        private async Task<(Message Message, int RawMessageSize)> ReadAndParseMessageAsync(uint protocolVersion, CancellationToken cancellation)
         {
             Message message = null;
 

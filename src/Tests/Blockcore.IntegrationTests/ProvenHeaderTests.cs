@@ -18,7 +18,6 @@ namespace Blockcore.IntegrationTests
 {
     public class ProvenHeaderTests
     {
-
         /// <summary>
         /// Prevent network being matched by name and replaced with a different network
         /// in the <see cref="NodeSettings" /> constructor.
@@ -31,8 +30,7 @@ namespace Blockcore.IntegrationTests
             }
         }
 
-
-        public CoreNode CreateNode(NodeBuilder nodeBuilder, string agent, ProtocolVersion version = ProtocolVersion.ALT_PROTOCOL_VERSION, NodeConfigParameters configParameters = null)
+        public CoreNode CreateNode(NodeBuilder nodeBuilder, string agent, uint version = ProtocolVersion.POS_PROTOCOL_VERSION, NodeConfigParameters configParameters = null)
         {
             var callback = new Action<IFullNodeBuilder>(builder => builder
                 .UseBlockStore()
@@ -57,9 +55,9 @@ namespace Blockcore.IntegrationTests
             {
                 // Create separate network parameters for this test.
                 CoreNode phEnabledNode = this.CreateNode(builder, "ph-enabled", ProtocolVersion.PROVEN_HEADER_VERSION, new NodeConfigParameters { { "maxoutboundconnections", "3" } }).Start();
-                CoreNode legacyNode1 = this.CreateNode(builder, "legacy1", ProtocolVersion.ALT_PROTOCOL_VERSION).Start();
-                CoreNode legacyNode2 = this.CreateNode(builder, "legacy2", ProtocolVersion.ALT_PROTOCOL_VERSION).Start();
-                CoreNode legacyNode3 = this.CreateNode(builder, "legacy3", ProtocolVersion.ALT_PROTOCOL_VERSION).Start();
+                CoreNode legacyNode1 = this.CreateNode(builder, "legacy1", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
+                CoreNode legacyNode2 = this.CreateNode(builder, "legacy2", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
+                CoreNode legacyNode3 = this.CreateNode(builder, "legacy3", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
 
                 TestHelper.Connect(phEnabledNode, legacyNode1);
                 TestHelper.Connect(phEnabledNode, legacyNode2);

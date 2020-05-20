@@ -21,7 +21,7 @@ namespace NBitcoin.Tests
                 TestCase testcase = JsonConvert.DeserializeObject<TestCase[]>(File.ReadAllText(TestDataLocations.GetFileFromDataFolder("openasset-known-tx.json")))
                     .First(t => t.Test == test);
                 var repository = new NoSqlTransactionRepository(network);
-                foreach(string tx in testcase.Txs)
+                foreach (string tx in testcase.Txs)
                 {
                     Transaction txObj = network.CreateTransaction(tx);
                     repository.Put(txObj.GetHash(), txObj);
@@ -30,7 +30,6 @@ namespace NBitcoin.Tests
                 this.TestedTxId = uint256.Parse(testcase.Testedtx);
                 this.Repository = new NullColoredTransactionRepository(repository);
             }
-
 
             public IColoredTransactionRepository Repository
             {
@@ -52,11 +51,13 @@ namespace NBitcoin.Tests
                 get;
                 set;
             }
+
             public string Testedtx
             {
                 get;
                 set;
             }
+
             public string[] Txs
             {
                 get;
@@ -72,16 +73,19 @@ namespace NBitcoin.Tests
                 this.ScriptPubKey = this.Key.PubKey.GetAddress(network).ScriptPubKey;
                 this.Id = this.ScriptPubKey.Hash.ToAssetId();
             }
+
             public Key Key
             {
                 get;
                 set;
             }
+
             public Script ScriptPubKey
             {
                 get;
                 set;
             }
+
             public AssetId Id
             {
                 get;
@@ -156,7 +160,7 @@ namespace NBitcoin.Tests
             Assert.True(destroyed.Length == 1);
             Assert.True(destroyed[0].Quantity == 6);
             Assert.True(destroyed[0].Id == a2.Id);
-            colored = colored.Clone();
+            colored = colored.Clone(this.networkMain.Consensus.ConsensusFactory);
             destroyed = colored.GetDestroyedAssets();
             Assert.True(destroyed.Length == 1);
             Assert.True(destroyed[0].Quantity == 6);
@@ -410,7 +414,7 @@ namespace NBitcoin.Tests
                 "6a056a104f41010003ac0200e58e260412345678", //valid push consume a marker
             };
 
-            foreach(Script script in invalidMarkers.Select(m => new Script(Encoders.Hex.DecodeData(m))))
+            foreach (Script script in invalidMarkers.Select(m => new Script(Encoders.Hex.DecodeData(m))))
             {
                 ColorMarker marker = ColorMarker.TryParse(script);
                 Assert.Null(marker);
@@ -423,7 +427,7 @@ namespace NBitcoin.Tests
                 "6a576e104f41010003ac0200e58e2604123456786811", //Invalid push at the end
             };
 
-            foreach(Script script in validMarkers.Select(m => new Script(Encoders.Hex.DecodeData(m))))
+            foreach (Script script in validMarkers.Select(m => new Script(Encoders.Hex.DecodeData(m))))
             {
                 ColorMarker marker = ColorMarker.TryParse(script);
                 Assert.NotNull(marker);
@@ -461,7 +465,7 @@ namespace NBitcoin.Tests
             Assert.Equal("36e0ea8e93eaa0285d641305f4c81e563aa570a2", script.Hash.ToString());
 
             Assert.Equal("36e0ea8e93eaa0285d641305f4c81e563aa570a2", key.PubKey.Decompress().Hash.ScriptPubKey.Hash.ToString());
-            //Finally, the hash is converted to a base 58 string with checksum using version byte 23: ALn3aK1fSuG27N96UGYB1kUYUpGKRhBuBC. 
+            //Finally, the hash is converted to a base 58 string with checksum using version byte 23: ALn3aK1fSuG27N96UGYB1kUYUpGKRhBuBC.
             Assert.Equal("ALn3aK1fSuG27N96UGYB1kUYUpGKRhBuBC", script.Hash.ToAssetId().GetWif(this.networkMain).ToString());
         }
     }

@@ -422,7 +422,7 @@ namespace Blockcore.Features.Miner.Tests
             var indexedTransactionSet = new TxMempool.IndexedTransactionSet();
             foreach (Transaction transaction in transactions)
             {
-                var txPoolEntry = new TxMempoolEntry(transaction, txFee, txTime, 1, 4, new Money(400000000), false, 2, lockPoints, newOptions);
+                var txPoolEntry = new TxMempoolEntry(transaction, txFee, txTime, 1, 4, new Money(400000000), false, 2, lockPoints, newOptions, chainIndexer.Network.Consensus.ConsensusFactory);
                 indexedTransactionSet.Add(txPoolEntry);
                 resultingTransactionEntries.Add(txPoolEntry);
             }

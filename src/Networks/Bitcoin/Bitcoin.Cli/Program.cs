@@ -118,9 +118,9 @@ namespace Bitcoin.Cli
                     try
                     {
                         string[] options = optionList.Append("-server").ToArray();
-                        var nodeSettings = new NodeSettings(networksSelector: networksSelector, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: options)
+                        var nodeSettings = new NodeSettings(networksSelector: networksSelector, args: options)
                         {
-                            MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
+                            MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION
                         };
 
                         var rpcSettings = new RpcSettings(nodeSettings);
@@ -170,10 +170,7 @@ namespace Bitcoin.Cli
                 {
                     // Process API call.
                     string[] options = optionList.ToArray();
-                    var nodeSettings = new NodeSettings(networksSelector: networksSelector, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, args: options)
-                    {
-                        MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
-                    };
+                    var nodeSettings = new NodeSettings(networksSelector: networksSelector, args: options);
 
                     var apiSettings = new NodeHostSettings(nodeSettings);
 

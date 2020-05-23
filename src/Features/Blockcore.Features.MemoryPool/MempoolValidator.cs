@@ -75,6 +75,11 @@ namespace Blockcore.Features.MemoryPool
         /// <seealso cref = "MempoolSettings" />
         public const bool DefaultPermitBareMultisig = true;
 
+        /// <summary>
+        /// Default for using fee filter (-feefilter).
+        /// </summary>
+        public const bool DefaultFeeFilter = true;
+
         /// <summary>Maximum age of our tip in seconds for us to be considered current for fee estimation.</summary>
         public const int MaxFeeEstimationTipAge = 3 * 60 * 60;
 
@@ -110,15 +115,6 @@ namespace Blockcore.Features.MemoryPool
 
         private readonly NodeDeployments nodeDeployments;
 
-        // TODO: Implement Later with CheckRateLimit()
-        //private readonly FreeLimiterSection freeLimiter;
-
-        //private class FreeLimiterSection
-        //{
-        //  public double FreeCount;
-        //  public long LastTime;
-        //}
-
         private Network network;
 
         private readonly List<IMempoolRule> mempoolRules;
@@ -144,8 +140,6 @@ namespace Blockcore.Features.MemoryPool
             this.network = chainIndexer.Network;
             this.coinView = coinView;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-            // TODO: Implement later with CheckRateLimit()
-            // this.freeLimiter = new FreeLimiterSection();
             this.PerformanceCounter = new MempoolPerformanceCounter(this.dateTimeProvider);
             this.minRelayTxFee = nodeSettings.MinRelayTxFeeRate;
             this.consensusRules = consensusRules;
@@ -166,10 +160,6 @@ namespace Blockcore.Features.MemoryPool
             {
                 var vHashTxToUncache = new List<uint256>();
                 await this.AcceptToMemoryPoolWorkerAsync(state, tx, vHashTxToUncache);
-                //if (!res) {
-                //    BOOST_FOREACH(const uint256& hashTx, vHashTxToUncache)
-                //        pcoinsTip->Uncache(hashTx);
-                //}
 
                 if (state.IsInvalid)
                 {

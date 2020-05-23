@@ -27,6 +27,12 @@ namespace Blockcore.Features.MemoryPool
 
         /// <summary>The fee delta.</summary>
         public long FeeDelta { get; set; }
+
+        /// <summary>The fee.</summary>
+        public Money Fee { get; set; }
+
+        /// <summary>The trx size.</summary>
+        public long Size { get; set; }
     }
 
 ;
@@ -231,7 +237,6 @@ namespace Blockcore.Features.MemoryPool
             ++this.nTransactionsUpdated;
         }
 
-
         /// <inheritdoc />
         public void Clear()
         {
@@ -314,7 +319,7 @@ namespace Blockcore.Features.MemoryPool
             string dummy;
             this.CalculateMemPoolAncestors(entry, setAncestors, nNoLimit, nNoLimit, nNoLimit, nNoLimit, out dummy);
             bool returnVal = this.AddUnchecked(hash, entry, setAncestors, validFeeEstimate);
-            
+
             return returnVal;
         }
 
@@ -448,7 +453,7 @@ namespace Blockcore.Features.MemoryPool
             Guard.Assert(this.MapTx.ContainsKey(entry.TransactionHash));
             TxLinks it = this.mapLinks.TryGet(entry);
             Guard.Assert(it != null);
-            
+
             return it.Children;
         }
 
@@ -579,7 +584,7 @@ namespace Blockcore.Features.MemoryPool
                     }
                 }
             }
-            
+
             return true;
         }
 
@@ -593,7 +598,7 @@ namespace Blockcore.Features.MemoryPool
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -671,7 +676,7 @@ namespace Blockcore.Features.MemoryPool
                 this.CalculateDescendants(removeit, stage);
             }
             this.RemoveStaged(stage, false);
-            
+
             return stage.Count;
         }
 
@@ -878,7 +883,7 @@ namespace Blockcore.Features.MemoryPool
         /// </summary>
         /// <param name="hash">Transaction hash.</param>
         private void ClearPrioritisation(uint256 hash)
-        { 
+        {
             //LOCK(cs);
             this.mapDeltas.Remove(hash);
         }

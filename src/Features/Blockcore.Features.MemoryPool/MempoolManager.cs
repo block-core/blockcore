@@ -76,6 +76,11 @@ namespace Blockcore.Features.MemoryPool
         /// <summary>Access to memory pool validator performance counter.</summary>
         public MempoolPerformanceCounter PerformanceCounter => this.Validator.PerformanceCounter;
 
+        public Task<FeeRate> GetMempoolMinFeeAsync(long sizelimit)
+        {
+            return this.MempoolLock.ReadAsync(() => this.memPool.GetMinFee(sizelimit));
+        }
+
         /// <inheritdoc />
         public async Task<Transaction> GetTransaction(uint256 trxid)
         {
@@ -104,7 +109,9 @@ namespace Blockcore.Features.MemoryPool
                 Trx = item.Transaction,
                 Time = item.Time,
                 FeeRate = new FeeRate(item.Fee, (int)item.GetTxSize()),
-                FeeDelta = item.ModifiedFee - item.Fee
+                FeeDelta = item.ModifiedFee - item.Fee,
+                Fee = item.Fee,
+                Size = item.SizeWithDescendants,
             }).ToList();
 
             return infoList;
@@ -167,7 +174,9 @@ namespace Blockcore.Features.MemoryPool
                 Trx = item.Transaction,
                 Time = item.Time,
                 FeeRate = new FeeRate(item.Fee, (int)item.GetTxSize()),
-                FeeDelta = item.ModifiedFee - item.Fee
+                FeeDelta = item.ModifiedFee - item.Fee,
+                Fee = item.Fee,
+                Size = item.SizeWithDescendants
             };
 
             return infoItem;

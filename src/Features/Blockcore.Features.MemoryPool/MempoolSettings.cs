@@ -54,6 +54,9 @@ namespace Blockcore.Features.MemoryPool
         /// <summary>Regard bare (non-P2SH) multisig transactions as standard.</summary>
         public bool PermitBareMultisig { get; set; }
 
+        /// <summary>Enable the fee filter relay.</summary>
+        public bool FeeFilter { get; set; }
+
         /// <summary>
         /// Initializes an instance of the object from the node configuration.
         /// </summary>
@@ -78,6 +81,7 @@ namespace Blockcore.Features.MemoryPool
             this.WhiteListRelay = config.GetOrDefault("whitelistrelay", DefaultWhiteListRelay, this.logger);
             this.RequireStandard = !(config.GetOrDefault("acceptnonstdtxn", nodeSettings.Network.IsTest(), this.logger));
             this.PermitBareMultisig = config.GetOrDefault("permitbaremultisig", MempoolValidator.DefaultPermitBareMultisig, this.logger);
+            this.FeeFilter = config.GetOrDefault("feefilter", MempoolValidator.DefaultFeeFilter, this.logger);
         }
 
         /// <summary>Prints the help information on how to configure the mempool settings to the logger.</summary>
@@ -96,8 +100,9 @@ namespace Blockcore.Features.MemoryPool
             builder.AppendLine($"-mempoolreplacement=<0 or 1>  Enable transaction replacement in the memory pool.");
             builder.AppendLine($"-maxorphantx=<kB>         Maximum number of orphan transactions kept in memory. Defaults to { MempoolOrphans.DefaultMaxOrphanTransactions }.");
             builder.AppendLine($"-whitelistrelay=<0 or 1>  Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to { DefaultWhiteListRelay }.");
-            builder.AppendLine($"-acceptnonstdtxn=<0 or 1> Accept non-standard transactions. Default {(!(network.IsTest())?1:0)}.");
+            builder.AppendLine($"-acceptnonstdtxn=<0 or 1> Accept non-standard transactions. Default {(!(network.IsTest()) ? 1 : 0)}.");
             builder.AppendLine($"-permitbaremultisig=<0 or 1> Relay non-P2SH multisig. Defaults to { MempoolValidator.DefaultPermitBareMultisig }.");
+            builder.AppendLine($"-feefilter=<0 or 1>       Tell other nodes to filter invs to us by our mempool min fee (default: { MempoolValidator.DefaultFeeFilter }).");
 
             NodeSettings.Default(network).Logger.LogInformation(builder.ToString());
         }
@@ -114,8 +119,8 @@ namespace Blockcore.Features.MemoryPool
             builder.AppendLine($"#maxmempool={ MempoolValidator.DefaultMaxMempoolSize }");
             builder.AppendLine($"#Maximum number of hours to keep transactions in the mempool. Defaults to { MempoolValidator.DefaultMempoolExpiry }.");
             builder.AppendLine($"#mempoolexpiry={ MempoolValidator.DefaultMempoolExpiry }");
-            builder.AppendLine($"#Enable high priority for relaying free or low-fee transactions. Defaults to { (MempoolValidator.DefaultRelaypriority?1:0) }.");
-            builder.AppendLine($"#relaypriority={ (MempoolValidator.DefaultRelaypriority?1:0) }");
+            builder.AppendLine($"#Enable high priority for relaying free or low-fee transactions. Defaults to { (MempoolValidator.DefaultRelaypriority ? 1 : 0) }.");
+            builder.AppendLine($"#relaypriority={ (MempoolValidator.DefaultRelaypriority ? 1 : 0) }");
             builder.AppendLine($"#Maximum number of ancestors of a transaction in mempool (including itself). Defaults to { MempoolValidator.DefaultAncestorLimit }.");
             builder.AppendLine($"#limitancestorcount={ MempoolValidator.DefaultAncestorLimit }");
             builder.AppendLine($"#Maximal size in kB of ancestors of a transaction in mempool (including itself). Defaults to { MempoolValidator.DefaultAncestorSizeLimit }.");
@@ -128,10 +133,10 @@ namespace Blockcore.Features.MemoryPool
             builder.AppendLine($"#mempoolreplacement=0");
             builder.AppendLine($"#Maximum number of orphan transactions kept in memory. Defaults to { MempoolOrphans.DefaultMaxOrphanTransactions }.");
             builder.AppendLine($"#maxorphantx={ MempoolOrphans.DefaultMaxOrphanTransactions }");
-            builder.AppendLine($"#Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to { (DefaultWhiteListRelay?1:0) }.");
-            builder.AppendLine($"#whitelistrelay={ (DefaultWhiteListRelay?1:0) }");
-            builder.AppendLine($"#Accept non-standard transactions. Default {(!(network.IsTest())?1:0)}.");
-            builder.AppendLine($"#acceptnonstdtxn={(!(network.IsTest())?1:0)}");
+            builder.AppendLine($"#Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to { (DefaultWhiteListRelay ? 1 : 0) }.");
+            builder.AppendLine($"#whitelistrelay={ (DefaultWhiteListRelay ? 1 : 0) }");
+            builder.AppendLine($"#Accept non-standard transactions. Default {(!(network.IsTest()) ? 1 : 0)}.");
+            builder.AppendLine($"#acceptnonstdtxn={(!(network.IsTest()) ? 1 : 0)}");
             builder.AppendLine($"#Relay non-P2SH multisig. Defaults to { MempoolValidator.DefaultPermitBareMultisig }.");
             builder.AppendLine($"#permitbaremultisig={ MempoolValidator.DefaultPermitBareMultisig }");
         }

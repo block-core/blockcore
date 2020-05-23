@@ -554,10 +554,6 @@ namespace Blockcore.Features.MemoryPool
                         continue;
                     }
 
-                    //if (filterrate && txinfo.feeRate.GetFeePerK() < filterrate) // TODO:filterrate
-                    //{
-                    //  continue;
-                    //}
                     transactionsToSend.Add(hash);
                     this.logger.LogDebug("Transaction ID '{0}' added to inventory list.", hash);
                 }

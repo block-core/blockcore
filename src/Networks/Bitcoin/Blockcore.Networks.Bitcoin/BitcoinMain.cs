@@ -69,7 +69,7 @@ namespace Blockcore.Networks.Bitcoin
 
             ConsensusProtocol consensusProtocol = new ConsensusProtocol()
             {
-                ProtocolVersion = ProtocolVersion.WITNESS_VERSION,
+                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
                 MinProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION,
             };
 

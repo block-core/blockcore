@@ -63,6 +63,52 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
             }
         }
 
+        private void StartFeeFilterBroadcast(INetworkPeer sender)
+        {
+            if (this.settings.FeeFilter)
+            {
+                INetworkPeer peer = sender;
+
+                if (peer.PeerVersion != null
+                    && peer.PeerVersion.Relay
+                    && peer.PeerVersion.Version >= ProtocolVersion.FEEFILTER_VERSION)
+                {
+                    if (this.asyncLoop != null)
+                    {
+                        this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop($"MemoryPool.FeeFilter:{peer.Connection.Id}", async token =>
+                        {
+                            if (this.initialBlockDownloadState.IsInitialBlockDownload())
+                            {
+                                return;
+                            }
+
+                            var feeRate = await this.mempoolManager.GetMempoolMinFeeAsync(MempoolValidator.DefaultMaxMempoolSize * 1000000).ConfigureAwait(false);
+                            var currentFilter = feeRate.FeePerK;
+
+                            // We always have a fee filter of at least minRelayTxFee
+                            Money filterToSend = Math.Max(currentFilter, new FeeRate(this.network.MinRelayTxFee).FeePerK);
+
+                            if (filterToSend != this.lastSendFilter)
+                            {
+                                INetworkPeer peer = this.AttachedPeer;
+
+                                if (peer != null && peer.IsConnected)
+                                {
+                                    this.logger.LogDebug("Sending for transaction data from peer '{0}'.", peer.RemoteSocketEndpoint);
+                                    var filterPayload = new FeeFilterPayload() { NewFeeFilter = filterToSend };
+                                    await peer.SendMessageAsync(filterPayload).ConfigureAwait(false);
+                                    this.lastSendFilter = filterToSend;
+                                }
+                            }
+                        },
+                        this.nodeLifetime.ApplicationStopping,
+                        repeatEvery: TimeSpans.Minute,
+                        startAfter: TimeSpans.TenSeconds);
+                    }
+                }
+            }
+        }
+
         private async Task ProcessMessageAsync(INetworkPeer peer, IncomingMessage message)
         {
             try
@@ -119,40 +165,9 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
 
         private async Task OnStateChangedAsync(INetworkPeer sender, NetworkPeerState arg)
         {
-            INetworkPeer peer = sender;
-
             if (arg == NetworkPeerState.HandShaked)
             {
-                if (this.settings.FeeFilter)
-                {
-                    if (peer.PeerVersion != null && peer.PeerVersion.Relay && peer.PeerVersion.Version >= ProtocolVersion.FEEFILTER_VERSION)
-                    {
-                        this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop($"MemoryPool.FeeFilter:{peer.Connection.Id}", async token =>
-                        {
-                            if (this.initialBlockDownloadState.IsInitialBlockDownload())
-                            {
-                                return;
-                            }
-
-                            var feeRate = await this.mempoolManager.GetMempoolMinFeeAsync(MempoolValidator.DefaultMaxMempoolSize * 1000000).ConfigureAwait(false);
-                            var currentFilter = feeRate.FeePerK;
-
-                            // We always have a fee filter of at least minRelayTxFee
-                            Money filterToSend = Math.Max(currentFilter, new FeeRate(this.network.MinRelayTxFee).FeePerK);
-
-                            if (filterToSend != this.lastSendFilter)
-                            {
-                                this.logger.LogDebug("Sending for transaction data from peer '{0}'.", peer.RemoteSocketEndpoint);
-                                var filterPayload = new FeeFilterPayload() { NewFeeFilter = filterToSend };
-                                await peer.SendMessageAsync(filterPayload).ConfigureAwait(false);
-                                this.lastSendFilter = filterToSend;
-                            }
-                        },
-                        this.nodeLifetime.ApplicationStopping,
-                        repeatEvery: TimeSpans.Minute,
-                        startAfter: TimeSpans.TenSeconds);
-                    }
-                }
+                this.StartFeeFilterBroadcast(sender);
             }
 
             if (arg == NetworkPeerState.Disconnecting)

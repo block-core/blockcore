@@ -172,8 +172,11 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
 
             if (arg == NetworkPeerState.Disconnecting)
             {
-                this.asyncLoop?.Dispose();
-                this.asyncLoop = null;
+                if (this.asyncLoop != null)
+                {
+                    this.asyncLoop?.Dispose();
+                    this.asyncLoop = null;
+                }
             }
         }
 

@@ -33,4 +33,8 @@
       </AssemblyAttribute>
     </ItemGroup>
   </Target>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1591;1572;1573;1574</NoWarn>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
 </Project>

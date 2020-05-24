@@ -7,17 +7,47 @@
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
 
-<h3>Receive Coins</h3>
-
-<p>Generate receive address for <strong> @walletname / @accountname</strong></p>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Receive to: <strong>@walletname</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+    </div>
+</div>
 
 @{
     var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
 
-    <ul class="list-group">
-        <li class="list-group-item">Address: @result.Address</li>
-        <li class="list-group-item">Segwit Address: @result.Bech32Address</li>
-    </ul>
+<div class="container">
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <td style="max-width: 10em">Address:</td>
+        <td><code>@result.Address</code></td>
+      </tr>
+      <tr>
+        <td style="max-width: 10em">Segwit Address:</td>
+        <td><code>@result.Bech32Address</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+    @* TODO: Add Copy Paste Functionality
+     <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Address:</span>
+        </div>
+        <span="text" class="form-control" placeholder="@result.Address" />
+        <button class="btn btn-primary btn-sm">Copy</button>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Segwit Address:</span>
+        </div>
+        <span="text" class="form-control" placeholder="@result.Bech32Address" />
+        <button class="btn btn-primary btn-sm">Copy</button>
+    </div> *@
+
 }
 
 @code {
@@ -26,9 +56,4 @@
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-
-    private void NavigateToWalletAccount(string walletName, string accountname)
-    {
-        NavigationManager.NavigateTo("walletaccount/" + walletName + "/" + accountname);
-    }
 }

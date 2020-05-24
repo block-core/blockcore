@@ -9,46 +9,32 @@
 @inject IWalletManager WalletManager
 @inject Network Network
 
-<h3>Wallet Account: <strong>@walletname / @accountname</strong></h3>
 @{
-    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
 
-    <br />
-    <button @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" class="btn btn-primary">Receive</button>
-    <button @onclick="() => { NavigateToSendWallet(walletname, accountname); }" class="btn btn-info">Send</button>
-    <br />
-    <br />
-    <table class="table">
-        <thead>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Wallet Account: <strong>@walletname</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >Receive</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >Send</button>
+    </div>
+</div>
+
+<div class="container my-3">
+    <h1>@accountBalance.AmountConfirmed <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
+    <p class="text-left text-secondary">@accountBalance.AmountUnconfirmed (unconfirmed)</p>
+</div>
+
+// For now just show last 100 trx of history.
+var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-sm table-hover">
+        <thead class="thead">
             <tr>
-                <th>Amount Confirmed</th>
-                <th>Amount Unconfirmed</th>
-                <th>Spendable Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-                    <tr>
-                        <td>@accountBalance.AmountConfirmed</td>
-                        <td>@accountBalance.AmountUnconfirmed</td>
-                        <td>@accountBalance.SpendableAmount</td>
-                    </tr>
-        </tbody>
-    </table>
-    <br />
-
-    <h3>Wallet History</h3>
-
-    // For now just show last 100 trx of history.
-    var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Block</th>
-                <th>Amount</th>
-                <th>To Address</th>
-                <th>TxID</th>
+                <th><p class="small"><strong>TYPE</strong></p></th>
+                <th><p class="small"><strong>AMOUNT</strong></p></th>
+                <th><p class="small"><strong>BLOCK</strong></p></th>
             </tr>
         </thead>
         <tbody>
@@ -56,17 +42,16 @@
             {
                 foreach (var transaction in history.TransactionsHistory)
                 {
-                    <tr>
-                        <td>@transaction.Type</td>
-                        <td>@transaction.ConfirmedInBlock</td>
-                        <td>@transaction.Amount</td>
-                        <td>@transaction.ToAddress</td>
-                        <td>@transaction.Id</td>
+                     <tr> @*@onclick="() => { NavigateToViewTx(transaction.Id); }" > *@
+                        <td><p class="small">@transaction.Type</p></td>
+                        <td><p class="small">@transaction.Amount</p></td>
+                        <td><p class="small">@transaction.ConfirmedInBlock</p></td>
                     </tr>
                 }
             }
         </tbody>
     </table>
+</div>
 }
 
 @code {
@@ -89,5 +74,10 @@
     private void NavigateToWallets()
     {
         NavigationManager.NavigateTo("wallets");
+    }
+
+    private void NavigateToViewTx(uint256 txId)
+    {
+        NavigationManager.NavigateTo("coldStakeviewtx");
     }
 }

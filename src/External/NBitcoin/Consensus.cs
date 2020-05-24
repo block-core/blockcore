@@ -98,12 +98,8 @@ namespace NBitcoin
         /// <inheritdoc />
         public List<Type> MempoolRules { get; set; }
 
-        /// <inheritdoc />
-        public ConsensusProtocol ConsensusProtocol { get; }
-
         public Consensus(
             ConsensusFactory consensusFactory,
-            ConsensusProtocol consensusProtocol,
             ConsensusOptions consensusOptions,
             int coinType,
             uint256 hashGenesisBlock,
@@ -170,11 +166,6 @@ namespace NBitcoin
             this.ConsensusRules = new ConsensusRules();
             this.MempoolRules = new List<Type>();
             this.ProofOfStakeTimestampMask = proofOfStakeTimestampMask;
-            this.ConsensusProtocol = consensusProtocol;
-
-            // this is a small hack to allow acess to protocol verison
-            // form serialization code.
-            this.ConsensusFactory.Protocol = this.ConsensusProtocol;
         }
     }
 }

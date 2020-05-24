@@ -22,7 +22,7 @@ namespace Blockcore.IntegrationTests.RPC
             GetInfoModel info = controller.GetInfo();
 
             NodeSettings nodeSettings = NodeSettings.Default(fullNode.Network);
-            uint expectedProtocolVersion = fullNode.Network.Consensus.ConsensusProtocol.ProtocolVersion;
+            uint expectedProtocolVersion = fullNode.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion;
             decimal expectedRelayFee = nodeSettings.MinRelayTxFeeRate.FeePerK.ToUnit(NBitcoin.MoneyUnit.BTC);
             Assert.NotNull(info);
             Assert.Equal(0, info.Blocks);

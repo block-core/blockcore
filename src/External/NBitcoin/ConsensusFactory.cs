@@ -131,7 +131,7 @@ namespace NBitcoin
 
     public class ConsensusProtocol
     {
-        public uint ProtocolVersion { get; set; } = Protocol.ProtocolVersion.WITNESS_VERSION;
+        public uint ProtocolVersion { get; set; } = Protocol.ProtocolVersion.FEEFILTER_VERSION;
 
         public uint MinProtocolVersion { get; set; } = Protocol.ProtocolVersion.SENDHEADERS_VERSION;
     }

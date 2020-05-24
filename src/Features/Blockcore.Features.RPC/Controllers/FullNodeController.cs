@@ -259,7 +259,7 @@ namespace Blockcore.Features.RPC.Controllers
             var model = new GetInfoModel
             {
                 Version = this.FullNode?.Version?.ToUint() ?? 0,
-                ProtocolVersion = this.Network.Consensus.ConsensusProtocol.ProtocolVersion,
+                ProtocolVersion = this.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 Blocks = this.ChainState?.ConsensusTip?.Height ?? 0,
                 TimeOffset = this.ConnectionManager?.ConnectedPeers?.GetMedianTimeOffset() ?? 0,
                 Connections = this.ConnectionManager?.ConnectedPeers?.Count(),
@@ -429,7 +429,7 @@ namespace Blockcore.Features.RPC.Controllers
             {
                 Version = this.FullNode?.Version?.ToUint() ?? 0,
                 SubVersion = this.Settings?.Agent,
-                ProtocolVersion = this.Network.Consensus.ConsensusProtocol.ProtocolVersion,
+                ProtocolVersion = this.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 IsLocalRelay = this.ConnectionManager?.Parameters?.IsRelay ?? false,
                 TimeOffset = this.ConnectionManager?.ConnectedPeers?.GetMedianTimeOffset() ?? 0,
                 Connections = this.ConnectionManager?.ConnectedPeers?.Count(),

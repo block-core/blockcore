@@ -141,7 +141,7 @@ namespace Blockcore.Controllers
             var model = new StatusModel
             {
                 Version = this.fullNode.Version?.ToString() ?? "0",
-                ProtocolVersion = (uint)(this.nodeSettings.Network.Consensus.ConsensusProtocol.ProtocolVersion),
+                ProtocolVersion = (uint)(this.nodeSettings.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion),
                 Difficulty = GetNetworkDifficulty(this.networkDifficulty)?.Difficulty ?? 0,
                 Agent = this.connectionManager.ConnectionSettings.Agent,
                 ExternalAddress = this.selfEndpointTracker.MyExternalAddress.Address.ToString(),

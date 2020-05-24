@@ -22,6 +22,7 @@ namespace NBitcoin
 
         // network and disk
         private List<Transaction> transactions = new List<Transaction>();
+
         public List<Transaction> Transactions { get { return this.transactions; } set { this.transactions = value; } }
 
         public MerkleNode GetMerkleRoot()
@@ -98,18 +99,16 @@ namespace NBitcoin
             Block instance = consensusFactory.CreateBlock();
             using (var ms = new MemoryStream())
             {
-                var bms = new BitcoinStream(ms, true)
+                var bms = new BitcoinStream(ms, true, consensusFactory)
                 {
                     TransactionOptions = options,
-                    ConsensusFactory = consensusFactory
                 };
 
                 this.ReadWrite(bms);
                 ms.Position = 0;
-                bms = new BitcoinStream(ms, false)
+                bms = new BitcoinStream(ms, false, consensusFactory)
                 {
                     TransactionOptions = options,
-                    ConsensusFactory = consensusFactory
                 };
 
                 instance.ReadWrite(bms);

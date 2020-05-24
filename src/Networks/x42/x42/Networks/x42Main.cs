@@ -14,6 +14,7 @@ using System.Net;
 using x42.Networks.Consensus;
 using x42.Networks.Setup;
 using x42.Networks.Deployments;
+using NBitcoin.Protocol;
 
 namespace x42.Networks
 {
@@ -85,6 +86,12 @@ namespace x42.Networks
                 [x42BIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
                 [x42BIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
                 [x42BIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2020, 3, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 3, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold)
+            };
+
+            consensusFactory.Protocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
+                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
             this.Consensus = new x42Consensus(

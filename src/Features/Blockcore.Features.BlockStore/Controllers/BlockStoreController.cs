@@ -111,7 +111,7 @@ namespace Blockcore.Features.BlockStore.Controllers
                 Block block = chainedHeader.Block ?? this.blockStore.GetBlock(blockId);
 
                 // In rare occasions a block that is found in the
-                // indexer may not have been pushed to the store yet. 
+                // indexer may not have been pushed to the store yet.
                 if (block == null)
                     return this.Ok("Block not found");
 
@@ -128,7 +128,7 @@ namespace Blockcore.Features.BlockStore.Controllers
                 {
                     var posBlock = block as PosBlock;
 
-                    blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.network);
+                    blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.network.Consensus.ConsensusFactory);
                     blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockTarget()).ToUInt256().ToString();
                     blockModel.PosChainTrust = chainedHeader.ChainWork.ToString(); // this should be similar to ChainWork
                 }
@@ -188,7 +188,6 @@ namespace Blockcore.Features.BlockStore.Controllers
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
         }
-
 
         /// <summary>Provides verbose balance data of the given addresses.</summary>
         /// <param name="addresses">A comma delimited set of addresses that will be queried.</param>

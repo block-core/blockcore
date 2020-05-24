@@ -482,7 +482,7 @@ namespace Blockcore.IntegrationTests.API
             statusResponse.Network.Should().Be(statusNode.Network.Name);
             statusResponse.ConsensusHeight.Should().Be(0);
             statusResponse.BlockStoreHeight.Should().Be(0);
-            statusResponse.ProtocolVersion.Should().Be((uint)(statusNode.Settings.ProtocolVersion));
+            statusResponse.ProtocolVersion.Should().Be((uint)(statusNode.Settings.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion));
             statusResponse.RelayFee.Should().Be(statusNode.Settings.MinRelayTxFeeRate.FeePerK.ToUnit(MoneyUnit.BTC));
             statusResponse.DataDirectoryPath.Should().Be(statusNode.Settings.DataDir);
 

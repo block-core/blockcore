@@ -13,13 +13,13 @@ namespace Blockcore.IntegrationTests.Common.Runners
     public sealed class CustomNodeRunner : NodeRunner
     {
         private readonly Action<IFullNodeBuilder> callback;
-        private readonly ProtocolVersion protocolVersion;
-        private readonly ProtocolVersion minProtocolVersion;
+        private readonly uint protocolVersion;
+        private readonly uint minProtocolVersion;
         private readonly NodeConfigParameters configParameters;
 
         public CustomNodeRunner(string dataDir, Action<IFullNodeBuilder> callback, Network network,
-            ProtocolVersion protocolVersion = ProtocolVersion.PROTOCOL_VERSION, NodeConfigParameters configParameters = null, string agent = "Custom",
-            ProtocolVersion minProtocolVersion = ProtocolVersion.PROTOCOL_VERSION)
+            uint protocolVersion = ProtocolVersion.PROTOCOL_VERSION, NodeConfigParameters configParameters = null, string agent = "Custom",
+            uint minProtocolVersion = ProtocolVersion.PROTOCOL_VERSION)
             : base(dataDir, agent)
         {
             this.callback = callback;
@@ -36,9 +36,9 @@ namespace Blockcore.IntegrationTests.Common.Runners
             NodeSettings settings = null;
 
             if (string.IsNullOrEmpty(this.Agent))
-                settings = new NodeSettings(this.Network, this.protocolVersion, args: argsAsStringArray) { MinProtocolVersion = this.minProtocolVersion };
+                settings = new NodeSettings(this.Network, args: argsAsStringArray) { MinProtocolVersion = this.minProtocolVersion };
             else
-                settings = new NodeSettings(this.Network, this.protocolVersion, this.Agent, argsAsStringArray) { MinProtocolVersion = this.minProtocolVersion };
+                settings = new NodeSettings(this.Network, agent: this.Agent, args: argsAsStringArray) { MinProtocolVersion = this.minProtocolVersion };
 
             IFullNodeBuilder builder = new FullNodeBuilder().UseNodeSettings(settings);
 

@@ -75,6 +75,11 @@ namespace Blockcore.Features.MemoryPool
         /// <seealso cref = "MempoolSettings" />
         public const bool DefaultPermitBareMultisig = true;
 
+        /// <summary>
+        /// Default for using fee filter (-feefilter).
+        /// </summary>
+        public const bool DefaultFeeFilter = true;
+
         /// <summary>Maximum age of our tip in seconds for us to be considered current for fee estimation.</summary>
         public const int MaxFeeEstimationTipAge = 3 * 60 * 60;
 
@@ -110,15 +115,6 @@ namespace Blockcore.Features.MemoryPool
 
         private readonly NodeDeployments nodeDeployments;
 
-        // TODO: Implement Later with CheckRateLimit()
-        //private readonly FreeLimiterSection freeLimiter;
-
-        //private class FreeLimiterSection
-        //{
-        //  public double FreeCount;
-        //  public long LastTime;
-        //}
-
         private Network network;
 
         private readonly List<IMempoolRule> mempoolRules;
@@ -144,8 +140,6 @@ namespace Blockcore.Features.MemoryPool
             this.network = chainIndexer.Network;
             this.coinView = coinView;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-            // TODO: Implement later with CheckRateLimit()
-            // this.freeLimiter = new FreeLimiterSection();
             this.PerformanceCounter = new MempoolPerformanceCounter(this.dateTimeProvider);
             this.minRelayTxFee = nodeSettings.MinRelayTxFeeRate;
             this.consensusRules = consensusRules;
@@ -166,10 +160,6 @@ namespace Blockcore.Features.MemoryPool
             {
                 var vHashTxToUncache = new List<uint256>();
                 await this.AcceptToMemoryPoolWorkerAsync(state, tx, vHashTxToUncache);
-                //if (!res) {
-                //    BOOST_FOREACH(const uint256& hashTx, vHashTxToUncache)
-                //        pcoinsTip->Uncache(hashTx);
-                //}
 
                 if (state.IsInvalid)
                 {
@@ -256,27 +246,31 @@ namespace Blockcore.Features.MemoryPool
         /// Takes into account witness options in the computation.
         /// </summary>
         /// <param name="tx">Transaction.</param>
+        /// <param name="consensusFactory">The consensus factory.</param>
         /// <param name="consensusOptions">Proof of work consensus options.</param>
         /// <returns>Transaction weight.</returns>
         /// <seealso cref="Transaction.GetSerializedSize"/>
-        public static int GetTransactionWeight(Transaction tx, ConsensusOptions consensusOptions)
+        public static int GetTransactionWeight(Transaction tx, ConsensusFactory consensusFactory, ConsensusOptions consensusOptions)
         {
-            return tx.GetSerializedSize(
-                       (ProtocolVersion)
-                       ((uint)ProtocolVersion.PROTOCOL_VERSION | ConsensusOptions.SerializeTransactionNoWitness),
-                       SerializationType.Network) * (consensusOptions.WitnessScaleFactor - 1) +
-                   tx.GetSerializedSize(ProtocolVersion.PROTOCOL_VERSION, SerializationType.Network);
+            uint noWitnessProtocolVersion = (consensusFactory.Protocol.ProtocolVersion | ConsensusOptions.SerializeTransactionNoWitness);
+
+            int noWitnessSize = tx.GetSerializedSize(consensusFactory, noWitnessProtocolVersion, SerializationType.Network);
+            int scaleFactor = (consensusOptions.WitnessScaleFactor - 1);
+            int withWitnessSize = tx.GetSerializedSize(consensusFactory, SerializationType.Network);
+
+            return noWitnessSize * (scaleFactor) + withWitnessSize;
         }
 
         /// <summary>
         /// Calculates the modified transaction size used for memory pool priority.
         /// Calculated by stripping off the lengths of the inputs signatures.
         /// </summary>
+        /// <param name="consensusFactory">The consensus factory.</param>
         /// <param name="nTxSize">Current transaction size, set to 0 to compute it.</param>
         /// <param name="trx">The transaction.</param>
         /// <param name="consensusOptions">The consensus option, needed to compute the transaction size.</param>
         /// <returns>The new transaction size.</returns>
-        public static int CalculateModifiedSize(int nTxSize, Transaction trx, ConsensusOptions consensusOptions)
+        public static int CalculateModifiedSize(ConsensusFactory consensusFactory, int nTxSize, Transaction trx, ConsensusOptions consensusOptions)
         {
             // In order to avoid disincentivizing cleaning up the UTXO set we don't count
             // the constant overhead for each txin and up to 110 bytes of scriptSig (which
@@ -284,7 +278,7 @@ namespace Blockcore.Features.MemoryPool
             // Providing any more cleanup incentive than making additional inputs free would
             // risk encouraging people to create junk outputs to redeem later.
             if (nTxSize == 0)
-                nTxSize = (GetTransactionWeight(trx, consensusOptions) + (consensusOptions.WitnessScaleFactor) - 1) / consensusOptions.WitnessScaleFactor;
+                nTxSize = (GetTransactionWeight(trx, consensusFactory, consensusOptions) + (consensusOptions.WitnessScaleFactor) - 1) / consensusOptions.WitnessScaleFactor;
 
             foreach (TxIn txInput in trx.Inputs)
             {
@@ -470,7 +464,7 @@ namespace Blockcore.Features.MemoryPool
 
             // Extremely large transactions with lots of inputs can cost the network almost as much to process as they cost the sender in fees, because
             // computing signature hashes is O(ninputs*txsize). Limiting transactions to MAX_STANDARD_TX_WEIGHT mitigates CPU exhaustion attacks.
-            int sz = GetTransactionWeight(tx, this.network.Consensus.Options);
+            int sz = GetTransactionWeight(tx, this.network.Consensus.ConsensusFactory, this.network.Consensus.Options);
             if (sz >= this.network.Consensus.Options.MaxStandardTxWeight)
             {
                 this.logger.LogTrace("(-)[FAIL_TX_SIZE]");

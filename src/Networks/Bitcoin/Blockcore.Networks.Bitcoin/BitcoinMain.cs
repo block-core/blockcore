@@ -9,6 +9,7 @@ using Blockcore.Networks.Bitcoin.Policies;
 using Blockcore.Networks.Bitcoin.Rules;
 using NBitcoin;
 using NBitcoin.DataEncoders;
+using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.Bitcoin
 {
@@ -64,6 +65,12 @@ namespace Blockcore.Networks.Bitcoin
                 [BitcoinBIP9Deployments.TestDummy] = new BIP9DeploymentsParameters("TestDummy", 28, 1199145601, 1230767999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
                 [BitcoinBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, 1462060800, 1493596800, BIP9DeploymentsParameters.DefaultMainnetThreshold),
                 [BitcoinBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, 1479168000, 1510704000, BIP9DeploymentsParameters.DefaultMainnetThreshold)
+            };
+
+            consensusFactory.Protocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
+                MinProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION,
             };
 
             this.Consensus = new NBitcoin.Consensus(

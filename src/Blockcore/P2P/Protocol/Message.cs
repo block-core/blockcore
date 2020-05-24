@@ -74,18 +74,26 @@ namespace Blockcore.P2P.Protocol
         public bool IfPayloadIs<TPayload>(Action<TPayload> action) where TPayload : Payload
         {
             var payload = this.Payload as TPayload;
+
             if (payload != null)
+            {
                 action(payload);
+            }
+
             return payload != null;
         }
 
         public void ReadWrite(BitcoinStream stream)
         {
             if ((this.Payload == null) && stream.Serializing)
+            {
                 throw new InvalidOperationException("Payload not affected");
+            }
 
             if (stream.Serializing || (!stream.Serializing && !this.skipMagic))
+            {
                 stream.ReadWrite(ref this.magic);
+            }
 
             stream.ReadWrite(ref this.command);
             int length = 0;
@@ -95,14 +103,13 @@ namespace Blockcore.P2P.Protocol
             length = payloadBytes == null ? 0 : length;
             stream.ReadWrite(ref length);
 
-            if (stream.ProtocolVersion >= ProtocolVersion.MEMPOOL_GD_VERSION)
+            if (stream.Serializing)
             {
-                if (stream.Serializing)
-                    checksum = Hashes.Hash256(payloadBytes, 0, length).GetLow32();
-
-                stream.ReadWrite(ref checksum);
-                hasChecksum = true;
+                checksum = Hashes.Hash256(payloadBytes, 0, length).GetLow32();
             }
+
+            stream.ReadWrite(ref checksum);
+            hasChecksum = true;
 
             if (stream.Serializing)
             {
@@ -112,7 +119,9 @@ namespace Blockcore.P2P.Protocol
             {
                 // MAX_SIZE 0x02000000 Serialize.h.
                 if (length > 0x02000000)
+                {
                     throw new FormatException("Message payload too big ( > 0x02000000 bytes)");
+                }
 
                 payloadBytes = new byte[length];
                 stream.ReadWrite(ref payloadBytes, 0, length);
@@ -121,30 +130,26 @@ namespace Blockcore.P2P.Protocol
                 {
                     if (!VerifyChecksum(checksum, payloadBytes, length))
                     {
-                        if (NodeServerTrace.Trace.Switch.ShouldTrace(TraceEventType.Verbose))
-                            NodeServerTrace.Trace.TraceEvent(TraceEventType.Verbose, 0, "Invalid message checksum bytes");
                         throw new FormatException("Message checksum invalid");
                     }
                 }
 
                 using (var ms = new MemoryStream(payloadBytes))
                 {
-                    var payloadStream = new BitcoinStream(ms, false)
-                    {
-                        ConsensusFactory = stream.ConsensusFactory
-                    };
+                    var payloadStream = new BitcoinStream(ms, false, stream.ConsensusFactory);
 
                     payloadStream.CopyParameters(stream);
 
                     Type payloadType = this.payloadProvider.GetCommandType(this.Command);
                     bool unknown = payloadType == typeof(UnknowPayload);
-                    if (unknown)
-                        NodeServerTrace.Trace.TraceEvent(TraceEventType.Warning, 0, "Unknown command received : " + this.Command);
 
                     object payload = this.payloadObject;
                     payloadStream.ReadWrite(payloadType, ref payload);
+
                     if (unknown)
+                    {
                         ((UnknowPayload)payload).UpdateCommand(this.Command);
+                    }
 
                     this.Payload = (Payload)payload;
                 }
@@ -161,8 +166,7 @@ namespace Blockcore.P2P.Protocol
         {
             using (var ms = new MemoryStream())
             {
-                var stream = new BitcoinStream(ms, true);
-                stream.ConsensusFactory = consensusFactory;
+                var stream = new BitcoinStream(ms, true, consensusFactory);
                 this.Payload.ReadWrite(stream);
                 length = (int)ms.Position;
                 return ms.ToArray();
@@ -179,17 +183,17 @@ namespace Blockcore.P2P.Protocol
             return string.Format("{0}: {1}", this.Command, this.Payload);
         }
 
-        public static Message ReadNext(Stream stream, Network network, ProtocolVersion version, CancellationToken cancellationToken, PayloadProvider payloadProvider, out PerformanceCounter counter)
+        public static Message ReadNext(Stream stream, Network network, uint version, CancellationToken cancellationToken, PayloadProvider payloadProvider, out PerformanceCounter counter)
         {
-            var bitStream = new BitcoinStream(stream, false)
+            var bitStream = new BitcoinStream(stream, false, network.Consensus.ConsensusFactory, version)
             {
-                ProtocolVersion = version,
                 ReadCancellationToken = cancellationToken,
-                ConsensusFactory = network.Consensus.ConsensusFactory,
             };
 
             if (!network.ReadMagic(stream, cancellationToken, true))
+            {
                 throw new FormatException("Magic incorrect, the message comes from another network");
+            }
 
             var message = new Message(payloadProvider);
             using (message.SkipMagicScope(true))

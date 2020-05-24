@@ -60,6 +60,8 @@ namespace Blockcore.Features.MemoryPool
         /// <summary> Proof of work consensus options.</summary>
         private readonly ConsensusOptions consensusOptions;
 
+        private readonly ConsensusFactory consensusFactory;
+
         /// <summary>
         /// Constructs a transaction memory pool entry.
         /// </summary>
@@ -76,7 +78,8 @@ namespace Blockcore.Features.MemoryPool
         public TxMempoolEntry(Transaction transaction, Money nFee,
             long nTime, double entryPriority, int entryHeight,
             Money inChainInputValue, bool spendsCoinbase,
-            long nSigOpsCost, LockPoints lp, ConsensusOptions consensusOptions)
+            long nSigOpsCost, LockPoints lp, ConsensusOptions consensusOptions,
+            ConsensusFactory consensusFactory)
         {
             this.Transaction = transaction;
             this.TransactionHash = transaction.GetHash();
@@ -89,9 +92,10 @@ namespace Blockcore.Features.MemoryPool
             this.SigOpCost = nSigOpsCost;
             this.LockPoints = lp;
             this.consensusOptions = consensusOptions;
+            this.consensusFactory = consensusFactory;
 
-            this.TxWeight = MempoolValidator.GetTransactionWeight(transaction, consensusOptions);
-            this.nModSize = MempoolValidator.CalculateModifiedSize(this.Transaction.GetSerializedSize(), this.Transaction, consensusOptions);
+            this.TxWeight = MempoolValidator.GetTransactionWeight(transaction, consensusFactory, consensusOptions);
+            this.nModSize = MempoolValidator.CalculateModifiedSize(consensusFactory, this.Transaction.GetSerializedSize(), this.Transaction, consensusOptions);
 
             this.nUsageSize = transaction.GetSerializedSize(); // RecursiveDynamicUsage(*tx) + memusage::DynamicUsage(Transaction);
 

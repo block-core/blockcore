@@ -7,6 +7,7 @@ using City.Networks.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
+using NBitcoin.Protocol;
 
 namespace City.Networks
 {
@@ -62,6 +63,12 @@ namespace City.Networks
                 [BuriedDeployments.BIP34] = 0,
                 [BuriedDeployments.BIP65] = 0,
                 [BuriedDeployments.BIP66] = 0
+            };
+
+            consensusFactory.Protocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
+                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
             Consensus = new NBitcoin.Consensus(

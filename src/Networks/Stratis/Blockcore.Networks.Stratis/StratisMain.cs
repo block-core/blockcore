@@ -112,6 +112,12 @@ namespace Blockcore.Networks.Stratis
                     BIP9DeploymentsParameters.DefaultMainnetThreshold)
             };
 
+            consensusFactory.Protocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
+                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
+            };
+
             this.Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,

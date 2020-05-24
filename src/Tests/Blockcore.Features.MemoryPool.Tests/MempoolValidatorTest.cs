@@ -685,7 +685,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             tx.AddInput(new TxIn(new OutPoint(context.SrcTxs[0].GetHash(), 0), PayToPubkeyHashTemplate.Instance.GenerateScriptPubKey(minerSecret.PubKey)));
 
             // Add outputs until transaction is large enough to fail standardness checks.
-            while (MempoolValidator.GetTransactionWeight(tx, this.Network.Consensus.Options) < this.Network.Consensus.Options.MaxStandardTxWeight)
+            while (MempoolValidator.GetTransactionWeight(tx, this.Network.Consensus.ConsensusFactory, this.Network.Consensus.Options) < this.Network.Consensus.Options.MaxStandardTxWeight)
             {
                 tx.AddOutput(new TxOut(Money.Coins(1), minerSecret.PubKeyHash));
             }
@@ -927,7 +927,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             var state = new MempoolValidationState(false);
 
             // Create dummy entry for the mempool.
-            var entry = new TxMempoolEntry(tx, Money.Coins(1), 1, 0, 1, Money.Coins(1), true, 0, null, this.Network.Consensus.Options);
+            var entry = new TxMempoolEntry(tx, Money.Coins(1), 1, 0, 1, Money.Coins(1), true, 0, null, this.Network.Consensus.Options, this.Network.Consensus.ConsensusFactory);
 
             // Force the transaction into the TxMempool.
             var txMempool = (ITxMempool)validator.GetMemberValue("memPool");

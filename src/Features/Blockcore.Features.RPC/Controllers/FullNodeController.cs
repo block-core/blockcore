@@ -259,7 +259,7 @@ namespace Blockcore.Features.RPC.Controllers
             var model = new GetInfoModel
             {
                 Version = this.FullNode?.Version?.ToUint() ?? 0,
-                ProtocolVersion = (uint)(this.Settings?.ProtocolVersion ?? NodeSettings.SupportedProtocolVersion),
+                ProtocolVersion = this.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 Blocks = this.ChainState?.ConsensusTip?.Height ?? 0,
                 TimeOffset = this.ConnectionManager?.ConnectedPeers?.GetMedianTimeOffset() ?? 0,
                 Connections = this.ConnectionManager?.ConnectedPeers?.Count(),
@@ -307,7 +307,7 @@ namespace Blockcore.Features.RPC.Controllers
             if (isJsonFormat)
                 return new BlockHeaderModel(blockHeader);
 
-            return new HexModel(blockHeader.ToHex(this.Network));
+            return new HexModel(blockHeader.ToHex(this.Network.Consensus.ConsensusFactory));
         }
 
         /// <summary>
@@ -396,7 +396,7 @@ namespace Blockcore.Features.RPC.Controllers
                 return null;
 
             if (verbosity == 0)
-                return new HexModel(block.ToHex(this.Network));
+                return new HexModel(block.ToHex(this.Network.Consensus.ConsensusFactory));
 
             var blockModel = new BlockModel(block, chainedHeader, this.ChainIndexer.Tip, this.Network, verbosity);
 
@@ -404,7 +404,7 @@ namespace Blockcore.Features.RPC.Controllers
             {
                 var posBlock = block as PosBlock;
 
-                blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.Network);
+                blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.Network.Consensus.ConsensusFactory);
                 blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockTarget()).ToUInt256().ToString();
                 blockModel.PosChainTrust = chainedHeader.ChainWork.ToString(); // this should be similar to ChainWork
 
@@ -429,7 +429,7 @@ namespace Blockcore.Features.RPC.Controllers
             {
                 Version = this.FullNode?.Version?.ToUint() ?? 0,
                 SubVersion = this.Settings?.Agent,
-                ProtocolVersion = (uint)(this.Settings?.ProtocolVersion ?? NodeSettings.SupportedProtocolVersion),
+                ProtocolVersion = this.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 IsLocalRelay = this.ConnectionManager?.Parameters?.IsRelay ?? false,
                 TimeOffset = this.ConnectionManager?.ConnectedPeers?.GetMedianTimeOffset() ?? 0,
                 Connections = this.ConnectionManager?.ConnectedPeers?.Count(),

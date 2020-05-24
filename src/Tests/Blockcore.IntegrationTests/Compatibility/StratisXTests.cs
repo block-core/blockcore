@@ -95,7 +95,7 @@ namespace Blockcore.IntegrationTests.Compatibility
                 config.Add("gateway", "1");
 
                 CoreNode stratisNode = builder
-                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION, configParameters: config)
+                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION, configParameters: config)
                     .WithWallet().Start();
 
                 RPCClient stratisXRpc = stratisXNode.CreateRPCClient();
@@ -149,7 +149,7 @@ namespace Blockcore.IntegrationTests.Compatibility
                     .UseTestChainedHeaderTree()
                     .MockIBD());
 
-                CoreNode stratisNode = builder.CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION).WithWallet().Start();
+                CoreNode stratisNode = builder.CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION).WithWallet().Start();
 
                 RPCClient stratisXRpc = stratisXNode.CreateRPCClient();
                 RPCClient stratisNodeRpc = stratisNode.CreateRPCClient();
@@ -219,7 +219,7 @@ namespace Blockcore.IntegrationTests.Compatibility
                     .UseTestChainedHeaderTree()
                     .MockIBD());
 
-                CoreNode stratisNode = builder.CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION, minProtocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION).WithWallet().Start();
+                CoreNode stratisNode = builder.CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION, minProtocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION).WithWallet().Start();
 
                 RPCClient stratisXRpc = stratisXNode.CreateRPCClient();
                 RPCClient stratisNodeRpc = stratisNode.CreateRPCClient();
@@ -290,7 +290,7 @@ namespace Blockcore.IntegrationTests.Compatibility
                 config.Add("gateway", "1");
 
                 CoreNode stratisNode = builder
-                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION, configParameters: config)
+                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION, configParameters: config)
                     .WithWallet().Start();
 
                 RPCClient stratisXRpc = stratisXNode.CreateRPCClient();
@@ -366,7 +366,7 @@ namespace Blockcore.IntegrationTests.Compatibility
                 config.Add("gateway", "1");
 
                 CoreNode sbfnNode2 = builder
-                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION, configParameters: config)
+                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION, configParameters: config)
                     .WithWallet().Start();
 
                 CoreNode xNode3 = builder.CreateStratisXNode(version: "2.0.0.5").Start();
@@ -474,7 +474,7 @@ namespace Blockcore.IntegrationTests.Compatibility
                 config.Add("gateway", "1");
 
                 CoreNode sbfnNode2 = builder
-                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.ALT_PROTOCOL_VERSION, configParameters: config)
+                    .CreateCustomNode(callback, network, protocolVersion: ProtocolVersion.PROVEN_HEADER_VERSION, minProtocolVersion: ProtocolVersion.POS_PROTOCOL_VERSION, configParameters: config)
                     .WithWallet().Start();
 
                 CoreNode xNode3 = builder.CreateStratisXNode(version: "2.0.0.5").Start();

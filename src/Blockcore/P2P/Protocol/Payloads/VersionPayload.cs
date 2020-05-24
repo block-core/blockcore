@@ -47,21 +47,21 @@ namespace Blockcore.P2P.Protocol.Payloads
 
         private uint version;
 
-        public ProtocolVersion Version
+        public uint Version
         {
             get
             {
                 // A version number of 10300 is converted to 300 before being processed.
                 if (this.version == 10300)
-                    return (ProtocolVersion)(300);  // https://en.bitcoin.it/wiki/Version_Handshake
+                    return 300;  // https://en.bitcoin.it/wiki/Version_Handshake
 
-                return (ProtocolVersion)this.version;
+                return this.version;
             }
 
             set
             {
-                if (value == (ProtocolVersion)10300)
-                    value = (ProtocolVersion)300;
+                if (value == 10300)
+                    value = 300;
 
                 this.version = (uint)value;
             }
@@ -204,7 +204,7 @@ namespace Blockcore.P2P.Protocol.Payloads
         public override void ReadWriteCore(BitcoinStream stream)
         {
             stream.ReadWrite(ref this.version);
-            using (stream.ProtocolVersionScope((ProtocolVersion)this.version))
+            using (stream.ProtocolVersionScope(this.version))
             {
                 stream.ReadWrite(ref this.services);
                 stream.ReadWrite(ref this.timestamp);

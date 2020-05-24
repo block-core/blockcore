@@ -750,7 +750,7 @@ namespace Blockcore.Features.Miner.Staking
             }
 
             // Limit size.
-            int serializedSize = coinstakeContext.CoinstakeTx.GetSerializedSize(ProtocolVersion.ALT_PROTOCOL_VERSION, SerializationType.Network);
+            int serializedSize = coinstakeContext.CoinstakeTx.GetSerializedSize(this.network.Consensus.ConsensusFactory, SerializationType.Network);
             if (serializedSize >= (MaxBlockSizeGen / 5))
             {
                 this.logger.LogDebug("Coinstake size {0} bytes exceeded limit {1} bytes.", serializedSize, MaxBlockSizeGen / 5);

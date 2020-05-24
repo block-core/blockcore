@@ -111,9 +111,9 @@ namespace Blockcore.Features.MemoryPool
                 {
                     foreach (IndexedTxOut txOut in entry.Transaction.Outputs.AsIndexedOutputs())
                     {
-                        // If an output was fetched form disk with empty coins but it 
+                        // If an output was fetched form disk with empty coins but it
                         // was found mempool then override the output with whats in mempool
-                        
+
                         var outpoint = new OutPoint(trxid, txOut.N);
                         var found = coins.UnspentOutputs.TryGetValue(outpoint, out UnspentOutput unspentOutput);
                         if (!found || unspentOutput?.Coins == null)
@@ -163,7 +163,7 @@ namespace Blockcore.Features.MemoryPool
             foreach (TxIn txInput in tx.Inputs)
             {
                 UnspentOutput coins = this.Set.AccessCoins(txInput.PrevOut);
-                
+
                 if (coins == null)
                     continue;
 
@@ -185,7 +185,7 @@ namespace Blockcore.Features.MemoryPool
         /// <returns>Priority value.</returns>
         private double ComputePriority(Transaction trx, double dPriorityInputs, int nTxSize = 0)
         {
-            nTxSize = MempoolValidator.CalculateModifiedSize(nTxSize, trx, this.mempoolValidator.ConsensusOptions);
+            nTxSize = MempoolValidator.CalculateModifiedSize(this.network.Consensus.ConsensusFactory, nTxSize, trx, this.mempoolValidator.ConsensusOptions);
             if (nTxSize == 0) return 0.0;
 
             return dPriorityInputs / nTxSize;

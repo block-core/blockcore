@@ -8,8 +8,10 @@ using Blockcore.Connection;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool.Broadcasting;
 using Blockcore.Features.MemoryPool.Fee;
+using Blockcore.Features.MemoryPool.FeeFilter;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,35 +29,16 @@ namespace Blockcore.Features.MemoryPool
     /// <seealso cref="https://github.com/bitcoin/bitcoin/blob/6dbcc74a0e0a7d45d20b03bb4eb41a027397a21d/src/txmempool.cpp"/>
     public class MempoolFeature : FullNodeFeature
     {
-        /// <summary>Connection manager for managing node connections.</summary>
         private readonly IConnectionManager connectionManager;
-
-        /// <summary>Observes block signal notifications from signals.</summary>
         private readonly MempoolSignaled mempoolSignaled;
-
-        /// <summary>Observes reorg signal notifications from signals.</summary>
         private readonly BlocksDisconnectedSignaled blocksDisconnectedSignaled;
-
-        /// <summary>Memory pool node behavior for managing attached node messages.</summary>
         private readonly MempoolBehavior mempoolBehavior;
-
-        /// <summary>Memory pool manager for managing external access to memory pool.</summary>
         private readonly MempoolManager mempoolManager;
-
         private readonly IBroadcasterManager broadcasterManager;
-
-        /// <summary>Instance logger for the memory pool component.</summary>
+        private readonly PayloadProvider payloadProvider;
+        private readonly FeeFilterBehavior feeFilterBehavior;
         private readonly ILogger logger;
 
-        /// <summary>
-        /// Constructs a memory pool feature.
-        /// </summary>
-        /// <param name="connectionManager">Connection manager for managing node connections.</param>
-        /// <param name="mempoolSignaled">Observes block signal notifications from signals.</param>
-        /// <param name="blocksDisconnectedSignaled">Observes reorged headers signal notifications from signals.</param>
-        /// <param name="mempoolBehavior">Memory pool node behavior for managing attached node messages.</param>
-        /// <param name="mempoolManager">Memory pool manager for managing external access to memory pool.</param>
-        /// <param name="loggerFactory">Logger factory for creating instance logger.</param>
         public MempoolFeature(
             IConnectionManager connectionManager,
             MempoolSignaled mempoolSignaled,
@@ -64,7 +47,9 @@ namespace Blockcore.Features.MemoryPool
             MempoolManager mempoolManager,
             ILoggerFactory loggerFactory,
             INodeStats nodeStats,
-            IBroadcasterManager broadcasterManager)
+            IBroadcasterManager broadcasterManager,
+            PayloadProvider payloadProvider,
+            FeeFilterBehavior feeFilterBehavior)
         {
             this.connectionManager = connectionManager;
             this.mempoolSignaled = mempoolSignaled;
@@ -72,6 +57,8 @@ namespace Blockcore.Features.MemoryPool
             this.mempoolBehavior = mempoolBehavior;
             this.mempoolManager = mempoolManager;
             this.broadcasterManager = broadcasterManager;
+            this.payloadProvider = payloadProvider;
+            this.feeFilterBehavior = feeFilterBehavior;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
@@ -93,12 +80,17 @@ namespace Blockcore.Features.MemoryPool
             await this.mempoolManager.LoadPoolAsync().ConfigureAwait(false);
 
             this.connectionManager.Parameters.TemplateBehaviors.Add(this.mempoolBehavior);
+            this.connectionManager.Parameters.TemplateBehaviors.Add(this.feeFilterBehavior);
+
             this.mempoolSignaled.Start();
 
             this.blocksDisconnectedSignaled.Initialize();
 
             // The mempool responds to trx getdata so disbled it form the broadcaster
             this.broadcasterManager.CanRespondToTrxGetData = false;
+
+            // Register the fee filter.
+            this.payloadProvider.AddPayload(typeof(FeeFilterPayload));
         }
 
         /// <summary>
@@ -172,6 +164,7 @@ namespace Blockcore.Features.MemoryPool
                             .AddSingleton<IPooledTransaction, MempoolManager>(provider => provider.GetService<MempoolManager>())
                             .AddSingleton<IPooledGetUnspentTransaction, MempoolManager>(provider => provider.GetService<MempoolManager>());
                         services.AddSingleton<MempoolBehavior>();
+                        services.AddSingleton<FeeFilterBehavior>();
                         services.AddSingleton<MempoolSignaled>();
                         services.AddSingleton<BlocksDisconnectedSignaled>();
                         services.AddSingleton<IMempoolPersistence, MempoolPersistence>();

@@ -81,6 +81,11 @@
         public const uint SHORT_IDS_BLOCKS_VERSION = 70014;
 
         /// <summary>
+        /// "feefilter" tells peers to filter invs to you by fee starts with this version.
+        /// </summary>
+        public const uint FEEFILTER_VERSION = 70013;
+
+        /// <summary>
         /// Oldest supported version of the CirrusNode which this node can connect to.
         /// </summary>
         public const uint CIRRUS_MIN_SUPPORTED_VERSION = 80000;

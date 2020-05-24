@@ -91,6 +91,11 @@ namespace Blockcore.Features.MemoryPool
         /// </summary>
         private bool isBlocksOnlyMode;
 
+        /// <summary>
+        /// The min fee the peer asks to relay transactions.
+        /// </summary>
+        public Money MinFeeFilter { get; set; }
+
         public MempoolBehavior(
             IMempoolValidator validator,
             MempoolManager mempoolManager,
@@ -116,6 +121,8 @@ namespace Blockcore.Features.MemoryPool
             this.filterInventoryKnown = new HashSet<uint256>();
             this.isPeerWhitelistedForRelay = false;
             this.isBlocksOnlyMode = false;
+
+            this.MinFeeFilter = 0;
         }
 
         /// <summary>Time of last memory pool request in unix time.</summary>
@@ -235,12 +242,6 @@ namespace Blockcore.Features.MemoryPool
 
             List<TxMempoolInfo> transactionsInMempool = await this.mempoolManager.InfoAllAsync().ConfigureAwait(false);
             Money filterrate = Money.Zero;
-
-            // TODO: implement minFeeFilter
-            //{
-            //  LOCK(pto->cs_feeFilter);
-            //  filterrate = pto->minFeeFilter;
-            //}
 
             var transactionsToSend = new List<uint256>();
             lock (this.lockObject)
@@ -553,16 +554,14 @@ namespace Blockcore.Features.MemoryPool
                         continue;
                     }
 
-                    //if (filterrate && txinfo.feeRate.GetFeePerK() < filterrate) // TODO:filterrate
-                    //{
-                    //  continue;
-                    //}
                     transactionsToSend.Add(hash);
                     this.logger.LogDebug("Transaction ID '{0}' added to inventory list.", hash);
                 }
 
                 this.logger.LogDebug("Transaction inventory list created.");
             }
+
+            FeeRate filterrate = new FeeRate(this.MinFeeFilter);
 
             List<uint256> findInMempool = transactionsToSend.ToList();
             foreach (uint256 hash in findInMempool)
@@ -572,6 +571,13 @@ namespace Blockcore.Features.MemoryPool
                 if (txInfo == null)
                 {
                     this.logger.LogDebug("Transaction ID '{0}' not added to inventory list, no longer in mempool.", hash);
+                    transactionsToSend.Remove(hash);
+                }
+
+                // Peer told you to not send transactions at that feerate? Don't bother sending it.
+                if (txInfo.Fee < filterrate.GetFee((int)txInfo.Size))
+                {
+                    this.logger.LogDebug("Transaction ID '{0}' not added to inventory list, bellow peers fee filter.", hash);
                     transactionsToSend.Remove(hash);
                 }
             }

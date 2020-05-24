@@ -12,6 +12,10 @@ using NBitcoin.Protocol;
 
 namespace Blockcore.Features.MemoryPool.FeeFilter
 {
+    /// <summary>
+    /// Implementing FeeFilter as described in BIP0133
+    /// https://github.com/bitcoin/bips/blob/master/bip-0133.mediawiki
+    /// </summary>
     public class FeeFilterBehavior : NetworkPeerBehavior
     {
         private readonly ILogger logger;
@@ -102,7 +106,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
                             }
                         },
                         this.nodeLifetime.ApplicationStopping,
-                        repeatEvery: TimeSpans.Minute,
+                        repeatEvery: TimeSpan.FromMinutes(10),
                         startAfter: TimeSpans.TenSeconds);
                     }
                 }

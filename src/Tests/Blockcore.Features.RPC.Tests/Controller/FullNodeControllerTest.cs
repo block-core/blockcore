@@ -493,7 +493,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
                 this.fullNode.Object, this.nodeSettings, this.network, this.chain, this.chainState.Object, this.connectionManager.Object);
             GetInfoModel model = this.controller.GetInfo();
 
-            Assert.Equal(this.Network.Consensus.ConsensusProtocol.ProtocolVersion, model.ProtocolVersion);
+            Assert.Equal(this.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion, model.ProtocolVersion);
             Assert.Equal(0, model.RelayFee);
         }
 

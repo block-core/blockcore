@@ -7,6 +7,7 @@ using x42.Networks.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
+using NBitcoin.Protocol;
 
 namespace x42.Networks
 {
@@ -64,9 +65,14 @@ namespace x42.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
+            consensusFactory.Protocol = new ConsensusProtocol()
+            {
+                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
+                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
+            };
+
             this.Consensus = new x42Consensus(
                 consensusFactory: consensusFactory,
-                consensusProtocol: this.Consensus.ConsensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),

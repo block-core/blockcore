@@ -135,7 +135,7 @@ namespace Blockcore.Configuration
             // Log arguments.
             this.Logger.LogDebug("Arguments: network='{0}', protocolVersion='{1}', agent='{2}', args='{3}'.",
                 this.Network == null ? "(None)" : this.Network.Name,
-                this.Network?.Consensus.ConsensusProtocol.ProtocolVersion,
+                this.Network?.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 this.Agent,
                 args == null ? "(None)" : string.Join(" ", args));
 

@@ -82,15 +82,14 @@ namespace City.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
-            ConsensusProtocol consensusProtocol = new ConsensusProtocol()
+            consensusFactory.Protocol = new ConsensusProtocol()
             {
-                ProtocolVersion = ProtocolVersion.PROVEN_HEADER_VERSION,
+                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
             Consensus = new NBitcoin.Consensus(
                 consensusFactory: consensusFactory,
-                consensusProtocol: consensusProtocol,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),

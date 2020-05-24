@@ -145,10 +145,5 @@ namespace NBitcoin
 
         /// <summary>Group of mempool validation rules used by the given network.</summary>
         List<Type> MempoolRules { get; set; }
-
-        /// <summary>
-        /// Information about the consensus protocol.
-        /// </summary>
-        ConsensusProtocol ConsensusProtocol { get; }
     }
 }

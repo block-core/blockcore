@@ -13,9 +13,11 @@
 @inject IBroadcasterManager BroadcasterManager
 @inject NodeDeployments NodeDeployments
 
-<h2>Coldstaking withdraw wallet: <strong> @walletname</strong></h2>
-
-<p>Withdraw form a coldstaking cold wallet.</p>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2"><strong>Cold Staking Withdrawal To: @walletname</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+    </div>
+</div>
 
 @{
     var coldStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletname), true);
@@ -23,24 +25,18 @@
     {
         var coldAccountBalance = ColdStakingManager.GetBalances(walletname, coldStakingAccount.Name).Single();
 
-        <p>Amount Confirmed: <strong> @coldAccountBalance.AmountConfirmed</strong></p>
-        <p>Amount Unconfirmed: <strong>@coldAccountBalance.AmountUnconfirmed</strong></p>
-        <p>Spendable Amount: <strong> @coldAccountBalance.SpendableAmount</strong></p>
-    }
-    <hr />
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Password:</span>
+        <div class="container my-3">
+            <h1>@coldAccountBalance.AmountConfirmed <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
+            <p class="text-left text-secondary">@coldAccountBalance.AmountUnconfirmed (unconfirmed)</p>
         </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="password" />
-    </div>
+    }
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Address:</span>
         </div>
-        <input @bind="Address" type="text" class="form-control" placeholder="address" />
-        <button class="btn btn-light btn-sm" @onclick="GenerateAddress">Get address from: @walletname</button>
+        <input @bind="Address" type="text" class="form-control" placeholder="Please enter your address" />
+        <button class="btn btn-primary btn-sm" @onclick="GenerateAddress">Get address from: @walletname</button>
     </div>
 
     <div class="input-group mb-3">
@@ -49,7 +45,7 @@
         </div>
         <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
         <div class="input-group-append">
-            <span style="min-width: 10em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+            <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
         </div>
     </div>
 
@@ -59,12 +55,19 @@
         </div>
         <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
         <div class="input-group-append">
-            <span style="min-width: 10em" class="input-group-text">Optional (default to low)</span>
+            <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
         </div>
     </div>
 
     <div class="input-group mb-3">
-        <button class="btn btn-info" @onclick="Withdraw">Withdraw from coldstake</button>
+        <div class="input-group-prepend">
+            <span style="min-width: 10em" class="input-group-text">Password:</span>
+        </div>
+        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+    </div>
+
+    <div class="input-group mb-3">
+        <button class="btn btn-primary" @onclick="Withdraw">Withdraw Now</button>
     </div>
 
     <div class="input-group mb-3">

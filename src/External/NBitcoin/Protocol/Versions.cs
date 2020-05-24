@@ -5,8 +5,6 @@
     /// </summary>
     public static class ProtocolVersion
     {
-        public const uint PROTOCOL_VERSION = 70012;
-
         /// <summary>
         /// Represents th protocol version of POS chains that was used before <see cref="ProtocolVersion.PROVEN_HEADER_VERSION"/>
         /// </summary>

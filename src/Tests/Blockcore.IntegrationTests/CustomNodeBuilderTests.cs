@@ -49,7 +49,7 @@ namespace Blockcore.IntegrationTests
                         .MockIBD());
 
                 var coreNode = nodeBuilder.CreateCustomNode(buildAction, this.network,
-                    ProtocolVersion.PROTOCOL_VERSION, configParameters: extraParams);
+                    this.network.Consensus.ConsensusFactory.Protocol.ProtocolVersion, configParameters: extraParams);
 
                 coreNode.Start();
 
@@ -79,7 +79,7 @@ namespace Blockcore.IntegrationTests
                         .UseNodeHost()
                         .MockIBD());
 
-                var coreNode = nodeBuilder.CreateCustomNode(buildAction, this.network, ProtocolVersion.PROTOCOL_VERSION, configParameters: extraParams);
+                var coreNode = nodeBuilder.CreateCustomNode(buildAction, this.network, this.network.Consensus.ConsensusFactory.Protocol.ProtocolVersion, configParameters: extraParams);
 
                 coreNode.Start();
 

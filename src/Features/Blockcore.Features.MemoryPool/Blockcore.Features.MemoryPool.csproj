@@ -24,11 +24,6 @@
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Behaviours\" />
-    <Folder Include="Payloads\" />
-  </ItemGroup>
-
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputType>Library</OutputType>
   </PropertyGroup>
@@ -37,5 +32,4 @@
     <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
-
 </Project>

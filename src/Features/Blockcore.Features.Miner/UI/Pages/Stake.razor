@@ -11,9 +11,11 @@
 @inject IPosMinting PosMinting
 @inject Network Network
 
-<h2>Staking</h2>
-
-<p>Information about staking.</p>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2"><strong>Staking</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+    </div>
+</div>
 
 @{
     if (this.StakingEnabled)
@@ -29,14 +31,14 @@
             Staking disabled
         </div>
     }
-
-    <hr>
-
-    <table class="table table-sm">
-        <thead>
+    
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-sm table-hover">
+        <thead class="thead">
             <tr>
-                <th>Wallet / Account</th>
-                <th>Balance</th>
+                <th>Wallet</th>
+                <th>Confirmed balance</th>
+                <th>Unconfirmed balance</th>
             </tr>
         </thead>
         <tbody>
@@ -47,15 +49,19 @@
                     {
                         var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
 
-                        <tr>
-                            <td @onclick="() => { SetWalletName(walletName); }" style="cursor:pointer"> @walletName <strong>/</strong> @account.Name</td>
+                        <tr @onclick="() => { SetWalletName(walletName); }">
+                            <td>@walletName</td>
                             <td>@accountBalance.AmountConfirmed</td>
+                            <td>@accountBalance.AmountUnconfirmed</td>
                         </tr>
                     }
                 }
             }
         </tbody>
     </table>
+</div>
+
+
 
     if (!this.StakingEnabled)
     {
@@ -70,17 +76,17 @@
             <div class="input-group-prepend">
                 <span style="min-width: 10em" class="input-group-text">Password:</span>
             </div>
-            <input @bind="Password" type="password" class="form-control" placeholder="password" />
+            <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
         </div>
 
         <div class="input-group mb-3">
-            <button class="btn btn-info" @onclick="StartStaking">Start Staking</button>
+            <button class="btn btn-primary" @onclick="StartStaking">Start Staking</button>
         </div>
     }
     else
     {
         <div class="input-group mb-3">
-            <button class="btn btn-secondary" @onclick="StopStaking">Stop Staking</button>
+            <button class="btn btn-danger" @onclick="StopStaking">Stop Staking</button>
         </div>
     }
 

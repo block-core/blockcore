@@ -12,22 +12,25 @@
 @inject Network Network
 @inject IPooledTransaction PooledTransaction
 
-<h2>Wallets</h2>
-
-<p>Information about the deployed wallets.</p>
-
 @{
-    <p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2"><strong>Wallet Details</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWalletCreate(); }">Create Wallet</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWalletRecover(); }">Recover Wallet</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { Resync(); }">Resync wallets</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { Rebroadcast(); }">Re-broadcast</button>
+    </div>
+</div>
 
-    <button @onclick="NavigateToWalletCreate" class="btn btn-primary">Create Wallet</button>
-    <button @onclick="NavigateToWalletRecover" class="btn btn-primary">Recover Wallet</button>
-    <button @onclick="Resync" class="btn btn-primary">Resync wallets from genesis</button>
-    <button @onclick="Rebroadcast" class="btn btn-primary">Re-broadcast unconfirmed</button>
-    <br /><br />
-    <table class="table">
-        <thead>
+<p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
+<br />
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-sm table-hover">
+        <thead class="thead">
             <tr>
-                <th>Wallet / Account</th>
+                <th>Wallet</th>
                 <th>Confirmed balance</th>
                 <th>Unconfirmed balance</th>
             </tr>
@@ -40,8 +43,8 @@
                     {
                         var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
 
-                        <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }" style="cursor:pointer">
-                            <td><strong>@walletName / @account.Name</strong></td>
+                        <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }">
+                            <td>@walletName</td>
                             <td>@accountBalance.AmountConfirmed</td>
                             <td>@accountBalance.AmountUnconfirmed</td>
                         </tr>
@@ -50,6 +53,7 @@
             }
         </tbody>
     </table>
+</div>
 }
 
 @code

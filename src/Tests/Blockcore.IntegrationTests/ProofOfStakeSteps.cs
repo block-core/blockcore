@@ -65,7 +65,7 @@ namespace Blockcore.IntegrationTests
                 .UseTestChainedHeaderTree()
                 .OverrideDateTimeProviderFor<MiningFeature>());
 
-            this.PremineNodeWithCoins = this.nodeBuilder.CreateCustomNode(callback, new StratisRegTest(), ProtocolVersion.PROTOCOL_VERSION, agent: "mint-pmnode", configParameters: configParameters);
+            this.PremineNodeWithCoins = this.nodeBuilder.CreateCustomNode(callback, new StratisRegTest(), this.PremineNodeWithCoins.FullNode.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion, agent: "mint-pmnode", configParameters: configParameters);
             this.PremineNodeWithCoins.WithWallet().Start();
         }
 

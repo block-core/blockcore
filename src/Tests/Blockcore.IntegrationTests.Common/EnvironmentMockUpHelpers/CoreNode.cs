@@ -276,7 +276,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                 peerAddressManager
                 );
 
-            return networkPeerFactory.CreateConnectedNetworkPeerAsync("127.0.0.1:" + this.ProtocolPort).ConfigureAwait(false).GetAwaiter().GetResult();
+            return networkPeerFactory.CreateConnectedNetworkPeerAsync("127.0.0.1:" + this.ProtocolPort, this.runner.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private IAsyncProvider GetOrCreateAsyncProvider()

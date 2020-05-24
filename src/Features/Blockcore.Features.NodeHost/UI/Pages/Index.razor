@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+@using Blockcore.Utilities.Extensions
+
 @inject IFullNode FullNode
 @inject NBitcoin.Network Network
 @inject NBitcoin.ChainIndexer ChainIndexer
@@ -7,26 +9,86 @@
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 @inject NavigationManager NavigationManager
 
-<h2>@this.Network.Name node.</h2>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Node</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="input-group mb-3">
+                <input @bind="NodeIp" type="text" class="form-control" placeholder="Node IP Address" />
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-primary" @onclick="Addnode">Add Node</button>
+            </div>
+            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToLogs(); }">View Logs</button>
+            <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">Shutdown</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="input-group mb-3">
+    <div class="alert-warning">@Alert</div>
+</div>
 
 @{
-    if (this.InitialBlockDownloadState.IsInitialBlockDownload())
-    {
-        <p>In IBD</p>
-    }
 
-    <p>Connected peers: @this.ConnectionManager.ConnectedPeers.Count()</p>
-    <p>Current tip at height: @this.ChainIndexer.Tip.Height</p>
-    <p>Current tip Hash: @this.ChainIndexer.Tip.HashBlock</p>
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <td style="max-width: 10em">Connected peers:</td>
+        <td>@this.ConnectionManager.ConnectedPeers.Count()</td>
+      </tr>
+      <tr>
+        <td style="max-width: 10em">Current tip at height:</td>
+        <td>@this.ChainIndexer.Tip.Height</td>
+      </tr>
+      <tr>
+        <td style="max-width: 10em">Current tip Hash:</td>
+        <td>@this.ChainIndexer.Tip.HashBlock</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <hr />
-
-    <button class="btn btn-danger" @onclick="Shutdown">Shutdown</button>
-    <button class="btn btn-secondary" @onclick="NavigateToLogs">Logs</button>
+if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+{
+    <p>In IBD</p>
 }
 
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-sm table-hover">
+        <thead class="thead">
+            <tr>
+                <th>IP Address</th>
+                <th>Inbound</th>
+                <th>Agent</th>
+                <th>Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var peer in this.ConnectionManager.ConnectedPeers)
+            {
+                <tr>
+                    <td>@peer.RemoteSocketEndpoint.ToString()</td>
+                    <td>@peer.Inbound</td>
+                    <td>@peer.PeerVersion?.UserAgent</td>
+                    <td>@peer.PeerVersion?.Version</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
 @code
 {
+    private string NodeIp { get; set; }
+    string Alert { get; set; }
+    private void Addnode()
+    {
+        var endpoint = this.NodeIp.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
+
+        this.ConnectionManager.AddNodeAddress(endpoint);
+
+        this.Alert = $"node {endpoint} added";
+    }
     private void Shutdown()
     {
         this.FullNode?.NodeLifetime.StopApplication();

@@ -33,7 +33,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
         <thead class="thead">
             <tr>
                 <th><p class="small"><strong>TYPE</strong></p></th>
-                <th><p class="small"><strong>DATE</strong></p></th>
+                <th><p class="small"><strong>DATE/TIME</strong></p></th>
                 <th><p class="small"><strong>AMOUNT</strong></p></th>
                 <th><p class="small"><strong>BLOCK</strong></p></th>
             </tr>
@@ -45,7 +45,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                 {
                      <tr> @*@onclick="() => { NavigateToViewTx(transaction.Id); }" > *@
                         <td><p class="small">@transaction.Type</p></td>
-                        <td><p class="small">@transaction.Timestamp</p></td>
+                        <td><p class="small">@String.Format("{0:f}", transaction.Timestamp)</p></td>
                         <td><p class="small">@transaction.Amount</p></td>
                         <td><p class="small">@transaction.ConfirmedInBlock</p></td>
                     </tr>

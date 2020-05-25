@@ -15,9 +15,9 @@
         <div class="input-group mb-3">
                 <input @bind="NodeIp" type="text" class="form-control" placeholder="Node IP Address" />
                 <div class="input-group-append">
-                    <button class="btn btn-sm btn-primary" @onclick="Addnode">Add Node</button>
+                    <button class="btn btn-sm btn-primary mr-1" @onclick="Addnode">Add Node</button>
             </div>
-            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToLogs(); }">View Logs</button>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">View Logs</button>
             <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">Shutdown</button>
         </div>
     </div>

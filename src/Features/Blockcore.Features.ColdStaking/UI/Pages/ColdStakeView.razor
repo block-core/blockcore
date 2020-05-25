@@ -15,8 +15,8 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>Cold Staking Dashboard for @walletname</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSetup(walletname); }">Stake</button>
-        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToDelegate(walletname); }">Delegate</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">Stake</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">Delegate</button>
         <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">Withdraw</button>
     </div>
 </div>
@@ -33,6 +33,7 @@
         <thead class="thead">
             <tr>
                 <th><p class="small"><strong>TYPE</strong></p></th>
+                <th><p class="small"><strong>TIMESTAMP</strong></p></th>
                 <th><p class="small"><strong>AMOUNT</strong></p></th>
                 <th><p class="small"><strong>BLOCK</strong></p></th>
             </tr>
@@ -42,8 +43,9 @@
             {
                 foreach (var transaction in history.TransactionsHistory)
                 {
-                    <tr @onclick="() => { NavigateToViewTx(transaction.Id); }" >
+                    <tr> @* @onclick="() => { NavigateToViewTx(transaction.Id); }" *@
                         <td><p class="small">@transaction.Type</p></td>
+                        <td><p class="small">@transaction.Timestamp</p></td>
                         <td><p class="small">@transaction.Amount</p></td>
                         <td><p class="small">@transaction.ConfirmedInBlock</p></td>
                     </tr>

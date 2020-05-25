@@ -12,9 +12,6 @@
 @if (!NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.CheckColdStakeVerify))
 {
     <h2>Cold staking is not activated</h2>
-    <hr />
-        <button @onclick="NavigateToEnableWallet" class="btn btn-primary">Enable Cold Staking</button>
-    <br />
     return;
 }
 
@@ -39,13 +36,11 @@
 
         <tbody>
             @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
-            <tr @onclick="() => { NavigateToColdStakeView(walletName); }" >
-                <td>@walletName</td>
-
+                <tr @onclick="() => { NavigateToColdStakeView(walletName); }" >
+                   <td>@walletName</td>
                 @foreach (var account in this.WalletManager.GetAccounts(walletName)) {
 
                     var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-    
                     <td>@accountBalance.AmountConfirmed</td>
 
                     var coldStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);

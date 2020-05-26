@@ -17,12 +17,12 @@
 
 <h2><strong>Enable cold staking on an existing wallet</strong></h2>
 
- <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="wallet-label">Wallet Name:</span>
-        </div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span style="min-width: 10em" class="input-group-text" id="wallet-label">Wallet Name:</span>
+    </div>
 
-        @* <select @bind="WalletName" type="text" class="form-control">
+    @* <select @bind="WalletName" type="text" class="form-control">
             @{
                 foreach (var walletName in this.WalletManager.GetWalletsNames()) {
                 var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
@@ -36,19 +36,23 @@
                 }
             }
         </select>*@
-        <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter the wallet you want to enable for cold staking" />
-    </div> 
+    <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter the wallet you want to enable for cold staking" />
+</div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Password:</span>
-        </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span style="min-width: 10em" class="input-group-text">Password:</span>
     </div>
+    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+</div>
 
-    <div class="input-group mb-3">
-        <button class="btn btn-primary" @onclick="CreateColdStakeAccount">Enable Cold Staking</button>
-    </div>
+<div class="input-group mb-3">
+    <button class="btn btn-primary" @onclick="CreateColdStakeAccount">Enable Cold Staking</button>
+</div>
+
+<div class="input-group mb-3">
+    <div class="alert-warning">@Alert</div>
+</div>
 
 @code
 {
@@ -56,6 +60,7 @@
     string Alert { get; set; }
     private string WalletName { get; set; }
     private string Password { get; set; }
+
     private void CreateColdStakeAccount()
     {
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter your password"; return; }
@@ -66,7 +71,8 @@
         this.ColdStakingManager.GetOrCreateColdStakingAccount(this.WalletName, false, this.Password);
 
         NavigationManager.NavigateTo("coldstakeview/" + WalletName + "/coldStakingColdAddresses");
-    }    
+    }
+
     protected override Task OnInitializedAsync()
     {
         ColdStakingManager = this.WalletManager as ColdStakingManager;

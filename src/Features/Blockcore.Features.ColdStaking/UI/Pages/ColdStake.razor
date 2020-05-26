@@ -18,7 +18,12 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>Cold Staking</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToEnableWallet(); }">Enable Cold Staking</button>
+        @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+            if (coldStakingWalletEnabled != null) {} else {
+                <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToEnableWallet(); }">Enable Cold Staking</button>
+            }
+        }
     </div>
 </div>
 
@@ -36,28 +41,32 @@
 
         <tbody>
             @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
-                <tr @onclick="() => { NavigateToColdStakeView(walletName); }" >
-                   <td>@walletName</td>
-                @foreach (var account in this.WalletManager.GetAccounts(walletName)) {
+    
+                var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                if (coldStakingWalletEnabled != null) {
+                    <tr @onclick="() => { NavigateToColdStakeView(walletName); }" >
+                    <td>@walletName</td>
+                    @foreach (var account in this.WalletManager.GetAccounts(walletName)) {
 
-                    var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-                    <td>@accountBalance.AmountConfirmed</td>
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                        <td>@accountBalance.AmountConfirmed</td>
 
-                    var coldStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
-                    
-                    if (coldStakingAccount != null) {
-                        var coldAccountBalance = ColdStakingManager.GetBalances(walletName, coldStakingAccount.Name).Single();
-                        <td>@coldAccountBalance.AmountConfirmed</td>
-                    }
+                        var coldStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                        
+                        if (coldStakingAccount != null) {
+                            var coldAccountBalance = ColdStakingManager.GetBalances(walletName, coldStakingAccount.Name).Single();
+                            <td>@coldAccountBalance.AmountConfirmed</td>
+                        }
 
-                    var hotStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), false);
-                    
-                    if (hotStakingAccount != null) {
-                        var hotAccountBalance = ColdStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();
-                         <td>@hotAccountBalance.AmountConfirmed</td>
-                    }
+                        var hotStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), false);
+                        
+                        if (hotStakingAccount != null) {
+                            var hotAccountBalance = ColdStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();
+                            <td>@hotAccountBalance.AmountConfirmed</td>
+                        }
                 }
             </tr>
+            }
         }                               
         </tbody>
     </table>

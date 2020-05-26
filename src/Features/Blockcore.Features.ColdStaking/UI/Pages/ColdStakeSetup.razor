@@ -27,9 +27,11 @@
     <p class="text-left text-secondary">@accountBalance.AmountUnconfirmed (unconfirmed)</p>
 </div>
 
+
+    //TODO: remove coldstake address
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">ColdWalletAddress:</span>
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Cold Address:</span>
         </div>
         <input @bind="ColdWalletAddress" type="text" class="form-control" placeholder="ColdWalletAddress" />
         <div class="input-group-append">
@@ -39,18 +41,34 @@
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">HotWalletAddress:</span>
+            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Hot Address:</span>
         </div>
         <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="HotWalletAddress" />
 
         <div class="input-group-append">
             <div class="btn-toolbar mb-2 mb-md-0">
-                @foreach (var walletNameItem in this.WalletManager.GetWalletsNames().Where(w => w != walletname))
-                {
-                    <button class="btn btn-secondary btn-sm" @onclick="() => { GetHotWalletAddress(walletNameItem); }">To: @walletNameItem</button>
+                @{
+                foreach (var walletName in this.WalletManager.GetWalletsNames().Where(w => w != walletname)) {
+                var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                    if (coldStakingWalletEnabled != null) {
+                            <button class="btn btn-primary btn-sm" @onclick="() => { GetHotWalletAddress(walletName); }">@walletName</button>
+                    }
                 }
+            }
             </div>
         </div>
+
+        @* <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select wallet
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @foreach (var walletNameItem in this.WalletManager.GetWalletsNames().Where(w => w != walletname))
+                {
+                    <a class="dropdown-item" href="javascript: void(0)" @onclick="() => { GetHotWalletAddress(walletNameItem); }">To: @walletNameItem</a>
+                }
+        </div>
+        </div> *@
 
     </div>
 

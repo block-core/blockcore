@@ -17,13 +17,12 @@
 
 <h2><strong>Enable cold staking on an existing wallet</strong></h2>
 
-
  <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span style="min-width: 10em" class="input-group-text" id="wallet-label">Wallet Name:</span>
         </div>
 
-        <select @bind="WalletName" type="text" class="form-control" placeholder="Choose the wallet you want to enable">
+        @* <select @bind="WalletName" type="text" class="form-control">
             @{
                 foreach (var walletName in this.WalletManager.GetWalletsNames()) {
                 var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
@@ -36,14 +35,15 @@
                     }
                 }
             }
-        </select>
-    </div>
+        </select>*@
+        <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter the wallet you want to enable for cold staking" />
+    </div> 
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span style="min-width: 10em" class="input-group-text">Password:</span>
         </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="password" />
+        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
     </div>
 
     <div class="input-group mb-3">

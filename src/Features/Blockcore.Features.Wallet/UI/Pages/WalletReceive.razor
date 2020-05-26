@@ -17,37 +17,19 @@
     var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
 
 <div class="container">
-  <table class="table table-bordered">
+  <table class="table table-borderless">
     <tbody>
       <tr>
-        <td style="max-width: 10em">Address:</td>
-        <td><code>@result.Address</code></td>
+        <td style="min-width: 10em"><strong>Address:</strong></td>
+        <td><CopyToClipboard Text="@result.Address" /></td>
       </tr>
       <tr>
-        <td style="max-width: 10em">Segwit Address:</td>
-        <td><code>@result.Bech32Address</code></td>
+        <td style="min-width: 10em"><strong>Segwit Address:</strong></td>
+        <td><CopyToClipboard Text="@result.Bech32Address" /></td>
       </tr>
     </tbody>
   </table>
 </div>
-
-    @* TODO: Add Copy Paste Functionality
-     <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Address:</span>
-        </div>
-        <span="text" class="form-control" placeholder="@result.Address" />
-        <button class="btn btn-primary btn-sm">Copy</button>
-    </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Segwit Address:</span>
-        </div>
-        <span="text" class="form-control" placeholder="@result.Bech32Address" />
-        <button class="btn btn-primary btn-sm">Copy</button>
-    </div> *@
-
 }
 
 @code {

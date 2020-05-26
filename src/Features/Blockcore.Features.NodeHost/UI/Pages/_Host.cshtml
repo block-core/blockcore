@@ -32,5 +32,16 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script>
+        window.clipboardCopy = {
+            copyText: function(text) {
+                navigator.clipboard.writeText(text).then(function () {
+                })
+                .catch(function (error) {
+                    alert(error);
+                });
+            }
+        };
+    </script>
 </body>
 </html>

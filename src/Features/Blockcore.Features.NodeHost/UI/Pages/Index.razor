@@ -12,13 +12,13 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Node</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="input-group mb-3">
+        <div class="input-group">
                 <input @bind="NodeIp" type="text" class="form-control" placeholder="Node IP Address" />
                 <div class="input-group-append">
                     <button class="btn btn-sm btn-primary mr-1" @onclick="Addnode">Add Node</button>
-            </div>
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">View Logs</button>
-            <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">Shutdown</button>
+                </div>
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">View Logs</button>
+                <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">Shutdown</button>
         </div>
     </div>
 
@@ -30,6 +30,7 @@
 
 @{
 
+<div class="table-responsive">
   <table class="table table-bordered">
     <tbody>
       <tr>
@@ -46,6 +47,7 @@
       </tr>
     </tbody>
   </table>
+</div>
 
 if (this.InitialBlockDownloadState.IsInitialBlockDownload())
 {
@@ -57,10 +59,10 @@ if (this.InitialBlockDownloadState.IsInitialBlockDownload())
     <table class="table table-bordered table-striped table-sm table-hover">
         <thead class="thead">
             <tr>
-                <th>IP Address</th>
-                <th>Inbound</th>
-                <th>Agent</th>
-                <th>Version</th>
+                <th><strong>IP Address</strong></th>
+                <th><strong>Inbound</strong></th>
+                <th><strong>Agent</strong></th>
+                <th><strong>Version</strong></th>
             </tr>
         </thead>
         <tbody>
@@ -83,6 +85,9 @@ if (this.InitialBlockDownloadState.IsInitialBlockDownload())
     string Alert { get; set; }
     private void Addnode()
     {
+        if (string.IsNullOrEmpty(this.NodeIp)) { this.Alert = "Please enter an IP address"; return; }
+        this.Alert = string.Empty;
+
         var endpoint = this.NodeIp.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
 
         this.ConnectionManager.AddNodeAddress(endpoint);

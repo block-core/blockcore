@@ -39,12 +39,6 @@ namespace x42.Networks.Rules
             return PoSReward;
         }
 
-        /// For x42, There is a limited supply, so there are blocks without a reward.
-        public override bool RewardRequired()
-        {
-            return false;
-        }
-
         /// <summary>
         /// Determines whether the block with specified height is past the Subsidy Limit.
         /// </summary>

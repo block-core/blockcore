@@ -96,8 +96,9 @@ namespace Blockcore.Features.Miner
 
             uint blockMaxSize = (uint) config.GetOrDefault<int>("blockmaxsize", (int) nodeSettings.Network.Consensus.Options.MaxBlockSerializedSize, this.logger);
             uint blockMaxWeight = (uint) config.GetOrDefault<int>("blockmaxweight", (int) nodeSettings.Network.Consensus.Options.MaxBlockWeight, this.logger);
+            int blockmintxfee = config.GetOrDefault<int>("blockmintxfee", (int)nodeSettings.Network.Consensus.Options.MinBlockFeeRate, this.logger);
 
-            this.BlockDefinitionOptions = new BlockDefinitionOptions(blockMaxWeight, blockMaxSize).RestrictForNetwork(nodeSettings.Network);
+            this.BlockDefinitionOptions = new BlockDefinitionOptions(blockMaxWeight, blockMaxSize, blockmintxfee).RestrictForNetwork(nodeSettings.Network);
 
             this.EnableCoinStakeSplitting = config.GetOrDefault("enablecoinstakesplitting", true, this.logger);
             this.MinimumSplitCoinValue = config.GetOrDefault("minimumsplitcoinvalue", MinimumSplitCoinValueDefaultValue, this.logger);
@@ -123,6 +124,7 @@ namespace Blockcore.Features.Miner
             builder.AppendLine("-walletpassword=<string>            Password to unlock the wallet.");
             builder.AppendLine("-blockmaxsize=<number>              Maximum block size (in bytes) for the miner to generate.");
             builder.AppendLine("-blockmaxweight=<number>            Maximum block weight (in weight units) for the miner to generate.");
+            builder.AppendLine("-blockmintxfee=<number>             Minimum fee rate for transactions to be included in blocks created by miner.");
             builder.AppendLine("-enablecoinstakesplitting=<0 or 1>  Enable splitting coins when staking. This is true by default.");
             builder.AppendLine($"-minimumstakingcoinvalue=<number>   Minimum size of the coins considered for staking, in satoshis. Default value is {MinimumStakingCoinValueDefaultValue:N0} satoshis (= {MinimumStakingCoinValueDefaultValue / (decimal)Money.COIN:N1} Coin).");
             builder.AppendLine($"-minimumsplitcoinvalue=<number>     Targeted minimum value of staking coins after splitting, in satoshis. Default value is {MinimumSplitCoinValueDefaultValue:N0} satoshis (= {MinimumSplitCoinValueDefaultValue / Money.COIN} Coin).");
@@ -154,6 +156,8 @@ namespace Blockcore.Features.Miner
             builder.AppendLine($"#blockmaxsize={network.Consensus.Options.MaxBlockSerializedSize}");
             builder.AppendLine("#Maximum block weight (in weight units) for the miner to generate.");
             builder.AppendLine($"#blockmaxweight={network.Consensus.Options.MaxBlockWeight}");
+            builder.AppendLine("#Minimum fee rate for transactions to be included in blocks created by miner.");
+            builder.AppendLine($"#blockmintxfee={network.Consensus.Options.MinBlockFeeRate}");
             builder.AppendLine("#Enable splitting coins when staking.");
             builder.AppendLine("#enablecoinstakesplitting=1");
             builder.AppendLine("#Minimum size of the coins considered for staking, in satoshis.");

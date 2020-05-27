@@ -51,8 +51,6 @@ namespace Blockcore.IntegrationTests
 
         private readonly Network network;
 
-        private static FeeRate blockMinFeeRate = new FeeRate(PowMining.DefaultBlockMinTxFee);
-
         public static PowBlockDefinition AssemblerForTest(TestContext testContext)
         {
             return new PowBlockDefinition(testContext.consensus, testContext.DateTimeProvider, new LoggerFactory(), testContext.mempool, testContext.mempoolLock, new MinerSettings(NodeSettings.Default(testContext.network)), testContext.network, testContext.ConsensusRules, new NodeDeployments(testContext.network, testContext.ChainIndexer));
@@ -312,7 +310,7 @@ namespace Blockcore.IntegrationTests
 
             // Calculate a fee on child transaction that will put the package just
             // below the block min tx fee (assuming 1 child tx of the same size).
-            Money feeToUse = blockMinFeeRate.GetFee(2 * freeTxSize) - 1;
+            Money feeToUse = new FeeRate(this.network.Consensus.Options.MinBlockFeeRate).GetFee(2 * freeTxSize) - 1;
 
             tx = context.network.CreateTransaction(tx.ToBytes());
             tx.Inputs[0].PrevOut.Hash = hashFreeTx;
@@ -354,7 +352,7 @@ namespace Blockcore.IntegrationTests
             tx = context.network.CreateTransaction(tx.ToBytes());
             tx.Inputs[0].PrevOut.Hash = hashFreeTx2;
             tx.Outputs.RemoveAt(1);
-            feeToUse = blockMinFeeRate.GetFee(freeTxSize);
+            feeToUse = new FeeRate(this.network.Consensus.Options.MinBlockFeeRate).GetFee(freeTxSize);
             tx.Outputs[0].Value = 5000000000L - 100000000 - feeToUse;
             uint256 hashLowFeeTx2 = tx.GetHash();
             context.mempool.AddUnchecked(hashLowFeeTx2, entry.Fee(feeToUse).SpendsCoinbase(false).FromTx(tx));

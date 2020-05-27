@@ -19,6 +19,9 @@ namespace NBitcoin
         /// <summary>The maximum allowed weight for a block, see BIP 141 (network rule)</summary>
         public uint MaxBlockWeight { get; set; }
 
+        /// <summary>Thee minimum feerate for a transaction in blocks mined.</summary>
+        public long MinBlockFeeRate { get; set; }
+
         /// <summary>The maximum allowed size for a serialized block, in bytes (only for buffer size limits). </summary>
         public uint MaxBlockSerializedSize { get; set; }
 
@@ -59,6 +62,7 @@ namespace NBitcoin
             // TODO: Remove this constructor. Should always set explicitly.
             this.MaxBlockSerializedSize = 4000000;
             this.MaxBlockWeight = 4000000;
+            this.MinBlockFeeRate = 1000;
             this.WitnessScaleFactor = 4;
             this.MaxStandardVersion = 2;
             this.MaxStandardTxWeight = 400000;

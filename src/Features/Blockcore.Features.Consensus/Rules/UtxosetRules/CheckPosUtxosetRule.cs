@@ -210,5 +210,14 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 
             return this.consensus.ProofOfStakeReward;
         }
+
+        /// <summary>
+        /// If the block can have no rewards.
+        /// </summary>
+        /// <returns>True - By default require a reward for new blocks</returns>
+        public virtual bool RewardRequired()
+        {
+            return true;
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace x42.Networks
                 maxStandardTxSigopsCost: 20_000 / 5,
                 witnessScaleFactor: 4
             );
+            consensusOptions.MinBlockFeeRate = Money.Zero;
             // END MODIFICATIONS
 
             CoinSetup setup = x42Setup.Instance.Setup;

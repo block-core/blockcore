@@ -718,8 +718,9 @@ namespace Blockcore.Features.Miner.Staking
             }
 
             // Get reward for newly created block.
-            long reward = fees + this.consensusManager.ConsensusRules.GetRule<CheckPosUtxosetRule>().GetProofOfStakeReward(chainTip.Height + 1);
-            if (reward <= 0)
+            var checkPosUtxosetRule = this.consensusManager.ConsensusRules.GetRule<CheckPosUtxosetRule>();
+            long reward = fees + checkPosUtxosetRule.GetProofOfStakeReward(chainTip.Height + 1);
+            if (reward <= 0 && checkPosUtxosetRule.RewardRequired())
             {
                 // TODO: This can't happen unless we remove reward for mined block.
                 // If this can happen over time then this check could be done much sooner

@@ -111,7 +111,7 @@ namespace x42
             HashGenesisBlock = "0x11bd504102b42b24680d7b4f9b9e9521adc1b690253494d108193cdfcdd2ef0b",
             HashMerkleRoot = "0x87e7f7df2fbe9fa56c627e59342e0d8142eb5e44c5e5769609059a60f17d0702",
             DNS = new[] { "testnet1.x42seed.host" },
-            Nodes = new[] { "63.32.82.169" },
+            Nodes = new[] { "63.32.82.169", "35.155.194.159" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 { 0, new CheckpointInfo(new uint256("0x11bd504102b42b24680d7b4f9b9e9521adc1b690253494d108193cdfcdd2ef0b"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) }, // Genisis

@@ -18,8 +18,8 @@ namespace Blockcore.IntegrationTests.Common.Runners
         private readonly NodeConfigParameters configParameters;
 
         public CustomNodeRunner(string dataDir, Action<IFullNodeBuilder> callback, Network network,
-            uint protocolVersion = ProtocolVersion.PROTOCOL_VERSION, NodeConfigParameters configParameters = null, string agent = "Custom",
-            uint minProtocolVersion = ProtocolVersion.PROTOCOL_VERSION)
+            uint protocolVersion, NodeConfigParameters configParameters = null, string agent = "Custom",
+            uint minProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION)
             : base(dataDir, agent)
         {
             this.callback = callback;

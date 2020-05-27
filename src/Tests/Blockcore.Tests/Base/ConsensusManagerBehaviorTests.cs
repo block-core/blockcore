@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus;
@@ -6,6 +7,7 @@ using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Tests.Common;
 using NBitcoin;
+using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.Tests.Base
@@ -50,14 +52,14 @@ namespace Blockcore.Tests.Base
         [Fact]
         public async Task ConsensusTipChanged_CachedHeadersConsumedFullyAsync()
         {
-            var cache = new List<BlockHeader>() {this.headers[11].Header, this.headers[12].Header};
+            var cache = new List<BlockHeader>() { this.headers[11].Header, this.headers[12].Header };
 
             ConsensusManagerBehavior behavior = this.helper.CreateAndAttachBehavior(this.headers[5], cache, this.headers[10], NetworkPeerState.HandShaked,
                 (presentedHeaders, triggerDownload) =>
                 {
                     Assert.Equal(this.headers[12].Header, presentedHeaders.Last());
 
-                    return new ConnectNewHeadersResult() {Consumed = this.headers[12]};
+                    return new ConnectNewHeadersResult() { Consumed = this.headers[12] };
                 });
 
             ConnectNewHeadersResult result = await behavior.ConsensusTipChangedAsync();
@@ -88,7 +90,7 @@ namespace Blockcore.Tests.Base
                 {
                     Assert.Equal(this.headers[50].Header, presentedHeaders.Last());
 
-                    return new ConnectNewHeadersResult() {Consumed = this.headers[40]};
+                    return new ConnectNewHeadersResult() { Consumed = this.headers[40] };
                 });
 
             ConnectNewHeadersResult result = await behavior.ConsensusTipChangedAsync();
@@ -221,7 +223,7 @@ namespace Blockcore.Tests.Base
             this.helper.CreateAndAttachBehavior(this.headers[10]);
 
             List<ChainedHeader> bogusHeaders = ChainedHeadersHelper.CreateConsecutiveHeaders(5);
-            var payload = new GetHeadersPayload(new BlockLocator() { Blocks = bogusHeaders.Select(x => x.HashBlock).ToList()});
+            var payload = new GetHeadersPayload(new BlockLocator() { Blocks = bogusHeaders.Select(x => x.HashBlock).ToList() });
 
             await this.helper.ReceivePayloadAsync(payload);
 
@@ -263,14 +265,18 @@ namespace Blockcore.Tests.Base
 
             List<ChainedHeader> chainBSuffix = ChainedHeadersHelper.CreateConsecutiveHeaders(50, this.headers[55]);
 
-            var payload = new GetHeadersPayload(new BlockLocator() { Blocks = new List<uint256>()
+            var payload = new GetHeadersPayload(new BlockLocator()
             {
-                chainBSuffix.Single(x => x.Height == 90).HashBlock,
-                chainBSuffix.Single(x => x.Height == 60).HashBlock,
-                this.headers[50].HashBlock,
-                this.headers[30].HashBlock,
-                this.headers[10].HashBlock
-            }});
+                Blocks = new List<uint256>()
+                {
+                    chainBSuffix.Single(x => x.Height == 90).HashBlock,
+                    chainBSuffix.Single(x => x.Height == 60).HashBlock,
+                    this.headers[50].HashBlock,
+                    this.headers[30].HashBlock,
+                    this.headers[10].HashBlock
+                }
+            })
+            { Version = ProtocolVersion.SENDHEADERS_VERSION };
 
             await this.helper.ReceivePayloadAsync(payload);
 
@@ -488,7 +494,6 @@ namespace Blockcore.Tests.Base
         {
             this.helper.CreateAndAttachBehavior(this.headers[10], null, null, NetworkPeerState.HandShaked,
                 (presentedHeaders, triggerDownload) => { throw new ConsensusException(""); });
-
 
             int maxHeaders = typeof(ConsensusManagerBehavior).GetPrivateConstantValue<int>("MaxItemsPerHeadersMessage");
 

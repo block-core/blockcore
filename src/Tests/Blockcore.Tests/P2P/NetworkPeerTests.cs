@@ -33,7 +33,7 @@ namespace Blockcore.Tests.P2P
         public void NetworkPeerRequirementCheckForOutboundWithInvalidVersionAndValidServiceReturnsFalse()
         {
             NetworkPeerRequirement networkPeerRequirement = new NetworkPeerRequirement();
-            networkPeerRequirement.MinVersion = ProtocolVersion.PROTOCOL_VERSION;
+            networkPeerRequirement.MinVersion = ProtocolVersion.SENDHEADERS_VERSION;
             networkPeerRequirement.RequiredServices = NetworkPeerServices.Network;
             Assert.False(networkPeerRequirement.Check(new VersionPayload() { Services = NetworkPeerServices.Network, Version = ProtocolVersion.POS_PROTOCOL_VERSION }, false, out string reason));
         }
@@ -42,7 +42,7 @@ namespace Blockcore.Tests.P2P
         public void NetworkPeerRequirementCheckForOutboundWithInvalidVersionAndInvalidServiceReturnsFalse()
         {
             NetworkPeerRequirement networkPeerRequirement = new NetworkPeerRequirement();
-            networkPeerRequirement.MinVersion = ProtocolVersion.PROTOCOL_VERSION;
+            networkPeerRequirement.MinVersion = ProtocolVersion.SENDHEADERS_VERSION;
             networkPeerRequirement.RequiredServices = NetworkPeerServices.Network;
             Assert.False(networkPeerRequirement.Check(new VersionPayload() { Services = NetworkPeerServices.Nothing, Version = ProtocolVersion.POS_PROTOCOL_VERSION }, false, out string reason));
         }
@@ -69,7 +69,7 @@ namespace Blockcore.Tests.P2P
         public void NetworkPeerRequirementCheckForInboundWithInvalidVersionAndValidServiceReturnsFalse()
         {
             NetworkPeerRequirement networkPeerRequirement = new NetworkPeerRequirement();
-            networkPeerRequirement.MinVersion = ProtocolVersion.PROTOCOL_VERSION;
+            networkPeerRequirement.MinVersion = ProtocolVersion.SENDHEADERS_VERSION;
             networkPeerRequirement.RequiredServices = NetworkPeerServices.Network;
             Assert.False(networkPeerRequirement.Check(new VersionPayload() { Services = NetworkPeerServices.Network, Version = ProtocolVersion.POS_PROTOCOL_VERSION }, true, out string reason));
         }
@@ -78,7 +78,7 @@ namespace Blockcore.Tests.P2P
         public void NetworkPeerRequirementCheckForInboundWithInvalidVersionAndInvalidServiceReturnsFalse()
         {
             NetworkPeerRequirement networkPeerRequirement = new NetworkPeerRequirement();
-            networkPeerRequirement.MinVersion = ProtocolVersion.PROTOCOL_VERSION;
+            networkPeerRequirement.MinVersion = ProtocolVersion.SENDHEADERS_VERSION;
             networkPeerRequirement.RequiredServices = NetworkPeerServices.Network;
             Assert.False(networkPeerRequirement.Check(new VersionPayload() { Services = NetworkPeerServices.Nothing, Version = ProtocolVersion.POS_PROTOCOL_VERSION }, true, out string reason));
         }

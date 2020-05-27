@@ -40,7 +40,7 @@ namespace Blockcore.P2P.Peer
 
         public NetworkPeerConnectionParameters()
         {
-            this.Version = ProtocolVersion.PROTOCOL_VERSION;
+            this.Version = ProtocolVersion.SENDHEADERS_VERSION;
             this.IsRelay = true;
             this.Services = NetworkPeerServices.Nothing;
             this.ConnectCancellation = default(CancellationToken);

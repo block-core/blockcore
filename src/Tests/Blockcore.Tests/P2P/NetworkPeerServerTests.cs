@@ -60,7 +60,7 @@ namespace Blockcore.Tests.P2P
             var networkPeerServer = new NetworkPeerServer(this.Network,
                 endpointAddNode,
                 endpointAddNode,
-                ProtocolVersion.PROTOCOL_VERSION,
+                this.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 this.extendedLoggerFactory,
                 networkPeerFactory.Object,
                 initialBlockDownloadState.Object,

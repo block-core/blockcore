@@ -25,7 +25,7 @@ namespace x42
             ProofOfStakeTimestampMask = 0x0000000F,
             BlocksWithoutRewards = true,
             LastProofOfStakeRewardHeight = 12155230,
-            ProofOfStakeRewardAfterSubsidyLimit = 2,
+            ProofOfStakeRewardAfterSubsidyLimit = Money.Coins(2),
             SubsidyLimit = 400000,
             PoSVersion = 3
         };

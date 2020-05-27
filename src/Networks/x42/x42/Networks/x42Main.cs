@@ -110,7 +110,7 @@ namespace x42.Networks
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 500,
                 defaultAssumeValid: null,
-                maxMoney: long.MaxValue,
+                maxMoney: Money.Coins(42 * 1000000),
                 coinbaseMaturity: 50,
                 premineHeight: 2,
                 premineReward: Money.Coins(setup.PremineReward),

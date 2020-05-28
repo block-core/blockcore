@@ -573,10 +573,9 @@ namespace Blockcore.Features.MemoryPool
                     this.logger.LogDebug("Transaction ID '{0}' not added to inventory list, no longer in mempool.", hash);
                     transactionsToSend.Remove(hash);
                 }
-
-                // Peer told you to not send transactions at that feerate? Don't bother sending it.
-                if (txInfo.Fee < filterrate.GetFee((int)txInfo.Size))
+                else if (txInfo.Fee < filterrate.GetFee((int)txInfo.Size))
                 {
+                    // Peer told you to not send transactions at that feerate? Don't bother sending it.
                     this.logger.LogDebug("Transaction ID '{0}' not added to inventory list, bellow peers fee filter.", hash);
                     transactionsToSend.Remove(hash);
                 }

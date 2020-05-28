@@ -8,6 +8,7 @@ using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
+using x42.Networks.Deployments;
 
 namespace x42.Networks
 {
@@ -24,6 +25,7 @@ namespace x42.Networks
                 maxStandardTxSigopsCost: 20_000 / 5,
                 witnessScaleFactor: 4
             );
+            consensusOptions.MinBlockFeeRate = Money.Zero;
             // END MODIFICATIONS
 
             CoinSetup setup = x42Setup.Instance.Setup;
@@ -47,6 +49,10 @@ namespace x42.Networks
             this.DefaultAPIPort = network.DefaultAPIPort;
             this.DefaultBanTimeSeconds = 288; // 9 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
+            this.MinTxFee = Money.Zero;
+            this.FallbackFee = Money.Zero;
+            this.MinRelayTxFee = Money.Zero;
+            
             var consensusFactory = new PosConsensusFactory();
 
             // Create the genesis block.
@@ -73,6 +79,13 @@ namespace x42.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
+            var bip9Deployments = new x42BIP9Deployments
+            {
+                [x42BIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [x42BIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [x42BIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2020, 3, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 3, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold)
+            };
+
             consensusFactory.Protocol = new ConsensusProtocol()
             {
                 ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
@@ -89,7 +102,7 @@ namespace x42.Networks
                 majorityRejectBlockOutdated: 950,
                 majorityWindow: 1000,
                 buriedDeployments: buriedDeployments,
-                bip9Deployments: new NoBIP9Deployments(),
+                bip9Deployments: bip9Deployments,
                 bip34Hash: null,
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 9,

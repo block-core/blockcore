@@ -30,6 +30,11 @@
 
 @{
 
+if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+{
+    <p><strong>Currently processing IBD, the initial block download & syncing your node with the network</strong></p>
+}
+
 <div class="table-responsive">
   <table class="table table-bordered">
     <tbody>
@@ -48,11 +53,6 @@
     </tbody>
   </table>
 </div>
-
-if (this.InitialBlockDownloadState.IsInitialBlockDownload())
-{
-    <p><strong>Currently processing IBD (the initial block download) & syncing your node with the network</strong></p>
-}
 
 
 <div class="table-responsive">

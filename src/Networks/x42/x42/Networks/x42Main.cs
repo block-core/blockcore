@@ -15,6 +15,7 @@ using x42.Networks.Consensus;
 using x42.Networks.Setup;
 using x42.Networks.Deployments;
 using NBitcoin.Protocol;
+using x42.Networks.Consensus.Rules;
 
 namespace x42.Networks
 {
@@ -129,6 +130,7 @@ namespace x42.Networks
                 subsidyLimit: setup.SubsidyLimit,
                 proofOfStakeRewardAfterSubsidyLimit: setup.ProofOfStakeRewardAfterSubsidyLimit,
                 lastProofOfStakeRewardHeight: setup.LastProofOfStakeRewardHeight,
+                minOpReturnFee: Money.Coins(0.02m).Satoshi,
                 proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask,
                 posEmptyCoinbase: x42Setup.Instance.IsPoSv3()
             )
@@ -227,7 +229,7 @@ namespace x42.Networks
                 typeof(CheckCoinViewMempoolRule),
                 typeof(CreateMempoolEntryMempoolRule),
                 typeof(CheckSigOpsMempoolRule),
-                typeof(CheckFeeMempoolRule),
+                typeof(x42OpReturnFeeMempoolRule),
                 typeof(CheckRateLimitMempoolRule),
                 typeof(CheckAncestorsMempoolRule),
                 typeof(CheckReplacementMempoolRule),

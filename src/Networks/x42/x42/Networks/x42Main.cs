@@ -51,6 +51,7 @@ namespace x42.Networks
             this.DefaultMaxInboundConnections = 109;
             this.MaxTipAge = 2 * 60 * 60;
             this.MinTxFee = Money.Zero;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = Money.Zero;
             this.MinRelayTxFee = Money.Zero;
             this.MaxTimeOffsetSeconds = 25 * 60;

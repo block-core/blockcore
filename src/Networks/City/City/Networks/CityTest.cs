@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using City.Networks.Consensus;
+using City.Networks.Deployments;
 using City.Networks.Policies;
 using City.Networks.Setup;
 using NBitcoin;
@@ -65,6 +66,14 @@ namespace City.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
+            var bip9Deployments = new CityBIP9Deployments()
+            {
+                [CityBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2,
+                   new DateTime(2018, 12, 1, 0, 0, 0, DateTimeKind.Utc),
+                   new DateTime(2019, 12, 1, 0, 0, 0, DateTimeKind.Utc),
+                   BIP9DeploymentsParameters.DefaultMainnetThreshold)
+            };
+
             consensusFactory.Protocol = new ConsensusProtocol()
             {
                 ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
@@ -81,7 +90,7 @@ namespace City.Networks
                 majorityRejectBlockOutdated: 950,
                 majorityWindow: 1000,
                 buriedDeployments: buriedDeployments,
-                bip9Deployments: new NoBIP9Deployments(),
+                bip9Deployments: bip9Deployments,
                 bip34Hash: null,
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 500,

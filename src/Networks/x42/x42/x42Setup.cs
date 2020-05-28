@@ -25,7 +25,7 @@ namespace x42
             ProofOfStakeTimestampMask = 0x0000000F,
             BlocksWithoutRewards = true,
             LastProofOfStakeRewardHeight = 12155230,
-            ProofOfStakeRewardAfterSubsidyLimit = 2,
+            ProofOfStakeRewardAfterSubsidyLimit = Money.Coins(2),
             SubsidyLimit = 400000,
             PoSVersion = 3
         };
@@ -50,7 +50,7 @@ namespace x42
             HashGenesisBlock = "0x04ffe583707a96c1c2eb54af33a4b1dc6d9d8e09fea8c9a7b097ba88f0cb64c4",
             HashMerkleRoot = "0x6e3439a32382f83dee4f94a6f8bdd38908bcf0c82ec09aba85c5321357f01f67",
             DNS = new[] { "mainnet1.x42seed.host", "mainnetnode1.x42seed.host", "tech.x42.cloud", "x42.seed.blockcore.net" },
-            Nodes = new[] { "34.255.35.42", "52.211.235.48", "63.32.82.169" },
+            Nodes = new[] { "34.255.35.42", "52.211.235.48", "63.32.82.169", "18.179.72.204", "15.188.129.215", "18.157.117.214" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 { 0, new CheckpointInfo(new uint256("0x04ffe583707a96c1c2eb54af33a4b1dc6d9d8e09fea8c9a7b097ba88f0cb64c4"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) }, // Genisis
@@ -60,7 +60,7 @@ namespace x42
                 { 200000, new CheckpointInfo(new uint256("0xaa276a1c51c025ff1a21fd4b07bfa5d55effc173840e054dd851b20dbb1f2f17"), new uint256("0x63d4bc7b0272703e94ae79103970ea324dc85221e88a51c39a170744848c0cc7")) },
                 { 300000, new CheckpointInfo(new uint256("0xff72e73ee8f87c0de9bf82c3bb758f4905c3e005493f2ed1faede7c120961750"), new uint256("0x2097fc9edfb8dfe287db45bbce820e168c50be32c9840b1cddf56b297011fc69")) },
                 { 500000, new CheckpointInfo(new uint256("0x7f9a88ebb32f47090ec37a110c5a05c1162a604dfbfb69c8d492e771cdb63289"), new uint256("0x19db6890c5c934e883bc99eb197509b0a81f19faeefcf49fd7fa6dab83644bfb")) },
-                { 634600, new CheckpointInfo(new uint256("0x5c0eb47bc96ba437e6d2550aceaa73ad9a4568110de83380d6a7b5f00aee7308"), new uint256("0x12ef7b665a07cef572c9b8d9ee44f41230d6a65e960d372f9396194ed6f51e53")) }
+                { 800000, new CheckpointInfo(new uint256("0x981083b047ecf8157a8b2dc24e17ca8cfad01b4e2dabc314df97f3b64fdf37f5"), new uint256("0xf3f0a821801b32c73a7c4f42416ddad3f74b732bd517c968a9b93a33d3684e0b")) }
             }
         };
 
@@ -111,7 +111,7 @@ namespace x42
             HashGenesisBlock = "0x11bd504102b42b24680d7b4f9b9e9521adc1b690253494d108193cdfcdd2ef0b",
             HashMerkleRoot = "0x87e7f7df2fbe9fa56c627e59342e0d8142eb5e44c5e5769609059a60f17d0702",
             DNS = new[] { "testnet1.x42seed.host" },
-            Nodes = new[] { "63.32.82.169" },
+            Nodes = new[] { "63.32.82.169", "35.155.194.159" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 { 0, new CheckpointInfo(new uint256("0x11bd504102b42b24680d7b4f9b9e9521adc1b690253494d108193cdfcdd2ef0b"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) }, // Genisis

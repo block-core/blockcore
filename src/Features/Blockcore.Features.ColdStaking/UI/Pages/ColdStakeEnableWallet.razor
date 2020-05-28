@@ -22,7 +22,8 @@
         <span style="min-width: 10em" class="input-group-text" id="wallet-label">Wallet Name:</span>
     </div>
 
-    @* <select @bind="WalletName" type="text" class="form-control">
+      <select @bind="WalletName" type="text" class="form-control">
+            <option value=""></option>
             @{
                 foreach (var walletName in this.WalletManager.GetWalletsNames()) {
                 var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
@@ -30,13 +31,13 @@
                     } else {
                         foreach (var account in this.WalletManager.GetAccounts(walletName))
                         {
-                            <option>@walletName</option>
+                            <option value="@walletName">@walletName</option>
                         }
                     }
                 }
             }
-        </select>*@
-    <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter the wallet you want to enable for cold staking" />
+        </select>
+     @* <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter the wallet you want to enable for cold staking" /> *@
 </div>
 
 <div class="input-group mb-3">

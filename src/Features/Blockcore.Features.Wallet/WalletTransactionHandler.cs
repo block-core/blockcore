@@ -229,6 +229,9 @@ namespace Blockcore.Features.Wallet
 
             if (context.Time.HasValue)
                 context.TransactionBuilder.SetTimeStamp(context.Time.Value);
+
+            // TODO: testing do not check-in
+            context.TransactionBuilder.StandardTransactionPolicy.CheckFee = false;
         }
 
         /// <summary>
@@ -426,11 +429,11 @@ namespace Blockcore.Features.Wallet
         /// <param name="context">The context associated with the current transaction being built.</param>
         protected void AddOpReturnOutput(TransactionBuildContext context)
         {
-            if (string.IsNullOrEmpty(context.OpReturnData) && context.OpReturnRawData == null) 
+            if (string.IsNullOrEmpty(context.OpReturnData) && context.OpReturnRawData == null)
                 return;
-            
+
             byte[] bytes = context.OpReturnRawData ?? Encoding.UTF8.GetBytes(context.OpReturnData);
-          
+
             // TODO: Get the template from the network standard scripts instead
             Script opReturnScript = TxNullDataTemplate.Instance.GenerateScriptPubKey(bytes);
             context.TransactionBuilder.Send(opReturnScript, context.OpReturnAmount ?? Money.Zero);

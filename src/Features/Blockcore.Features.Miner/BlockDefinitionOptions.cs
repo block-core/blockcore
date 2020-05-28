@@ -20,11 +20,11 @@ namespace Blockcore.Features.Miner
         /// <summary>Minimum fee rate for transactions to be included in blocks created by miner.</summary>
         public FeeRate BlockMinFeeRate { get; private set; }
 
-        public BlockDefinitionOptions(uint blockMaxWeight, uint blockMaxSize)
+        public BlockDefinitionOptions(uint blockMaxWeight, uint blockMaxSize, int blockMinFeeRate)
         {
             this.BlockMaxWeight = blockMaxWeight;
             this.BlockMaxSize = blockMaxSize;
-            this.BlockMinFeeRate = new FeeRate(PowMining.DefaultBlockMinTxFee); // TODO: Where should this be set, really?
+            this.BlockMinFeeRate = new FeeRate(blockMinFeeRate);
         }
 
         /// <summary>
@@ -36,6 +36,7 @@ namespace Blockcore.Features.Miner
             uint minAllowedBlockWeight = MinBlockSize * (uint) network.Consensus.Options.WitnessScaleFactor;
             this.BlockMaxWeight = Math.Max(minAllowedBlockWeight, Math.Min(network.Consensus.Options.MaxBlockWeight, this.BlockMaxWeight));
             this.BlockMaxSize = Math.Max(MinBlockSize, Math.Min(network.Consensus.Options.MaxBlockSerializedSize, this.BlockMaxSize));
+            this.BlockMinFeeRate = new FeeRate(Math.Max(network.Consensus.Options.MinBlockFeeRate, this.BlockMinFeeRate.FeePerK));
 
             return this;
         }

@@ -22,6 +22,7 @@
             var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
             if (coldStakingWalletEnabled != null) {} else {
                 <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToEnableWallet(); }">Enable Cold Staking</button>
+                break;
             }
         }
     </div>

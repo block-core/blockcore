@@ -47,9 +47,6 @@ namespace Blockcore.Features.Miner
         /// <summary>Provider of time functions.</summary>
         private readonly IDateTimeProvider dateTimeProvider;
 
-        /// <summary>Default for "-blockmintxfee", which sets the minimum feerate for a transaction in blocks created by mining code.</summary>
-        public const int DefaultBlockMinTxFee = 1000;
-
         private uint256 hashPrevBlock;
 
         private const int InnerLoopCount = 0x10000;

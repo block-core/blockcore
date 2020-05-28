@@ -26,6 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\City\City.csproj" />
+    <ProjectReference Include="..\City\Blockcore.Networks.City.csproj" />
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
-    <ProjectReference Include="..\..\Networks\City\City\City.csproj" />
+    <ProjectReference Include="..\..\Networks\City\City\Blockcore.Networks.City.csproj" />
     <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\Networks\x42\x42\x42.Networks.csproj" />
     <ProjectReference Include="..\..\Networks\Xds\Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj" />

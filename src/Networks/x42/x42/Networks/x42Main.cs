@@ -31,6 +31,7 @@ namespace x42.Networks
                 maxStandardTxSigopsCost: 20_000 / 5,
                 witnessScaleFactor: 4
             );
+            consensusOptions.MinBlockFeeRate = Money.Zero;
             // END MODIFICATIONS
 
             CoinSetup setup = x42Setup.Instance.Setup;
@@ -109,7 +110,7 @@ namespace x42.Networks
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 500,
                 defaultAssumeValid: null,
-                maxMoney: long.MaxValue,
+                maxMoney: Money.Coins(42 * 1000000),
                 coinbaseMaturity: 50,
                 premineHeight: 2,
                 premineReward: Money.Coins(setup.PremineReward),

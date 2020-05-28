@@ -104,7 +104,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.IntegrationTests.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "City", "City", "{3AD23CD3-51A4-4DFE-9501-55963B54519A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "City", "Networks\City\City\City.csproj", "{C4D5381C-53D0-419A-A32B-70E38C5A42A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.City", "Networks\City\City\Blockcore.Networks.City.csproj", "{C4D5381C-53D0-419A-A32B-70E38C5A42A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "City.Node", "Networks\City\City.Node\City.Node.csproj", "{363B09A7-BA71-4BC2-ABCA-B47065C374E5}"
 EndProject

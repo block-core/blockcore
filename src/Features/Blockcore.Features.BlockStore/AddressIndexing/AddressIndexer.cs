@@ -448,7 +448,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                     var address = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, new Script(consumedOutputData.ScriptPubKeyBytes));
 
-                    if (string.IsNullOrEmpty(address))
+                    if (address.IsNullOrEmpty())
                     {
                         // This condition need not be logged, as the address reader should be aware of all possible address formats already.
                         continue;
@@ -477,7 +477,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                         var address = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, txOut.ScriptPubKey);
 
-                        if (string.IsNullOrEmpty(address))
+                        if (address.IsNullOrEmpty())
                         {
                             // This condition need not be logged, as the address reader should be aware of all
                             // possible address formats already.

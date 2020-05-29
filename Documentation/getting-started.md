@@ -1,6 +1,6 @@
 
 
-# Getting started - Building and running a Stratis Full Node 
+# Getting started - Build instructions for x42-BlockCore
 
 ---------------
 
@@ -13,7 +13,7 @@
 ## Prerequisites
 
 To install and run the node, you need
-* [.NET Core 2.1](https://www.microsoft.com/net/download/core)
+* [.NET Core 3.1](https://www.microsoft.com/net/download/core)
 * [Git](https://git-scm.com/)
 
 ## Build instructions
@@ -21,35 +21,21 @@ To install and run the node, you need
 ### Get the repository and its dependencies
 
 ```
-git clone https://github.com/stratisproject/StratisBitcoinFullNode.git  
-cd StratisBitcoinFullNode/src
+git clone https://github.com/x42protocol/x42-BlockCore.git
+cd src/Networks/x42/x42.Node
 ```
 
 ### Build and run the code
 With this node, you can connect to either the Stratis network or the Bitcoin network, either on MainNet or TestNet.
 So you have 4 options:
 
-1. To run a <b>Stratis</b> node on <b>MainNet</b>, do
+1. To run a <b>x42.Node</b> node on <b>MainNet</b>, do
 ```
-cd Stratis.StratisD
 dotnet run
 ```  
 
 2. To run a <b>Stratis</b>  node on <b>TestNet</b>, do
 ```
-cd Stratis.StratisD
-dotnet run -testnet
-```  
-
-3. To run a <b>Bitcoin</b> node on <b>MainNet</b>, do
-```
-cd Stratis.BitcoinD
-dotnet run
-```  
-
-4. To run a <b>Bitcoin</b> node on <b>TestNet</b>, do
-```
-cd Stratis.BitcoinD
 dotnet run -testnet
 ```  
 
@@ -57,32 +43,17 @@ dotnet run -testnet
 
 You can get a list of command line arguments to pass to the node with the -help command line argument. For example:
 ```
-cd Stratis.StratisD
 dotnet run -help
 ```  
 
-### Script
-We have a nifty little script that can execute all the previous commands for you, including starting the node.  
-You just need to edit the file and specify whether you want to run a Stratis or a Bitcoin node, on MainNet or Testnet.  
-It's located [here](https://gist.github.com/bokobza/e68832f5d7d4102bcb33fcde8d9a72fb#file-build-and-run-a-stratis-node-ps1).
 
-### Faucet
-If you need testnet funds (TSTRAT) for testing there is a faucet located [here](https://faucet.stratisplatform.com/).
-
-Docker Containers
+Simple UI/API
 -------------------
 
-Two containers are available [here](https://hub.docker.com/u/stratisplatform/)
+Once the node is running, Simple dashboard and a Swagger interface (web UI for testing an API) is available.
 
-- stratis-node: Run on the Bitcoin Main or Test networks
-- stratis-node-sim: Join our simulation network
+* For Simple UI: http://localhost:42220/
+* For Swagger API: http://localhost:42220/docs/index.html
 
-Swagger Endpoints
--------------------
-
-Once the node is running, a Swagger interface (web UI for testing an API) is available.
-
-* For Bitcoin: http://localhost:37220/swagger/
-* For Stratis: http://localhost:37221/swagger/
-* For Bitcoin Testnet: http://localhost:38220/swagger/
-* For Stratis Testnet: http://localhost:38221/swagger/
+* For Simple UI (Testnet): http://localhost:42221/
+* For Swagger API (Testnet): http://localhost:42221/docs/index.html

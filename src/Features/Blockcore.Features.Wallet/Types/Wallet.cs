@@ -48,6 +48,12 @@ namespace Blockcore.Features.Wallet.Types
         public bool IsExtPubKeyWallet { get; set; }
 
         /// <summary>
+        /// Flag indicating if it is a cold hot wallet.
+        /// </summary>
+        [JsonProperty(PropertyName = "isColdHotWallet")]
+        public bool isColdHotWallet { get; set; }
+
+        /// <summary>
         /// The seed for this wallet, password encrypted.
         /// </summary>
         [JsonProperty(PropertyName = "encryptedSeed", NullValueHandling = NullValueHandling.Ignore)]

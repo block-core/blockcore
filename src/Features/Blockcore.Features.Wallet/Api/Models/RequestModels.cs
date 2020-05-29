@@ -289,6 +289,15 @@ namespace Blockcore.Features.Wallet.Api.Models
         public string Name { get; set; }
     }
 
+    public class ToggleColdRequest : RequestModel
+    {
+
+        [Required(ErrorMessage = "The name of the wallet is missing.")]
+        public string Name { get; set; }
+
+        public bool isColdHotWallet { get; set; }
+    }
+
     /// <summary>
     /// A class containing the necessary parameters for a transaction fee estimate request.
     /// </summary>

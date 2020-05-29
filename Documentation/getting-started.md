@@ -26,7 +26,7 @@ cd src/Networks/x42/x42.Node
 ```
 
 ### Build and run the code
-With this node, you can connect to either the Stratis network or the Bitcoin network, either on MainNet or TestNet.
+With this node, you can connect to either the x42 MainNet or TestNet.
 So you have 4 options:
 
 1. To run a <b>x42.Node</b> node on <b>MainNet</b>, do
@@ -34,7 +34,7 @@ So you have 4 options:
 dotnet run
 ```  
 
-2. To run a <b>Stratis</b>  node on <b>TestNet</b>, do
+2. To run a <b>x42.Node</b>  node on <b>TestNet</b>, do
 ```
 dotnet run -testnet
 ```  

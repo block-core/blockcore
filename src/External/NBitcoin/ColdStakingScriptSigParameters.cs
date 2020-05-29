@@ -1,6 +1,5 @@
-﻿using NBitcoin;
-
-namespace Blockcore.Features.ColdStaking
+﻿
+namespace NBitcoin
 {
     /// <summary>
     /// The scriptSig parameters used for cold staking script.

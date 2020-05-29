@@ -25,6 +25,9 @@ Introduction
 - Support for all of the x42 specific functionalities ([xCore](https://github.com/x42protocol/xCore), [xServer](https://github.com/x42protocol/xServer)).
 - Help support the BlockCore project.
 
+
+* [Getting Started](Documentation/getting-started.md)
+
 Join our community on [discord](https://discordapp.com/invite/tdN4ue6).  
 ****
 

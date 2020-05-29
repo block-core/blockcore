@@ -751,6 +751,38 @@ namespace NBitcoin
             return new IPEndPoint(ParseIPAddress(endpoint), port);
         }
 
+        public static NetworkXServer ParseIpXServerEndpoint(string endpoint, int port, bool isSSL)
+        {
+            // Get the position of the last ':'.
+            int colon = endpoint.LastIndexOf(':');
+            bool hasHTTPS = endpoint.Contains("https");
+
+            if (colon >= 0)
+            {
+                int bracket = endpoint.LastIndexOf(']');
+                int dot = endpoint.LastIndexOf('.');
+
+                // The ':' must be preceded by a ']' or a '.' with no ']' or '.' following the ':'.
+                if ((dot != -1 || bracket != -1) && dot < colon && bracket < colon)
+                {
+                    int endpointAddressStartIndex = endpoint.LastIndexOf('/');
+                    if (endpointAddressStartIndex == -1)
+                    {
+                        endpointAddressStartIndex = 0;
+                    }
+                    else
+                    {
+                        endpointAddressStartIndex++;
+                    }
+                    port = int.Parse(endpoint.Substring(colon + 1));
+                    endpoint = endpoint.Substring(endpointAddressStartIndex, colon - endpointAddressStartIndex);
+                    isSSL = hasHTTPS;
+                }
+            }
+
+            return new NetworkXServer(endpoint, port, isSSL);
+        }
+
         private static async Task<string> DnsLookup(string remoteHostName)
         {
             IPHostEntry data = await Dns.GetHostEntryAsync(remoteHostName).ConfigureAwait(false);

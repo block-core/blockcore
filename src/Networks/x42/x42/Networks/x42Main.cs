@@ -163,6 +163,13 @@ namespace x42.Networks
             this.DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
             this.SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
 
+            this.XServerSeedNodes = new List<NetworkXServer>
+            {
+                new NetworkXServer("34.255.35.42", 4242),
+                new NetworkXServer("52.211.235.48", 4242),
+                new NetworkXServer("63.32.82.169", 4242),
+            };
+
             this.StandardScriptsRegistry = new x42StandardScriptsRegistry();
 
             // 64 below should be changed to TargetSpacingSeconds when we move that field.

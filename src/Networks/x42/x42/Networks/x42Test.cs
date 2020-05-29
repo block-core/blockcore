@@ -9,6 +9,7 @@ using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 using x42.Networks.Deployments;
+using System.Collections.Generic;
 
 namespace x42.Networks
 {
@@ -150,6 +151,14 @@ namespace x42.Networks
             this.Checkpoints = network.Checkpoints;
             this.DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
             this.SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
+
+            this.XServerSeedNodes = new List<NetworkXServer>
+            {
+                new NetworkXServer("35.155.194.159", 4243),
+                new NetworkXServer("34.255.35.42", 4243),
+                new NetworkXServer("52.211.235.48", 4243),
+                new NetworkXServer("63.32.82.169", 4243),
+            };
 
             this.StandardScriptsRegistry = new x42StandardScriptsRegistry();
 

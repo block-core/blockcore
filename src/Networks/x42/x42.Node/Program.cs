@@ -12,8 +12,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Utilities;
-using NBitcoin;
-using NBitcoin.Protocol;
+using x42.Features.xServer;
 
 namespace x42.Daemon
 {
@@ -34,7 +33,8 @@ namespace x42.Daemon
                     .AddPowPosMining()
                     .UseNodeHost()
                     .AddRPC()
-                    .UseDiagnosticFeature();
+                    .UseDiagnosticFeature()
+                    .UsexServer();
 
                 IFullNode node = nodeBuilder.Build();
 

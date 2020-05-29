@@ -36,6 +36,7 @@ namespace Blockcore.Configuration
             this.DnsMasterFilePath = path;
             this.SmartContractStatePath = Path.Combine(path, "contracts");
             this.ProvenBlockHeaderPath = Path.Combine(path, "provenheaders");
+            this.xServerAppsPath = Path.Combine(path, "xserver");
             this.RootPath = path;
         }
 
@@ -93,5 +94,8 @@ namespace Blockcore.Configuration
 
         /// <summary>Path to applications</summary>
         public string ApplicationsPath { get; internal set; }
+
+        /// <summary>Path to the folder with the xServer Apps path.</summary>
+        public string xServerAppsPath { get; set; }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Blockcore.Utilities;
-using NBitcoin;
 using static NBitcoin.OpcodeType;
 
-namespace Blockcore.Features.ColdStaking
+namespace NBitcoin
 {
     /// <summary>
     /// Script template for the cold staking script.
@@ -65,8 +63,10 @@ namespace Blockcore.Features.ColdStaking
         /// <returns>The scriptSig.</returns>
         public Script GenerateScriptSig(TransactionSignature signature, bool coldPubKey, PubKey publicKey)
         {
-            Guard.NotNull(signature, nameof(signature));
-            Guard.NotNull(publicKey, nameof(publicKey));
+            if (signature == null)
+                throw new ArgumentNullException(nameof(signature));
+            if (publicKey == null)
+                throw new ArgumentNullException(nameof(publicKey));
 
             return new Script(
                 Op.GetPushOp(signature.ToBytes()),
@@ -184,7 +184,8 @@ namespace Blockcore.Features.ColdStaking
                 return false;
             }
 
-            Guard.Assert(!needMoreCheck);
+            if (needMoreCheck)
+                throw new ArgumentNullException("Need more checks");
 
             hotPubKeyHash = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(6, 20));
             coldPubKeyHash = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(28, 20));

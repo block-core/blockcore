@@ -446,7 +446,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                     if (amountSpent == 0)
                         continue;
 
-                    string address = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, new Script(consumedOutputData.ScriptPubKeyBytes));
+                    var address = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, new Script(consumedOutputData.ScriptPubKeyBytes));
 
                     if (string.IsNullOrEmpty(address))
                     {
@@ -454,7 +454,14 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                         continue;
                     }
 
-                    this.ProcessBalanceChangeLocked(header.Height, address, amountSpent, false);
+                    if (address.Address != string.Empty)
+                        this.ProcessBalanceChangeLocked(header.Height, address.Address, amountSpent, false);
+
+                    if (address.HotAddress != string.Empty)
+                        this.ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountSpent, false);
+
+                    if (address.ColdAddress != string.Empty)
+                        this.ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountSpent, false);
                 }
 
                 // Process outputs.
@@ -468,7 +475,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                         if (amountReceived == 0 || txOut.IsEmpty || txOut.ScriptPubKey.IsUnspendable)
                             continue;
 
-                        string address = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, txOut.ScriptPubKey);
+                        var address = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, txOut.ScriptPubKey);
 
                         if (string.IsNullOrEmpty(address))
                         {
@@ -477,7 +484,14 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                             continue;
                         }
 
-                        this.ProcessBalanceChangeLocked(header.Height, address, amountReceived, true);
+                        if (address.Address != string.Empty)
+                            this.ProcessBalanceChangeLocked(header.Height, address.Address, amountReceived, true);
+
+                        if (address.HotAddress != string.Empty)
+                            this.ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountReceived, true);
+
+                        if (address.ColdAddress != string.Empty)
+                            this.ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountReceived, true);
                     }
                 }
 

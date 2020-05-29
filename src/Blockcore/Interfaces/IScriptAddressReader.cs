@@ -1,4 +1,5 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus;
+using NBitcoin;
 
 namespace Blockcore.Interfaces
 {
@@ -13,6 +14,6 @@ namespace Blockcore.Interfaces
         /// <param name="network"></param>
         /// <param name="script"></param>
         /// <returns></returns>
-        string GetAddressFromScriptPubKey(Network network, Script script);
+        ScriptAddressResult GetAddressFromScriptPubKey(Network network, Script script);
     }
 }

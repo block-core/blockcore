@@ -386,6 +386,69 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         }
 
         /// <summary>
+        /// Toggle's the type of wallet for cold staking.
+        /// </summary>
+        /// <param name="request">The name of the wallet to get the information for, and if it's a cold wallet or not.</param>
+        /// <returns>A JSON true.</returns>
+        [Route("setcoldhotstate")]
+        [HttpPost]
+        public IActionResult SetColdHotState([FromBody] ToggleColdRequest request)
+        {
+            Guard.NotNull(request, nameof(request));
+
+            // checks the request is valid
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            try
+            {
+                Types.Wallet wallet = this.walletManager.GetWallet(request.Name);
+                wallet.isColdHotWallet = request.isColdHotWallet;
+                this.walletManager.SaveWallet(wallet);
+
+                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, "Exception occurred: {0}");
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Get's the cold staking type for wallet.
+        /// </summary>
+        /// <param name="request">The name of the wallet to get the information for.</param>
+        /// <returns>A JSON true/false.</returns>
+        [Route("getcoldhotstate")]
+        [HttpGet]
+        public IActionResult GetColdHotState([FromQuery] WalletName request)
+        {
+            Guard.NotNull(request, nameof(request));
+
+            // checks the request is valid
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            try
+            {
+                Types.Wallet wallet = this.walletManager.GetWallet(request.Name);
+
+                return this.Json(wallet.isColdHotWallet);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, "Exception occurred: {0}");
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+
+        /// <summary>
         /// Gets the history of a wallet. This includes the transactions held by the entire wallet
         /// or a single account if one is specified.
         /// </summary>

@@ -9,6 +9,7 @@ using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Connection.Broadcasting;
 using Blockcore.EventBus;
+using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
@@ -314,7 +315,7 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
-        public string SignMessage(string password, string walletName, string accountName, string externalAddress, string message)
+        public SignMessageResult SignMessage(string password, string walletName, string accountName, string externalAddress, string message)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(walletName, nameof(walletName));
@@ -328,7 +329,11 @@ namespace Blockcore.Features.Wallet
             // Sign the message.
             HdAddress hdAddress = wallet.GetAddress(externalAddress, account => account.Name.Equals(accountName));
             Key privateKey = wallet.GetExtendedPrivateKeyForAddress(password, hdAddress).PrivateKey;
-            return privateKey.SignMessage(message);
+            return new SignMessageResult()
+            {
+                Signature = privateKey.SignMessage(message),
+                SignedAddress = hdAddress.Address
+            };
         }
 
         /// <inheritdoc />

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Types;
@@ -1493,7 +1494,7 @@ namespace Blockcore.IntegrationTests.Wallet
         public async Task SignMessage()
         {
             // Act.
-            string signatureResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
+            SignMessageResult signatureResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
                 .AppendPathSegment("wallet/signmessage")
                 .PostJsonAsync(new SignMessageRequest
                 {
@@ -1503,11 +1504,12 @@ namespace Blockcore.IntegrationTests.Wallet
                     Password = this.fixture.walletWithFundsPassword,
                     Message = this.fixture.signatureMessage
                 })
-                .ReceiveJson<string>();
+                .ReceiveJson<SignMessageResult>();
 
             // Assert.
-            signatureResult.Should().Be(this.fixture.validSignature, $"Signature is invalid.");
-            Encoders.Base64.DecodeData(signatureResult).Should().BeOfType<byte[]>($"Signature was not a {typeof(byte[])} type.");
+            signatureResult.SignedAddress.Should().Be(this.fixture.addressWithFunds, $"Returned address is invalid.");
+            signatureResult.Signature.Should().Be(this.fixture.validSignature, $"Signature is invalid.");
+            Encoders.Base64.DecodeData(signatureResult.Signature).Should().BeOfType<byte[]>($"Signature was not a {typeof(byte[])} type.");
         }
 
         [Fact]

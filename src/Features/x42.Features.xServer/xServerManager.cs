@@ -111,7 +111,7 @@ namespace x42.Features.xServer
         /// <inheritdoc />
         public void Start()
         {
-            this.xServerDiscoveryLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{nameof(xServerFeature)}.WhitelistRefreshLoop", async token =>
+            this.xServerDiscoveryLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{nameof(xServerFeature)}.xServerSeedRefresh", async token =>
             {
                 await XServerDiscoveryAsync(this.xServerPeerList).ConfigureAwait(false);
                 this.logger.LogInformation($"Saving cached xServer Seeds to {this.xServerPeerList.Path}");

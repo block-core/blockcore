@@ -35,6 +35,7 @@ namespace Blockcore.Networks.Bitcoin
             this.MaxTimeOffsetSeconds = BitcoinMaxTimeOffsetSeconds;
             this.MaxTipAge = BitcoinDefaultMaxTipAgeInSeconds;
             this.MinTxFee = 1000;
+            this.MaxTxFee = Money.Coins(0.1m).Satoshi;
             this.FallbackFee = 20000;
             this.MinRelayTxFee = 1000;
             this.CoinTicker = "BTC";

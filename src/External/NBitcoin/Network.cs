@@ -84,6 +84,11 @@ namespace NBitcoin
         public int MaxTipAge { get; protected set; }
 
         /// <summary>
+        /// The total fee this node will allow
+        /// </summary>
+        public long MaxTxFee { get; protected set; }
+
+        /// <summary>
         /// Mininum fee rate for all transactions.
         /// Fees smaller than this are considered zero fee for transaction creation.
         /// Be careful setting this: if you set it to zero then a transaction spammer can cheaply fill blocks using
@@ -503,7 +508,6 @@ namespace NBitcoin
                         continue;
                     }
                 }
-
             }
 
             throw new FormatException("Invalid string");

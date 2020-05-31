@@ -53,6 +53,7 @@ namespace City.Networks
             DefaultMaxInboundConnections = 109;
             MaxTipAge = 2 * 60 * 60;
             MinTxFee = 4333;
+            MaxTxFee = Money.Coins(1).Satoshi;
             FallbackFee = 4333;
             MinRelayTxFee = 4333;
             MaxTimeOffsetSeconds = 25 * 60;

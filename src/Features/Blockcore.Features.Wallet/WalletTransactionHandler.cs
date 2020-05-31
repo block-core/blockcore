@@ -229,9 +229,6 @@ namespace Blockcore.Features.Wallet
 
             if (context.Time.HasValue)
                 context.TransactionBuilder.SetTimeStamp(context.Time.Value);
-
-            // TODO: testing do not check-in
-            context.TransactionBuilder.StandardTransactionPolicy.CheckFee = false;
         }
 
         /// <summary>

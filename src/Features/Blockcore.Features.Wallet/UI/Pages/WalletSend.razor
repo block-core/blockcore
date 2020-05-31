@@ -14,85 +14,115 @@
 @inject IWalletTransactionHandler WalletTransactionHandler
 @inject IBroadcasterManager BroadcasterManager
 
-
+@{
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>Send coins from: @walletname</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
     </div>
 </div>
 
-@{
-
-    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
-
-<div class="container my-3">
-    <h1>@accountBalance.AmountConfirmed <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
-    <p class="text-left text-secondary">@accountBalance.AmountUnconfirmed (unconfirmed)</p>
+var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Main Balance</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@accountBalance.AmountConfirmed</h3>
+                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
+            </div>
+        </div>
+    </div>
 </div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">To Address:</span>
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 10em" class="input-group-text" id="basic-addon1">To Address:</span>
+                    </div>
+                    <input @bind="Address" type="text" class="form-control" placeholder="Where you want to send coins? Please enter the address" />
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                    </div>
+                    <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+                    <div class="input-group-append">
+                        <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 10em" class="input-group-text">Fee:</span>
+                    </div>
+                    <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" @onclick="EstimateFee">Estimate Fee</button>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 10em" class="input-group-text">Password:</span>
+                    </div>
+                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                </div>
+
+                    <div class="input-group mb-3">
+                        @if (IsSending)
+                            { <button class="btn btn-danger mr-1" disabled>
+                                <span class="spinner-border spinner-border-sm"></span> Working...</button> }
+                        else
+                            { <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button> }
+                    </div>    
+
+                <div class="input-group">
+                    <div class="alert-warning">@Alert</div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="alert-info">@Success</div>
+                </div>
+            </div>
         </div>
-        <input @bind="Address" type="text" class="form-control" placeholder="address" />
     </div>
+</div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Amount:</span>
+    <h3>Transaction Details</h3>
+
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+            <p>Transaction hash: @SentTransactionHash</p>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
+                </div>
+                <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
+            </div>
+            <br />
+
+            @* <div class="input-group mb-3">
+                <button class="btn btn-info" @onclick="Broadcast">Broadcast Transaction</button>
+            </div> *@
+            </div>
         </div>
-        <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
-        <div class="input-group-append">
-            <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
-        </div>
     </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Fee:</span>
-        </div>
-        <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
-        <div class="input-group-append">
-            <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
-        </div>
-    </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Password:</span>
-        </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
-    </div>
-
-    <div class="input-group mb-3">
-        <button class="btn btn-primary" @onclick="SendCoins">Send Coins</button>
-    </div>
-    <br />
-
-    <div class="input-group mb-3">
-        <div class="alert-warning">@Alert</div>
-    </div>
-
-    <h3>Broadcast Transaction</h3>
-
-    <p>Transaction hash: @SentTransactionHash</p>
-
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
-        </div>
-        <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
-    </div>
-    <br />
-    <div class="input-group mb-3">
-        <button class="btn btn-info" @onclick="Broadcast">Broadcast Transaction</button>
-    </div>
-
-    <div class="input-group mb-3">
-        <div class="alert-info">@Success</div>
-    </div>
+</div>
 }
-
 @code
 {
     [Parameter]
@@ -115,14 +145,16 @@
     string Alert { get; set; }
 
     string Success { get; set; }
-
     protected override void OnInitialized()
     {
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
     }
-
     public void EstimateFee()
     {
+        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
+        if (this.Amount == 0) { this.Alert = "Please enter the number of coins you want to send"; return; }
+        this.Alert = string.Empty;
+
         var recipients = new List<Recipient>();
         recipients.Add(new Recipient
         {
@@ -140,15 +172,26 @@
 
         this.Fee = this.WalletTransactionHandler.EstimateFee(context).ToDecimal(MoneyUnit.BTC);
     }
-
-    private void NavigateToWalletAccount(string walletName, string accountname)
+    private bool IsSending { get; set; }
+    private async Task callSendCoins()
     {
-        NavigationManager.NavigateTo("walletaccount/" + walletName + "/" + accountname);
+        IsSending = true;
+        StateHasChanged();
+        await Task.Delay(1); 
+        {
+            SendCoins();
+        }
+        IsSending = false;
+        StateHasChanged();
+        await Task.Delay(1);
     }
 
-    private async Task Broadcast()
+    private async Task SendCoins()
     {
-        if (string.IsNullOrEmpty(this.TransactionHex)) { this.Alert = "No transaction details, please click send coins first"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
+        if (this.Amount == 0) { this.Alert = "Please enter the number of coins you want to send"; return; }
+        if (this.Fee == 0) { this.Alert = "Please ensure you enter a fee"; return; }
 
         this.Alert = string.Empty;
 
@@ -157,30 +200,6 @@
             this.Alert = "No peers connected. You need connections before a transaction can be brodcast to the network.";
             return;
         }
-
-        Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
-
-        await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
-
-        var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
-
-        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
-        {
-            this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
-            return;
-        }
-
-        this.Success = "Coins sent.";
-    }
-
-    private void SendCoins()
-    {
-        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
-        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
-        if (this.Amount == 0) { this.Alert = "Please enter the number of coins you want to send"; return; }
-        if (this.Fee == 0) { this.Alert = "Please ensure you enter a fee"; return; }
-
-        this.Alert = string.Empty;
 
         var recipients = new List<Recipient>();
         recipients.Add(new Recipient
@@ -203,5 +222,28 @@
 
         this.SentTransactionHash = transactionResult.GetHash();
         this.TransactionHex = transactionResult.ToHex(this.Network.Consensus.ConsensusFactory);
+    @* }
+    private async Task Broadcast()
+    { 
+        if (string.IsNullOrEmpty(this.TransactionHex)) { this.Alert = "No transaction details, please click send coins first"; return; }
+        this.Alert = string.Empty; *@
+
+        Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
+
+        await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
+
+        var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
+
+        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
+        {
+            this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
+            return;
+        }
+        StateHasChanged();
+        this.Success = "Coins sent.";
+    }
+    private void NavigateToBroadcastTx(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletbroadcasttx/" + walletName + "/" + accountname);
     }
 }

@@ -35,48 +35,63 @@ if (this.InitialBlockDownloadState.IsInitialBlockDownload())
     <p><strong>Currently processing the IBD (initial block download) & syncing your node with the network</strong></p>
 }
 
-<div class="table-responsive">
-  <table class="table table-bordered">
-    <tbody>
-      <tr>
-        <td style="max-width: 10em">Connected peers:</td>
-        <td>@this.ConnectionManager.ConnectedPeers.Count()</td>
-      </tr>
-      <tr>
-        <td style="max-width: 10em">Current tip at height:</td>
-        <td>@this.ChainIndexer.Tip.Height</td>
-      </tr>
-      <tr>
-        <td style="max-width: 10em">Current tip Hash:</td>
-        <td>@this.ChainIndexer.Tip.HashBlock</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table table-border-bottom">
+                    <tbody>
+                    <tr>
+                        <td style="max-width: 10em">Connected peers:</td>
+                        <td>@this.ConnectionManager.ConnectedPeers.Count()</td>
+                    </tr>
+                    <tr>
+                        <td style="max-width: 10em">Current tip at height:</td>
+                        <td>@this.ChainIndexer.Tip.Height</td>
+                    </tr>
+                    <tr>
+                        <td style="max-width: 10em">Current tip Hash:</td>
+                        <td>@this.ChainIndexer.Tip.HashBlock</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-<div class="table-responsive">
-    <table class="table table-bordered table-striped table-sm table-hover">
-        <thead class="thead">
-            <tr>
-                <th><strong>IP Address</strong></th>
-                <th><strong>Inbound</strong></th>
-                <th><strong>Agent</strong></th>
-                <th><strong>Version</strong></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var peer in this.ConnectionManager.ConnectedPeers)
-            {
-                <tr>
-                    <td>@peer.RemoteSocketEndpoint.ToString()</td>
-                    <td>@peer.Inbound</td>
-                    <td>@peer.PeerVersion?.UserAgent</td>
-                    <td>@peer.PeerVersion?.Version</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-border-bottom table-striped table-sm table-hover">
+                        <thead class="thead">
+                            <tr>
+                                <th><strong>IP Address</strong></th>
+                                <th><strong>Inbound</strong></th>
+                                <th><strong>Agent</strong></th>
+                                <th><strong>Version</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var peer in this.ConnectionManager.ConnectedPeers)
+                            {
+                                <tr>
+                                    <td>@peer.RemoteSocketEndpoint.ToString()</td>
+                                    <td>@peer.Inbound</td>
+                                    <td>@peer.PeerVersion?.UserAgent</td>
+                                    <td>@peer.PeerVersion?.Version</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 }
 @code

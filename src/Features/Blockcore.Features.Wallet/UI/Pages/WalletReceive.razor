@@ -14,21 +14,29 @@
 </div>
 
 @{
-    var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
+var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
 
-<div class="container">
-  <table class="table table-borderless">
-    <tbody>
-      <tr>
-        <td style="min-width: 10em"><strong>Address:</strong></td>
-        <td><CopyToClipboard Text="@result.Address" /></td>
-      </tr>
-      <tr>
-        <td style="min-width: 10em"><strong>Segwit Address:</strong></td>
-        <td><CopyToClipboard Text="@result.Bech32Address" /></td>
-      </tr>
-    </tbody>
-  </table>
+<div class="row ">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+              <div class="container">
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <td style="min-width: 10em"><strong>Address:</strong></td>
+                      <td><CopyToClipboard Text="@result.Address" /></td>
+                    </tr>
+                    <tr>
+                      <td style="min-width: 10em"><strong>Segwit Address:</strong></td>
+                      <td><CopyToClipboard Text="@result.Bech32Address" /></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+    </div>
 </div>
 }
 

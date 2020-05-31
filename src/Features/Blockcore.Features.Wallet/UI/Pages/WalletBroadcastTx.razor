@@ -1,0 +1,109 @@
+﻿@page "/walletbroadcasttx/{walletname}/{accountname}"
+
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Features.Wallet;
+@using NBitcoin;
+@using Blockcore.Connection.Broadcasting
+@using Blockcore.Features.Wallet.Types
+@using Blockcore.Interfaces
+
+@inject IWalletManager WalletManager
+@inject NavigationManager NavigationManager
+@inject Network Network
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
+@inject IWalletTransactionHandler WalletTransactionHandler
+@inject IBroadcasterManager BroadcasterManager
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2"><strong>Broadcast Transaction from: @walletname</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+    </div>
+</div>
+
+@{
+var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Main Balance</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@accountBalance.AmountConfirmed</h3>
+                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row ">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
+                    </div>
+                    <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
+                </div>
+                <div class="input-group mb-3">
+                    <button class="btn btn-primary mr-1" @onclick="Broadcast">Broadcast Transaction</button>
+                </div> 
+                <div class="input-group mb-3">
+                    <div class="alert-warning">@Alert</div>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="alert-info">@Success</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@code
+{
+    [Parameter]
+    public string walletname { get; set; }
+    [Parameter]
+    public string accountname { get; set; }
+
+    string TransactionHex { get; set; }
+
+    string Alert { get; set; }
+
+    string Success { get; set; }
+
+    private async Task Broadcast()
+    {
+        if (string.IsNullOrEmpty(this.TransactionHex)) { this.Alert = "No transaction details, please click send coins first"; return; }
+        this.Alert = string.Empty;
+
+        if (!this.ConnectionManager.ConnectedPeers.Any())
+        {
+            this.Alert = "No peers connected. You need connections before a transaction can be brodcast to the network.";
+            return;
+        }
+
+        Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
+
+        await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
+
+        var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
+
+        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
+        {
+            this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
+            return;
+        }
+
+        this.Success = "Coins sent.";
+    }
+
+}

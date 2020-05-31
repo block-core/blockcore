@@ -31,8 +31,8 @@ app {
 }
 
     .main .top-row {
-        background-color: #f7f7f7;
-        border-bottom: 1px solid #d6d5d5;
+        /* background-color: #f7f7f7;
+        border-bottom: 1px solid #d6d5d5;  */
         justify-content: flex-end;
     }
 
@@ -47,7 +47,7 @@ app {
         }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #375d7d 70%);
+    /* background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #375d7d 70%); */
 }
 
     .sidebar .top-row {

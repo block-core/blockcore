@@ -20,96 +20,115 @@
 </div>
 
 @{
-    var accountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingColdAddresses").Single();
+var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
-<div class="container my-3">
-    <h1>@accountBalance.AmountConfirmed <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
-    <p class="text-left text-secondary">@accountBalance.AmountUnconfirmed (unconfirmed)</p>
-</div>
-
-
-    //TODO: remove coldstake address
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Cold Address:</span>
-        </div>
-        <input @bind="ColdWalletAddress" type="text" class="form-control" placeholder="ColdWalletAddress" />
-        <div class="input-group-append">
-            <span style="min-width: 10em" class="input-group-text">from: @walletname</span>
-        </div>
-    </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Hot Address:</span>
-        </div>
-        <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="HotWalletAddress" />
-
-        <div class="input-group-append">
-            <div class="btn-toolbar mb-2 mb-md-0">
-                @{
-                foreach (var walletName in this.WalletManager.GetWalletsNames().Where(w => w != walletname)) {
-                var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
-                    if (coldStakingWalletEnabled != null) {
-                            <button class="btn btn-primary btn-sm" @onclick="() => { GetHotWalletAddress(walletName); }">@walletName</button>
-                    }
-                }
-            }
+<div class="row mb-3">
+    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Main Balance</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
+                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
             </div>
         </div>
-
-        @* <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Select wallet
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @foreach (var walletNameItem in this.WalletManager.GetWalletsNames().Where(w => w != walletname))
-                {
-                    <a class="dropdown-item" href="javascript: void(0)" @onclick="() => { GetHotWalletAddress(walletNameItem); }">To: @walletNameItem</a>
-                }
-        </div>
-        </div> *@
-
     </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Amount:</span>
-        </div>
-        <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
-        <div class="input-group-append">
-            <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Cold Balance</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
+                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Fee:</span>
+//TODO: remove coldstake address
+<div class="row ">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Cold Address:</span>
+                    </div>
+                    <input @bind="ColdWalletAddress" type="text" class="form-control" placeholder="ColdWalletAddress" />
+                    <div class="input-group-append">
+                        <span style="min-width: 10em" class="input-group-text">from: @walletname</span>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend mb-3">
+                        <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Hot Address:</span>
+                    </div>
+                    <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Hot Address" />
+
+                    <div class="input-group-append mb-3">
+                        <div class="btn-toolbar mb-3 mb-md-0">
+                            @{
+                            foreach (var walletName in this.WalletManager.GetWalletsNames().Where(w => w != walletname)) {
+                            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                                if (coldStakingWalletEnabled != null) {
+                                        <button class="btn btn-primary btn-sm" @onclick="() => { GetHotWalletAddress(walletName); }">@walletName</button>
+                                }
+                            }
+                        }
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                        </div>
+                        <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+                        <div class="input-group-append">
+                            <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 10em" class="input-group-text">Fee:</span>
+                        </div>
+                        <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
+                        <div class="input-group-append">
+                            <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 10em" class="input-group-text">Password:</span>
+                        </div>
+                        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                    </div>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                            <button class="btn btn-primary mr-1" @onclick="Setup">Setup coldstaking</button>
+                            <button class="btn btn-primary" @onclick="ChangePayToScript">PayToScript: @PayToScript</button>
+                    </div>
+                    <div class="input-group">
+                        <div class="alert-warning">@Alert</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
-        <div class="input-group-append">
-            <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
-        </div>
     </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span style="min-width: 10em" class="input-group-text">Password:</span>
-        </div>
-        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
-    </div>
-
-    <div class="input-group mb-3">
-        <button class="btn btn-secondary btn-sm" @onclick="ChangePayToScript">PayToScript: @PayToScript</button>
-    </div>
-
-    <div class="input-group mb-3">
-        <button class="btn btn-primary" @onclick="Setup">Setup coldstaking</button>
-    </div>
-
-    <div class="input-group mb-3">
-        <div class="alert-warning">@Alert</div>
-    </div>
+</div>
 }
 
 @code

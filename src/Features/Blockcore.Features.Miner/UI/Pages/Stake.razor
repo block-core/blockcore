@@ -16,14 +16,24 @@
     <div class="btn-toolbar mb-2 mb-md-0">
     </div>
 </div>
-
-<div class="row">
-  <div class="col-sm-6">
-    <h1 class="text-left">@totalBalance() <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
-    <p class="text-left text-secondary">@totalUnconfirmedBalance() (unconfirmed)</p>
-   </div>
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Main Balance</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@totalBalance() </h3>
+                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-left text-muted font-weight-normal">@totalUnconfirmedBalance() (unconfirmed)</h6>
+            </div>
+        </div>
+    </div>
 </div>
-
 @{
     if (this.StakingEnabled)
     {
@@ -40,7 +50,7 @@
     }
 
 <div class="table-responsive">
-    <table class="table table-bordered table-striped table-sm table-hover">
+    <table class="table table-border-bottom table-striped table-sm table-hover">
         <thead class="thead">
             <tr>
                 <th>Wallet</th>

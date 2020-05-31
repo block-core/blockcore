@@ -7,6 +7,7 @@ using System.Security;
 using System.Text;
 using Blockcore.Connection;
 using Blockcore.Connection.Broadcasting;
+using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
@@ -145,7 +146,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// Signs a message and returns the signature.
         /// </summary>
         /// <param name="request">The object containing the parameters used to sign a message.</param>
-        /// <returns>A JSON object containing the generated signature.</returns>
+        /// <returns>A JSON object containing the generated signature and the address used to sign.</returns>
         [Route("signmessage")]
         [HttpPost]
         public IActionResult SignMessage([FromBody]SignMessageRequest request)
@@ -160,7 +161,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                string signature = this.walletManager.SignMessage(request.Password, request.WalletName, request.AccountName, request.ExternalAddress, request.Message);
+                SignMessageResult signature = this.walletManager.SignMessage(request.Password, request.WalletName, request.AccountName, request.ExternalAddress, request.Message);
                 return this.Json(signature);
             }
             catch (Exception e)

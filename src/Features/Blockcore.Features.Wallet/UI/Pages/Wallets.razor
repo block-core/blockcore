@@ -23,8 +23,12 @@
     </div>
 </div>
 
-<p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
-<br />
+<div class="row">
+  <div class="col-sm-6">
+    <h1 class="text-left">@totalBalance() <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
+    <p class="text-left text-secondary">@totalUnconfirmedBalance() (unconfirmed)</p>
+   </div>
+</div>
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped table-sm table-hover">
@@ -54,6 +58,7 @@
         </tbody>
     </table>
 </div>
+<p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
 }
 
 @code
@@ -103,4 +108,32 @@
             }
         }
     }
+    private dynamic totalBalance()
+    {
+        dynamic balance = 0;
+              foreach (var walletName in this.WalletManager.GetWalletsNames())
+                {
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+                    {
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                        balance = balance + accountBalance.AmountConfirmed;
+                    }
+                }
+        return balance;
+    }
+
+    private dynamic totalUnconfirmedBalance()
+    {
+        dynamic balance = 0;
+              foreach (var walletName in this.WalletManager.GetWalletsNames())
+                {
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+                    {
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                        balance = balance + accountBalance.AmountUnconfirmed;
+                    }
+                }
+        return balance;
+    }
+
 }

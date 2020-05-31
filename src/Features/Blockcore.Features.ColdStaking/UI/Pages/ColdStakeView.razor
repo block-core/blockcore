@@ -10,7 +10,6 @@
 @inject Network Network
 
 @{
-    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>Cold Staking Dashboard for @walletname</strong></h1>
@@ -21,12 +20,23 @@
     </div>
 </div>
 
-<div class="container my-3">
-    <h1>@accountBalance.AmountConfirmed <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
+var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+
+<div class="row">
+  <div class="col-sm-6">
+    <h1 class="text-left">@accountBalance.AmountConfirmed <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
     <p class="text-left text-secondary">@accountBalance.AmountUnconfirmed (unconfirmed)</p>
+  </div>
+
+  <div class="col-sm-6">
+    <h2 class="text-right">@mainAccountBalance.AmountConfirmed <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h2>
+    <p class="text-right text-secondary">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</p>
+  </div> 
 </div>
-    // For now just show last 100 trx of history.
-    var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+
+// For now just show last 100 trx of history.
+var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
 
 <div class="table-responsive small">
     <table class="table table-bordered table-striped table-sm table-hover">

@@ -17,6 +17,13 @@
     </div>
 </div>
 
+<div class="row">
+  <div class="col-sm-6">
+    <h1 class="text-left">@totalBalance() <kbd>@this.Network.CoinTicker.ToUpper()</kbd></h1>
+    <p class="text-left text-secondary">@totalUnconfirmedBalance() (unconfirmed)</p>
+   </div>
+</div>
+
 @{
     if (this.StakingEnabled)
     {
@@ -31,14 +38,14 @@
             Staking disabled
         </div>
     }
-    
+
 <div class="table-responsive">
     <table class="table table-bordered table-striped table-sm table-hover">
         <thead class="thead">
             <tr>
                 <th>Wallet</th>
-                <th>Confirmed balance</th>
-                <th>Unconfirmed balance</th>
+                <th>Main balance (unconfirmed)</th>
+                @* <th>Hot balance (unconfirmed)</th> *@
             </tr>
         </thead>
         <tbody>
@@ -47,12 +54,26 @@
                 {
                     foreach (var account in this.WalletManager.GetAccounts(walletName))
                     {
-                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                        var mainAccountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
 
                         <tr @onclick="() => { SetWalletName(walletName); }">
                             <td>@walletName</td>
-                            <td>@accountBalance.AmountConfirmed</td>
-                            <td>@accountBalance.AmountUnconfirmed</td>
+                        @if (@mainAccountBalance.AmountUnconfirmed >0) {
+                            <td>@mainAccountBalance.AmountConfirmed (@mainAccountBalance.AmountUnconfirmed )</td>
+                         } else {
+                            <td>@mainAccountBalance.AmountConfirmed</td>
+                        }
+                        
+                        @* var hotStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), false);
+
+                        if (hotStakingAccount != null) {
+                            var hotAccountBalance = ColdStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();
+                            @if (@hotAccountBalance.AmountUnconfirmed >0) {
+                                <td>@hotAccountBalance.AmountConfirmed (@hotAccountBalance.AmountUnconfirmed )</td>
+                            } else {
+                                <td>@hotAccountBalance.AmountConfirmed</td>
+                            }
+                        } *@
                         </tr>
                     }
                 }
@@ -60,8 +81,6 @@
         </tbody>
     </table>
 </div>
-
-
 
     if (!this.StakingEnabled)
     {
@@ -97,6 +116,7 @@
 
 @code
 {
+
     string Alert { get; set; }
 
     private string WalletName { get; set; }
@@ -142,6 +162,35 @@
 
         this.LoadStats();
     }
+
+    private dynamic totalBalance()
+    {
+        dynamic balance = 0;
+              foreach (var walletName in this.WalletManager.GetWalletsNames())
+                {
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+                    {
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                        balance = balance + accountBalance.AmountConfirmed;
+                    }
+                }
+        return balance;
+    }
+
+    private dynamic totalUnconfirmedBalance()
+    {
+        dynamic balance = 0;
+              foreach (var walletName in this.WalletManager.GetWalletsNames())
+                {
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+                    {
+                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                        balance = balance + accountBalance.AmountUnconfirmed;
+                    }
+                }
+        return balance;
+    }
+
 
     private void StartStaking()
     {

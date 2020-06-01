@@ -7,17 +7,37 @@
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
 
-<h3>Receive Coins</h3>
-
-<p>Generate receive address for <strong> @walletname / @accountname</strong></p>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Receive to: <strong>@walletname</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+    </div>
+</div>
 
 @{
-    var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
+var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
 
-    <ul class="list-group">
-        <li class="list-group-item">Address: @result.Address</li>
-        <li class="list-group-item">Segwit Address: @result.Bech32Address</li>
-    </ul>
+<div class="row ">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+              <div class="container">
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <td style="min-width: 10em"><strong>Address:</strong></td>
+                      <td><CopyToClipboard Text="@result.Address" /></td>
+                    </tr>
+                    <tr>
+                      <td style="min-width: 10em"><strong>Segwit Address:</strong></td>
+                      <td><CopyToClipboard Text="@result.Bech32Address" /></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
 }
 
 @code {
@@ -26,9 +46,4 @@
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-
-    private void NavigateToWalletAccount(string walletName, string accountname)
-    {
-        NavigationManager.NavigateTo("walletaccount/" + walletName + "/" + accountname);
-    }
 }

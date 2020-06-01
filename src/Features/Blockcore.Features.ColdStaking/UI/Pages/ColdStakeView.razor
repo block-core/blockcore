@@ -1,4 +1,4 @@
-﻿@page "/walletaccount/{walletname}/{accountname}"
+﻿@page "/coldstakeview/{walletName}/{accountname}"
 
 @using Blockcore.Features.Wallet.Interfaces
 @using NBitcoin;
@@ -10,21 +10,40 @@
 @inject Network Network
 
 @{
-var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2">Wallet Account: <strong>@walletname</strong></h1>
+    <h1 style="max-width: 18em" class="h2"><strong>Cold Staking Dashboard for @walletname</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >Receive</button>
-        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >Send</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">Coldstake</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">Delegate</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">Withdraw</button>
     </div>
 </div>
 
+var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+
 <div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
+                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
+            </div>
+        </div>
+    </div>
+        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Cold Balance</h5>
                 <div class="row">
                     <div class="col-12">
                         <div class="d-flex align-items-center align-self-start">
@@ -41,11 +60,12 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
 
 // For now just show last 100 trx of history.
 var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">History</h4>
+                <h4 class="card-title">Balances</h4>
                 <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">
                         <thead class="thead">
@@ -61,7 +81,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                             {
                                 foreach (var transaction in history.TransactionsHistory)
                                 {
-                                    <tr> @*@onclick="() => { NavigateToViewTx(transaction.Id); }" > *@
+                                    <tr> @* @onclick="() => { NavigateToViewTx(transaction.Id); }" *@
                                         <td>@transaction.Type</td>
                                         <td>@String.Format("{0:f}", transaction.Timestamp)</td>
                                         <td>@transaction.Amount</td>
@@ -85,19 +105,22 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     [Parameter]
     public string accountname { get; set; }
 
-    private void NavigateToReceiveWallet(string walletName, string accountname)
+    private void NavigateToEnableWallet()
     {
-        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+        NavigationManager.NavigateTo("coldstaking-enablewallet");
+    }
+    private void NavigateToWithdraw(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-withdraw/" + walletName);
     }
 
-    private void NavigateToSendWallet(string walletName, string accountname)
+    private void NavigateToSetup(string walletName)
     {
-        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+        NavigationManager.NavigateTo("coldstaking-setup/" + walletName);
     }
-
-    private void NavigateToWallets()
+    private void NavigateToDelegate(string walletName)
     {
-        NavigationManager.NavigateTo("wallets");
+        NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
     }
 
     private void NavigateToViewTx(uint256 txId)

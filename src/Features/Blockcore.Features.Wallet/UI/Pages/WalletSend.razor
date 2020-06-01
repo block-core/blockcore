@@ -99,7 +99,8 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
         </div>
     </div>
 </div>
-
+@* 
+// TODO add confirmation screeen
     <h3>Transaction Details</h3>
 
 <div class="row mb-3">
@@ -107,21 +108,16 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
         <div class="card">
             <div class="card-body">
             <p>Transaction hash: @SentTransactionHash</p>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
+                    </div>
+                    <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
                 </div>
-                <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
-            </div>
-            <br />
-
-            @* <div class="input-group mb-3">
-                <button class="btn btn-info" @onclick="Broadcast">Broadcast Transaction</button>
-            </div> *@
             </div>
         </div>
     </div>
-</div>
+</div> *@
 }
 @code
 {
@@ -222,11 +218,6 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
 
         this.SentTransactionHash = transactionResult.GetHash();
         this.TransactionHex = transactionResult.ToHex(this.Network.Consensus.ConsensusFactory);
-    @* }
-    private async Task Broadcast()
-    { 
-        if (string.IsNullOrEmpty(this.TransactionHex)) { this.Alert = "No transaction details, please click send coins first"; return; }
-        this.Alert = string.Empty; *@
 
         Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
 
@@ -239,8 +230,9 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
             this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
             return;
         }
-        StateHasChanged();
         this.Success = "Coins sent.";
+
+        NavigationManager.NavigateTo("walletaccount/" + walletname + "/" + accountname);
     }
     private void NavigateToBroadcastTx(string walletName, string accountname)
     {

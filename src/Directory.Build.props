@@ -19,13 +19,13 @@
   <Target Name="AddInternalsVisibleTo" BeforeTargets="CoreCompile">
     <ItemGroup>
 
-      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <!--<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <_Parameter1>NBitcoin.Tests</_Parameter1>
       </AssemblyAttribute>
 
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <_Parameter1>Blockcore.NBitcoin.Tests</_Parameter1>
-      </AssemblyAttribute>
+      </AssemblyAttribute>-->
 
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <_Parameter1>$(AssemblyName).Tests</_Parameter1>

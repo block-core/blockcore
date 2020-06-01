@@ -6,6 +6,6 @@ namespace Blockcore.Features.Wallet.UI
     {
         public string Name => "Cold Staking";
         public string Navigation => "ColdStaking";
-        public string Icon => "oi-cloud";
+        public string Icon => "oi-pulse";
     }
 }

@@ -9,7 +9,7 @@
     Expanded x42 feature set to the .NET Core blockchain node
   </p>
   <p align="center">
-      <a href="https://github.com/x42protocol/x42-BlockCore/actions"><img src="https://github.com/block-core/blockcore/workflows/Build/badge.svg" /></a>
+      <a href="https://github.com/x42protocol/x42-BlockCore/actions"><img src="https://github.com/x42protocol/x42-BlockCore/workflows/Build/badge.svg" /></a>
   </p>
 </p>
 

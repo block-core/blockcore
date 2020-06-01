@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <PackageId>Blockcore.NBitcoin.Tests</PackageId>
+    <AssemblyName>Blockcore.NBitcoin.Tests</AssemblyName>
+  <AssemblyName>Blockcore.NBitcoin.Tests</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

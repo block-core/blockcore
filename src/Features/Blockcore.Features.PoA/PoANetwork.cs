@@ -84,17 +84,19 @@ namespace Blockcore.Features.PoA
                 new FederationMember(new PubKey("022f8ad1799fd281fc9519814d20a407ed120ba84ec24cca8e869b811e6f6d4590"))
             };
 
-            var consensusOptions = new PoAConsensusOptions(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                genesisFederationMembers: genesisFederationMembers,
-                targetSpacingSeconds: 16,
-                votingEnabled: true,
-                autoKickIdleMembers: true
-            );
+            var consensusOptions = new PoAConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+
+                GenesisFederationMembers = genesisFederationMembers,
+                TargetSpacingSeconds = 16,
+                VotingEnabled = true,
+                AutoKickIdleMembers = true
+            };
 
             var buriedDeployments = new BuriedDeploymentsArray
             {

@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Version>1.0.10</Version>
-    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>3.1.4</RuntimeFrameworkVersion>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>
@@ -18,11 +18,18 @@
 
   <Target Name="AddInternalsVisibleTo" BeforeTargets="CoreCompile">
     <ItemGroup>
-      <!-- We don't need this at the moment, so not added. -->
-      <!--
+
+      <!--<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <_Parameter1>NBitcoin.Tests</_Parameter1>
+      </AssemblyAttribute>
+
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <_Parameter1>Blockcore.NBitcoin.Tests</_Parameter1>
+      </AssemblyAttribute>-->
+
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <_Parameter1>$(AssemblyName).Tests</_Parameter1>
-      </AssemblyAttribute>-->
+      </AssemblyAttribute>
 
       <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <_Parameter1>$(PackageId).Tests</_Parameter1>

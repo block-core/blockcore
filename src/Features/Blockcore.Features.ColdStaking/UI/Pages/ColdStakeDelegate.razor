@@ -135,7 +135,6 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
     protected override Task OnInitializedAsync()
     {
-        //TODO Check Coldstake Address
         ColdStakingManager = this.WalletManager as ColdStakingManager;
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
         var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
@@ -191,7 +190,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             Alert = ex.Message;
             return;
         }
-
-        NavigationManager.NavigateTo("coldstaking");
+        //TODO: Add confirmation screen
+        NavigationManager.NavigateTo("coldstakeview/" + walletname + "/coldStakingColdAddresses");
     }
 }

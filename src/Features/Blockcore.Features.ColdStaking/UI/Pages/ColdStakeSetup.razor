@@ -232,7 +232,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             Alert = ex.Message;
             return;
         }
-
-        NavigationManager.NavigateTo("coldstaking");
+        //TODO: Add confirmation screen
+        NavigationManager.NavigateTo("coldstakeview/" + walletname + "/coldStakingColdAddresses");
     }
 }

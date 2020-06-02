@@ -13,6 +13,7 @@ using Blockcore.Utilities;
 using x42.Features.xServer.Interfaces;
 using x42.Features.xServer.Models;
 using NBitcoin.Protocol;
+using System.Collections.Concurrent;
 
 namespace x42.Features.xServer
 {
@@ -131,7 +132,7 @@ namespace x42.Features.xServer
         public RegisterResult RegisterXServer(RegisterRequest registerRequest)
         {
             var result = new RegisterResult();
-            foreach(var networkAddress in this.xServerSettings.RetrieveNodes())
+            foreach (var networkAddress in this.xServerSettings.RetrieveNodes())
             {
                 if (this.nodeLifetime.ApplicationStopping.IsCancellationRequested)
                 {
@@ -161,8 +162,55 @@ namespace x42.Features.xServer
             return $"{(networkAddress.IsSSL ? "https" : "http")}://{networkAddress.PublicAddress}:{networkAddress.Port}";
         }
 
+        private void SyncPeerToPeersList(xServerPeers xServerPeerList, xServerPeer peer, bool seedCheck = false)
+        {
+            lock (this.xServerPeersLock)
+            {
+                var peersList = xServerPeerList.GetPeers();
+                int peerIndex = peersList.FindIndex(p => p.Name == peer.Name && p.Address == peer.Address);
+                if (seedCheck)
+                {
+                    if (peerIndex == -1)
+                    {
+                        peersList.Add(peer);
+                    }
+                }
+                else
+                {
+                    if (peerIndex >= 0)
+                    {
+                        peersList[peerIndex] = peer;
+                    }
+                    else
+                    {
+                        peersList.Add(peer);
+                    }
+                }
+                xServerPeerList.ReplacePeers(peersList);
+            }
+        }
+
+        private void SyncSeedsToPeersList(xServerPeers xServerPeerList, ConcurrentBag<NetworkXServer> seedList)
+        {
+            foreach (var networkAddress in seedList)
+            {
+                var seedPeer = new xServerPeer()
+                {
+                    Name = "Public Seed",
+                    Address = networkAddress.PublicAddress,
+                    Port = networkAddress.Port,
+                    Priority = -1,
+                    Version = "N/A",
+                    ResponseTime = 99999999,
+                    Tier = (int)TierLevel.Seed
+                };
+                SyncPeerToPeersList(xServerPeerList, seedPeer, true);
+            }
+        }
+
         private async Task XServerDiscoveryAsync(xServerPeers xServerPeerList)
         {
+            var seedList = new ConcurrentBag<NetworkXServer>();
             int topResult = 10;
             await this.xServerSettings.RetrieveNodes().ForEachAsync(10, this.nodeLifetime.ApplicationStopping, async (networkAddress, cancellation) =>
             {
@@ -179,6 +227,7 @@ namespace x42.Features.xServer
                 var topXServerResult = await client.ExecuteAsync<TopResult>(topXServersRequest, cancellation).ConfigureAwait(false);
                 if (topXServerResult.StatusCode == HttpStatusCode.OK)
                 {
+                    seedList.Add(networkAddress);
                     if (topXServerResult.Data?.XServers?.Count > 0)
                     {
                         var xServers = topXServerResult.Data.XServers;
@@ -200,25 +249,13 @@ namespace x42.Features.xServer
                                     Version = ping.Version,
                                     ResponseTime = pingResponseTime.ElapsedMilliseconds
                                 };
-                                lock (this.xServerPeersLock)
-                                {
-                                    var peersList = xServerPeerList.GetPeers();
-                                    int peerIndex = peersList.FindIndex(p => p.Name == peer.Name && p.Address == peer.Address);
-                                    if (peerIndex >= 0)
-                                    {
-                                        peersList[peerIndex] = peer;
-                                    }
-                                    else
-                                    {
-                                        peersList.Add(peer);
-                                    }
-                                    xServerPeerList.ReplacePeers(peersList);
-                                }
-
+                                SyncPeerToPeersList(xServerPeerList, peer);
                             }
                         }
                     }
                 }
+
+                SyncSeedsToPeersList(xServerPeerList, seedList);
 
             }).ConfigureAwait(false);
         }

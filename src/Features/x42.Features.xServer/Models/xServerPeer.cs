@@ -1,9 +1,4 @@
-﻿using System;
-using System.Net;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace x42.Features.xServer
+﻿namespace x42.Features.xServer.Models
 {
     public class xServerPeer
     {
@@ -18,6 +13,8 @@ namespace x42.Features.xServer
         public string Version { get; set; }
 
         public long ResponseTime { get; set; }
+
+        public int Tier { get; set; }
 
     }
 }

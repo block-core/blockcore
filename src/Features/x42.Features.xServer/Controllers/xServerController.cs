@@ -14,7 +14,7 @@ namespace x42.Features.xServer.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class XServerController : Controller
+    public class xServerController : Controller
     {
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -24,7 +24,10 @@ namespace x42.Features.xServer.Controllers
         /// </summary>
         private readonly IxServerManager xServerManager;
 
-        public XServerController(ILoggerFactory loggerFactory, IxServerManager xServerManager)
+        /// <summary>
+        /// Constructor for the xServer contoller
+        /// </summary>
+        public xServerController(ILoggerFactory loggerFactory, IxServerManager xServerManager)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(xServerManager, nameof(IxServerManager));
@@ -50,7 +53,8 @@ namespace x42.Features.xServer.Controllers
             {
                 var serverStats = new GetXServerStatsResult()
                 {
-                    Connected = this.xServerManager.ConnectedSeeds.Count
+                    Connected = this.xServerManager.ConnectedSeeds.Count,
+                    Nodes = this.xServerManager.ConnectedSeeds
                 };
 
                 return this.Json(serverStats);

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using x42.Features.xServer.Models;
 
 namespace x42.Features.xServer
 {

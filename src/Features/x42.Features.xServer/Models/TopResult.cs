@@ -32,5 +32,8 @@ namespace x42.Features.xServer.Models
 
         /// <summary>xServer priority.</summary>
         public long Priotiry { get; set; }
+
+        /// <summary>xServer tier.</summary>
+        public int Tier { get; set; }
     }
 }

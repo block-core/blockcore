@@ -32,7 +32,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     env:
-      PROJECT_NAME: 'x42.x42D'
+      PROJECT_NAME: 'x42.Node'
       SOLUTION_PATH: 'src/Blockcore.sln'
       PROJECT_PATH: 'src/Networks/x42/x42.Node/x42.Node.csproj'
       BUILD_CONFIGURATION: 'Release'

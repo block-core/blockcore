@@ -8,6 +8,8 @@ namespace NBitcoin
     /// </summary>
     public class ConsensusOptions
     {
+        private const int DefaultMaxBlockSigopsCost = 80000;
+
         /// <summary>
         /// Flag used to detect SegWit transactions.
         /// </summary>
@@ -46,13 +48,13 @@ namespace NBitcoin
         public int MaxStandardTxWeight { get; set; } = 400000;
 
         /// <summary>The maximum allowed number of signature check operations in a block (network rule).</summary>
-        public int MaxBlockSigopsCost { get; set; } = 80000;
+        public int MaxBlockSigopsCost { get; set; } = DefaultMaxBlockSigopsCost;
 
         /// <summary>The maximum number of sigops we're willing to relay/mine in a single tx.</summary>
         /// <remarks>
         /// This value is calculated based on <see cref="MaxBlockSigopsCost"/> dived by 5.
         /// </remarks>
-        public int MaxStandardTxSigopsCost { get; set; } = 80000 / 5; // MaxBlockSigopsCost / 5
+        public int MaxStandardTxSigopsCost { get; set; } = DefaultMaxBlockSigopsCost / 5;
 
         /// <summary>Block Height at which the node should enforce the use of <see cref="EnforcedMinProtocolVersion"/>.
         /// Can be set to zero to indicate that the minimum supported protocol version will not change depending on the block height.</summary>

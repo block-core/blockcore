@@ -8,6 +8,7 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <CodeAnalysisRuleSet>..\Blockcore.ruleset</CodeAnalysisRuleSet>
     <IsPackable>true</IsPackable>
+    <Version>1.1.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

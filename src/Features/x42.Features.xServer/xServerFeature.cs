@@ -51,11 +51,19 @@ namespace x42.Features.xServer
             var builder = new StringBuilder();
             builder.AppendLine();
             builder.AppendLine($"====== xServer Network ({connectedPeers.Count()}) ======");
-            foreach (var peer in connectedPeers)
+            foreach (var peer in connectedPeers.OrderBy(p => p.ResponseTime))
             {
+                string responseTime = $"{peer.ResponseTime} ms";
+                string tier = $"T{peer.Tier}";
+                if (peer.Tier == 0)
+                {
+                    tier = "Seed Node";
+                    responseTime = "N/A";
+                }
+
                 builder.AppendLine(
-                    ($"{peer.Name}: {peer.Address}:{peer.Port}").PadRight(LoggingConfiguration.ColumnLength + 15)
-                    + ($"Response Time: {peer.ResponseTime} ms").PadRight(LoggingConfiguration.ColumnLength + 14)
+                    ($"{peer.Name} ({tier}): {peer.Address}:{peer.Port}").PadRight(LoggingConfiguration.ColumnLength + 25)
+                    + ($"Response Time: {responseTime}").PadRight(LoggingConfiguration.ColumnLength + 14)
                     + ($"Version: {peer.Version}").PadRight(LoggingConfiguration.ColumnLength + 7)
                     );
             }

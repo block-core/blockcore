@@ -247,7 +247,8 @@ namespace x42.Features.xServer
                                     Port = xServer.Port,
                                     Priority = xServer.Priotiry,
                                     Version = ping.Version,
-                                    ResponseTime = pingResponseTime.ElapsedMilliseconds
+                                    ResponseTime = pingResponseTime.ElapsedMilliseconds,
+                                    Tier = xServer.Tier
                                 };
                                 SyncPeerToPeersList(xServerPeerList, peer);
                             }

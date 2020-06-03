@@ -13,6 +13,14 @@ namespace x42.Features.xServer.Models
         public string Name { get; set; }
 
         /// <summary>
+        ///     Public Network Protocol of the server requesting to be registered.
+        ///     Support for HTTP = 1 or HTTPS = 2
+        /// </summary>
+        [Required(ErrorMessage = "The Network protocol is missing.")]
+        [Range(1, 100, ErrorMessage = "The network protocol cannot be below 1 and not exceed 100.")]
+        public int NetworkProtocol { get; set; }
+
+        /// <summary>
         ///     Public Network Address of the server requesting to be registered.
         /// </summary>
         [Required(ErrorMessage = "The Network address is missing.")]

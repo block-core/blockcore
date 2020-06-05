@@ -14,7 +14,7 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Delegate Staking From: @walletname</strong></h1>
+    <h1 class="h2"><strong>Delegate Staking from @walletname</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
     </div>
 </div>
@@ -71,11 +71,11 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text">Amount:</span>
+                        <span style="min-width: 15em" class="input-group-text">Amount(@this.Network.CoinTicker.ToUpper()):</span>
                     </div>
                     <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
                     <div class="input-group-append">
-                        <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+                        <button class="btn btn-secondary" @onclick="MaxAmount">Max</button>
                     </div>
                 </div>
 
@@ -151,6 +151,12 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
     private void ChangePayToScript()
     {
         this.PayToScript = !this.PayToScript;
+    }
+
+    public void MaxAmount()
+    {
+        var accountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+        this.Amount = accountBalance.AmountConfirmed.ToDecimal(MoneyUnit.BTC) - this.Fee;
     }
 
     private async Task Setup()

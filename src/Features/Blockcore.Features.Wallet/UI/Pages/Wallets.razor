@@ -14,12 +14,16 @@
 
 @{
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Wallet Details</strong></h1>
+    <h1 class="h2"><strong>Wallets</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletCreate(); }">Create Wallet</button>
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletRecover(); }">Recover Wallet</button>
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { Rebroadcast(); }">Re-broadcast</button>
-        <button class="btn btn-sm btn-danger" @onclick="() => { Resync(); }">Resync wallets</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletCreate(); }">
+            <span class="oi oi-file" aria-hidden="true"></span> Create Wallet</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletRecover(); }">
+            <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { Rebroadcast(); }">
+            <span class="oi oi-globe" aria-hidden="true"></span> Re-broadcast</button>
+        <button class="btn btn-sm btn-danger" @onclick="() => { Resync(); }">
+            <span class="oi oi-flash" aria-hidden="true"></span> Resync wallets</button>
     </div>
 </div>
 <div class="row mb-3">
@@ -47,13 +51,14 @@
             <div class="card-body">
                 <h4 class="card-title">Balances</h4>
 
-                <div class="table-responsive">
+                <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">
                         <thead class="thead">
                             <tr>
-                                <th>Wallet</th>
-                                <th>Confirmed balance</th>
-                                <th>Unconfirmed balance</th>
+                                <th class="text-primary"><strong>WALLET</strong></th>
+                                <th class="text-primary"><strong>CONFIRMED BALANCE</strong></th>
+                                <th class="text-primary"><strong>UNCONFIRMED BALANCE</strong></th>
+                                <th class="text-primary text-center"><strong>DETAILS</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,11 +68,13 @@
                                     foreach (var account in this.WalletManager.GetAccounts(walletName))
                                     {
                                         var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-
                                         <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }">
-                                            <td>@walletName</td>
-                                            <td>@accountBalance.AmountConfirmed</td>
-                                            <td>@accountBalance.AmountUnconfirmed</td>
+                                            <td class="align-middle">@walletName</td>
+                                            <td class="align-middle">@accountBalance.AmountConfirmed</td>
+                                            <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
+                                            <td class="text-center align-middle"><button class="btn btn-sm btn-primary">
+                                                                        <span class="oi oi-zoom-in" aria-hidden="true"></span>
+                                                                    </button></td>
                                         </tr>
                                     }
                                 }

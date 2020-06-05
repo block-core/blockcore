@@ -88,11 +88,15 @@
 
                     <div class="input-group mb-3">
                         @if (IsSending)
-                        {<button class="btn btn-danger mr-1" disabled>
+                        {
+                            <button class="btn btn-danger mr-1" disabled>
                                 <span class="spinner-border spinner-border-sm"></span> Working...
-                            </button> }
+                            </button>
+                        }
                         else
-                        { <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button>}
+                        {
+                            <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button>
+                        }
                     </div>
 
                     <div class="input-group">

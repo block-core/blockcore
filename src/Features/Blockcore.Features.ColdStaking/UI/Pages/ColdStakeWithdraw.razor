@@ -78,6 +78,9 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
                     <div class="input-group-append">
                         <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
                     </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" @onclick="SendMax">Max</button>
+                    </div>
                 </div>
 
                 <div class="input-group mb-3">
@@ -134,6 +137,14 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
 
         return Task.CompletedTask;
+    }
+    public void SendMax()
+    {
+        var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+
+        this.Amount = mainAccountBalance.AmountConfirmed.ToUnit(MoneyUnit.BTC);
+
+        this.Amount = this.Amount - this.Fee;
     }
 
     private void GenerateAddress()

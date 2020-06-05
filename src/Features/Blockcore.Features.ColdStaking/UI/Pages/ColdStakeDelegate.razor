@@ -20,92 +20,95 @@
 </div>
 
 @{
-var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingColdAddresses").Single();
-var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+    var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingColdAddresses").Single();
+    var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
-<div class="row mb-3">
-    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h5>Main Balance</h5>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center align-self-start">
-                            <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
-                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
-                        </div>
-                    </div>
-                </div>
-                <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
-            </div>
-        </div>
-    </div>
+    <div class="row mb-3">
         <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h5>Cold Balance</h5>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center align-self-start">
-                            <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
-                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+            <div class="card">
+                <div class="card-body">
+                    <h5>Main Balance</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
                         </div>
                     </div>
+                    <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
                 </div>
-                <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
+            </div>
+        </div>
+        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Cold Balance</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row ">
-    <div class="col-12 grid-margin">
-        <div class="card">
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text" id="basic-addon1">Delegated Staking Address:</span>
+    <div class="row ">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 15em" class="input-group-text" id="basic-addon1">Delegated Staking Address:</span>
+                        </div>
+                        <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Your third party delegated staking address" />
                     </div>
-                    <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Your third party delegated staking address" />
-                </div>
 
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text">Amount:</span>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 15em" class="input-group-text">Amount:</span>
+                        </div>
+                        <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+                        <div class="input-group-append">
+                            <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" @onclick="SendMax">Max</button>
+                        </div>
                     </div>
-                    <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
-                    <div class="input-group-append">
-                        <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
-                    </div>
-                </div>
 
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text">Fee:</span>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 15em" class="input-group-text">Fee:</span>
+                        </div>
+                        <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
+                        <div class="input-group-append">
+                            <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
+                        </div>
                     </div>
-                    <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
-                    <div class="input-group-append">
-                        <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
-                    </div>
-                </div>
 
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text">Password:</span>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 15em" class="input-group-text">Password:</span>
+                        </div>
+                        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
                     </div>
-                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
-                </div>
-                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-toolbar mb-2 mb-md-0">
                         <button class="btn btn-primary mr-1" @onclick="Setup">Delegate Staking Now</button>
                         <button class="btn btn-primary" @onclick="ChangePayToScript">PayToScript: @PayToScript</button>
-                </div>
-                <div class="input-group">
-                    <div class="alert-warning">@Alert</div>
+                    </div>
+                    <div class="input-group">
+                        <div class="alert-warning">@Alert</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @code
@@ -147,7 +150,14 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         }
         return Task.CompletedTask;
     }
+    public void SendMax()
+    {
+        var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
+        this.Amount = mainAccountBalance.AmountConfirmed.ToUnit(MoneyUnit.BTC);
+
+        this.Amount = this.Amount - this.Fee;
+    }
     private void ChangePayToScript()
     {
         this.PayToScript = !this.PayToScript;

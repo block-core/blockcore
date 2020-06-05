@@ -185,7 +185,8 @@
         {
             if (nef.Missing is Money money)
             {
-                this.Fee = money.ToDecimal(MoneyUnit.BTC);
+                var minFee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
+                this.Fee = Math.Max(minFee, money.ToDecimal(MoneyUnit.BTC));
             }
             else
             {
@@ -216,10 +217,8 @@
     {
         IsSending = true;
         StateHasChanged();
-        await Task.Delay(1);
-        {
-            SendCoins();
-        }
+        await Task.Delay(1);  // flush changes
+        await SendCoins();
         IsSending = false;
         StateHasChanged();
         await Task.Delay(1);
@@ -240,39 +239,48 @@
             return;
         }
 
-        var recipients = new List<Recipient>();
-        recipients.Add(new Recipient
+        try
         {
-            ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
-            Amount = new Money(Amount, MoneyUnit.BTC)
-        });
+            var recipients = new List<Recipient>();
+            recipients.Add(new Recipient
+            {
+                ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
+                Amount = new Money(Amount, MoneyUnit.BTC)
+            });
 
-        var context = new TransactionBuildContext(this.Network)
+            var context = new TransactionBuildContext(this.Network)
+            {
+                AccountReference = new WalletAccountReference(walletname, accountname),
+                Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
+                WalletPassword = Password,
+                Recipients = recipients,
+                UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
+                TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
+            };
+
+            Transaction transactionResult = this.WalletTransactionHandler.BuildTransaction(context);
+
+            this.SentTransactionHash = transactionResult.GetHash();
+            this.TransactionHex = transactionResult.ToHex(this.Network.Consensus.ConsensusFactory);
+
+            Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
+
+            await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
+
+            var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
+
+            if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
+            {
+                this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
+                return;
+            }
+        }
+        catch (Exception ex)
         {
-            AccountReference = new WalletAccountReference(walletname, accountname),
-            Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
-            WalletPassword = Password,
-            Recipients = recipients,
-            UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
-            TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
-        };
-
-        Transaction transactionResult = this.WalletTransactionHandler.BuildTransaction(context);
-
-        this.SentTransactionHash = transactionResult.GetHash();
-        this.TransactionHex = transactionResult.ToHex(this.Network.Consensus.ConsensusFactory);
-
-        Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
-
-        await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
-
-        var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
-
-        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
-        {
-            this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
+            this.Alert = ex.Message;
             return;
         }
+
         this.Success = "Coins sent.";
 
         NavigationManager.NavigateTo("walletaccount/" + walletname + "/" + accountname);

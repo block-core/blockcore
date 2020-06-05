@@ -10,15 +10,18 @@
 @inject NavigationManager NavigationManager
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Node</strong></h1>
+    <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Network</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="input-group">
-                <input @bind="NodeIp" type="text" class="form-control" placeholder="Node IP Address" />
+                <input @bind="NodeIp" type="text" class="form-control-sm" placeholder="Node IP Address" />
                 <div class="input-group-append">
-                    <button class="btn btn-sm btn-primary mr-1" @onclick="Addnode">Add Node</button>
+                    <button class="btn btn-sm btn-primary mr-1" @onclick="Addnode">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Add Node</button>
                 </div>
-                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">View Logs</button>
-                <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">Shutdown</button>
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">
+                    <span class="oi oi-list" aria-hidden="true"></span> View Logs</button>
+                <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">
+                    <span class="oi oi-power-standby" aria-hidden="true"></span> Shutdown</button>
         </div>
     </div>
 
@@ -29,7 +32,6 @@
 </div>
 
 @{
-
 if (this.InitialBlockDownloadState.IsInitialBlockDownload())
 {
     <p><strong>Currently processing the IBD (initial block download) & syncing your node with the network</strong></p>

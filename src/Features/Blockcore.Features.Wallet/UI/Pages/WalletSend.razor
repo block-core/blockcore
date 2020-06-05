@@ -16,7 +16,7 @@
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h2"><strong>Send coins from: @walletname</strong></h1>
+        <h1 class="h2"><strong>Send coins from @walletname</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
         </div>
@@ -55,12 +55,9 @@
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                        <span style="min-width: 10em" class="input-group-text">Amount(@this.Network.CoinTicker.ToUpper()):</span>
                         </div>
                         <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
-                        <div class="input-group-append">
-                            <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
-                        </div>
                         <div class="input-group-append">
                             <button class="btn btn-secondary" @onclick="SendMax">Max</button>
                         </div>
@@ -72,9 +69,8 @@
                         </div>
                         <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
                         <div class="input-group-append">
-                            <span class="input-group-text">Estimate Fee:</span>
                             <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.Low); }">Low</button>
-                            <button class="btn btn-Information" @onclick="() => { EstimateFee(FeeType.Medium); }">Medium</button>
+                            <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.Medium); }">Medium</button>
                             <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.High); }">High</button>
                         </div>
                     </div>

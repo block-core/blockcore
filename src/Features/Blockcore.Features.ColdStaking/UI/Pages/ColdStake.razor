@@ -69,14 +69,15 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Balances</h4>
-                <div class="table-responsive">
+                <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">
                         <thead class="thead">
                             <tr>
-                                <th>Wallet</th>
-                                <th>Account balance</th>
-                                <th>Cold balance</th>
-                                <th>Hot balance</th>
+                                <th class="text-primary"><strong>WALLET</strong></th>
+                                <th class="text-primary"><strong>MAIN BALANCE</strong></th>
+                                <th class="text-primary"><strong>COLD BALANCE</strong></th>
+                                <th class="text-primary"><strong>HOT BALANCE</strong></th>
+                                <th class="text-primary text-center"><strong>DETAILS</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -85,15 +86,15 @@
                                 var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
                                 if (coldStakingWalletEnabled != null) {
                                     <tr @onclick="() => { NavigateToColdStakeView(walletName); }" >
-                                    <td>@walletName</td>
+                                    <td class="align-middle">@walletName</td>
                                     @foreach (var account in this.WalletManager.GetAccounts(walletName)) {
 
                                         var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
 
                                         @if (@accountBalance.AmountUnconfirmed >0) {
-                                            <td>@accountBalance.AmountConfirmed (@accountBalance.AmountUnconfirmed )</td>
+                                            <td class="align-middle">@accountBalance.AmountConfirmed (@accountBalance.AmountUnconfirmed )</td>
                                         } else {
-                                            <td>@accountBalance.AmountConfirmed</td>
+                                            <td class="align-middle">@accountBalance.AmountConfirmed</td>
                                         }
 
                                         var coldStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
@@ -101,9 +102,9 @@
                                         if (coldStakingAccount != null) {
                                             var coldAccountBalance = ColdStakingManager.GetBalances(walletName, coldStakingAccount.Name).Single();
                                             @if (@coldAccountBalance.AmountUnconfirmed >0) {
-                                                <td>@coldAccountBalance.AmountConfirmed (@coldAccountBalance.AmountUnconfirmed )</td>
+                                                <td class="align-middle">@coldAccountBalance.AmountConfirmed (@coldAccountBalance.AmountUnconfirmed )</td>
                                             } else {
-                                                <td>@coldAccountBalance.AmountConfirmed</td>
+                                                <td class="align-middle">@coldAccountBalance.AmountConfirmed</td>
                                             }
                                         }
 
@@ -112,15 +113,18 @@
                                         if (hotStakingAccount != null) {
                                             var hotAccountBalance = ColdStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();
                                             @if (@hotAccountBalance.AmountUnconfirmed >0) {
-                                                <td>@hotAccountBalance.AmountConfirmed (@hotAccountBalance.AmountUnconfirmed )</td>
+                                                <td class="align-middle">@hotAccountBalance.AmountConfirmed (@hotAccountBalance.AmountUnconfirmed )</td>
                                             } else {
-                                                <td>@hotAccountBalance.AmountConfirmed</td>
+                                                <td class="align-middle">@hotAccountBalance.AmountConfirmed</td>
                                             }
                                         }
                                 }
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-primary"><span class="oi oi-zoom-in" aria-hidden="true"></span></button>
+                                </td>
                             </tr>
                             }
-                        }                               
+                        }
                         </tbody>
                     </table>
                 </div>

@@ -16,7 +16,7 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Coldstaking setup for: @walletname</strong></h1>
+    <h1 class="h2"><strong>Cold Staking setup for @walletname</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
     </div>
 </div>
@@ -60,26 +60,27 @@
         </div>
     </div>
 
-    //TODO: remove coldstake address
     <div class="row ">
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-body">
-                    <div class="input-group mb-3">
+
+                    @*TODO: test removed coldstake address
+                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Cold Address:</span>
+                          <span style="min-width: 10em" class="input-group-text">Amount(@this.Network.CoinTicker.ToUpper()):</span>
                         </div>
                         <input @bind="ColdWalletAddress" type="text" class="form-control" placeholder="ColdWalletAddress" />
                         <div class="input-group-append">
                             <span style="min-width: 10em" class="input-group-text">from: @walletname</span>
                         </div>
-                    </div>
+                    </div> *@
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend mb-3">
                             <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Hot Address:</span>
                         </div>
-                        <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Hot Address" />
+                        <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Select the wallet from which you will cold stake" />
 
                         <div class="input-group-append mb-3">
                             <div class="btn-toolbar mb-3 mb-md-0">
@@ -89,7 +90,7 @@
                                         var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
                                         if (coldStakingWalletEnabled != null)
                                         {
-                                            <button class="btn btn-primary btn-sm" @onclick="() => { GetHotWalletAddress(walletName); }">@walletName</button>
+                                            <button class="btn btn-secondary" @onclick="() => { GetHotWalletAddress(walletName); }">@walletName</button>
                                         }
                                     }
                                 }
@@ -97,12 +98,9 @@
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                                <span style="min-width: 10em" class="input-group-text">Amount (@this.Network.CoinTicker.ToUpper()):</span>
                             </div>
                             <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
-                            <div class="input-group-append">
-                                <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
-                            </div>
                             <div class="input-group-append">
                                 <button class="btn btn-secondary" @onclick="SendMax">Max</button>
                             </div>
@@ -114,7 +112,7 @@
                             </div>
                             <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
                             <div class="input-group-append">
-                                <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
+                                <span style="min-width: 6em" class="input-group-text"><abbr title="The low fee may not be enough for every transaction">Default to low</abbr></span>
                             </div>
                         </div>
 
@@ -124,7 +122,7 @@
                             </div>
                             <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
                         </div>
-                        <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-toolbar mb-3 mb-md-0">
                             <button class="btn btn-primary mr-1" @onclick="Setup">Setup coldstaking</button>
                             <button class="btn btn-primary" @onclick="ChangePayToScript">PayToScript: @PayToScript</button>
                         </div>
@@ -216,7 +214,11 @@
     {
         this.PayToScript = !this.PayToScript;
     }
-
+    public void MaxAmount()
+    {
+        var accountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+        this.Amount = accountBalance.AmountConfirmed.ToDecimal(MoneyUnit.BTC) - this.Fee;
+    }
     private async Task Setup()
     {
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }

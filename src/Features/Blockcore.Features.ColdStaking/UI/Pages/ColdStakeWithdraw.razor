@@ -14,7 +14,7 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Cold Staking Withdrawal To: @walletname</strong></h1>
+    <h1 class="h2"><strong>Cold Staking withdrawal to @walletname</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
     </div>
 </div>
@@ -57,7 +57,6 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         </div>
     </div>
 </div>
-
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
@@ -67,19 +66,16 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
                         <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Address:</span>
                     </div>
                     <input @bind="Address" type="text" class="form-control" placeholder="Please enter your address" />
-                    <button class="btn btn-primary btn-sm" @onclick="GenerateAddress">Get address from: @walletname</button>
+                    <button class="btn btn-secondary" @onclick="GenerateAddress">@walletname</button>
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                        <span style="min-width: 10em" class="input-group-text">Amount(@this.Network.CoinTicker.ToUpper()):</span>
                     </div>
                     <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
                     <div class="input-group-append">
-                        <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
-                    </div>
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary" @onclick="SendMax">Max</button>
+                        <button class="btn btn-secondary" @onclick="MaxAmount">Max</button>
                     </div>
                 </div>
 
@@ -89,7 +85,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
                     </div>
                     <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
                     <div class="input-group-append">
-                        <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
+                        <span style="min-width: 6em" class="input-group-text"><abbr title="The low fee may not be enough for every transaction">Default to low</abbr></span>
                     </div>
                 </div>
 
@@ -110,7 +106,6 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
     </div>
 </div>
 }
-
 @code
 {
     ColdStakingManager ColdStakingManager;
@@ -138,14 +133,6 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
         return Task.CompletedTask;
     }
-    public void SendMax()
-    {
-        var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
-
-        this.Amount = mainAccountBalance.AmountConfirmed.ToUnit(MoneyUnit.BTC);
-
-        this.Amount = this.Amount - this.Fee;
-    }
 
     private void GenerateAddress()
     {
@@ -155,7 +142,11 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
         this.Address = segwit ? result.Bech32Address : result.Address;
     }
-
+    public void MaxAmount()
+    {
+        var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingColdAddresses").Single();
+        this.Amount = accountBalance.AmountConfirmed.ToDecimal(MoneyUnit.BTC) - this.Fee;
+    }
     private async Task Withdraw()
     {
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }

@@ -49,45 +49,49 @@
             Staking disabled
         </div>
     }
-<div class="row mb-3">
-    <div class="col-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-            <h4 class="card-title">Staking Wallets</h4>
-                <div class="table-responsive small">
-                    <table class="table table-border-bottom table-striped table-sm table-hover">
-                        <thead class="thead">
-                            <tr>
-                                <th class="text-primary"><strong>WALLET</strong></th>
-                                <th class="text-primary text-right"><strong>BALANCE (UNCONFIRMED)</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                foreach (var walletName in this.WalletManager.GetWalletsNames())
-                                {
-                                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+    <div class="row mb-3">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Staking Wallets</h4>
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary"><strong>WALLET</strong></th>
+                                    <th class="text-primary text-right"><strong>BALANCE (UNCONFIRMED)</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var walletName in this.WalletManager.GetWalletsNames())
                                     {
-                                        var mainAccountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                                        var items = this.WalletManager.GetSpendableTransactionsInWalletForStaking(walletName, 0);
+
+                                        var amountConfirmed = items.Where(s => s.Confirmations > 0).Sum(s => s.Transaction.Amount);
+                                        var amountUnconfirmed = items.Where(s => s.Confirmations <= 0).Sum(s => s.Transaction.Amount);
 
                                         <tr @onclick="() => { SetWalletName(walletName); }">
                                             <td class="align-middle">@walletName</td>
-                                        @if (@mainAccountBalance.AmountUnconfirmed >0) {
-                                            <td class="align-middle text-right">@mainAccountBalance.AmountConfirmed (@mainAccountBalance.AmountUnconfirmed )</td>
-                                        } else {
-                                            <td class="align-middle text-right">@mainAccountBalance.AmountConfirmed</td>
-                                        }
+                                            @if (amountUnconfirmed > 0)
+                                            {
+                                                <td class="align-middle text-right">@Money.Satoshis(amountConfirmed) (@Money.Satoshis(amountUnconfirmed))</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="align-middle text-right">@Money.Satoshis(amountConfirmed)</td>
+                                            }
                                         </tr>
+
                                     }
                                 }
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
     if (!this.StakingEnabled)
     {
         <div class="input-group mb-3">
@@ -107,37 +111,37 @@
         <div class="input-group mb-3">
             <button class="btn btn-primary" @onclick="StartStaking">Start Staking</button>
         </div>
-    @* <div class="row mb-3">
-        <div class="col-12 grid-margin stretch-card mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <form>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Wallet Name:</span>
-                            </div>
-                            <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter your wallet name" />
+        @* <div class="row mb-3">
+                <div class="col-12 grid-margin stretch-card mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Wallet Name:</span>
+                                    </div>
+                                    <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter your wallet name" />
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span style="min-width: 10em" class="input-group-text">Password:</span>
+                                    </div>
+                                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                                </div>
+                                <div class="input-group mb-3">
+                                    <button class="btn btn-primary" @onclick="StartStaking">Start Staking</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span style="min-width: 10em" class="input-group-text">Password:</span>
-                            </div>
-                            <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <button class="btn btn-primary" @onclick="StartStaking">Start Staking</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div> *@
+            </div> *@
     }
     else
     {
-    <div class="input-group mb-3">
-        <button class="btn btn-danger" @onclick="StopStaking">Stop Staking</button>
-    </div>
+        <div class="input-group mb-3">
+            <button class="btn btn-danger" @onclick="StopStaking">Stop Staking</button>
+        </div>
     }
     <div class="input-group mb-3">
         <div class="alert-warning">@Alert</div>
@@ -157,9 +161,9 @@
     private string StakingInfo { get; set; }
 
     @* private string StakingWeight { get; set; }
-    private string NetworkWeight { get; set; }
-    private string StakingPercent { get; set; }
-    private string StakingTime { get; set; } *@
+        private string NetworkWeight { get; set; }
+        private string StakingPercent { get; set; }
+        private string StakingTime { get; set; } *@
 
     protected override void OnInitialized()
     {
@@ -180,9 +184,9 @@
                    $"est. time to find new block is {TimeSpan.FromSeconds(model.ExpectedTime)}.";
 
             @* this.StakingWeight = $"{new Money(model.Weight)}";
-            this.NetworkWeight = $"{new Money(model.NetStakeWeight)}";
-            this.StakingPercent = $"{ourPercent:0.00}";
-            this.StakingTime = $"{TimeSpan.FromSeconds(model.ExpectedTime)}"; *@
+                this.NetworkWeight = $"{new Money(model.NetStakeWeight)}";
+                this.StakingPercent = $"{ourPercent:0.00}";
+                this.StakingTime = $"{TimeSpan.FromSeconds(model.ExpectedTime)}"; *@
         }
         else
         {
@@ -205,28 +209,28 @@
     private dynamic totalBalance()
     {
         dynamic balance = 0;
-              foreach (var walletName in this.WalletManager.GetWalletsNames())
-                {
-                    foreach (var account in this.WalletManager.GetAccounts(walletName))
-                    {
-                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-                        balance = balance + accountBalance.AmountConfirmed;
-                    }
-                }
+        foreach (var walletName in this.WalletManager.GetWalletsNames())
+        {
+            var items = this.WalletManager.GetSpendableTransactionsInWalletForStaking(walletName, 1);
+            var amountConfirmed = items.Where(s => s.Confirmations > 0).Sum(s => s.Transaction.Amount);
+
+            var accountBalance = Money.Satoshis(amountConfirmed);
+            balance = balance + accountBalance;
+        }
         return balance;
     }
 
     private dynamic totalUnconfirmedBalance()
     {
         dynamic balance = 0;
-              foreach (var walletName in this.WalletManager.GetWalletsNames())
-                {
-                    foreach (var account in this.WalletManager.GetAccounts(walletName))
-                    {
-                        var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-                        balance = balance + accountBalance.AmountUnconfirmed;
-                    }
-                }
+        foreach (var walletName in this.WalletManager.GetWalletsNames())
+        {
+            var items = this.WalletManager.GetSpendableTransactionsInWalletForStaking(walletName, 0);
+            var amountConfirmed = items.Where(s => s.Confirmations <= 0).Sum(s => s.Transaction.Amount);
+
+            var accountBalance = Money.Satoshis(amountConfirmed);
+            balance = balance + accountBalance;
+        }
         return balance;
     }
 

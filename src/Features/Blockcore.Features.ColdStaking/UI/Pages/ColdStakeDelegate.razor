@@ -1,4 +1,4 @@
-﻿@page "/coldstaking-withdraw/{walletname}"
+﻿@page "/coldstaking-delegate/{walletname}"
 
 @using Blockcore.Features.ColdStaking
 @using Blockcore.Features.Wallet.Interfaces
@@ -14,7 +14,7 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Cold Staking Withdrawal To: @walletname</strong></h1>
+    <h1 class="h2"><strong>Delegate Staking From: @walletname</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
     </div>
 </div>
@@ -64,15 +64,14 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             <div class="card-body">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Address:</span>
+                        <span style="min-width: 15em" class="input-group-text" id="basic-addon1">Delegated Staking Address:</span>
                     </div>
-                    <input @bind="Address" type="text" class="form-control" placeholder="Please enter your address" />
-                    <button class="btn btn-primary btn-sm" @onclick="GenerateAddress">Get address from: @walletname</button>
+                    <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Your third party delegated staking address" />
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                        <span style="min-width: 15em" class="input-group-text">Amount:</span>
                     </div>
                     <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
                     <div class="input-group-append">
@@ -82,7 +81,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Fee:</span>
+                        <span style="min-width: 15em" class="input-group-text">Fee:</span>
                     </div>
                     <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
                     <div class="input-group-append">
@@ -92,12 +91,13 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Password:</span>
+                        <span style="min-width: 15em" class="input-group-text">Password:</span>
                     </div>
                     <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
                 </div>
-                <div class="input-group mb-3">
-                    <button class="btn btn-primary" @onclick="Withdraw">Withdraw Now</button>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                        <button class="btn btn-primary mr-1" @onclick="Setup">Delegate Staking Now</button>
+                        <button class="btn btn-primary" @onclick="ChangePayToScript">PayToScript: @PayToScript</button>
                 </div>
                 <div class="input-group">
                     <div class="alert-warning">@Alert</div>
@@ -110,14 +110,18 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
 @code
 {
+    [Parameter]
+    public string walletname { get; set; }
+
     ColdStakingManager ColdStakingManager;
 
     string Alert { get; set; }
 
-    [Parameter]
-    public string walletname { get; set; }
+    private string HotWallet { get; set; }
 
-    private string Address { get; set; }
+    private string HotWalletAddress { get; set; }
+
+    private string ColdWalletAddress { get; set; }
 
     private string Password { get; set; }
 
@@ -125,41 +129,51 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
     private decimal Fee { get; set; }
 
-    public bool IsColdWalletAccount { get; set; }
+    public bool SegwitChangeAddress { get; set; }
+
+    public bool PayToScript { get; set; }
 
     protected override Task OnInitializedAsync()
     {
         ColdStakingManager = this.WalletManager as ColdStakingManager;
-
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
-
+        var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
+        this.SegwitChangeAddress = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
+        this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
+        if (this.ColdWalletAddress == null)
+        {
+            this.Alert = "The cold staking account does not exist.";
+            return Task.CompletedTask;
+        }
         return Task.CompletedTask;
     }
 
-    private void GenerateAddress()
+    private void ChangePayToScript()
     {
-        var result = this.WalletManager.GetUnusedAddress(new Wallet.Types.WalletAccountReference(this.walletname, "account 0"));
-
-        var segwit = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
-
-        this.Address = segwit ? result.Bech32Address : result.Address;
+        this.PayToScript = !this.PayToScript;
     }
 
-    private async Task Withdraw()
+    private async Task Setup()
     {
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
-        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a withdrawal address"; return; }
+        if (string.IsNullOrEmpty(this.ColdWalletAddress)) { this.Alert = "Your cold wallet address is missing"; return; }
+        if (string.IsNullOrEmpty(this.HotWalletAddress)) { this.Alert = "Your hot wallet address is missing"; return; }
+
         this.Alert = string.Empty;
 
         try
         {
-            Transaction transaction = this.ColdStakingManager.GetColdStakingWithdrawalTransaction(
+            Transaction transaction = this.ColdStakingManager.GetColdStakingSetupTransaction(
                 this.WalletTransactionHandler,
-                this.Address,
+                this.ColdWalletAddress,
+                this.HotWalletAddress,
                 this.walletname,
+                "account 0",
                 this.Password,
                 new Money(this.Amount, MoneyUnit.BTC),
-                new Money(this.Fee, MoneyUnit.BTC));
+                new Money(this.Fee, MoneyUnit.BTC),
+                this.SegwitChangeAddress,
+                this.PayToScript);
 
             await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
 
@@ -170,7 +184,6 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
                 this.Alert = res.ErrorMessage;
                 return;
             }
-
         }
         catch (Exception ex)
         {

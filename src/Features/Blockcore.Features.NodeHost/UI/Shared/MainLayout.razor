@@ -1,17 +1,20 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
-
-<div class="main">
-    <div class="top-row px-4">
-        <a href="/docs/index.html" target="_blank">Open API</a>
-        <a href="/ws-ui/index.html">Web Socket</a>
-        <a href="https://www.blockcore.net" target="_blank">Blockcore</a>
+    <div class="sidebar">
+        <NavMenu />
     </div>
 
-    <div class="content px-4">
-        @Body
+    <div class="main container border-left border-secondary">
+        @* <div class="top-row p-4 border-bottom">
+            <span class="float-right">
+            <a href="/docs/index.html" target="_blank">Open API</a>
+            <a href="/ws-ui/index.html">Web Socket</a>
+            <a href="https://www.blockcore.net" target="_blank">Blockcore</a>
+            </span>
+        </div>
+        <div class="content px-4"> *@
+
+        <div class="container pt-3">
+            @Body
+        </div>
     </div>
-</div>

@@ -43,14 +43,14 @@ namespace Blockcore.IntegrationTests
 
         private class ConsensusOptionsTest : PosConsensusOptions
         {
-            public ConsensusOptionsTest() : base(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                witnessScaleFactor: 4)
+            public ConsensusOptionsTest()
             {
+                MaxBlockBaseSize = 1_000_000;
+                MaxStandardVersion = 2;
+                MaxStandardTxWeight = 100_000;
+                MaxBlockSigopsCost = 20_000;
+                MaxStandardTxSigopsCost = 20_000 / 5;
+                WitnessScaleFactor = 4;
             }
 
             public override int GetStakeMinConfirmations(int height, Network network)

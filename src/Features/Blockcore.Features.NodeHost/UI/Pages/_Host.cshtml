@@ -12,8 +12,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
     <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/bootstrap/darkstrap.min.css" />
+    <link rel="stylesheet" href="css/site.css"/>
 </head>
 <body>
     <app>
@@ -32,5 +32,16 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script>
+        window.clipboardCopy = {
+            copyText: function(text) {
+                navigator.clipboard.writeText(text).then(function () {
+                })
+                .catch(function (error) {
+                    alert(error);
+                });
+            }
+        };
+    </script>
 </body>
 </html>

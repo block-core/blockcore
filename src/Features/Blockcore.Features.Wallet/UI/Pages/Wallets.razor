@@ -11,6 +11,7 @@
 @inject IBroadcasterManager BroadcasterManager
 @inject Network Network
 @inject IPooledTransaction PooledTransaction
+@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 
 @{
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -27,7 +28,7 @@
     </div>
 </div>
 <div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
@@ -43,8 +44,35 @@
             </div>
         </div>
     </div>
+    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Wallet Status</h5>
+                <div class="row">
+                    <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</h3>
+                        </div>
+                    </div>
+                  <div class="col-3">
+                    <div class="icon icon-box-success">
+                        @if (this.InitialBlockDownloadState.IsInitialBlockDownload()) {
+                            <h3 class="oi oi-circle-x text-danger" aria-hidden="true"></h3>
+                        } else {
+                            <h3 class="oi oi-circle-check text-success" aria-hidden="true"></h3>
+                        }
+                    </div>
+                  </div>
+                </div>
+                    @if (this.InitialBlockDownloadState.IsInitialBlockDownload()) {
+                       <h6 class="text-left text-danger font-weight-normal">Syncing</h6>
+                     } else {
+                        <h6 class="text-left text-success font-weight-normal">Synced</h6>
+                }
+            </div>
+        </div>
+    </div>
 </div>
-
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
@@ -82,7 +110,6 @@
                         </tbody>
                     </table>
                 </div>
-                <p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
             </div>
         </div>
     </div>

@@ -56,7 +56,7 @@
                     </div>
                   <div class="col-3">
                     <div class="icon icon-box-success">
-                        @if (this.InitialBlockDownloadState.IsInitialBlockDownload()) {
+                        @if (InSync()<100) {
                             <h3 class="oi oi-circle-x text-danger" aria-hidden="true"></h3>
                         } else {
                             <h3 class="oi oi-circle-check text-success" aria-hidden="true"></h3>
@@ -64,8 +64,8 @@
                     </div>
                   </div>
                 </div>
-                    @if (this.InitialBlockDownloadState.IsInitialBlockDownload()) {
-                       <h6 class="text-left text-danger font-weight-normal">Syncing</h6>
+                    @if (InSync()<100) {
+                       <h6 class="text-left text-danger font-weight-normal">Syncing - @InSync()%</h6>
                      } else {
                         <h6 class="text-left text-success font-weight-normal">Synced</h6>
                 }
@@ -134,7 +134,6 @@
     {
         this.WalletSyncManager.SyncFromHeight(1);
     }
-
     private async Task Rebroadcast()
     {
         foreach (string walletName in this.WalletManager.GetWalletsNames())
@@ -188,6 +187,13 @@
                     }
                 }
         return balance;
+    }
+
+    private dynamic InSync()
+    {
+        dynamic syncPercent = 0;
+        syncPercent = (this.WalletSyncManager.WalletTip.Height / this.ChainIndexer.Height) * 100;
+        return syncPercent;
     }
 
 }

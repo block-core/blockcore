@@ -132,34 +132,34 @@ namespace x42.Features.xServer
         public RegisterResult RegisterXServer(RegisterRequest registerRequest)
         {
             var result = new RegisterResult();
-            foreach (var networkAddress in this.xServerSettings.RetrieveNodes())
+
+            var client = new RestClient(GetAddress(registerRequest));
+            var registerRestRequest = new RestRequest("/register", Method.POST);
+            var request = JsonConvert.SerializeObject(registerRequest);
+            registerRestRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
+            registerRestRequest.RequestFormat = DataFormat.Json;
+
+            var registerResult = client.Execute<RegisterResult>(registerRestRequest);
+            if (registerResult.StatusCode == HttpStatusCode.OK)
             {
-                if (this.nodeLifetime.ApplicationStopping.IsCancellationRequested)
-                {
-                    result.ResultMessage = "Application closing.";
-                    break;
-                }
-
-                var client = new RestClient(GetAddress(networkAddress));
-                var registerRestRequest = new RestRequest("/register", Method.POST);
-                var request = JsonConvert.SerializeObject(registerRequest);
-                registerRestRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
-                registerRestRequest.RequestFormat = DataFormat.Json;
-
-                var registerResult = client.Execute<RegisterResult>(registerRestRequest);
-                if (registerResult.StatusCode == HttpStatusCode.OK)
-                {
-                    result = registerResult.Data;
-                    break;
-                }
-
-            };
+                result = registerResult.Data;
+            }
+            else
+            {
+                result.ResultMessage = "Failed to access xServer";
+                result.Success = false;
+            }
             return result;
         }
 
         private string GetAddress(NetworkXServer networkAddress)
         {
             return $"{(networkAddress.IsSSL ? "https" : "http")}://{networkAddress.PublicAddress}:{networkAddress.Port}";
+        }
+
+        private string GetAddress(RegisterRequest registerRequest)
+        {
+            return $"{(registerRequest.NetworkProtocol == 1 ? "http" : "https")}://{registerRequest.NetworkAddress}:{registerRequest.NetworkPort}";
         }
 
         private void SyncPeerToPeersList(xServerPeers xServerPeerList, xServerPeer peer, bool seedCheck = false)

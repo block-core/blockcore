@@ -10,18 +10,23 @@
 @inject NavigationManager NavigationManager
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Node</strong></h1>
+    <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Network</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="input-group">
-                <input @bind="NodeIp" type="text" class="form-control" placeholder="Node IP Address" />
-                <div class="input-group-append">
-                    <button class="btn btn-sm btn-primary mr-1" @onclick="Addnode">Add Node</button>
-                </div>
-                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">View Logs</button>
-                <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">Shutdown</button>
+            <input @bind="NodeIp" type="text" class="form-control-sm" placeholder="Node IP Address" />
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-primary mr-1" @onclick="Addnode">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Add Node
+                </button>
+            </div>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">
+                <span class="oi oi-list" aria-hidden="true"></span> View Logs
+            </button>
+            <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">
+                <span class="oi oi-power-standby" aria-hidden="true"></span> Shutdown
+            </button>
         </div>
     </div>
-
 </div>
 
 <div class="input-group mb-3">
@@ -29,70 +34,151 @@
 </div>
 
 @{
+    if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+    {
+        <p><strong>Currently processing the IBD (initial block download) & syncing your node with the network</strong></p>
+    }
 
-if (this.InitialBlockDownloadState.IsInitialBlockDownload())
-{
-    <p><strong>Currently processing the IBD (initial block download) & syncing your node with the network</strong></p>
-}
-
-<div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td style="min-width: 11em">Connected peers:</td>
-                            <td>@this.ConnectionManager.ConnectedPeers.Count()</td>
-                        </tr>
-                        <tr>
-                            <td style="min-width: 11em">Current tip at height:</td>
-                            <td>@this.ChainIndexer.Tip.Height</td>
-                        </tr>
-                        <tr>
-                            <td style="min-width: 11em">Current tip Hash:</td>
-                            <td>@this.ChainIndexer.Tip.HashBlock</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="row mb-3">
+        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-success mb-0">@this.Network.CoinTicker.ToUpper()</h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="icon icon-box-success ">
+                                <span class="mdi mdi-arrow-top-right icon-item"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Network</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-success mb-0">@this.ConnectionManager.ConnectedPeers.Count()</h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="icon icon-box-success ">
+                                <span class="mdi mdi-arrow-top-right icon-item"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Peers</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="d-flex align-items-center align-self-start">
+                                @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+                                {
+                                    <h3 class="oi oi-circle-x text-danger" aria-hidden="true"></h3>
+                                }
+                                else
+                                {
+                                    <h3 class="oi oi-circle-check text-success" aria-hidden="true"></h3>
+                                }
+                                <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="icon icon-box-success">
+                                <span class="mdi mdi-arrow-top-right icon-item"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Chain Synced</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-success mb-0">@this.ChainIndexer.Tip.Height</h3>
+                                <p class="text-danger ml-2 mb-0 font-weight-medium"></p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="icon icon-box-danger">
+                                <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Network Height</h6>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-border-bottom table-striped table-sm table-hover">
-                        <thead class="thead">
-                            <tr>
-                                <th><strong>IP Address</strong></th>
-                                <th><strong>Inbound</strong></th>
-                                <th><strong>Agent</strong></th>
-                                <th><strong>Version</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var peer in this.ConnectionManager.ConnectedPeers)
-                            {
+    <div class="row mb-3">
+        <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table>
+                            <tbody>
                                 <tr>
-                                    <td>@peer.RemoteSocketEndpoint.ToString()</td>
-                                    <td>@peer.Inbound</td>
-                                    <td>@peer.PeerVersion?.UserAgent</td>
-                                    <td>@peer.PeerVersion?.Version</td>
+                                    <td style="min-width: 11em">Current tip Hash:</td>
+                                    <td>@this.ChainIndexer.Tip.HashBlock</td>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary"><strong>IP ADDRESS</strong></th>
+                                    <th class="text-primary"><strong>CONNECTION</strong></th>
+                                    <th class="text-primary"><strong>AGENT</strong></th>
+                                    <th class="text-primary"><strong>VERSION</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var peer in this.ConnectionManager.ConnectedPeers)
+                                {
+                                    <tr>
+                                        <td class="align-middle">@peer.RemoteSocketEndpoint.ToString()</td>
+                                        <td class="align-middle">@(peer.Inbound ? "Inbound" : "Outbound") </td>
+                                        <td class="align-middle">@peer.PeerVersion?.UserAgent</td>
+                                        <td class="align-middle">@peer.PeerVersion?.Version</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @code
 {

@@ -11,19 +11,24 @@
 @inject IBroadcasterManager BroadcasterManager
 @inject Network Network
 @inject IPooledTransaction PooledTransaction
+@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 
 @{
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Wallet Details</strong></h1>
+    <h1 class="h2"><strong>Wallets</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletCreate(); }">Create Wallet</button>
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletRecover(); }">Recover Wallet</button>
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { Rebroadcast(); }">Re-broadcast</button>
-        <button class="btn btn-sm btn-danger" @onclick="() => { Resync(); }">Resync wallets</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletCreate(); }">
+            <span class="oi oi-file" aria-hidden="true"></span> Create Wallet</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletRecover(); }">
+            <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { Rebroadcast(); }">
+            <span class="oi oi-globe" aria-hidden="true"></span> Re-broadcast</button>
+        <button class="btn btn-sm btn-danger" @onclick="() => { Resync(); }">
+            <span class="oi oi-flash" aria-hidden="true"></span> Resync wallets</button>
     </div>
 </div>
 <div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
@@ -39,21 +44,49 @@
             </div>
         </div>
     </div>
+    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5>Wallet Status</h5>
+                <div class="row">
+                    <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                            <h3 class="text-left">@this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</h3>
+                        </div>
+                    </div>
+                  <div class="col-3">
+                    <div class="icon icon-box-success">
+                        @if (InSync()<100) {
+                            <h3 class="oi oi-circle-x text-danger" aria-hidden="true"></h3>
+                        } else {
+                            <h3 class="oi oi-circle-check text-success" aria-hidden="true"></h3>
+                        }
+                    </div>
+                  </div>
+                </div>
+                    @if (InSync()<100) {
+                       <h6 class="text-left text-danger font-weight-normal">Syncing - @InSync()%</h6>
+                     } else {
+                        <h6 class="text-left text-success font-weight-normal">Synced</h6>
+                }
+            </div>
+        </div>
+    </div>
 </div>
-
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Balances</h4>
 
-                <div class="table-responsive">
+                <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">
                         <thead class="thead">
                             <tr>
-                                <th>Wallet</th>
-                                <th>Confirmed balance</th>
-                                <th>Unconfirmed balance</th>
+                                <th class="text-primary"><strong>WALLET</strong></th>
+                                <th class="text-primary"><strong>CONFIRMED BALANCE</strong></th>
+                                <th class="text-primary"><strong>UNCONFIRMED BALANCE</strong></th>
+                                <th class="text-primary text-center"><strong>DETAILS</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,11 +96,13 @@
                                     foreach (var account in this.WalletManager.GetAccounts(walletName))
                                     {
                                         var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-
                                         <tr @onclick="() => { NavigateToWallet(walletName, account.Name); }">
-                                            <td>@walletName</td>
-                                            <td>@accountBalance.AmountConfirmed</td>
-                                            <td>@accountBalance.AmountUnconfirmed</td>
+                                            <td class="align-middle">@walletName</td>
+                                            <td class="align-middle">@accountBalance.AmountConfirmed</td>
+                                            <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
+                                            <td class="text-center align-middle"><button class="btn btn-sm btn-primary">
+                                                                        <span class="oi oi-zoom-in" aria-hidden="true"></span>
+                                                                    </button></td>
                                         </tr>
                                     }
                                 }
@@ -75,7 +110,6 @@
                         </tbody>
                     </table>
                 </div>
-                <p>Wallet Tip: <strong> @this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</strong></p>
             </div>
         </div>
     </div>
@@ -100,7 +134,6 @@
     {
         this.WalletSyncManager.SyncFromHeight(1);
     }
-
     private async Task Rebroadcast()
     {
         foreach (string walletName in this.WalletManager.GetWalletsNames())
@@ -154,6 +187,13 @@
                     }
                 }
         return balance;
+    }
+
+    private dynamic InSync()
+    {
+        dynamic syncPercent = 0;
+        syncPercent = (this.WalletSyncManager.WalletTip.Height / this.ChainIndexer.Height) * 100;
+        return syncPercent;
     }
 
 }

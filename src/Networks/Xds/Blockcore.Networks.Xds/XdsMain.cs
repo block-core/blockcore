@@ -45,8 +45,8 @@ namespace Blockcore.Networks.Xds
             this.MaxTipAge = 2 * 60 * 60;
             this.MinTxFee = Money.Coins(0.00001m).Satoshi;
             this.MaxTxFee = Money.Coins(1).Satoshi;
-            this.FallbackFee = this.MinTxFee;
-            this.MinRelayTxFee = this.MinTxFee;
+            this.FallbackFee = Money.Coins(0.00001m).Satoshi;
+            this.MinRelayTxFee = Money.Coins(0.00001m).Satoshi;
             this.AbsoluteMinTxFee = Money.Coins(0.01m).Satoshi;
 
             var consensusFactory = new XdsConsensusFactory();

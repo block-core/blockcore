@@ -11,16 +11,14 @@
 			<button class="btn btn-primary" @onclick="Addnode">
 				<span class="oi oi-plus" aria-hidden="true"></span> Add Node</button>
 		</div>
-</div>
-
-}
-else
-{
-
-<div class="alert alert-success" role="alert">
-    @Alert
+        <div class="input-group mt-2">
+            <div class="alert-warning">
+                @Alert
+            </div>
+        </div>
 </div>
 }
+
 @code
 {
 	bool ShowForm { get; set; } = true;
@@ -29,16 +27,11 @@ else
     private void Addnode()
     {
 
-		ShowForm = false;
-
         if (string.IsNullOrEmpty(this.NodeIp)) { this.Alert = "Please enter an IP address"; return; }
         this.Alert = string.Empty;
-
         var endpoint = this.NodeIp.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
-
         this.ConnectionManager.AddNodeAddress(endpoint);
-
-        this.Alert = $"node {endpoint} added";
+        this.Alert = $"Added Node: {endpoint}";
     }
 
 

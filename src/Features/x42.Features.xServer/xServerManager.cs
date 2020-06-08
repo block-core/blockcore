@@ -167,7 +167,7 @@ namespace x42.Features.xServer
             lock (this.xServerPeersLock)
             {
                 var peersList = xServerPeerList.GetPeers();
-                int peerIndex = peersList.FindIndex(p => p.Name == peer.Name && p.Address == peer.Address);
+                int peerIndex = peersList.FindIndex(p => p.Address == peer.Address);
                 if (seedCheck)
                 {
                     if (peerIndex == -1)

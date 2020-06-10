@@ -1,0 +1,38 @@
+@using Blockcore.Utilities.Extensions
+
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
+
+@if (ShowForm)
+{
+
+<div class="input-group">
+		<input @bind="NodeIp" type="text" class="form-control" placeholder="Node IP Address" />
+		<div class="input-group-append">
+			<button class="btn btn-primary" @onclick="Addnode">
+				<span class="oi oi-plus" aria-hidden="true"></span> Add Node</button>
+		</div>
+        <div class="input-group mt-2">
+            <div class="alert-warning">
+                @Alert
+            </div>
+        </div>
+</div>
+}
+
+@code
+{
+	bool ShowForm { get; set; } = true;
+    private string NodeIp { get; set; }
+    string Alert { get; set; }
+    private void Addnode()
+    {
+
+        if (string.IsNullOrEmpty(this.NodeIp)) { this.Alert = "Please enter an IP address"; return; }
+        this.Alert = string.Empty;
+        var endpoint = this.NodeIp.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
+        this.ConnectionManager.AddNodeAddress(endpoint);
+        this.Alert = $"Added Node: {endpoint}";
+    }
+
+
+}

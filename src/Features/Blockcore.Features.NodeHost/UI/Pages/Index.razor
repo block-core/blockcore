@@ -8,29 +8,18 @@
 @inject Blockcore.Connection.IConnectionManager ConnectionManager
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 @inject NavigationManager NavigationManager
+@inject ModalService ModalService
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Network</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="input-group">
-            <input @bind="NodeIp" type="text" class="form-control-sm" placeholder="Node IP Address" />
-            <div class="input-group-append">
-                <button class="btn btn-sm btn-primary mr-1" @onclick="Addnode">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Add Node
-                </button>
-            </div>
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">
-                <span class="oi oi-list" aria-hidden="true"></span> View Logs
-            </button>
-            <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">
-                <span class="oi oi-power-standby" aria-hidden="true"></span> Shutdown
-            </button>
-        </div>
+                 <button class="btn btn-sm btn-primary mr-1" @onclick="AddNode">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Add Node</button>
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToLogs(); }">
+                    <span class="oi oi-list" aria-hidden="true"></span> View Logs</button>
+                <button class="btn btn-sm btn-danger" @onclick="() => { Shutdown(); }">
+                    <span class="oi oi-power-standby" aria-hidden="true"></span> Shutdown</button>
     </div>
-</div>
-
-<div class="input-group mb-3">
-    <div class="alert-warning">@Alert</div>
 </div>
 
 @{
@@ -152,6 +141,7 @@
         <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
+                    <h4 class="card-title">Peers</h4>
                     <div class="table-responsive small">
                         <table class="table table-border-bottom table-striped table-sm table-hover">
                             <thead class="thead">
@@ -179,29 +169,20 @@
             </div>
         </div>
     </div>
+
 }
 @code
 {
-    private string NodeIp { get; set; }
-    string Alert { get; set; }
-    private void Addnode()
-    {
-        if (string.IsNullOrEmpty(this.NodeIp)) { this.Alert = "Please enter an IP address"; return; }
-        this.Alert = string.Empty;
-
-        var endpoint = this.NodeIp.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
-
-        this.ConnectionManager.AddNodeAddress(endpoint);
-
-        this.Alert = $"node {endpoint} added";
-    }
     private void Shutdown()
     {
         this.FullNode?.NodeLifetime.StopApplication();
     }
-
     private void NavigateToLogs()
     {
         NavigationManager.NavigateTo("logs");
+    }
+    private void AddNode()
+    {
+        ModalService.Show("Add Node", typeof(AddNode));
     }
 }

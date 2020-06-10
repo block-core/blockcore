@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using BlazorModal;
 
 namespace Blockcore.Features.NodeHost
 {
@@ -82,6 +83,9 @@ namespace Blockcore.Features.NodeHost
                     // The UI elements moved under the UI folder
                     options.RootDirectory = "/UI/Pages";
                 });
+            
+            	services.AddBlazorModal();
+
             }
 
             if (hostSettings.EnableWS)

@@ -1,4 +1,4 @@
-﻿@page "/walletaccount/{walletname}/{accountname}"
+﻿@page "/walletview/{walletname}/{accountname}"
 
 @using Blockcore.Features.Wallet.Interfaces
 @using NBitcoin;
@@ -8,18 +8,33 @@
 @inject NavigationManager NavigationManager
 @inject IWalletManager WalletManager
 @inject Network Network
+@inject ModalService ModalService
 
 @{
 var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Wallet - @walletname</strong></h1>
+    <h1 class="h2"><strong>Wallet</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <Dropdown TItem="string" OnSelected="@OnSelected" >
+            <InitialTip>@walletname</InitialTip>
+            <ChildContent>
+                @{
+                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                        foreach (var account in this.WalletManager.GetAccounts(walletName))
+                        {
+                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                        }
+                    }
+                }
+            </ChildContent>
+        </Dropdown>
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >
-             <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive</button>
+             <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
+        </button>
         <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >
-            <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send</button>
-
+            <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+        </button>
     </div>
 </div>
 
@@ -57,6 +72,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                                 <th class="text-primary text-center"><strong>DATE/TIME</strong></th>
                                 <th class="text-primary text-right"><strong>AMOUNT</strong></th>
                                 <th class="text-primary text-right"><strong>BLOCK</strong></th>
+                                <th class="text-primary text-center"><strong>DETAILS</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,11 +80,14 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                             {
                                 foreach (var transaction in history.TransactionsHistory)
                                 {
-                                    <tr> @*@onclick="() => { NavigateToViewTx(transaction.Id); }" > *@
-                                        <td>@transaction.Type</td>
+                                    <tr @onclick="ViewTransaction" >
+                                        <td>@transaction.Type</td> 
                                         <td class="text-center">@String.Format("{0:f}", transaction.Timestamp)</td>
                                         <td class="text-right">@transaction.Amount</td>
                                         <td class="text-right">@transaction.ConfirmedInBlock</td>
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-sm btn-secondary"> <span class="oi oi-list" aria-hidden="true"></span></button>
+                                        </td>
                                     </tr>
                                 }
                             }
@@ -80,31 +99,31 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     </div>
 </div>
 }
-
 @code {
-
     [Parameter]
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+    }
     private void NavigateToReceiveWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
     }
-
     private void NavigateToSendWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
     }
-
-    private void NavigateToWallets()
+    private void ViewTransaction()
     {
-        NavigationManager.NavigateTo("wallets");
+        ModalService.Show("Transaction Details", typeof(ViewTransaction));
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToWallet(selection,"account 0");
     }
 
-    private void NavigateToViewTx(uint256 txId)
-    {
-        NavigationManager.NavigateTo("coldStakeviewtx");
-    }
 }

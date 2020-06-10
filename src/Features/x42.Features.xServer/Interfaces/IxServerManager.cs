@@ -27,5 +27,10 @@ namespace x42.Features.xServer.Interfaces
         /// Registers the xServer and returns the result.
         /// </summary>
         RegisterResult RegisterXServer(RegisterRequest registerRequest);
+
+        /// <summary>
+        /// Tests the xServer Ports, and returns the result
+        /// </summary>
+        TestResult TestXServerPorts(TestRequest testRequest);
     }
 }

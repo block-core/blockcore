@@ -15,6 +15,7 @@ using x42.Features.xServer.Models;
 using NBitcoin.Protocol;
 using System.Collections.Concurrent;
 using NBitcoin;
+using System.Net.Sockets;
 
 namespace x42.Features.xServer
 {
@@ -77,6 +78,9 @@ namespace x42.Features.xServer
         /// </summary>
         readonly xServerSettings xServerSettings;
 
+        // <summary>The network the node is running on.</summary>
+        private readonly Network network;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="xServerFeature"/> class with the xServers.
         /// </summary>
@@ -90,7 +94,8 @@ namespace x42.Features.xServer
             DataFolder dataFolders,
             IAsyncProvider asyncProvider,
             INodeLifetime nodeLifetime,
-            xServerSettings xServerSettings)
+            xServerSettings xServerSettings,
+            Network network)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(dataFolders, nameof(dataFolders));
@@ -103,6 +108,7 @@ namespace x42.Features.xServer
             this.asyncProvider = asyncProvider;
             this.nodeLifetime = nodeLifetime;
             this.xServerSettings = xServerSettings;
+            this.network = network;
 
             string path = Path.Combine(this.dataFolders.xServerAppsPath, xServerPeersFileName);
             this.xServerPeerList = new xServerPeers(path);
@@ -149,6 +155,74 @@ namespace x42.Features.xServer
             {
                 result.ResultMessage = "Failed to access xServer";
                 result.Success = false;
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
+        public TestResult TestXServerPorts(TestRequest testRequest)
+        {
+            TestResult testResult = new TestResult()
+            {
+                Success = true
+            };
+
+            if (!ValidateNodeOnline(testRequest))
+            {
+                testResult.ResultMessage = $"Test failed, node unavailable on port {this.network.DefaultPort}";
+                testResult.Success = false;
+            }
+
+            string connectedAndSyncedMessage = GetServerOnlineAndSyncedMessage(testRequest);
+            if (connectedAndSyncedMessage != string.Empty)
+            {
+                testResult.ResultMessage = connectedAndSyncedMessage;
+                testResult.Success = false;
+            }
+
+            return testResult;
+        }
+
+        private bool ValidateNodeOnline(TestRequest testRequest)
+        {
+            bool result = false;
+            try
+            {
+                using var client = new TcpClient(testRequest.NetworkAddress, this.network.DefaultPort);
+                result = true;
+            }
+            catch (SocketException) { }
+            return result;
+        }
+
+        private string GetServerOnlineAndSyncedMessage(TestRequest testRequest)
+        {
+            string result = string.Empty;
+            try
+            {
+                string xServerURL = Utils.GetServerUrl(testRequest.NetworkProtocol, testRequest.NetworkAddress, testRequest.NetworkPort);
+
+                this.logger.LogDebug($"Attempting validate connection to {xServerURL}.");
+
+                var client = new RestClient(xServerURL);
+                var xServersPingRequest = new RestRequest("/ping", Method.GET);
+                var xServerPingResult = client.Execute<PingResult>(xServersPingRequest);
+                if (xServerPingResult.StatusCode == HttpStatusCode.OK)
+                {
+                    long minimumBlockHeight = Convert.ToInt64(xServerPingResult.Data.BestBlockHeight) + 6; // TODO: This 6 is an xServer consensus.
+                    if (minimumBlockHeight < testRequest.BlockHeight)
+                    {
+                        result = $"The xServer is not sync'd to network, it's on block {xServerPingResult.Data.BestBlockHeight} but needs to be on {testRequest.BlockHeight}";
+                    }
+                }
+                else
+                {
+                    result = $"Test failed, xServer unavailable on port {testRequest.NetworkPort}";
+                }
+            }
+            catch (Exception)
+            {
+                result = $"Test failed, xServer unavailable on port {testRequest.NetworkPort}";
             }
             return result;
         }

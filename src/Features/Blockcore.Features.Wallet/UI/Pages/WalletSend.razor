@@ -31,6 +31,9 @@
                     }
                 </ChildContent>
             </Dropdown>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >
+                <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
+            </button>
             <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
         </div>
     </div>
@@ -298,13 +301,22 @@
     {
         NavigationManager.NavigateTo("walletbroadcasttx/" + walletName + "/" + accountname);
     }
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+    }
+    private void NavigateToReceiveWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+    }
     private void NavigateToSendWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
     }
+
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToSendWallet(selection,"account 0");
+        NavigateToWallet(selection,"account 0");
     }
 }

@@ -24,6 +24,9 @@
                 }
             </ChildContent>
         </Dropdown>
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >
+          <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+        </button>
     </div>
 </div>
 
@@ -58,13 +61,21 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+    }
     private void NavigateToReceiveWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
     }
+    private void NavigateToSendWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+    }
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToReceiveWallet(selection,"account 0");
+        NavigateToWallet(selection,"account 0");
     }
 }

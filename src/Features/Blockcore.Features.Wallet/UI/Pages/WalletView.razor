@@ -30,10 +30,11 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
             </ChildContent>
         </Dropdown>
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >
-             <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive</button>
+             <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
+        </button>
         <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >
-            <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send</button>
-
+            <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+        </button>
     </div>
 </div>
 
@@ -103,6 +104,10 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+    }
     private void NavigateToReceiveWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
@@ -114,10 +119,6 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     private void ViewTransaction()
     {
         ModalService.Show("Transaction Details", typeof(ViewTransaction));
-    }
-    private void NavigateToWallet(string walletName, string accountname)
-    {
-        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
     }
     private void OnSelected(string selection)
     {

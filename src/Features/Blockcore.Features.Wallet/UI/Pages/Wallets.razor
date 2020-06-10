@@ -78,7 +78,6 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Balances</h4>
-
                 <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">
                         <thead class="thead">
@@ -100,10 +99,10 @@
                                             <td class="align-middle">@walletName</td>
                                             <td class="align-middle">@accountBalance.AmountConfirmed</td>
                                             <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
-                                            <td class="text-center align-middle"><button class="btn btn-sm btn-primary">
-                                                                        <span class="oi oi-zoom-in" aria-hidden="true"></span>
-                                                                    </button></td>
-                                        </tr>
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-sm btn-secondary"> <span class="oi oi-arrow-right" aria-hidden="true"></span></button>
+                                        </td>
+                                    </tr>
                                     }
                                 }
                             }

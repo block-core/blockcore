@@ -1,0 +1,13 @@
+@if (ShowForm)
+{
+
+}
+
+@code
+{
+	bool ShowForm { get; set; } = true;
+	private void SubmitForm()
+	{
+		ShowForm = false;
+	}
+}

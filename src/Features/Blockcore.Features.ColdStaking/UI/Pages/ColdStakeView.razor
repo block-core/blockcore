@@ -8,6 +8,7 @@
 @inject NavigationManager NavigationManager
 @inject IWalletManager WalletManager
 @inject Network Network
+@inject ModalService ModalService
 
 @{
 
@@ -77,6 +78,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                                 <th class="text-primary text-center"><strong>DATE/TIME</strong></th>
                                 <th class="text-primary text-right"><strong>AMOUNT</strong></th>
                                 <th class="text-primary text-right"><strong>BLOCK</strong></th>
+                                <th class="text-primary text-center"><strong>DETAILS</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,11 +86,14 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                             {
                                 foreach (var transaction in history.TransactionsHistory)
                                 {
-                                    <tr> @* @onclick="() => { NavigateToViewTx(transaction.Id); }" *@
+                                    <tr @onclick="ViewTransaction">
                                         <td>@transaction.Type</td>
                                         <td class="text-center">@String.Format("{0:f}", transaction.Timestamp)</td>
                                         <td class="text-right">@transaction.Amount</td>
                                         <td class="text-right">@transaction.ConfirmedInBlock</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-secondary"><span class="oi oi-list" aria-hidden="true"></span></button>
+                                        </td>                                     
                                     </tr>
                                 }
                             }
@@ -126,8 +131,8 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
         NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
     }
 
-    private void NavigateToViewTx(uint256 txId)
+    private void ViewTransaction()
     {
-        NavigationManager.NavigateTo("coldStakeviewtx");
+        ModalService.Show("Transaction Details", typeof(ViewTransaction));
     }
 }

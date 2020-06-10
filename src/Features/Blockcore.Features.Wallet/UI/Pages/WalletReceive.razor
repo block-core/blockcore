@@ -7,15 +7,27 @@
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
 
+@{
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Receive to @walletname</strong></h1>
+    <h1 class="h2"><strong>Receive</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <Dropdown TItem="string" OnSelected="@OnSelected" >
+            <InitialTip>@walletname</InitialTip>
+            <ChildContent>
+                @{
+                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                        foreach (var account in this.WalletManager.GetAccounts(walletName))
+                        {
+                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                        }
+                    }
+                }
+            </ChildContent>
+        </Dropdown>
     </div>
 </div>
 
-@{
 var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
-
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
@@ -46,4 +58,13 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
+    private void NavigateToReceiveWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToReceiveWallet(selection,"account 0");
+    }
 }

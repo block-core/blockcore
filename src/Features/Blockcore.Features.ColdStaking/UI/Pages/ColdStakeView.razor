@@ -11,10 +11,22 @@
 @inject ModalService ModalService
 
 @{
-
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 style="max-width: 18em" class="h2"><strong>Cold Staking - @walletname</strong></h1>
+    <h1 style="max-width: 18em" class="h2"><strong>Cold Staking</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <Dropdown TItem="string" OnSelected="@OnSelected" >
+            <InitialTip>@walletname</InitialTip>
+            <ChildContent>
+                @{
+                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                        foreach (var account in this.WalletManager.GetAccounts(walletName))
+                        {
+                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                        }
+                    }
+                }
+            </ChildContent>
+        </Dropdown>
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
             <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake</button>
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
@@ -112,7 +124,12 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-
+    ColdStakingManager ColdStakingManager;
+    protected override Task OnInitializedAsync()
+    {
+        ColdStakingManager = this.WalletManager as ColdStakingManager;
+        return Task.CompletedTask;
+    }
     private void NavigateToEnableWallet()
     {
         NavigationManager.NavigateTo("coldstaking-enablewallet");
@@ -134,5 +151,14 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     private void ViewTransaction()
     {
         ModalService.Show("Transaction Details", typeof(ViewTransaction));
+    }
+    private void NavigateToColdStakeView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+    }    
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakeView(selection);
     }
 }

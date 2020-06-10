@@ -16,8 +16,21 @@
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h2"><strong>Send coins from @walletname</strong></h1>
+        <h1 class="h2"><strong>Send coins</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
+            <Dropdown TItem="string" OnSelected="@OnSelected" >
+                <InitialTip>@walletname</InitialTip>
+                <ChildContent>
+                    @{
+                        foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                            foreach (var account in this.WalletManager.GetAccounts(walletName))
+                            {
+                            <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                            }
+                        }
+                    }
+                </ChildContent>
+            </Dropdown>
             <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
         </div>
     </div>
@@ -284,5 +297,14 @@
     private void NavigateToBroadcastTx(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletbroadcasttx/" + walletName + "/" + accountname);
+    }
+    private void NavigateToSendWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToSendWallet(selection,"account 0");
     }
 }

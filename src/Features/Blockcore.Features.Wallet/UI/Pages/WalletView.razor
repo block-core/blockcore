@@ -1,4 +1,4 @@
-﻿@page "/walletaccount/{walletname}/{accountname}"
+﻿@page "/walletview/{walletname}/{accountname}"
 
 @using Blockcore.Features.Wallet.Interfaces
 @using NBitcoin;
@@ -14,8 +14,21 @@
 var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Wallet - @walletname</strong></h1>
+    <h1 class="h2"><strong>Wallet</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <Dropdown TItem="string" OnSelected="@OnSelected" >
+            <InitialTip>@walletname</InitialTip>
+            <ChildContent>
+                @{
+                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                        foreach (var account in this.WalletManager.GetAccounts(walletName))
+                        {
+                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                        }
+                    }
+                }
+            </ChildContent>
+        </Dropdown>
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >
              <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive</button>
         <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >
@@ -102,4 +115,14 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     {
         ModalService.Show("Transaction Details", typeof(ViewTransaction));
     }
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToWallet(selection,"account 0");
+    }
+
 }

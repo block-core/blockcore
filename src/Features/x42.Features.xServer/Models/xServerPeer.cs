@@ -4,6 +4,8 @@
     {
         public string Name { get; set; }
 
+        public int NetworkProtocol { get; set; }
+
         public string Address { get; set; }
 
         public long Priority { get; set; }
@@ -15,6 +17,5 @@
         public long ResponseTime { get; set; }
 
         public int Tier { get; set; }
-
     }
 }

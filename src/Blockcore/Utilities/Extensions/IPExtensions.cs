@@ -60,9 +60,9 @@ namespace Blockcore.Utilities.Extensions
             return Utils.ParseIpEndpoint(ipAddress, port);
         }
 
-        public static NetworkXServer ToIPXServerEndPoint(this string ipAddress, int port, bool isSSL)
+        public static NetworkXServer ToIPXServerEndPoint(this string ipAddress, int port, int networkProtocol)
         {
-            return Utils.ParseIpXServerEndpoint(ipAddress, port, isSSL);
+            return Utils.ParseIpXServerEndpoint(ipAddress, port, networkProtocol);
         }
 
         /// <summary>

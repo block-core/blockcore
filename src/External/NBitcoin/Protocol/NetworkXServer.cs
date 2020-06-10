@@ -5,13 +5,13 @@
         public string PublicAddress { get; set; }
         public long Port { get; set; }
 
-        public bool IsSSL { get; set; }
+        public int NetworkProtocol { get; set; }
 
-        public NetworkXServer(string publicAddress, long port, bool isSSL = false)
+        public NetworkXServer(string publicAddress, long port, int networkProtocol = 0)
         {
             this.PublicAddress = publicAddress;
             this.Port = port;
-            this.IsSSL = isSSL;
+            this.NetworkProtocol = networkProtocol;
         }
     }
 }

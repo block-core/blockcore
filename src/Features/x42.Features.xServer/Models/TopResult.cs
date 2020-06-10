@@ -24,6 +24,9 @@ namespace x42.Features.xServer.Models
         /// <summary>xServer name.</summary>
         public string Name { get; set; }
 
+        /// <summary>xServer connection protocol.</summary>
+        public int NetworkProtocol { get; set; }
+
         /// <summary>xServer connection address.</summary>
         public string Address { get; set; }
 

@@ -14,6 +14,7 @@ using x42.Features.xServer.Interfaces;
 using x42.Features.xServer.Models;
 using NBitcoin.Protocol;
 using System.Collections.Concurrent;
+using NBitcoin;
 
 namespace x42.Features.xServer
 {
@@ -132,8 +133,8 @@ namespace x42.Features.xServer
         public RegisterResult RegisterXServer(RegisterRequest registerRequest)
         {
             var result = new RegisterResult();
-
-            var client = new RestClient(GetAddress(registerRequest));
+            string xServerURL = Utils.GetServerUrl(registerRequest.NetworkProtocol, registerRequest.NetworkAddress, registerRequest.NetworkPort);
+            var client = new RestClient(xServerURL);
             var registerRestRequest = new RestRequest("/register", Method.POST);
             var request = JsonConvert.SerializeObject(registerRequest);
             registerRestRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
@@ -150,16 +151,6 @@ namespace x42.Features.xServer
                 result.Success = false;
             }
             return result;
-        }
-
-        private string GetAddress(NetworkXServer networkAddress)
-        {
-            return $"{(networkAddress.IsSSL ? "https" : "http")}://{networkAddress.PublicAddress}:{networkAddress.Port}";
-        }
-
-        private string GetAddress(RegisterRequest registerRequest)
-        {
-            return $"{(registerRequest.NetworkProtocol == 1 ? "http" : "https")}://{registerRequest.NetworkAddress}:{registerRequest.NetworkPort}";
         }
 
         private void SyncPeerToPeersList(xServerPeers xServerPeerList, xServerPeer peer, bool seedCheck = false)
@@ -197,6 +188,7 @@ namespace x42.Features.xServer
                 var seedPeer = new xServerPeer()
                 {
                     Name = "Public Seed",
+                    NetworkProtocol = networkAddress.NetworkProtocol,
                     Address = networkAddress.PublicAddress,
                     Port = networkAddress.Port,
                     Priority = -1,
@@ -217,7 +209,7 @@ namespace x42.Features.xServer
                 if (this.nodeLifetime.ApplicationStopping.IsCancellationRequested)
                     return;
 
-                string xServerURL = $"{(networkAddress.IsSSL ? "https" : "http")}://{networkAddress.PublicAddress}:{networkAddress.Port}";
+                string xServerURL = Utils.GetServerUrl(networkAddress.NetworkProtocol, networkAddress.PublicAddress, networkAddress.Port);
 
                 this.logger.LogDebug($"Attempting connection to {xServerURL}.");
 
@@ -243,6 +235,7 @@ namespace x42.Features.xServer
                                 var peer = new xServerPeer()
                                 {
                                     Name = xServer.Name,
+                                    NetworkProtocol = xServer.NetworkProtocol,
                                     Address = xServer.Address,
                                     Port = xServer.Port,
                                     Priority = xServer.Priotiry,

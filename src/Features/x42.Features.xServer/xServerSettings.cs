@@ -55,7 +55,7 @@ namespace x42.Features.xServer
 
             try
             {
-                foreach (NetworkXServer addNode in config.GetAll("addxservernode", this.logger).Select(c => c.ToIPXServerEndPoint(4242, false)))
+                foreach (NetworkXServer addNode in config.GetAll("addxservernode", this.logger).Select(c => c.ToIPXServerEndPoint(4242, 0)))
                 {
                     this.AddAddNode(addNode);
                 }

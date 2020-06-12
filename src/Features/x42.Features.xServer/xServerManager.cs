@@ -122,6 +122,7 @@ namespace x42.Features.xServer
             this.xServerDiscoveryLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{nameof(xServerFeature)}.xServerSeedRefresh", async token =>
             {
                 await XServerDiscoveryAsync(this.xServerPeerList).ConfigureAwait(false);
+                await RemoveUnresponsivePeersAsync(this.xServerPeerList).ConfigureAwait(false);
                 this.logger.LogInformation($"Saving cached xServer Seeds to {this.xServerPeerList.Path}");
                 await this.xServerPeerList.Save().ConfigureAwait(false);
             },
@@ -227,13 +228,17 @@ namespace x42.Features.xServer
             return result;
         }
 
-        private void SyncPeerToPeersList(xServerPeers xServerPeerList, xServerPeer peer, bool seedCheck = false)
+        private void SyncPeerToPeersList(xServerPeers xServerPeerList, xServerPeer peer, bool seedCheck = false, bool removePeer = false)
         {
             lock (this.xServerPeersLock)
             {
                 var peersList = xServerPeerList.GetPeers();
                 int peerIndex = peersList.FindIndex(p => p.Address == peer.Address);
-                if (seedCheck)
+                if (removePeer)
+                {
+                    peersList.Remove(peer);
+                }
+                else if (seedCheck)
                 {
                     if (peerIndex == -1)
                     {
@@ -274,16 +279,34 @@ namespace x42.Features.xServer
             }
         }
 
+        private async Task RemoveUnresponsivePeersAsync(xServerPeers xServerPeerList)
+        {
+            foreach (var peer in xServerPeerList.GetPeers())
+            {
+                string xServerURL = Utils.GetServerUrl(peer.NetworkProtocol, peer.Address, peer.Port);
+                var client = new RestClient(xServerURL);
+                var pingRequest = new RestRequest("/ping/", Method.GET);
+                var pingResponseTime = Stopwatch.StartNew();
+                var pingResult = await client.ExecuteAsync<PingResult>(pingRequest).ConfigureAwait(false);
+                pingResponseTime.Stop();
+                if (pingResult.StatusCode != HttpStatusCode.OK)
+                {
+                    SyncPeerToPeersList(xServerPeerList, peer, removePeer: true);
+                }
+            }
+
+        }
+
         private async Task XServerDiscoveryAsync(xServerPeers xServerPeerList)
         {
             var seedList = new ConcurrentBag<NetworkXServer>();
             int topResult = 10;
-            await this.xServerSettings.RetrieveNodes().ForEachAsync(10, this.nodeLifetime.ApplicationStopping, async (networkAddress, cancellation) =>
+            await this.xServerSettings.RetrieveNodes().ForEachAsync(10, this.nodeLifetime.ApplicationStopping, async (peer, cancellation) =>
             {
                 if (this.nodeLifetime.ApplicationStopping.IsCancellationRequested)
                     return;
 
-                string xServerURL = Utils.GetServerUrl(networkAddress.NetworkProtocol, networkAddress.PublicAddress, networkAddress.Port);
+                string xServerURL = Utils.GetServerUrl(peer.NetworkProtocol, peer.PublicAddress, peer.Port);
 
                 this.logger.LogDebug($"Attempting connection to {xServerURL}.");
 
@@ -293,7 +316,7 @@ namespace x42.Features.xServer
                 var topXServerResult = await client.ExecuteAsync<TopResult>(topXServersRequest, cancellation).ConfigureAwait(false);
                 if (topXServerResult.StatusCode == HttpStatusCode.OK)
                 {
-                    seedList.Add(networkAddress);
+                    seedList.Add(peer);
                     if (topXServerResult.Data?.XServers?.Count > 0)
                     {
                         var xServers = topXServerResult.Data.XServers;
@@ -303,10 +326,10 @@ namespace x42.Features.xServer
                             var pingResponseTime = Stopwatch.StartNew();
                             var pingResult = await client.ExecuteAsync<PingResult>(pingRequest, cancellation).ConfigureAwait(false);
                             pingResponseTime.Stop();
-                            if (topXServerResult.StatusCode == HttpStatusCode.OK)
+                            if (pingResult.StatusCode == HttpStatusCode.OK)
                             {
                                 var ping = pingResult.Data;
-                                var peer = new xServerPeer()
+                                var newPeer = new xServerPeer()
                                 {
                                     Name = xServer.Name,
                                     NetworkProtocol = xServer.NetworkProtocol,
@@ -317,7 +340,7 @@ namespace x42.Features.xServer
                                     ResponseTime = pingResponseTime.ElapsedMilliseconds,
                                     Tier = xServer.Tier
                                 };
-                                SyncPeerToPeersList(xServerPeerList, peer);
+                                SyncPeerToPeersList(xServerPeerList, newPeer);
                             }
                         }
                     }

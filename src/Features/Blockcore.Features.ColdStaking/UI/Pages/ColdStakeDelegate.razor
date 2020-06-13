@@ -14,8 +14,25 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Delegate Staking from @walletname</strong></h1>
+    <h1 class="h2"><strong>Delegate Staking</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <Dropdown TItem="string" OnSelected="@OnSelected" >
+            <InitialTip>@walletname</InitialTip>
+            <ChildContent>
+                @{
+                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                        foreach (var account in this.WalletManager.GetAccounts(walletName))
+                        {
+                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                        }
+                    }
+                }
+            </ChildContent>
+        </Dropdown>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
+            <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">
+            <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw</button>
     </div>
 </div>
 
@@ -205,5 +222,26 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         }
         //TODO: Add confirmation screen
         NavigationManager.NavigateTo("coldstakeview/" + walletname + "/coldStakingColdAddresses");
+    }
+    private void NavigateToWithdraw(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-withdraw/" + walletName);
+    }
+    private void NavigateToSetup(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-setup/" + walletName);
+    }
+    private void NavigateToDelegate(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
+    }
+    private void NavigateToColdStakeView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakeView(selection);
     }
 }

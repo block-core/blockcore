@@ -16,8 +16,26 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Cold Staking setup for @walletname</strong></h1>
+    <h1 class="h2"><strong>Cold Staking Setup</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <Dropdown TItem="string" OnSelected="@OnSelected" >
+            <InitialTip>@walletname</InitialTip>
+            <ChildContent>
+                @{
+                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                        foreach (var account in this.WalletManager.GetAccounts(walletName))
+                        {
+                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                        }
+                    }
+                }
+            </ChildContent>
+        </Dropdown>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
+            <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">
+            <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw</button>
+
     </div>
 </div>
 
@@ -64,18 +82,6 @@
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-body">
-
-                    @*TODO: test removed coldstake address
-                     <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                          <span style="min-width: 10em" class="input-group-text">Amount(@this.Network.CoinTicker.ToUpper()):</span>
-                        </div>
-                        <input @bind="ColdWalletAddress" type="text" class="form-control" placeholder="ColdWalletAddress" />
-                        <div class="input-group-append">
-                            <span style="min-width: 10em" class="input-group-text">from: @walletname</span>
-                        </div>
-                    </div> *@
-
                     <div class="input-group mb-3">
                         <div class="input-group-prepend mb-3">
                             <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Hot Address:</span>
@@ -258,5 +264,26 @@
         }
         //TODO: Add confirmation screen
         NavigationManager.NavigateTo("coldstakeview/" + walletname + "/coldStakingColdAddresses");
+    }
+    private void NavigateToWithdraw(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-withdraw/" + walletName);
+    }
+    private void NavigateToSetup(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-setup/" + walletName);
+    }
+    private void NavigateToDelegate(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
+    }
+    private void NavigateToColdStakeView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakeView(selection);
     }
 }

@@ -19,12 +19,10 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
         <Dropdown TItem="string" OnSelected="@OnSelected" >
             <InitialTip>@walletname</InitialTip>
             <ChildContent>
-                @{
-                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
-                        foreach (var account in this.WalletManager.GetAccounts(walletName))
-                        {
-                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                        }
+                @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                    foreach (var account in this.WalletManager.GetAccounts(walletName))
+                    {
+                    <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
                     }
                 }
             </ChildContent>
@@ -125,5 +123,4 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
         Console.WriteLine(selection);
         NavigateToWallet(selection,"account 0");
     }
-
 }

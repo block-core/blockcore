@@ -50,7 +50,7 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
                     <div class="input-group-prepend">
                         <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
                     </div>
-                    <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
+                    <textarea @bind="TransactionHex" class="form-control bg-secondary text-light" rows="5">@TransactionHex</textarea>
                 </div>
                 <div class="input-group mb-3">
                     <button class="btn btn-primary mr-1" @onclick="Broadcast">Broadcast Transaction</button>

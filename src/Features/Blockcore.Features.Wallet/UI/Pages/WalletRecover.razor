@@ -25,7 +25,7 @@
                     <div class="input-group-prepend">
                         <span style="min-width: 15em" class="input-group-text">Mnemonic</span>
                     </div>
-                    <textarea @bind="Mnemonic" class="form-control" rows="2" placeholder="Please enter your mnemonic seed words">@Mnemonic</textarea>
+                    <textarea @bind="Mnemonic" class="form-control bg-secondary text-light" rows="2" placeholder="Please enter your mnemonic seed words">@Mnemonic</textarea>
                 </div>
                 <p><strong>Reminder:</strong> The Mnemonic is your wallet and must be kept safe and secure.</p>
 
@@ -33,7 +33,7 @@
                     <div class="input-group-prepend">
                         <span style="min-width: 15em" class="input-group-text">Passphrase (optional):</span>
                     </div>
-                    <input @bind="Passphrase" type="password" class="form-control" placeholder="If you used a passphrase when creating the wallet, enter it here" />
+                    <input @bind="Passphrase" type="password" class="form-control bg-secondary text-light" placeholder="If you used a passphrase when creating the wallet, enter it here" />
                 </div>
                 <p><strong>Reminder:</strong> The Passphrase is permanently linked to the wallet and must be kept safe and secure.</p>
 
@@ -41,14 +41,14 @@
                     <div class="input-group-prepend">
                         <span style="min-width: 15em" class="input-group-text" id="basic-addon1">Wallet name:</span>
                     </div>
-                    <input @bind="WalletName" type="text" class="form-control" placeholder="Please enter your wallet name" />
+                    <input @bind="WalletName" type="text" class="form-control bg-secondary text-light" placeholder="Please enter your wallet name" />
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span style="min-width: 15em" class="input-group-text">Wallet Password:</span>
                     </div>
-                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                    <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                 </div>
 
                 <button class="btn btn-primary" @onclick="RecoverWallet">Recover wallet</button>

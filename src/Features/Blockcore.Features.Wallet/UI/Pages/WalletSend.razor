@@ -66,14 +66,14 @@
                         <div class="input-group-prepend">
                             <span style="min-width: 10em" class="input-group-text" id="basic-addon1">To Address:</span>
                         </div>
-                        <input @bind="Address" type="text" class="form-control" placeholder="Where you want to send coins? Please enter the address" />
+                        <input @bind="Address" type="text" class="form-control bg-secondary text-light" placeholder="Where you want to send coins? Please enter the address" />
                     </div>
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                         <span style="min-width: 10em" class="input-group-text">Amount(@this.Network.CoinTicker.ToUpper()):</span>
                         </div>
-                        <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+                        <input @bind="Amount" type="text" class="form-control bg-secondary text-light" placeholder="amount" />
                         <div class="input-group-append">
                             <button class="btn btn-secondary" @onclick="SendMax">Max</button>
                         </div>
@@ -83,7 +83,7 @@
                         <div class="input-group-prepend">
                             <span style="min-width: 10em" class="input-group-text">Fee:</span>
                         </div>
-                        <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
+                        <input @bind="Fee" type="text" class="form-control bg-secondary text-light" placeholder="fee" />
                         <div class="input-group-append">
                             <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.Low); }">Low</button>
                             <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.Medium); }">Medium</button>
@@ -95,7 +95,7 @@
                         <div class="input-group-prepend">
                             <span style="min-width: 10em" class="input-group-text">Password:</span>
                         </div>
-                        <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                        <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                     </div>
 
                     <div class="input-group mb-3">
@@ -135,7 +135,7 @@
                             <div class="input-group-prepend">
                                 <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
                             </div>
-                            <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
+                            <textarea @bind="TransactionHex" class="form-control bg-secondary text-light" rows="5">@TransactionHex</textarea>
                         </div>
                     </div>
                 </div>

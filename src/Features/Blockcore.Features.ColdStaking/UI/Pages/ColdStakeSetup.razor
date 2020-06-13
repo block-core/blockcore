@@ -84,9 +84,9 @@
                 <div class="card-body">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend mb-3">
-                            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Hot Address:</span>
+                            <span style="min-width: 10em" class="input-group-text m-1" id="basic-addon1">Hot Address:</span>
                         </div>
-                        <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Select the wallet from which you will cold stake" />
+                        <input @bind="HotWalletAddress" type="text" class="form-control bg-secondary text-light m-1" placeholder="Select the wallet from which you will cold stake" />
 
                         <div class="input-group-append mb-3">
                             <div class="btn-toolbar mb-3 mb-md-0">
@@ -96,7 +96,7 @@
                                         var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
                                         if (coldStakingWalletEnabled != null)
                                         {
-                                            <button class="btn btn-secondary" @onclick="() => { GetHotWalletAddress(walletName); }">@walletName</button>
+                                            <button class="btn btn-secondary m-1" @onclick="() => { GetHotWalletAddress(walletName); }">@walletName</button>
                                         }
                                     }
                                 }
@@ -104,29 +104,26 @@
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span style="min-width: 10em" class="input-group-text">Amount (@this.Network.CoinTicker.ToUpper()):</span>
+                                <span style="min-width: 10em" class="input-group-text m-1">Amount (@this.Network.CoinTicker.ToUpper()):</span>
                             </div>
-                            <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+                            <input @bind="Amount" type="text" class="form-control bg-secondary text-light m-1" placeholder="amount" />
                             <div class="input-group-append">
-                                <button class="btn btn-secondary" @onclick="SendMax">Max</button>
+                                <button class="btn btn-secondary m-1" @onclick="SendMax">Max</button>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span style="min-width: 10em" class="input-group-text">Fee:</span>
+                                <span style="min-width: 10em" class="input-group-text m-1">Fee:</span>
                             </div>
-                            <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
-                            <div class="input-group-append">
-                                <span style="min-width: 6em" class="input-group-text"><abbr title="The low fee may not be enough for every transaction">Default to low</abbr></span>
-                            </div>
+                            <input @bind="Fee" type="text" class="form-control bg-secondary text-light m-1" placeholder="fee" />
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span style="min-width: 10em" class="input-group-text">Password:</span>
+                                <span style="min-width: 10em" class="input-group-text m-1">Password:</span>
                             </div>
-                            <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                            <input @bind="Password" type="password" class="form-control bg-secondary text-light m-1" placeholder="Please enter your password" />
                         </div>
                         <div class="btn-toolbar mb-3 mb-md-0">
                             <button class="btn btn-primary mr-1" @onclick="Setup">Setup coldstaking</button>

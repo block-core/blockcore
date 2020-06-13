@@ -23,11 +23,6 @@
 </div>
 
 @{
-    if (this.InitialBlockDownloadState.IsInitialBlockDownload())
-    {
-        <p><strong>Currently processing the IBD (initial block download) & syncing your node with the network</strong></p>
-    }
-
     <div class="row mb-3">
         <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
             <div class="card">
@@ -92,7 +87,12 @@
                             </div>
                         </div>
                     </div>
-                    <h6 class="text-muted font-weight-normal">Chain Synced</h6>
+                   @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+                        {
+                            <h6 class="text-danger font-weight-normal">Chain Syncing</h6>                
+                        } else {
+                            <h6 class="text-muted font-weight-normal">Chain Synced</h6>
+                        }
                 </div>
             </div>
         </div>
@@ -156,7 +156,7 @@
                                 @foreach (var peer in this.ConnectionManager.ConnectedPeers)
                                 {
                                     <tr>
-                                        <td class="align-middle">@peer.RemoteSocketEndpoint.ToString()</td>
+                                        <td class="align-middle"><h5 class="oi oi-monitor" aria-hidden="true"></h5> @peer.RemoteSocketEndpoint.ToString()</td>
                                         <td class="align-middle">@(peer.Inbound ? "Inbound" : "Outbound") </td>
                                         <td class="align-middle">@peer.PeerVersion?.UserAgent</td>
                                         <td class="align-middle">@peer.PeerVersion?.Version</td>

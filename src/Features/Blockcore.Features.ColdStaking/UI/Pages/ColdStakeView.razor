@@ -40,7 +40,7 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
 var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
 <div class="row mb-3">
-    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
@@ -56,7 +56,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             </div>
         </div>
     </div>
-        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Cold Balance</h5>
@@ -80,7 +80,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
-            <div class="card-body">
+            <div class="mx-3 mt-3">
                 <h4 class="card-title">Balances</h4>
                 <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">

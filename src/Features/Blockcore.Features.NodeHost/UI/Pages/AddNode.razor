@@ -4,7 +4,6 @@
 
 @if (ShowForm)
 {
-
 <div class="input-group">
 		<input @bind="NodeIp" type="text" class="form-control bg-secondary text-light" placeholder="Node IP Address" />
 		<div class="input-group-append">
@@ -18,7 +17,6 @@
         </div>
 </div>
 }
-
 @code
 {
 	bool ShowForm { get; set; } = true;
@@ -26,13 +24,10 @@
     string Alert { get; set; }
     private void Addnode()
     {
-
         if (string.IsNullOrEmpty(this.NodeIp)) { this.Alert = "Please enter an IP address"; return; }
         this.Alert = string.Empty;
         var endpoint = this.NodeIp.ToIPEndPoint(this.ConnectionManager.Network.DefaultPort);
         this.ConnectionManager.AddNodeAddress(endpoint);
         this.Alert = $"Added Node: {endpoint}";
     }
-
-
 }

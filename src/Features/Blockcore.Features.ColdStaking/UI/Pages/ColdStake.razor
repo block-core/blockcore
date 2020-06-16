@@ -10,15 +10,24 @@
 @inject NodeDeployments NodeDeployments
 @inject Network Network
 
+
 @if (!NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.CheckColdStakeVerify))
 {
     <h2>Cold staking is not activated</h2>
     return;
 }
-@{
+
+@if (!this.WalletManager.ContainsWallets) {
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>No wallets available</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
+    </div>
+} else {
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>Cold Staking</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+     @if (this.WalletManager.GetWalletsNames().Count() > 1) {
         <Dropdown TItem="string" OnSelected="@OnSelected" >
             <InitialTip>Select Wallet</InitialTip>
             <ChildContent>
@@ -30,14 +39,15 @@
                 }
             </ChildContent>
         </Dropdown>
-        @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
-            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
-            if (coldStakingWalletEnabled != null) {} else {
-                <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToEnableWallet(); }">Enable Cold Staking</button>
-                break;
-            }
+    }
+    @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+        var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+        if (coldStakingWalletEnabled != null) {} else {
+            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToEnableWallet(); }">Enable Cold Staking</button>
+            break;
         }
-    </div>
+    }
+</div>
 </div>
 
 <div class="row mb-3">

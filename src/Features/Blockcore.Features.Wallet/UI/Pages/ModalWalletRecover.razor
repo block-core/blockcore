@@ -48,9 +48,16 @@
                         <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                     </div>
                 </div>
-        
-                <button class="btn btn-primary" @onclick="RecoverWallet">Recover wallet</button>
-
+                @if (IsSubmitting)
+                {
+                    <button class="btn btn-danger mr-1" disabled>
+                        <span class="spinner-border spinner-border-sm"></span> Working ......
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-primary" @onclick="callRecoverWallet">Recover wallet</button>
+                }
                 <div class="input-group mt-3">
                     <div class="alert-warning">@Alert</div>
                 </div>
@@ -63,7 +70,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="text-success">@Alert</h4>
+                <h5 class="text-success">@Alert</h5>
                 <button class="btn btn-primary" @onclick="CloseModal">Close</button>
             </div>
         </div>
@@ -71,12 +78,13 @@
 </div>
 }
 @code {
+    
 	bool ShowForm { get; set; } = true;
-
     private void CloseModal()
     {
         ModalService.Close();   
         NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
+        StateHasChanged();
     }
     
     public string WalletName { get; set; }
@@ -84,8 +92,18 @@
     private string Password { get; set; }
     private string Passphrase { get; set; }
     string Alert { get; set; }
-
-    private void RecoverWallet()
+    private bool IsSubmitting { get; set; }
+    private async Task callRecoverWallet()
+    {
+        IsSubmitting = true;
+        StateHasChanged();
+        await Task.Delay(1);  // flush changes
+        await RecoverWallet();
+        IsSubmitting = false;
+        StateHasChanged();
+        await Task.Delay(1);
+    }
+    private async Task RecoverWallet()
     {
         if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "Ensure that you have entered your Mnemonic"; return; }
         if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
@@ -95,6 +113,7 @@
         this.Alert = string.Empty;
         var wallet = this.WalletManager.RecoverWallet(this.Password, this.WalletName, this.Mnemonic, this.DateTimeProvider.GetUtcNow(), passphrase: this.Passphrase);
         this.Alert = "Your wallet has now been created.";
+        ShowForm = false;
     }
 
 }

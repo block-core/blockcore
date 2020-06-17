@@ -50,7 +50,7 @@
                 </div>
                 @if (IsSubmitting)
                 {
-                    <button class="btn btn-danger mr-1" disabled>
+                    <button class="btn btn-danger" disabled>
                         <span class="spinner-border spinner-border-sm"></span> Working ......
                     </button>
                 }
@@ -58,8 +58,8 @@
                 {
                     <button class="btn btn-primary" @onclick="callRecoverWallet">Recover wallet</button>
                 }
-                <div class="input-group mt-3">
-                    <div class="alert-warning">@Alert</div>
+                <div class="input-group mt-1">
+                    <div class="text-danger">@Alert</div>
                 </div>
             </div>
         </div>

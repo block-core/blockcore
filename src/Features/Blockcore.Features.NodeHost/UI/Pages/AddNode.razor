@@ -11,8 +11,8 @@
 			<button class="btn btn-primary" @onclick="Addnode">
 				<span class="oi oi-plus" aria-hidden="true"></span> Add Node</button>
 		</div>
-        <div class="input-group mt-2">
-            <div class="alert-warning">
+        <div class="input-group mt-1">
+            <div class="text-danger">
                 @Alert
             </div>
         </div>
@@ -22,7 +22,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="text-success">@Alert</h4>
+                <h5 class="text-success">@Alert</h5>
                 <button class="btn btn-primary" @onclick="CloseModal">Close</button>
             </div>
         </div>

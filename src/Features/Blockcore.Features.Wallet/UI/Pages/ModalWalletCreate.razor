@@ -118,7 +118,7 @@
         Mnemonic mnemonic = this.WalletManager.CreateWallet(this.Password, this.WalletName, this.Passphrase, mnemonic: requestMnemonic);
         // start syncing the wallet from the creation date
         this.WalletSyncManager.SyncFromDate(this.DateTimeProvider.GetUtcNow());
-        this.Alert = "Your wallet has now been recovered.";
+        this.Alert = "Your wallet has now been created.";
         ShowForm = false;    
     }
     private void GenerateMnemonic()

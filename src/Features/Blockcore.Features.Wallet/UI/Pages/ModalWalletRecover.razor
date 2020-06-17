@@ -112,7 +112,7 @@
             this.Passphrase = string.Empty;
         this.Alert = string.Empty;
         var wallet = this.WalletManager.RecoverWallet(this.Password, this.WalletName, this.Mnemonic, this.DateTimeProvider.GetUtcNow(), passphrase: this.Passphrase);
-        this.Alert = "Your wallet has now been created.";
+        this.Alert = "Your wallet has now been recovered.";
         ShowForm = false;
     }
 

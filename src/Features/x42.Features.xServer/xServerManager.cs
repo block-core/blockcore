@@ -127,7 +127,8 @@ namespace x42.Features.xServer
                 await this.xServerPeerList.Save().ConfigureAwait(false);
             },
             this.nodeLifetime.ApplicationStopping,
-            repeatEvery: TimeSpan.FromSeconds(CheckXServerRate));
+            repeatEvery: TimeSpan.FromSeconds(CheckXServerRate),
+            startAfter: TimeSpans.Second);
         }
 
         /// <inheritdoc />

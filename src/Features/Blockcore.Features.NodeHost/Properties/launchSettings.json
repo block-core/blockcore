@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Stratis.Bitcoin.Api": {
+    "Blockcore.Api": {
       "commandName": "Project",
       "launchUrl": "http://localhost:37220/api/values",
       "environmentVariables": {

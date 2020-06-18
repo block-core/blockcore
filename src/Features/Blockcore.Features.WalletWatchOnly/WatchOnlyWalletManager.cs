@@ -8,7 +8,7 @@ using Blockcore.Features.Wallet;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 
-namespace Blockcore.Features.WatchOnlyWallet
+namespace Blockcore.Features.WalletWatchOnly
 {
     /// <summary>
     /// Class representing a manager for a watch-only wallet.

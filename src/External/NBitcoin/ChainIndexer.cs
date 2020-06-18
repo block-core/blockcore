@@ -179,7 +179,7 @@ namespace NBitcoin
         }
 
         /// <summary>
-        /// TODO: Make this internal when the component moves to Stratis.Bitcoin
+        /// TODO: Make this internal when the component moves to Blockcore
         /// </summary>
         public void Add(ChainedHeader addTip)
         {
@@ -196,7 +196,7 @@ namespace NBitcoin
         }
 
         /// <summary>
-        /// TODO: Make this internal when the component moves to Stratis.Bitcoin
+        /// TODO: Make this internal when the component moves to Blockcore
         /// </summary>
         public void Remove(ChainedHeader removeTip)
         {

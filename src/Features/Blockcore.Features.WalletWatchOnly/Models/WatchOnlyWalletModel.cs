@@ -6,7 +6,7 @@ using Blockcore.Controllers.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Utilities.JsonConverters;
 
-namespace Blockcore.Features.WatchOnlyWallet.Models
+namespace Blockcore.Features.WalletWatchOnly.Models
 {
     /// <summary>
     /// Represents a watch-only wallet to be used as an API return object.

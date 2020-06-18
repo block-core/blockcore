@@ -5,15 +5,14 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Tests.Common;
-using Stratis.Bitcoin.Tests.Common.Logging;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Configuration;
+using Blockcore.Signals;
+using Blockcore.Tests.Common;
+using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet.Tests
+namespace Blockcore.Features.WalletWatchOnly.Tests
 {
     public class WatchOnlyWalletManagerTest : LogsTestBase
     {
@@ -267,7 +266,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet.Tests
         }
 
         /// <summary>
-        /// Helper method that constructs a <see cref="WatchOnlyWallet"/> object and saved it to the file system.
+        /// Helper method that constructs a <see cref="WalletWatchOnly"/> object and saved it to the file system.
         /// </summary>
         /// <param name="dataFolder">Folder location where the wallet will be saved,</param>
         /// <returns>The wallet that was created.</returns>
@@ -280,7 +279,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet.Tests
 
             var wallet = new WatchOnlyWallet
             {
-                CoinType = CoinType.Bitcoin,
+                CoinType = 0, // Bitcoin
                 Network = this.networkTestNet,
                 CreationTime = now,
                 WatchedAddresses = new ConcurrentDictionary<string, WatchedAddress>()

@@ -3,10 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using NBitcoin;
 using Newtonsoft.Json;
-using Blockcore.Features.Wallet;
 using Blockcore.Utilities.JsonConverters;
 
-namespace Blockcore.Features.WatchOnlyWallet
+namespace Blockcore.Features.WalletWatchOnly
 {
     /// <summary>
     /// Represents a watch-only wallet.

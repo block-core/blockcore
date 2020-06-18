@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Features.Notifications;
-using Blockcore.Features.WatchOnlyWallet.Controllers;
+using Blockcore.Features.WalletWatchOnly.Controllers;
 
-namespace Blockcore.Features.WatchOnlyWallet
+namespace Blockcore.Features.WalletWatchOnly
 {
     /// <summary>
     /// A feature used to add a watch-only wallet to the full node.

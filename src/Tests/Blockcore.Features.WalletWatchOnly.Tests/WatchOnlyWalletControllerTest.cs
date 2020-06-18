@@ -2,12 +2,12 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Stratis.Bitcoin.Features.WatchOnlyWallet.Controllers;
-using Stratis.Bitcoin.Features.WatchOnlyWallet.Models;
-using Stratis.Bitcoin.Utilities.JsonErrors;
+using Blockcore.Features.WalletWatchOnly.Controllers;
+using Blockcore.Features.WalletWatchOnly.Models;
+using Blockcore.Utilities.JsonErrors;
 using Xunit;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet.Tests
+namespace Blockcore.Features.WalletWatchOnly.Tests
 {
     public class WatchOnlyWalletControllerTest
     {

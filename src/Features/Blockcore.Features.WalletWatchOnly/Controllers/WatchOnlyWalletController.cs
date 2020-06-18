@@ -4,10 +4,10 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 using Blockcore.Controllers.Models;
-using Blockcore.Features.WatchOnlyWallet.Models;
+using Blockcore.Features.WalletWatchOnly.Models;
 using Blockcore.Utilities.JsonErrors;
 
-namespace Blockcore.Features.WatchOnlyWallet.Controllers
+namespace Blockcore.Features.WalletWatchOnly.Controllers
 {
     /// <summary>
     /// Controller providing operations on a watch-only wallet.

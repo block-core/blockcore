@@ -1,7 +1,7 @@
 ﻿using System;
 using NBitcoin;
 
-namespace Blockcore.Features.WatchOnlyWallet
+namespace Blockcore.Features.WalletWatchOnly
 {
     /// <summary>
     /// An interface representing a manager providing operations on a watch-only wallet.

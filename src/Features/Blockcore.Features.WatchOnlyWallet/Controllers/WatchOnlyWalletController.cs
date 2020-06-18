@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
-using Stratis.Bitcoin.Controllers.Models;
-using Stratis.Bitcoin.Features.WatchOnlyWallet.Models;
-using Stratis.Bitcoin.Utilities.JsonErrors;
+using Blockcore.Controllers.Models;
+using Blockcore.Features.WatchOnlyWallet.Models;
+using Blockcore.Utilities.JsonErrors;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet.Controllers
+namespace Blockcore.Features.WatchOnlyWallet.Controllers
 {
     /// <summary>
     /// Controller providing operations on a watch-only wallet.

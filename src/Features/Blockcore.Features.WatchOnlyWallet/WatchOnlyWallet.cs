@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Utilities.JsonConverters;
+using Blockcore.Features.Wallet;
+using Blockcore.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet
+namespace Blockcore.Features.WatchOnlyWallet
 {
     /// <summary>
     /// Represents a watch-only wallet.
@@ -33,7 +33,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// The type of coin, Bitcoin or Stratis.
         /// </summary>
         [JsonProperty(PropertyName = "coinType")]
-        public CoinType CoinType { get; set; }
+        public int CoinType { get; set; }
 
         /// <summary>
         /// The time this wallet was created.

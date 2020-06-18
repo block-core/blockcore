@@ -118,6 +118,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Node", "Node", "{8820C3A5-7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Node", "Node\Blockcore.Node\Blockcore.Node.csproj", "{D0A183FE-C913-4F8F-92EC-BD4502745140}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Notifications", "Features\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj", "{B3D4208F-797A-4893-BC33-BAB77508DFEE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.WatchOnlyWallet", "Features\Blockcore.Features.WatchOnlyWallet\Blockcore.Features.WatchOnlyWallet.csproj", "{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -296,6 +300,14 @@ Global
 		{D0A183FE-C913-4F8F-92EC-BD4502745140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0A183FE-C913-4F8F-92EC-BD4502745140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0A183FE-C913-4F8F-92EC-BD4502745140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3D4208F-797A-4893-BC33-BAB77508DFEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D4208F-797A-4893-BC33-BAB77508DFEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D4208F-797A-4893-BC33-BAB77508DFEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D4208F-797A-4893-BC33-BAB77508DFEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -348,6 +360,8 @@ Global
 		{36CE71D7-812A-40D7-96B7-8220E8E86643} = {88A9A633-DA22-412B-A04C-2A3405D3E2C8}
 		{8E17F166-F15A-42F7-9407-06CE2A4AA0AF} = {88A9A633-DA22-412B-A04C-2A3405D3E2C8}
 		{D0A183FE-C913-4F8F-92EC-BD4502745140} = {8820C3A5-74B4-45AB-B80C-2495DFBA4A2B}
+		{B3D4208F-797A-4893-BC33-BAB77508DFEE} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
+		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Configuration;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.Wallet;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet
+namespace Blockcore.Features.WatchOnlyWallet
 {
     /// <summary>
     /// Class representing a manager for a watch-only wallet.
@@ -26,7 +26,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// </summary>
         public WatchOnlyWallet Wallet { get; private set; }
 
-        private readonly CoinType coinType;
+        private readonly int coinType;
 
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         private readonly Network network;
@@ -55,7 +55,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.network = network;
-            this.coinType = (CoinType)network.Consensus.CoinType;
+            this.coinType = network.Consensus.CoinType;
             this.fileStorage = new FileStorage<WatchOnlyWallet>(dataFolder.WalletPath);
             this.dateTimeProvider = dateTimeProvider;
             this.signals = signals;

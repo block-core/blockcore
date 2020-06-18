@@ -1,7 +1,7 @@
 ﻿using System;
 using NBitcoin;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet
+namespace Blockcore.Features.WatchOnlyWallet
 {
     /// <summary>
     /// An interface representing a manager providing operations on a watch-only wallet.

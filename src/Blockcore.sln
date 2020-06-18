@@ -120,11 +120,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Node", "Node\Bloc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Notifications", "Features\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj", "{B3D4208F-797A-4893-BC33-BAB77508DFEE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.WalletWatchOnly", "Features\Blockcore.Features.WatchOnlyWallet\Blockcore.Features.WalletWatchOnly.csproj", "{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Notifications.Tests", "Tests\Blockcore.Features.Notifications.Tests\Blockcore.Features.Notifications.Tests.csproj", "{EADB5247-F704-4B87-8B0E-606730B8517A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.WatchOnlyWallet.Tests", "Tests\Blockcore.Features.WatchOnlyWallet.Tests\Blockcore.Features.WatchOnlyWallet.Tests.csproj", "{46F17B53-A74B-41C4-AB84-7B4DD4471349}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.WalletWatchOnly", "Features\Blockcore.Features.WalletWatchOnly\Blockcore.Features.WalletWatchOnly.csproj", "{F64554A3-EC9A-4DBF-9AD6-25C78176C74E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.WalletWatchOnly.Tests", "Tests\Blockcore.Features.WalletWatchOnly.Tests\Blockcore.Features.WalletWatchOnly.Tests.csproj", "{53DA5042-1325-48A0-815A-C586590EC2EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -308,18 +308,18 @@ Global
 		{B3D4208F-797A-4893-BC33-BAB77508DFEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3D4208F-797A-4893-BC33-BAB77508DFEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3D4208F-797A-4893-BC33-BAB77508DFEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EADB5247-F704-4B87-8B0E-606730B8517A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EADB5247-F704-4B87-8B0E-606730B8517A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EADB5247-F704-4B87-8B0E-606730B8517A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EADB5247-F704-4B87-8B0E-606730B8517A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46F17B53-A74B-41C4-AB84-7B4DD4471349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46F17B53-A74B-41C4-AB84-7B4DD4471349}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46F17B53-A74B-41C4-AB84-7B4DD4471349}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46F17B53-A74B-41C4-AB84-7B4DD4471349}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F64554A3-EC9A-4DBF-9AD6-25C78176C74E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F64554A3-EC9A-4DBF-9AD6-25C78176C74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F64554A3-EC9A-4DBF-9AD6-25C78176C74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F64554A3-EC9A-4DBF-9AD6-25C78176C74E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53DA5042-1325-48A0-815A-C586590EC2EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53DA5042-1325-48A0-815A-C586590EC2EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53DA5042-1325-48A0-815A-C586590EC2EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53DA5042-1325-48A0-815A-C586590EC2EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -373,9 +373,9 @@ Global
 		{8E17F166-F15A-42F7-9407-06CE2A4AA0AF} = {88A9A633-DA22-412B-A04C-2A3405D3E2C8}
 		{D0A183FE-C913-4F8F-92EC-BD4502745140} = {8820C3A5-74B4-45AB-B80C-2495DFBA4A2B}
 		{B3D4208F-797A-4893-BC33-BAB77508DFEE} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
-		{A08F5114-8B8A-42AE-8902-CF3BE41DBD3C} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
 		{EADB5247-F704-4B87-8B0E-606730B8517A} = {EAE139C2-B19C-4905-9117-8A4068ABD3D2}
-		{46F17B53-A74B-41C4-AB84-7B4DD4471349} = {EAE139C2-B19C-4905-9117-8A4068ABD3D2}
+		{F64554A3-EC9A-4DBF-9AD6-25C78176C74E} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
+		{53DA5042-1325-48A0-815A-C586590EC2EB} = {EAE139C2-B19C-4905-9117-8A4068ABD3D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

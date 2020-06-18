@@ -5,13 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.WalletWatchOnly.Models;
+using Blockcore.Features.WalletWatchOnly.Interfaces;
 using Blockcore.Utilities.JsonErrors;
 
-namespace Blockcore.Features.WalletWatchOnly.Controllers
+namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 {
     /// <summary>
     /// Controller providing operations on a watch-only wallet.
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
     public class WatchOnlyWalletController : Controller
@@ -81,7 +83,7 @@ namespace Blockcore.Features.WalletWatchOnly.Controllers
                         Transactions = new List<TransactionVerboseModel>()
                     };
 
-                    foreach (KeyValuePair<string, TransactionData> transactionData in watchAddress.Value.Transactions)
+                    foreach (KeyValuePair<string, WatchTransactionData> transactionData in watchAddress.Value.Transactions)
                     {
                         Transaction transaction = watchOnlyWallet.Network.CreateTransaction(transactionData.Value.Hex);
                         watchedAddressModel.Transactions.Add(new TransactionVerboseModel(transaction, watchOnlyWallet.Network));
@@ -90,7 +92,7 @@ namespace Blockcore.Features.WalletWatchOnly.Controllers
                     model.WatchedAddresses.Add(watchedAddressModel);
                 }
 
-                foreach (KeyValuePair<string, TransactionData> transaction in watchOnlyWallet.WatchedTransactions)
+                foreach (KeyValuePair<string, WatchTransactionData> transaction in watchOnlyWallet.WatchedTransactions)
                 {
                     var watchedTransactionModel = new WatchedTransactionModel
                     {

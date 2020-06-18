@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Features.Notifications;
-using Blockcore.Features.WalletWatchOnly.Controllers;
+using Blockcore.Features.WalletWatchOnly.Interfaces;
 
 namespace Blockcore.Features.WalletWatchOnly
 {

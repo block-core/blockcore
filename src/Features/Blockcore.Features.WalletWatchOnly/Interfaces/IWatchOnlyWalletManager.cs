@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using NBitcoin;
 
-namespace Blockcore.Features.WalletWatchOnly
+namespace Blockcore.Features.WalletWatchOnly.Interfaces
 {
     /// <summary>
     /// An interface representing a manager providing operations on a watch-only wallet.
@@ -36,7 +37,7 @@ namespace Blockcore.Features.WalletWatchOnly
         /// Stores a transaction.
         /// </summary>
         /// <param name="transactionData">The transaction data.</param>
-        void StoreTransaction(TransactionData transactionData);
+        void StoreTransaction(WatchTransactionData transactionData);
 
         /// <summary>
         /// Processes a block received from the network.
@@ -61,5 +62,12 @@ namespace Blockcore.Features.WalletWatchOnly
         /// </summary>
         /// <returns>The stored watch-only wallet.</returns>
         WatchOnlyWallet LoadWatchOnlyWallet();
+
+        /// <summary>
+        /// Get the transaction lookup dictionary with the current
+        /// contents of the watch only wallet's watched addresses and
+        /// transactions.
+        /// </summary>
+        ConcurrentDictionary<uint256, WatchTransactionData> GetWatchedTransactions();
     }
 }

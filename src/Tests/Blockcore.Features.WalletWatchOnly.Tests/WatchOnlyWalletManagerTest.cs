@@ -95,7 +95,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
             Assert.False(addressInWallet.Transactions.IsEmpty);
             Assert.Single(addressInWallet.Transactions);
 
-            TransactionData transactionExpected = addressInWallet.Transactions.Single().Value;
+            WatchTransactionData transactionExpected = addressInWallet.Transactions.Single().Value;
             Assert.Equal(transactionHex, transactionExpected.Hex);
             Assert.Null(transactionExpected.BlockHash);
             Assert.Null(transactionExpected.MerkleProof);
@@ -137,7 +137,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
             Assert.False(addressInWallet.Transactions.IsEmpty);
             Assert.Single(addressInWallet.Transactions);
 
-            TransactionData transactionExpected = addressInWallet.Transactions.Single().Value;
+            WatchTransactionData transactionExpected = addressInWallet.Transactions.Single().Value;
             Assert.Equal(transactionHex, transactionExpected.Hex);
             Assert.NotNull(transactionExpected.BlockHash);
             Assert.NotNull(transactionExpected.MerkleProof);
@@ -238,7 +238,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
             var walletManager = new WatchOnlyWalletManager(DateTimeProvider.Default, this.LoggerFactory.Object, this.networkTestNet, dataFolder, this.signals);
             walletManager.Initialize();
             walletManager.WatchAddress("mnSmvy2q4dFNKQF18EBsrZrS7WEy6CieEE");
-            walletManager.StoreTransaction(new TransactionData()
+            walletManager.StoreTransaction(new WatchTransactionData()
             {
                 Id = transaction.GetHash(),
                 Hex = transactionHex
@@ -249,17 +249,17 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
 
             // Artificially remove info from the watched address version of the transaction
             WatchedAddress addressInWallet = wallet.WatchedAddresses[newScript.ToString()];
-            TransactionData watchedTransaction = addressInWallet.Transactions.Values.First();
+            WatchTransactionData watchedTransaction = addressInWallet.Transactions.Values.First();
             watchedTransaction.MerkleProof = null;
             watchedTransaction.BlockHash = null;
 
             // Now populate lookup
-            ConcurrentDictionary<uint256, TransactionData> lookup = wallet.GetWatchedTransactions();
+            ConcurrentDictionary<uint256, WatchTransactionData> lookup = wallet.GetWatchedTransactions();
 
             // Expect that the cached version of the transaction has a
             // Merkle proof and block hash
 
-            TransactionData lookupTransaction = lookup[transaction.GetHash()];
+            WatchTransactionData lookupTransaction = lookup[transaction.GetHash()];
 
             Assert.NotNull(lookupTransaction.MerkleProof);
             Assert.NotNull(lookupTransaction.BlockHash);
@@ -289,10 +289,10 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
             {
                 Script = script,
                 Address = script.GetDestinationAddress(this.networkTestNet).ToString(),
-                Transactions = new ConcurrentDictionary<string, TransactionData>()
+                Transactions = new ConcurrentDictionary<string, WatchTransactionData>()
             });
 
-            wallet.WatchedAddresses[script.ToString()].Transactions.AddOrReplace(transactionHash.ToString(), new TransactionData
+            wallet.WatchedAddresses[script.ToString()].Transactions.AddOrReplace(transactionHash.ToString(), new WatchTransactionData
             {
                 Id = this.networkTestNet.CreateTransaction(transactionHex).GetHash(),
                 BlockHash = uint256.Zero,

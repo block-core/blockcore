@@ -2,10 +2,11 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Blockcore.Features.WalletWatchOnly.Controllers;
-using Blockcore.Features.WalletWatchOnly.Models;
 using Blockcore.Utilities.JsonErrors;
+using Blockcore.Features.WalletWatchOnly.Interfaces;
+using Blockcore.Features.WalletWatchOnly.Api.Controllers;
 using Xunit;
+using Blockcore.Features.WalletWatchOnly.Models;
 
 namespace Blockcore.Features.WalletWatchOnly.Tests
 {

@@ -164,6 +164,7 @@ namespace Blockcore.Features.Wallet
                         services.AddSingleton<IWalletSyncManager, WalletSyncManager>();
                         services.AddSingleton<IWalletTransactionHandler, WalletTransactionHandler>();
                         services.AddSingleton<IWalletManager, WalletManager>();
+                        services.AddSingleton<IWalletStore, WalletStore>();
                         services.AddSingleton<IWalletFeePolicy, WalletFeePolicy>();
                         services.AddSingleton<WalletSettings>();
                         services.AddSingleton<IScriptAddressReader>(new ScriptAddressReader());

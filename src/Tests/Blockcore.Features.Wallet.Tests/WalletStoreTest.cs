@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration;
+using Blockcore.Consensus.ValidationResults;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
@@ -21,9 +22,9 @@ namespace Blockcore.Features.Wallet.Tests
             WalletStore store = new WalletStore(this.Network, dataFolder, this.LoggerFactory.Object);
 
             var utxo = new OutPoint(new uint256(10), 1);
-            var address = new Key().PubKey.GetAddress(this.Network).ToString();
+            var address = new Key().PubKey.GetAddress(this.Network).ScriptPubKey;
 
-            var trx = Create(utxo.ToString(), address);
+            var trx = Create(utxo, address);
 
             // insert the document then fetch it and compare with source
             store.Upsert(trx);
@@ -36,7 +37,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             trx.BlockHash = null;
             trx.BlockHeight = null;
-            trx.IndexInBlock = null;
+            trx.BlockIndex = null;
 
             // update the changed document then fetch it and compare with source
             store.Upsert(trx);
@@ -55,62 +56,62 @@ namespace Blockcore.Features.Wallet.Tests
 
             WalletStore store = new WalletStore(this.Network, dataFolder, this.LoggerFactory.Object);
 
-            var address = new Key().PubKey.GetAddress(this.Network).ToString();
+            var scripts = new List<Script>();
 
             for (int indexAddress = 0; indexAddress < 3; indexAddress++)
             {
-                var insertaddress = address + indexAddress;
+                var script = new Key().PubKey.GetAddress(this.Network).ScriptPubKey;
+                scripts.Add(script);
 
                 for (int indexTrx = 0; indexTrx < 5; indexTrx++)
                 {
                     var utxo = new OutPoint(new uint256((ulong)indexTrx), indexAddress);
-                    var trx = Create(utxo.ToString(), insertaddress);
+                    var trx = Create(utxo, script);
                     store.Upsert(trx);
                 }
             }
 
-            var findforAddress = address + 1;
+            var findforAddress = scripts[1];
             var res = store.GetForAddress(findforAddress);
 
             res.Should().HaveCount(5);
 
             for (int indexTrx = 0; indexTrx < 5; indexTrx++)
             {
-                var utxo = new OutPoint(new uint256((ulong)indexTrx), 1).ToString();
-                res.ElementAt(indexTrx).Utxo.Should().Be(utxo);
+                var utxo = new OutPoint(new uint256((ulong)indexTrx), 1);
+                res.ElementAt(indexTrx).OutPoint.Should().Be(utxo);
             }
         }
 
-        private TrxOutput Create(string outPoint, string address)
+        private TransactionData Create(OutPoint outPoint, Script script)
         {
-            return new TrxOutput
+            return new TransactionData
             {
-                Utxo = outPoint,
-                Address = address,
+                OutPoint = outPoint,
                 Amount = 5,
-                BlockHash = new uint256(50).ToString(),
+                BlockHash = new uint256(50),
                 BlockHeight = 5,
-                IndexInBlock = 2,
-                TransactionHex = "TransactionHex",
-                ScriptPubKey = new Script(OpcodeType.OP_0, OpcodeType.OP_1).ToHex(),
-                MerkleProofHex = new PartialMerkleTree(new[] { new uint256(10), new uint256(11) }, new[] { true, false }).ToHex(this.Network.Consensus.ConsensusFactory),
+                BlockIndex = 2,
+                Hex = "TransactionHex",
+                ScriptPubKey = script,
+                MerkleProof = new PartialMerkleTree(new[] { new uint256(10), new uint256(11) }, new[] { true, false }),
                 IsCoinBase = true,
                 IsCoinStake = true,
                 IsColdCoinStake = false,
                 CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00"),
                 IsPropagated = false,
-                SpendingDetails = new TrxSpentOutput
+                SpendingDetails = new SpendingDetails
                 {
                     BlockIndex = 10,
                     BlockHeight = 20,
-                    SpentTrxHex = "SpentTrxHex",
+                    Hex = "SpentTrxHex",
                     CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00"),
                     IsCoinStake = true,
-                    TransactionId = new uint256(100).ToString(),
-                    Payments = new List<TrxSpentOutputPayment>
+                    TransactionId = new uint256(100),
+                    Payments = new List<PaymentDetails>
                     {
-                        new TrxSpentOutputPayment { Amount = 20, DestinationAddress = "DestinationAddress1", DestinationScriptPubKey = new Script(OpcodeType.OP_0, OpcodeType.OP_1).ToHex() },
-                        new TrxSpentOutputPayment { Amount = 30, DestinationAddress = "DestinationAddress2", DestinationScriptPubKey = new Script(OpcodeType.OP_0, OpcodeType.OP_1).ToHex() },
+                        new PaymentDetails { Amount = 20, DestinationAddress = "DestinationAddress1", DestinationScriptPubKey = new Script(OpcodeType.OP_0, OpcodeType.OP_1) },
+                        new PaymentDetails { Amount = 30, DestinationAddress = "DestinationAddress2", DestinationScriptPubKey = new Script(OpcodeType.OP_0, OpcodeType.OP_1) },
                     }
                 }
             };

@@ -55,6 +55,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <summary>Provider of date time functionality.</summary>
         private readonly IDateTimeProvider dateTimeProvider;
 
+        private readonly IWalletStore walletStore;
+
         public WalletController(
             ILoggerFactory loggerFactory,
             IWalletManager walletManager,
@@ -64,7 +66,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             Network network,
             ChainIndexer chainIndexer,
             IBroadcasterManager broadcasterManager,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IWalletStore walletStore)
         {
             this.walletManager = walletManager;
             this.walletTransactionHandler = walletTransactionHandler;
@@ -76,6 +79,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.broadcasterManager = broadcasterManager;
             this.dateTimeProvider = dateTimeProvider;
+            this.walletStore = walletStore;
         }
 
         /// <summary>
@@ -108,7 +112,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the mnemonic created for the new wallet.</returns>
         [Route("create")]
         [HttpPost]
-        public IActionResult Create([FromBody]WalletCreationRequest request)
+        public IActionResult Create([FromBody] WalletCreationRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -149,7 +153,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the generated signature and the address used to sign.</returns>
         [Route("signmessage")]
         [HttpPost]
-        public IActionResult SignMessage([FromBody]SignMessageRequest request)
+        public IActionResult SignMessage([FromBody] SignMessageRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -178,7 +182,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the result of the verification.</returns>
         [Route("verifymessage")]
         [HttpPost]
-        public IActionResult VerifyMessage([FromBody]VerifyRequest request)
+        public IActionResult VerifyMessage([FromBody] VerifyRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -206,7 +210,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <param name="request">An object containing the necessary parameters to load an existing wallet</param>
         [Route("load")]
         [HttpPost]
-        public IActionResult Load([FromBody]WalletLoadRequest request)
+        public IActionResult Load([FromBody] WalletLoadRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -246,7 +250,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A value of Ok if the wallet was successfully recovered.</returns>
         [Route("recover")]
         [HttpPost]
-        public IActionResult Recover([FromBody]WalletRecoveryRequest request)
+        public IActionResult Recover([FromBody] WalletRecoveryRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -291,7 +295,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A value of Ok if the wallet was successfully recovered.</returns>
         [Route("recover-via-extpubkey")]
         [HttpPost]
-        public IActionResult RecoverViaExtPubKey([FromBody]WalletExtPubRecoveryRequest request)
+        public IActionResult RecoverViaExtPubKey([FromBody] WalletExtPubRecoveryRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -452,11 +456,11 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                         SpendableAmount = balance.SpendableAmount,
                         Addresses = account.GetCombinedAddresses().Select(address =>
                         {
-                            (Money confirmedAmount, Money unConfirmedAmount) = address.GetBalances(account.IsNormalAccount());
+                            (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(this.walletStore, account.IsNormalAccount());
                             return new AddressModel
                             {
                                 Address = address.Address,
-                                IsUsed = address.Transactions.Any(),
+                                IsUsed = anyTrx,
                                 IsChange = address.IsChangeAddress(),
                                 AmountConfirmed = confirmedAmount,
                                 AmountUnconfirmed = unConfirmedAmount
@@ -602,7 +606,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>The estimated fee for the transaction.</returns>
         [Route("estimate-txfee")]
         [HttpPost]
-        public IActionResult GetTransactionFeeEstimate([FromBody]TxFeeEstimateRequest request)
+        public IActionResult GetTransactionFeeEstimate([FromBody] TxFeeEstimateRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -895,7 +899,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// containing no transactions.</returns>
         [Route("account")]
         [HttpPost]
-        public IActionResult CreateNewAccount([FromBody]GetUnusedAccountModel request)
+        public IActionResult CreateNewAccount([FromBody] GetUnusedAccountModel request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -929,7 +933,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing a list of accounts for the specified wallet.</returns>
         [Route("accounts")]
         [HttpGet]
-        public IActionResult ListAccounts([FromQuery]ListAccountsModel request)
+        public IActionResult ListAccounts([FromQuery] ListAccountsModel request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -960,7 +964,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the last created and unused address (in Base58 format).</returns>
         [Route("unusedaddress")]
         [HttpGet]
-        public IActionResult GetUnusedAddress([FromQuery]GetUnusedAddressModel request)
+        public IActionResult GetUnusedAddress([FromQuery] GetUnusedAddressModel request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -992,7 +996,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// </summary>
         [Route("unusedaddresses")]
         [HttpGet]
-        public IActionResult GetUnusedAddresses([FromQuery]GetUnusedAddressesModel request)
+        public IActionResult GetUnusedAddresses([FromQuery] GetUnusedAddressesModel request)
         {
             Guard.NotNull(request, nameof(request));
             int count = int.Parse(request.Count);
@@ -1023,7 +1027,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// </summary>
         [Route("addresses")]
         [HttpGet]
-        public IActionResult GetAllAddresses([FromQuery]GetAllAddressesModel request)
+        public IActionResult GetAllAddresses([FromQuery] GetAllAddressesModel request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -1044,12 +1048,12 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 {
                     Addresses = account.GetCombinedAddresses().Select(address =>
                     {
-                        (Money confirmedAmount, Money unConfirmedAmount) = address.GetBalances(account.IsNormalAccount());
+                        (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(this.walletStore, account.IsNormalAccount());
 
                         return new AddressModel
                         {
                             Address = request.Segwit ? address.Bech32Address : address.Address,
-                            IsUsed = address.Transactions.Any(),
+                            IsUsed = anyTrx,
                             IsChange = address.IsChangeAddress(),
                             AmountConfirmed = confirmedAmount,
                             AmountUnconfirmed = unConfirmedAmount
@@ -1085,7 +1089,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// </summary>
         [Route("remove-transactions")]
         [HttpDelete]
-        public IActionResult RemoveTransactions([FromQuery]RemoveTransactionsModel request)
+        public IActionResult RemoveTransactions([FromQuery] RemoveTransactionsModel request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -1157,7 +1161,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// </summary>
         [Route("extpubkey")]
         [HttpGet]
-        public IActionResult GetExtPubKey([FromQuery]GetExtPubKeyModel request)
+        public IActionResult GetExtPubKey([FromQuery] GetExtPubKeyModel request)
         {
             Guard.NotNull(request, nameof(request));
 

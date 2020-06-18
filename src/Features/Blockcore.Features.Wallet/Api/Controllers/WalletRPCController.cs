@@ -45,6 +45,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <summary>Wallet transaction handler.</summary>
         private readonly IWalletTransactionHandler walletTransactionHandler;
 
+        private readonly IWalletStore walletStore;
+
         /// <summary>Wallet related configuration.</summary>
         private readonly WalletSettings walletSettings;
 
@@ -65,7 +67,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             StoreSettings storeSettings,
             IWalletManager walletManager,
             WalletSettings walletSettings,
-            IWalletTransactionHandler walletTransactionHandler) : base(fullNode: fullNode, consensusManager: consensusManager, chainIndexer: chainIndexer, network: network)
+            IWalletTransactionHandler walletTransactionHandler,
+            IWalletStore walletStore) : base(fullNode: fullNode, consensusManager: consensusManager, chainIndexer: chainIndexer, network: network)
         {
             this.blockStore = blockStore;
             this.broadcasterManager = broadcasterManager;
@@ -75,6 +78,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             this.walletManager = walletManager;
             this.walletSettings = walletSettings;
             this.walletTransactionHandler = walletTransactionHandler;
+            this.walletStore = walletStore;
         }
 
         [ActionName("setwallet")]
@@ -259,7 +263,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             WalletAccountReference accountReference = this.GetWalletAccountReference();
             Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
 
-            IEnumerable<TransactionData> transactions = wallet.GetAllTransactions();
+            IEnumerable<TransactionData> transactions = wallet.GetAllTransactions(this.walletStore);
 
             var model = new ListSinceBlockModel();
 
@@ -331,8 +335,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             // Get the transaction from the wallet by looking into received and send transactions.
             List<HdAddress> addresses = account.GetCombinedAddresses().ToList();
-            List<TransactionData> receivedTransactions = addresses.Where(r => !r.IsChangeAddress() && r.Transactions != null).SelectMany(a => a.Transactions.Where(t => t.Id == trxid)).ToList();
-            List<TransactionData> sendTransactions = addresses.Where(r => r.Transactions != null).SelectMany(a => a.Transactions.Where(t => t.SpendingDetails != null && t.SpendingDetails.TransactionId == trxid)).ToList();
+            List<TransactionData> receivedTransactions = addresses.Where(r => !r.IsChangeAddress()).SelectMany(a => this.walletStore.GetForAddress(a.ScriptPubKey).Where(t => t.Id == trxid)).ToList();
+            List<TransactionData> sendTransactions = addresses.SelectMany(a => this.walletStore.GetForAddress(a.ScriptPubKey).Where(t => t.SpendingDetails != null && t.SpendingDetails.TransactionId == trxid)).ToList();
 
             if (!receivedTransactions.Any() && !sendTransactions.Any())
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id.");
@@ -414,7 +418,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             if (sendTransactions.Any())
             {
                 Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
-                feeSent = wallet.GetSentTransactionFee(trxid);
+                feeSent = wallet.GetSentTransactionFee(this.walletStore, trxid);
             }
 
             // Send transactions details.
@@ -461,7 +465,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 model.Details.Add(new GetTransactionDetailsModel
                 {
-                    Address = addresses.First(a => a.Transactions.Contains(trxInWallet)).Address,
+                    Address = addresses.First(a => this.walletStore.GetForAddress(a.ScriptPubKey).Contains(trxInWallet)).Address,
                     Category = category,
                     Amount = trxInWallet.Amount.ToDecimal(MoneyUnit.BTC),
                     OutputIndex = trxInWallet.Index
@@ -522,7 +526,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             var addresses = wallet.GetAllAddresses();
 
             // Get the transaction data for this wallet.
-            var txs = wallet.GetAllTransactions();
+            var txs = wallet.GetAllTransactions(this.walletStore);
 
             // Create a transaction dictionary for performant lookups.
             var txDictionary = new Dictionary<uint256, TransactionData>(txs.Count());
@@ -828,7 +832,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                                             .Where(i => i.Name.Equals(accountReference.AccountName))
                                             .Single();
 
-            (Money confirmedAmount, Money unconfirmedAmount) = account.GetBalances(account.IsNormalAccount());
+            (Money confirmedAmount, Money unconfirmedAmount) = account.GetBalances(this.walletStore, account.IsNormalAccount());
 
             var balance = Money.Coins(GetBalance(string.Empty));
             var immature = Money.Coins(balance.ToDecimal(MoneyUnit.BTC) - GetBalance(string.Empty, (int)this.FullNode.Network.Consensus.CoinbaseMaturity)); // Balance - Balance(AtHeight)

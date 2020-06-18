@@ -24,6 +24,7 @@ namespace Blockcore.Features.Wallet.Broadcasters
         private readonly IWalletManager walletManager;
         private readonly IConnectionManager connectionManager;
         private readonly ChainIndexer chainIndexer;
+        private readonly IWalletStore walletStore;
 
         public WalletInfoBroadcaster(
             ILoggerFactory loggerFactory,
@@ -32,12 +33,14 @@ namespace Blockcore.Features.Wallet.Broadcasters
             IAsyncProvider asyncProvider,
             INodeLifetime nodeLifetime,
             ChainIndexer chainIndexer,
+            IWalletStore walletStore,
             IEventsSubscriptionService subscriptionService = null)
             : base(loggerFactory, nodeLifetime, asyncProvider, subscriptionService)
         {
             this.walletManager = walletManager;
             this.connectionManager = connectionManager;
             this.chainIndexer = chainIndexer;
+            this.walletStore = walletStore;
         }
 
         protected override IEnumerable<EventBase> GetMessages()
@@ -56,7 +59,7 @@ namespace Blockcore.Features.Wallet.Broadcasters
 
                         var accountBalanceModel = new AccountBalanceModel
                         {
-                            CoinType =  wallet.Network.Consensus.CoinType,
+                            CoinType = wallet.Network.Consensus.CoinType,
                             Name = account.Name,
                             HdPath = account.HdPath,
                             AmountConfirmed = balance.AmountConfirmed,
@@ -64,11 +67,11 @@ namespace Blockcore.Features.Wallet.Broadcasters
                             SpendableAmount = balance.SpendableAmount,
                             Addresses = account.GetCombinedAddresses().Select(address =>
                             {
-                                (Money confirmedAmount, Money unConfirmedAmount) = address.GetBalances(account.IsNormalAccount());
+                                (Money confirmedAmount, Money unConfirmedAmount, bool anytrx) = address.GetBalances(this.walletStore, account.IsNormalAccount());
                                 return new AddressModel
                                 {
                                     Address = address.Address,
-                                    IsUsed = address.Transactions.Any(),
+                                    IsUsed = anytrx,
                                     IsChange = address.IsChangeAddress(),
                                     AmountConfirmed = confirmedAmount,
                                     AmountUnconfirmed = unConfirmedAmount
@@ -82,7 +85,8 @@ namespace Blockcore.Features.Wallet.Broadcasters
                     clientEvent = new WalletGeneralInfoClientEvent
                     {
                         WalletName = walletName,
-                        WalletInfo = new WalletGeneralInfoModel {
+                        WalletInfo = new WalletGeneralInfoModel
+                        {
                             Network = wallet.Network,
                             CreationTime = wallet.CreationTime,
                             LastBlockSyncedHeight = wallet.AccountsRoot.Single().LastBlockSyncedHeight,

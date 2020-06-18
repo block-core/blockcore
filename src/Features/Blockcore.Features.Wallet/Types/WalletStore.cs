@@ -15,13 +15,25 @@ using Newtonsoft.Json;
 
 namespace Blockcore.Features.Wallet.Types
 {
-    public class WalletStore
+    public interface IWalletStore
+    {
+        void InsertOrUpdate(TransactionData item);
+
+        IEnumerable<TransactionData> GetForAddress(Script address);
+
+        int CountForAddress(Script address);
+
+        TransactionData GetForOutput(OutPoint outPoint);
+
+        bool Remove(OutPoint outPoint);
+    }
+
+    public class WalletStore : IWalletStore
     {
         private readonly ILogger logger;
         private readonly Network network;
         private LiteDatabase db;
-        private LiteCollection<TrxOutput> trxCol;
-        private LiteCollection<TrxOutputSlim> trxColMin; // this is experimental
+        private LiteCollection<TransactionData> trxCol;
 
         public WalletStore(Network network, DataFolder dataFolder, ILoggerFactory loggerFactory)
         {
@@ -32,47 +44,81 @@ namespace Blockcore.Features.Wallet.Types
             LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
             this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode });
 
-            this.trxCol = this.db.GetCollection<TrxOutput>("trxCol");
-            this.trxColMin = this.db.GetCollection<TrxOutputSlim>("trxCol");
+            this.trxCol = this.db.GetCollection<TransactionData>("TransactionData");
 
-            this.trxCol.EnsureIndex(x => x.Utxo, true);
-            this.trxCol.EnsureIndex(x => x.Address, false);
+            this.trxCol.EnsureIndex(x => x.OutPoint, true);
+            this.trxCol.EnsureIndex(x => x.ScriptPubKey, false);
             this.trxCol.EnsureIndex(x => x.BlockHeight, false);
+
+            BsonMapper.Global.Entity<TransactionData>().Id(x => x.OutPoint);
+
+            BsonMapper.Global.RegisterType<OutPoint>
+            (
+                serialize: (outPoint) => outPoint.ToString(),
+                deserialize: (bson) => OutPoint.Parse(bson.AsString)
+            );
+
+            BsonMapper.Global.RegisterType<uint256>
+            (
+                serialize: (hash) => hash.ToString(),
+                deserialize: (bson) => uint256.Parse(bson.AsString)
+            );
+
+            BsonMapper.Global.RegisterType<Money>
+            (
+                serialize: (money) => money.Satoshi,
+                deserialize: (bson) => Money.Satoshis(bson.AsInt64)
+            );
+
+            BsonMapper.Global.RegisterType<Script>
+            (
+                serialize: (script) => Encoders.Hex.EncodeData(script.ToBytes(false)),
+                deserialize: (bson) => Script.FromBytesUnsafe(Encoders.Hex.DecodeData(bson.AsString))
+            );
+
+            BsonMapper.Global.RegisterType<PartialMerkleTree>
+            (
+                serialize: (pmt) => Encoders.Hex.EncodeData(pmt.ToBytes()),
+                deserialize: (bson) =>
+                {
+                    var ret = new PartialMerkleTree();
+                    var bytes = Encoders.Hex.DecodeData(bson.AsString);
+                    ret.ReadWrite(bytes);
+                    return ret;
+                }
+            );
 
             this.network = network;
         }
 
-        public int Count => this.trxCol.Count();
+        public int CountForAddress(Script address)
+        {
+            var req = Encoders.Hex.EncodeData(address.ToBytes(false));
+            var count = this.trxCol.Count(Query.EQ("ScriptPubKey", new BsonValue(req)));
+            return count;
+        }
 
-        public bool IsReadOnly => true;
-
-        public void Upsert(TrxOutput item)
+        public void InsertOrUpdate(TransactionData item)
         {
             this.trxCol.Upsert(item);
         }
 
-        public IEnumerable<TrxOutput> GetForAddress(string address)
+        public IEnumerable<TransactionData> GetForAddress(Script address)
         {
-            var trxs = this.trxCol.Find(Query.EQ("Address", address));
+            var req = Encoders.Hex.EncodeData(address.ToBytes(false));
+            var trxs = this.trxCol.Find(Query.EQ("ScriptPubKey", new BsonValue(req)));
             return trxs;
         }
 
-        public IEnumerable<TrxOutputSlim> GetForAddressSlim(string address)
-        {
-            var trxs = this.trxColMin.Find(Query.EQ("Address", address));
-
-            return trxs;
-        }
-
-        public TrxOutput Get(OutPoint outPoint)
+        public TransactionData GetForOutput(OutPoint outPoint)
         {
             var trx = this.trxCol.FindById(outPoint.ToString());
             return trx;
         }
 
-        public bool Remove(TrxOutput item)
+        public bool Remove(OutPoint outPoint)
         {
-            throw new NotImplementedException();
+            return this.trxCol.Delete(outPoint.ToString());
         }
     }
 }

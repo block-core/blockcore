@@ -86,36 +86,35 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 
         [ActionName("listtransactions")]
         [ActionDescription("Returns up to 'count' most recent transactions skipping the first 'skip' transactions.")]
-        public ListTransactionsModel[] ListTransactions(string account = "*", int count = 10, int skip = 0, bool get_watchonly = false)
+        public ListTransactionsModel[] ListTransactions(string account = "*", int count = 10, int skip = 0, bool include_watchonly = true)
         {
             List<ListTransactionsModel> result = new List<ListTransactionsModel>();
             WalletAccountReference accountReference = this.GetWalletAccountReference();
 
-            if (get_watchonly)
+            if (include_watchonly)
             {
-                var selectedTransactions = this.watchOnlyWalletManager.GetWatchedTransactions().Values
+                var selectedWatchOnlyTransactions = this.watchOnlyWalletManager.GetWatchedTransactions().Values
                     .Skip(skip)
                     .Take(count);
-                foreach (var transactionData in selectedTransactions)
+                foreach (var transactionData in selectedWatchOnlyTransactions)
                 {
                     var transactionInfo = this.GetTransactionInfo(transactionData.Id);
                     var transactionResult = this.GetTransactionsModel(transactionInfo);
                     result.Add(transactionResult);
                 }
             }
-            else
+
+            Wallet.Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
+            IEnumerable<TransactionData> selectedTransactions = wallet.GetAllTransactions()
+                .Skip(skip)
+                .Take(count);
+            foreach (var transactionData in selectedTransactions)
             {
-                Wallet.Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
-                IEnumerable<TransactionData> selectedTransactions = wallet.GetAllTransactions()
-                    .Skip(skip)
-                    .Take(count);
-                foreach (var transactionData in selectedTransactions)
-                {
-                    var transactionInfo = this.GetTransactionInfo(transactionData.Id);
-                    var transactionResult = this.GetTransactionsModel(transactionInfo);
-                    result.Add(transactionResult);
-                }
+                var transactionInfo = this.GetTransactionInfo(transactionData.Id);
+                var transactionResult = this.GetTransactionsModel(transactionInfo);
+                result.Add(transactionResult);
             }
+
             return result.ToArray();
         }
 

@@ -16,7 +16,7 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// The list of unspent outputs (utxos) for checking whether inputs from a transaction are being spent by our wallet.
         /// </summary>
-        public Dictionary<OutPoint, TransactionData> OutpointLookup { get; internal set; }
+        public Dictionary<OutPoint, string> OutpointLookup { get; internal set; }
 
         /// <summary>
         /// The list of addresses contained in our wallet for checking whether a transaction is being paid to the wallet.
@@ -28,7 +28,7 @@ namespace Blockcore.Features.Wallet
         /// This index is used for double spend scenarios, if a utxo is spent in a different trx
         /// from what the wallet initially detected this will be found inthois list.
         /// </summary>
-        public Dictionary<OutPoint, TransactionData> InputLookup { get; internal set; }
+        public Dictionary<OutPoint, string> InputLookup { get; internal set; }
 
         /// <summary>
         /// A reference to the wallet of the current index.

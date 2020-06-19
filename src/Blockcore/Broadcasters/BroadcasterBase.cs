@@ -36,6 +36,10 @@ namespace Blockcore.Broadcasters
         {
             this.log.LogDebug($"Initialising Web Socket Broadcaster {this.GetType().Name}");
 
+            // Why is this fetching form the wallet every 5 sec?
+            // if this is correct we should impl some flag that is set when wallet changed
+            return;
+
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop(
                 $"Broadcast {this.GetType().Name}",
                 async token =>

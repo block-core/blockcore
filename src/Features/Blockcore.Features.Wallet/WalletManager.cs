@@ -631,8 +631,8 @@ namespace Blockcore.Features.Wallet
                     throw new WalletException($"No account with the name '{accountReference.AccountName}' could be found.");
 
                 List<HdAddress> unusedAddresses = isChange ?
-                    account.InternalAddresses.Where(acc => this.walletStore.CountForAddress(acc.ScriptPubKey) == 0).ToList() :
-                    account.ExternalAddresses.Where(acc => this.walletStore.CountForAddress(acc.ScriptPubKey) == 0).ToList();
+                    account.InternalAddresses.Where(acc => this.walletStore.CountForAddress(acc.Address) == 0).ToList() :
+                    account.ExternalAddresses.Where(acc => this.walletStore.CountForAddress(acc.Address) == 0).ToList();
 
                 int diff = alwaysnew ? -1 : unusedAddresses.Count - count;
 
@@ -707,19 +707,19 @@ namespace Blockcore.Features.Wallet
             lock (this.lockObject)
             {
                 // Get transactions contained in the account.
-                var query = account.GetCombinedAddresses().Where(a => this.walletStore.CountForAddress(a.ScriptPubKey) > 0);
+                var query = account.GetCombinedAddresses().Where(a => this.walletStore.CountForAddress(a.Address) > 0);
 
                 if (account.IsNormalAccount())
                 {
                     // When the account is a normal one, we want to filter out all cold stake UTXOs.
-                    items = query.SelectMany(s => this.walletStore.GetForAddress(s.ScriptPubKey)
+                    items = query.SelectMany(s => this.walletStore.GetForAddress(s.Address)
                                  .Where(t => t.IsColdCoinStake == null || t.IsColdCoinStake == false)
                                  .Select(t => new FlatHistory { Address = s, Transaction = t }))
                                 .ToArray();
                 }
                 else
                 {
-                    items = query.SelectMany(s => this.walletStore.GetForAddress(s.ScriptPubKey)
+                    items = query.SelectMany(s => this.walletStore.GetForAddress(s.Address)
                                 .Select(t => new FlatHistory { Address = s, Transaction = t }))
                                 .ToArray();
                 }
@@ -980,7 +980,7 @@ namespace Blockcore.Features.Wallet
                 foreach (HdAddress address in allAddresses)
                 {
                     // Remove all the UTXO that have been reorged.
-                    var allStransactions = this.walletStore.GetForAddress(address.ScriptPubKey).ToList();
+                    var allStransactions = this.walletStore.GetForAddress(address.Address).ToList();
                     IEnumerable<TransactionData> makeUnspendable = allStransactions.Where(w => w.BlockHeight > fork.Height).ToList();
                     foreach (TransactionData transactionData in makeUnspendable)
                     {
@@ -1075,8 +1075,10 @@ namespace Blockcore.Features.Wallet
                         {
                             // See if this input is being used by another wallet transaction present in the index.
                             // The inputs themselves may not belong to the wallet, but the transaction data in the index has to be for a wallet transaction.
-                            if (walletIndexItem.Value.InputLookup.TryGetValue(input.PrevOut, out TransactionData indexData))
+                            if (walletIndexItem.Value.InputLookup.TryGetValue(input.PrevOut, out string _))
                             {
+                                TransactionData indexData = this.walletStore.GetForOutput(input.PrevOut);
+
                                 // It's the same transaction, which can occur if the transaction had been added to the wallet previously. Ignore.
                                 if (indexData.Id == hash)
                                     continue;
@@ -1122,12 +1124,12 @@ namespace Blockcore.Features.Wallet
                 {
                     foreach (KeyValuePair<string, WalletIndex> walletIndexItem in this.walletIndex)
                     {
-                        if (!walletIndexItem.Value.OutpointLookup.TryGetValue(input.PrevOut, out TransactionData tTx))
+                        if (!walletIndexItem.Value.OutpointLookup.TryGetValue(input.PrevOut, out string _))
                         {
                             continue;
                         }
 
-                        this.AddSpendingTransactionToWallet(transaction, tTx, walletIndexItem.Value.Wallet, blockHeight, block);
+                        this.AddSpendingTransactionToWallet(transaction, input.PrevOut, walletIndexItem.Value.Wallet, blockHeight, block);
                         foundSendingTrx = true;
                         this.logger.LogDebug("Transaction '{0}' contained funds sent by the user's wallet(s).", hash);
                     }
@@ -1174,6 +1176,7 @@ namespace Blockcore.Features.Wallet
                 var newTransaction = new TransactionData
                 {
                     OutPoint = outPoint,
+                    Address = address.Address,
                     Amount = amount,
                     IsCoinBase = transaction.IsCoinBase == false ? (bool?)null : true,
                     IsCoinStake = transaction.IsCoinStake == false ? (bool?)null : true,
@@ -1196,7 +1199,7 @@ namespace Blockcore.Features.Wallet
                 }
 
                 this.walletStore.InsertOrUpdate(newTransaction);
-                this.AddInputKeysLookup(wallet, newTransaction);
+                this.AddInputKeysLookup(wallet, newTransaction.OutPoint);
 
                 if (block == null)
                 {
@@ -1250,12 +1253,13 @@ namespace Blockcore.Features.Wallet
         /// <param name="spentTransactionWallet">The wallet associated with this transaction.</param>
         /// <param name="blockHeight">Height of the block.</param>
         /// <param name="block">The block containing the transaction to add.</param>
-        private void AddSpendingTransactionToWallet(Transaction transaction, TransactionData spentTransaction,
+        private void AddSpendingTransactionToWallet(Transaction transaction, OutPoint outPoint,
             Types.Wallet spentTransactionWallet, int? blockHeight = null, Block block = null)
         {
             Guard.NotNull(transaction, nameof(transaction));
 
             uint256 transactionHash = transaction.GetHash();
+            TransactionData spentTransaction = this.walletStore.GetForOutput(outPoint);
 
             // If the details of this spending transaction are seen for the first time.
             if (spentTransaction.SpendingDetails == null)
@@ -1316,15 +1320,21 @@ namespace Blockcore.Features.Wallet
 
                 spentTransaction.SpendingDetails = spendingDetails;
                 spentTransaction.MerkleProof = null;
+
+                // Push the changes to disk
+                this.walletStore.InsertOrUpdate(spentTransaction);
             }
             else // If this spending transaction is being confirmed in a block.
             {
                 this.logger.LogDebug("Spending transaction ID '{0}' is being confirmed, updating.", spentTransaction.Id);
 
+                bool changed = false;
+
                 // Update the block height.
                 if (spentTransaction.SpendingDetails.BlockHeight == null && blockHeight != null)
                 {
                     spentTransaction.SpendingDetails.BlockHeight = blockHeight;
+                    changed = true;
                 }
 
                 // Update the block time to be that of the block in which the transaction is confirmed.
@@ -1332,6 +1342,13 @@ namespace Blockcore.Features.Wallet
                 {
                     spentTransaction.SpendingDetails.CreationTime = DateTimeOffset.FromUnixTimeSeconds(block.Header.Time);
                     spentTransaction.BlockIndex = block?.Transactions.FindIndex(t => t.GetHash() == transactionHash);
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    // Push the changes to disk
+                    this.walletStore.InsertOrUpdate(spentTransaction);
                 }
             }
 
@@ -1559,13 +1576,13 @@ namespace Blockcore.Features.Wallet
                         {
                             this.AddAddressToIndex(wallet, address);
 
-                            foreach (TransactionData transaction in this.walletStore.GetForAddress(address.ScriptPubKey))
+                            foreach (TransactionData transaction in this.walletStore.GetForAddress(address.Address))
                             {
                                 // Get the UTXOs that are unspent or spent but not confirmed.
                                 // We only exclude from the list the confirmed spent UTXOs.
                                 if (transaction.SpendingDetails?.BlockHeight == null)
                                 {
-                                    this.walletIndex[wallet.Name].OutpointLookup[new OutPoint(transaction.Id, transaction.Index)] = transaction;
+                                    this.walletIndex[wallet.Name].OutpointLookup[transaction.OutPoint] = null;
                                 }
                             }
                         }
@@ -1582,8 +1599,8 @@ namespace Blockcore.Features.Wallet
             {
                 walletIndex = new WalletIndex()
                 {
-                    InputLookup = new Dictionary<OutPoint, TransactionData>(),
-                    OutpointLookup = new Dictionary<OutPoint, TransactionData>(),
+                    InputLookup = new Dictionary<OutPoint, string>(),
+                    OutpointLookup = new Dictionary<OutPoint, string>(),
                     ScriptToAddressLookup = this.CreateAddressFromScriptLookup(),
                     Wallet = wallet
                 };
@@ -1629,13 +1646,13 @@ namespace Blockcore.Features.Wallet
         /// <summary>
         /// Add to the list of unspent outputs kept in memory for faster lookups.
         /// </summary>
-        private void AddInputKeysLookup(Types.Wallet wallet, TransactionData transactionData)
+        private void AddInputKeysLookup(Types.Wallet wallet, OutPoint outPoint)
         {
-            Guard.NotNull(transactionData, nameof(transactionData));
+            Guard.NotNull(outPoint, nameof(outPoint));
 
             lock (this.lockObject)
             {
-                this.walletIndex[wallet.Name].OutpointLookup[new OutPoint(transactionData.Id, transactionData.Index)] = transactionData;
+                this.walletIndex[wallet.Name].OutpointLookup[outPoint] = null;
             }
         }
 
@@ -1649,7 +1666,7 @@ namespace Blockcore.Features.Wallet
 
             lock (this.lockObject)
             {
-                this.walletIndex[wallet.Name].OutpointLookup.Remove(new OutPoint(transactionData.Id, transactionData.Index));
+                this.walletIndex[wallet.Name].OutpointLookup.Remove(transactionData.OutPoint);
             }
         }
 
@@ -1662,15 +1679,15 @@ namespace Blockcore.Features.Wallet
             {
                 foreach (Types.Wallet wallet in this.Wallets)
                 {
-                    this.walletIndex[wallet.Name].OutpointLookup = new Dictionary<OutPoint, TransactionData>();
+                    this.walletIndex[wallet.Name].OutpointLookup = new Dictionary<OutPoint, string>();
 
                     foreach (HdAddress address in wallet.GetAllAddresses(a => true))
                     {
                         // Get the UTXOs that are unspent or spent but not confirmed.
                         // We only exclude from the list the confirmed spent UTXOs.
-                        foreach (TransactionData transaction in this.walletStore.GetForAddress(address.ScriptPubKey).Where(t => t.SpendingDetails?.BlockHeight == null))
+                        foreach (TransactionData transaction in this.walletStore.GetForAddress(address.Address).Where(t => t.SpendingDetails?.BlockHeight == null))
                         {
-                            this.walletIndex[wallet.Name].OutpointLookup[new OutPoint(transaction.Id, transaction.Index)] = transaction;
+                            this.walletIndex[wallet.Name].OutpointLookup[transaction.OutPoint] = null;
                         }
                     }
                 }
@@ -1689,7 +1706,7 @@ namespace Blockcore.Features.Wallet
             {
                 foreach (OutPoint input in transaction.Inputs.Select(s => s.PrevOut))
                 {
-                    this.walletIndex[wallet.Name].InputLookup[input] = transactionData;
+                    this.walletIndex[wallet.Name].InputLookup[input] = null;
                 }
             }
         }
@@ -1775,7 +1792,7 @@ namespace Blockcore.Features.Wallet
                 {
                     foreach (HdAddress address in account.GetCombinedAddresses())
                     {
-                        IEnumerable<TransactionData> transactions = this.walletStore.GetForAddress(address.ScriptPubKey);
+                        IEnumerable<TransactionData> transactions = this.walletStore.GetForAddress(address.Address);
 
                         foreach (TransactionData transaction in transactions)
                         {
@@ -1825,7 +1842,7 @@ namespace Blockcore.Features.Wallet
                 {
                     foreach (HdAddress address in account.GetCombinedAddresses())
                     {
-                        foreach (TransactionData transaction in this.walletStore.GetForAddress(address.ScriptPubKey))
+                        foreach (TransactionData transaction in this.walletStore.GetForAddress(address.Address))
                         {
                             removedTransactions.Add((transaction.Id, transaction.CreationTime));
                             this.walletStore.Remove(transaction.OutPoint);
@@ -1860,7 +1877,7 @@ namespace Blockcore.Features.Wallet
                 {
                     foreach (HdAddress address in account.GetCombinedAddresses())
                     {
-                        var toRemove = this.walletStore.GetForAddress(address.ScriptPubKey).Where(t => t.CreationTime > fromDate).ToList();
+                        var toRemove = this.walletStore.GetForAddress(address.Address).Where(t => t.CreationTime > fromDate).ToList();
                         foreach (var trx in toRemove)
                         {
                             removedTransactions.Add((trx.Id, trx.CreationTime));

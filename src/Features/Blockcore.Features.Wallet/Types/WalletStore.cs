@@ -19,9 +19,9 @@ namespace Blockcore.Features.Wallet.Types
     {
         void InsertOrUpdate(TransactionData item);
 
-        IEnumerable<TransactionData> GetForAddress(Script address);
+        IEnumerable<TransactionData> GetForAddress(string address);
 
-        int CountForAddress(Script address);
+        int CountForAddress(string address);
 
         TransactionData GetForOutput(OutPoint outPoint);
 
@@ -47,7 +47,7 @@ namespace Blockcore.Features.Wallet.Types
             this.trxCol = this.db.GetCollection<TransactionData>("TransactionData");
 
             this.trxCol.EnsureIndex(x => x.OutPoint, true);
-            this.trxCol.EnsureIndex(x => x.ScriptPubKey, false);
+            this.trxCol.EnsureIndex(x => x.Address, false);
             this.trxCol.EnsureIndex(x => x.BlockHeight, false);
 
             BsonMapper.Global.Entity<TransactionData>().Id(x => x.OutPoint);
@@ -91,10 +91,9 @@ namespace Blockcore.Features.Wallet.Types
             this.network = network;
         }
 
-        public int CountForAddress(Script address)
+        public int CountForAddress(string address)
         {
-            var req = Encoders.Hex.EncodeData(address.ToBytes(false));
-            var count = this.trxCol.Count(Query.EQ("ScriptPubKey", new BsonValue(req)));
+            var count = this.trxCol.Count(Query.EQ("Address", new BsonValue(address)));
             return count;
         }
 
@@ -103,10 +102,9 @@ namespace Blockcore.Features.Wallet.Types
             this.trxCol.Upsert(item);
         }
 
-        public IEnumerable<TransactionData> GetForAddress(Script address)
+        public IEnumerable<TransactionData> GetForAddress(string address)
         {
-            var req = Encoders.Hex.EncodeData(address.ToBytes(false));
-            var trxs = this.trxCol.Find(Query.EQ("ScriptPubKey", new BsonValue(req)));
+            var trxs = this.trxCol.Find(Query.EQ("Address", new BsonValue(address)));
             return trxs;
         }
 

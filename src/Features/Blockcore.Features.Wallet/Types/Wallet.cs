@@ -130,7 +130,7 @@ namespace Blockcore.Features.Wallet.Types
             List<HdAccount> accounts = this.GetAccounts(accountFilter).ToList();
 
             // First we iterate normal accounts
-            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => walletStore.GetForAddress(x.ScriptPubKey)))
+            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
             {
                 // If this is a cold coin stake UTXO, we won't return it for a normal account.
                 if (txData.IsColdCoinStake.HasValue && txData.IsColdCoinStake.Value == true)
@@ -141,7 +141,7 @@ namespace Blockcore.Features.Wallet.Types
                 yield return txData;
             }
 
-            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => walletStore.GetForAddress(x.ScriptPubKey)))
+            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
             {
                 // If this is a cold coin stake UTXO, we won't return it for a normal account.
                 if (txData.IsColdCoinStake.HasValue && txData.IsColdCoinStake.Value == true)
@@ -153,12 +153,12 @@ namespace Blockcore.Features.Wallet.Types
             }
 
             // Then we iterate special accounts.
-            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => walletStore.GetForAddress(x.ScriptPubKey)))
+            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
             {
                 yield return txData;
             }
 
-            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => walletStore.GetForAddress(x.ScriptPubKey)))
+            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
             {
                 yield return txData;
             }
@@ -426,9 +426,9 @@ namespace Blockcore.Features.Wallet.Types
             List<HdAccount> unusedAccounts = this.Accounts
                 .Where(Wallet.NormalAccounts)
                 .Where(acc =>
-                !acc.ExternalAddresses.SelectMany(add => walletStore.GetForAddress(add.ScriptPubKey)).Any()
+                !acc.ExternalAddresses.SelectMany(add => walletStore.GetForAddress(add.Address)).Any()
                 &&
-                !acc.InternalAddresses.SelectMany(add => walletStore.GetForAddress(add.ScriptPubKey)).Any()).ToList();
+                !acc.InternalAddresses.SelectMany(add => walletStore.GetForAddress(add.Address)).Any()).ToList();
 
             if (!unusedAccounts.Any())
                 return null;
@@ -679,7 +679,7 @@ namespace Blockcore.Features.Wallet.Types
             if (addresses == null)
                 return null;
 
-            List<HdAddress> unusedAddresses = addresses.Where(acc => walletStore.CountForAddress(acc.ScriptPubKey) == 0).ToList();
+            List<HdAddress> unusedAddresses = addresses.Where(acc => walletStore.CountForAddress(acc.Address) == 0).ToList();
             if (!unusedAddresses.Any())
             {
                 return null;
@@ -701,7 +701,7 @@ namespace Blockcore.Features.Wallet.Types
             if (addresses == null)
                 return null;
 
-            List<HdAddress> usedAddresses = addresses.Where(acc => walletStore.CountForAddress(acc.ScriptPubKey) > 0).ToList();
+            List<HdAddress> usedAddresses = addresses.Where(acc => walletStore.CountForAddress(acc.Address) > 0).ToList();
             if (!usedAddresses.Any())
             {
                 return null;
@@ -730,8 +730,8 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         public (Money ConfirmedAmount, Money UnConfirmedAmount) GetBalances(IWalletStore walletStore, bool excludeColdStakeUtxo)
         {
-            List<TransactionData> allTransactions = this.ExternalAddresses.SelectMany(a => walletStore.GetForAddress(a.ScriptPubKey))
-                .Concat(this.InternalAddresses.SelectMany(i => walletStore.GetForAddress(i.ScriptPubKey))).ToList();
+            List<TransactionData> allTransactions = this.ExternalAddresses.SelectMany(a => walletStore.GetForAddress(a.Address))
+                .Concat(this.InternalAddresses.SelectMany(i => walletStore.GetForAddress(i.Address))).ToList();
 
             if (excludeColdStakeUtxo)
             {
@@ -1001,7 +1001,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>List of spendable transactions.</returns>
         public IEnumerable<TransactionData> UnspentTransactions(IWalletStore walletStore)
         {
-            return walletStore.GetForAddress(this.ScriptPubKey).Where(t => !t.IsSpent());
+            return walletStore.GetForAddress(this.Address).Where(t => !t.IsSpent());
         }
 
         /// <summary>
@@ -1009,7 +1009,7 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         public (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) GetBalances(IWalletStore walletStore, bool excludeColdStakeUtxo)
         {
-            var trx = walletStore.GetForAddress(this.ScriptPubKey).ToList();
+            var trx = walletStore.GetForAddress(this.Address).ToList();
 
             List<TransactionData> allTransactions = excludeColdStakeUtxo
                 ? trx.Where(t => t.IsColdCoinStake != true).ToList()
@@ -1034,6 +1034,14 @@ namespace Blockcore.Features.Wallet.Types
         [JsonConverter(typeof(OutPointJsonConverter))]
         [BsonId]
         public OutPoint OutPoint { get; set; }
+
+        /// <summary>
+        /// The address (hash of P2PKH) representation of the pubkey this utxo is associated to.
+        /// This is only the unique way to identify the pubkey, the utxo itself can be any of the script representations
+        /// </summary>
+        [JsonProperty(PropertyName = "Address")]
+        [JsonConverter(typeof(OutPointJsonConverter))]
+        public string Address { get; set; }
 
         /// <summary>
         /// Transaction id.

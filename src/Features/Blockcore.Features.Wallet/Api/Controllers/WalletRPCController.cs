@@ -335,8 +335,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             // Get the transaction from the wallet by looking into received and send transactions.
             List<HdAddress> addresses = account.GetCombinedAddresses().ToList();
-            List<TransactionData> receivedTransactions = addresses.Where(r => !r.IsChangeAddress()).SelectMany(a => this.walletStore.GetForAddress(a.ScriptPubKey).Where(t => t.Id == trxid)).ToList();
-            List<TransactionData> sendTransactions = addresses.SelectMany(a => this.walletStore.GetForAddress(a.ScriptPubKey).Where(t => t.SpendingDetails != null && t.SpendingDetails.TransactionId == trxid)).ToList();
+            List<TransactionData> receivedTransactions = addresses.Where(r => !r.IsChangeAddress()).SelectMany(a => this.walletStore.GetForAddress(a.Address).Where(t => t.Id == trxid)).ToList();
+            List<TransactionData> sendTransactions = addresses.SelectMany(a => this.walletStore.GetForAddress(a.Address).Where(t => t.SpendingDetails != null && t.SpendingDetails.TransactionId == trxid)).ToList();
 
             if (!receivedTransactions.Any() && !sendTransactions.Any())
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id.");
@@ -465,7 +465,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 model.Details.Add(new GetTransactionDetailsModel
                 {
-                    Address = addresses.First(a => this.walletStore.GetForAddress(a.ScriptPubKey).Contains(trxInWallet)).Address,
+                    Address = addresses.First(a => this.walletStore.GetForAddress(a.Address).Contains(trxInWallet)).Address,
                     Category = category,
                     Amount = trxInWallet.Amount.ToDecimal(MoneyUnit.BTC),
                     OutputIndex = trxInWallet.Index

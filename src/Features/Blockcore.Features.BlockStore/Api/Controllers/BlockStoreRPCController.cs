@@ -19,26 +19,11 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
     /// </summary>
     public class BlockStoreRPCController : FeatureController
     {
-        /// <summary>Full Node.</summary>
-        private readonly IFullNode fullNode;
-
         /// <summary>Thread safe access to the best chain of block headers from genesis.</summary>
         private readonly ChainIndexer chainIndexer;
 
-        /// <summary>Specification of the network the node runs on.</summary>
-        private readonly Network network;
-
-        /// <summary>Wallet broadcast manager.</summary>
-        private readonly IBroadcasterManager broadcasterManager;
-
-        /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
-
         /// <summary>Provides access to the block store database.</summary>
         private readonly IBlockStore blockStore;
-
-        /// <summary>Information about node's chain.</summary>
-        private readonly IChainState chainState;
 
         /// <inheritdoc />
         public BlockStoreRPCController(
@@ -46,16 +31,10 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             IConsensusManager consensusManager,
             ChainIndexer chainIndexer,
             Network network,
-            ILoggerFactory loggerFactory,
-            IBlockStore blockStore,
-            IChainState chainState) : base(fullNode: fullNode, consensusManager: consensusManager, chainIndexer: chainIndexer, network: network)
+            IBlockStore blockStore) : base(fullNode: fullNode, consensusManager: consensusManager, chainIndexer: chainIndexer, network: network)
         {
-            this.fullNode = fullNode;
             this.chainIndexer = chainIndexer;
-            this.network = network;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.blockStore = blockStore;
-            this.chainState = chainState;
         }
 
         /// <summary>
@@ -82,7 +61,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                 foreach (var transactionId in transactionIds)
                 {
                     var hashBlock = uint256.Parse(blockhash);
-                    ChainedHeader chainedHeader = this.GetTransactionBlock(transactionId, this.fullNode, this.chainIndexer);
+                    ChainedHeader chainedHeader = this.GetTransactionBlock(transactionId);
                     if (chainedHeader.HashBlock != hashBlock)
                     {
                         throw new RPCServerException(RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY, "Not all transactions found in specified or retrieved block");
@@ -98,14 +77,13 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                 // Loop through txids and try to find which block they're in. Exit loop once a block is found.
                 foreach (var transactionId in transactionIds)
                 {
-                    ChainedHeader chainedHeader = this.GetTransactionBlock(transactionId, this.fullNode, this.chainIndexer);
+                    ChainedHeader chainedHeader = this.GetTransactionBlock(transactionId);
                     if (chainedHeader.BlockDataAvailability == BlockDataAvailabilityState.BlockAvailable)
                     {
                         block = this.blockStore.GetBlock(chainedHeader.HashBlock);
                         break;
                     }
                 }
-
             }
             if (block == null)
             {
@@ -115,15 +93,13 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             return result;
         }
 
-        internal ChainedHeader GetTransactionBlock(uint256 trxid, IFullNode fullNode, ChainIndexer chain)
+        internal ChainedHeader GetTransactionBlock(uint256 trxid)
         {
-            Guard.NotNull(fullNode, nameof(fullNode));
-
             ChainedHeader block = null;
             uint256 blockid = this.blockStore?.GetBlockIdByTransactionId(trxid);
             if (blockid != null)
             {
-                block = chain?.GetHeader(blockid);
+                block = this.chainIndexer?.GetHeader(blockid);
             }
             return block;
         }

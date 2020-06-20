@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject NBitcoin.Network Network
 @namespace Blockcore.Features.NodeHost.UI.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -13,7 +14,13 @@
     <title>Dashboard</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/darkstrap.min.css" />
-    <link rel="stylesheet" href="css/site.css"/>
+    <link rel="stylesheet" href="css/site.css" />
+    @{
+        if (this.Network.CoinTicker == "RUTA")
+        {
+            <link rel="icon" type="image/x-icon" href="faviconruta.ico" />
+        }
+    }
 </head>
 <body>
     <app>
@@ -32,8 +39,7 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
-    <script>
-        window.clipboardCopy = {
+    <script>window.clipboardCopy = {
             copyText: function(text) {
                 navigator.clipboard.writeText(text).then(function () {
                 })
@@ -41,7 +47,6 @@
                     alert(error);
                 });
             }
-        };
-    </script>
+        };</script>
 </body>
 </html>

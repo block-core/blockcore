@@ -21,14 +21,13 @@
             <Dropdown TItem="string" OnSelected="@OnSelected" >
                 <InitialTip>@walletname</InitialTip>
                 <ChildContent>
-                    @{
-                        foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                        @foreach (var walletName in this.WalletManager.GetWalletsNames()) 
+                        {
                             foreach (var account in this.WalletManager.GetAccounts(walletName))
                             {
                             <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
                             }
                         }
-                    }
                 </ChildContent>
             </Dropdown>
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >
@@ -58,46 +57,42 @@
         </div>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-xl-12 col-sm-12 ">
-            <div class="card">
-                <div class="card-body">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span style="min-width: 10em" class="input-group-text" id="basic-addon1">To Address:</span>
-                        </div>
-                        <input @bind="Address" type="text" class="form-control bg-secondary text-light" placeholder="Where you want to send coins? Please enter the address" />
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Amount(@this.Network.CoinTicker.ToUpper()):</span>
-                        </div>
-                        <input @bind="Amount" type="text" class="form-control bg-secondary text-light" placeholder="amount" />
-                        <div class="input-group-append">
-                            <button class="btn btn-secondary" @onclick="SendMax">Max</button>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Address</label>
+                        <div class="col-sm-10">
+                            <input @bind="Address" type="text" class="form-control bg-secondary text-light" placeholder="Where you want to send coins? Please enter the address" />
                         </div>
                     </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span style="min-width: 10em" class="input-group-text">Fee:</span>
-                        </div>
-                        <input @bind="Fee" type="text" class="form-control bg-secondary text-light" placeholder="fee" />
-                        <div class="input-group-append">
-                            <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.Low); }">Low</button>
-                            <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.Medium); }">Medium</button>
-                            <button class="btn btn-secondary" @onclick="() => { EstimateFee(FeeType.High); }">High</button>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Amount (@this.Network.CoinTicker.ToUpper())</label>
+                        <div class="input-group col-sm-10">
+                            <input @bind="Amount" type="text" class="form-control bg-secondary text-light" placeholder="Amount" />
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary ml-1" @onclick="SendMax">Max</button>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span style="min-width: 10em" class="input-group-text">Password:</span>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Fee</label>
+                        <div class="input-group col-sm-10">
+                            <input @bind="Fee" type="text" class="form-control bg-secondary text-light" placeholder="Fee" />
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary ml-1" @onclick="() => { EstimateFee(FeeType.Low); }">Low</button>
+                                <button class="btn btn-secondary ml-1" @onclick="() => { EstimateFee(FeeType.Medium); }">Medium</button>
+                                <button class="btn btn-secondary ml-1" @onclick="() => { EstimateFee(FeeType.High); }">High</button>
+                            </div>
                         </div>
-                        <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
+                    </div> 
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                            <input @bind="Password" type="text" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
+                        </div>
                     </div>
-
                     <div class="input-group mb-3">
                         @if (IsSending)
                         {

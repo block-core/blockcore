@@ -27,13 +27,13 @@ namespace Rutanio.Daemon
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
                     .UseNodeSettings(nodeSettings)
                     .UseBlockStore()
-                    .UsePosConsensus()
                     .UseMempool()
-                    .UseColdStakingWallet()
-                    .AddPowPosMining()
                     .UseNodeHost()
                     .AddRPC()
-                    .UseDiagnosticFeature();
+                    .UseDiagnosticFeature()
+                    .UsePosConsensus()
+                    .AddPowPosMining()
+                    .UseColdStakingWallet();
 
                 IFullNode node = nodeBuilder.Build();
 

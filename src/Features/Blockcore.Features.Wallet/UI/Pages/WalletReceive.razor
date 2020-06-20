@@ -35,31 +35,20 @@
 </div>
 
 var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
-<div class="row ">
-    <div class="col-12 grid-margin">
-        <div class="card">
-            <div class="mx-3 mt-3">
-              <div class="container">
-                <table class="table table-borderless">
-                  <tbody>
-                    @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) 
-                    {
-                      <tr>
-                        <td style="min-width: 10em"><strong>Address:</strong></td>
-                        <td><CopyToClipboard Text="@result.Bech32Address" /></td>
-                      </tr>
-                    } else {
-                      <tr>
-                        <td style="min-width: 10em"><strong>Address:</strong></td>
-                        <td><CopyToClipboard Text="@result.Address" /></td>
-                      </tr>
-                    }
-                  </tbody>
-                </table>
-              </div>
-            </div>
-        </div>
+
+<div class="card">
+  <div class="m-3">
+      <div class="row">
+          @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) 
+          {
+             <div class="col-sm-2"><strong>Address:</strong></div>
+              <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
+          } else {
+               <div class="col-sm-2"><strong>Address:</strong></div>
+              <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
+          }
     </div>
+  </div>
 </div>
 }
 

@@ -52,6 +52,9 @@ namespace Blockcore.Features.NodeHost
         /// <summary>Use HTTPS or not.</summary>
         public bool UseHttps { get; set; }
 
+        /// <summary>Use title from agent</summary>
+        public string NetworkAgent { get; set; }
+
         /// <summary>
         /// Initializes an instance of the object from the node configuration.
         /// </summary>
@@ -61,6 +64,8 @@ namespace Blockcore.Features.NodeHost
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
 
             this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(NodeHostSettings).FullName);
+
+            this.NetworkAgent = nodeSettings.Agent;
 
             TextFileConfiguration config = nodeSettings.ConfigReader;
 

@@ -83,12 +83,6 @@
 
 @code {
 	bool ShowForm { get; set; } = true;
-    private void CloseModal()
-    {
-        ModalService.Close();        
-        NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
-        StateHasChanged();
-    }
     public string WalletName { get; set; }
     public string Mnemonic { get; set; }
     private string Password { get; set; }
@@ -105,7 +99,6 @@
         StateHasChanged();
         await Task.Delay(1);
     }
-
     private  async Task CreateWallet()
     {
         if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "Ensure that you have generated a new Mnemonic"; return; }
@@ -119,11 +112,16 @@
         // start syncing the wallet from the creation date
         this.WalletSyncManager.SyncFromDate(this.DateTimeProvider.GetUtcNow());
         this.Alert = "Your wallet has now been created.";
-        ShowForm = false;    
+        ShowForm = false;
     }
     private void GenerateMnemonic()
     {
         var mnemonic = WalletModelBuilder.GenerateMnemonic(wordCount: 24);
         this.Mnemonic = mnemonic.ToString();
+    }
+    private void CloseModal()
+    {
+        ModalService.Close();
+        NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
     }
 }

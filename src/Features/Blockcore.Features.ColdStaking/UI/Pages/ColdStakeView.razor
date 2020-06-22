@@ -101,7 +101,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                             {
                                 foreach (var transaction in history.TransactionsHistory)
                                 {
-                                    <tr @onclick="ViewTransaction">
+                                    <tr> @* @onclick="ViewTransaction"> *@
                                         <td>@transaction.Type</td>
                                         <td class="text-center">@String.Format("{0:f}", transaction.Timestamp)</td>
                                         <td class="text-right">@transaction.Amount</td>

@@ -1,0 +1,119 @@
+﻿@using Blockcore.Features.Wallet.Interfaces
+@using NBitcoin;
+@using Blockcore.Features.Wallet.Api.Controllers
+
+@inject NavigationManager NavigationManager
+@inject IWalletManager WalletManager
+@inject Blockcore.Utilities.IDateTimeProvider DateTimeProvider
+@inject IWalletSyncManager WalletSyncManager
+@inject ModalService ModalService
+
+@if (ShowForm)
+{
+<div class="row ">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">
+                        <span class="text">Mnemonic</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <textarea @bind="Mnemonic" class="form-control bg-secondary text-light" rows="3" placeholder="Please enter your mnemonic seed words. The mnemonic is your wallet, and must be kept safe and secure.">@Mnemonic</textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">
+                        <span class="text">Passphrase</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <input @bind="Passphrase" type="password" class="form-control bg-secondary text-light" placeholder="When creating the wallet, a passphrase is optional. Important - a passphrase if used, is permanently linked to the wallet and must be kept safe and secure." />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">
+                        <span class="text">Name</span>
+                     </label>
+                    <div class="col-sm-10">
+                        <input @bind="WalletName" type="text" class="form-control bg-secondary text-light" placeholder="Please enter your wallet name" />
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">
+                        <span class="text">Password</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
+                    </div>
+                </div>
+                @if (IsSubmitting)
+                {
+                    <button class="btn btn-danger" disabled>
+                        <span class="spinner-border spinner-border-sm"></span> Working ......
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-primary" @onclick="callRecoverWallet">Recover wallet</button>
+                }
+                <div class="input-group mt-1">
+                    <div class="text-danger">@Alert</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+} else {
+<div class="row ">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-success">@Alert</h5>
+                <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@code {
+    
+	bool ShowForm { get; set; } = true;
+    private void CloseModal()
+    {
+        ModalService.Close();   
+        NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
+        StateHasChanged();
+    }
+    
+    public string WalletName { get; set; }
+    public string Mnemonic { get; set; }
+    private string Password { get; set; }
+    private string Passphrase { get; set; }
+    string Alert { get; set; }
+    private bool IsSubmitting { get; set; }
+    private async Task callRecoverWallet()
+    {
+        IsSubmitting = true;
+        StateHasChanged();
+        await Task.Delay(1);  // flush changes
+        await RecoverWallet();
+        IsSubmitting = false;
+        StateHasChanged();
+        await Task.Delay(1);
+    }
+    private async Task RecoverWallet()
+    {
+        if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "Ensure that you have entered your Mnemonic"; return; }
+        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (this.Passphrase == null)
+            this.Passphrase = string.Empty;
+        this.Alert = string.Empty;
+        var wallet = this.WalletManager.RecoverWallet(this.Password, this.WalletName, this.Mnemonic, this.DateTimeProvider.GetUtcNow(), passphrase: this.Passphrase);
+        this.Alert = "Your wallet has now been recovered.";
+        ShowForm = false;
+    }
+
+}

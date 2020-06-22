@@ -14,19 +14,22 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 style="max-width: 18em" class="h2"><strong>Cold Staking</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <Dropdown TItem="string" OnSelected="@OnSelected" >
-            <InitialTip>@walletname</InitialTip>
-            <ChildContent>
-                @{
-                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
-                        foreach (var account in this.WalletManager.GetAccounts(walletName))
-                        {
-                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                        }
-                    }
-                }
-            </ChildContent>
-        </Dropdown>
+        @if (this.ColdStakingManager.GetWalletsNames().Count() > 1) {
+            <Dropdown TItem="string" OnSelected="@OnSelected" >
+                <InitialTip>@walletname</InitialTip>
+                <ChildContent>
+                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames()) {
+                            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                                if (coldStakingWalletEnabled != null) {
+                                    foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
+                                    {
+                                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                                    }
+                                }
+                            }
+                </ChildContent>
+            </Dropdown>
+        }
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
             <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake</button>
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
@@ -40,7 +43,7 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
 var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
 <div class="row mb-3">
-    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
@@ -56,7 +59,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             </div>
         </div>
     </div>
-        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Cold Balance</h5>
@@ -80,7 +83,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
-            <div class="card-body">
+            <div class="mx-3 mt-3">
                 <h4 class="card-title">Balances</h4>
                 <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">
@@ -98,7 +101,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
                             {
                                 foreach (var transaction in history.TransactionsHistory)
                                 {
-                                    <tr @onclick="ViewTransaction">
+                                    <tr> @* @onclick="ViewTransaction"> *@
                                         <td>@transaction.Type</td>
                                         <td class="text-center">@String.Format("{0:f}", transaction.Timestamp)</td>
                                         <td class="text-right">@transaction.Amount</td>
@@ -150,7 +153,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
 
     private void ViewTransaction()
     {
-        ModalService.Show("Transaction Details", typeof(ViewTransaction));
+        ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction));
     }
     private void NavigateToColdStakeView(string walletName)
     {

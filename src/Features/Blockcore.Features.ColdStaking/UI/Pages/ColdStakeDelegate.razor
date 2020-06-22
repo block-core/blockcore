@@ -14,8 +14,28 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Delegate Staking from @walletname</strong></h1>
+    <h1 class="h2"><strong>Delegate Staking</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+       @if (this.ColdStakingManager.GetWalletsNames().Count() > 1) {
+            <Dropdown TItem="string" OnSelected="@OnSelected" >
+                <InitialTip>@walletname</InitialTip>
+                <ChildContent>
+                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames()) {
+                            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                                if (coldStakingWalletEnabled != null) {
+                                    foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
+                                    {
+                                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                                    }
+                                }
+                            }
+                </ChildContent>
+            </Dropdown>
+        }
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
+            <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">
+            <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw</button>
     </div>
 </div>
 
@@ -24,7 +44,7 @@ var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingCold
 var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
 <div class="row mb-3">
-    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
@@ -40,7 +60,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             </div>
         </div>
     </div>
-    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Cold Balance</h5>
@@ -63,36 +83,33 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             <div class="card-body">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text" id="basic-addon1">Delegated Staking Address:</span>
+                        <span style="min-width: 15em" class="input-group-text m-1" id="basic-addon1">Delegated Staking Address:</span>
                     </div>
-                    <input @bind="HotWalletAddress" type="text" class="form-control" placeholder="Your third party delegated staking address" />
+                    <input @bind="HotWalletAddress" type="text" class="form-control bg-secondary text-light m-1" placeholder="Your third party delegated staking address" />
                 </div>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span style="min-width: 15em" class="input-group-text">Amount (@this.Network.CoinTicker.ToUpper()):</span>
+                    <span style="min-width: 15em" class="input-group-text m-1">Amount (@this.Network.CoinTicker.ToUpper()):</span>
                 </div>
-                <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+                <input @bind="Amount" type="text" class="form-control bg-secondary text-light m-1" placeholder="amount" />
                 <div class="input-group-append">
-                    <button class="btn btn-secondary" @onclick="MaxAmount">Max</button>
+                    <button class="btn btn-secondary m-1" @onclick="MaxAmount">Max</button>
                 </div>
             </div>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span style="min-width: 15em" class="input-group-text">Fee:</span>
+                    <span style="min-width: 15em" class="input-group-text m-1">Fee:</span>
                 </div>
-                <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
-                <div class="input-group-append">
-                    <span style="min-width: 6em" class="input-group-text"><abbr title="The low fee may not be enough for every transaction">Default to low</abbr></span>
-                </div>
+                <input @bind="Fee" type="text" class="form-control bg-secondary text-ligh m-1" placeholder="fee" />
             </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text">Password:</span>
+                        <span style="min-width: 15em" class="input-group-text m-1">Password:</span>
                     </div>
-                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                    <input @bind="Password" type="password" class="form-control bg-secondary text-light m-1" placeholder="Please enter your password" />
                 </div>
 
                 <div class="btn-toolbar mb-2 mb-md-0">
@@ -100,7 +117,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
                     <button class="btn btn-primary" @onclick="ChangePayToScript">PayToScript: @PayToScript</button>
                 </div>
                 <div class="input-group">
-                    <div class="alert-warning">@Alert</div>
+                    <div class="text-danger">@Alert</div>
                 </div>
             </div>
         </div>
@@ -205,5 +222,26 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         }
         //TODO: Add confirmation screen
         NavigationManager.NavigateTo("coldstakeview/" + walletname + "/coldStakingColdAddresses");
+    }
+    private void NavigateToWithdraw(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-withdraw/" + walletName);
+    }
+    private void NavigateToSetup(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-setup/" + walletName);
+    }
+    private void NavigateToDelegate(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
+    }
+    private void NavigateToColdStakeView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakeView(selection);
     }
 }

@@ -19,7 +19,7 @@
                         <span style="min-width: 10em" class="input-group-text" id="wallet-label">Wallet Name:</span>
                     </div>
 
-                    <select @bind="WalletName" type="text" class="form-control">
+                    <select @bind="WalletName" type="text" class="form-control bg-secondary text-light">
                             <option value=""></option>
                             @{
                                 foreach (var walletName in this.WalletManager.GetWalletsNames()) {
@@ -39,7 +39,7 @@
                     <div class="input-group-prepend">
                         <span style="min-width: 10em" class="input-group-text">Password:</span>
                     </div>
-                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                    <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                 </div>
 
                 <div class="input-group mb-3">
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="input-group mb-3">
-                    <div class="alert-warning">@Alert</div>
+                    <div class="text-danger">@Alert</div>
                 </div>
             </div>
         </div>

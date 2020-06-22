@@ -5,19 +5,21 @@ namespace Blockcore.Features.Wallet.UI
 {
     public class StakeNavigationItem : INavigationItem
     {
-         public string Name => "Staking";
+        private readonly IWalletManager WalletManager;
+
+        public StakeNavigationItem(IWalletManager WalletManager)
+        {
+            this.WalletManager = WalletManager;
+        }
+
+        public string Name => "Staking";
         public string Navigation => "Stake";
-        public string Icon => "oi-bolt";     
-        private readonly IWalletManager walletManager;
-        public bool IsVisible => true; //hasWallets();
-        public bool hasWallets() {
-            var walletManager = this.walletManager as WalletManager;
-            bool hasWallets = false;
-            if (walletManager != null)
-                {
-                    hasWallets = true; //walletManager.ContainsWallets;
-                }
-            return hasWallets;
+        public string Icon => "oi-bolt";
+        public bool IsVisible => this.HasWallets();
+
+        public bool HasWallets()
+        {
+            return this.WalletManager?.ContainsWallets ?? false;
         }
     }
 }

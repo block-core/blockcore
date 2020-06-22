@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-3">
                             <div class="icon icon-box-success">
-                                @if (InSync() < 100)
+                                @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
                                 {
                                     <h3 class="oi oi-circle-x text-danger" aria-hidden="true"></h3>
                                 }
@@ -118,13 +118,13 @@
                             </div>
                         </div>
                     </div>
-                    @if (InSync() < 100)
+                    @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
                     {
-                        <h6 class="text-left text-danger font-weight-normal">Syncing - @InSync()%</h6>
+                        <h6 class="text-left text-danger font-weight-normal">Chain Syncing</h6>
                     }
                     else
                     {
-                        <h6 class="text-left text-success font-weight-normal">Synced</h6>
+                        <h6 class="text-left text-success font-weight-normal">Chain Synced</h6>
                     }
                 </div>
             </div>

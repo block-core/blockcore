@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Blockcore.Base;
 using Blockcore.Consensus;
 using Blockcore.Controllers;
-using Blockcore.Controllers.Models;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Interfaces;
 using Blockcore.Primitives;
-using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NBitcoin;
 
 namespace Blockcore.Features.BlockStore.Api.Controllers

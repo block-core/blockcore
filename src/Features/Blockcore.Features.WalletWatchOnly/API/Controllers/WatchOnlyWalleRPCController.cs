@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Base;
 using Blockcore.Consensus;
@@ -7,7 +8,6 @@ using Blockcore.Controllers.Models;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet;
-using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Features.WalletWatchOnly.Api.Models;
@@ -15,7 +15,6 @@ using Blockcore.Features.WalletWatchOnly.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NBitcoin;
 
 namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
@@ -33,12 +32,6 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 
         /// <summary>Specification of the network the node runs on.</summary>
         private readonly Network network;
-
-        /// <summary>Wallet broadcast manager.</summary>
-        private readonly IBroadcasterManager broadcasterManager;
-
-        /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
 
         /// <summary>Wallet related configuration.</summary>
         private readonly WalletSettings walletSettings;
@@ -66,7 +59,6 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             IConsensusManager consensusManager,
             ChainIndexer chainIndexer,
             Network network,
-            ILoggerFactory loggerFactory,
             WalletSettings walletSettings,
             IWalletManager walletManager,
             IWatchOnlyWalletManager watchOnlyWalletManager,
@@ -76,7 +68,6 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             this.fullNode = fullNode;
             this.chainIndexer = chainIndexer;
             this.network = network;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.walletSettings = walletSettings;
             this.walletManager = walletManager;
             this.watchOnlyWalletManager = watchOnlyWalletManager;
@@ -105,7 +96,16 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             }
 
             Wallet.Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
-            IEnumerable<TransactionData> selectedTransactions = wallet.GetAllTransactions()
+            Func<HdAccount, bool> accountFilter = null;
+            if (account == "*" || account == null)
+            {
+                accountFilter = Wallet.Types.Wallet.AllAccounts;
+            }
+            else
+            {
+                accountFilter = a => a.Name == account;
+            }
+            IEnumerable<TransactionData> selectedTransactions = wallet.GetAllTransactions(accountFilter)
                 .Skip(skip)
                 .Take(count);
             foreach (var transactionData in selectedTransactions)
@@ -153,20 +153,6 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
                 block = chain?.GetHeader(blockid);
             }
             return block;
-        }
-
-        private ListSinceBlockTransactionCategoryModel GetTransactionCategoryModel(long confirmations, decimal amount, bool? isgenerated = false)
-        {
-            if (isgenerated ?? false)
-            {
-                return confirmations > this.FullNode.Network.Consensus.CoinbaseMaturity
-                    ? ListSinceBlockTransactionCategoryModel.Generate
-                    : ListSinceBlockTransactionCategoryModel.Immature;
-            }
-
-            return amount > 0
-                ? ListSinceBlockTransactionCategoryModel.Receive
-                : ListSinceBlockTransactionCategoryModel.Send;
         }
 
         /// <summary>

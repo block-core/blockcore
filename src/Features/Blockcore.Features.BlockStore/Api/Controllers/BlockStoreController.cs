@@ -3,6 +3,7 @@ using System.Net;
 using Blockcore.Base;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.Features.BlockStore.Api.Models;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
@@ -12,16 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.BlockStore.Controllers
+namespace Blockcore.Features.BlockStore.Api.Contollers
 {
-    public static class BlockStoreRouteEndPoint
-    {
-        public const string GetAddressesBalances = "getaddressesbalances";
-        public const string GetVerboseAddressesBalances = "getverboseaddressesbalances";
-        public const string GetAddressIndexerTip = "addressindexertip";
-        public const string GetBlock = "block";
-        public const string GetBlockCount = "GetBlockCount";
-    }
 
     /// <summary>Controller providing operations on a blockstore.</summary>
     [ApiController]

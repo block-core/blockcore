@@ -3,9 +3,13 @@
 @using Blockcore.Features.Wallet.Interfaces
 @using Blockcore.Features.Wallet;
 @using Blockcore.Features.Wallet.Types
+@using Blockcore.Base.Deployments
+@using NBitcoin;
 
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
+@inject NodeDeployments NodeDeployments
+@inject Network Network
 
 @{
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -31,27 +35,20 @@
 </div>
 
 var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
-<div class="row ">
-    <div class="col-12 grid-margin">
-        <div class="card">
-            <div class="card-body">
-              <div class="container">
-                <table class="table table-borderless">
-                  <tbody>
-                    <tr>
-                      <td style="min-width: 10em"><strong>Address:</strong></td>
-                      <td><CopyToClipboard Text="@result.Address" /></td>
-                    </tr>
-                    <tr>
-                      <td style="min-width: 10em"><strong>Segwit Address:</strong></td>
-                      <td><CopyToClipboard Text="@result.Bech32Address" /></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-        </div>
+
+<div class="card">
+  <div class="m-3">
+      <div class="row">
+          @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) 
+          {
+             <div class="col-sm-2"><strong>Address:</strong></div>
+              <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
+          } else {
+               <div class="col-sm-2"><strong>Address:</strong></div>
+              <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
+          }
     </div>
+  </div>
 </div>
 }
 

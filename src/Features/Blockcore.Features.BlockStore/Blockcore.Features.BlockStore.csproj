@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
   </ItemGroup>
 
   <ItemGroup>

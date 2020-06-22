@@ -9,5 +9,7 @@ namespace Blockcore.Interfaces.UI
         public string Name { get; }
         public string Navigation { get; }
         public string Icon { get; }
+        public bool IsVisible {get; }
+        
     }
 }

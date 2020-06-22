@@ -10,25 +10,49 @@
 @inject NodeDeployments NodeDeployments
 @inject Network Network
 
+
 @if (!NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.CheckColdStakeVerify))
 {
     <h2>Cold staking is not activated</h2>
     return;
 }
 
+@if (!this.WalletManager.ContainsWallets) {
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>No wallets available</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
+    </div>
+} else {
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>Cold Staking</strong></h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
-            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
-            if (coldStakingWalletEnabled != null) {} else {
-                <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToEnableWallet(); }">Enable Cold Staking</button>
-                break;
-            }
+    <div class="btn-toolbar mb-2 mb-md-0 mr-3">
+       @if (this.ColdStakingManager.GetWalletsNames().Count() > 1) {
+            <Dropdown TItem="string" OnSelected="@OnSelected" >
+                <InitialTip>Select Wallet</InitialTip>
+                <ChildContent>
+                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames()) {
+                            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                                if (coldStakingWalletEnabled != null) {
+                                    foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
+                                    {
+                                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                                    }
+                                }
+                            }
+                </ChildContent>
+            </Dropdown>
         }
-    </div>
+    @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+        var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+        if (coldStakingWalletEnabled != null) {} else {
+            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToEnableWallet(); }">Enable Cold Staking</button>
+            break;
+        }
+    }
 </div>
-@{
+</div>
+
 <div class="row mb-3">
     <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
         <div class="card">
@@ -67,7 +91,7 @@
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
-            <div class="card-body">
+            <div class="mx-3 mt-3">
                 <h4 class="card-title">Balances</h4>
                 <div class="table-responsive small">
                     <table class="table table-border-bottom table-striped table-sm table-hover">
@@ -205,4 +229,10 @@
     {
         NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
     }    
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakeView(selection);
+    }
+
 }

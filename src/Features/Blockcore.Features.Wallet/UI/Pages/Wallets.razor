@@ -12,15 +12,62 @@
 @inject Network Network
 @inject IPooledTransaction PooledTransaction
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+@inject ModalService ModalService
 
 @{
+    @if (!this.WalletManager.ContainsWallets) {
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>No wallets available</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-xl-6 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Create new wallet</h5>
+                    <div class="d-flex align-items-center align-self-start">
+                        <button class="btn btn-primary" @onclick="ShowWalletCreate">
+                            <span class="oi oi-file" aria-hidden="true"></span> Create Wallet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Recover existing wallet</h5>
+                    <div class="d-flex align-items-center align-self-start">
+                        <button class="btn btn-primary" @onclick="ShowWalletRecover">
+                            <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+} else {
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>Wallets</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletCreate(); }">
+            @if (this.WalletManager.GetWalletsNames().Count() > 1) {
+                <Dropdown TItem="string" OnSelected="@OnSelected" >
+                    <InitialTip>Select Wallet</InitialTip>
+                    <ChildContent>
+                        @foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                            foreach (var account in this.WalletManager.GetAccounts(walletName))
+                            {
+                            <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                            }
+                        }
+                    </ChildContent>
+                </Dropdown>
+            }
+            <button class="btn btn-sm btn-primary mr-1" @onclick="ShowWalletCreate">
                 <span class="oi oi-file" aria-hidden="true"></span> Create Wallet
             </button>
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletRecover(); }">
+            <button class="btn btn-sm btn-primary mr-1" @onclick="ShowWalletRecover">
                 <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet
             </button>
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { Rebroadcast(); }">
@@ -32,7 +79,7 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-6 col-sm-6">
             <div class="card">
                 <div class="card-body">
                     <h5>Main Balance</h5>
@@ -48,7 +95,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-6 col-sm-6">
             <div class="card">
                 <div class="card-body">
                     <h5>Wallet Status</h5>
@@ -60,7 +107,7 @@
                         </div>
                         <div class="col-3">
                             <div class="icon icon-box-success">
-                                @if (InSync() < 100)
+                                @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
                                 {
                                     <h3 class="oi oi-circle-x text-danger" aria-hidden="true"></h3>
                                 }
@@ -71,13 +118,13 @@
                             </div>
                         </div>
                     </div>
-                    @if (InSync() < 100)
+                    @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
                     {
-                        <h6 class="text-left text-danger font-weight-normal">Syncing - @InSync()%</h6>
+                        <h6 class="text-left text-danger font-weight-normal">Chain Syncing</h6>
                     }
                     else
                     {
-                        <h6 class="text-left text-success font-weight-normal">Synced</h6>
+                        <h6 class="text-left text-success font-weight-normal">Chain Synced</h6>
                     }
                 </div>
             </div>
@@ -86,7 +133,7 @@
     <div class="row ">
         <div class="col-12 grid-margin">
             <div class="card">
-                <div class="card-body">
+                <div class="mx-3 mt-3">
                     <h4 class="card-title">Balances</h4>
                     <div class="table-responsive small">
                         <table class="table table-border-bottom table-striped table-sm table-hover">
@@ -123,6 +170,7 @@
             </div>
         </div>
     </div>
+}
 }
 @code
 {
@@ -183,7 +231,6 @@
         }
         return balance;
     }
-
     private dynamic totalUnconfirmedBalance()
     {
         dynamic balance = 0;
@@ -197,7 +244,6 @@
         }
         return balance;
     }
-
     private dynamic InSync()
     {
         decimal wt = (decimal)this.WalletSyncManager.WalletTip.Height;
@@ -206,5 +252,18 @@
         dynamic syncPercent = 0;
         syncPercent = (int)(((decimal)wt / (decimal)ct) * 100);
         return syncPercent;
+    }
+        private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToWallet(selection,"account 0");
+    }
+        private void ShowWalletRecover()
+    {
+        ModalService.Show("Recover your Wallet", typeof(Modal.ModalWalletRecover));
+    }
+    private void ShowWalletCreate()
+    {
+        ModalService.Show("Create your Wallet", typeof(Modal.ModalWalletCreate));
     }
 }

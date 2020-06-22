@@ -1130,6 +1130,51 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         }
 
         /// <summary>
+        /// Gets profile address.
+        /// <param name="request">An object containing the necessary parameters to retrieve
+        /// the profile address.</param>
+        /// <returns>A JSON object containing the address for a profile account.</returns>
+        /// </summary>
+        [Route("profileaddress")]
+        [HttpGet]
+        public IActionResult GetProfileAddress([FromQuery] GetAllAddressesModel request)
+        {
+            Guard.NotNull(request, nameof(request));
+
+            // Checks the request is valid.
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            try
+            {
+                Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
+                HdAccount account = wallet.GetAccount(request.AccountName);
+                if (account == null)
+                    throw new WalletException($"No account with the name '{request.AccountName}' could be found.");
+
+                var address = account.GetFirstExternalAddress();
+                (Money confirmedAmount, Money unConfirmedAmount) = address.GetBalances(account.IsNormalAccount());
+                var profileAddress = new AddressModel
+                {
+                    Address = request.Segwit ? address.Bech32Address : address.Address,
+                    IsUsed = address.Transactions.Any(),
+                    IsChange = address.IsChangeAddress(),
+                    AmountConfirmed = confirmedAmount,
+                    AmountUnconfirmed = unConfirmedAmount
+                };
+
+                return this.Json(profileAddress);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
         /// Removes transactions from the wallet.
         /// You might want to remove transactions from a wallet if some unconfirmed transactions disappear
         /// from the blockchain or the transaction fields within the wallet are updated and a refresh is required to

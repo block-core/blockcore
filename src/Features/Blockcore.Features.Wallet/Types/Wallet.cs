@@ -669,6 +669,27 @@ namespace Blockcore.Features.Wallet.Types
         }
 
         /// <summary>
+        /// Gets the first external address
+        /// </summary>
+        /// <returns>An unused address</returns>
+        public HdAddress GetFirstExternalAddress()
+        {
+            IEnumerable<HdAddress> addresses = this.ExternalAddresses;
+            if (addresses == null)
+                return null;
+
+            List<HdAddress> unusedAddresses = addresses.ToList();
+            if (!unusedAddresses.Any())
+            {
+                return null;
+            }
+
+            // gets the external address with the lowest index
+            int index = unusedAddresses.Min(a => a.Index);
+            return unusedAddresses.Single(a => a.Index == index);
+        }
+
+        /// <summary>
         /// Gets the first receiving address that contains no transaction.
         /// </summary>
         /// <returns>An unused address</returns>

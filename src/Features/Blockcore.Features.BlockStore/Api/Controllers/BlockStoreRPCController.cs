@@ -7,6 +7,7 @@ using Blockcore.Controllers.Models;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Interfaces;
+using Blockcore.Primitives;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,9 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
     /// </summary>
     public class BlockStoreRPCController : FeatureController
     {
+        /// <summary>Consensus manager class.</summary>
+        private readonly IConsensusManager consensusManager;
+
         /// <summary>Thread safe access to the best chain of block headers from genesis.</summary>
         private readonly ChainIndexer chainIndexer;
 
@@ -33,6 +37,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             Network network,
             IBlockStore blockStore) : base(fullNode: fullNode, consensusManager: consensusManager, chainIndexer: chainIndexer, network: network)
         {
+            this.consensusManager = consensusManager;
             this.chainIndexer = chainIndexer;
             this.blockStore = blockStore;
         }
@@ -49,7 +54,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
         public MerkleBlock GetTxOutProof(string[] txids, string blockhash = "")
         {
             List<uint256> transactionIds = new List<uint256>();
-            Block block = null;
+            ChainedHeaderBlock block = null;
             foreach (var txString in txids)
             {
                 transactionIds.Add(uint256.Parse(txString));
@@ -68,7 +73,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                     }
                     if (block == null && chainedHeader.BlockDataAvailability == BlockDataAvailabilityState.BlockAvailable) // Only get the block once.
                     {
-                        block = this.blockStore.GetBlock(chainedHeader.HashBlock);
+                        block = this.consensusManager.GetBlockData(chainedHeader.HashBlock);
                     }
                 }
             }
@@ -80,7 +85,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                     ChainedHeader chainedHeader = this.GetTransactionBlock(transactionId);
                     if (chainedHeader.BlockDataAvailability == BlockDataAvailabilityState.BlockAvailable)
                     {
-                        block = this.blockStore.GetBlock(chainedHeader.HashBlock);
+                        block = this.consensusManager.GetBlockData(chainedHeader.HashBlock);
                         break;
                     }
                 }
@@ -89,7 +94,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             {
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
             }
-            var result = new MerkleBlock(block, transactionIds.ToArray());
+            var result = new MerkleBlock(block.Block, transactionIds.ToArray());
             return result;
         }
 

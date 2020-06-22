@@ -36,6 +36,9 @@ namespace Blockcore.Features.Wallet.Types
             this.AccountsRoot = new List<AccountRoot>();
         }
 
+        [JsonIgnore]
+        public IWalletStore walletStore { get; set; }
+
         /// <summary>
         /// The name of this wallet.
         /// </summary>

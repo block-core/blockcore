@@ -210,9 +210,10 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <summary>
         /// Gets the history of the transactions in addresses contained in this account.
         /// </summary>
+        /// <param name="wallet">The wallet instance.</param>
         /// <param name="account">The account for which to get history.</param>
         /// <returns>The history for this account.</returns>
-        AccountHistory GetHistory(HdAccount account);
+        AccountHistory GetHistory(Types.Wallet wallet, HdAccount account);
 
         /// <summary>
         /// Gets the balance of transactions contained in an account.

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Blockcore.Configuration;
+using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.Utilities;
 using Blockcore.Utilities.JsonConverters;
 using LiteDB;
 using Microsoft.Extensions.Logging;
@@ -28,67 +30,78 @@ namespace Blockcore.Features.Wallet.Types
         bool Remove(OutPoint outPoint);
     }
 
+    public class WalletData
+    {
+        [BsonId]
+        public string Key { get; set; }
+
+        public string EncryptedSeed { get; set; }
+
+        public string WalletName { get; set; }
+
+        public HashHeightPair WalletTip { get; set; }
+    }
+
     public class WalletStore : IWalletStore
     {
-        private readonly ILogger logger;
-        private readonly Network network;
         private LiteDatabase db;
+        private readonly Network network;
+        private LiteCollection<WalletData> dataCol;
         private LiteCollection<TransactionData> trxCol;
 
-        public WalletStore(Network network, DataFolder dataFolder, ILoggerFactory loggerFactory)
+        public WalletStore(Network network, DataFolder dataFolder, Wallet wallet)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            string dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.txdb.litedb");
 
-            string dbPath = Path.Combine(dataFolder.RootPath, "wallet.litedb");
+            if (!Directory.Exists(dataFolder.WalletFolderPath))
+            {
+                Directory.CreateDirectory(dataFolder.WalletFolderPath);
+            }
 
+            BsonMapper mapper = this.Create();
             LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
-            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode });
+            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
 
-            this.trxCol = this.db.GetCollection<TransactionData>("TransactionData");
+            this.trxCol = this.db.GetCollection<TransactionData>("transactions");
+            this.dataCol = this.db.GetCollection<WalletData>("data");
 
             this.trxCol.EnsureIndex(x => x.OutPoint, true);
             this.trxCol.EnsureIndex(x => x.Address, false);
             this.trxCol.EnsureIndex(x => x.BlockHeight, false);
 
-            BsonMapper.Global.Entity<TransactionData>().Id(x => x.OutPoint);
+            this.dataCol.EnsureIndex(x => x.Key, true);
 
-            BsonMapper.Global.RegisterType<OutPoint>
-            (
-                serialize: (outPoint) => outPoint.ToString(),
-                deserialize: (bson) => OutPoint.Parse(bson.AsString)
-            );
+            WalletData key = this.GetKey();
 
-            BsonMapper.Global.RegisterType<uint256>
-            (
-                serialize: (hash) => hash.ToString(),
-                deserialize: (bson) => uint256.Parse(bson.AsString)
-            );
-
-            BsonMapper.Global.RegisterType<Money>
-            (
-                serialize: (money) => money.Satoshi,
-                deserialize: (bson) => Money.Satoshis(bson.AsInt64)
-            );
-
-            BsonMapper.Global.RegisterType<Script>
-            (
-                serialize: (script) => Encoders.Hex.EncodeData(script.ToBytes(false)),
-                deserialize: (bson) => Script.FromBytesUnsafe(Encoders.Hex.DecodeData(bson.AsString))
-            );
-
-            BsonMapper.Global.RegisterType<PartialMerkleTree>
-            (
-                serialize: (pmt) => Encoders.Hex.EncodeData(pmt.ToBytes()),
-                deserialize: (bson) =>
+            if (key != null)
+            {
+                if (key.EncryptedSeed != wallet.EncryptedSeed)
                 {
-                    var ret = new PartialMerkleTree();
-                    var bytes = Encoders.Hex.DecodeData(bson.AsString);
-                    ret.ReadWrite(bytes);
-                    return ret;
+                    throw new WalletException("Invalid Wallet seed");
                 }
-            );
+            }
+            else
+            {
+                this.SetKey(new WalletData
+                {
+                    Key = "Key",
+                    EncryptedSeed = wallet.EncryptedSeed,
+                    WalletName = wallet.Name,
+                    WalletTip = new HashHeightPair(network.GenesisHash, 0)
+                });
+            }
 
             this.network = network;
+        }
+
+        public WalletData GetKey()
+        {
+            return this.dataCol.FindById("Key");
+        }
+
+        public void SetKey(WalletData data)
+        {
+            this.dataCol.Upsert(data);
         }
 
         public int CountForAddress(string address)
@@ -117,6 +130,49 @@ namespace Blockcore.Features.Wallet.Types
         public bool Remove(OutPoint outPoint)
         {
             return this.trxCol.Delete(outPoint.ToString());
+        }
+
+        private BsonMapper Create()
+        {
+            var mapper = new BsonMapper();
+
+            mapper.RegisterType<OutPoint>
+            (
+                serialize: (outPoint) => outPoint.ToString(),
+                deserialize: (bson) => OutPoint.Parse(bson.AsString)
+            );
+
+            mapper.RegisterType<uint256>
+            (
+                serialize: (hash) => hash.ToString(),
+                deserialize: (bson) => uint256.Parse(bson.AsString)
+            );
+
+            mapper.RegisterType<Money>
+            (
+                serialize: (money) => money.Satoshi,
+                deserialize: (bson) => Money.Satoshis(bson.AsInt64)
+            );
+
+            mapper.RegisterType<Script>
+            (
+                serialize: (script) => Encoders.Hex.EncodeData(script.ToBytes(false)),
+                deserialize: (bson) => Script.FromBytesUnsafe(Encoders.Hex.DecodeData(bson.AsString))
+            );
+
+            mapper.RegisterType<PartialMerkleTree>
+            (
+                serialize: (pmt) => Encoders.Hex.EncodeData(pmt.ToBytes()),
+                deserialize: (bson) =>
+                {
+                    var ret = new PartialMerkleTree();
+                    var bytes = Encoders.Hex.DecodeData(bson.AsString);
+                    ret.ReadWrite(bytes);
+                    return ret;
+                }
+            );
+
+            return mapper;
         }
     }
 }

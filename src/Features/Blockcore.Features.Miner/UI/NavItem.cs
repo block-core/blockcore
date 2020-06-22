@@ -15,11 +15,6 @@ namespace Blockcore.Features.Wallet.UI
         public string Name => "Staking";
         public string Navigation => "Stake";
         public string Icon => "oi-bolt";
-        public bool IsVisible => this.HasWallets();
-
-        public bool HasWallets()
-        {
-            return this.WalletManager?.ContainsWallets ?? false;
-        }
+        public bool IsVisible => this.WalletManager?.ContainsWallets ?? false;
     }
 }

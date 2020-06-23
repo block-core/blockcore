@@ -53,7 +53,7 @@ namespace Blockcore.Features.NodeHost
         public bool UseHttps { get; set; }
 
         /// <summary>Use title from agent</summary>
-        public string NetworkAgent { get; set; }
+        public string APITitle { get; set; }
 
         /// <summary>
         /// Initializes an instance of the object from the node configuration.
@@ -65,7 +65,7 @@ namespace Blockcore.Features.NodeHost
 
             this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(NodeHostSettings).FullName);
 
-            this.NetworkAgent = nodeSettings.Agent;
+            this.APITitle = "Blockcore-" + nodeSettings.Network.CoinTicker;
 
             TextFileConfiguration config = nodeSettings.ConfigReader;
 

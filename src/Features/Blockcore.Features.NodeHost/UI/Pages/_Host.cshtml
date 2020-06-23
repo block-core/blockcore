@@ -1,5 +1,6 @@
 ﻿@page "/"
 @namespace Blockcore.Features.NodeHost.UI.Pages
+@inject NBitcoin.Network Network
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, BlazorModal
 @{
@@ -14,7 +15,8 @@
     <title>Dashboard</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/darkstrap.min.css" />
-    <link rel="stylesheet" href="css/site.css"/>
+    <link rel="stylesheet" href="css/site.css" />
+    <link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,@this.Network.FavoriteIcon()">
 </head>
 <body>
     <app>
@@ -35,12 +37,12 @@
     <script src="_framework/blazor.server.js"></script>
     <script>
         window.clipboardCopy = {
-            copyText: function(text) {
+            copyText: function (text) {
                 navigator.clipboard.writeText(text).then(function () {
                 })
-                .catch(function (error) {
-                    alert(error);
-                });
+                    .catch(function (error) {
+                        alert(error);
+                    });
             }
         };
     </script>

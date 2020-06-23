@@ -62,6 +62,8 @@ namespace NBitcoin
 
     public abstract class Network
     {
+        private string icon = string.Empty;
+
         protected Block Genesis;
 
         /// <summary>
@@ -788,6 +790,31 @@ namespace NBitcoin
         public Transaction CreateTransaction(byte[] bytes)
         {
             return this.Consensus.ConsensusFactory.CreateTransaction(bytes);
+        }
+
+        public string FavoriteIcon()
+        {
+            if (!string.IsNullOrWhiteSpace(this.icon))
+            {
+                return this.icon;
+            }
+
+            System.Reflection.Assembly assembly = this.GetType().Assembly;
+            var iconResource = assembly.GetManifestResourceNames().FirstOrDefault(r => r.Contains("icon"));
+
+            if (string.IsNullOrWhiteSpace(iconResource))
+            {
+                assembly = typeof(NBitcoin.Network).Assembly;
+                iconResource = assembly.GetManifestResourceNames().FirstOrDefault(r => r.Contains("icon"));
+            }
+
+            using (Stream stream = assembly.GetManifestResourceStream(iconResource))
+            {
+                byte[] bytes = new BinaryReader(stream).ReadBytes((int)stream.Length);
+                this.icon = Convert.ToBase64String(bytes);
+            }
+
+            return this.icon;
         }
     }
 }

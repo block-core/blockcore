@@ -54,6 +54,7 @@ namespace Rutanio.Networks
             DefaultMaxInboundConnections = 109;
             MaxTipAge = 2 * 60 * 60;
             MinTxFee = 10000;
+            MaxTxFee = Money.Coins(1).Satoshi;
             FallbackFee = 10000;
             MinRelayTxFee = 10000;
             MaxTimeOffsetSeconds = 25 * 60;
@@ -214,17 +215,14 @@ namespace Rutanio.Networks
                 .Register<CheckDifficultyHybridRule>()
 
                 /// rules that require the store to be loaded (coinview)
-#pragma warning disable CS0618 // Type or member is obsolete
-                .Register<LoadCoinviewRule>()
-#pragma warning restore CS0618 // Type or member is obsolete
+                .Register<FetchUtxosetRule>()
                 .Register<TransactionDuplicationActivationRule>()
                 .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
                                                  // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
                                                  // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
                 .Register<PosColdStakingRule>()
-#pragma warning disable CS0618 // Type or member is obsolete
-                .Register<SaveCoinviewRule>();
-#pragma warning restore CS0618 // Type or member is obsolete
+                .Register<PushUtxosetRule>()
+                .Register<FlushUtxosetRule>();
         }
 
         protected void RegisterMempoolRules(IConsensus consensus)

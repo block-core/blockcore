@@ -55,8 +55,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <summary>Provider of date time functionality.</summary>
         private readonly IDateTimeProvider dateTimeProvider;
 
-        private readonly IWalletStore walletStore;
-
         public WalletController(
             ILoggerFactory loggerFactory,
             IWalletManager walletManager,
@@ -66,8 +64,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             Network network,
             ChainIndexer chainIndexer,
             IBroadcasterManager broadcasterManager,
-            IDateTimeProvider dateTimeProvider,
-            IWalletStore walletStore)
+            IDateTimeProvider dateTimeProvider)
         {
             this.walletManager = walletManager;
             this.walletTransactionHandler = walletTransactionHandler;
@@ -79,7 +76,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.broadcasterManager = broadcasterManager;
             this.dateTimeProvider = dateTimeProvider;
-            this.walletStore = walletStore;
         }
 
         /// <summary>
@@ -440,8 +436,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 var model = new WalletBalanceModel();
-
-                IEnumerable<AccountBalance> balances = this.walletManager.GetBalances(request.WalletName, request.AccountName);
+                Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
+                IEnumerable<AccountBalance> balances = this.walletManager.GetBalances(wallet.Name, request.AccountName);
 
                 foreach (AccountBalance balance in balances)
                 {
@@ -456,7 +452,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                         SpendableAmount = balance.SpendableAmount,
                         Addresses = account.GetCombinedAddresses().Select(address =>
                         {
-                            (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(this.walletStore, account.IsNormalAccount());
+                            (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(wallet.walletStore, account.IsNormalAccount());
                             return new AddressModel
                             {
                                 Address = address.Address,
@@ -1048,7 +1044,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 {
                     Addresses = account.GetCombinedAddresses().Select(address =>
                     {
-                        (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(this.walletStore, account.IsNormalAccount());
+                        (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(wallet.walletStore, account.IsNormalAccount());
 
                         return new AddressModel
                         {

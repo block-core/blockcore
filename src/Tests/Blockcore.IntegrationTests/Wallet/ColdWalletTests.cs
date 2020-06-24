@@ -129,6 +129,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Set up cold staking account on cold wallet.
                 coldWalletManager.GetOrCreateColdStakingAccount(WalletName, true, Password);
                 HdAddress coldWalletAddress = coldWalletManager.GetFirstUnusedColdStakingAddress(WalletName, true);
+                IWalletStore walletStore = coldWalletManager.GetWalletByName(WalletName).walletStore;
 
                 // Set up cold staking account on hot wallet.
                 hotWalletManager.GetOrCreateColdStakingAccount(WalletName, false, Password);
@@ -203,7 +204,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 {
                     // Keep mining to ensure that staking outputs reach maturity.
                     TestHelper.MineBlocks(stratisSender, 1, true);
-                    return coldWalletAddress.Transactions.Count > 1;
+                    return walletStore.CountForAddress(coldWalletAddress.Address) > 1;
                 }, cancellationToken: cancellationToken);
 
                 // Wait for money from staking.

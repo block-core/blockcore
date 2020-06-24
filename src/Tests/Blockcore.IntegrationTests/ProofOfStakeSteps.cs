@@ -75,12 +75,18 @@ namespace Blockcore.IntegrationTests
 
             var addressUsed = TestHelper.MineBlocks(this.PremineNodeWithCoins, premineBlockCount).AddressUsed;
 
+            var wallet = this.PremineNodeWithCoins.FullNode.WalletManager().Wallets.Single(w => w.Name == "mywallet");
+            var allTrx = wallet.walletStore.GetForAddress(addressUsed.Address);
+
             // Since the pre-mine will not be immediately spendable, the transactions have to be counted directly from the address.
-            addressUsed.Transactions.Count().Should().Be(premineBlockCount);
+            allTrx.Count().Should().Be(premineBlockCount);
 
             IConsensus consensus = this.PremineNodeWithCoins.FullNode.Network.Consensus;
 
-            addressUsed.Transactions.Sum(s => s.Amount).Should().Be(consensus.PremineReward + consensus.ProofOfWorkReward);
+            allTrx.Sum(s => s.Amount).Should().Be(consensus.PremineReward + consensus.ProofOfWorkReward);
+
+            var balance = this.PremineNodeWithCoins.FullNode.WalletManager().GetAddressBalance(addressUsed.Address);
+            balance.AmountConfirmed.Should().Be(consensus.PremineReward + consensus.ProofOfWorkReward);
         }
 
         public void MineCoinsToMaturity()
@@ -182,7 +188,8 @@ namespace Blockcore.IntegrationTests
         private List<TransactionData> GetTransactionsSnapshot()
         {
             // Enumerate to a list otherwise the enumerable can change during enumeration as new transactions are added to the wallet.
-            return this.PremineNodeWithCoins.FullNode.WalletManager().Wallets.First().GetAllTransactions().ToList();
+            var wal = this.PremineNodeWithCoins.FullNode.WalletManager().Wallets.First();
+            return wal.GetAllTransactions(wal.walletStore).ToList();
         }
     }
 }

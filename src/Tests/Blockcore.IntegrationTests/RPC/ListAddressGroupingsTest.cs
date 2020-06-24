@@ -20,12 +20,12 @@ namespace Blockcore.IntegrationTests.RPC
 {
     public sealed class ListAddressGroupingsTest
     {
-        const string walletName = "mywallet";
-        const string password = "password";
-        const string accountName = "account 0";
+        private const string walletName = "mywallet";
+        private const string password = "password";
+        private const string accountName = "account 0";
 
-        CoreNode miner;
-        CoreNode receiver;
+        private CoreNode miner;
+        private CoreNode receiver;
 
         [Fact]
         public async Task ListAddressGroupingsAsync()
@@ -61,7 +61,7 @@ namespace Blockcore.IntegrationTests.RPC
 
                 // Get the change address.
                 var receiver_Wallet = this.receiver.FullNode.WalletManager().GetWallet(walletName);
-                var firstChangeAddress = receiver_Wallet.GetAllAddresses().First(a => a.IsChangeAddress() && a.Transactions.Any());
+                var firstChangeAddress = receiver_Wallet.GetAllAddresses().First(a => a.IsChangeAddress() && receiver_Wallet.walletStore.GetForAddress(a.Address).Any());
 
                 //---------------------------------------------------
                 //  Receiver's listaddressgroupings response contains 1 array with 2 items:
@@ -96,8 +96,8 @@ namespace Blockcore.IntegrationTests.RPC
 
                 // Get the change address.
                 receiver_Wallet = this.receiver.FullNode.WalletManager().GetWallet(walletName);
-                var changeAddresses = receiver_Wallet.GetAllAddresses().Where(a => a.IsChangeAddress() && a.Transactions.Any());
-                var secondChangeAddress = receiver_Wallet.GetAllAddresses().First(a => a.IsChangeAddress() && a.Transactions.Any() && a.Address != firstChangeAddress.Address);
+                var changeAddresses = receiver_Wallet.GetAllAddresses().Where(a => a.IsChangeAddress() && receiver_Wallet.walletStore.GetForAddress(a.Address).Any());
+                var secondChangeAddress = receiver_Wallet.GetAllAddresses().First(a => a.IsChangeAddress() && receiver_Wallet.walletStore.GetForAddress(a.Address).Any() && a.Address != firstChangeAddress.Address);
 
                 //---------------------------------------------------
                 //  Receiver's listaddressgroupings response contains 1 array with 3 items:

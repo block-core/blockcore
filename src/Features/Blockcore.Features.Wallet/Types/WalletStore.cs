@@ -42,7 +42,7 @@ namespace Blockcore.Features.Wallet.Types
         public HashHeightPair WalletTip { get; set; }
     }
 
-    public class WalletStore : IWalletStore
+    public class WalletStore : IWalletStore, IDisposable
     {
         private LiteDatabase db;
         private readonly Network network;
@@ -173,6 +173,11 @@ namespace Blockcore.Features.Wallet.Types
             );
 
             return mapper;
+        }
+
+        public void Dispose()
+        {
+            this.db?.Dispose();
         }
     }
 }

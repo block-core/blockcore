@@ -28,9 +28,8 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
             StoreSettings storeSettings,
             IWalletManager walletManager,
             WalletSettings walletSettings,
-            IWalletTransactionHandler walletTransactionHandler,
-            IWalletStore walletStore) :
-            base(blockStore, broadcasterManager, chainIndexer, consensusManager, fullNode, loggerFactory, network, scriptAddressReader, storeSettings, walletManager, walletSettings, walletTransactionHandler, walletStore)
+            IWalletTransactionHandler walletTransactionHandler) :
+            base(blockStore, broadcasterManager, chainIndexer, consensusManager, fullNode, loggerFactory, network, scriptAddressReader, storeSettings, walletManager, walletSettings, walletTransactionHandler)
         {
         }
     }

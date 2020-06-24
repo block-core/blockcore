@@ -123,7 +123,7 @@ namespace Blockcore.Features.NodeHost
                     options.SwaggerDoc("node",
                            new OpenApiInfo
                            {
-                               Title = hostSettings.APITitle + " Node API",
+                               Title = hostSettings.ApiTitle + " Node API",
                                Version = assemblyVersion,
                                Description = "Access to the Blockcore Node features.",
                                Contact = new OpenApiContact

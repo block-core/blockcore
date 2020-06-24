@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject NBitcoin.Network Network
 @namespace Blockcore.Features.NodeHost.UI.Pages
 @inject NBitcoin.Network Network
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -44,7 +45,6 @@
                         alert(error);
                     });
             }
-        };
-    </script>
+        };</script>
 </body>
 </html>

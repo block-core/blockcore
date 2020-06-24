@@ -28,9 +28,15 @@ namespace Blockcore.Features.RPC
         private readonly IHttpContextFactory httpContextFactory;
         private readonly DataFolder dataFolder;
 
-        public const string ContentType = "application/json; charset=utf-8";
+        public readonly string ContentType;
 
-        public RPCMiddleware(RequestDelegate next, IRPCAuthorization authorization, ILoggerFactory loggerFactory, IHttpContextFactory httpContextFactory, DataFolder dataFolder)
+        public RPCMiddleware(
+            RequestDelegate next, 
+            IRPCAuthorization authorization, 
+            ILoggerFactory loggerFactory, 
+            IHttpContextFactory httpContextFactory, 
+            DataFolder dataFolder,
+            string contentType = "application/json; charset=utf-8")
         {
             Guard.NotNull(next, nameof(next));
             Guard.NotNull(authorization, nameof(authorization));
@@ -40,6 +46,7 @@ namespace Blockcore.Features.RPC
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.httpContextFactory = httpContextFactory;
             this.dataFolder = dataFolder;
+            this.ContentType = contentType;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)

@@ -32,6 +32,10 @@ namespace Blockcore.Node
                 case "XDS":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Xds.Networks.Xds, args: args);
                     break;
+
+                case "RUTA":
+                    nodeSettings = new NodeSettings(networksSelector: Rutanio.Networks.Networks.Rutanio, args: args, agent: "Blockcore-" + chain);
+                    break;
             }
 
             return nodeSettings;

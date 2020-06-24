@@ -65,7 +65,7 @@ namespace Blockcore.Features.RPC
 
             MvcNewtonsoftJsonOptions options = GetMVCOptions(serviceProvider);
             Serializer.RegisterFrontConverters(options.SerializerSettings, fullNode.Network);
-            app.UseMiddleware(typeof(RPCMiddleware), authorizedAccess);
+            app.UseMiddleware(typeof(RPCMiddleware), authorizedAccess, rpcSettings.RPCContentType);
             app.UseRPC();
         }
 

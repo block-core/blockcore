@@ -3,12 +3,12 @@ using System.Linq;
 using NBitcoin;
 using NBitcoin.BitcoinCore;
 
-namespace x42.Networks.Policies
+namespace Rutanio.Networks.Policies
 {
     /// <summary>
-    /// x42 coin-specific standard transaction definitions.
+    /// Blockcore sample coin-specific standard transaction definitions.
     /// </summary>
-    public class x42StandardScriptsRegistry : StandardScriptsRegistry
+    public class RutanioStandardScriptsRegistry : StandardScriptsRegistry
     {
         // See MAX_OP_RETURN_RELAY in Bitcoin Core, <script/standard.h.>
         // 80 bytes of data, +1 for OP_RETURN, +2 for the pushdata opcodes.
@@ -25,13 +25,13 @@ namespace x42.Networks.Policies
             PayToWitTemplate.Instance
         };
 
-        public override List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
+        public override List<ScriptTemplate> GetScriptTemplates => standardTemplates;
 
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {
-            if (!this.standardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
+            if (!standardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
             {
-                this.standardTemplates.Add(scriptTemplate);
+                standardTemplates.Add(scriptTemplate);
             }
         }
 
@@ -47,7 +47,7 @@ namespace x42.Networks.Policies
 
         public override ScriptTemplate GetTemplateFromScriptPubKey(Script script)
         {
-            return this.standardTemplates.FirstOrDefault(t => t.CheckScriptPubKey(script));
+            return standardTemplates.FirstOrDefault(t => t.CheckScriptPubKey(script));
         }
 
         public override bool IsStandardScriptPubKey(Network network, Script scriptPubKey)

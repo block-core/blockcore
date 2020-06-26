@@ -88,7 +88,7 @@ namespace OpenExo.Networks
             var bip9Deployments = new OpenExoBIP9Deployments
             {
                 [OpenExoBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, new DateTime(2020, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 6, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold),
-                [OpenExoBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultTestnetThreshold),
+                [OpenExoBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, new DateTime(2020, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 6, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold),
                 [OpenExoBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2020, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 6, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold)
             };
 

@@ -118,7 +118,10 @@ namespace Blockcore.Features.Wallet.Types
         {
             AccountRoot accountRoot = this.AccountsRoot.SingleOrDefault();
 
-            if (accountRoot == null) return;
+            if (accountRoot == null)
+            {
+                return;
+            }
 
             accountRoot.LastBlockSyncedHeight = block.Height;
             accountRoot.LastBlockSyncedHash = block.HashBlock;
@@ -1043,7 +1046,6 @@ namespace Blockcore.Features.Wallet.Types
         /// This is only the unique way to identify the pubkey, the utxo itself can be any of the script representations
         /// </summary>
         [JsonProperty(PropertyName = "Address")]
-        [JsonConverter(typeof(OutPointJsonConverter))]
         public string Address { get; set; }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
@@ -25,37 +26,37 @@ namespace Blockcore.IntegrationTests
             Directory.CreateDirectory(DataPath);
         }
 
-        [Fact]//(Skip = SkipTestMessage)]
+        [Fact(Skip = SkipTestMessage)]
         public void CreateStratisBlockchainDataWith10Blocks()
         {
             this.GenerateStratisBlockchainData(new StratisRegTest(), 10, true, true, true);
         }
 
-        [Fact]//(Skip = SkipTestMessage)]
+        [Fact(Skip = SkipTestMessage)]
         public void CreateStratisBlockchainDataWith100Blocks()
         {
             this.GenerateStratisBlockchainData(new StratisRegTest(), 100, true, true, true);
         }
 
-        [Fact]//(Skip = SkipTestMessage)]
+        [Fact(Skip = SkipTestMessage)]
         public void CreateStratisBlockchainDataWith150Blocks()
         {
             this.GenerateStratisBlockchainData(new StratisRegTest(), 150, true, true, true);
         }
 
-        [Fact]//(Skip = SkipTestMessage)]
+        [Fact(Skip = SkipTestMessage)]
         public void CreateBitcoinBlockchainDataWith10Blocks()
         {
             this.GenerateBitcoinBlockchainData(new BitcoinRegTest(), 10, true, true, true);
         }
 
-        [Fact]//(Skip = SkipTestMessage)]
+        [Fact(Skip = SkipTestMessage)]
         public void CreateBitcoinBlockchainDataWith100Blocks()
         {
             this.GenerateBitcoinBlockchainData(new BitcoinRegTest(), 100, true, true, true);
         }
 
-        [Fact]//(Skip = SkipTestMessage)]
+        [Fact(Skip = SkipTestMessage)]
         public void CreateBitcoinBlockchainDataWith150Blocks()
         {
             this.GenerateBitcoinBlockchainData(new BitcoinRegTest(), 150, true, true, true);
@@ -77,6 +78,14 @@ namespace Blockcore.IntegrationTests
                 TestHelper.WaitForNodeToSync(miningNode, listeningNode);
                 TestBase.WaitLoop(() => miningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
                 TestBase.WaitLoop(() => listeningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
+                TestBase.WaitLoop(() => miningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+                TestBase.WaitLoop(() => listeningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+
+                TestBase.WaitLoop(() =>
+                {
+                    return miningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount))
+                     && listeningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount));
+                });
 
                 dataFolderPath = miningNode.DataFolder;
                 listenerFolderPath = listeningNode.DataFolder;
@@ -121,6 +130,14 @@ namespace Blockcore.IntegrationTests
                 TestHelper.WaitForNodeToSync(miningNode, listeningNode);
                 TestBase.WaitLoop(() => miningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
                 TestBase.WaitLoop(() => listeningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
+                TestBase.WaitLoop(() => miningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+                TestBase.WaitLoop(() => listeningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+
+                TestBase.WaitLoop(() =>
+                {
+                    return miningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount))
+                     && listeningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount));
+                });
 
                 dataFolderPath = miningNode.DataFolder;
                 listenerFolderPath = listeningNode.DataFolder;

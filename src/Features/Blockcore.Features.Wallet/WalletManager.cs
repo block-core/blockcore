@@ -1935,9 +1935,13 @@ namespace Blockcore.Features.Wallet
 
                     foreach (Types.Wallet wallet in wallets)
                     {
-                        this.logger.LogDebug("The chain of headers has finished downloading, updating wallet '{0}' with height {1}", wallet.Name, heightAtDate);
-                        this.UpdateLastBlockSyncedHeight(wallet, this.ChainIndexer.GetHeader(heightAtDate));
-                        this.SaveWallet(wallet);
+                        var acc = wallet.AccountsRoot.SingleOrDefault();
+                        if (acc == null || acc.LastBlockSyncedHeight < heightAtDate)
+                        {
+                            this.logger.LogDebug("The chain of headers has finished downloading, updating wallet '{0}' with height {1}", wallet.Name, heightAtDate);
+                            this.UpdateLastBlockSyncedHeight(wallet, this.ChainIndexer.GetHeader(heightAtDate));
+                            this.SaveWallet(wallet);
+                        }
                     }
                 },
                 (ex) =>

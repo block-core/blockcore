@@ -461,7 +461,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 model.Details.Add(new GetTransactionDetailsModel
                 {
-                    Address = addresses.First(a => wallet.walletStore.GetForAddress(a.Address).Contains(trxInWallet)).Address,
+                    Address = trxInWallet.Address,
                     Category = category,
                     Amount = trxInWallet.Amount.ToDecimal(MoneyUnit.BTC),
                     OutputIndex = trxInWallet.Index

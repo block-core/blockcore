@@ -1,0 +1,15 @@
+{
+    "profiles": {
+      "OpenExo.Dns": {
+        "commandName": "Project"
+      },
+      "OpenExo.Node Test": {
+        "commandName": "Project",
+        "commandLineArgs": "-testnet -dnslistenport=5399 -dnshostname=dns.openexo.com -dnsnameserver=ns1.dns.openexo.com -dnsmailbox=admin@openexo.com"
+      },
+      "OpenExo.Dns FullNode Test": {
+        "commandName": "Project",
+        "commandLineArgs": "-testnet -dnsfullnode -dnslistenport=5399 -dnshostname=dns.openexo.com -dnsnameserver=ns1.dns.openexo.com -dnsmailbox=admin@openexo.com"
+      }
+    }
+  }

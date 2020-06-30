@@ -218,7 +218,7 @@ namespace Blockcore.Configuration.Logging
                     {
                         if (!KeyCategories.TryGetValue(key.Trim(), out string category))
                         {
-                            // Allow direct specification - e.g. "-debug=Stratis.Bitcoin.Miner".
+                            // Allow direct specification - e.g. "-debug=Blockcore.Miner".
                             category = key.Trim();
                         }
 
@@ -276,7 +276,7 @@ namespace Blockcore.Configuration.Logging
                             {
                                 if (!KeyCategories.TryGetValue(key.Trim(), out string category))
                                 {
-                                    // Allow direct specification - e.g. "-debug=Stratis.Bitcoin.Miner".
+                                    // Allow direct specification - e.g. "-debug=Blockcore.Miner".
                                     category = key.Trim();
                                 }
 

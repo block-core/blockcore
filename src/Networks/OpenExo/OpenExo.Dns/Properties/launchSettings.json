@@ -5,11 +5,11 @@
       },
       "OpenExo.Node Test": {
         "commandName": "Project",
-        "commandLineArgs": "-testnet -dnslistenport=5399 -dnshostname=dns.openexo.com -dnsnameserver=ns1.dns.openexo.com -dnsmailbox=admin@openexo.com"
+        "commandLineArgs": "-testnet -dnslistenport=53 -dnshostname=seednode1.oexo.cloud -dnsnameserver=vps101.oexo.cloud -dnsmailbox=admin@oexo.cloud"
       },
       "OpenExo.Dns FullNode Test": {
         "commandName": "Project",
-        "commandLineArgs": "-testnet -dnsfullnode -dnslistenport=5399 -dnshostname=dns.openexo.com -dnsnameserver=ns1.dns.openexo.com -dnsmailbox=admin@openexo.com"
+        "commandLineArgs": "-testnet -dnsfullnode -dnslistenport=53 -dnshostname=seednode1.oexo.cloud -dnsnameserver=vps101.oexo.cloud -dnsmailbox=admin@oexo.cloud"
       }
     }
   }

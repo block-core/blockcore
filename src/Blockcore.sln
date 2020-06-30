@@ -124,6 +124,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rutanio.Node", "Networks\Ru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rutanio", "Networks\Rutanio\Rutanio\Rutanio.csproj", "{271E03B3-5DD6-4A16-A54A-1E72AF9B4902}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rutanio.Dns", "Networks\Rutanio\Rutanio.Dns\Rutanio.Dns.csproj", "{EC8E1621-802A-4641-8DDF-11C677242A84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -310,6 +312,10 @@ Global
 		{271E03B3-5DD6-4A16-A54A-1E72AF9B4902}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{271E03B3-5DD6-4A16-A54A-1E72AF9B4902}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{271E03B3-5DD6-4A16-A54A-1E72AF9B4902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC8E1621-802A-4641-8DDF-11C677242A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC8E1621-802A-4641-8DDF-11C677242A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC8E1621-802A-4641-8DDF-11C677242A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC8E1621-802A-4641-8DDF-11C677242A84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -365,6 +371,7 @@ Global
 		{D0A183FE-C913-4F8F-92EC-BD4502745140} = {8820C3A5-74B4-45AB-B80C-2495DFBA4A2B}
 		{EECEF785-EC8C-4037-9BF9-1DACABDE0E3D} = {50759380-AF62-11EA-BC6D-7563ABA8C5CA}
 		{271E03B3-5DD6-4A16-A54A-1E72AF9B4902} = {50759380-AF62-11EA-BC6D-7563ABA8C5CA}
+		{EC8E1621-802A-4641-8DDF-11C677242A84} = {50759380-AF62-11EA-BC6D-7563ABA8C5CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

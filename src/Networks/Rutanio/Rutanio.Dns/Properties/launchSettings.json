@@ -1,0 +1,15 @@
+{
+    "profiles": {
+      "Rutanio.Dns": {
+        "commandName": "Project"
+      },
+      "Rutanio.Node Test": {
+        "commandName": "Project",
+        "commandLineArgs": "-testnet -dnslistenport=53 -dnshostname=seednode1.rutan.cloud -dnsnameserver=vps101.rutan.cloud -dnsmailbox=admin@rutanio.com"
+      },
+      "Rutanio.Dns FullNode Test": {
+        "commandName": "Project",
+        "commandLineArgs": "-testnet -dnsfullnode -dnslistenport=53 -dnshostname=seednode1.rutan.cloud -dnsnameserver=vps101.rutan.cloud -dnsmailbox=admin@rutanio.com"
+      }
+    }
+  }

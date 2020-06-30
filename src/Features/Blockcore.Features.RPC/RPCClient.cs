@@ -85,8 +85,8 @@ namespace Blockcore.Features.RPC
         blockchain         getdifficulty
         blockchain         getmempoolinfo
         blockchain         getrawmempool                Yes
-        blockchain         gettxout                    Yes
-        blockchain         gettxoutproof
+        blockchain         gettxout                     Yes
+        blockchain         gettxoutproof                Yes
         blockchain         verifytxoutproof
         blockchain         gettxoutsetinfo
         blockchain         verifychain

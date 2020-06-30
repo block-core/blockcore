@@ -24,7 +24,7 @@
 @{
 var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
 <div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+    <div class="col-xl-12 col-sm-12 ">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
@@ -50,13 +50,13 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
                     <div class="input-group-prepend">
                         <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
                     </div>
-                    <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
+                    <textarea @bind="TransactionHex" class="form-control bg-secondary text-light" rows="5">@TransactionHex</textarea>
                 </div>
                 <div class="input-group mb-3">
                     <button class="btn btn-primary mr-1" @onclick="Broadcast">Broadcast Transaction</button>
                 </div> 
                 <div class="input-group mb-3">
-                    <div class="alert-warning">@Alert</div>
+                    <div class="text-danger">@Alert</div>
                 </div>
                 <div class="input-group mb-3">
                     <div class="alert-info">@Success</div>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Authors>Blockcore</Authors>
@@ -12,6 +12,10 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ico.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\External\NBitcoin\NBitcoin.csproj" />

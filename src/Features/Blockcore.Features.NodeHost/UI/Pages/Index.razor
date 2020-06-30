@@ -23,13 +23,8 @@
 </div>
 
 @{
-    if (this.InitialBlockDownloadState.IsInitialBlockDownload())
-    {
-        <p><strong>Currently processing the IBD (initial block download) & syncing your node with the network</strong></p>
-    }
-
     <div class="row mb-3">
-        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-3 col-sm-6 ">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -49,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-3 col-sm-6 ">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -69,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-3 col-sm-6 ">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -92,11 +87,16 @@
                             </div>
                         </div>
                     </div>
-                    <h6 class="text-muted font-weight-normal">Chain Synced</h6>
+                   @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+                        {
+                            <h6 class="text-danger font-weight-normal">Chain Syncing</h6>                
+                        } else {
+                            <h6 class="text-muted font-weight-normal">Chain Synced</h6>
+                        }
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-3 col-sm-6 ">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -119,7 +119,7 @@
     </div>
 
     <div class="row mb-3">
-        <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="col-xl-12 col-sm-12 ">
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -138,9 +138,9 @@
     </div>
 
     <div class="row">
-        <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+        <div class="col-xl-12 col-sm-12 ">
             <div class="card">
-                <div class="card-body">
+                <div class="mx-3 mt-3">
                     <h4 class="card-title">Peers</h4>
                     <div class="table-responsive small">
                         <table class="table table-border-bottom table-striped table-sm table-hover">
@@ -156,7 +156,7 @@
                                 @foreach (var peer in this.ConnectionManager.ConnectedPeers)
                                 {
                                     <tr>
-                                        <td class="align-middle">@peer.RemoteSocketEndpoint.ToString()</td>
+                                        <td class="align-middle"><h5 class="oi oi-monitor" aria-hidden="true"></h5> @peer.RemoteSocketEndpoint.ToString()</td>
                                         <td class="align-middle">@(peer.Inbound ? "Inbound" : "Outbound") </td>
                                         <td class="align-middle">@peer.PeerVersion?.UserAgent</td>
                                         <td class="align-middle">@peer.PeerVersion?.Version</td>
@@ -183,6 +183,6 @@
     }
     private void AddNode()
     {
-        ModalService.Show("Add Node", typeof(AddNode));
+        ModalService.Show("Add Node", typeof(Modal.ModalAddNode));
     }
 }

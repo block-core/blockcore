@@ -22,12 +22,14 @@
             var items = fullnode.NodeService<IEnumerable<INavigationItem>>();
             foreach (var item in items)
             {
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="@item.Navigation">
-                        <span class="oi @item.Icon" aria-hidden="true"></span> @item.Name
-                        @* icon reference >> https://iconify.design/icon-sets/oi/ *@
-                    </NavLink>
-                </li>
+                if (item.IsVisible) {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="@item.Navigation">
+                            <span class="oi @item.Icon" aria-hidden="true"></span> @item.Name
+                            @* icon reference >> https://iconify.design/icon-sets/oi/ *@
+                        </NavLink>
+                    </li>
+                }
             }
         }
     </ul>

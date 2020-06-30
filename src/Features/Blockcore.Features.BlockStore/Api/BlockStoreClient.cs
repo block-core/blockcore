@@ -4,9 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Controllers;
 using Blockcore.Controllers.Models;
+using Blockcore.Features.BlockStore.Api.Contollers;
+using Blockcore.Features.BlockStore.Api.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Blockcore.Features.BlockStore.Controllers
+namespace Blockcore.Features.BlockStore.Api
 {
     /// <summary>Rest client for <see cref="BlockStoreController"/>.</summary>
     public interface IBlockStoreClient : IRestApiClientBase

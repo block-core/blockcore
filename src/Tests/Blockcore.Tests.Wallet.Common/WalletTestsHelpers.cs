@@ -47,7 +47,7 @@ namespace Blockcore.Tests.Wallet.Common
             };
         }
 
-        public static TransactionData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null)
+        public static TransactionData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null, string address = null)
         {
             if (creationTime == null)
             {
@@ -56,6 +56,7 @@ namespace Blockcore.Tests.Wallet.Common
 
             return new TransactionData
             {
+                Address = address,
                 Amount = amount,
                 Id = id,
                 CreationTime = creationTime.Value,

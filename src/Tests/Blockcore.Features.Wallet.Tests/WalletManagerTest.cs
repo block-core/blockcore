@@ -115,7 +115,7 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/1/{k}", actualAddress.HdPath);
-                        Assert.Equal(0, actualAddress.Transactions.Count);
+                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
 
                     Assert.Equal(20, actualAccount.ExternalAddresses.Count);
@@ -129,7 +129,7 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/0/{l}", actualAddress.HdPath);
-                        Assert.Equal(0, actualAddress.Transactions.Count);
+                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
                 }
             }
@@ -227,7 +227,7 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/1/{k}", actualAddress.HdPath);
-                        Assert.Equal(0, actualAddress.Transactions.Count);
+                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
 
                     Assert.Equal(20, actualAccount.ExternalAddresses.Count);
@@ -241,7 +241,7 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/0/{l}", actualAddress.HdPath);
-                        Assert.Equal(0, actualAddress.Transactions.Count);
+                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
                 }
             }
@@ -432,8 +432,8 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Equal(0, expectedAddress.Transactions.Count);
-                        Assert.Equal(expectedAddress.Transactions.Count, recoveredAddress.Transactions.Count);
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
 
                     Assert.Equal(20, recoveredAccount.ExternalAddresses.Count);
@@ -446,8 +446,8 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Equal(0, expectedAddress.Transactions.Count);
-                        Assert.Equal(expectedAddress.Transactions.Count, recoveredAddress.Transactions.Count);
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
                 }
             }
@@ -523,8 +523,8 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Equal(0, expectedAddress.Transactions.Count);
-                        Assert.Equal(expectedAddress.Transactions.Count, recoveredAddress.Transactions.Count);
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
 
                     Assert.Equal(20, recoveredAccount.ExternalAddresses.Count);
@@ -537,8 +537,8 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Equal(0, expectedAddress.Transactions.Count);
-                        Assert.Equal(expectedAddress.Transactions.Count, recoveredAddress.Transactions.Count);
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
+                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
                 }
             }
@@ -749,15 +749,15 @@ namespace Blockcore.Features.Wallet.Tests
                     new HdAddress {
                         Index = 0,
                         Address = "myUsedAddress",
-                        Transactions = new List<TransactionData>
-                        {
-                            new TransactionData()
-                        }
+                        //Transactions = new List<TransactionData>
+                        //{
+                        //    new TransactionData()
+                        //}
                     },
                      new HdAddress {
                         Index = 1,
                         Address = "myUnusedAddress",
-                        Transactions = new List<TransactionData>()
+                        //Transactions = new List<TransactionData>()
                     }
                 },
                 InternalAddresses = null
@@ -788,16 +788,16 @@ namespace Blockcore.Features.Wallet.Tests
                         Index = 0,
                         Address = bob.GetAddress().ToString(),
                         ScriptPubKey = bob.ScriptPubKey,
-                        Transactions = new List<TransactionData>
-                        {
-                            new TransactionData()
-                        }
+                        //Transactions = new List<TransactionData>
+                        //{
+                        //    new TransactionData()
+                        //}
                     },
                     new HdAddress {
                         Index = 1,
                         Address = alice.GetAddress().ToString(),
                         ScriptPubKey = alice.ScriptPubKey,
-                        Transactions = new List<TransactionData>()
+                       //Transactions = new List<TransactionData>()
                     }
                 },
                 ExternalAddresses = new List<HdAddress>()
@@ -858,10 +858,10 @@ namespace Blockcore.Features.Wallet.Tests
                         Index = 0,
                         Address = "myUsedAddress",
                         ScriptPubKey = new Script(),
-                        Transactions = new List<TransactionData>
-                        {
-                            new TransactionData()
-                        },
+                        //Transactions = new List<TransactionData>
+                        //{
+                        //    new TransactionData()
+                        //},
                     }
                 },
                 InternalAddresses = new List<HdAddress>(),
@@ -880,7 +880,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(address.ToString(), result.Address);
             Assert.Equal(pubKey.ScriptPubKey, result.Pubkey);
             Assert.Equal(address.ScriptPubKey, result.ScriptPubKey);
-            Assert.Equal(0, result.Transactions.Count);
+            Assert.Empty(wallet.walletStore.GetForAddress(result.Address));
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/myWallet.wallet.json")));
         }
 
@@ -952,7 +952,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(account);
             walletManager.Wallets.Add(wallet);
 
-            AccountHistory accountHistory = walletManager.GetHistory(account);
+            AccountHistory accountHistory = walletManager.GetHistory(wallet, account);
 
             Assert.NotNull(accountHistory);
             Assert.NotNull(accountHistory.Account);
@@ -985,7 +985,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(account);
             walletManager.Wallets.Add(wallet);
 
-            AccountHistory result = walletManager.GetHistory(account);
+            AccountHistory result = walletManager.GetHistory(wallet, account);
 
             Assert.NotNull(result.Account);
             Assert.Equal("myAccount", result.Account.Name);
@@ -1393,7 +1393,7 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = spendingKeys.Address.ToString(),
                 Pubkey = spendingKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = spendingKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                // Transactions = new List<TransactionData>()
             };
 
             var destinationAddress = new HdAddress
@@ -1403,7 +1403,7 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = destinationKeys.Address.ToString(),
                 Pubkey = destinationKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = destinationKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                // Transactions = new List<TransactionData>()
             };
 
             var changeAddress = new HdAddress
@@ -1413,13 +1413,14 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = changeKeys.Address.ToString(),
                 Pubkey = changeKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = changeKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                //    Transactions = new List<TransactionData>()
             };
 
             //Generate a spendable transaction
             (ChainIndexer chain, uint256 blockhash, Block block) chainInfo = WalletTestsHelpers.CreateChainAndCreateFirstBlockWithPaymentToAddress(wallet.Network, spendingAddress);
             TransactionData spendingTransaction = WalletTestsHelpers.CreateTransactionDataFromFirstBlock(chainInfo);
-            spendingAddress.Transactions.Add(spendingTransaction);
+            spendingTransaction.Address = spendingAddress.Address;
+            wallet.walletStore.InsertOrUpdate(spendingTransaction);
 
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
@@ -1445,19 +1446,19 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.ProcessTransaction(transaction);
 
             HdAddress spentAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0);
-            Assert.Equal(1, spendingAddress.Transactions.Count);
-            Assert.Equal(transaction.GetHash(), spentAddressResult.Transactions.ElementAt(0).SpendingDetails.TransactionId);
-            Assert.Equal(transaction.Outputs[1].Value, spentAddressResult.Transactions.ElementAt(0).SpendingDetails.Payments.ElementAt(0).Amount);
-            Assert.Equal(transaction.Outputs[1].ScriptPubKey, spentAddressResult.Transactions.ElementAt(0).SpendingDetails.Payments.ElementAt(0).DestinationScriptPubKey);
+            Assert.Single(wallet.walletStore.GetForAddress(spendingAddress.Address));
+            Assert.Equal(transaction.GetHash(), wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.TransactionId);
+            Assert.Equal(transaction.Outputs[1].Value, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.ElementAt(0).Amount);
+            Assert.Equal(transaction.Outputs[1].ScriptPubKey, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.ElementAt(0).DestinationScriptPubKey);
 
-            Assert.Equal(1, wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Transactions.Count);
-            TransactionData destinationAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Transactions.ElementAt(0);
+            Assert.Equal(1, wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Address).Count());
+            TransactionData destinationAddressResult = wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Address).ElementAt(0);
             Assert.Equal(transaction.GetHash(), destinationAddressResult.Id);
             Assert.Equal(transaction.Outputs[1].Value, destinationAddressResult.Amount);
             Assert.Equal(transaction.Outputs[1].ScriptPubKey, destinationAddressResult.ScriptPubKey);
 
-            Assert.Equal(1, wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Transactions.Count);
-            TransactionData changeAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Transactions.ElementAt(0);
+            Assert.Equal(1, wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).Count());
+            TransactionData changeAddressResult = wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).ElementAt(0);
             Assert.Equal(transaction.GetHash(), changeAddressResult.Id);
             Assert.Equal(transaction.Outputs[0].Value, changeAddressResult.Amount);
             Assert.Equal(transaction.Outputs[0].ScriptPubKey, changeAddressResult.ScriptPubKey);
@@ -1482,7 +1483,7 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = spendingKeys.Address.ToString(),
                 Pubkey = spendingKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = spendingKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                //  Transactions = new List<TransactionData>()
             };
 
             var destinationAddress = new HdAddress
@@ -1492,7 +1493,7 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = destinationKeys.Address.ToString(),
                 Pubkey = destinationKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = destinationKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                //  Transactions = new List<TransactionData>()
             };
 
             var changeAddress = new HdAddress
@@ -1502,13 +1503,14 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = changeKeys.Address.ToString(),
                 Pubkey = changeKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = changeKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                // Transactions = new List<TransactionData>()
             };
 
             //Generate a spendable transaction
             (ChainIndexer chain, uint256 blockhash, Block block) chainInfo = WalletTestsHelpers.CreateChainAndCreateFirstBlockWithPaymentToAddress(wallet.Network, spendingAddress);
             TransactionData spendingTransaction = WalletTestsHelpers.CreateTransactionDataFromFirstBlock(chainInfo);
-            spendingAddress.Transactions.Add(spendingTransaction);
+            spendingTransaction.Address = spendingAddress.Address;
+            wallet.walletStore.InsertOrUpdate(spendingTransaction);
 
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
@@ -1536,14 +1538,14 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.ProcessTransaction(transaction);
 
             HdAddress spentAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0);
-            Assert.Equal(1, spendingAddress.Transactions.Count);
-            Assert.Equal(transaction.GetHash(), spentAddressResult.Transactions.ElementAt(0).SpendingDetails.TransactionId);
-            Assert.Equal(0, spentAddressResult.Transactions.ElementAt(0).SpendingDetails.Payments.Count);
+            Assert.Equal(1, wallet.walletStore.GetForAddress(spendingAddress.Address).Count());
+            Assert.Equal(transaction.GetHash(), wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.TransactionId);
+            Assert.Equal(0, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.Count);
 
-            Assert.Equal(0, wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Transactions.Count);
+            Assert.Equal(0, wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Address).Count());
 
-            Assert.Equal(1, wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Transactions.Count);
-            TransactionData changeAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Transactions.ElementAt(0);
+            Assert.Equal(1, wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).Count());
+            TransactionData changeAddressResult = wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).ElementAt(0);
             Assert.Equal(transaction.GetHash(), changeAddressResult.Id);
             Assert.Equal(transaction.Outputs[0].Value, changeAddressResult.Amount);
             Assert.Equal(transaction.Outputs[0].ScriptPubKey, changeAddressResult.ScriptPubKey);

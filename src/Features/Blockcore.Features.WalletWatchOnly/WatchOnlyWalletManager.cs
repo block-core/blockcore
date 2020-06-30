@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Stratis.Bitcoin.Configuration;
-using Stratis.Bitcoin.EventBus;
-using Stratis.Bitcoin.EventBus.CoreEvents;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Signals;
-using Stratis.Bitcoin.Utilities;
+using Blockcore.Configuration;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents;
+using Blockcore.Features.WalletWatchOnly.Interfaces;
+using Blockcore.Signals;
+using Blockcore.Utilities;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet
+namespace Blockcore.Features.WalletWatchOnly
 {
     /// <summary>
     /// Class representing a manager for a watch-only wallet.
@@ -26,7 +26,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// </summary>
         public WatchOnlyWallet Wallet { get; private set; }
 
-        private readonly CoinType coinType;
+        private readonly int coinType;
 
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         private readonly Network network;
@@ -49,13 +49,13 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// This includes both transactions under watched addresses, as well as stored
         /// transactions. Enables quicker computation of address balances etc.
         /// </summary>
-        private ConcurrentDictionary<uint256, TransactionData> txLookup;
+        private ConcurrentDictionary<uint256, WatchTransactionData> txLookup;
 
         public WatchOnlyWalletManager(IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, Network network, DataFolder dataFolder, ISignals signals)
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.network = network;
-            this.coinType = (CoinType)network.Consensus.CoinType;
+            this.coinType = network.Consensus.CoinType;
             this.fileStorage = new FileStorage<WatchOnlyWallet>(dataFolder.WalletPath);
             this.dateTimeProvider = dateTimeProvider;
             this.signals = signals;
@@ -114,7 +114,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         }
 
         /// <inheritdoc />
-        public void StoreTransaction(TransactionData transactionData)
+        public void StoreTransaction(WatchTransactionData transactionData)
         {
             if (this.Wallet.WatchedTransactions.ContainsKey(transactionData.Id.ToString()))
             {
@@ -123,7 +123,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
             }
 
             this.logger.LogDebug($"added transaction: {transactionData.Id} to the watch list. coin: {this.coinType}");
-            this.Wallet.WatchedTransactions.TryAdd(transactionData.Id.ToString(), new TransactionData
+            this.Wallet.WatchedTransactions.TryAdd(transactionData.Id.ToString(), new WatchTransactionData
             {
                 BlockHash = transactionData.BlockHash,
                 Hex = transactionData.Hex,
@@ -155,7 +155,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
             foreach (TxIn input in transaction.Inputs)
             {
                 // See if the previous transaction is in the watch-only wallet.
-                this.txLookup.TryGetValue(input.PrevOut.Hash, out TransactionData prevTransactionData);
+                this.txLookup.TryGetValue(input.PrevOut.Hash, out WatchTransactionData prevTransactionData);
 
                 // If it is null, it can't be related to one of the watched addresses (or it is the very first watched transaction)
                 if (prevTransactionData == null)
@@ -171,11 +171,11 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
                     if (addressInWallet != null)
                     {
                         // Retrieve a transaction, if present.
-                        addressInWallet.Transactions.TryGetValue(transactionHash.ToString(), out TransactionData existingTransaction);
+                        addressInWallet.Transactions.TryGetValue(transactionHash.ToString(), out WatchTransactionData existingTransaction);
 
                         if (existingTransaction == null)
                         {
-                            var newTransaction = new TransactionData
+                            var newTransaction = new WatchTransactionData
                             {
                                 Id = transactionHash,
                                 Hex = transaction.ToHex(),
@@ -229,11 +229,11 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
                 if (addressInWallet != null)
                 {
                     // Retrieve a transaction, if present.
-                    addressInWallet.Transactions.TryGetValue(transactionHash.ToString(), out TransactionData existingTransaction);
+                    addressInWallet.Transactions.TryGetValue(transactionHash.ToString(), out WatchTransactionData existingTransaction);
 
                     if (existingTransaction == null)
                     {
-                        var newTransaction = new TransactionData
+                        var newTransaction = new WatchTransactionData
                         {
                             Id = transactionHash,
                             Hex = transaction.ToHex(),
@@ -277,7 +277,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
                 }
             }
 
-            this.Wallet.WatchedTransactions.TryGetValue(transactionHash.ToString(), out TransactionData existingWatchedTransaction);
+            this.Wallet.WatchedTransactions.TryGetValue(transactionHash.ToString(), out WatchTransactionData existingWatchedTransaction);
 
             if (existingWatchedTransaction != null && block != null)
             {
@@ -302,6 +302,12 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         private void LoadTransactionLookup()
         {
             this.txLookup = this.Wallet.GetWatchedTransactions();
+        }
+
+        // <inheritdoc />
+        public ConcurrentDictionary<uint256, WatchTransactionData> GetWatchedTransactions()
+        {
+            return this.Wallet.GetWatchedTransactions();
         }
 
         /// <inheritdoc />
@@ -380,14 +386,14 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
                 // Returning zero would be misleading.
                 return null;
 
-            foreach (TransactionData transactionData in this.Wallet.WatchedAddresses[scriptToCheck.ToString()].Transactions.Values)
+            foreach (WatchTransactionData transactionData in this.Wallet.WatchedAddresses[scriptToCheck.ToString()].Transactions.Values)
             {
                 var transaction = this.network.CreateTransaction(transactionData.Hex);
 
                 foreach (TxIn input in transaction.Inputs)
                 {
                     // See if the previous transaction is in the watch-only wallet.
-                    this.txLookup.TryGetValue(input.PrevOut.Hash, out TransactionData prevTransactionData);
+                    this.txLookup.TryGetValue(input.PrevOut.Hash, out WatchTransactionData prevTransactionData);
 
                     // If it is null, it can't be related to the watched addresses (or it is the very first watched transaction)
                     if (prevTransactionData == null)

@@ -3,10 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using NBitcoin;
 using Newtonsoft.Json;
-using Stratis.Bitcoin.Features.Wallet;
-using Stratis.Bitcoin.Utilities.JsonConverters;
+using Blockcore.Utilities.JsonConverters;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet
+namespace Blockcore.Features.WalletWatchOnly
 {
     /// <summary>
     /// Represents a watch-only wallet.
@@ -19,7 +18,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         public WatchOnlyWallet()
         {
             this.WatchedAddresses = new ConcurrentDictionary<string, WatchedAddress>();
-            this.WatchedTransactions = new ConcurrentDictionary<string, TransactionData>();
+            this.WatchedTransactions = new ConcurrentDictionary<string, WatchTransactionData>();
         }
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// The type of coin, Bitcoin or Stratis.
         /// </summary>
         [JsonProperty(PropertyName = "coinType")]
-        public CoinType CoinType { get; set; }
+        public int CoinType { get; set; }
 
         /// <summary>
         /// The time this wallet was created.
@@ -54,25 +53,25 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// </summary>
         [JsonProperty(PropertyName = "watchedTransactions")]
         [JsonConverter(typeof(TransactionDataConcurrentDictionaryConverter))]
-        public ConcurrentDictionary<string, TransactionData> WatchedTransactions { get; set; }
+        public ConcurrentDictionary<string, WatchTransactionData> WatchedTransactions { get; set; }
 
         /// <summary>
         /// Returns a dictionary of all the transactions being watched (both under addresses
         /// and standalone).
         /// </summary>
-        public ConcurrentDictionary<uint256, TransactionData> GetWatchedTransactions()
+        public ConcurrentDictionary<uint256, WatchTransactionData> GetWatchedTransactions()
         {
-            var txDict = new ConcurrentDictionary<uint256, TransactionData>();
+            var txDict = new ConcurrentDictionary<uint256, WatchTransactionData>();
 
             foreach (WatchedAddress address in this.WatchedAddresses.Values)
             {
-                foreach (TransactionData transaction in address.Transactions.Values)
+                foreach (WatchTransactionData transaction in address.Transactions.Values)
                 {
                     txDict.TryAdd(transaction.Id, transaction);
                 }
             }
 
-            foreach (TransactionData transaction in this.WatchedTransactions.Values)
+            foreach (WatchTransactionData transaction in this.WatchedTransactions.Values)
             {
                 // It is conceivable that a transaction could be both watched
                 // in isolation and watched as a transaction under one or
@@ -83,7 +82,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
                     // the watched transaction than the watched address.
                     // If there is, use the watched transaction info instead.
 
-                    TransactionData existingTx = txDict[transaction.Id];
+                    WatchTransactionData existingTx = txDict[transaction.Id];
 
                     if (existingTx.MerkleProof == null)
                     {
@@ -116,7 +115,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// </summary>
         public WatchedAddress()
         {
-            this.Transactions = new ConcurrentDictionary<string, TransactionData>();
+            this.Transactions = new ConcurrentDictionary<string, WatchTransactionData>();
         }
 
         /// <summary>
@@ -140,13 +139,13 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// </summary>
         [JsonProperty(PropertyName = "transactions")]
         [JsonConverter(typeof(TransactionDataConcurrentDictionaryConverter))]
-        public ConcurrentDictionary<string, TransactionData> Transactions { get; set; }
+        public ConcurrentDictionary<string, WatchTransactionData> Transactions { get; set; }
     }
 
     /// <summary>
     /// An object containing the details of a transaction affecting a <see cref="Script"/> being watched.
     /// </summary>
-    public class TransactionData
+    public class WatchTransactionData
     {
         /// <summary>
         /// Transaction id.
@@ -212,7 +211,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
     }
 
     /// <summary>
-    /// Converter used to convert a <see cref="ConcurrentDictionary{TKey,TValue}"/> (where TKey is <see cref="string"/> and TValue is <see cref="TransactionData"/>) to and from a collection of its values.
+    /// Converter used to convert a <see cref="ConcurrentDictionary{TKey,TValue}"/> (where TKey is <see cref="string"/> and TValue is <see cref="WatchTransactionData"/>) to and from a collection of its values.
     /// </summary>
     /// <seealso cref="Newtonsoft.Json.JsonConverter" />
     public class TransactionDataConcurrentDictionaryConverter : JsonConverter
@@ -221,16 +220,16 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         public override bool CanConvert(Type objectType)
         {
             // Check this is a ConcurrentDictionary with the right argument types.
-            return objectType == typeof(ConcurrentDictionary<string, TransactionData>);
+            return objectType == typeof(ConcurrentDictionary<string, WatchTransactionData>);
         }
 
         /// <inheritdoc />
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var transactions = serializer.Deserialize<IEnumerable<TransactionData>>(reader);
+            var transactions = serializer.Deserialize<IEnumerable<WatchTransactionData>>(reader);
 
-            var transactionsDictionary = new ConcurrentDictionary<string, TransactionData>();
-            foreach (TransactionData transactionData in transactions)
+            var transactionsDictionary = new ConcurrentDictionary<string, WatchTransactionData>();
+            foreach (WatchTransactionData transactionData in transactions)
             {
                 transactionsDictionary.TryAdd(transactionData.Id.ToString(), transactionData);
             }
@@ -241,7 +240,7 @@ namespace Stratis.Bitcoin.Features.WatchOnlyWallet
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var transactionsDictionary = (ConcurrentDictionary<string, TransactionData>)value;
+            var transactionsDictionary = (ConcurrentDictionary<string, WatchTransactionData>)value;
             serializer.Serialize(writer, transactionsDictionary.Values);
         }
     }

@@ -19,7 +19,9 @@
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Diagnostic\Blockcore.Features.Diagnostic.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+    <ProjectReference Include="..\..\..\Features\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\..\..\Features\Blockcore.Features.WalletWatchOnly\Blockcore.Features.WalletWatchOnly.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
     <ProjectReference Include="..\x42\x42.Networks.csproj" />
   </ItemGroup>

@@ -189,6 +189,9 @@ namespace Blockcore.Configuration
             // Ensure the network being used is registered and we have the correct Network object reference.
             this.Network = NetworkRegistration.Register(this.Network);
 
+            // Use Network CoinTicker on Agent 
+            this.Agent = $"{agent}-{this.Network.CoinTicker}";
+
             // Set the full data directory path.
             if (this.DataDir == null)
             {

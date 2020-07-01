@@ -53,7 +53,18 @@ namespace OpenExo.Dns
                         .AddRPC()
                         .UseDns()
                         .Build();
-                }     
+                }
+                else
+                {
+                    // Build the Dns node.
+                    node = new FullNodeBuilder()
+                        .UseNodeSettings(nodeSettings)
+                        .UsePosConsensus()
+                        .UseNodeHost()
+                        .AddRPC()
+                        .UseDns()
+                        .Build();
+                }
 
                 // Run node.
                 if (node != null)

@@ -20,7 +20,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         public IEnumerable<TransactionData> GetForAddress(string address)
         {
-            return this.transactions.Values.Where(t => t.Address == address);
+            return this.transactions.Values.Where(t => t.Address == address).ToList();
         }
 
         public TransactionData GetForOutput(OutPoint outPoint)
@@ -30,12 +30,19 @@ namespace Blockcore.Features.Wallet.Tests
 
         public void InsertOrUpdate(TransactionData item)
         {
-            this.transactions.Add(item.OutPoint, item);
+            if (this.transactions.ContainsKey(item.OutPoint))
+            {
+                this.transactions[item.OutPoint] = item;
+            }
+            else
+            {
+                this.transactions.Add(item.OutPoint, item);
+            }
         }
 
         public bool Remove(OutPoint outPoint)
         {
-            throw new NotImplementedException();
+            return this.transactions.Remove(outPoint);
         }
 
         public void Add(IEnumerable<TransactionData> transactions)

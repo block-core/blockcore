@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Policy;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
+using DBreeze.Utils;
 using NBitcoin;
+using NBitcoin.Crypto;
 using Newtonsoft.Json;
 
 namespace Blockcore.Tests.Wallet.Common
@@ -57,6 +61,7 @@ namespace Blockcore.Tests.Wallet.Common
 
             return new TransactionData
             {
+                OutPoint = new OutPoint(id, blockHeight ?? 1),
                 Address = address ?? script?.ToHex(),
                 Amount = amount,
                 Id = id,
@@ -262,9 +267,12 @@ namespace Blockcore.Tests.Wallet.Common
             var addresses = new List<HdAddress>();
             for (int i = 0; i < count; i++)
             {
+                var key = new Key().ScriptPubKey;
+
                 var address = new HdAddress
                 {
-                    ScriptPubKey = new Key().ScriptPubKey
+                    Address = key.ToString(),
+                    ScriptPubKey = key
                 };
                 addresses.Add(address);
             }
@@ -420,6 +428,8 @@ namespace Blockcore.Tests.Wallet.Common
                 store.Add(new List<TransactionData> {
                         new TransactionData
                         {
+                            Address = address.Address,
+                            OutPoint = new OutPoint(new uint256(Hashes.Hash256(key.PubKey.ToBytes())), height),
                             BlockHeight = height,
                             Amount = new Money(new Random().Next(500000, 1000000)),
                             SpendingDetails = new SpendingDetails(),
@@ -456,6 +466,7 @@ namespace Blockcore.Tests.Wallet.Common
                 {
                         new TransactionData
                         {
+                            OutPoint = new OutPoint( new uint256(Hashes.SHA256(key.PubKey.ToBytes())), height),
                             Address = address.Address,
                             BlockHeight = height,
                             Amount = new Money(new Random().Next(500000, 1000000))
@@ -474,6 +485,7 @@ namespace Blockcore.Tests.Wallet.Common
 
             var addressTransaction = new TransactionData
             {
+                OutPoint = new OutPoint(transaction, 0),
                 Address = transaction.Outputs[0].ScriptPubKey.ToHex(),
                 Amount = transaction.TotalOut,
                 BlockHash = chainInfo.blockHash,
@@ -580,7 +592,9 @@ namespace Blockcore.Tests.Wallet.Common
             if (this.walletsGenerated.TryGetValue((name, password), out Features.Wallet.Types.Wallet existingWallet))
             {
                 string serializedExistingWallet = JsonConvert.SerializeObject(existingWallet, Formatting.None);
-                return JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
+                var wal1 = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
+                wal1.walletStore = new WalletMemoryStore();
+                return wal1;
             }
 
             Features.Wallet.Types.Wallet newWallet = WalletTestsHelpers.GenerateBlankWallet(name, password);

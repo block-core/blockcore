@@ -266,8 +266,8 @@ namespace Blockcore.Features.Wallet
         {
             this.asyncLoop?.Dispose();
             this.SaveWallets();
-            foreach (Types.Wallet wallet in this.Wallets)
-                ((IDisposable)wallet.walletStore)?.Dispose();
+            foreach (IDisposable disposable in this.Wallets.OfType<IDisposable>())
+                disposable?.Dispose();
         }
 
         /// <inheritdoc />

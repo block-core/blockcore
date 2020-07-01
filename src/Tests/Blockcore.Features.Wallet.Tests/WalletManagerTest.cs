@@ -763,6 +763,7 @@ namespace Blockcore.Features.Wallet.Tests
                 InternalAddresses = null
             });
             walletManager.Wallets.Add(wallet);
+            wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), 1), Address = "myUsedAddress" });
 
             HdAddress result = walletManager.GetUnusedAddress(new WalletAccountReference("myWallet", "myAccount"));
 
@@ -803,6 +804,7 @@ namespace Blockcore.Features.Wallet.Tests
                 ExternalAddresses = new List<HdAddress>()
             });
             walletManager.Wallets.Add(wallet);
+            wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), 1), Address = bob.GetAddress().ToString() });
 
             HdAddress result = walletManager.GetUnusedChangeAddress(new WalletAccountReference(wallet.Name, wallet.AccountsRoot.Single().Accounts.First().Name));
 
@@ -869,6 +871,8 @@ namespace Blockcore.Features.Wallet.Tests
             });
             walletManager.Wallets.Add(wallet);
 
+            wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), 1), Address = "myUsedAddress" });
+
             HdAddress result = walletManager.GetUnusedAddress(new WalletAccountReference("myWallet", "myAccount"));
 
             var keyPath = new KeyPath($"0/1");
@@ -907,6 +911,9 @@ namespace Blockcore.Features.Wallet.Tests
                 ExtendedPubKey = "blabla"
             });
             walletManager.Wallets.Add(wallet);
+
+            wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), 1), Address = "myUsedExternalAddress" });
+            wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), 1), Address = "myUsedInternalAddress" });
 
             List<AccountHistory> result = walletManager.GetHistory("myWallet").ToList();
 
@@ -951,6 +958,9 @@ namespace Blockcore.Features.Wallet.Tests
 
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(account);
             walletManager.Wallets.Add(wallet);
+
+            wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), 1), Address = "myUsedExternalAddress" });
+            wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), 1), Address = "myUsedInternalAddress" });
 
             AccountHistory accountHistory = walletManager.GetHistory(wallet, account);
 
@@ -2482,8 +2492,8 @@ namespace Blockcore.Features.Wallet.Tests
             // add two unconfirmed transactions
             for (int i = 1; i < 3; i++)
             {
-                store.InsertOrUpdate(new TransactionData { Amount = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                store.InsertOrUpdate(new TransactionData { Amount = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                store.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                store.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             Assert.Equal(0, firstAccount.GetBalances(store, firstAccount.IsNormalAccount()).ConfirmedAmount);
@@ -2539,6 +2549,7 @@ namespace Blockcore.Features.Wallet.Tests
             var accounts = new List<HdAccount> { account, account2 };
 
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("myWallet");
+            wallet.walletStore = store;
             wallet.AccountsRoot.Add(new AccountRoot());
             wallet.AccountsRoot.Single().Accounts = accounts;
 
@@ -2580,8 +2591,8 @@ namespace Blockcore.Features.Wallet.Tests
             // add two confirmed transactions
             for (int i = 1; i < 3; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, BlockHeight = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, BlockHeight = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             Assert.Equal(40, firstAccount.GetBalances(wallet.walletStore, firstAccount.IsNormalAccount()).ConfirmedAmount);
@@ -2607,8 +2618,8 @@ namespace Blockcore.Features.Wallet.Tests
             // add two spent transactions
             for (int i = 1; i < 3; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             Assert.Equal(0, firstAccount.GetBalances(wallet.walletStore, firstAccount.IsNormalAccount()).ConfirmedAmount);
@@ -2634,14 +2645,14 @@ namespace Blockcore.Features.Wallet.Tests
             // add two spent transactions
             for (int i = 1; i < 3; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             for (int i = 3; i < 5; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, BlockHeight = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, BlockHeight = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             Assert.Equal(40, firstAccount.GetBalances(wallet.walletStore, firstAccount.IsNormalAccount()).ConfirmedAmount);
@@ -2667,14 +2678,14 @@ namespace Blockcore.Features.Wallet.Tests
             // add two spent transactions
             for (int i = 1; i < 3; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, BlockHeight = 10, SpendingDetails = new SpendingDetails(), Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             for (int i = 3; i < 5; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             Assert.Equal(0, firstAccount.GetBalances(wallet.walletStore, firstAccount.IsNormalAccount()).ConfirmedAmount);
@@ -2958,15 +2969,15 @@ namespace Blockcore.Features.Wallet.Tests
 
             for (int i = 0; i < 3; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
             }
 
             // Add two confirmed transactions.
             for (int i = 3; i < 6; i++)
             {
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
-                wallet.walletStore.InsertOrUpdate(new TransactionData { Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(1), i), Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(i).Address });
+                wallet.walletStore.InsertOrUpdate(new TransactionData { OutPoint = new OutPoint(new uint256(2), i), Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(i).Address });
             }
 
             int transactionCount = firstAccount.GetCombinedAddresses().SelectMany(a => wallet.walletStore.GetForAddress(a.Address)).Count();
@@ -3032,10 +3043,10 @@ namespace Blockcore.Features.Wallet.Tests
             uint256 trxId = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
             int counter = 0;
 
-            var trxUnconfirmed1 = new TransactionData { Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(0).Address };
-            var trxUnconfirmed2 = new TransactionData { Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(0).Address };
-            var trxConfirmed1 = new TransactionData { Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, Address = firstAccount.ExternalAddresses.ElementAt(1).Address };
-            var trxConfirmed2 = new TransactionData { Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, Address = firstAccount.InternalAddresses.ElementAt(1).Address };
+            var trxUnconfirmed1 = new TransactionData { OutPoint = new OutPoint(new uint256(1), 1), Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(0).Address };
+            var trxUnconfirmed2 = new TransactionData { OutPoint = new OutPoint(new uint256(1), 2), Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(0).Address };
+            var trxConfirmed1 = new TransactionData { OutPoint = new OutPoint(new uint256(1), 3), Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, Address = firstAccount.ExternalAddresses.ElementAt(1).Address };
+            var trxConfirmed2 = new TransactionData { OutPoint = new OutPoint(new uint256(1), 4), Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, Address = firstAccount.InternalAddresses.ElementAt(1).Address };
 
             wallet.walletStore.InsertOrUpdate(trxUnconfirmed1);
             wallet.walletStore.InsertOrUpdate(trxConfirmed1);
@@ -3177,15 +3188,15 @@ namespace Blockcore.Features.Wallet.Tests
 
             // Confirmed transaction with confirmed spending.
             var confirmedSpendingDetails = new SpendingDetails { TransactionId = trxId >> counter++, BlockHeight = 500002 };
-            var trxConfirmed1 = new TransactionData { Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, SpendingDetails = confirmedSpendingDetails, Address = firstAccount.ExternalAddresses.ElementAt(1).Address };
+            var trxConfirmed1 = new TransactionData { OutPoint = new OutPoint(new uint256(1), 3), Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, SpendingDetails = confirmedSpendingDetails, Address = firstAccount.ExternalAddresses.ElementAt(1).Address };
 
             // Confirmed transaction with unconfirmed spending.
             uint256 unconfirmedTransactionId = trxId >> counter++;
             var unconfirmedSpendingDetails1 = new SpendingDetails { TransactionId = unconfirmedTransactionId };
-            var trxConfirmed2 = new TransactionData { Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, SpendingDetails = unconfirmedSpendingDetails1, Address = firstAccount.InternalAddresses.ElementAt(1).Address };
+            var trxConfirmed2 = new TransactionData { OutPoint = new OutPoint(new uint256(1), 1), Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, SpendingDetails = unconfirmedSpendingDetails1, Address = firstAccount.InternalAddresses.ElementAt(1).Address };
 
             // Unconfirmed transaction.
-            var trxUnconfirmed1 = new TransactionData { Amount = 10, Id = unconfirmedTransactionId, Address = firstAccount.ExternalAddresses.ElementAt(0).Address };
+            var trxUnconfirmed1 = new TransactionData { OutPoint = new OutPoint(new uint256(1), 2), Amount = 10, Id = unconfirmedTransactionId, Address = firstAccount.ExternalAddresses.ElementAt(0).Address };
 
             wallet.walletStore.InsertOrUpdate(trxUnconfirmed1);
             wallet.walletStore.InsertOrUpdate(trxConfirmed1);

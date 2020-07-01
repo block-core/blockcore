@@ -118,7 +118,6 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             return result.ToArray();
         }
 
-
         internal ListTransactionsModel GetTransactionsModel(TransactionVerboseModel transactionInfo)
         {
             var transactionResult = new ListTransactionsModel

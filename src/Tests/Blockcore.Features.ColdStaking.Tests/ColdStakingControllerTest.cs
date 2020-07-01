@@ -627,10 +627,10 @@ namespace Blockcore.Features.ColdStaking.Tests
             Assert.True(wallet1.walletStore.GetForAddress(accounts[0].ExternalAddresses.ToArray()[1].Address).ToArray()[0].IsColdCoinStake);
             Assert.Equal(new Money(202, MoneyUnit.BTC), wallet1.walletStore.GetForAddress(accounts[0].ExternalAddresses.ToArray()[1].Address).ToArray()[0].Amount);
 
-            Assert.Single(wallet1.GetAllTransactions(wallet1.walletStore).ToArray()); // Default to NormalAccounts, should filter out cold staking (trx3) from normal wallet.
-            Assert.Single(wallet1.GetAllTransactions(wallet1.walletStore, Wallet.Types.Wallet.NormalAccounts).ToArray());
+            Assert.Single(wallet1.GetAllTransactions().ToArray()); // Default to NormalAccounts, should filter out cold staking (trx3) from normal wallet.
+            Assert.Single(wallet1.GetAllTransactions(Wallet.Types.Wallet.NormalAccounts).ToArray());
             Assert.Single(wallet1.GetAllSpendableTransactions(wallet1.walletStore, 5, 0, Wallet.Types.Wallet.NormalAccounts).ToArray()); // Default to NormalAccounts
-            Assert.Equal(2, wallet1.GetAllTransactions(wallet1.walletStore, Wallet.Types.Wallet.AllAccounts).ToArray().Length);
+            Assert.Equal(2, wallet1.GetAllTransactions(Wallet.Types.Wallet.AllAccounts).ToArray().Length);
             Assert.Equal(2, wallet1.GetAllSpendableTransactions(wallet1.walletStore, 5, 0, Wallet.Types.Wallet.AllAccounts).ToArray().Length); // Specified AllAccounts, should include cold-staking transaction.
 
             // Verify balance on normal account

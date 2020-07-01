@@ -259,7 +259,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             WalletAccountReference accountReference = this.GetWalletAccountReference();
             Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
 
-            IEnumerable<TransactionData> transactions = wallet.GetAllTransactions(wallet.walletStore);
+            IEnumerable<TransactionData> transactions = wallet.GetAllTransactions();
 
             var model = new ListSinceBlockModel();
 
@@ -414,7 +414,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             Money feeSent = Money.Zero;
             if (sendTransactions.Any())
             {
-                feeSent = wallet.GetSentTransactionFee(wallet.walletStore, trxid);
+                feeSent = wallet.GetSentTransactionFee(trxid);
             }
 
             // Send transactions details.
@@ -522,7 +522,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             var addresses = wallet.GetAllAddresses();
 
             // Get the transaction data for this wallet.
-            var txs = wallet.GetAllTransactions(wallet.walletStore);
+            var txs = wallet.GetAllTransactions();
 
             // Create a transaction dictionary for performant lookups.
             var txDictionary = new Dictionary<uint256, TransactionData>(txs.Count());

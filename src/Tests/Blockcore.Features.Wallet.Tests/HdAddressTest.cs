@@ -93,17 +93,21 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentTransactionsWithAddressHavingUnspentTransactionsReturnsUnspentTransactions()
         {
+            WalletMemoryStore store = new WalletMemoryStore();
+
             var address = new HdAddress
             {
-                Transactions = new List<TransactionData> {
+                Address = "Address"
+            };
+
+            store.Add(new List<TransactionData> {
                     new TransactionData { Id = new uint256(15)},
                     new TransactionData { Id = new uint256(16), SpendingDetails = new SpendingDetails() },
                     new TransactionData { Id = new uint256(17)},
                     new TransactionData { Id = new uint256(18), SpendingDetails = new SpendingDetails() }
-                }
-            };
+                });
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions();
+            IEnumerable<TransactionData> result = address.UnspentTransactions(store);
 
             Assert.Equal(2, result.Count());
             Assert.Equal(new uint256(15), result.ElementAt(0).Id);
@@ -113,15 +117,19 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentTransactionsWithAddressNotHavingUnspentTransactionsReturnsEmptyList()
         {
+            WalletMemoryStore store = new WalletMemoryStore();
+
             var address = new HdAddress
             {
-                Transactions = new List<TransactionData> {
-                    new TransactionData { Id = new uint256(16), SpendingDetails = new SpendingDetails() },
-                    new TransactionData { Id = new uint256(18), SpendingDetails = new SpendingDetails() }
-                }
+                Address = "Address"
             };
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions();
+            store.Add(new List<TransactionData> {
+                    new TransactionData { Id = new uint256(16), SpendingDetails = new SpendingDetails() },
+                    new TransactionData { Id = new uint256(18), SpendingDetails = new SpendingDetails() }
+                });
+
+            IEnumerable<TransactionData> result = address.UnspentTransactions(store);
 
             Assert.Empty(result);
         }
@@ -129,12 +137,14 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentTransactionsWithAddressWithoutTransactionsReturnsEmptyList()
         {
+            WalletMemoryStore store = new WalletMemoryStore();
+
             var address = new HdAddress
             {
-                Transactions = new List<TransactionData>()
+                Address = "Address"
             };
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions();
+            IEnumerable<TransactionData> result = address.UnspentTransactions(store);
 
             Assert.Empty(result);
         }

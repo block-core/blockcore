@@ -11,7 +11,7 @@ namespace Blockcore.Features.Wallet.Tests
 {
     public class WalletMemoryStore : IWalletStore
     {
-        public Dictionary<OutPoint, TransactionData> transactions { get; set; internal} = new Dictionary<OutPoint, TransactionData>();
+        public Dictionary<OutPoint, TransactionData> transactions { get; set; } = new Dictionary<OutPoint, TransactionData>();
 
         public int CountForAddress(string address)
         {

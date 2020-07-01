@@ -131,12 +131,12 @@ namespace Blockcore.Features.Wallet.Types
         /// Gets all the transactions in the wallet.
         /// </summary>
         /// <returns>A list of all the transactions in the wallet.</returns>
-        public IEnumerable<TransactionData> GetAllTransactions(IWalletStore walletStore, Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<TransactionData> GetAllTransactions(Func<HdAccount, bool> accountFilter = null)
         {
             List<HdAccount> accounts = this.GetAccounts(accountFilter).ToList();
 
             // First we iterate normal accounts
-            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
+            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 // If this is a cold coin stake UTXO, we won't return it for a normal account.
                 if (txData.IsColdCoinStake.HasValue && txData.IsColdCoinStake.Value == true)
@@ -147,7 +147,7 @@ namespace Blockcore.Features.Wallet.Types
                 yield return txData;
             }
 
-            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
+            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 // If this is a cold coin stake UTXO, we won't return it for a normal account.
                 if (txData.IsColdCoinStake.HasValue && txData.IsColdCoinStake.Value == true)
@@ -159,12 +159,12 @@ namespace Blockcore.Features.Wallet.Types
             }
 
             // Then we iterate special accounts.
-            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
+            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 yield return txData;
             }
 
-            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => walletStore.GetForAddress(x.Address)))
+            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 yield return txData;
             }
@@ -341,9 +341,9 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         /// <param name="transactionId">The transaction id to look for.</param>
         /// <returns>The fee paid.</returns>
-        public Money GetSentTransactionFee(IWalletStore walletStore, uint256 transactionId)
+        public Money GetSentTransactionFee(uint256 transactionId)
         {
-            List<TransactionData> allTransactions = this.GetAllTransactions(walletStore, Wallet.NormalAccounts).ToList();
+            List<TransactionData> allTransactions = this.GetAllTransactions(Wallet.NormalAccounts).ToList();
 
             // Get a list of all the inputs spent in this transaction.
             List<TransactionData> inputsSpentInTransaction = allTransactions.Where(t => t.SpendingDetails?.TransactionId == transactionId).ToList();

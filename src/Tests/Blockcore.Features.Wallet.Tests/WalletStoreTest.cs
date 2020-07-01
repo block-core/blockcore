@@ -19,16 +19,16 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
 
-            WalletStore store = new WalletStore(this.Network, dataFolder, this.LoggerFactory.Object);
+            WalletStore store = new WalletStore(this.Network, dataFolder, new Types.Wallet { Name = "wallet1", EncryptedSeed = "EncryptedSeed1" });
 
             var utxo = new OutPoint(new uint256(10), 1);
-            var address = new Key().PubKey.GetAddress(this.Network).ScriptPubKey;
+            var address = new Key().PubKey.GetAddress(this.Network).ScriptPubKey.ToString();
 
             var trx = Create(utxo, address);
 
             // insert the document then fetch it and compare with source
-            store.Upsert(trx);
-            var trxRes = store.Get(utxo);
+            store.InsertOrUpdate(trx);
+            var trxRes = store.GetForOutput(utxo);
             var docTrx = LiteDB.BsonMapper.Global.ToDocument(trx);
             var jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx, false, true);
             var docTrxRes = LiteDB.BsonMapper.Global.ToDocument(trxRes);
@@ -40,8 +40,8 @@ namespace Blockcore.Features.Wallet.Tests
             trx.BlockIndex = null;
 
             // update the changed document then fetch it and compare with source
-            store.Upsert(trx);
-            trxRes = store.Get(utxo);
+            store.InsertOrUpdate(trx);
+            trxRes = store.GetForOutput(utxo);
             docTrx = LiteDB.BsonMapper.Global.ToDocument(trx);
             jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx, false, true);
             docTrxRes = LiteDB.BsonMapper.Global.ToDocument(trxRes);
@@ -54,20 +54,20 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
 
-            WalletStore store = new WalletStore(this.Network, dataFolder, this.LoggerFactory.Object);
+            WalletStore store = new WalletStore(this.Network, dataFolder, new Types.Wallet { Name = "wallet1", EncryptedSeed = "EncryptedSeed1" });
 
-            var scripts = new List<Script>();
+            var scripts = new List<string>();
 
             for (int indexAddress = 0; indexAddress < 3; indexAddress++)
             {
-                var script = new Key().PubKey.GetAddress(this.Network).ScriptPubKey;
+                var script = new Key().PubKey.GetAddress(this.Network).ScriptPubKey.ToString();
                 scripts.Add(script);
 
                 for (int indexTrx = 0; indexTrx < 5; indexTrx++)
                 {
                     var utxo = new OutPoint(new uint256((ulong)indexTrx), indexAddress);
                     var trx = Create(utxo, script);
-                    store.Upsert(trx);
+                    store.InsertOrUpdate(trx);
                 }
             }
 
@@ -83,17 +83,18 @@ namespace Blockcore.Features.Wallet.Tests
             }
         }
 
-        private TransactionData Create(OutPoint outPoint, Script script)
+        private TransactionData Create(OutPoint outPoint, string address)
         {
             return new TransactionData
             {
                 OutPoint = outPoint,
+                Address = address,
                 Amount = 5,
                 BlockHash = new uint256(50),
                 BlockHeight = 5,
                 BlockIndex = 2,
                 Hex = "TransactionHex",
-                ScriptPubKey = script,
+                ScriptPubKey = new Script(OpcodeType.OP_0, OpcodeType.OP_1, OpcodeType.OP_3),
                 MerkleProof = new PartialMerkleTree(new[] { new uint256(10), new uint256(11) }, new[] { true, false }),
                 IsCoinBase = true,
                 IsCoinStake = true,

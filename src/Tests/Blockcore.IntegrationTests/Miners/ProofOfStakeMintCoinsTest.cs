@@ -130,7 +130,7 @@ namespace Blockcore.IntegrationTests.Miners
         {
             // Enumerate to a list otherwise the enumerable can change during enumeration as new transactions are added to the wallet.
             var wal = node.FullNode.WalletManager().Wallets.First();
-            return wal.GetAllTransactions(wal.walletStore).ToList();
+            return wal.GetAllTransactions().ToList();
         }
     }
 }

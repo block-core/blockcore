@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Stratis.Bitcoin.Builder;
-using Stratis.Bitcoin.Builder.Feature;
-using Stratis.Bitcoin.Features.Notifications;
-using Stratis.Bitcoin.Features.WatchOnlyWallet.Controllers;
+using Blockcore.Builder;
+using Blockcore.Builder.Feature;
+using Blockcore.Features.Notifications;
+using Blockcore.Features.WalletWatchOnly.Interfaces;
 
-namespace Stratis.Bitcoin.Features.WatchOnlyWallet
+namespace Blockcore.Features.WalletWatchOnly
 {
     /// <summary>
     /// A feature used to add a watch-only wallet to the full node.

@@ -110,32 +110,25 @@
                         <div class="text-danger">@Alert</div>
                     </div>
 
-                    <div class="input-group">
-                        <div class="alert-info">@Success</div>
-                    </div>
+                    @if (Success != null)
+                        {
+                        <h4>Transaction Broadcast</h4>
+                        <div class="row mb-3">
+                            <div class="col-xl-12 col-sm-12 ">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p>Transaction hash: @SentTransactionHash</p>
+                                        <span>Raw Transaction</span>
+                                        <textarea @bind="TransactionHex" class="form-control bg-secondary text-light" rows="4">@TransactionHex</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
                 </div>
             </div>
         </div>
     </div>
-    @*
-        // TODO add confirmation screeen
-            <h3>Transaction Details</h3>
-
-        <div class="row mb-3">
-            <div class="col-xl-12 col-sm-12 ">
-                <div class="card">
-                    <div class="card-body">
-                    <p>Transaction hash: @SentTransactionHash</p>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
-                            </div>
-                            <textarea @bind="TransactionHex" class="form-control bg-secondary text-light" rows="5">@TransactionHex</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> *@
 }
 @code
 {
@@ -288,9 +281,8 @@
             return;
         }
 
-        this.Success = "Coins sent.";
+        this.Success = "Coins sent. TransactionID: " + this.SentTransactionHash;
 
-        NavigationManager.NavigateTo("walletaccount/" + walletname + "/" + accountname);
     }
     private void NavigateToBroadcastTx(string walletName, string accountname)
     {

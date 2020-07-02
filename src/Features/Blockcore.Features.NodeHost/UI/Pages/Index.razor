@@ -9,6 +9,17 @@
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 @inject NavigationManager NavigationManager
 @inject ModalService ModalService
+@inject IToastService toastService
+@inject IModalService Modal
+
+
+<button @onclick="ShowModal" class="btn btn-primary">Show Modal</button>
+
+<button class="btn btn-info" @onclick="@(() => toastService.ShowInfo("I'm an INFO message"))">Info Toast</button>
+<button class="btn btn-success" @onclick="@(() => toastService.ShowSuccess("I'm a SUCCESS message with a custom heading", "Congratulations!"))">Success Toast</button>
+<button class="btn btn-warning" @onclick="@(() => toastService.ShowWarning("I'm a WARNING message"))">Warning Toast</button>
+<button class="btn btn-danger" @onclick="@(() => toastService.ShowError("I'm an ERROR message"))">Error Toast</button>
+
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>@this.Network.CoinTicker.ToUpper() Network</strong></h1>
@@ -185,4 +196,6 @@
     {
         ModalService.Show("Add Node", typeof(Modal.ModalAddNode));
     }
+    private void ShowModal() => Modal.Show<Confirm>("Welcome to Blazored Modal");
+
 }

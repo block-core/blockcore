@@ -23,7 +23,7 @@ namespace Rutanio.Daemon
         {
             try
             {
-                var nodeSettings = new NodeSettings(networksSelector: Networks.Networks.Rutanio, args: args, agent: "Blockcore-RUTA");
+                var nodeSettings = new NodeSettings(networksSelector: Networks.Networks.Rutanio, args: args);
 
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
                     .UseNodeSettings(nodeSettings)

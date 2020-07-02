@@ -1,5 +1,15 @@
 ﻿@inherits LayoutComponentBase
 
+    <BlazoredToasts Position="ToastPosition.BottomRight"
+                    Timeout="10"
+                    IconType="IconType.Material"
+                    ErrorIcon="error_outline"
+                    InfoIcon="school"
+                    SuccessIcon="done_outline"
+                    WarningIcon="warning"
+                    ShowProgressBar="@true"/>
+
+    <BlazoredModal />
     <Modal />
 
     <div class="sidebar bg-dark">

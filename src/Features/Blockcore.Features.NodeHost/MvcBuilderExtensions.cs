@@ -46,5 +46,14 @@ namespace Blockcore.Features.NodeHost
         {
             return services.AddScoped<ModalService>();
         }
+
+        public static IServiceCollection AddBlazoredToast(this IServiceCollection services)
+        {
+            return services.AddScoped<IToastService, ToastService>();
+        }
+        public static IServiceCollection AddBlazoredModal(this IServiceCollection services)
+        {
+            return services.AddScoped<IModalService, ModalService>();
+        }
     }
 }

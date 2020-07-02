@@ -85,6 +85,8 @@ namespace Blockcore.Features.NodeHost
                 });
             
             	services.AddBlazorModal();
+                services.AddBlazoredModal();
+               	services.AddBlazoredToast();
 
             }
 

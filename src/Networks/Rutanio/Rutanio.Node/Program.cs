@@ -30,9 +30,9 @@ namespace Rutanio.Daemon
                     .UseBlockStore()
                     .UsePosConsensus()
                     .UseMempool()
+                    .AddPowPosMining()
                     .UseColdStakingWallet();
                     .UseDiagnosticFeature()
-                    .AddPowPosMining()
                     .UseNodeHost()
                     .AddRPC();
 

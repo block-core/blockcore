@@ -38,7 +38,7 @@ namespace Blockcore.Node
                     break;
 
                 case "EXOS":
-                    nodeSettings = new NodeSettings(networksSelector: OpenExo.Networks.Networks.OpenExo, args: args, agent: "Blockcore-" + chain);
+                    nodeSettings = new NodeSettings(networksSelector: OpenExo.Networks.Networks.OpenExo, args: args);
                     break;
             }
 

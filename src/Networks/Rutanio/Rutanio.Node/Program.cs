@@ -31,7 +31,7 @@ namespace Rutanio.Daemon
                     .UsePosConsensus()
                     .UseMempool()
                     .AddPowPosMining()
-                    .UseColdStakingWallet();
+                    .UseColdStakingWallet()
                     .UseDiagnosticFeature()
                     .UseNodeHost()
                     .AddRPC();

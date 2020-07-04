@@ -17,6 +17,7 @@ namespace Blockcore.Features.Wallet.UI
         public string Navigation => "ColdStaking";
         public string Icon => "oi-pulse";
         public bool IsVisible => this.WalletManager?.ContainsWallets ?? false;
+        public int NavOrder => 30;
 
     }
 }

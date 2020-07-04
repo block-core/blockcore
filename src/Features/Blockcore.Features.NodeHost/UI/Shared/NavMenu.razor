@@ -20,7 +20,7 @@
 
         @{
             var items = fullnode.NodeService<IEnumerable<INavigationItem>>();
-            foreach (var item in items)
+            foreach (var item in items.OrderBy(i => i.NavOrder))
             {
                 if (item.IsVisible) {
                     <li class="nav-item px-3">

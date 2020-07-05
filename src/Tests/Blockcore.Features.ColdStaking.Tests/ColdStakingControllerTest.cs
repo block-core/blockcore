@@ -249,6 +249,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             wallet.walletStore.InsertOrUpdate(new TransactionData()
             {
+                OutPoint = new OutPoint(transaction.GetHash(), 0),
                 Address = address.Address,
                 Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
@@ -864,6 +865,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             wallet.walletStore.InsertOrUpdate(new TransactionData()
             {
+                OutPoint = new OutPoint(transaction.GetHash(), 0),
                 Address = address.Address,
                 Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
@@ -907,6 +909,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             wallet.walletStore.InsertOrUpdate(new TransactionData()
             {
+                OutPoint = new OutPoint(transaction.GetHash(), 0),
                 Address = address.Address,
                 Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,

@@ -1,4 +1,5 @@
-﻿using NBitcoin;
+﻿using System;
+using NBitcoin;
 
 namespace Blockcore.Utilities
 {
@@ -93,6 +94,45 @@ namespace Blockcore.Utilities
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public static bool TryParse(string str, out HashHeightPair result)
+        {
+            Guard.NotEmpty(str, nameof(str));
+
+            result = null;
+
+            string[] splitted = str.Split('-');
+            if (splitted.Length != 2)
+            {
+                return false;
+            }
+
+            if (!int.TryParse(splitted[0], out int index))
+            {
+                return false;
+            }
+
+            if (!uint256.TryParse(splitted[1], out uint256 hash))
+            {
+                return false;
+            }
+
+            result = new HashHeightPair(hash, index);
+
+            return true;
+        }
+
+        public static HashHeightPair Parse(string str)
+        {
+            HashHeightPair result;
+
+            if (TryParse(str, out result))
+            {
+                return result;
+            }
+
+            throw new FormatException("The format of the outpoint is incorrect");
         }
     }
 }

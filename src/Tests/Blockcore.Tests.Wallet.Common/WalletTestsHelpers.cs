@@ -546,6 +546,7 @@ namespace Blockcore.Tests.Wallet.Common
 
                 var addressTransaction = new TransactionData
                 {
+                    OutPoint = new OutPoint(coinbase.GetHash(), 0),
                     Address = address.Address,
                     Amount = coinbase.TotalOut,
                     BlockHash = block.GetHash(),

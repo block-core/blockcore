@@ -25,15 +25,16 @@ namespace Blockcore.Features.Wallet.Tests
             var wallet = new Types.Wallet();
             wallet.walletStore = new WalletMemoryStore();
             AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", KnownCoinTypes.Stratis);
-            WalletMemoryStore store = new WalletMemoryStore();
 
             TransactionData transaction1 = CreateTransaction(new uint256(1), new Money(15000), 1);
             TransactionData transaction2 = CreateTransaction(new uint256(2), new Money(91209), 1);
 
+            transaction1.OutPoint = new OutPoint(new uint256(1), 1);
             transaction1.Address = stratisAccountRoot.Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address;
-            store.InsertOrUpdate(transaction1);
+            wallet.walletStore.InsertOrUpdate(transaction1);
+            transaction2.OutPoint = new OutPoint(new uint256(2), 1);
             transaction2.Address = stratisAccountRoot.Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address;
-            store.InsertOrUpdate(transaction2);
+            wallet.walletStore.InsertOrUpdate(transaction2);
 
             wallet.AccountsRoot.Add(stratisAccountRoot);
 

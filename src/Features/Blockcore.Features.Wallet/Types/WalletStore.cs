@@ -28,6 +28,10 @@ namespace Blockcore.Features.Wallet.Types
         TransactionData GetForOutput(OutPoint outPoint);
 
         bool Remove(OutPoint outPoint);
+
+        WalletData GetData();
+
+        void SetData(WalletData data);
     }
 
     public class WalletData
@@ -40,6 +44,8 @@ namespace Blockcore.Features.Wallet.Types
         public string WalletName { get; set; }
 
         public HashHeightPair WalletTip { get; set; }
+
+        public ICollection<uint256> BlockLocator { get; set; }
     }
 
     public class WalletStore : IWalletStore, IDisposable
@@ -48,6 +54,10 @@ namespace Blockcore.Features.Wallet.Types
         private readonly Network network;
         private LiteCollection<WalletData> dataCol;
         private LiteCollection<TransactionData> trxCol;
+
+        public WalletData WalletData { get; private set; }
+
+        public BsonMapper Mapper => this.db.Mapper;
 
         public WalletStore(Network network, DataFolder dataFolder, Wallet wallet)
         {
@@ -71,18 +81,18 @@ namespace Blockcore.Features.Wallet.Types
 
             this.dataCol.EnsureIndex(x => x.Key, true);
 
-            WalletData key = this.GetKey();
+            this.WalletData = this.GetData();
 
-            if (key != null)
+            if (this.WalletData != null)
             {
-                if (key.EncryptedSeed != wallet.EncryptedSeed)
+                if (this.WalletData.EncryptedSeed != wallet.EncryptedSeed)
                 {
                     throw new WalletException("Invalid Wallet seed");
                 }
             }
             else
             {
-                this.SetKey(new WalletData
+                this.SetData(new WalletData
                 {
                     Key = "Key",
                     EncryptedSeed = wallet.EncryptedSeed,
@@ -94,14 +104,20 @@ namespace Blockcore.Features.Wallet.Types
             this.network = network;
         }
 
-        public WalletData GetKey()
+        public WalletData GetData()
         {
-            return this.dataCol.FindById("Key");
+            if (this.WalletData == null)
+            {
+                this.WalletData = this.dataCol.FindById("Key");
+            }
+
+            return this.WalletData;
         }
 
-        public void SetKey(WalletData data)
+        public void SetData(WalletData data)
         {
             this.dataCol.Upsert(data);
+            this.WalletData = data;
         }
 
         public int CountForAddress(string address)
@@ -135,6 +151,12 @@ namespace Blockcore.Features.Wallet.Types
         private BsonMapper Create()
         {
             var mapper = new BsonMapper();
+
+            mapper.RegisterType<HashHeightPair>
+            (
+                serialize: (hash) => hash.ToString(),
+                deserialize: (bson) => HashHeightPair.Parse(bson.AsString)
+            );
 
             mapper.RegisterType<OutPoint>
             (

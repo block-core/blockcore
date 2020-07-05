@@ -272,12 +272,12 @@ namespace Blockcore.Features.Miner.Tests
         {
             WalletMemoryStore store = wallet.walletStore as WalletMemoryStore;
             var account = new HdAccount();
-            account.ExternalAddresses.Add(new HdAddress { Index = 1 }); store.Add(new List<TransactionData> { new TransactionData { Id = new uint256(15), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue - 1 } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 1 }); store.Add(new List<TransactionData> { new TransactionData { Id = new uint256(16), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 2 }); store.Add(new List<TransactionData> { new TransactionData { Id = new uint256(17), Index = 0, Amount = 2 * Money.COIN } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 2 }); store.Add(new List<TransactionData> { new TransactionData { Id = new uint256(18), Index = 0, Amount = 2 * Money.CENT } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 3 }); store.Add(new List<TransactionData> { new TransactionData { Id = new uint256(19), Index = 0, Amount = 1 * Money.NANO } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 4 }); store.Add(null);
+            account.ExternalAddresses.Add(new HdAddress { Index = 1, Address = "1" }); store.Add(new List<TransactionData> { new TransactionData { OutPoint = new OutPoint(new uint256(15), 0), Address = "1", Id = new uint256(15), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue - 1 } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 1, Address = "2" }); store.Add(new List<TransactionData> { new TransactionData { OutPoint = new OutPoint(new uint256(16), 0), Address = "1", Id = new uint256(16), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "3" }); store.Add(new List<TransactionData> { new TransactionData { OutPoint = new OutPoint(new uint256(17), 0), Address = "2", Id = new uint256(17), Index = 0, Amount = 2 * Money.COIN } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "4" }); store.Add(new List<TransactionData> { new TransactionData { OutPoint = new OutPoint(new uint256(18), 0), Address = "2", Id = new uint256(18), Index = 0, Amount = 2 * Money.CENT } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 3, Address = "5" }); store.Add(new List<TransactionData> { new TransactionData { OutPoint = new OutPoint(new uint256(19), 0), Address = "3", Id = new uint256(19), Index = 0, Amount = 1 * Money.NANO } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 4, Address = "6" }); //store.Add(null);
             wallet.AccountsRoot.Add(new AccountRoot() { Accounts = new[] { account }, CoinType = KnownCoinTypes.Stratis });
         }
 

@@ -45,7 +45,10 @@ namespace Blockcore.Features.Wallet
         private const int WalletCreationAccountsCount = 1;
 
         /// <summary>File extension for wallet files.</summary>
-        private const string WalletFileExtension = "wallet.json";
+        private const string OldWalletFileExtension = "wallet.json";
+
+        /// <summary>File extension for wallet files.</summary>
+        private const string WalletFileExtension = "wallet-v2.json";
 
         /// <summary>Timer for saving wallet files to the file system.</summary>
         private const int WalletSavetimeIntervalInMinutes = 5;
@@ -210,6 +213,8 @@ namespace Blockcore.Features.Wallet
 
         public void Start()
         {
+            this.fileStorage.CloneLegacyWallet(OldWalletFileExtension, WalletFileExtension);
+
             // Find wallets and load them in memory.
             IEnumerable<Types.Wallet> wallets = this.fileStorage.LoadByFileExtension(WalletFileExtension);
 
@@ -1436,6 +1441,13 @@ namespace Blockcore.Features.Wallet
 
             lock (this.lockObject)
             {
+                WalletData walletData = wallet.walletStore.GetData();
+                walletData.BlockLocator = wallet.BlockLocator;
+                AccountRoot accountRoot = wallet.AccountsRoot.Single();
+                walletData.WalletTip = new HashHeightPair(accountRoot.LastBlockSyncedHash, accountRoot.LastBlockSyncedHeight.Value);
+
+                wallet.walletStore.SetData(walletData);
+
                 this.fileStorage.SaveToFile(wallet, $"{wallet.Name}.{WalletFileExtension}", new FileStorageOption { SerializeNullValues = false });
             }
         }
@@ -1516,8 +1528,10 @@ namespace Blockcore.Features.Wallet
                 ChainCode = chainCode,
                 CreationTime = creationTime ?? this.dateTimeProvider.GetTimeOffset(),
                 Network = this.network,
-                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = coinType ?? this.coinType } },
+                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = coinType ?? this.coinType, LastBlockSyncedHeight = 0, LastBlockSyncedHash = this.network.GenesisHash } },
             };
+
+            walletFile.walletStore = new WalletStore(this.network, this.dataFolder, walletFile);
 
             // Create a folder if none exists and persist the file.
             this.SaveWallet(walletFile);
@@ -1573,7 +1587,14 @@ namespace Blockcore.Features.Wallet
                 return;
             }
 
-            wallet.walletStore = new WalletStore(this.network, this.dataFolder, wallet);
+            if (wallet.walletStore == null)
+            {
+                wallet.walletStore = new WalletStore(this.network, this.dataFolder, wallet);
+            }
+
+            wallet.BlockLocator = wallet.walletStore.GetData().BlockLocator;
+            wallet.AccountsRoot.Single().LastBlockSyncedHash = wallet.walletStore.GetData().WalletTip.Hash;
+            wallet.AccountsRoot.Single().LastBlockSyncedHeight = wallet.walletStore.GetData().WalletTip.Height;
 
             this.Wallets.Add(wallet);
         }

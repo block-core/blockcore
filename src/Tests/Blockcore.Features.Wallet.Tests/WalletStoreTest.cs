@@ -29,9 +29,9 @@ namespace Blockcore.Features.Wallet.Tests
             // insert the document then fetch it and compare with source
             store.InsertOrUpdate(trx);
             var trxRes = store.GetForOutput(utxo);
-            var docTrx = LiteDB.BsonMapper.Global.ToDocument(trx);
+            var docTrx = store.Mapper.ToDocument(trx);
             var jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx, false, true);
-            var docTrxRes = LiteDB.BsonMapper.Global.ToDocument(trxRes);
+            var docTrxRes = store.Mapper.ToDocument(trxRes);
             var jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes, false, true);
             jsonStringTrx.Should().Be(jsonStringTrxRes);
 
@@ -42,9 +42,9 @@ namespace Blockcore.Features.Wallet.Tests
             // update the changed document then fetch it and compare with source
             store.InsertOrUpdate(trx);
             trxRes = store.GetForOutput(utxo);
-            docTrx = LiteDB.BsonMapper.Global.ToDocument(trx);
+            docTrx = store.Mapper.ToDocument(trx);
             jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx, false, true);
-            docTrxRes = LiteDB.BsonMapper.Global.ToDocument(trxRes);
+            docTrxRes = store.Mapper.ToDocument(trxRes);
             jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes, false, true);
             jsonStringTrx.Should().Be(jsonStringTrxRes);
         }
@@ -81,6 +81,37 @@ namespace Blockcore.Features.Wallet.Tests
                 var utxo = new OutPoint(new uint256((ulong)indexTrx), 1);
                 res.ElementAt(indexTrx).OutPoint.Should().Be(utxo);
             }
+        }
+
+        [Fact]
+        public void WalletStore_GetData()
+        {
+            DataFolder dataFolder = CreateDataFolder(this);
+
+            WalletStore store1 = new WalletStore(this.Network, dataFolder, new Types.Wallet { Name = "wallet1", EncryptedSeed = "EncryptedSeed1" });
+
+            store1.GetData().Should().NotBeNull();
+            store1.GetData().WalletTip.Height.Should().Be(0);
+            store1.GetData().WalletTip.Hash.Should().Be(this.Network.GenesisHash);
+            store1.GetData().WalletName.Should().Be("wallet1");
+            store1.GetData().EncryptedSeed.Should().Be("EncryptedSeed1");
+
+            var data = store1.GetData();
+            data.WalletName = "wallet2";
+            data.BlockLocator = new List<uint256>() { new uint256(1), new uint256(2) };
+            data.WalletTip = new Utilities.HashHeightPair(new uint256(2), 2);
+            store1.SetData(data);
+
+            store1.Dispose();
+
+            WalletStore store2 = new WalletStore(this.Network, dataFolder, new Types.Wallet { Name = "wallet1", EncryptedSeed = "EncryptedSeed1" });
+
+            store2.GetData().WalletTip.Height.Should().Be(2);
+            store2.GetData().WalletTip.Hash.Should().Be(new uint256(2));
+            store2.GetData().WalletName.Should().Be("wallet2");
+            store2.GetData().BlockLocator.Should().HaveCount(2);
+
+            store2.Dispose();
         }
 
         private TransactionData Create(OutPoint outPoint, string address)

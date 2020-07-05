@@ -67,7 +67,8 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// Gets or sets the merkle path.
         /// </summary>
-        [JsonProperty(PropertyName = "blockLocator", ItemConverterType = typeof(UInt256JsonConverter))]
+        //[JsonProperty(PropertyName = "blockLocator", ItemConverterType = typeof(UInt256JsonConverter))]
+        [JsonIgnore]
         public ICollection<uint256> BlockLocator { get; set; }
 
         /// <summary>
@@ -404,14 +405,16 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The height of the last block that was synced.
         /// </summary>
-        [JsonProperty(PropertyName = "lastBlockSyncedHeight", NullValueHandling = NullValueHandling.Ignore)]
+        //[JsonProperty(PropertyName = "lastBlockSyncedHeight", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore]
         public int? LastBlockSyncedHeight { get; set; }
 
         /// <summary>
         /// The hash of the last block that was synced.
         /// </summary>
-        [JsonProperty(PropertyName = "lastBlockSyncedHash", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(UInt256JsonConverter))]
+        //[JsonProperty(PropertyName = "lastBlockSyncedHash", NullValueHandling = NullValueHandling.Ignore)]
+        //[JsonConverter(typeof(UInt256JsonConverter))]
+        [JsonIgnore]
         public uint256 LastBlockSyncedHash { get; set; }
 
         /// <summary>

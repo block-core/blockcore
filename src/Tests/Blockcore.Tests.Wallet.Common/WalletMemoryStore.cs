@@ -13,6 +13,8 @@ namespace Blockcore.Features.Wallet.Tests
     {
         public Dictionary<OutPoint, TransactionData> transactions { get; set; } = new Dictionary<OutPoint, TransactionData>();
 
+        public WalletData WalletData { get; set; }
+
         public int CountForAddress(string address)
         {
             return this.transactions.Values.Where(t => t.Address == address).Count();
@@ -48,6 +50,16 @@ namespace Blockcore.Features.Wallet.Tests
         public void Add(IEnumerable<TransactionData> transactions)
         {
             transactions.ToList().ForEach(this.InsertOrUpdate);
+        }
+
+        public WalletData GetData()
+        {
+            return this.WalletData;
+        }
+
+        public void SetData(WalletData data)
+        {
+            this.WalletData = data;
         }
     }
 }

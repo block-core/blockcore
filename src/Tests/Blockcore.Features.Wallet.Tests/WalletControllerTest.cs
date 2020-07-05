@@ -855,7 +855,7 @@ namespace Blockcore.Features.Wallet.Tests
             string walletName = "myWallet";
             HdAddress address = WalletTestsHelpers.CreateAddress();
             WalletMemoryStore store = new WalletMemoryStore();
-            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1);
+            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, address: address.Address);
             store.InsertOrUpdate(transaction);
 
             var addresses = new List<HdAddress> { address };
@@ -906,13 +906,13 @@ namespace Blockcore.Features.Wallet.Tests
             HdAddress destinationAddress = WalletTestsHelpers.CreateAddress();
             WalletMemoryStore store = new WalletMemoryStore();
 
-            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(275000), 1);
+            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(275000), 1, address: changeAddress.Address);
             store.InsertOrUpdate(changeTransaction);
 
             PaymentDetails paymentDetails = WalletTestsHelpers.CreatePaymentDetails(new Money(200000), destinationAddress);
             SpendingDetails spendingDetails = WalletTestsHelpers.CreateSpendingDetails(changeTransaction, paymentDetails);
 
-            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails);
+            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails, address: address.Address);
             store.InsertOrUpdate(transaction);
 
             var addresses = new List<HdAddress> { address, changeAddress };
@@ -981,13 +981,13 @@ namespace Blockcore.Features.Wallet.Tests
             HdAddress destinationAddress = WalletTestsHelpers.CreateAddress();
             WalletMemoryStore store = new WalletMemoryStore();
 
-            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(310000), 1);
+            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(310000), 1, address: changeAddress.Address);
             store.InsertOrUpdate(changeTransaction);
 
             PaymentDetails paymentDetails = WalletTestsHelpers.CreatePaymentDetails(new Money(200000), destinationAddress);
             SpendingDetails spendingDetails = WalletTestsHelpers.CreateSpendingDetails(changeTransaction, paymentDetails);
 
-            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails);
+            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails, address: address.Address);
             store.InsertOrUpdate(transaction);
 
             var addresses = new List<HdAddress> { address, changeAddress };
@@ -1050,6 +1050,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             store.InsertOrUpdate(new TransactionData
             {
+                OutPoint = new OutPoint(new uint256(13), 1),
                 Id = new uint256(13),
                 Address = "address1",
                 Amount = new Money(50),
@@ -1071,6 +1072,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             store.InsertOrUpdate(new TransactionData
             {
+                OutPoint = new OutPoint(new uint256(14), 1),
                 Id = new uint256(14),
                 Address = "address2",
                 Amount = new Money(30),
@@ -1309,6 +1311,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var mockWalletManager = new Mock<IWalletManager>();
             mockWalletManager.Setup(w => w.GetBalances("myWallet", WalletManager.DefaultAccount)).Returns(accountsBalances);
+            mockWalletManager.Setup(w => w.GetWallet(It.IsAny<string>())).Returns(new Types.Wallet { Name = "myWallet" });
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
             IActionResult result = controller.GetBalance(new WalletBalanceRequest
@@ -1346,6 +1349,7 @@ namespace Blockcore.Features.Wallet.Tests
             var mockWalletManager = new Mock<IWalletManager>();
             mockWalletManager.Setup(w => w.GetAccounts("myWallet"))
                 .Returns(accounts);
+            mockWalletManager.Setup(w => w.GetWallet(It.IsAny<string>())).Returns(new Types.Wallet { Name = "myWallet" });
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
             IActionResult result = controller.GetBalance(new WalletBalanceRequest
@@ -1387,6 +1391,7 @@ namespace Blockcore.Features.Wallet.Tests
             var mockWalletManager = new Mock<IWalletManager>();
             mockWalletManager.Setup(m => m.GetBalances("myWallet", WalletManager.DefaultAccount))
                   .Throws(new InvalidOperationException("Issue retrieving accounts."));
+            mockWalletManager.Setup(w => w.GetWallet(It.IsAny<string>())).Returns(new Types.Wallet { Name = "myWallet" });
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
             IActionResult result = controller.GetBalance(new WalletBalanceRequest
@@ -2128,27 +2133,27 @@ namespace Blockcore.Features.Wallet.Tests
         public void GetAllAddressesWithValidModelReturnsAllAddresses()
         {
             string walletName = "myWallet";
-            WalletMemoryStore store = new WalletMemoryStore();
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
 
             // Receive address with a transaction
             HdAddress usedReceiveAddress = WalletTestsHelpers.CreateAddress();
             TransactionData receiveTransaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, address: usedReceiveAddress.Address);
-            store.InsertOrUpdate(receiveTransaction);
+            wallet.walletStore.InsertOrUpdate(receiveTransaction);
 
             // Receive address without a transaction
             HdAddress unusedReceiveAddress = WalletTestsHelpers.CreateAddress();
 
             // Change address with a transaction
             HdAddress usedChangeAddress = WalletTestsHelpers.CreateAddress(true);
-            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, address: usedChangeAddress.Address);
-            store.InsertOrUpdate(changeTransaction);
+            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(500000), 1, address: usedChangeAddress.Address);
+            wallet.walletStore.InsertOrUpdate(changeTransaction);
 
             // Change address without a transaction
             HdAddress unusedChangeAddress = WalletTestsHelpers.CreateAddress(true);
 
             var receiveAddresses = new List<HdAddress> { usedReceiveAddress, unusedReceiveAddress };
             var changeAddresses = new List<HdAddress> { usedChangeAddress, unusedChangeAddress };
-            Types.Wallet wallet = WalletTestsHelpers.CreateWallet(walletName);
+
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 Accounts = new List<HdAccount> { new HdAccount

@@ -194,6 +194,37 @@ namespace Blockcore.Utilities
         }
 
         /// <summary>
+        /// Creates a copy of legacy wallets in to v2 wallets.
+        /// </summary>
+        /// <param name="oldFileExtension">The old file extension.</param>
+        /// <param name="newFileExtension">The new file extension.</param>
+        /// <returns>A list of objects of type <see cref="T"/> whose persisted files have the specified extension. </returns>
+        public IEnumerable<T> CloneLegacyWallet(string oldFileExtension, string newFileExtension)
+        {
+            Guard.NotEmpty(oldFileExtension, nameof(oldFileExtension));
+            Guard.NotEmpty(newFileExtension, nameof(newFileExtension));
+
+            // Get the paths of files with the extension
+            IEnumerable<string> filesPaths = this.GetFilesPaths(oldFileExtension);
+
+            var files = new List<T>();
+            foreach (string filePath in filesPaths)
+            {
+                string fileName = Path.GetFileName(filePath);
+                string newFileName = fileName.Replace(oldFileExtension, newFileExtension);
+
+                if (!this.Exists(newFileName))
+                {
+                    // Load the file into the object of type T.
+                    T loadedFile = this.LoadByFileName(fileName);
+                    this.SaveToFile(loadedFile, newFileName);
+                }
+            }
+
+            return files;
+        }
+
+        /// <summary>
         /// Loads all the objects that have file with the specified extension.
         /// </summary>
         /// <param name="fileExtension">The file extension.</param>

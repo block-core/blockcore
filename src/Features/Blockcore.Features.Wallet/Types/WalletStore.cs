@@ -23,6 +23,8 @@ namespace Blockcore.Features.Wallet.Types
 
         IEnumerable<TransactionData> GetForAddress(string address);
 
+        IEnumerable<TransactionData> GetUnspentForAddress(string address);
+
         int CountForAddress(string address);
 
         TransactionData GetForOutput(OutPoint outPoint);
@@ -134,6 +136,12 @@ namespace Blockcore.Features.Wallet.Types
         public IEnumerable<TransactionData> GetForAddress(string address)
         {
             var trxs = this.trxCol.Find(Query.EQ("Address", new BsonValue(address)));
+            return trxs;
+        }
+
+        public IEnumerable<TransactionData> GetUnspentForAddress(string address)
+        {
+            var trxs = this.trxCol.Find(Query.And(Query.EQ("Address", new BsonValue(address)), Query.EQ("SpendingDetails", BsonValue.Null)));
             return trxs;
         }
 

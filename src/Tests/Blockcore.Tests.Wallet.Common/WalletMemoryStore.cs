@@ -61,5 +61,10 @@ namespace Blockcore.Features.Wallet.Tests
         {
             this.WalletData = data;
         }
+
+        public IEnumerable<TransactionData> GetUnspentForAddress(string address)
+        {
+            return this.transactions.Values.Where(t => t.Address == address && t.SpendingDetails == null).ToList();
+        }
     }
 }

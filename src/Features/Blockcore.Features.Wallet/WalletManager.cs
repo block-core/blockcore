@@ -271,7 +271,7 @@ namespace Blockcore.Features.Wallet
         {
             this.asyncLoop?.Dispose();
             this.SaveWallets();
-            foreach (IDisposable disposable in this.Wallets.OfType<IDisposable>())
+            foreach (IDisposable disposable in this.Wallets.Select(s => s.walletStore).OfType<IDisposable>())
                 disposable?.Dispose();
         }
 
@@ -1564,8 +1564,10 @@ namespace Blockcore.Features.Wallet
                 IsExtPubKeyWallet = true,
                 CreationTime = creationTime ?? this.dateTimeProvider.GetTimeOffset(),
                 Network = this.network,
-                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = this.coinType } },
+                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = this.coinType, LastBlockSyncedHeight = 0, LastBlockSyncedHash = this.network.GenesisHash } },
             };
+
+            walletFile.walletStore = new WalletStore(this.network, this.dataFolder, walletFile);
 
             // Create a folder if none exists and persist the file.
             this.SaveWallet(walletFile);

@@ -1011,6 +1011,7 @@ namespace Blockcore.Features.Wallet.Types
         public IEnumerable<TransactionData> UnspentTransactions(IWalletStore walletStore)
         {
             return walletStore.GetForAddress(this.Address).Where(t => !t.IsSpent());
+            //return walletStore.GetUnspentForAddress(this.Address);
         }
 
         /// <summary>

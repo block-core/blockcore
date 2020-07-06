@@ -52,7 +52,7 @@
         <h1 class="h2"><strong>Wallets</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             @if (this.WalletManager.GetWalletsNames().Count() > 1) {
-                <Dropdown TItem="string" OnSelected="@OnSelected" >
+                <Dropdown TItem="string" OnSelected="@OnSelected">
                     <InitialTip>Select Wallet</InitialTip>
                     <ChildContent>
                         @foreach (var walletName in this.WalletManager.GetWalletsNames()) {

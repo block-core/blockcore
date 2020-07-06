@@ -45,7 +45,7 @@ namespace Blockcore.IntegrationTests.Wallet
         {
             string walletsFolderPath = node.FullNode.DataFolder.WalletPath;
             string dbWalletsFolderPath = node.FullNode.DataFolder.WalletFolderPath;
-            string filename = "wallet-with-funds.wallet.json";
+            string filename = "wallet-with-funds.wallet-v2.json";
             string dbfilename = $"wallet-with-funds.txdb.litedb";
             this.walletFilePath = Path.Combine(walletsFolderPath, filename);
             File.Copy(Path.Combine("Wallet", "Data", filename), this.walletFilePath, true);

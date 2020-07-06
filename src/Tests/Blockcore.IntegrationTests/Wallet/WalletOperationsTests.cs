@@ -169,7 +169,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             // Check a wallet file has been created.
             string walletFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet.json");
+            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
@@ -220,7 +220,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             // Check a wallet file has been created.
             string walletFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet.json");
+            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
@@ -275,7 +275,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             // Check a wallet file has been created.
             string walletFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet.json");
+            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
@@ -326,7 +326,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             // Check a wallet file has been created.
             string walletFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet.json");
+            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
@@ -374,7 +374,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             // Check a wallet file has been created.
             string walletFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet.json");
+            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
@@ -460,10 +460,10 @@ namespace Blockcore.IntegrationTests.Wallet
             mnemonic2.Should().NotBe(mnemonic);
 
             // Check a wallet files have been created.
-            string walletWithPassphrasePath = Path.Combine(walletsFolderPath, $"{walletWithPassphraseName}.wallet.json");
+            string walletWithPassphrasePath = Path.Combine(walletsFolderPath, $"{walletWithPassphraseName}.wallet-v2.json");
             File.Exists(walletWithPassphrasePath).Should().BeTrue();
 
-            string walletWithoutPassphrasePath = Path.Combine(walletsFolderPath, $"{walletWithoutPassphraseName}.wallet.json");
+            string walletWithoutPassphrasePath = Path.Combine(walletsFolderPath, $"{walletWithoutPassphraseName}.wallet-v2.json");
             File.Exists(walletWithoutPassphrasePath).Should().BeTrue();
 
             // Check the wallet.
@@ -509,10 +509,10 @@ namespace Blockcore.IntegrationTests.Wallet
             // Assert.
 
             // Check only one wallet has been created.
-            string firstWalletPath = Path.Combine(walletsFolderPath, $"{firstWalletName}.wallet.json");
+            string firstWalletPath = Path.Combine(walletsFolderPath, $"{firstWalletName}.wallet-v2.json");
             File.Exists(firstWalletPath).Should().BeTrue();
 
-            string secondWalletPath = Path.Combine(walletsFolderPath, $"{secondWalletName}.wallet.json");
+            string secondWalletPath = Path.Combine(walletsFolderPath, $"{secondWalletName}.wallet-v2.json");
             File.Exists(secondWalletPath).Should().BeFalse();
 
             // Check the error message.
@@ -552,7 +552,7 @@ namespace Blockcore.IntegrationTests.Wallet
             // Assert.
 
             // Check only one wallet has been created.
-            string firstWalletPath = Path.Combine(walletsFolderPath, $"{walletName}.wallet.json");
+            string firstWalletPath = Path.Combine(walletsFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(firstWalletPath).Should().BeTrue();
 
             // Check the error message.
@@ -598,11 +598,11 @@ namespace Blockcore.IntegrationTests.Wallet
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
             string walletsFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string importWalletPath = Path.Combine("Wallet", "Data", "test.wallet.json");
+            string importWalletPath = Path.Combine("Wallet", "Data", "test.wallet-v2.json");
 
             Features.Wallet.Types.Wallet importedWallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(importWalletPath));
             importedWallet.Name = walletName;
-            File.WriteAllText(Path.Combine(walletsFolderPath, $"{walletName}.wallet.json"), JsonConvert.SerializeObject(importedWallet, Formatting.Indented));
+            File.WriteAllText(Path.Combine(walletsFolderPath, $"{walletName}.wallet-v2.json"), JsonConvert.SerializeObject(importedWallet, Formatting.Indented));
 
             // Act.
             var response = await $"http://localhost:{this.fixture.Node.ApiPort}/api".AppendPathSegment("wallet/load").PostJsonAsync(new WalletLoadRequest
@@ -630,11 +630,11 @@ namespace Blockcore.IntegrationTests.Wallet
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
             string walletsFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string importWalletPath = Path.Combine("Wallet", "Data", "test.wallet.json");
+            string importWalletPath = Path.Combine("Wallet", "Data", "test.wallet-v2.json");
 
             Features.Wallet.Types.Wallet importedWallet = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(File.ReadAllText(importWalletPath));
             importedWallet.Name = walletName;
-            File.WriteAllText(Path.Combine(walletsFolderPath, $"{walletName}.wallet.json"), JsonConvert.SerializeObject(importedWallet, Formatting.Indented));
+            File.WriteAllText(Path.Combine(walletsFolderPath, $"{walletName}.wallet-v2.json"), JsonConvert.SerializeObject(importedWallet, Formatting.Indented));
 
             // Act.
             Func<Task> act = async () => await $"http://localhost:{this.fixture.Node.ApiPort}/api".AppendPathSegment("wallet/load").PostJsonAsync(new WalletLoadRequest
@@ -771,7 +771,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             // Check a wallet file has been created.
             string walletFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet.json");
+            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
@@ -816,7 +816,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             // Check a wallet file has been created.
             string walletFolderPath = this.fixture.Node.FullNode.DataFolder.WalletPath;
-            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet.json");
+            string walletPath = Path.Combine(walletFolderPath, $"{walletName}.wallet-v2.json");
             File.Exists(walletPath).Should().BeTrue();
 
             // Check the wallet.
@@ -871,10 +871,10 @@ namespace Blockcore.IntegrationTests.Wallet
             // Assert.
 
             // Check only one wallet has been created.
-            string firstWalletPath = Path.Combine(walletsFolderPath, $"{firstWalletName}.wallet.json");
+            string firstWalletPath = Path.Combine(walletsFolderPath, $"{firstWalletName}.wallet-v2.json");
             File.Exists(firstWalletPath).Should().BeTrue();
 
-            string secondWalletPath = Path.Combine(walletsFolderPath, $"{secondWalletName}.wallet.json");
+            string secondWalletPath = Path.Combine(walletsFolderPath, $"{secondWalletName}.wallet-v2.json");
             File.Exists(secondWalletPath).Should().BeFalse();
 
             // Check the error message.

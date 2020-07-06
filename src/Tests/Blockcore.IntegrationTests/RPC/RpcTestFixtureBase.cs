@@ -38,7 +38,7 @@ namespace Blockcore.IntegrationTests.RPC
 
         /// <summary>
         /// Disposes of the test fixtures resources.
-        /// Note: do not call this dispose in the class itself xunit will handle it. 
+        /// Note: do not call this dispose in the class itself xunit will handle it.
         /// </summary>
         public virtual void Dispose()
         {
@@ -54,9 +54,9 @@ namespace Blockcore.IntegrationTests.RPC
         {
             Directory.CreateDirectory(path);
 
-            string testWalletPath = Path.Combine(path, "test.wallet.json");
+            string testWalletPath = Path.Combine(path, "test.wallet-v2.json");
             if (!File.Exists(testWalletPath))
-                File.Copy("Data/test.wallet.json", testWalletPath);
+                File.Copy("Data/test.wallet-v2.json", testWalletPath);
         }
     }
 }

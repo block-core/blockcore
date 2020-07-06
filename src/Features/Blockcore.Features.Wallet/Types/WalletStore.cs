@@ -54,8 +54,9 @@ namespace Blockcore.Features.Wallet.Types
     {
         private LiteDatabase db;
         private readonly Network network;
-        private LiteCollection<WalletData> dataCol;
-        private LiteCollection<TransactionData> trxCol;
+        private ILiteCollection<WalletData> dataCol;
+        private ILiteCollection<TransactionData> trxCol;
+        private string dbPath;
 
         public WalletData WalletData { get; private set; }
 
@@ -63,7 +64,7 @@ namespace Blockcore.Features.Wallet.Types
 
         public WalletStore(Network network, DataFolder dataFolder, Wallet wallet)
         {
-            string dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.txdb.litedb");
+            this.dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.txdb.litedb");
 
             if (!Directory.Exists(dataFolder.WalletFolderPath))
             {
@@ -71,8 +72,7 @@ namespace Blockcore.Features.Wallet.Types
             }
 
             BsonMapper mapper = this.Create();
-            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
-            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
+            this.db = new LiteDatabase(new ConnectionString() { Filename = this.dbPath }, mapper: mapper);
 
             this.trxCol = this.db.GetCollection<TransactionData>("transactions");
             this.dataCol = this.db.GetCollection<WalletData>("data");

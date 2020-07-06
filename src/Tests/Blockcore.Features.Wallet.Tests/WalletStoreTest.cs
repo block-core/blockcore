@@ -30,9 +30,9 @@ namespace Blockcore.Features.Wallet.Tests
             store.InsertOrUpdate(trx);
             var trxRes = store.GetForOutput(utxo);
             var docTrx = store.Mapper.ToDocument(trx);
-            var jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx, false, true);
+            var jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx);
             var docTrxRes = store.Mapper.ToDocument(trxRes);
-            var jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes, false, true);
+            var jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes);
             jsonStringTrx.Should().Be(jsonStringTrxRes);
 
             trx.BlockHash = null;
@@ -43,9 +43,9 @@ namespace Blockcore.Features.Wallet.Tests
             store.InsertOrUpdate(trx);
             trxRes = store.GetForOutput(utxo);
             docTrx = store.Mapper.ToDocument(trx);
-            jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx, false, true);
+            jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx);
             docTrxRes = store.Mapper.ToDocument(trxRes);
-            jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes, false, true);
+            jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes);
             jsonStringTrx.Should().Be(jsonStringTrxRes);
         }
 

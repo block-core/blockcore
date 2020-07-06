@@ -20,8 +20,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
         public AddressIndexerOutpointsRepositoryTests()
         {
-            FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? FileMode.Exclusive : FileMode.Shared;
-            var db = new LiteDatabase(new ConnectionString() { Filename = this.RandomString(20) + ".litedb", Mode = fileMode });
+            var db = new LiteDatabase(new ConnectionString() { Filename = this.RandomString(20) + ".litedb", Upgrade = true });
 
             this.repository = new AddressIndexerOutpointsRepository(db, new ExtendedLoggerFactory(), this.maxItems);
         }

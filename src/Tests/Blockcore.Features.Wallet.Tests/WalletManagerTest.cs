@@ -66,10 +66,6 @@ namespace Blockcore.Features.Wallet.Tests
 
             // assert it has saved it to disk and has been created correctly.
             var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet-v2.json"));
-            expectedWallet.walletStore = new WalletStore(this.Network, dataFolder, expectedWallet);
-            expectedWallet.BlockLocator = expectedWallet.walletStore.GetData().BlockLocator;
-            expectedWallet.AccountsRoot.Single().LastBlockSyncedHash = expectedWallet.walletStore.GetData().WalletTip.Hash;
-            expectedWallet.AccountsRoot.Single().LastBlockSyncedHeight = expectedWallet.walletStore.GetData().WalletTip.Height;
 
             Types.Wallet actualWallet = walletManager.Wallets.ElementAt(0);
 
@@ -87,12 +83,8 @@ namespace Blockcore.Features.Wallet.Tests
             for (int i = 0; i < expectedWallet.AccountsRoot.Count; i++)
             {
                 Assert.Equal(KnownCoinTypes.Stratis, expectedWallet.AccountsRoot.ElementAt(i).CoinType);
-                Assert.Equal(1, expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
-                Assert.Equal(block.GetHash(), expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
 
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).CoinType, actualWallet.AccountsRoot.ElementAt(i).CoinType);
-                Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash, actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
-                Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight, actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
 
                 AccountRoot accountRoot = actualWallet.AccountsRoot.ElementAt(i);
                 Assert.Equal(1, accountRoot.Accounts.Count);
@@ -120,7 +112,6 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/1/{k}", actualAddress.HdPath);
-                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
 
                     Assert.Equal(20, actualAccount.ExternalAddresses.Count);
@@ -134,21 +125,9 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/0/{l}", actualAddress.HdPath);
-                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
                 }
             }
-
-            Assert.Equal(2, expectedWallet.BlockLocator.Count);
-            Assert.Equal(2, actualWallet.BlockLocator.Count);
-
-            uint256 expectedBlockHash = block.GetHash();
-            Assert.Equal(expectedBlockHash, expectedWallet.BlockLocator.ElementAt(0));
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(0), actualWallet.BlockLocator.ElementAt(0));
-
-            expectedBlockHash = chain.Genesis.HashBlock;
-            Assert.Equal(expectedBlockHash, expectedWallet.BlockLocator.ElementAt(1));
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(1), actualWallet.BlockLocator.ElementAt(1));
 
             Assert.Equal(actualWallet.EncryptedSeed, mnemonic.DeriveExtKey(password).PrivateKey.GetEncryptedBitcoinSecret(password, KnownNetworks.StratisMain).ToWif());
             Assert.Equal(expectedWallet.EncryptedSeed, mnemonic.DeriveExtKey(password).PrivateKey.GetEncryptedBitcoinSecret(password, KnownNetworks.StratisMain).ToWif());
@@ -180,15 +159,10 @@ namespace Blockcore.Features.Wallet.Tests
 
             // create the wallet
             Mnemonic mnemonic = walletManager.CreateWallet(password, "mywallet", passphrase);
+            Types.Wallet actualWallet = walletManager.Wallets.ElementAt(0);
 
             // assert it has saved it to disk and has been created correctly.
             var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet-v2.json"));
-            expectedWallet.walletStore = new WalletStore(this.Network, dataFolder, expectedWallet);
-            expectedWallet.BlockLocator = expectedWallet.walletStore.GetData().BlockLocator;
-            expectedWallet.AccountsRoot.Single().LastBlockSyncedHash = expectedWallet.walletStore.GetData().WalletTip.Hash;
-            expectedWallet.AccountsRoot.Single().LastBlockSyncedHeight = expectedWallet.walletStore.GetData().WalletTip.Height;
-
-            Types.Wallet actualWallet = walletManager.Wallets.ElementAt(0);
 
             Assert.Equal("mywallet", expectedWallet.Name);
             Assert.Equal(KnownNetworks.StratisMain, expectedWallet.Network);
@@ -204,12 +178,8 @@ namespace Blockcore.Features.Wallet.Tests
             for (int i = 0; i < expectedWallet.AccountsRoot.Count; i++)
             {
                 Assert.Equal(KnownCoinTypes.Stratis, expectedWallet.AccountsRoot.ElementAt(i).CoinType);
-                Assert.Equal(1, expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
-                Assert.Equal(block.GetHash(), expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
 
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).CoinType, actualWallet.AccountsRoot.ElementAt(i).CoinType);
-                Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash, actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
-                Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight, actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
 
                 AccountRoot accountRoot = actualWallet.AccountsRoot.ElementAt(i);
                 Assert.Equal(1, accountRoot.Accounts.Count);
@@ -237,7 +207,6 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/1/{k}", actualAddress.HdPath);
-                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
 
                     Assert.Equal(20, actualAccount.ExternalAddresses.Count);
@@ -251,21 +220,9 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey.ScriptPubKey, actualAddress.Pubkey);
                         Assert.Equal($"m/44'/105'/{j}'/0/{l}", actualAddress.HdPath);
-                        Assert.Empty(actualWallet.walletStore.GetForAddress(actualAddress.Address));
                     }
                 }
             }
-
-            Assert.Equal(2, expectedWallet.BlockLocator.Count);
-            Assert.Equal(2, actualWallet.BlockLocator.Count);
-
-            uint256 expectedBlockHash = block.GetHash();
-            Assert.Equal(expectedBlockHash, expectedWallet.BlockLocator.ElementAt(0));
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(0), actualWallet.BlockLocator.ElementAt(0));
-
-            expectedBlockHash = chain.Genesis.HashBlock;
-            Assert.Equal(expectedBlockHash, expectedWallet.BlockLocator.ElementAt(1));
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(1), actualWallet.BlockLocator.ElementAt(1));
 
             Assert.Equal(actualWallet.EncryptedSeed, mnemonic.DeriveExtKey(passphrase).PrivateKey.GetEncryptedBitcoinSecret(password, KnownNetworks.StratisMain).ToWif());
             Assert.Equal(expectedWallet.EncryptedSeed, mnemonic.DeriveExtKey(passphrase).PrivateKey.GetEncryptedBitcoinSecret(password, KnownNetworks.StratisMain).ToWif());
@@ -442,8 +399,6 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
 
                     Assert.Equal(20, recoveredAccount.ExternalAddresses.Count);
@@ -456,16 +411,10 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
                 }
             }
 
-            Assert.Equal(2, expectedWallet.BlockLocator.Count);
-            Assert.Equal(2, recoveredWallet.BlockLocator.Count);
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(0), recoveredWallet.BlockLocator.ElementAt(0));
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(1), recoveredWallet.BlockLocator.ElementAt(1));
             Assert.Equal(expectedWallet.EncryptedSeed, recoveredWallet.EncryptedSeed);
         }
 
@@ -533,8 +482,6 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
 
                     Assert.Equal(20, recoveredAccount.ExternalAddresses.Count);
@@ -547,16 +494,10 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.Address, recoveredAddress.Address);
                         Assert.Equal(expectedAddress.Pubkey, recoveredAddress.Pubkey);
                         Assert.Equal(expectedAddress.HdPath, recoveredAddress.HdPath);
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(expectedAddress.Address));
-                        Assert.Empty(expectedWallet.walletStore.GetForAddress(recoveredAddress.Address));
                     }
                 }
             }
 
-            Assert.Equal(2, expectedWallet.BlockLocator.Count);
-            Assert.Equal(2, recoveredWallet.BlockLocator.Count);
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(0), recoveredWallet.BlockLocator.ElementAt(0));
-            Assert.Equal(expectedWallet.BlockLocator.ElementAt(1), recoveredWallet.BlockLocator.ElementAt(1));
             Assert.Equal(expectedWallet.EncryptedSeed, recoveredWallet.EncryptedSeed);
         }
 
@@ -3235,6 +3176,8 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(20, hdAccount.ExternalAddresses.Count);
             Assert.Equal(20, hdAccount.InternalAddresses.Count);
 
+            walletManager.Stop();
+
             // Restart with walletaddressbuffer set
             walletManager = this.CreateWalletManager(dataFolder, this.Network, "-walletaddressbuffer=30");
             walletManager.Start();
@@ -3387,6 +3330,8 @@ namespace Blockcore.Features.Wallet.Tests
             // create the wallet
             Mnemonic mnemonic = walletManager.CreateWallet(password, walletName, passphrase);
             Types.Wallet wallet = walletManager.Wallets.ElementAt(0);
+
+            walletManager.Stop();
 
             File.Delete(dataFolder.WalletPath + $"/{walletName}.wallet-v2.json");
 

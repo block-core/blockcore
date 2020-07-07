@@ -46,10 +46,7 @@ namespace Blockcore.Features.Wallet
         private const int WalletCreationAccountsCount = 1;
 
         /// <summary>File extension for wallet files.</summary>
-        private const string OldWalletFileExtension = "wallet.json";
-
-        /// <summary>File extension for wallet files.</summary>
-        private const string WalletFileExtension = "wallet-v2.json";
+        private const string WalletFileExtension = "wallet.json";
 
         /// <summary>Timer for saving wallet files to the file system.</summary>
         private const int WalletSavetimeIntervalInMinutes = 5;
@@ -214,7 +211,7 @@ namespace Blockcore.Features.Wallet
 
         public void Start()
         {
-            this.fileStorage.CloneLegacyWallet(OldWalletFileExtension, WalletFileExtension);
+            this.fileStorage.CloneLegacyWallet(WalletFileExtension);
 
             // Find wallets and load them in memory.
             IEnumerable<Types.Wallet> wallets = this.fileStorage.LoadByFileExtension(WalletFileExtension);

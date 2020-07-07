@@ -61,19 +61,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\test.wallet-v2.json">
+    <None Update="Data\test.wallet.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\invalid.cookie">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Wallet\Data\test.wallet-v2.json">
+    <None Update="Wallet\Data\test.wallet.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Wallet\Data\wallet-with-funds.txdb.litedb">
+    <None Update="Wallet\Data\wallet-with-funds.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Wallet\Data\wallet-with-funds.wallet-v2.json">
+    <None Update="Wallet\Data\wallet-with-funds.wallet.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="xunit.runner.json">

@@ -66,7 +66,7 @@ namespace Blockcore.Features.Wallet.Tests
             Mnemonic mnemonic = walletManager.CreateWallet(password, "mywallet", passphrase);
 
             // assert it has saved it to disk and has been created correctly.
-            var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet-v2.json"));
+            var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet.json"));
 
             Types.Wallet actualWallet = walletManager.Wallets.ElementAt(0);
 
@@ -163,7 +163,7 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet actualWallet = walletManager.Wallets.ElementAt(0);
 
             // assert it has saved it to disk and has been created correctly.
-            var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet-v2.json"));
+            var expectedWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(dataFolder.WalletPath + "/mywallet.wallet.json"));
 
             Assert.Equal("mywallet", expectedWallet.Name);
             Assert.Equal(KnownNetworks.StratisMain, expectedWallet.Network);
@@ -306,7 +306,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
 
-            File.WriteAllText(Path.Combine(dataFolder.WalletPath, "testWallet.wallet-v2.json"), JsonConvert.SerializeObject(wallet, Formatting.Indented, new ByteArrayConverter()));
+            File.WriteAllText(Path.Combine(dataFolder.WalletPath, "testWallet.wallet.json"), JsonConvert.SerializeObject(wallet, Formatting.Indented, new ByteArrayConverter()));
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, KnownNetworks.StratisMain, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                                                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
@@ -347,7 +347,7 @@ namespace Blockcore.Features.Wallet.Tests
             ChainIndexer chainIndexer = WalletTestsHelpers.PrepareChainWithBlock();
             // Prepare an existing wallet through this manager and delete the file from disk. Return the created wallet object and mnemonic.
             (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, passphrase, walletName, chainIndexer);
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet-v2.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             // create a fresh manager.
             var walletManager = new WalletManager(this.LoggerFactory.Object, KnownNetworks.StratisMain, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
@@ -356,7 +356,7 @@ namespace Blockcore.Features.Wallet.Tests
             // Try to recover it.
             Types.Wallet recoveredWallet = walletManager.RecoverWallet(password, walletName, deletedWallet.mnemonic.ToString(), DateTime.Now.AddDays(1), passphrase);
 
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             Types.Wallet expectedWallet = deletedWallet.wallet;
 
@@ -430,7 +430,7 @@ namespace Blockcore.Features.Wallet.Tests
             ChainIndexer chainIndexer = WalletTestsHelpers.PrepareChainWithBlock();
             // prepare an existing wallet through this manager and delete the file from disk. Return the created wallet object and mnemonic.
             (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, password, walletName, chainIndexer);
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet-v2.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             // create a fresh manager.
             var walletManager = new WalletManager(this.LoggerFactory.Object, KnownNetworks.StratisMain, chainIndexer, new WalletSettings(NodeSettings.Default(this.Network)),
@@ -439,7 +439,7 @@ namespace Blockcore.Features.Wallet.Tests
             // try to recover it.
             Types.Wallet recoveredWallet = walletManager.RecoverWallet(password, walletName, deletedWallet.mnemonic.ToString(), DateTime.Now.AddDays(1), password);
 
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             Types.Wallet expectedWallet = deletedWallet.wallet;
 
@@ -553,7 +553,7 @@ namespace Blockcore.Features.Wallet.Tests
             HdAccount result = walletManager.GetUnusedAccount("testWallet", "password");
 
             Assert.Equal("unused", result.Name);
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet-v2.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet.json")));
         }
 
         [Fact]
@@ -574,7 +574,7 @@ namespace Blockcore.Features.Wallet.Tests
             int addressBuffer = new WalletSettings(NodeSettings.Default(this.Network)).UnusedAddressesBuffer;
             Assert.Equal(addressBuffer, result.ExternalAddresses.Count);
             Assert.Equal(addressBuffer, result.InternalAddresses.Count);
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet.json")));
         }
 
         [Fact]
@@ -591,7 +591,7 @@ namespace Blockcore.Features.Wallet.Tests
             HdAccount result = walletManager.GetUnusedAccount(wallet, "password");
 
             Assert.Equal("unused", result.Name);
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet-v2.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet.json")));
         }
 
         [Fact]
@@ -608,7 +608,7 @@ namespace Blockcore.Features.Wallet.Tests
             HdAccount result = walletManager.GetUnusedAccount(wallet, "password");
 
             Assert.Equal("account 0", result.Name);
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet.json")));
         }
 
         [Fact]
@@ -837,7 +837,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(pubKey.ScriptPubKey, result.Pubkey);
             Assert.Equal(address.ScriptPubKey, result.ScriptPubKey);
             Assert.Empty(wallet.walletStore.GetForAddress(result.Address));
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/myWallet.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/myWallet.wallet.json")));
         }
 
         [Fact]
@@ -2643,22 +2643,22 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(wallet);
             walletManager.Wallets.Add(wallet2);
 
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
             walletManager.SaveWallets();
 
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
-            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
+            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.Equal(wallet.Name, resultWallet.Name);
             Assert.Equal(wallet.EncryptedSeed, resultWallet.EncryptedSeed);
             Assert.Equal(wallet.ChainCode, resultWallet.ChainCode);
             Assert.Equal(wallet.Network, resultWallet.Network);
             Assert.Equal(wallet.AccountsRoot.Count, resultWallet.AccountsRoot.Count);
 
-            var resultWallet2 = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            var resultWallet2 = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
             Assert.Equal(wallet2.Name, resultWallet2.Name);
             Assert.Equal(wallet2.EncryptedSeed, resultWallet2.EncryptedSeed);
             Assert.Equal(wallet2.ChainCode, resultWallet2.ChainCode);
@@ -2679,15 +2679,15 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(wallet);
             walletManager.Wallets.Add(wallet2);
 
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
             walletManager.SaveWallet(wallet);
 
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
-            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
+            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.Equal(wallet.Name, resultWallet.Name);
             Assert.Equal(wallet.EncryptedSeed, resultWallet.EncryptedSeed);
             Assert.Equal(wallet.ChainCode, resultWallet.ChainCode);
@@ -2703,7 +2703,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             string result = walletManager.GetWalletFileExtension();
 
-            Assert.Equal("wallet-v2.json", result);
+            Assert.Equal("wallet.json", result);
         }
 
         [Fact]
@@ -2807,22 +2807,22 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(wallet);
             walletManager.Wallets.Add(wallet2);
 
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
-            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
             walletManager.Stop();
 
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
-            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
+            Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
 
-            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet-v2.json")));
+            var resultWallet = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet1.wallet.json")));
             Assert.Equal(wallet.Name, resultWallet.Name);
             Assert.Equal(wallet.EncryptedSeed, resultWallet.EncryptedSeed);
             Assert.Equal(wallet.ChainCode, resultWallet.ChainCode);
             Assert.Equal(wallet.Network, resultWallet.Network);
             Assert.Equal(wallet.AccountsRoot.Count, resultWallet.AccountsRoot.Count);
 
-            var resultWallet2 = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet-v2.json")));
+            var resultWallet2 = JsonConvert.DeserializeObject<Types.Wallet>(File.ReadAllText(Path.Combine(dataFolder.WalletPath + $"/wallet2.wallet.json")));
             Assert.Equal(wallet2.Name, resultWallet2.Name);
             Assert.Equal(wallet2.EncryptedSeed, resultWallet2.EncryptedSeed);
             Assert.Equal(wallet2.ChainCode, resultWallet2.ChainCode);
@@ -3334,7 +3334,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletManager.Stop();
 
-            File.Delete(dataFolder.WalletPath + $"/{walletName}.wallet-v2.json");
+            File.Delete(dataFolder.WalletPath + $"/{walletName}.wallet.json");
 
             return (mnemonic, wallet);
         }

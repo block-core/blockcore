@@ -54,9 +54,9 @@ namespace Blockcore.IntegrationTests.RPC
         {
             Directory.CreateDirectory(path);
 
-            string testWalletPath = Path.Combine(path, "test.wallet-v2.json");
+            string testWalletPath = Path.Combine(path, "test.wallet.json");
             if (!File.Exists(testWalletPath))
-                File.Copy("Data/test.wallet-v2.json", testWalletPath);
+                File.Copy("Data/test.wallet.json", testWalletPath);
         }
     }
 }

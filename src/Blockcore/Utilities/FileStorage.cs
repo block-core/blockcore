@@ -196,28 +196,33 @@ namespace Blockcore.Utilities
         /// <summary>
         /// Creates a copy of legacy wallets in to v2 wallets.
         /// </summary>
-        /// <param name="oldFileExtension">The old file extension.</param>
-        /// <param name="newFileExtension">The new file extension.</param>
+        /// <param name="fileExtension">The extension.</param>
         /// <returns>A list of objects of type <see cref="T"/> whose persisted files have the specified extension. </returns>
-        public IEnumerable<T> CloneLegacyWallet(string oldFileExtension, string newFileExtension)
+        public IEnumerable<T> CloneLegacyWallet(string fileExtension)
         {
-            Guard.NotEmpty(oldFileExtension, nameof(oldFileExtension));
-            Guard.NotEmpty(newFileExtension, nameof(newFileExtension));
+            Guard.NotEmpty(fileExtension, nameof(fileExtension));
 
             // Get the paths of files with the extension
-            IEnumerable<string> filesPaths = this.GetFilesPaths(oldFileExtension);
+            IEnumerable<string> filesPaths = this.GetFilesPaths(fileExtension);
 
             var files = new List<T>();
             foreach (string filePath in filesPaths)
             {
-                string fileName = Path.GetFileName(filePath);
-                string newFileName = fileName.Replace(oldFileExtension, newFileExtension);
-
-                if (!this.Exists(newFileName))
+                if (File.ReadAllText(filePath).Contains("blockLocator"))
                 {
-                    // Load the file into the object of type T.
-                    T loadedFile = this.LoadByFileName(fileName);
-                    this.SaveToFile(loadedFile, newFileName);
+                    // This is an old legacy wallet, back it up and migrate.
+
+                    string fileName = Path.GetFileName(filePath);
+                    string newFileName = fileName.Replace(fileExtension, $"{fileExtension}.backup");
+
+                    if (!this.Exists(newFileName))
+                    {
+                        File.Copy(filePath, newFileName);
+
+                        // Upgrade the wallet
+                        T loadedFile = this.LoadByFileName(fileName);
+                        this.SaveToFile(loadedFile, newFileName);
+                    }
                 }
             }
 

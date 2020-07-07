@@ -25,7 +25,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletStore(Network network, DataFolder dataFolder, Types.Wallet wallet)
         {
-            this.dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.txdb.litedb");
+            this.dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.db");
 
             if (!Directory.Exists(dataFolder.WalletFolderPath))
             {

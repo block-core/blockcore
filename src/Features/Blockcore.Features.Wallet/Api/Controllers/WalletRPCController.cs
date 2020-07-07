@@ -9,6 +9,7 @@ using Blockcore.Features.BlockStore;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;

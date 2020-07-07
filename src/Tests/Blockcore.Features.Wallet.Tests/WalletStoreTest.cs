@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Consensus.ValidationResults;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;

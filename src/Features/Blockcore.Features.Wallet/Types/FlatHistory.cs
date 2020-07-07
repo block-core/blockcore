@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Features.Wallet.Database;
 
 namespace Blockcore.Features.Wallet.Types
 {

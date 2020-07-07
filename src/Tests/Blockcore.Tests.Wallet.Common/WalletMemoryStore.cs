@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Moq;

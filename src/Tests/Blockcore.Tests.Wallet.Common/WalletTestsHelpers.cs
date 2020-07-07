@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Policy;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;

@@ -1,55 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
-using Blockcore.Utilities.JsonConverters;
 using LiteDB;
-using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using Newtonsoft.Json;
 
-namespace Blockcore.Features.Wallet.Types
+namespace Blockcore.Features.Wallet.Database
 {
-    public interface IWalletStore
-    {
-        void InsertOrUpdate(TransactionData item);
-
-        IEnumerable<TransactionData> GetForAddress(string address);
-
-        IEnumerable<TransactionData> GetUnspentForAddress(string address);
-
-        int CountForAddress(string address);
-
-        TransactionData GetForOutput(OutPoint outPoint);
-
-        bool Remove(OutPoint outPoint);
-
-        WalletData GetData();
-
-        void SetData(WalletData data);
-    }
-
-    public class WalletData
-    {
-        [BsonId]
-        public string Key { get; set; }
-
-        public string EncryptedSeed { get; set; }
-
-        public string WalletName { get; set; }
-
-        public HashHeightPair WalletTip { get; set; }
-
-        public ICollection<uint256> BlockLocator { get; set; }
-    }
-
     public class WalletStore : IWalletStore, IDisposable
     {
         private LiteDatabase db;
@@ -62,7 +23,7 @@ namespace Blockcore.Features.Wallet.Types
 
         public BsonMapper Mapper => this.db.Mapper;
 
-        public WalletStore(Network network, DataFolder dataFolder, Wallet wallet)
+        public WalletStore(Network network, DataFolder dataFolder, Types.Wallet wallet)
         {
             this.dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.txdb.litedb");
 

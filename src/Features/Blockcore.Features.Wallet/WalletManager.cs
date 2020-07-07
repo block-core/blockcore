@@ -10,6 +10,7 @@ using Blockcore.Configuration;
 using Blockcore.Connection.Broadcasting;
 using Blockcore.EventBus;
 using Blockcore.Features.BlockStore.Models;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;

@@ -5,6 +5,7 @@ using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Tests;

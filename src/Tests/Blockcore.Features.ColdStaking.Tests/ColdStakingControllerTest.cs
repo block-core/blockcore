@@ -20,6 +20,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;

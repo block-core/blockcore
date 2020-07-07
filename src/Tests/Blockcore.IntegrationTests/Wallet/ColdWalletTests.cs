@@ -13,6 +13,7 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;

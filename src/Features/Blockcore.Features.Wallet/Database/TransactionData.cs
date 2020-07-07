@@ -1,10 +1,11 @@
 using System;
+using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities.JsonConverters;
 using LiteDB;
 using NBitcoin;
 using Newtonsoft.Json;
 
-namespace Blockcore.Features.Wallet.Types
+namespace Blockcore.Features.Wallet.Database
 {
     /// <summary>
     /// An object containing transaction data.

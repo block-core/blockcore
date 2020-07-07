@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using NBitcoin;

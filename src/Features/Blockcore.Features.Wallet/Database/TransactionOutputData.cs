@@ -10,7 +10,7 @@ namespace Blockcore.Features.Wallet.Database
     /// <summary>
     /// An object containing transaction data.
     /// </summary>
-    public class TransactionData
+    public class TransactionOutputData
     {
         /// <summary>
         /// Transaction id.

@@ -856,7 +856,7 @@ namespace Blockcore.Features.Wallet.Tests
             string walletName = "myWallet";
             HdAddress address = WalletTestsHelpers.CreateAddress();
             WalletMemoryStore store = new WalletMemoryStore();
-            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, address: address.Address);
+            TransactionOutputData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, address: address.Address);
             store.InsertOrUpdate(transaction);
 
             var addresses = new List<HdAddress> { address };
@@ -907,13 +907,13 @@ namespace Blockcore.Features.Wallet.Tests
             HdAddress destinationAddress = WalletTestsHelpers.CreateAddress();
             WalletMemoryStore store = new WalletMemoryStore();
 
-            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(275000), 1, address: changeAddress.Address);
+            TransactionOutputData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(275000), 1, address: changeAddress.Address);
             store.InsertOrUpdate(changeTransaction);
 
             PaymentDetails paymentDetails = WalletTestsHelpers.CreatePaymentDetails(new Money(200000), destinationAddress);
             SpendingDetails spendingDetails = WalletTestsHelpers.CreateSpendingDetails(changeTransaction, paymentDetails);
 
-            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails, address: address.Address);
+            TransactionOutputData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails, address: address.Address);
             store.InsertOrUpdate(transaction);
 
             var addresses = new List<HdAddress> { address, changeAddress };
@@ -982,13 +982,13 @@ namespace Blockcore.Features.Wallet.Tests
             HdAddress destinationAddress = WalletTestsHelpers.CreateAddress();
             WalletMemoryStore store = new WalletMemoryStore();
 
-            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(310000), 1, address: changeAddress.Address);
+            TransactionOutputData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(310000), 1, address: changeAddress.Address);
             store.InsertOrUpdate(changeTransaction);
 
             PaymentDetails paymentDetails = WalletTestsHelpers.CreatePaymentDetails(new Money(200000), destinationAddress);
             SpendingDetails spendingDetails = WalletTestsHelpers.CreateSpendingDetails(changeTransaction, paymentDetails);
 
-            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails, address: address.Address);
+            TransactionOutputData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails, address: address.Address);
             store.InsertOrUpdate(transaction);
 
             var addresses = new List<HdAddress> { address, changeAddress };
@@ -1049,7 +1049,7 @@ namespace Blockcore.Features.Wallet.Tests
                 }
             };
 
-            store.InsertOrUpdate(new TransactionData
+            store.InsertOrUpdate(new TransactionOutputData
             {
                 OutPoint = new OutPoint(new uint256(13), 1),
                 Id = new uint256(13),
@@ -1071,7 +1071,7 @@ namespace Blockcore.Features.Wallet.Tests
                 }
             });
 
-            store.InsertOrUpdate(new TransactionData
+            store.InsertOrUpdate(new TransactionOutputData
             {
                 OutPoint = new OutPoint(new uint256(14), 1),
                 Id = new uint256(14),
@@ -1179,26 +1179,26 @@ namespace Blockcore.Features.Wallet.Tests
             destinationAddress2.Address = "destinationAddress2";
 
             // create transaction on change address
-            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(275000), 1);
+            TransactionOutputData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(275000), 1);
             changeTransaction.Address = changeAddress.Address;
             store.InsertOrUpdate(changeTransaction);
 
             // create transaction with spending details
             PaymentDetails paymentDetails = WalletTestsHelpers.CreatePaymentDetails(new Money(200000), destinationAddress);
             SpendingDetails spendingDetails = WalletTestsHelpers.CreateSpendingDetails(changeTransaction, paymentDetails);
-            TransactionData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails);
+            TransactionOutputData transaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, spendingDetails);
             transaction.Address = address.Address;
             store.InsertOrUpdate(transaction);
 
             // create transaction on change address
-            TransactionData changeTransaction2 = WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(200000), 2);
+            TransactionOutputData changeTransaction2 = WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(200000), 2);
             changeTransaction2.Address = changeAddress2.Address;
             store.InsertOrUpdate(changeTransaction2);
 
             // create transaction with spending details on change address
             PaymentDetails paymentDetails2 = WalletTestsHelpers.CreatePaymentDetails(new Money(50000), destinationAddress2);
             SpendingDetails spendingDetails2 = WalletTestsHelpers.CreateSpendingDetails(changeTransaction2, paymentDetails2);
-            TransactionData transaction2 = WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(275000), 2, spendingDetails2);
+            TransactionOutputData transaction2 = WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(275000), 2, spendingDetails2);
             transaction2.Address = changeAddress.Address;
             store.InsertOrUpdate(transaction2);
 
@@ -2138,7 +2138,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             // Receive address with a transaction
             HdAddress usedReceiveAddress = WalletTestsHelpers.CreateAddress();
-            TransactionData receiveTransaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, address: usedReceiveAddress.Address);
+            TransactionOutputData receiveTransaction = WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(500000), 1, address: usedReceiveAddress.Address);
             wallet.walletStore.InsertOrUpdate(receiveTransaction);
 
             // Receive address without a transaction
@@ -2146,7 +2146,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             // Change address with a transaction
             HdAddress usedChangeAddress = WalletTestsHelpers.CreateAddress(true);
-            TransactionData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(500000), 1, address: usedChangeAddress.Address);
+            TransactionOutputData changeTransaction = WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(500000), 1, address: usedChangeAddress.Address);
             wallet.walletStore.InsertOrUpdate(changeTransaction);
 
             // Change address without a transaction

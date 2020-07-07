@@ -48,14 +48,14 @@ namespace Blockcore.Features.Wallet.Tests
             };
         }
 
-        public static TransactionData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null)
+        public static TransactionOutputData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null)
         {
             if (creationTime == null)
             {
                 creationTime = new DateTimeOffset(new DateTime(2017, 6, 23, 1, 2, 3));
             }
 
-            return new TransactionData
+            return new TransactionOutputData
             {
                 Amount = amount,
                 Id = id,

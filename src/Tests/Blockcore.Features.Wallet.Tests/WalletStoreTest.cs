@@ -115,9 +115,9 @@ namespace Blockcore.Features.Wallet.Tests
             store2.Dispose();
         }
 
-        private TransactionData Create(OutPoint outPoint, string address)
+        private TransactionOutputData Create(OutPoint outPoint, string address)
         {
-            return new TransactionData
+            return new TransactionOutputData
             {
                 OutPoint = outPoint,
                 Address = address,

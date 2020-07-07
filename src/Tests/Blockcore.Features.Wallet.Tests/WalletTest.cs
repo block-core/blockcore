@@ -27,8 +27,8 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.walletStore = new WalletMemoryStore();
             AccountRoot stratisAccountRoot = CreateAccountRootWithHdAccountHavingAddresses("StratisAccount", KnownCoinTypes.Stratis);
 
-            TransactionData transaction1 = CreateTransaction(new uint256(1), new Money(15000), 1);
-            TransactionData transaction2 = CreateTransaction(new uint256(2), new Money(91209), 1);
+            TransactionOutputData transaction1 = CreateTransaction(new uint256(1), new Money(15000), 1);
+            TransactionOutputData transaction2 = CreateTransaction(new uint256(2), new Money(91209), 1);
 
             transaction1.OutPoint = new OutPoint(new uint256(1), 1);
             transaction1.Address = stratisAccountRoot.Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address;
@@ -39,7 +39,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             wallet.AccountsRoot.Add(stratisAccountRoot);
 
-            List<TransactionData> result = wallet.GetAllTransactions().ToList();
+            List<TransactionOutputData> result = wallet.GetAllTransactions().ToList();
 
             Assert.Equal(2, result.Count);
             Assert.Equal(transaction1, result[1]);
@@ -52,7 +52,7 @@ namespace Blockcore.Features.Wallet.Tests
             var wallet = new Types.Wallet();
             wallet.walletStore = new WalletMemoryStore();
 
-            List<TransactionData> result = wallet.GetAllTransactions().ToList();
+            List<TransactionOutputData> result = wallet.GetAllTransactions().ToList();
 
             Assert.Empty(result);
         }

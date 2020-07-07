@@ -35,7 +35,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
         public Transaction CreateColdStakingSetupTransaction(Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, PubKey destinationColdPubKey, PubKey destinationHotPubKey, HdAddress changeAddress, Money amount, Money fee)
         {
-            TransactionData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
+            TransactionOutputData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
             var coin = new Coin(spendingTransaction.Id, (uint)spendingTransaction.Index, spendingTransaction.Amount, spendingTransaction.ScriptPubKey);
 
             Key privateKey = Key.Parse(wallet.EncryptedSeed, password, wallet.Network);
@@ -62,7 +62,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
         public Transaction CreateColdStakingWithdrawalTransaction(Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, PubKey destinationPubKey, Script changeScript, Money amount, Money fee)
         {
-            TransactionData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
+            TransactionOutputData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
             var coin = new Coin(spendingTransaction.Id, (uint)spendingTransaction.Index, spendingTransaction.Amount, spendingTransaction.ScriptPubKey);
 
             Key privateKey = Key.Parse(wallet.EncryptedSeed, password, wallet.Network);
@@ -155,7 +155,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             // Generate a spendable transaction
             (ChainIndexer chain, uint256 blockhash, Block block) chainInfo = WalletTestsHelpers.CreateChainAndCreateFirstBlockWithPaymentToAddress(wallet.Network, spendingAddress);
-            TransactionData spendingTransaction = WalletTestsHelpers.CreateTransactionDataFromFirstBlock(chainInfo);
+            TransactionOutputData spendingTransaction = WalletTestsHelpers.CreateTransactionDataFromFirstBlock(chainInfo);
             spendingTransaction.Address = spendingAddress.Address;
             wallet.walletStore.InsertOrUpdate(spendingTransaction);
 
@@ -221,21 +221,21 @@ namespace Blockcore.Features.ColdStaking.Tests
             Assert.Equal(transaction.Outputs[1].ScriptPubKey, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.ElementAt(0).DestinationScriptPubKey);
 
             Assert.Equal(1, wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).Count());
-            TransactionData changeAddressResult = wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).ElementAt(0);
+            TransactionOutputData changeAddressResult = wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).ElementAt(0);
             Assert.Equal(transaction.GetHash(), changeAddressResult.Id);
             Assert.Equal(transaction.Outputs[0].Value, changeAddressResult.Amount);
             Assert.Equal(transaction.Outputs[0].ScriptPubKey, changeAddressResult.ScriptPubKey);
 
             // Verify that the transaction has been recorded in the cold wallet.
             Assert.Equal(1, coldWallet.walletStore.GetForAddress(coldWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).Count());
-            TransactionData destinationColdAddressResult = coldWallet.walletStore.GetForAddress(coldWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(0);
+            TransactionOutputData destinationColdAddressResult = coldWallet.walletStore.GetForAddress(coldWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(0);
             Assert.Equal(transaction.GetHash(), destinationColdAddressResult.Id);
             Assert.Equal(transaction.Outputs[1].Value, destinationColdAddressResult.Amount);
             Assert.Equal(transaction.Outputs[1].ScriptPubKey, destinationColdAddressResult.ScriptPubKey);
 
             // Verify that the transaction has been recorded in the hot wallet.
             Assert.Equal(1, hotWallet.walletStore.GetForAddress(hotWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).Count());
-            TransactionData destinationHotAddressResult = hotWallet.walletStore.GetForAddress(hotWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(0);
+            TransactionOutputData destinationHotAddressResult = hotWallet.walletStore.GetForAddress(hotWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(0);
             Assert.Equal(transaction.GetHash(), destinationHotAddressResult.Id);
             Assert.Equal(transaction.Outputs[1].Value, destinationHotAddressResult.Amount);
             Assert.Equal(transaction.Outputs[1].ScriptPubKey, destinationHotAddressResult.ScriptPubKey);
@@ -290,21 +290,21 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             // Verify that the transaction has been recorded in the withdrawal wallet.
             Assert.Equal(1, withdrawalWallet.walletStore.GetForAddress(withdrawalWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).Count());
-            TransactionData withdrawalAddressResult = withdrawalWallet.walletStore.GetForAddress(withdrawalWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(0);
+            TransactionOutputData withdrawalAddressResult = withdrawalWallet.walletStore.GetForAddress(withdrawalWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(0);
             Assert.Equal(withdrawalTransaction.GetHash(), withdrawalAddressResult.Id);
             Assert.Equal(withdrawalTransaction.Outputs[1].Value, withdrawalAddressResult.Amount);
             Assert.Equal(withdrawalTransaction.Outputs[1].ScriptPubKey, withdrawalAddressResult.ScriptPubKey);
 
             // Verify that the transaction has been recorded in the cold wallet.
             Assert.Equal(2, coldWallet.walletStore.GetForAddress(coldWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).Count());
-            TransactionData coldAddressResult = coldWallet.walletStore.GetForAddress(coldWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(1);
+            TransactionOutputData coldAddressResult = coldWallet.walletStore.GetForAddress(coldWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(1);
             Assert.Equal(withdrawalTransaction.GetHash(), coldAddressResult.Id);
             Assert.Equal(withdrawalTransaction.Outputs[0].Value, coldAddressResult.Amount);
             Assert.Equal(withdrawalTransaction.Outputs[0].ScriptPubKey, coldAddressResult.ScriptPubKey);
 
             // Verify that the transaction has been recorded in the hot wallet.
             Assert.Equal(2, hotWallet.walletStore.GetForAddress(hotWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).Count());
-            TransactionData hotAddressResult = hotWallet.walletStore.GetForAddress(hotWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(1);
+            TransactionOutputData hotAddressResult = hotWallet.walletStore.GetForAddress(hotWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).ElementAt(1);
             Assert.Equal(withdrawalTransaction.GetHash(), hotAddressResult.Id);
             Assert.Equal(withdrawalTransaction.Outputs[0].Value, hotAddressResult.Amount);
             Assert.Equal(withdrawalTransaction.Outputs[0].ScriptPubKey, hotAddressResult.ScriptPubKey);

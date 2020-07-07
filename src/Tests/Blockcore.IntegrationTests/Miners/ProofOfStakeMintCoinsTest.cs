@@ -21,7 +21,7 @@ namespace Blockcore.IntegrationTests.Miners
     public sealed class ProofOfStakeMintCoinsTest
     {
         private readonly HashSet<uint256> transactionsBeforeStaking = new HashSet<uint256>();
-        private readonly ConcurrentDictionary<uint256, TransactionData> transactionLookup = new ConcurrentDictionary<uint256, TransactionData>();
+        private readonly ConcurrentDictionary<uint256, TransactionOutputData> transactionLookup = new ConcurrentDictionary<uint256, TransactionOutputData>();
 
         [Fact]
         public void Staking_Wallet_Can_Mint_New_Coins()
@@ -49,7 +49,7 @@ namespace Blockcore.IntegrationTests.Miners
 
                 // Get set of transaction IDs present in wallet before staking is started.
                 this.transactionsBeforeStaking.Clear();
-                foreach (TransactionData transactionData in this.GetTransactionsSnapshot(minerA))
+                foreach (TransactionOutputData transactionData in this.GetTransactionsSnapshot(minerA))
                 {
                     this.transactionsBeforeStaking.Add(transactionData.Id);
                 }
@@ -63,9 +63,9 @@ namespace Blockcore.IntegrationTests.Miners
                 // determine whether staking occurred.
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
 
-                    foreach (TransactionData transactionData in transactions)
+                    foreach (TransactionOutputData transactionData in transactions)
                     {
                         if (!this.transactionsBeforeStaking.Contains(transactionData.Id) && (transactionData.IsCoinStake ?? false))
                         {
@@ -84,9 +84,9 @@ namespace Blockcore.IntegrationTests.Miners
 
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
 
-                    foreach (TransactionData transactionData in transactions)
+                    foreach (TransactionOutputData transactionData in transactions)
                     {
                         if (!this.transactionsBeforeStaking.Contains(transactionData.Id) && (transactionData.IsCoinStake ?? false))
                         {
@@ -102,7 +102,7 @@ namespace Blockcore.IntegrationTests.Miners
                             // Subtract coinstake inputs from balance.
                             foreach (TxIn input in coinstakeTransaction.Inputs)
                             {
-                                this.transactionLookup.TryGetValue(input.PrevOut.Hash, out TransactionData prevTransactionData);
+                                this.transactionLookup.TryGetValue(input.PrevOut.Hash, out TransactionOutputData prevTransactionData);
 
                                 if (prevTransactionData == null)
                                     continue;
@@ -127,7 +127,7 @@ namespace Blockcore.IntegrationTests.Miners
         /// Returns a snapshot of the current transactions by coin type in the first wallet.
         /// </summary>
         /// <returns>A list of TransactionData.</returns>
-        private List<TransactionData> GetTransactionsSnapshot(CoreNode node)
+        private List<TransactionOutputData> GetTransactionsSnapshot(CoreNode node)
         {
             // Enumerate to a list otherwise the enumerable can change during enumeration as new transactions are added to the wallet.
             var wal = node.FullNode.WalletManager().Wallets.First();

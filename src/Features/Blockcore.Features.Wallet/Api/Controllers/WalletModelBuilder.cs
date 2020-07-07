@@ -100,7 +100,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                         break;
                     }
 
-                    TransactionData transaction = item.Transaction;
+                    TransactionOutputData transaction = item.Transaction;
                     HdAddress address = item.Address;
 
                     // First we look for staking transaction as they require special attention.
@@ -242,7 +242,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             return model;
         }
 
-        private static TransactionItemModel FindSimilarReceivedTransactionOutput(List<TransactionItemModel> items, TransactionData transaction)
+        private static TransactionItemModel FindSimilarReceivedTransactionOutput(List<TransactionItemModel> items, TransactionOutputData transaction)
         {
             TransactionItemModel existingTransaction = items.FirstOrDefault(i => i.Id == transaction.Id &&
                                                                                  i.Type == TransactionItemType.Received &&

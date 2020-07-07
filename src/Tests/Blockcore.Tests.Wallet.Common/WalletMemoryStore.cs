@@ -12,7 +12,7 @@ namespace Blockcore.Features.Wallet.Tests
 {
     public class WalletMemoryStore : IWalletStore
     {
-        public Dictionary<OutPoint, TransactionData> transactions { get; set; } = new Dictionary<OutPoint, TransactionData>();
+        public Dictionary<OutPoint, TransactionOutputData> transactions { get; set; } = new Dictionary<OutPoint, TransactionOutputData>();
 
         public WalletData WalletData { get; set; }
 
@@ -21,17 +21,17 @@ namespace Blockcore.Features.Wallet.Tests
             return this.transactions.Values.Where(t => t.Address == address).Count();
         }
 
-        public IEnumerable<TransactionData> GetForAddress(string address)
+        public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
             return this.transactions.Values.Where(t => t.Address == address).ToList();
         }
 
-        public TransactionData GetForOutput(OutPoint outPoint)
+        public TransactionOutputData GetForOutput(OutPoint outPoint)
         {
             return this.transactions.TryGet(outPoint);
         }
 
-        public void InsertOrUpdate(TransactionData item)
+        public void InsertOrUpdate(TransactionOutputData item)
         {
             if (this.transactions.ContainsKey(item.OutPoint))
             {
@@ -48,7 +48,7 @@ namespace Blockcore.Features.Wallet.Tests
             return this.transactions.Remove(outPoint);
         }
 
-        public void Add(IEnumerable<TransactionData> transactions)
+        public void Add(IEnumerable<TransactionOutputData> transactions)
         {
             transactions.ToList().ForEach(this.InsertOrUpdate);
         }
@@ -63,7 +63,7 @@ namespace Blockcore.Features.Wallet.Tests
             this.WalletData = data;
         }
 
-        public IEnumerable<TransactionData> GetUnspentForAddress(string address)
+        public IEnumerable<TransactionOutputData> GetUnspentForAddress(string address)
         {
             return this.transactions.Values.Where(t => t.Address == address && t.SpendingDetails == null).ToList();
         }

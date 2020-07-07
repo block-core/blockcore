@@ -30,7 +30,7 @@ namespace Blockcore.Tests.Wallet.Common
             };
         }
 
-        public static SpendingDetails CreateSpendingDetails(TransactionData changeTransaction, PaymentDetails paymentDetails)
+        public static SpendingDetails CreateSpendingDetails(TransactionOutputData changeTransaction, PaymentDetails paymentDetails)
         {
             var spendingDetails = new SpendingDetails
             {
@@ -53,14 +53,14 @@ namespace Blockcore.Tests.Wallet.Common
             };
         }
 
-        public static TransactionData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null, string address = null)
+        public static TransactionOutputData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null, string address = null)
         {
             if (creationTime == null)
             {
                 creationTime = new DateTimeOffset(new DateTime(2017, 6, 23, 1, 2, 3));
             }
 
-            return new TransactionData
+            return new TransactionOutputData
             {
                 OutPoint = new OutPoint(id, blockHeight ?? 1),
                 Address = address ?? script?.ToHex(),
@@ -197,7 +197,7 @@ namespace Blockcore.Tests.Wallet.Common
 
         public static Transaction SetupValidTransaction(Features.Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, Script destinationScript, HdAddress changeAddress, Money amount, Money fee)
         {
-            TransactionData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
+            TransactionOutputData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
             spendingTransaction.Address = spendingAddress.Address;
 
             var coin = new Coin(spendingTransaction.Id, (uint)spendingTransaction.Index, spendingTransaction.Amount, spendingTransaction.ScriptPubKey);
@@ -431,8 +431,8 @@ namespace Blockcore.Tests.Wallet.Common
                     ScriptPubKey = key.ScriptPubKey,
                 };
 
-                store.Add(new List<TransactionData> {
-                        new TransactionData
+                store.Add(new List<TransactionOutputData> {
+                        new TransactionOutputData
                         {
                             Address = address.Address,
                             OutPoint = new OutPoint(new uint256(Hashes.Hash256(key.PubKey.ToBytes())), height),
@@ -468,9 +468,9 @@ namespace Blockcore.Tests.Wallet.Common
                     //}
                 };
 
-                store.Add(new List<TransactionData>
+                store.Add(new List<TransactionOutputData>
                 {
-                        new TransactionData
+                        new TransactionOutputData
                         {
                             OutPoint = new OutPoint( new uint256(Hashes.SHA256(key.PubKey.ToBytes())), height),
                             Address = address.Address,
@@ -485,11 +485,11 @@ namespace Blockcore.Tests.Wallet.Common
             return addresses;
         }
 
-        public static TransactionData CreateTransactionDataFromFirstBlock((ChainIndexer chain, uint256 blockHash, Block block) chainInfo)
+        public static TransactionOutputData CreateTransactionDataFromFirstBlock((ChainIndexer chain, uint256 blockHash, Block block) chainInfo)
         {
             Transaction transaction = chainInfo.block.Transactions[0];
 
-            var addressTransaction = new TransactionData
+            var addressTransaction = new TransactionOutputData
             {
                 OutPoint = new OutPoint(transaction, 0),
                 Address = transaction.Outputs[0].ScriptPubKey.ToHex(),
@@ -550,7 +550,7 @@ namespace Blockcore.Tests.Wallet.Common
 
                 chainIndexer.SetTip(block.Header);
 
-                var addressTransaction = new TransactionData
+                var addressTransaction = new TransactionOutputData
                 {
                     OutPoint = new OutPoint(coinbase.GetHash(), 0),
                     Address = address.Address,

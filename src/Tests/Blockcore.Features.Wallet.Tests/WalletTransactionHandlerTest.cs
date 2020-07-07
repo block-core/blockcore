@@ -691,7 +691,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var chain = new ChainIndexer(wallet.Network);
             WalletTestsHelpers.AddBlocksWithCoinbaseToChain(wallet.walletStore as WalletMemoryStore, wallet.Network, chain, address);
-            TransactionData addressTransaction = wallet.walletStore.GetForAddress(address.Address).First();
+            TransactionOutputData addressTransaction = wallet.walletStore.GetForAddress(address.Address).First();
 
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
@@ -744,7 +744,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         public (PubKey PubKey, BitcoinPubKeyAddress Address) DestinationKeys { get; set; }
 
-        public TransactionData AddressTransaction { get; set; }
+        public TransactionOutputData AddressTransaction { get; set; }
 
         public WalletTransactionHandler WalletTransactionHandler { get; set; }
 

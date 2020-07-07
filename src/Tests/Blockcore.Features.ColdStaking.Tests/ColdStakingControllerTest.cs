@@ -248,7 +248,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             transaction.Outputs.Add(new TxOut(Money.Coins(101), address.ScriptPubKey));
 
-            wallet.walletStore.InsertOrUpdate(new TransactionData()
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData()
             {
                 OutPoint = new OutPoint(transaction.GetHash(), 0),
                 Address = address.Address,
@@ -864,7 +864,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             if (script)
                 address.RedeemScript = scriptPubKey;
 
-            wallet.walletStore.InsertOrUpdate(new TransactionData()
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData()
             {
                 OutPoint = new OutPoint(transaction.GetHash(), 0),
                 Address = address.Address,
@@ -908,7 +908,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             if (script)
                 address.RedeemScript = scriptPubKey;
 
-            wallet.walletStore.InsertOrUpdate(new TransactionData()
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData()
             {
                 OutPoint = new OutPoint(transaction.GetHash(), 0),
                 Address = address.Address,

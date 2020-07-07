@@ -6,15 +6,15 @@ namespace Blockcore.Features.Wallet.Database
 {
     public interface IWalletStore
     {
-        void InsertOrUpdate(TransactionData item);
+        void InsertOrUpdate(TransactionOutputData item);
 
-        IEnumerable<TransactionData> GetForAddress(string address);
+        IEnumerable<TransactionOutputData> GetForAddress(string address);
 
-        IEnumerable<TransactionData> GetUnspentForAddress(string address);
+        IEnumerable<TransactionOutputData> GetUnspentForAddress(string address);
 
         int CountForAddress(string address);
 
-        TransactionData GetForOutput(OutPoint outPoint);
+        TransactionOutputData GetForOutput(OutPoint outPoint);
 
         bool Remove(OutPoint outPoint);
 

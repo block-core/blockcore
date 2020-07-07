@@ -16,7 +16,7 @@ namespace Blockcore.Features.Wallet.Database
         private LiteDatabase db;
         private readonly Network network;
         private ILiteCollection<WalletData> dataCol;
-        private ILiteCollection<TransactionData> trxCol;
+        private ILiteCollection<TransactionOutputData> trxCol;
         private string dbPath;
 
         public WalletData WalletData { get; private set; }
@@ -35,7 +35,7 @@ namespace Blockcore.Features.Wallet.Database
             BsonMapper mapper = this.Create();
             this.db = new LiteDatabase(new ConnectionString() { Filename = this.dbPath }, mapper: mapper);
 
-            this.trxCol = this.db.GetCollection<TransactionData>("transactions");
+            this.trxCol = this.db.GetCollection<TransactionOutputData>("transactions");
             this.dataCol = this.db.GetCollection<WalletData>("data");
 
             this.trxCol.EnsureIndex(x => x.OutPoint, true);
@@ -89,24 +89,24 @@ namespace Blockcore.Features.Wallet.Database
             return count;
         }
 
-        public void InsertOrUpdate(TransactionData item)
+        public void InsertOrUpdate(TransactionOutputData item)
         {
             this.trxCol.Upsert(item);
         }
 
-        public IEnumerable<TransactionData> GetForAddress(string address)
+        public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
             var trxs = this.trxCol.Find(Query.EQ("Address", new BsonValue(address)));
             return trxs;
         }
 
-        public IEnumerable<TransactionData> GetUnspentForAddress(string address)
+        public IEnumerable<TransactionOutputData> GetUnspentForAddress(string address)
         {
             var trxs = this.trxCol.Find(Query.And(Query.EQ("Address", new BsonValue(address)), Query.EQ("SpendingDetails", BsonValue.Null)));
             return trxs;
         }
 
-        public TransactionData GetForOutput(OutPoint outPoint)
+        public TransactionOutputData GetForOutput(OutPoint outPoint)
         {
             var trx = this.trxCol.FindById(outPoint.ToString());
             return trx;

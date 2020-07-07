@@ -106,7 +106,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             {
                 accountFilter = a => a.Name == account;
             }
-            IEnumerable<TransactionData> selectedTransactions = wallet.GetAllTransactions(accountFilter)
+            IEnumerable<TransactionOutputData> selectedTransactions = wallet.GetAllTransactions(accountFilter)
                 .Skip(skip)
                 .Take(count);
             foreach (var transactionData in selectedTransactions)

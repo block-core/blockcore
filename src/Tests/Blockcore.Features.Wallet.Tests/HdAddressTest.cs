@@ -101,14 +101,14 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = "Address"
             };
 
-            store.Add(new List<TransactionData> {
-                    new TransactionData { Id = new uint256(15), OutPoint = new OutPoint(new uint256(15),1), Address = "Address"},
-                    new TransactionData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
-                    new TransactionData { Id = new uint256(17), OutPoint = new OutPoint(new uint256(17),1), Address = "Address"},
-                    new TransactionData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
+            store.Add(new List<TransactionOutputData> {
+                    new TransactionOutputData { Id = new uint256(15), OutPoint = new OutPoint(new uint256(15),1), Address = "Address"},
+                    new TransactionOutputData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
+                    new TransactionOutputData { Id = new uint256(17), OutPoint = new OutPoint(new uint256(17),1), Address = "Address"},
+                    new TransactionOutputData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
                 });
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions(store);
+            IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
 
             Assert.Equal(2, result.Count());
             Assert.Equal(new uint256(15), result.ElementAt(0).Id);
@@ -125,12 +125,12 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = "Address"
             };
 
-            store.Add(new List<TransactionData> {
-                    new TransactionData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
-                    new TransactionData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
+            store.Add(new List<TransactionOutputData> {
+                    new TransactionOutputData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
+                    new TransactionOutputData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
                 });
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions(store);
+            IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
 
             Assert.Empty(result);
         }
@@ -145,7 +145,7 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = "Address"
             };
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions(store);
+            IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
 
             Assert.Empty(result);
         }

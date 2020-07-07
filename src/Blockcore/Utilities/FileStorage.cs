@@ -214,14 +214,15 @@ namespace Blockcore.Utilities
 
                     string fileName = Path.GetFileName(filePath);
                     string newFileName = fileName.Replace(fileExtension, $"{fileExtension}.backup");
+                    string newFilePath = Path.Combine(this.FolderPath, newFileName);
 
-                    if (!this.Exists(newFileName))
+                    if (!this.Exists(newFilePath))
                     {
-                        File.Copy(filePath, newFileName);
+                        File.Copy(filePath, newFilePath);
 
                         // Upgrade the wallet
                         T loadedFile = this.LoadByFileName(fileName);
-                        this.SaveToFile(loadedFile, newFileName);
+                        this.SaveToFile(loadedFile, fileName);
                     }
                 }
             }

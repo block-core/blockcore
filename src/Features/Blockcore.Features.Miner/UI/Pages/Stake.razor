@@ -337,37 +337,15 @@ else
 
         foreach (var walletName in this.WalletManager.GetWalletsNames())
         {
-            Money balanceConfirmed = 0;
-            Money balanceUnconfirmed = 0;
-
             var items = this.WalletManager.GetSpendableTransactionsInWalletForStaking(walletName, 1);
 
             var amountConfirmed = items.Where(s => s.Confirmations > 0).Sum(s => s.Transaction.Amount);
-            var accountBalance = Money.Satoshis(amountConfirmed);
-            balanceConfirmed = balanceConfirmed + accountBalance;
-
             var amountUnconfirmed = items.Where(s => s.Confirmations <= 0).Sum(s => s.Transaction.Amount);
-            accountBalance = Money.Satoshis(amountUnconfirmed);
-            balanceUnconfirmed = balanceUnconfirmed + accountBalance;
 
-            walletBalances.Add(walletName, (balanceConfirmed, balanceUnconfirmed));
+            walletBalances.Add(walletName, (Money.Satoshis(amountConfirmed), Money.Satoshis(amountUnconfirmed)));
         }
 
         return walletBalances;
-    }
-
-    private dynamic totalUnconfirmedBalance()
-    {
-        dynamic balance = 0;
-        foreach (var walletName in this.WalletManager.GetWalletsNames())
-        {
-            var items = this.WalletManager.GetSpendableTransactionsInWalletForStaking(walletName, 0);
-            var amountConfirmed = items.Where(s => s.Confirmations <= 0).Sum(s => s.Transaction.Amount);
-
-            var accountBalance = Money.Satoshis(amountConfirmed);
-            balance = balance + accountBalance;
-        }
-        return balance;
     }
 
     private async Task StartStaking()

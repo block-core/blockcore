@@ -334,11 +334,12 @@ else
     private Dictionary<string, (Money AmountConfirmed, Money AmountUnconfirmed)> ReadWallets()
     {
         var walletBalances = new Dictionary<string, (Money AmountConfirmed, Money AmountUnconfirmed)>();
-        Money balanceConfirmed = 0;
-        Money balanceUnconfirmed = 0;
 
         foreach (var walletName in this.WalletManager.GetWalletsNames())
         {
+            Money balanceConfirmed = 0;
+            Money balanceUnconfirmed = 0;
+
             var items = this.WalletManager.GetSpendableTransactionsInWalletForStaking(walletName, 1);
 
             var amountConfirmed = items.Where(s => s.Confirmations > 0).Sum(s => s.Transaction.Amount);

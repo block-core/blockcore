@@ -1182,6 +1182,7 @@ namespace Blockcore.Features.Wallet
                 {
                     OutPoint = outPoint,
                     Address = address.Address,
+                    AccountIndex = HdOperations.GetAccountIndex(address.HdPath),
                     Amount = amount,
                     IsCoinBase = transaction.IsCoinBase == false ? (bool?)null : true,
                     IsCoinStake = transaction.IsCoinStake == false ? (bool?)null : true,

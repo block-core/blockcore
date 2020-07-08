@@ -722,41 +722,31 @@ namespace Blockcore.Features.Wallet.Types
         }
 
         /// <summary>
-        /// Gets a collection of transactions by id.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        //public IEnumerable<TransactionData> GetTransactionsById(uint256 id)
-        //{
-        //    Guard.NotNull(id, nameof(id));
-
-        //    IEnumerable<HdAddress> addresses = this.GetCombinedAddresses();
-        //    return addresses.Where(r => r.Transactions != null).SelectMany(a => a.Transactions.Where(t => t.Id == id));
-        //}
-
-        /// <summary>
         /// Get the accounts total spendable value for both confirmed and unconfirmed UTXO.
         /// </summary>
         public (Money ConfirmedAmount, Money UnConfirmedAmount) GetBalances(IWalletStore walletStore, bool excludeColdStakeUtxo)
         {
-            List<TransactionOutputData> allTransactions = this.ExternalAddresses.SelectMany(a => walletStore.GetForAddress(a.Address))
-                .Concat(this.InternalAddresses.SelectMany(i => walletStore.GetForAddress(i.Address))).ToList();
+            long confirmed = 0;
+            long total = 0;
 
-            if (excludeColdStakeUtxo)
+            foreach (HdAddress address in this.GetCombinedAddresses())
             {
-                // If this is a normal account, we must exclude the cold coin stake data.
-                long confirmed = allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(true));
-                long total = allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(false));
+                List<TransactionOutputData> allTransactions = walletStore.GetUnspentForAddress(address.Address).ToList();
 
-                return (confirmed, total - confirmed);
+                if (excludeColdStakeUtxo)
+                {
+                    // If this is a normal account, we must exclude the cold coin stake data.
+                    confirmed += allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(true));
+                    total += allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(false));
+                }
+                else
+                {
+                    confirmed += allTransactions.Sum(t => t.GetUnspentAmount(true));
+                    total += allTransactions.Sum(t => t.GetUnspentAmount(false));
+                }
             }
-            else
-            {
-                long confirmed = allTransactions.Sum(t => t.GetUnspentAmount(true));
-                long total = allTransactions.Sum(t => t.GetUnspentAmount(false));
 
-                return (confirmed, total - confirmed);
-            }
+            return (confirmed, total - confirmed);
         }
 
         /// <summary>
@@ -836,7 +826,6 @@ namespace Blockcore.Features.Wallet.Types
                     Pubkey = pubkey.ScriptPubKey,
                     Bech32Address = witAddress.ToString(),
                     Address = address.ToString(),
-                    //   Transactions = new List<TransactionData>()
                 };
 
                 addresses.Add(newAddress);

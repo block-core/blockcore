@@ -24,8 +24,14 @@ namespace Blockcore.Features.Wallet.Database
         /// The address (hash of P2PKH) representation of the pubkey this utxo is associated to.
         /// This is only the unique way to identify the pubkey, the utxo itself can be any of the script representations
         /// </summary>
-        [JsonProperty(PropertyName = "Address")]
+        [JsonProperty(PropertyName = "address")]
         public string Address { get; set; }
+
+        /// <summary>
+        /// The HD account the address belongs to.
+        /// </summary>
+        [JsonProperty(PropertyName = "accountIndex")]
+        public int AccountIndex { get; set; }
 
         /// <summary>
         /// Transaction id.

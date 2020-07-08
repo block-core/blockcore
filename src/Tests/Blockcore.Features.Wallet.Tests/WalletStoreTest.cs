@@ -16,7 +16,7 @@ namespace Blockcore.Features.Wallet.Tests
     public class WalletStoreTest : LogsTestBase
     {
         [Fact]
-        public void WalletStore_Upsert()
+        public void WalletStore_Get_And_Set_And_Remove()
         {
             DataFolder dataFolder = CreateDataFolder(this);
 
@@ -48,10 +48,14 @@ namespace Blockcore.Features.Wallet.Tests
             docTrxRes = store.Mapper.ToDocument(trxRes);
             jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes);
             jsonStringTrx.Should().Be(jsonStringTrxRes);
+
+            store.Remove(trx.OutPoint);
+            var removed = store.GetForOutput(trx.OutPoint);
+            removed.Should().BeNull();
         }
 
         [Fact]
-        public void WalletStore_FindBy_Address()
+        public void WalletStore_GetForAddress()
         {
             DataFolder dataFolder = CreateDataFolder(this);
 
@@ -68,6 +72,10 @@ namespace Blockcore.Features.Wallet.Tests
                 {
                     var utxo = new OutPoint(new uint256((ulong)indexTrx), indexAddress);
                     var trx = Create(utxo, script);
+
+                    if (indexTrx > 2)
+                        trx.SpendingDetails = null;
+
                     store.InsertOrUpdate(trx);
                 }
             }
@@ -77,10 +85,45 @@ namespace Blockcore.Features.Wallet.Tests
 
             res.Should().HaveCount(5);
 
-            for (int indexTrx = 0; indexTrx < 5; indexTrx++)
+            foreach (var item in res)
             {
-                var utxo = new OutPoint(new uint256((ulong)indexTrx), 1);
-                res.ElementAt(indexTrx).OutPoint.Should().Be(utxo);
+                item.Address.Should().Be(findforAddress);
+            }
+        }
+
+        [Fact]
+        public void WalletStore_GetUnspentForAddress()
+        {
+            DataFolder dataFolder = CreateDataFolder(this);
+
+            WalletStore store = new WalletStore(this.Network, dataFolder, new Types.Wallet { Name = "wallet1", EncryptedSeed = "EncryptedSeed1" });
+
+            var scripts = new List<string>();
+
+            for (int indexAddress = 0; indexAddress < 3; indexAddress++)
+            {
+                var script = new Key().PubKey.GetAddress(this.Network).ScriptPubKey.ToString();
+                scripts.Add(script);
+
+                for (int indexTrx = 0; indexTrx < 5; indexTrx++)
+                {
+                    var utxo = new OutPoint(new uint256((ulong)indexTrx), indexAddress);
+                    var trx = Create(utxo, script);
+
+                    if (indexTrx > 2)
+                        trx.SpendingDetails = null;
+
+                    store.InsertOrUpdate(trx);
+                }
+            }
+
+            var findforAddress = scripts[1];
+            var res = store.GetUnspentForAddress(findforAddress);
+
+            foreach (var item in res)
+            {
+                item.Address.Should().Be(findforAddress);
+                item.SpendingDetails.Should().BeNull();
             }
         }
 

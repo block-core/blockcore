@@ -34,7 +34,7 @@ namespace Blockcore.Node
                     break;
 
                 case "RUTA":
-                    nodeSettings = new NodeSettings(networksSelector: Rutanio.Networks.Networks.Rutanio, args: args, agent: "Blockcore-" + chain);
+                    nodeSettings = new NodeSettings(networksSelector: Rutanio.Networks.Networks.Rutanio, args: args);
                     break;
 
                 case "EXOS":

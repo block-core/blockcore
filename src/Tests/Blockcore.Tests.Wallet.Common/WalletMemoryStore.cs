@@ -67,5 +67,15 @@ namespace Blockcore.Features.Wallet.Tests
         {
             return this.transactions.Values.Where(t => t.Address == address && t.SpendingDetails == null).ToList();
         }
+
+        public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
+        {
+            throw new NotImplementedException();
+        }
+
+        public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

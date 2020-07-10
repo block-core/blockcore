@@ -726,44 +726,10 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         public (Money ConfirmedAmount, Money UnConfirmedAmount) GetBalances(IWalletStore walletStore, bool excludeColdStakeUtxo)
         {
-            long confirmed = 0;
-            long total = 0;
+            var res = walletStore.GetBalanceForAccount(this.Index, excludeColdStakeUtxo);
 
-            foreach (HdAddress address in this.GetCombinedAddresses())
-            {
-                List<TransactionOutputData> allTransactions = walletStore.GetUnspentForAddress(address.Address).ToList();
-
-                if (excludeColdStakeUtxo)
-                {
-                    // If this is a normal account, we must exclude the cold coin stake data.
-                    confirmed += allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(true));
-                    total += allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(false));
-                }
-                else
-                {
-                    confirmed += allTransactions.Sum(t => t.GetUnspentAmount(true));
-                    total += allTransactions.Sum(t => t.GetUnspentAmount(false));
-                }
-            }
-
-            return (confirmed, total - confirmed);
+            return (res.AmountConfirmed, res.AmountUnconfirmed);
         }
-
-        /// <summary>
-        /// Finds the addresses in which a transaction is contained.
-        /// </summary>
-        /// <remarks>
-        /// Returns a collection because a transaction can be contained in a change address as well as in a receive address (as a spend).
-        /// </remarks>
-        /// <param name="predicate">A predicate by which to filter the transactions.</param>
-        /// <returns></returns>
-        //public IEnumerable<HdAddress> FindAddressesForTransaction(Func<TransactionData, bool> predicate)
-        //{
-        //    Guard.NotNull(predicate, nameof(predicate));
-
-        //    IEnumerable<HdAddress> addresses = this.GetCombinedAddresses();
-        //    return addresses.Where(t => t.Transactions != null).Where(a => a.Transactions.Any(predicate));
-        //}
 
         /// <summary>
         /// Return both the external and internal (change) address from an account.

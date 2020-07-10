@@ -758,22 +758,28 @@ namespace Blockcore.Features.Wallet
                 foreach (HdAccount account in accounts)
                 {
                     // Calculates the amount of spendable coins.
-                    UnspentOutputReference[] spendableBalance = account.GetSpendableTransactions(wallet.walletStore, this.ChainIndexer.Tip.Height, this.network.Consensus.CoinbaseMaturity).ToArray();
-                    Money spendableAmount = Money.Zero;
-                    foreach (UnspentOutputReference bal in spendableBalance)
-                    {
-                        spendableAmount += bal.Transaction.Amount;
-                    }
+                    //UnspentOutputReference[] spendableBalance = account.GetSpendableTransactions(wallet.walletStore, this.ChainIndexer.Tip.Height, this.network.Consensus.CoinbaseMaturity).ToArray();
+                    //Money spendableAmount = Money.Zero;
+                    //foreach (UnspentOutputReference bal in spendableBalance)
+                    //{
+                    //    spendableAmount += bal.Transaction.Amount;
+                    //}
+
+                    var spendable = ((WalletStore)wallet.walletStore).GetSpendableBalanceForAccount(account.Index, this.ChainIndexer.Tip.Height, this.network.Consensus.CoinbaseMaturity, 0, account.IsNormalAccount());
+
+                    //if (spendable != spendableAmount)
+                    //{
+                    //}
 
                     // Get the total balances.
-                    (Money amountConfirmed, Money amountUnconfirmed) result = account.GetBalances(wallet.walletStore, account.IsNormalAccount());
+                    WalletBalanceResult result = wallet.walletStore.GetBalanceForAccount(account.Index, account.IsNormalAccount());
 
                     balances.Add(new AccountBalance
                     {
                         Account = account,
-                        AmountConfirmed = result.amountConfirmed,
-                        AmountUnconfirmed = result.amountUnconfirmed,
-                        SpendableAmount = spendableAmount
+                        AmountConfirmed = result.AmountConfirmed,
+                        AmountUnconfirmed = result.AmountUnconfirmed,
+                        SpendableAmount = spendable
                     });
                 }
             }

@@ -128,6 +128,68 @@ namespace Blockcore.Features.Wallet.Tests
         }
 
         [Fact]
+        public void WalletStore_GetBalanceForAddress_And_GetBalanceForAccount()
+        {
+            DataFolder dataFolder = CreateDataFolder(this);
+
+            WalletStore store = new WalletStore(this.Network, dataFolder, new Types.Wallet { Name = "wallet1", EncryptedSeed = "EncryptedSeed1" });
+
+            // Create some temp data
+            for (int indexAddress = 0; indexAddress < 3; indexAddress++)
+            {
+                var scriptInsert = new Key().PubKey.GetAddress(this.Network).ScriptPubKey.ToString();
+                for (int indexTrx = 0; indexTrx < 5; indexTrx++)
+                    store.InsertOrUpdate(Create(new OutPoint(new uint256((ulong)indexTrx), indexAddress), scriptInsert));
+            }
+
+            string script = null;
+            for (int accountIndex = 0; accountIndex < 2; accountIndex++)
+            {
+                script = new Key().PubKey.GetAddress(this.Network).ScriptPubKey.ToString();
+
+                TransactionOutputData trx = null;
+
+                // spent
+                trx = Create(new OutPoint(new uint256(21), accountIndex * 10), script, 2); store.InsertOrUpdate(trx);
+                trx = Create(new OutPoint(new uint256(22), accountIndex * 10), script, 2); trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+                trx = Create(new OutPoint(new uint256(23), accountIndex * 10), script, 2); trx.IsColdCoinStake = true; trx.BlockHeight = null; store.InsertOrUpdate(trx);
+
+                // cold stake unspent spend
+                trx = Create(new OutPoint(new uint256(3), accountIndex * 10), script, 2); trx.IsColdCoinStake = true; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+                trx = Create(new OutPoint(new uint256(4), accountIndex * 10), script, 2); trx.IsColdCoinStake = true; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+
+                // cold stake unspent spend unconfirmed
+                trx = Create(new OutPoint(new uint256(5), accountIndex * 10), script, 2); trx.IsColdCoinStake = true; trx.BlockHeight = null; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+                trx = Create(new OutPoint(new uint256(6), accountIndex * 10), script, 2); trx.IsColdCoinStake = true; trx.BlockHeight = null; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+
+                // unspent spend
+                trx = Create(new OutPoint(new uint256(7), accountIndex * 10), script, 2); trx.IsColdCoinStake = false; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+                trx = Create(new OutPoint(new uint256(8), accountIndex * 10), script, 2); trx.IsColdCoinStake = null; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+
+                // unspent spend unconfirmed
+                trx = Create(new OutPoint(new uint256(9), accountIndex * 10), script, 2); trx.IsColdCoinStake = false; trx.BlockHeight = null; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+                trx = Create(new OutPoint(new uint256(10), accountIndex * 10), script, 2); trx.IsColdCoinStake = null; trx.BlockHeight = null; trx.SpendingDetails = null; store.InsertOrUpdate(trx);
+            }
+
+            var findforAddress = script;
+            var res = store.GetBalanceForAddress(findforAddress, false);
+            res.AmountConfirmed.Should().Be(20);
+            res.AmountUnconfirmed.Should().Be(20);
+
+            res = store.GetBalanceForAddress(findforAddress, true);
+            res.AmountConfirmed.Should().Be(10);
+            res.AmountUnconfirmed.Should().Be(10);
+
+            res = store.GetBalanceForAccount(2, false);
+            res.AmountConfirmed.Should().Be(40);
+            res.AmountUnconfirmed.Should().Be(40);
+
+            res = store.GetBalanceForAccount(2, true);
+            res.AmountConfirmed.Should().Be(20);
+            res.AmountUnconfirmed.Should().Be(20);
+        }
+
+        [Fact]
         public void WalletStore_GetData()
         {
             DataFolder dataFolder = CreateDataFolder(this);
@@ -158,7 +220,7 @@ namespace Blockcore.Features.Wallet.Tests
             store2.Dispose();
         }
 
-        private TransactionOutputData Create(OutPoint outPoint, string address)
+        private TransactionOutputData Create(OutPoint outPoint, string address, int accountIndex = 0)
         {
             return new TransactionOutputData
             {
@@ -168,6 +230,7 @@ namespace Blockcore.Features.Wallet.Tests
                 BlockHash = new uint256(50),
                 BlockHeight = 5,
                 BlockIndex = 2,
+                AccountIndex = accountIndex,
                 Hex = "TransactionHex",
                 ScriptPubKey = new Script(OpcodeType.OP_0, OpcodeType.OP_1, OpcodeType.OP_3),
                 MerkleProof = new PartialMerkleTree(new[] { new uint256(10), new uint256(11) }, new[] { true, false }),

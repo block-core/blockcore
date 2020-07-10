@@ -5,6 +5,12 @@ using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Database
 {
+    public class WalletBalanceResult
+    {
+        public long AmountConfirmed { get; set; }
+        public long AmountUnconfirmed { get; set; }
+    }
+
     public class WalletData
     {
         [BsonId]

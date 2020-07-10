@@ -831,7 +831,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                                             .Where(i => i.Name.Equals(accountReference.AccountName))
                                             .Single();
 
-            (Money confirmedAmount, Money unconfirmedAmount) = account.GetBalances(wallet.walletStore, account.IsNormalAccount());
+            WalletBalanceResult result = wallet.walletStore.GetBalanceForAccount(account.Index, account.IsNormalAccount());
 
             var balance = Money.Coins(GetBalance(string.Empty));
             var immature = Money.Coins(balance.ToDecimal(MoneyUnit.BTC) - GetBalance(string.Empty, (int)this.FullNode.Network.Consensus.CoinbaseMaturity)); // Balance - Balance(AtHeight)
@@ -841,7 +841,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 Balance = balance,
                 WalletName = accountReference.WalletName + ".wallet.json",
                 WalletVersion = 1,
-                UnConfirmedBalance = unconfirmedAmount,
+                UnConfirmedBalance = result.AmountUnconfirmed,
                 ImmatureBalance = immature
             };
 

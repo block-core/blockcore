@@ -21,5 +21,9 @@ namespace Blockcore.Features.Wallet.Database
         WalletData GetData();
 
         void SetData(WalletData data);
+
+        WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake);
+
+        WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake);
     }
 }

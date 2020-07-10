@@ -437,7 +437,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 var model = new WalletBalanceModel();
                 Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
-                IEnumerable<AccountBalance> balances = this.walletManager.GetBalances(wallet.Name, request.AccountName);
+                IEnumerable<AccountBalance> balances = this.walletManager.GetBalances(wallet.Name, request.AccountName, calculatSpendable: true);
 
                 foreach (AccountBalance balance in balances)
                 {

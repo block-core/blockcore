@@ -221,8 +221,9 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="walletName">The wallet name.</param>
         /// <param name="accountName">The account name.</param>
+        /// <param name="calculatSpendable">Whether to calculate also the spendable balance.</param>
         /// <returns>Collection of account balances.</returns>
-        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null);
+        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null, bool calculatSpendable = false);
 
         /// <summary>
         /// Gets the balance of transactions for this specific address.

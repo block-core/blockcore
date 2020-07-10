@@ -48,7 +48,7 @@ namespace Blockcore.Features.Wallet.Broadcasters
                 try
                 {
                     Wallet.Types.Wallet wallet = this.walletManager.GetWallet(walletName);
-                    IEnumerable<AccountBalance> balances = this.walletManager.GetBalances(walletName);
+                    IEnumerable<AccountBalance> balances = this.walletManager.GetBalances(walletName, calculatSpendable: true);
                     IList<AccountBalanceModel> accountBalanceModels = new List<AccountBalanceModel>();
                     foreach (var balance in balances)
                     {

@@ -733,7 +733,7 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
-        public IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null)
+        public IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null, bool calculatSpendable = false)
         {
             var balances = new List<AccountBalance>();
 
@@ -757,19 +757,18 @@ namespace Blockcore.Features.Wallet
 
                 foreach (HdAccount account in accounts)
                 {
-                    // Calculates the amount of spendable coins.
-                    //UnspentOutputReference[] spendableBalance = account.GetSpendableTransactions(wallet.walletStore, this.ChainIndexer.Tip.Height, this.network.Consensus.CoinbaseMaturity).ToArray();
-                    //Money spendableAmount = Money.Zero;
-                    //foreach (UnspentOutputReference bal in spendableBalance)
-                    //{
-                    //    spendableAmount += bal.Transaction.Amount;
-                    //}
+                    Money spendableAmount = null;
 
-                    var spendable = ((WalletStore)wallet.walletStore).GetSpendableBalanceForAccount(account.Index, this.ChainIndexer.Tip.Height, this.network.Consensus.CoinbaseMaturity, 0, account.IsNormalAccount());
+                    if (calculatSpendable)
+                    {
+                        // Calculates the amount of spendable coins.
+                        UnspentOutputReference[] spendableBalance = account.GetSpendableTransactions(wallet.walletStore, this.ChainIndexer.Tip.Height, this.network.Consensus.CoinbaseMaturity).ToArray();
 
-                    //if (spendable != spendableAmount)
-                    //{
-                    //}
+                        foreach (UnspentOutputReference bal in spendableBalance)
+                        {
+                            spendableAmount += bal.Transaction.Amount;
+                        }
+                    }
 
                     // Get the total balances.
                     WalletBalanceResult result = wallet.walletStore.GetBalanceForAccount(account.Index, account.IsNormalAccount());
@@ -779,7 +778,7 @@ namespace Blockcore.Features.Wallet
                         Account = account,
                         AmountConfirmed = result.AmountConfirmed,
                         AmountUnconfirmed = result.AmountUnconfirmed,
-                        SpendableAmount = spendable
+                        SpendableAmount = result.AmountConfirmed
                     });
                 }
             }

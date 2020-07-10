@@ -1311,7 +1311,7 @@ namespace Blockcore.Features.Wallet.Tests
             };
 
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.GetBalances("myWallet", WalletManager.DefaultAccount)).Returns(accountsBalances);
+            mockWalletManager.Setup(w => w.GetBalances("myWallet", WalletManager.DefaultAccount, true)).Returns(accountsBalances);
             mockWalletManager.Setup(w => w.GetWallet(It.IsAny<string>())).Returns(new Types.Wallet { Name = "myWallet" });
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
@@ -1390,7 +1390,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void GetBalanceWithExceptionReturnsBadRequest()
         {
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(m => m.GetBalances("myWallet", WalletManager.DefaultAccount))
+            mockWalletManager.Setup(m => m.GetBalances("myWallet", WalletManager.DefaultAccount, false))
                   .Throws(new InvalidOperationException("Issue retrieving accounts."));
             mockWalletManager.Setup(w => w.GetWallet(It.IsAny<string>())).Returns(new Types.Wallet { Name = "myWallet" });
 

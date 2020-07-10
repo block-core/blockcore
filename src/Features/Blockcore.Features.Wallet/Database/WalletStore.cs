@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Utilities;
@@ -13,6 +14,7 @@ namespace Blockcore.Features.Wallet.Database
     public class WalletStore : IWalletStore, IDisposable
     {
         private LiteDatabase db;
+        private LiteRepository repo;
         private readonly Network network;
         private ILiteCollection<WalletData> dataCol;
         private ILiteCollection<TransactionOutputData> trxCol;
@@ -32,6 +34,7 @@ namespace Blockcore.Features.Wallet.Database
 
             BsonMapper mapper = this.Create();
             this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+            this.repo = new LiteRepository(this.db);
 
             this.trxCol = this.db.GetCollection<TransactionOutputData>("transactions");
             this.dataCol = this.db.GetCollection<WalletData>("data");
@@ -106,7 +109,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake ? "AND IsColdCoinStake != true " : string.Empty;
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
 
             var sql = "SELECT " +
                         "@key as Confirmed," +
@@ -134,7 +137,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake ? "AND IsColdCoinStake != true " : string.Empty;
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
 
             var sql = "SELECT " +
                         "@key as Confirmed," +
@@ -158,52 +161,6 @@ namespace Blockcore.Features.Wallet.Database
 
                 return walletBalanceResult;
             }
-        }
-
-        public long GetSpendableBalanceForAccount(int accountIndex, int currentChainHeight, long coinbaseMaturity, int confirmations, bool excludeColdStake)
-        {
-            string excludeColdStakeSql = excludeColdStake ? "AND IsColdCoinStake != true " : string.Empty;
-
-            var sqlAll = "SELECT SUM(*.Amount) Spendable " +
-                          "FROM transactions " +
-                          "WHERE SpendingDetails = null " +
-                         $"{excludeColdStakeSql}" +
-                         $"AND AccountIndex = {accountIndex} " +
-                          "AND (isCoinBase != true) " +
-                          "AND (isCoinStake != true) " +
-                         $"AND (({confirmations} = 0 AND BlockHeight = null) OR ({currentChainHeight} - BlockHeight  >= {confirmations}))";
-
-            var sqlCoinbase = "SELECT SUM(*.Amount) Spendable " +
-                              "FROM transactions " +
-                              "WHERE SpendingDetails = null " +
-                            $"{excludeColdStakeSql}" +
-                             $"AND AccountIndex = {accountIndex} " +
-                              "AND (isCoinBase = true) " +
-                              "AND (isCoinStake != true) " +
-                             $"AND({currentChainHeight} - BlockHeight  >= {coinbaseMaturity})";
-
-            var sqlCoinStake = "SELECT SUM(*.Amount) Spendable " +
-                            "FROM transactions " +
-                            "WHERE SpendingDetails = null " +
-                           $"{excludeColdStakeSql}" +
-                           $"AND AccountIndex = {accountIndex} " +
-                            "AND (isCoinStake = true) " +
-                            "AND (isCoinBase != true) " +
-                           $"AND({currentChainHeight} - BlockHeight  >= {coinbaseMaturity})";
-
-            long sum = 0;
-            foreach (var sql in new string[] { sqlAll, sqlCoinbase, sqlCoinStake })
-            {
-                using (var res = this.db.Execute(sql))
-                {
-                    while (res.Read())
-                    {
-                        sum += res["Spendable"].AsInt64;
-                    }
-                }
-            }
-
-            return sum;
         }
 
         public TransactionOutputData GetForOutput(OutPoint outPoint)

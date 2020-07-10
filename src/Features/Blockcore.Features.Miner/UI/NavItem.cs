@@ -16,5 +16,6 @@ namespace Blockcore.Features.Wallet.UI
         public string Navigation => "Stake";
         public string Icon => "oi-bolt";
         public bool IsVisible => this.WalletManager?.ContainsWallets ?? false;
+        public int NavOrder => 20;
     }
 }

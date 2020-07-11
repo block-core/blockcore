@@ -23,6 +23,14 @@ namespace Blockcore.Features.Wallet.Database
 
         public BsonMapper Mapper => this.db.Mapper;
 
+        public WalletStore(Network network, Types.Wallet wallet)
+        {
+            BsonMapper mapper = this.Create();
+            this.db = new LiteDatabase(new MemoryStream(), mapper: mapper);
+            this.network = network;
+            this.Init(wallet);
+        }
+
         public WalletStore(Network network, DataFolder dataFolder, Types.Wallet wallet)
         {
             var dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.db");
@@ -34,6 +42,13 @@ namespace Blockcore.Features.Wallet.Database
 
             BsonMapper mapper = this.Create();
             this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+            this.network = network;
+
+            this.Init(wallet);
+        }
+
+        private void Init(Types.Wallet wallet)
+        {
             this.repo = new LiteRepository(this.db);
 
             this.trxCol = this.db.GetCollection<TransactionOutputData>("transactions");
@@ -61,11 +76,9 @@ namespace Blockcore.Features.Wallet.Database
                     Key = "Key",
                     EncryptedSeed = wallet.EncryptedSeed,
                     WalletName = wallet.Name,
-                    WalletTip = new HashHeightPair(network.GenesisHash, 0)
+                    WalletTip = new HashHeightPair(this.network.GenesisHash, 0)
                 });
             }
-
-            this.network = network;
         }
 
         public WalletData GetData()

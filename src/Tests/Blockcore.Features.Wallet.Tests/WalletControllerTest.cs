@@ -1390,7 +1390,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void GetBalanceWithExceptionReturnsBadRequest()
         {
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(m => m.GetBalances("myWallet", WalletManager.DefaultAccount, false))
+            mockWalletManager.Setup(m => m.GetBalances("myWallet", WalletManager.DefaultAccount, It.IsAny<bool>()))
                   .Throws(new InvalidOperationException("Issue retrieving accounts."));
             mockWalletManager.Setup(w => w.GetWallet(It.IsAny<string>())).Returns(new Types.Wallet { Name = "myWallet" });
 

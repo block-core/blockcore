@@ -42,8 +42,8 @@ namespace Blockcore.Features.Wallet.Tests
             List<TransactionOutputData> result = wallet.GetAllTransactions().ToList();
 
             Assert.Equal(2, result.Count);
-            Assert.Equal(transaction1, result[1]);
-            Assert.Equal(transaction2, result[0]);
+            Assert.Contains(transaction1.OutPoint, result.Select(x => x.OutPoint));
+            Assert.Contains(transaction2.OutPoint, result.Select(x => x.OutPoint));
         }
 
         [Fact]

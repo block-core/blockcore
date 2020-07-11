@@ -21,12 +21,13 @@ namespace Blockcore.Tests.Wallet.Common
     /// </summary>
     public class WalletTestsHelpers
     {
-        public static HdAccount CreateAccount(string name)
+        public static HdAccount CreateAccount(string name, int index = 0)
         {
             return new HdAccount
             {
                 Name = name,
                 HdPath = "1/2/3/4/5",
+                Index = index
             };
         }
 
@@ -53,7 +54,7 @@ namespace Blockcore.Tests.Wallet.Common
             };
         }
 
-        public static TransactionOutputData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null, string address = null)
+        public static TransactionOutputData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null, string address = null, int accountIndex = 0)
         {
             if (creationTime == null)
             {
@@ -65,6 +66,7 @@ namespace Blockcore.Tests.Wallet.Common
                 OutPoint = new OutPoint(id, blockHeight ?? 1),
                 Address = address ?? script?.ToHex(),
                 Amount = amount,
+                AccountIndex = accountIndex,
                 Id = id,
                 CreationTime = creationTime.Value,
                 BlockHeight = blockHeight,
@@ -170,7 +172,11 @@ namespace Blockcore.Tests.Wallet.Common
                 AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = KnownNetworks.Main.Consensus.CoinType, LastBlockSyncedHash = KnownNetworks.Main.GenesisHash, LastBlockSyncedHeight = 0 } },
             };
 
-            walletFile.walletStore.SetData(new WalletData { BlockLocator = walletFile.BlockLocator, WalletName = walletFile.Name, WalletTip = new Utilities.HashHeightPair(KnownNetworks.Main.GenesisHash, 0) });
+            var data = walletFile.walletStore.GetData();
+            data.BlockLocator = walletFile.BlockLocator;
+            data.WalletName = walletFile.Name;
+            data.WalletTip = new Utilities.HashHeightPair(KnownNetworks.Main.GenesisHash, 0);
+            walletFile.walletStore.SetData(data);
 
             return (walletFile, extendedKey);
         }
@@ -600,11 +606,16 @@ namespace Blockcore.Tests.Wallet.Common
             {
                 string serializedExistingWallet = JsonConvert.SerializeObject(existingWallet, Formatting.None);
                 var wal1 = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
-                wal1.walletStore = new WalletMemoryStore();
                 wal1.BlockLocator = existingWallet.BlockLocator;
                 wal1.AccountsRoot.Single().LastBlockSyncedHash = existingWallet.AccountsRoot.Single().LastBlockSyncedHash;
                 wal1.AccountsRoot.Single().LastBlockSyncedHeight = existingWallet.AccountsRoot.Single().LastBlockSyncedHeight;
-                wal1.walletStore.SetData(new WalletData { BlockLocator = wal1.BlockLocator, WalletTip = new Utilities.HashHeightPair(wal1.AccountsRoot.Single().LastBlockSyncedHash, wal1.AccountsRoot.Single().LastBlockSyncedHeight.Value) });
+                wal1.walletStore = new WalletMemoryStore();
+                var data1 = wal1.walletStore.GetData();
+                data1.BlockLocator = existingWallet.BlockLocator;
+                data1.WalletName = existingWallet.Name;
+                data1.WalletTip = new Utilities.HashHeightPair(existingWallet.AccountsRoot.Single().LastBlockSyncedHash, existingWallet.AccountsRoot.Single().LastBlockSyncedHeight.Value);
+                wal1.walletStore.SetData(data1);
+
                 return wal1;
             }
 
@@ -617,7 +628,12 @@ namespace Blockcore.Tests.Wallet.Common
             wal.BlockLocator = newWallet.BlockLocator;
             wal.AccountsRoot.Single().LastBlockSyncedHash = newWallet.AccountsRoot.Single().LastBlockSyncedHash;
             wal.AccountsRoot.Single().LastBlockSyncedHeight = newWallet.AccountsRoot.Single().LastBlockSyncedHeight;
-            wal.walletStore.SetData(new WalletData { BlockLocator = wal.BlockLocator, WalletTip = new Utilities.HashHeightPair(wal.AccountsRoot.Single().LastBlockSyncedHash, wal.AccountsRoot.Single().LastBlockSyncedHeight.Value) });
+
+            var data = wal.walletStore.GetData();
+            data.BlockLocator = wal.BlockLocator;
+            data.WalletName = wal.Name;
+            data.WalletTip = new Utilities.HashHeightPair(wal.AccountsRoot.Single().LastBlockSyncedHash, wal.AccountsRoot.Single().LastBlockSyncedHeight.Value);
+            wal.walletStore.SetData(data);
             return wal;
         }
     }

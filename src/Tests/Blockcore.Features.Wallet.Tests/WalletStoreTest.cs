@@ -15,6 +15,10 @@ namespace Blockcore.Features.Wallet.Tests
 {
     public class WalletStoreTest : LogsTestBase
     {
+        public WalletStoreTest() : base(KnownNetworks.StratisTest)
+        {
+        }
+
         [Fact]
         public void WalletStore_Get_And_Set_And_Remove()
         {

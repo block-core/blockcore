@@ -2210,25 +2210,22 @@ namespace Blockcore.Features.Wallet.Tests
                 InternalAddresses = WalletTestsHelpers.CreateSpentTransactionsOfBlockHeights((WalletMemoryStore)wallet.walletStore, this.Network, 1, 2, 3, 4, 5).ToList()
             });
 
+            HdAccount account = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0);
+
             // reorg at block 3
+            TransactionOutputData data = null;
 
             // Trx at block 0 is not spent
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).First().Id = trxId >> trxCount++; ;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0).Address).First().SpendingDetails = null;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).First().Id = trxId >> trxCount++;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).First().SpendingDetails = null;
+            data = wallet.walletStore.GetForAddress(account.ExternalAddresses.ElementAt(0).Address).First(); data.Id = trxId >> trxCount++; data.SpendingDetails = null; wallet.walletStore.InsertOrUpdate(data);
+            data = wallet.walletStore.GetForAddress(account.InternalAddresses.ElementAt(0).Address).First(); data.Id = trxId >> trxCount++; data.SpendingDetails = null; wallet.walletStore.InsertOrUpdate(data);
 
             // Trx at block 2 is spent in block 3, after reorg it will not be spendable.
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Address).First().SpendingDetails.TransactionId = trxId >> trxCount++;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(1).Address).First().SpendingDetails.BlockHeight = 3;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(1).Address).First().SpendingDetails.TransactionId = trxId >> trxCount++;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(1).Address).First().SpendingDetails.BlockHeight = 3;
+            data = wallet.walletStore.GetForAddress(account.ExternalAddresses.ElementAt(1).Address).First(); data.SpendingDetails.TransactionId = trxId >> trxCount++; data.SpendingDetails.BlockHeight = 3; wallet.walletStore.InsertOrUpdate(data);
+            data = wallet.walletStore.GetForAddress(account.InternalAddresses.ElementAt(1).Address).First(); data.SpendingDetails.TransactionId = trxId >> trxCount++; data.SpendingDetails.BlockHeight = 3; wallet.walletStore.InsertOrUpdate(data);
 
             // Trx at block 3 is spent at block 5, after reorg it will be spendable.
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(2).Address).First().SpendingDetails.TransactionId = trxId >> trxCount++; ;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(2).Address).First().SpendingDetails.BlockHeight = 5;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(2).Address).First().SpendingDetails.TransactionId = trxId >> trxCount++; ;
-            wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(2).Address).First().SpendingDetails.BlockHeight = 5;
+            data = wallet.walletStore.GetForAddress(account.ExternalAddresses.ElementAt(2).Address).First(); data.SpendingDetails.TransactionId = trxId >> trxCount++; data.SpendingDetails.BlockHeight = 5; wallet.walletStore.InsertOrUpdate(data);
+            data = wallet.walletStore.GetForAddress(account.InternalAddresses.ElementAt(2).Address).First(); data.SpendingDetails.TransactionId = trxId >> trxCount++; data.SpendingDetails.BlockHeight = 5; wallet.walletStore.InsertOrUpdate(data);
 
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
                 CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
@@ -2240,8 +2237,6 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(chainedHeader.Height, wallet.AccountsRoot.ElementAt(0).LastBlockSyncedHeight);
             Assert.Equal(chainedHeader.HashBlock, wallet.AccountsRoot.ElementAt(0).LastBlockSyncedHash);
             Assert.Equal(chainedHeader.HashBlock, walletManager.WalletTipHash);
-
-            HdAccount account = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0);
 
             Assert.Equal(6, account.InternalAddresses.Concat(account.ExternalAddresses).SelectMany(r => wallet.walletStore.GetForAddress(r.Address)).Count());
             Assert.True(account.InternalAddresses.Concat(account.ExternalAddresses).SelectMany(r => wallet.walletStore.GetForAddress(r.Address)).All(r => r.BlockHeight <= chainedHeader.Height));
@@ -2460,26 +2455,26 @@ namespace Blockcore.Features.Wallet.Tests
 
             WalletMemoryStore store = new WalletMemoryStore();
 
-            HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
+            HdAccount account = WalletTestsHelpers.CreateAccount("account 1", 1);
             HdAddress accountAddress1 = WalletTestsHelpers.CreateAddress();
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), null, address: accountAddress1.Address));
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), 1, address: accountAddress1.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), null, accountIndex: account.Index, address: accountAddress1.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), 1, accountIndex: account.Index, address: accountAddress1.Address));
 
             HdAddress accountAddress2 = WalletTestsHelpers.CreateAddress();
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), null, address: accountAddress2.Address));
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), 2, address: accountAddress2.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), null, accountIndex: account.Index, address: accountAddress2.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), 2, accountIndex: account.Index, address: accountAddress2.Address));
 
             account.ExternalAddresses.Add(accountAddress1);
             account.InternalAddresses.Add(accountAddress2);
 
-            HdAccount account2 = WalletTestsHelpers.CreateAccount("account 2");
+            HdAccount account2 = WalletTestsHelpers.CreateAccount("account 2", 2);
             HdAddress account2Address1 = WalletTestsHelpers.CreateAddress();
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(5), new Money(74000), null, address: account2Address1.Address));
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(6), new Money(18700), 3, address: account2Address1.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(5), new Money(74000), null, accountIndex: account2.Index, address: account2Address1.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(6), new Money(18700), 3, accountIndex: account2.Index, address: account2Address1.Address));
 
             HdAddress account2Address2 = WalletTestsHelpers.CreateAddress();
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(7), new Money(65000), null, address: account2Address2.Address));
-            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(8), new Money(89300), 4, address: account2Address2.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(7), new Money(65000), null, accountIndex: account2.Index, address: account2Address2.Address));
+            store.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(8), new Money(89300), 4, accountIndex: account2.Index, address: account2Address2.Address));
 
             account2.ExternalAddresses.Add(account2Address1);
             account2.InternalAddresses.Add(account2Address2);
@@ -2896,7 +2891,6 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             wallet.walletStore = new WalletMemoryStore();
-            wallet.walletStore.SetData(new WalletData { WalletTip = new HashHeightPair(this.Network.GenesisHash, 0) });
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
 
@@ -2973,7 +2967,6 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             walletManager.Wallets.Add(wallet);
             wallet.walletStore = new WalletMemoryStore();
-            wallet.walletStore.SetData(new WalletData { WalletTip = new HashHeightPair(this.Network.GenesisHash, 0) });
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
 
@@ -3116,7 +3109,6 @@ namespace Blockcore.Features.Wallet.Tests
             // Generate a wallet with an account and a few transactions.
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             wallet.walletStore = new WalletMemoryStore();
-            wallet.walletStore.SetData(new WalletData { WalletTip = new HashHeightPair(this.Network.GenesisHash, 0) });
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
@@ -3161,7 +3153,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Single(result);
             Assert.Contains((unconfirmedTransactionId, trxUnconfirmed1.CreationTime), result);
             Assert.DoesNotContain(trxUnconfirmed1, remainingTrxs);
-            Assert.Null(trxConfirmed2.SpendingDetails);
+            Assert.Null(remainingTrxs.Single(s => s.OutPoint == trxConfirmed2.OutPoint).SpendingDetails);
         }
 
         [Fact]

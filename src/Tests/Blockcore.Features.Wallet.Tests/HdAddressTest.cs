@@ -111,8 +111,8 @@ namespace Blockcore.Features.Wallet.Tests
             IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
 
             Assert.Equal(2, result.Count());
-            Assert.Equal(new uint256(15), result.ElementAt(0).Id);
-            Assert.Equal(new uint256(17), result.ElementAt(1).Id);
+            Assert.Contains(new uint256(15), result.Select(x => x.Id));
+            Assert.Contains(new uint256(17), result.Select(x => x.Id));
         }
 
         [Fact]

@@ -847,7 +847,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         private Transaction AddSpendableColdstakingTransactionToWallet(Wallet.Types.Wallet wallet, bool script = false)
         {
             // Get first unused cold staking address.
-            this.coldStakingManager.GetOrCreateColdStakingAccount(wallet.Name, true, walletPassword);
+            HdAccount account = this.coldStakingManager.GetOrCreateColdStakingAccount(wallet.Name, true, walletPassword);
             HdAddress address = this.coldStakingManager.GetFirstUnusedColdStakingAddress(wallet.Name, true);
 
             TxDestination hotPubKey = BitcoinAddress.Create(hotWalletAddress1, wallet.Network).ScriptPubKey.GetDestination(wallet.Network);
@@ -868,6 +868,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             {
                 OutPoint = new OutPoint(transaction.GetHash(), 0),
                 Address = address.Address,
+                AccountIndex = account.Index,
                 Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
                 Id = transaction.GetHash(),

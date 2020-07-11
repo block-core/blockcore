@@ -373,7 +373,8 @@ namespace Blockcore.IntegrationTests
                 TestBase.WaitLoop(() => node.FullNode.WalletManager().WalletTipHeight >= 12, cancellationToken: cancellationToken);
 
                 // Check that every UTXO in the wallet has a Segwit scriptPubKey
-                var scriptPubKeys = node.FullNode.WalletManager().GetAccounts(node.WalletName).SelectMany(a => a.GetCombinedAddresses()).SelectMany(b => b.Transactions).Select(c => c.ScriptPubKey);
+                var walletStore = node.FullNode.WalletManager().GetWalletByName(node.WalletName).walletStore;
+                var scriptPubKeys = node.FullNode.WalletManager().GetAccounts(node.WalletName).SelectMany(a => a.GetCombinedAddresses()).SelectMany(b => walletStore.GetForAddress(b.Address)).Select(c => c.ScriptPubKey);
 
                 foreach (Script scriptPubKey in scriptPubKeys)
                     Assert.True(scriptPubKey.IsScriptType(ScriptType.P2WPKH));

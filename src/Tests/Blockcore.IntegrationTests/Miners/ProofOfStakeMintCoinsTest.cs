@@ -4,6 +4,7 @@ using System.Linq;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
@@ -20,7 +21,7 @@ namespace Blockcore.IntegrationTests.Miners
     public sealed class ProofOfStakeMintCoinsTest
     {
         private readonly HashSet<uint256> transactionsBeforeStaking = new HashSet<uint256>();
-        private readonly ConcurrentDictionary<uint256, TransactionData> transactionLookup = new ConcurrentDictionary<uint256, TransactionData>();
+        private readonly ConcurrentDictionary<uint256, TransactionOutputData> transactionLookup = new ConcurrentDictionary<uint256, TransactionOutputData>();
 
         [Fact]
         public void Staking_Wallet_Can_Mint_New_Coins()
@@ -33,18 +34,22 @@ namespace Blockcore.IntegrationTests.Miners
                 var minerA = builder.CreateStratisPosNode(network, "stake-1-minerA", configParameters: configParameters).OverrideDateTimeProvider().WithWallet().Start();
 
                 var addressUsed = TestHelper.MineBlocks(minerA, (int)network.Consensus.PremineHeight).AddressUsed;
+                var wallet = minerA.FullNode.WalletManager().Wallets.Single(w => w.Name == "mywallet");
+                var allTrx = wallet.walletStore.GetForAddress(addressUsed.Address);
 
                 // Since the pre-mine will not be immediately spendable, the transactions have to be counted directly from the address.
-                addressUsed.Transactions.Count().Should().Be((int)network.Consensus.PremineHeight);
+                allTrx.Count().Should().Be((int)network.Consensus.PremineHeight);
 
-                addressUsed.Transactions.Sum(s => s.Amount).Should().Be(network.Consensus.PremineReward + network.Consensus.ProofOfWorkReward);
+                allTrx.Sum(s => s.Amount).Should().Be(network.Consensus.PremineReward + network.Consensus.ProofOfWorkReward);
+                var balance = minerA.FullNode.WalletManager().GetAddressBalance(addressUsed.Address);
+                balance.AmountConfirmed.Should().Be(network.Consensus.PremineReward + network.Consensus.ProofOfWorkReward);
 
                 // Mine blocks to maturity
                 TestHelper.MineBlocks(minerA, (int)network.Consensus.CoinbaseMaturity + 10);
 
                 // Get set of transaction IDs present in wallet before staking is started.
                 this.transactionsBeforeStaking.Clear();
-                foreach (TransactionData transactionData in this.GetTransactionsSnapshot(minerA))
+                foreach (TransactionOutputData transactionData in this.GetTransactionsSnapshot(minerA))
                 {
                     this.transactionsBeforeStaking.Add(transactionData.Id);
                 }
@@ -58,9 +63,9 @@ namespace Blockcore.IntegrationTests.Miners
                 // determine whether staking occurred.
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
 
-                    foreach (TransactionData transactionData in transactions)
+                    foreach (TransactionOutputData transactionData in transactions)
                     {
                         if (!this.transactionsBeforeStaking.Contains(transactionData.Id) && (transactionData.IsCoinStake ?? false))
                         {
@@ -79,9 +84,9 @@ namespace Blockcore.IntegrationTests.Miners
 
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
 
-                    foreach (TransactionData transactionData in transactions)
+                    foreach (TransactionOutputData transactionData in transactions)
                     {
                         if (!this.transactionsBeforeStaking.Contains(transactionData.Id) && (transactionData.IsCoinStake ?? false))
                         {
@@ -97,7 +102,7 @@ namespace Blockcore.IntegrationTests.Miners
                             // Subtract coinstake inputs from balance.
                             foreach (TxIn input in coinstakeTransaction.Inputs)
                             {
-                                this.transactionLookup.TryGetValue(input.PrevOut.Hash, out TransactionData prevTransactionData);
+                                this.transactionLookup.TryGetValue(input.PrevOut.Hash, out TransactionOutputData prevTransactionData);
 
                                 if (prevTransactionData == null)
                                     continue;
@@ -122,10 +127,11 @@ namespace Blockcore.IntegrationTests.Miners
         /// Returns a snapshot of the current transactions by coin type in the first wallet.
         /// </summary>
         /// <returns>A list of TransactionData.</returns>
-        private List<TransactionData> GetTransactionsSnapshot(CoreNode node)
+        private List<TransactionOutputData> GetTransactionsSnapshot(CoreNode node)
         {
             // Enumerate to a list otherwise the enumerable can change during enumeration as new transactions are added to the wallet.
-            return node.FullNode.WalletManager().Wallets.First().GetAllTransactions().ToList();
+            var wal = node.FullNode.WalletManager().Wallets.First();
+            return wal.GetAllTransactions().ToList();
         }
     }
 }

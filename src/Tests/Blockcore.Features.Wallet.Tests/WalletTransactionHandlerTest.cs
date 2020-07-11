@@ -5,6 +5,7 @@ using System.Text;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
@@ -106,11 +107,11 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = spendingKeys.Address.ToString(),
                 Pubkey = spendingKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = spendingKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                //Transactions = new List<TransactionData>()
             };
 
             var chain = new ChainIndexer(wallet.Network);
-            WalletTestsHelpers.AddBlocksWithCoinbaseToChain(wallet.Network, chain, address);
+            WalletTestsHelpers.AddBlocksWithCoinbaseToChain(wallet.walletStore as WalletMemoryStore, wallet.Network, chain, address);
 
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
@@ -127,7 +128,7 @@ namespace Blockcore.Features.Wallet.Tests
                     Address = changeKeys.Address.ToString(),
                     Pubkey = changeKeys.PubKey.ScriptPubKey,
                     ScriptPubKey = changeKeys.Address.ScriptPubKey,
-                    Transactions = new List<TransactionData>()
+                    //Transactions = new List<TransactionData>()
                 }
             }
             });
@@ -194,7 +195,7 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = address.ToString(),
                 Pubkey = key.PubKey.ScriptPubKey,
                 ScriptPubKey = address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                //Transactions = new List<TransactionData>()
             };
 
             Transaction transactionResult = testContext.WalletTransactionHandler.BuildTransaction(context);
@@ -303,7 +304,6 @@ namespace Blockcore.Features.Wallet.Tests
             new Action(() => testContext.WalletTransactionHandler.BuildTransaction(context))
                 .Should().Throw<ArgumentOutOfRangeException>()
                 .And.Message.Should().Contain(" maximum size of 83");
-
         }
 
         [Fact]
@@ -325,12 +325,12 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = spendingKeys.Address.ToString(),
                 Pubkey = spendingKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = spendingKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                // Transactions = new List<TransactionData>()
             };
 
             // wallet with 4 coinbase outputs of 50 = 200 Bitcoin
             var chain = new ChainIndexer(wallet.Network);
-            WalletTestsHelpers.AddBlocksWithCoinbaseToChain(wallet.Network, chain, address, 4);
+            WalletTestsHelpers.AddBlocksWithCoinbaseToChain(wallet.walletStore as WalletMemoryStore, wallet.Network, chain, address, 4);
 
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
@@ -446,19 +446,19 @@ namespace Blockcore.Features.Wallet.Tests
             var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
 
             HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
 
             HdAddress accountAddress1 = WalletTestsHelpers.CreateAddress();
-            accountAddress1.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), 1, new SpendingDetails()));
-            accountAddress1.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), 1, new SpendingDetails()));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), 1, new SpendingDetails(), address: accountAddress1.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), 1, new SpendingDetails(), address: accountAddress1.Address));
 
             HdAddress accountAddress2 = WalletTestsHelpers.CreateAddress();
-            accountAddress2.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), 3, new SpendingDetails()));
-            accountAddress2.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), 4, new SpendingDetails()));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), 3, new SpendingDetails(), address: accountAddress2.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), 4, new SpendingDetails(), address: accountAddress2.Address));
 
             account.ExternalAddresses.Add(accountAddress1);
             account.InternalAddresses.Add(accountAddress2);
 
-            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 Accounts = new List<HdAccount> { account }
@@ -482,19 +482,19 @@ namespace Blockcore.Features.Wallet.Tests
             var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, It.IsAny<WalletFeePolicy>(), this.Network, this.standardTransactionPolicy);
 
             HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
 
             HdAddress accountAddress1 = WalletTestsHelpers.CreateAddress();
-            accountAddress1.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), null));
-            accountAddress1.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), null));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), null, address: accountAddress1.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), null, address: accountAddress1.Address));
 
             HdAddress accountAddress2 = WalletTestsHelpers.CreateAddress();
-            accountAddress2.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), null));
-            accountAddress2.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), null));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), null, address: accountAddress2.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), null, address: accountAddress2.Address));
 
             account.ExternalAddresses.Add(accountAddress1);
             account.InternalAddresses.Add(accountAddress2);
 
-            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 Accounts = new List<HdAccount> { account }
@@ -521,19 +521,19 @@ namespace Blockcore.Features.Wallet.Tests
             var walletTransactionHandler = new WalletTransactionHandler(this.LoggerFactory.Object, walletManager, walletFeePolicy.Object, this.Network, this.standardTransactionPolicy);
 
             HdAccount account = WalletTestsHelpers.CreateAccount("account 1");
+            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
 
             HdAddress accountAddress1 = WalletTestsHelpers.CreateAddress();
-            accountAddress1.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), null, null, null, new Key().ScriptPubKey));
-            accountAddress1.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), null, null, null, new Key().ScriptPubKey));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), null, null, null, new Key().ScriptPubKey, accountAddress1.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), null, null, null, new Key().ScriptPubKey, accountAddress1.Address));
 
             HdAddress accountAddress2 = WalletTestsHelpers.CreateAddress();
-            accountAddress2.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), null, null, null, new Key().ScriptPubKey));
-            accountAddress2.Transactions.Add(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), null, null, null, new Key().ScriptPubKey));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), null, null, null, new Key().ScriptPubKey, accountAddress2.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), null, null, null, new Key().ScriptPubKey, accountAddress2.Address));
 
             account.ExternalAddresses.Add(accountAddress1);
             account.InternalAddresses.Add(accountAddress2);
 
-            Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 Accounts = new List<HdAccount> { account }
@@ -686,12 +686,12 @@ namespace Blockcore.Features.Wallet.Tests
                 Address = spendingKeys.Address.ToString(),
                 Pubkey = spendingKeys.PubKey.ScriptPubKey,
                 ScriptPubKey = spendingKeys.Address.ScriptPubKey,
-                Transactions = new List<TransactionData>()
+                // Transactions = new List<TransactionData>()
             };
 
             var chain = new ChainIndexer(wallet.Network);
-            WalletTestsHelpers.AddBlocksWithCoinbaseToChain(wallet.Network, chain, address);
-            TransactionData addressTransaction = address.Transactions.First();
+            WalletTestsHelpers.AddBlocksWithCoinbaseToChain(wallet.walletStore as WalletMemoryStore, wallet.Network, chain, address);
+            TransactionOutputData addressTransaction = wallet.walletStore.GetForAddress(address.Address).First();
 
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
@@ -744,7 +744,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         public (PubKey PubKey, BitcoinPubKeyAddress Address) DestinationKeys { get; set; }
 
-        public TransactionData AddressTransaction { get; set; }
+        public TransactionOutputData AddressTransaction { get; set; }
 
         public WalletTransactionHandler WalletTransactionHandler { get; set; }
 

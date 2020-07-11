@@ -210,9 +210,10 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <summary>
         /// Gets the history of the transactions in addresses contained in this account.
         /// </summary>
+        /// <param name="wallet">The wallet instance.</param>
         /// <param name="account">The account for which to get history.</param>
         /// <returns>The history for this account.</returns>
-        AccountHistory GetHistory(HdAccount account);
+        AccountHistory GetHistory(Types.Wallet wallet, HdAccount account);
 
         /// <summary>
         /// Gets the balance of transactions contained in an account.
@@ -220,8 +221,9 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="walletName">The wallet name.</param>
         /// <param name="accountName">The account name.</param>
+        /// <param name="calculatSpendable">Whether to calculate also the spendable balance.</param>
         /// <returns>Collection of account balances.</returns>
-        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null);
+        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null, bool calculatSpendable = false);
 
         /// <summary>
         /// Gets the balance of transactions for this specific address.

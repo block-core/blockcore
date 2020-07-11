@@ -59,7 +59,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         private static NodeBuilder CreateNodeBuilder(string testFolderPath)
         {
             return new NodeBuilder(testFolderPath)
-                .WithLogsDisabled();
+             .WithLogsDisabled();
         }
 
         private static string GetBitcoinCorePath(string version)

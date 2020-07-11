@@ -1,4 +1,5 @@
-﻿using Blockcore.Features.Wallet.Types;
+﻿using Blockcore.Features.Wallet.Database;
+using Blockcore.Features.Wallet.Types;
 using NBitcoin;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void IsConfirmedWithTransactionHavingBlockHeightReturnsTrue()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 BlockHeight = 15
             };
@@ -20,7 +21,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void IsConfirmedWithTransactionHavingNoBlockHeightReturnsFalse()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 BlockHeight = null
             };
@@ -31,7 +32,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void IsSpentWithTransactionHavingSpendingDetailsReturnsTrue()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = new SpendingDetails()
             };
@@ -42,7 +43,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void IsSpentWithTransactionHavingNoSpendingDetailsReturnsFalse()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = null
             };
@@ -53,7 +54,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountNotConfirmedOnlyGivenNoSpendingDetailsReturnsTransactionAmount()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = null,
                 Amount = new Money(15)
@@ -67,7 +68,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountNotConfirmedOnlyGivenBeingConfirmedAndSpentConfirmedReturnsZero()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = new SpendingDetails { BlockHeight = 16 },
                 Amount = new Money(15),
@@ -82,7 +83,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountNotConfirmedOnlyGivenBeingConfirmedAndSpentUnconfirmedReturnsZero()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = new SpendingDetails(),
                 Amount = new Money(15),
@@ -97,7 +98,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountConfirmedOnlyGivenBeingConfirmedAndSpentUnconfirmedReturnsZero()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = new SpendingDetails(),
                 Amount = new Money(15),
@@ -112,7 +113,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountNotConfirmedOnlyGivenBeingUnConfirmedAndSpentUnconfirmedReturnsZero()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = new SpendingDetails(),
                 Amount = new Money(15),
@@ -126,7 +127,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountConfirmedOnlyGivenNoSpendingDetailsReturnsZero()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = null
             };
@@ -139,7 +140,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountConfirmedOnlyGivenBeingConfirmedAndSpentConfirmedReturnsZero()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = new SpendingDetails { BlockHeight = 16 },
                 Amount = new Money(15),
@@ -154,7 +155,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountConfirmedOnlyGivenBeingUnConfirmedAndSpentUnconfirmedReturnsZero()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = new SpendingDetails(),
                 Amount = new Money(15),
@@ -168,7 +169,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentAmountConfirmedOnlyGivenSpendableAndConfirmedReturnsAmount()
         {
-            var transaction = new TransactionData
+            var transaction = new TransactionOutputData
             {
                 SpendingDetails = null,
                 Amount = new Money(15),

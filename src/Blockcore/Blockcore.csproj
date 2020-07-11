@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="ConcurrentHashSet" Version="1.1.0" />
     <PackageReference Include="DBreeze" Version="1.95.0" />
-    <PackageReference Include="LiteDB" Version="4.1.4" />
+    <PackageReference Include="LiteDB" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.4" />
     <PackageReference Include="NLog" Version="4.7.0" />

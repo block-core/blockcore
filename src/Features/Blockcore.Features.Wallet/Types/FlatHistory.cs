@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Features.Wallet.Database;
 
 namespace Blockcore.Features.Wallet.Types
 {
@@ -28,6 +29,6 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The transaction representing the UTXO.
         /// </summary>
-        public TransactionData Transaction { get; set; }
+        public TransactionOutputData Transaction { get; set; }
     }
 }

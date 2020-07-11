@@ -98,8 +98,7 @@ namespace Blockcore.Features.ColdStaking
                 dateTimeProvider,
                 scriptAddressReader,
                 signals,
-                broadcasterManager
-                )
+                broadcasterManager)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(dateTimeProvider, nameof(dateTimeProvider));
@@ -279,7 +278,7 @@ namespace Blockcore.Features.ColdStaking
                 return null;
             }
 
-            HdAddress address = account.GetFirstUnusedReceivingAddress();
+            HdAddress address = account.GetFirstUnusedReceivingAddress(wallet.walletStore);
             if (address == null)
             {
                 this.logger.LogDebug("No unused address exists on account '{0}'. Adding new address.", account.Name);
@@ -579,7 +578,7 @@ namespace Blockcore.Features.ColdStaking
             UnspentOutputReference[] res = null;
             lock (this.lockObject)
             {
-                res = wallet.GetAllSpendableTransactions(this.ChainIndexer.Tip.Height, confirmations,
+                res = wallet.GetAllSpendableTransactions(wallet.walletStore, this.ChainIndexer.Tip.Height, confirmations,
                     a => a.Index == (isColdWalletAccount ? ColdWalletAccountIndex : HotWalletAccountIndex)).ToArray();
             }
 

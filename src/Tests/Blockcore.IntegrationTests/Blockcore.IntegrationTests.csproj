@@ -70,6 +70,9 @@
     <None Update="Wallet\Data\test.wallet.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Wallet\Data\wallet-with-funds.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Wallet\Data\wallet-with-funds.wallet.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -8,6 +8,7 @@ using Blockcore.Controllers.Models;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Features.WalletWatchOnly.Api.Models;
@@ -105,7 +106,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             {
                 accountFilter = a => a.Name == account;
             }
-            IEnumerable<TransactionData> selectedTransactions = wallet.GetAllTransactions(accountFilter)
+            IEnumerable<TransactionOutputData> selectedTransactions = wallet.GetAllTransactions(accountFilter)
                 .Skip(skip)
                 .Take(count);
             foreach (var transactionData in selectedTransactions)
@@ -117,7 +118,6 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 
             return result.ToArray();
         }
-
 
         internal ListTransactionsModel GetTransactionsModel(TransactionVerboseModel transactionInfo)
         {

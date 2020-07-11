@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Utilities;
@@ -35,6 +36,9 @@ namespace Blockcore.Features.Wallet.Types
             this.AccountsRoot = new List<AccountRoot>();
         }
 
+        [JsonIgnore]
+        public IWalletStore walletStore { get; set; }
+
         /// <summary>
         /// The name of this wallet.
         /// </summary>
@@ -63,7 +67,8 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// Gets or sets the merkle path.
         /// </summary>
-        [JsonProperty(PropertyName = "blockLocator", ItemConverterType = typeof(UInt256JsonConverter))]
+        //[JsonProperty(PropertyName = "blockLocator", ItemConverterType = typeof(UInt256JsonConverter))]
+        [JsonIgnore]
         public ICollection<uint256> BlockLocator { get; set; }
 
         /// <summary>
@@ -114,7 +119,10 @@ namespace Blockcore.Features.Wallet.Types
         {
             AccountRoot accountRoot = this.AccountsRoot.SingleOrDefault();
 
-            if (accountRoot == null) return;
+            if (accountRoot == null)
+            {
+                return;
+            }
 
             accountRoot.LastBlockSyncedHeight = block.Height;
             accountRoot.LastBlockSyncedHash = block.HashBlock;
@@ -124,12 +132,12 @@ namespace Blockcore.Features.Wallet.Types
         /// Gets all the transactions in the wallet.
         /// </summary>
         /// <returns>A list of all the transactions in the wallet.</returns>
-        public IEnumerable<TransactionData> GetAllTransactions(Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<TransactionOutputData> GetAllTransactions(Func<HdAccount, bool> accountFilter = null)
         {
             List<HdAccount> accounts = this.GetAccounts(accountFilter).ToList();
 
             // First we iterate normal accounts
-            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => x.Transactions))
+            foreach (TransactionOutputData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 // If this is a cold coin stake UTXO, we won't return it for a normal account.
                 if (txData.IsColdCoinStake.HasValue && txData.IsColdCoinStake.Value == true)
@@ -140,7 +148,7 @@ namespace Blockcore.Features.Wallet.Types
                 yield return txData;
             }
 
-            foreach (TransactionData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => x.Transactions))
+            foreach (TransactionOutputData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 // If this is a cold coin stake UTXO, we won't return it for a normal account.
                 if (txData.IsColdCoinStake.HasValue && txData.IsColdCoinStake.Value == true)
@@ -152,12 +160,12 @@ namespace Blockcore.Features.Wallet.Types
             }
 
             // Then we iterate special accounts.
-            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => x.Transactions))
+            foreach (TransactionOutputData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 yield return txData;
             }
 
-            foreach (TransactionData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => x.Transactions))
+            foreach (TransactionOutputData txData in accounts.Where(a => !a.IsNormalAccount()).SelectMany(x => x.InternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
             {
                 yield return txData;
             }
@@ -242,7 +250,7 @@ namespace Blockcore.Features.Wallet.Types
         /// Gets the first account that contains no transaction.
         /// </summary>
         /// <returns>An unused account.</returns>
-        public HdAccount GetFirstUnusedAccount()
+        public HdAccount GetFirstUnusedAccount(IWalletStore walletStore)
         {
             // Get the accounts root for this type of coin.
             AccountRoot accountsRoot = this.AccountsRoot.Single();
@@ -250,7 +258,7 @@ namespace Blockcore.Features.Wallet.Types
             if (accountsRoot.Accounts.Any())
             {
                 // Get an unused account.
-                HdAccount firstUnusedAccount = accountsRoot.GetFirstUnusedAccount();
+                HdAccount firstUnusedAccount = accountsRoot.GetFirstUnusedAccount(walletStore);
                 if (firstUnusedAccount != null)
                 {
                     return firstUnusedAccount;
@@ -306,11 +314,11 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="confirmations">The number of confirmations required to consider a transaction spendable.</param>
         /// <param name="accountFilter">An optional filter for filtering the accounts being returned.</param>
         /// <returns>A collection of spendable outputs.</returns>
-        public IEnumerable<UnspentOutputReference> GetAllSpendableTransactions(int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<UnspentOutputReference> GetAllSpendableTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
         {
             IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
 
-            return accounts.SelectMany(x => x.GetSpendableTransactions(currentChainHeight, this.Network.Consensus.CoinbaseMaturity, confirmations));
+            return accounts.SelectMany(x => x.GetSpendableTransactions(walletStore, currentChainHeight, this.Network.Consensus.CoinbaseMaturity, confirmations));
         }
 
         /// <summary>
@@ -321,12 +329,12 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="confirmations">The number of confirmations required to consider a transaction spendable.</param>
         /// <param name="accountFilter">An optional filter for filtering the accounts being returned.</param>
         /// <returns>A collection of spendable outputs.</returns>
-        public IEnumerable<UnspentOutputReference> GetAllUnspentTransactions(int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<UnspentOutputReference> GetAllUnspentTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
         {
             IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
 
             // The logic for retrieving unspent transactions is almost identical to determining spendable transactions, we just don't take coinbase/stake maturity into consideration.
-            return accounts.SelectMany(x => x.GetSpendableTransactions(currentChainHeight, 0, confirmations));
+            return accounts.SelectMany(x => x.GetSpendableTransactions(walletStore, currentChainHeight, 0, confirmations));
         }
 
         /// <summary>
@@ -336,10 +344,10 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>The fee paid.</returns>
         public Money GetSentTransactionFee(uint256 transactionId)
         {
-            List<TransactionData> allTransactions = this.GetAllTransactions(Wallet.NormalAccounts).ToList();
+            List<TransactionOutputData> allTransactions = this.GetAllTransactions(Wallet.NormalAccounts).ToList();
 
             // Get a list of all the inputs spent in this transaction.
-            List<TransactionData> inputsSpentInTransaction = allTransactions.Where(t => t.SpendingDetails?.TransactionId == transactionId).ToList();
+            List<TransactionOutputData> inputsSpentInTransaction = allTransactions.Where(t => t.SpendingDetails?.TransactionId == transactionId).ToList();
 
             if (!inputsSpentInTransaction.Any())
             {
@@ -351,7 +359,7 @@ namespace Blockcore.Features.Wallet.Types
 
             // The change is the output paid into one of our addresses. We make sure to exclude the output received to one of
             // our addresses if this transaction is self-sent.
-            IEnumerable<TransactionData> changeOutput = allTransactions.Where(t => t.Id == transactionId && spendingTransaction.Payments.All(p => p.OutputIndex != t.Index)).ToList();
+            IEnumerable<TransactionOutputData> changeOutput = allTransactions.Where(t => t.Id == transactionId && spendingTransaction.Payments.All(p => p.OutputIndex != t.Index)).ToList();
 
             Money inputsAmount = new Money(inputsSpentInTransaction.Sum(i => i.Amount));
             Money outputsAmount = new Money(spendingTransaction.Payments.Sum(p => p.Amount) + changeOutput.Sum(c => c.Amount));
@@ -397,14 +405,16 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The height of the last block that was synced.
         /// </summary>
-        [JsonProperty(PropertyName = "lastBlockSyncedHeight", NullValueHandling = NullValueHandling.Ignore)]
+        //[JsonProperty(PropertyName = "lastBlockSyncedHeight", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore]
         public int? LastBlockSyncedHeight { get; set; }
 
         /// <summary>
         /// The hash of the last block that was synced.
         /// </summary>
-        [JsonProperty(PropertyName = "lastBlockSyncedHash", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(UInt256JsonConverter))]
+        //[JsonProperty(PropertyName = "lastBlockSyncedHash", NullValueHandling = NullValueHandling.Ignore)]
+        //[JsonConverter(typeof(UInt256JsonConverter))]
+        [JsonIgnore]
         public uint256 LastBlockSyncedHash { get; set; }
 
         /// <summary>
@@ -417,12 +427,18 @@ namespace Blockcore.Features.Wallet.Types
         /// Gets the first account that contains no transaction.
         /// </summary>
         /// <returns>An unused account</returns>
-        public HdAccount GetFirstUnusedAccount()
+        public HdAccount GetFirstUnusedAccount(IWalletStore walletStore)
         {
             if (this.Accounts == null)
                 return null;
 
-            List<HdAccount> unusedAccounts = this.Accounts.Where(Wallet.NormalAccounts).Where(acc => !acc.ExternalAddresses.SelectMany(add => add.Transactions).Any() && !acc.InternalAddresses.SelectMany(add => add.Transactions).Any()).ToList();
+            List<HdAccount> unusedAccounts = this.Accounts
+                .Where(Wallet.NormalAccounts)
+                .Where(acc =>
+                !acc.ExternalAddresses.SelectMany(add => walletStore.GetForAddress(add.Address)).Any()
+                &&
+                !acc.InternalAddresses.SelectMany(add => walletStore.GetForAddress(add.Address)).Any()).ToList();
+
             if (!unusedAccounts.Any())
                 return null;
 
@@ -648,31 +664,31 @@ namespace Blockcore.Features.Wallet.Types
         /// Gets the first receiving address that contains no transaction.
         /// </summary>
         /// <returns>An unused address</returns>
-        public HdAddress GetFirstUnusedReceivingAddress()
+        public HdAddress GetFirstUnusedReceivingAddress(IWalletStore walletStore)
         {
-            return this.GetFirstUnusedAddress(false);
+            return this.GetFirstUnusedAddress(walletStore, false);
         }
 
         /// <summary>
         /// Gets the first change address that contains no transaction.
         /// </summary>
         /// <returns>An unused address</returns>
-        public HdAddress GetFirstUnusedChangeAddress()
+        public HdAddress GetFirstUnusedChangeAddress(IWalletStore walletStore)
         {
-            return this.GetFirstUnusedAddress(true);
+            return this.GetFirstUnusedAddress(walletStore, true);
         }
 
         /// <summary>
         /// Gets the first receiving address that contains no transaction.
         /// </summary>
         /// <returns>An unused address</returns>
-        private HdAddress GetFirstUnusedAddress(bool isChange)
+        private HdAddress GetFirstUnusedAddress(IWalletStore walletStore, bool isChange)
         {
             IEnumerable<HdAddress> addresses = isChange ? this.InternalAddresses : this.ExternalAddresses;
             if (addresses == null)
                 return null;
 
-            List<HdAddress> unusedAddresses = addresses.Where(acc => !acc.Transactions.Any()).ToList();
+            List<HdAddress> unusedAddresses = addresses.Where(acc => walletStore.CountForAddress(acc.Address) == 0).ToList();
             if (!unusedAddresses.Any())
             {
                 return null;
@@ -688,13 +704,13 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         /// <param name="isChange">Whether the address is a change (internal) address or receiving (external) address.</param>
         /// <returns></returns>
-        public HdAddress GetLastUsedAddress(bool isChange)
+        public HdAddress GetLastUsedAddress(IWalletStore walletStore, bool isChange)
         {
             IEnumerable<HdAddress> addresses = isChange ? this.InternalAddresses : this.ExternalAddresses;
             if (addresses == null)
                 return null;
 
-            List<HdAddress> usedAddresses = addresses.Where(acc => acc.Transactions.Any()).ToList();
+            List<HdAddress> usedAddresses = addresses.Where(acc => walletStore.CountForAddress(acc.Address) > 0).ToList();
             if (!usedAddresses.Any())
             {
                 return null;
@@ -706,57 +722,13 @@ namespace Blockcore.Features.Wallet.Types
         }
 
         /// <summary>
-        /// Gets a collection of transactions by id.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        public IEnumerable<TransactionData> GetTransactionsById(uint256 id)
-        {
-            Guard.NotNull(id, nameof(id));
-
-            IEnumerable<HdAddress> addresses = this.GetCombinedAddresses();
-            return addresses.Where(r => r.Transactions != null).SelectMany(a => a.Transactions.Where(t => t.Id == id));
-        }
-
-        /// <summary>
         /// Get the accounts total spendable value for both confirmed and unconfirmed UTXO.
         /// </summary>
-        public (Money ConfirmedAmount, Money UnConfirmedAmount) GetBalances(bool excludeColdStakeUtxo)
+        public (Money ConfirmedAmount, Money UnConfirmedAmount) GetBalances(IWalletStore walletStore, bool excludeColdStakeUtxo)
         {
-            List<TransactionData> allTransactions = this.ExternalAddresses.SelectMany(a => a.Transactions)
-                .Concat(this.InternalAddresses.SelectMany(i => i.Transactions)).ToList();
+            var res = walletStore.GetBalanceForAccount(this.Index, excludeColdStakeUtxo);
 
-            if (excludeColdStakeUtxo)
-            {
-                // If this is a normal account, we must exclude the cold coin stake data.
-                long confirmed = allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(true));
-                long total = allTransactions.Where(t => t.IsColdCoinStake != true).Sum(t => t.GetUnspentAmount(false));
-
-                return (confirmed, total - confirmed);
-            }
-            else
-            {
-                long confirmed = allTransactions.Sum(t => t.GetUnspentAmount(true));
-                long total = allTransactions.Sum(t => t.GetUnspentAmount(false));
-
-                return (confirmed, total - confirmed);
-            }
-        }
-
-        /// <summary>
-        /// Finds the addresses in which a transaction is contained.
-        /// </summary>
-        /// <remarks>
-        /// Returns a collection because a transaction can be contained in a change address as well as in a receive address (as a spend).
-        /// </remarks>
-        /// <param name="predicate">A predicate by which to filter the transactions.</param>
-        /// <returns></returns>
-        public IEnumerable<HdAddress> FindAddressesForTransaction(Func<TransactionData, bool> predicate)
-        {
-            Guard.NotNull(predicate, nameof(predicate));
-
-            IEnumerable<HdAddress> addresses = this.GetCombinedAddresses();
-            return addresses.Where(t => t.Transactions != null).Where(a => a.Transactions.Any(predicate));
+            return (res.AmountConfirmed, res.AmountUnconfirmed);
         }
 
         /// <summary>
@@ -820,7 +792,6 @@ namespace Blockcore.Features.Wallet.Types
                     Pubkey = pubkey.ScriptPubKey,
                     Bech32Address = witAddress.ToString(),
                     Address = address.ToString(),
-                    Transactions = new List<TransactionData>()
                 };
 
                 addresses.Add(newAddress);
@@ -848,7 +819,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>A collection of spendable outputs that belong to the given account.</returns>
         /// <remarks>Note that coinbase and coinstake transaction outputs also have to mature with a sufficient number of confirmations before
         /// they are considered spendable. This is independent of the confirmations parameter.</remarks>
-        public IEnumerable<UnspentOutputReference> GetSpendableTransactions(int currentChainHeight, long coinbaseMaturity, int confirmations = 0)
+        public IEnumerable<UnspentOutputReference> GetSpendableTransactions(IWalletStore walletStore, int currentChainHeight, long coinbaseMaturity, int confirmations = 0)
         {
             // This will take all the spendable coins that belong to the account and keep the reference to the HdAddress and HdAccount.
             // This is useful so later the private key can be calculated just from a given UTXO.
@@ -858,7 +829,7 @@ namespace Blockcore.Features.Wallet.Types
                 // When calculating the confirmations the tip must be advanced by one.
 
                 int countFrom = currentChainHeight + 1;
-                foreach (TransactionData transactionData in address.UnspentTransactions())
+                foreach (TransactionOutputData transactionData in address.UnspentTransactions(walletStore))
                 {
                     int? confirmationCount = 0;
 
@@ -911,7 +882,7 @@ namespace Blockcore.Features.Wallet.Types
     {
         public HdAddress()
         {
-            this.Transactions = new List<TransactionData>();
+            // this.Transactions = new List<TransactionData>();
         }
 
         /// <summary>
@@ -965,11 +936,11 @@ namespace Blockcore.Features.Wallet.Types
         [JsonProperty(PropertyName = "hdPath")]
         public string HdPath { get; set; }
 
-        /// <summary>
-        /// A list of transactions involving this address.
-        /// </summary>
-        [JsonProperty(PropertyName = "transactions")]
-        public ICollection<TransactionData> Transactions { get; set; }
+        ///// <summary>
+        ///// A list of transactions involving this address.
+        ///// </summary>
+        //[JsonProperty(PropertyName = "transactions")]
+        //public ICollection<TransactionData> Transactions { get; set; }
 
         /// <summary>
         /// Specify whether UTXOs associated with this address is within the allowed staking time.
@@ -992,166 +963,26 @@ namespace Blockcore.Features.Wallet.Types
         /// List all spendable transactions in an address.
         /// </summary>
         /// <returns>List of spendable transactions.</returns>
-        public IEnumerable<TransactionData> UnspentTransactions()
+        public IEnumerable<TransactionOutputData> UnspentTransactions(IWalletStore walletStore)
         {
-            if (this.Transactions == null)
-            {
-                return new List<TransactionData>();
-            }
-
-            return this.Transactions.Where(t => !t.IsSpent());
+            return walletStore.GetUnspentForAddress(this.Address);
         }
 
         /// <summary>
         /// Get the address total spendable value for both confirmed and unconfirmed UTXO.
         /// </summary>
-        public (Money confirmedAmount, Money unConfirmedAmount) GetBalances(bool excludeColdStakeUtxo)
+        public (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) GetBalances(IWalletStore walletStore, bool excludeColdStakeUtxo)
         {
-            List<TransactionData> allTransactions = excludeColdStakeUtxo ? this.Transactions.Where(t => t.IsColdCoinStake != true).ToList() : this.Transactions.ToList();
+            var trx = walletStore.GetForAddress(this.Address).ToList();
+
+            List<TransactionOutputData> allTransactions = excludeColdStakeUtxo
+                ? trx.Where(t => t.IsColdCoinStake != true).ToList()
+                : trx;
 
             long confirmed = allTransactions.Sum(t => t.GetUnspentAmount(true));
             long total = allTransactions.Sum(t => t.GetUnspentAmount(false));
 
-            return (confirmed, total - confirmed);
-        }
-    }
-
-    /// <summary>
-    /// An object containing transaction data.
-    /// </summary>
-    public class TransactionData
-    {
-        /// <summary>
-        /// Transaction id.
-        /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        [JsonConverter(typeof(UInt256JsonConverter))]
-        public uint256 Id { get; set; }
-
-        /// <summary>
-        /// The transaction amount.
-        /// </summary>
-        [JsonProperty(PropertyName = "amount")]
-        [JsonConverter(typeof(MoneyJsonConverter))]
-        public Money Amount { get; set; }
-
-        /// <summary>
-        /// A value indicating whether this is a coinbase transaction or not.
-        /// </summary>
-        [JsonProperty(PropertyName = "isCoinBase", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? IsCoinBase { get; set; }
-
-        /// <summary>
-        /// A value indicating whether this is a coinstake transaction or not.
-        /// </summary>
-        [JsonProperty(PropertyName = "isCoinStake", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? IsCoinStake { get; set; }
-
-        /// <summary>
-        /// A value indicating whether this is a coldstake transaction or not.
-        /// </summary>
-        [JsonProperty(PropertyName = "isColdCoinStake", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? IsColdCoinStake { get; set; }
-
-        /// <summary>
-        /// The index of this scriptPubKey in the transaction it is contained.
-        /// </summary>
-        /// <remarks>
-        /// This is effectively the index of the output, the position of the output in the parent transaction.
-        /// </remarks>
-        [JsonProperty(PropertyName = "index", NullValueHandling = NullValueHandling.Ignore)]
-        public int Index { get; set; }
-
-        /// <summary>
-        /// The height of the block including this transaction.
-        /// </summary>
-        [JsonProperty(PropertyName = "blockHeight", NullValueHandling = NullValueHandling.Ignore)]
-        public int? BlockHeight { get; set; }
-
-        /// <summary>
-        /// The hash of the block including this transaction.
-        /// </summary>
-        [JsonProperty(PropertyName = "blockHash", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(UInt256JsonConverter))]
-        public uint256 BlockHash { get; set; }
-
-        /// <summary>
-        /// The index of this transaction in the block in which it is contained.
-        /// </summary>
-        [JsonProperty(PropertyName = "blockIndex", NullValueHandling = NullValueHandling.Ignore)]
-        public int? BlockIndex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the creation time.
-        /// </summary>
-        [JsonProperty(PropertyName = "creationTime")]
-        [JsonConverter(typeof(DateTimeOffsetConverter))]
-        public DateTimeOffset CreationTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Merkle proof for this transaction.
-        /// </summary>
-        [JsonProperty(PropertyName = "merkleProof", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(BitcoinSerializableJsonConverter))]
-        public PartialMerkleTree MerkleProof { get; set; }
-
-        /// <summary>
-        /// The script pub key for this address.
-        /// </summary>
-        [JsonProperty(PropertyName = "scriptPubKey")]
-        [JsonConverter(typeof(ScriptJsonConverter))]
-        public Script ScriptPubKey { get; set; }
-
-        /// <summary>
-        /// Hexadecimal representation of this transaction.
-        /// </summary>
-        [JsonProperty(PropertyName = "hex", NullValueHandling = NullValueHandling.Ignore)]
-        public string Hex { get; set; }
-
-        /// <summary>
-        /// Propagation state of this transaction.
-        /// </summary>
-        /// <remarks>Assume it's <c>true</c> if the field is <c>null</c>.</remarks>
-        [JsonProperty(PropertyName = "isPropagated", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? IsPropagated { get; set; }
-
-        /// <summary>
-        /// The details of the transaction in which the output referenced in this transaction is spent.
-        /// </summary>
-        [JsonProperty(PropertyName = "spendingDetails", NullValueHandling = NullValueHandling.Ignore)]
-        public SpendingDetails SpendingDetails { get; set; }
-
-        /// <summary>
-        /// Determines whether this transaction is confirmed.
-        /// </summary>
-        public bool IsConfirmed()
-        {
-            return this.BlockHeight != null;
-        }
-
-        /// <summary>
-        /// Indicates whether an output has been spent.
-        /// </summary>
-        /// <returns>A value indicating whether an output has been spent.</returns>
-        public bool IsSpent()
-        {
-            return this.SpendingDetails != null;
-        }
-
-        /// <summary>
-        /// Checks if the output is not spent, with the option to choose whether only confirmed ones are considered.
-        /// </summary>
-        /// <param name="confirmedOnly">A value indicating whether we only want confirmed amount.</param>
-        /// <returns>The total amount that has not been spent.</returns>
-        public Money GetUnspentAmount(bool confirmedOnly)
-        {
-            // The spendable balance is 0 if the output is spent or it needs to be confirmed to be considered.
-            if (this.IsSpent() || (confirmedOnly && !this.IsConfirmed()))
-            {
-                return Money.Zero;
-            }
-
-            return this.Amount;
+            return (confirmed, total - confirmed, trx.Any());
         }
     }
 
@@ -1268,7 +1099,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The transaction representing the UTXO.
         /// </summary>
-        public TransactionData Transaction { get; set; }
+        public TransactionOutputData Transaction { get; set; }
 
         /// <summary>
         /// Number of confirmations for this UTXO.
@@ -1276,7 +1107,7 @@ namespace Blockcore.Features.Wallet.Types
         public int Confirmations { get; set; }
 
         /// <summary>
-        /// Convert the <see cref="TransactionData"/> to an <see cref="OutPoint"/>
+        /// Convert the <see cref="TransactionOutputData"/> to an <see cref="OutPoint"/>
         /// </summary>
         /// <returns>The corresponding <see cref="OutPoint"/>.</returns>
         public OutPoint ToOutPoint()

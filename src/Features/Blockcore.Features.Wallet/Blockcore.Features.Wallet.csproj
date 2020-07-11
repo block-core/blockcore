@@ -37,7 +37,6 @@
     <Folder Include="Api\" />
     <Folder Include="Exceptions\" />
     <Folder Include="AddressBook\" />
-    <Folder Include="Types\" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

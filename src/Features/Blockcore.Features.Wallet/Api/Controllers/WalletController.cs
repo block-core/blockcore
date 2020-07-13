@@ -737,17 +737,17 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     });
                 }
 
+                Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
+                HdAccount account = wallet.GetAccount(request.AccountName);
+                if (account == null)
+                {
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Account not found.", $"No account with the name '{request.AccountName}' could be found in wallet {wallet.Name}.");
+                }
+
                 // If specified, get the change address, which must already exist in the wallet.
                 HdAddress changeAddress = null;
                 if (!string.IsNullOrWhiteSpace(request.ChangeAddress))
                 {
-                    Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
-                    HdAccount account = wallet.GetAccount(request.AccountName);
-                    if (account == null)
-                    {
-                        return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Account not found.", $"No account with the name '{request.AccountName}' could be found in wallet {wallet.Name}.");
-                    }
-
                     changeAddress = account.GetCombinedAddresses().FirstOrDefault(x => x.Address == request.ChangeAddress);
 
                     if (changeAddress == null)
@@ -783,7 +783,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 {
                     Hex = transactionResult.ToHex(),
                     Fee = context.TransactionFee,
-                    TransactionId = transactionResult.GetHash()
+                    TransactionId = transactionResult.GetHash(),
+                    InputAddresses = account.FindAddressesForTransaction(t => t.Id == transactionResult.Inputs[0].PrevOut.Hash).Select(a => a.Address).ToList()
                 };
 
                 return this.Json(model);

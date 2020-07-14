@@ -16,6 +16,12 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using BlazorModal;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Blockcore.Features.NodeHost.Authentication;
+using Blockcore.Features.NodeHost.Authorization;
+using Blockcore.Features.NodeHost.Settings;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Blockcore.Features.NodeHost
 {
@@ -50,6 +56,8 @@ namespace Blockcore.Features.NodeHost
                 loggingBuilder.AddDebug();
             });
 
+            services.Configure<BlockcoreSettings>(this.Configuration.GetSection("Blockcore"));
+
             // Add service and create Policy to allow Cross-Origin Requests
             services.AddCors
             (
@@ -72,6 +80,21 @@ namespace Blockcore.Features.NodeHost
                     );
                 });
 
+            if (hostSettings.EnableAuth)
+            {
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+                    options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+                })
+                .AddApiKeySupport(options => { });
+
+                services.AddSingleton<IAuthorizationHandler, OnlyUsersAuthorizationHandler>();
+                services.AddSingleton<IAuthorizationHandler, OnlyAdminsAuthorizationHandler>();
+
+                services.AddSingleton<IGetApiKeyQuery, AppSettingsGetApiKeyQuery>();
+            }
+
             if (hostSettings.EnableUI)
             {
                 services.AddRazorPages();
@@ -83,9 +106,8 @@ namespace Blockcore.Features.NodeHost
                     // The UI elements moved under the UI folder
                     options.RootDirectory = "/UI/Pages";
                 });
-            
-            	services.AddBlazorModal();
 
+                services.AddBlazorModal();
             }
 
             if (hostSettings.EnableWS)
@@ -113,7 +135,8 @@ namespace Blockcore.Features.NodeHost
                     options.Filters.Add(typeof(LoggingActionFilter));
                 })
                 // add serializers for NBitcoin objects
-                .AddNewtonsoftJson(options => {
+                .AddNewtonsoftJson(options =>
+                {
                     Serializer.RegisterFrontConverters(options.SerializerSettings);
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 })
@@ -159,6 +182,9 @@ namespace Blockcore.Features.NodeHost
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseCors("CorsPolicy");
 
             // Register this before MVC and Swagger.
@@ -168,7 +194,15 @@ namespace Blockcore.Features.NodeHost
             {
                 if (hostSettings.EnableAPI)
                 {
-                    endpoints.MapControllers();
+                    if (hostSettings.EnableAuth)
+                    {
+                        endpoints.MapControllers();
+                    }
+                    else
+                    {
+                        // When authentication is not enabled, we must set this filter.
+                        endpoints.MapControllers().WithMetadata(new AllowAnonymousAttribute());
+                    }
                 }
 
                 if (hostSettings.EnableWS)

@@ -30,7 +30,7 @@
     },
     "CITY (MAIN/RPC)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+      "commandLineArgs": "--chain=CITY -enableauth=1 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
     },
     "CITY (MAIN/LOCAL/RPC)": {
       "commandName": "Project",

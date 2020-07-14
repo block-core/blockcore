@@ -7,12 +7,14 @@ using Blockcore.Controllers.Models;
 using Blockcore.Features.WalletWatchOnly.Models;
 using Blockcore.Features.WalletWatchOnly.Interfaces;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 {
     /// <summary>
     /// Controller providing operations on a watch-only wallet.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

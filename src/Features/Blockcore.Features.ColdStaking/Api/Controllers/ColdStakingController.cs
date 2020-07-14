@@ -7,6 +7,7 @@ using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Blockcore.Utilities.ModelStateErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -16,6 +17,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
     /// <summary>
     /// Controller providing operations for cold staking.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

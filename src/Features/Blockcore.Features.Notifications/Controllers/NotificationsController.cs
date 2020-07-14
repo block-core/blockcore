@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blockcore.Features.Notifications.Controllers
 {
     /// <summary>
     /// Controller providing operations on blocks and transactions notifications.
     /// </summary>
+    [Authorize]
     [ApiVersion("1")]
     [Route("api/[controller]")]
     public class NotificationsController : Controller

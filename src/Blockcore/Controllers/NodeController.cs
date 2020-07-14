@@ -25,6 +25,7 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
+using Swashbuckle.AspNetCore.Annotations;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = NLog.LogLevel;
 using Target = NBitcoin.Target;
@@ -34,6 +35,7 @@ namespace Blockcore.Controllers
     /// <summary>
     /// Provides methods that interact with the full node.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
@@ -441,6 +443,7 @@ namespace Blockcore.Controllers
         /// </remarks>
         /// <returns><see cref="OkResult"/></returns>
         [Authorize(Policy = "OnlyAdmins")]
+        [SwaggerOperation(Tags = new[] { "Admin" })]
         [HttpPost]
         [Route("shutdown")]
         [Route("stop")]

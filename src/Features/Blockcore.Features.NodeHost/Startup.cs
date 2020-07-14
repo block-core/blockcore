@@ -147,12 +147,45 @@ namespace Blockcore.Features.NodeHost
                 {
                     string assemblyVersion = typeof(Startup).Assembly.GetName().Version.ToString();
 
+                    string description = "Access to the Blockcore Node features.";
+
+                    if (hostSettings.EnableAuth)
+                    {
+                        description += " Authorization is enabled on this API. You must have API key to perform calls that are not public.";
+
+                        options.AddSecurityDefinition(ApiKeyConstants.HeaderName, new OpenApiSecurityScheme
+                        {
+                            Description = "API key needed to access the endpoints. Node-Api-Key: YOUR_KEY",
+                            In = ParameterLocation.Header,
+                            Name = ApiKeyConstants.HeaderName,
+                            Type = SecuritySchemeType.ApiKey
+                        });
+
+                        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                        {
+                            {
+                                new OpenApiSecurityScheme
+                                {
+                                    Name = ApiKeyConstants.HeaderName,
+                                    Type = SecuritySchemeType.ApiKey,
+                                    In = ParameterLocation.Header,
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = ApiKeyConstants.HeaderName
+                                    },
+                                 },
+                                 new string[] {}
+                             }
+                        });
+                    }
+
                     options.SwaggerDoc("node",
                            new OpenApiInfo
                            {
                                Title = hostSettings.ApiTitle + " Node API",
                                Version = assemblyVersion,
-                               Description = "Access to the Blockcore Node features.",
+                               Description = description,
                                Contact = new OpenApiContact
                                {
                                    Name = "Blockcore",

@@ -9,6 +9,7 @@ using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Blockcore.Utilities.ModelStateErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -17,6 +18,7 @@ namespace Blockcore.Features.BlockStore.Api.Contollers
 {
 
     /// <summary>Controller providing operations on a blockstore.</summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

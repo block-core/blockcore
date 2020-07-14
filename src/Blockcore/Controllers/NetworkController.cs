@@ -8,6 +8,7 @@ using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities.Extensions;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -17,6 +18,7 @@ namespace Blockcore.Controllers
     /// <summary>
     /// Provides methods that interact with the network elements of the full node.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

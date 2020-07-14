@@ -6,6 +6,7 @@ using System.Reflection;
 using Blockcore.Controllers;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -17,6 +18,7 @@ namespace Blockcore.Features.RPC.Controllers
     /// <summary>
     /// Controller providing API operations on the RPC feature.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

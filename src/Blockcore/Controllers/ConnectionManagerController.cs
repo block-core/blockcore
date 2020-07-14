@@ -10,7 +10,6 @@ using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Blockcore.Controllers
 {
@@ -69,7 +68,6 @@ namespace Blockcore.Controllers
         /// <remarks>This is an API implementation of an RPC call.</remarks>
         /// <returns>Json formatted <see cref="List{T}<see cref="PeerNodeModel"/>"/> of connected nodes. Returns <see cref="IActionResult"/> formatted error if fails.</returns>
         [AllowAnonymous]
-        [SwaggerOperation(Tags = new[] { "Public" })]
         [Route("getpeerinfo")]
         [HttpGet]
         public IActionResult GetPeerInfo()

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Blockcore.Features.MemoryPool
 {
@@ -46,7 +45,6 @@ namespace Blockcore.Features.MemoryPool
         /// </summary>
         /// <returns>Json formatted <see cref="List{T}<see cref="uint256"/>"/> containing the memory pool contents. Returns <see cref="IActionResult"/> formatted error if fails.</returns>
         [AllowAnonymous]
-        [SwaggerOperation(Tags = new[] { "Public" })]
         [Route("api/[controller]/getrawmempool")]
         [HttpGet]
         public async Task<IActionResult> GetRawMempoolAsync()

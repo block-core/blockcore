@@ -293,6 +293,37 @@ namespace Blockcore.Features.ColdStaking
         }
 
         /// <summary>
+        /// Gets the first cold staking address. Creates a new address if required.
+        /// </summary>
+        /// <param name="walletName">The name of the wallet providing the cold staking address.</param>
+        /// <param name="isColdWalletAddress">Indicates whether we need the cold wallet address (versus the hot wallet address).</param>
+        /// <returns>The cold staking address or <c>null</c> if the required account does not exist.</returns>
+        internal HdAddress GetFirstColdStakingAddress(string walletName, bool isColdWalletAddress)
+        {
+            Guard.NotNull(walletName, nameof(walletName));
+
+            Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
+            HdAccount account = this.GetColdStakingAccount(wallet, isColdWalletAddress);
+            if (account == null)
+            {
+                this.logger.LogTrace("(-)[ACCOUNT_DOES_NOT_EXIST]:null");
+                return null;
+            }
+
+            HdAddress address = account.GetFirstExternalAddress();
+            if (address == null)
+            {
+                this.logger.LogDebug("No unused address exists on account '{0}'. Adding new address.", account.Name);
+                IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1);
+                this.UpdateKeysLookup(wallet, newAddresses);
+                address = newAddresses.First();
+            }
+
+            this.logger.LogTrace("(-):'{0}'", address.Address);
+            return address;
+        }
+
+        /// <summary>
         /// Creates cold staking setup <see cref="Transaction"/>.
         /// </summary>
         /// <remarks>

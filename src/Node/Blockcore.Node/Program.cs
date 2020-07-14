@@ -25,8 +25,21 @@ namespace Blockcore.Node
                     chain = "BTC";
                 }
 
+                string modeSelection = args
+                   .DefaultIfEmpty("--mode=full")
+                   .Where(arg => arg.StartsWith("--mode", ignoreCase: true, CultureInfo.InvariantCulture))
+                   .Select(arg => arg.Replace("--mode=", string.Empty, ignoreCase: true, CultureInfo.InvariantCulture))
+                   .FirstOrDefault();
+
+                if (string.IsNullOrWhiteSpace(modeSelection))
+                {
+                    modeSelection = "full";
+                }
+
+                Mode mode = (Mode)Enum.Parse(typeof(Mode), modeSelection, true);
+
                 NodeSettings nodeSettings = NetworkSelector.Create(chain, args);
-                IFullNodeBuilder nodeBuilder = NodeBuilder.Create(chain, nodeSettings);
+                IFullNodeBuilder nodeBuilder = NodeBuilder.Create(chain, nodeSettings, mode);
 
                 IFullNode node = nodeBuilder.Build();
 

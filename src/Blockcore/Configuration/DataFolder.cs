@@ -34,6 +34,7 @@ namespace Blockcore.Configuration
             this.LogPath = Path.Combine(path, "logs");
             this.ApplicationsPath = Path.Combine(path, "apps");
             this.WalletFolderPath = Path.Combine(path, "txdb");
+            this.StoragePath = Path.Combine(path, "storage");
             this.DnsMasterFilePath = path;
             this.SmartContractStatePath = Path.Combine(path, "contracts");
             this.ProvenBlockHeaderPath = Path.Combine(path, "provenheaders");
@@ -97,5 +98,10 @@ namespace Blockcore.Configuration
 
         /// <summary>Path to applications</summary>
         public string ApplicationsPath { get; internal set; }
+
+        /// <summary>
+        /// The folder used by the storage feature.
+        /// </summary>
+        public string StoragePath { get; internal set; }
     }
 }

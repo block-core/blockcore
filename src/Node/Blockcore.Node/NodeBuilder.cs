@@ -10,46 +10,81 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.Dns;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Blockcore.Features.Storage;
 
 namespace Blockcore.Node
 {
+    public enum Mode
+    {
+        Full,
+        DNS,
+        Storage
+    }
+
     public static class NodeBuilder
     {
-        public static IFullNodeBuilder Create(string chain, NodeSettings settings)
+        public static IFullNodeBuilder Create(string chain, NodeSettings settings, Mode mode)
         {
             chain = chain.ToUpperInvariant();
 
-            IFullNodeBuilder nodeBuilder = CreateBaseBuilder(chain, settings);
+            IFullNodeBuilder nodeBuilder = CreateBaseBuilder(chain, settings, mode);
 
-            switch (chain)
+            if (mode == Mode.Full || mode == Mode.DNS)
             {
-                case "BTC":
-                    nodeBuilder.UsePowConsensus().AddMining().UseWallet();
-                    break;
-                case "CITY":
-                case "STRAT":
-                case "RUTA":
-                case "EXOS":
-                case "X42":
-                case "XDS":
-                    nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
-                    break;
+                switch (chain)
+                {
+                    case "BTC":
+                        nodeBuilder.UsePowConsensus().AddMining().UseWallet();
+                        break;
+                    case "CITY":
+                    case "STRAT":
+                    case "RUTA":
+                    case "EXOS":
+                    case "X42":
+                    case "XDS":
+                        nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
+                        break;
+                }
+            }
+
+            if (mode == Mode.Storage)
+            {
+                nodeBuilder.UsePosConsensus();
             }
 
             return nodeBuilder;
         }
 
-        private static IFullNodeBuilder CreateBaseBuilder(string chain, NodeSettings settings)
+        private static IFullNodeBuilder CreateBaseBuilder(string chain, NodeSettings settings, Mode mode)
         {
-            IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-            .UseNodeSettings(settings)
-            .UseBlockStore()
-            .UseMempool()
-            .UseNodeHost()
-            .AddRPC()
-            .UseDiagnosticFeature();
+            IFullNodeBuilder nodeBuilder = null;
 
-            UseDnsFullNode(nodeBuilder, settings);
+            if (mode == Mode.Full || mode == Mode.DNS)
+            {
+                nodeBuilder = new FullNodeBuilder()
+                .UseNodeSettings(settings)
+                .UseBlockStore()
+                .UseMempool()
+                .UseNodeHost()
+                .AddRPC()
+                .UseDiagnosticFeature();
+            }
+
+            if (mode == Mode.Storage)
+            {
+                nodeBuilder = new FullNodeBuilder()
+                .UseNodeSettings(settings)
+                .UseBlockStore()
+                .UseNodeHost()
+                .UseStorage()
+                .UseDiagnosticFeature();
+            }
+
+            if (mode == Mode.DNS)
+            {
+                UseDnsFullNode(nodeBuilder, settings);
+            }
 
             return nodeBuilder;
         }
@@ -64,6 +99,6 @@ namespace Blockcore.Node
 
                 nodeBuilder.UseDns();
             }
-        }        
+        }
     }
 }

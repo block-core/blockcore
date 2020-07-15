@@ -32,7 +32,7 @@ namespace Blockcore.Features.Storage.Persistence
         //    this.Init();
         //}
 
-        public DataStore(Network network, DataFolder dataFolder)
+        public DataStore(DataFolder dataFolder)
         {
             var dbPath = Path.Combine(dataFolder.StoragePath, "data.db");
 
@@ -43,7 +43,7 @@ namespace Blockcore.Features.Storage.Persistence
 
             BsonMapper mapper = this.Create();
             this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
-            this.network = network;
+            //this.network = network;
 
             this.Init();
         }
@@ -180,6 +180,7 @@ namespace Blockcore.Features.Storage.Persistence
         private BsonMapper Create()
         {
             var mapper = new BsonMapper();
+            mapper.UseCamelCase();
 
             mapper.RegisterType<HashHeightPair>
             (

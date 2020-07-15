@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Configuration;
 using Blockcore.Controllers;
+using Blockcore.Features.Storage.Models;
+using Blockcore.Features.Storage.Persistence;
+using MessagePack;
 using Microsoft.AspNetCore.Mvc;
+using NBitcoin;
 
 namespace Blockcore.Features.Storage.Controllers
 {
@@ -14,12 +19,12 @@ namespace Blockcore.Features.Storage.Controllers
     [Route("api/identity")]
     public class IdentityController : FeatureController
     {
-        private string currentPublicKey = "4b9715afa903c82b383abb74b6cd746bdd3beea3";
+        private string currentPublicKey = "PTe6MFNouKATrLF5YbjxR1bsei2zwzdyLU";
+        private readonly DataStore dataStore;
 
-        public IdentityController()
+        public IdentityController(IDataStore dataStore)
         {
- 
-
+            this.dataStore = (DataStore)dataStore;
         }
 
         /// <summary>
@@ -63,7 +68,7 @@ namespace Blockcore.Features.Storage.Controllers
         /// <param name="address"></param>
         /// <returns></returns>
         [HttpPut("{address}")]
-        public async Task<IActionResult> PutIdentity([FromRoute] string address)
+        public async Task<IActionResult> PutIdentity([FromRoute] string address, [FromBody] IdentityDocument document)
         {
             // Just an example.
             if (string.IsNullOrWhiteSpace(address))
@@ -71,13 +76,41 @@ namespace Blockcore.Features.Storage.Controllers
                 return BadRequest();
             }
 
-            // If we can't find the data.
-            if (address != currentPublicKey)
+            // Make sure the route address and document owner is the same.
+            if (address != document.Owner)
             {
-                return NotFound();
+                // Invalid address (public key)
+                return BadRequest();
             }
 
-            return Ok(address);
+            // Testing to sign only name.
+            byte[] entityBytes = MessagePackSerializer.Serialize(document.Body);
+            
+            // THIS WORKS, VALIDATES TO TRUE WHEN ONLY STRING IS USED!
+            //entityBytes = Encoding.UTF8.GetBytes(document.Body.Name);
+
+            var bitcoinAddress = (BitcoinPubKeyAddress)BitcoinPubKeyAddress.Create(address, ProfileNetwork.Instance);
+
+            var valid = bitcoinAddress.VerifyMessage(entityBytes, document.Signature);
+
+            if (!valid)
+            {
+                // Invalid signature.
+                return BadRequest();
+            }
+
+            IdentityEntity entity = new IdentityEntity();
+            entity.Owner = document.Owner;
+            entity.Signature = document.Signature;
+
+            // The EntityId should combine type/path and address (pubkey).
+            entity.EntityId = "identity/" + address;
+
+            entity.Document = document.Body;
+
+            dataStore.SetIdentity(entity);
+
+            return Ok(valid.ToString());
         }
 
         /// <summary>

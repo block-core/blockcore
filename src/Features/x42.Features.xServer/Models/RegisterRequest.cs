@@ -13,7 +13,7 @@ namespace x42.Features.xServer.Models
         public string ProfileName { get; set; }
 
         /// <summary>
-        ///     Public Network Protocol of the server requesting to be registered.
+        ///     Network Protocol of the server requesting to be registered.
         ///     Support for HTTP = 1 or HTTPS = 2
         /// </summary>
         [Required(ErrorMessage = "The Network protocol is missing.")]
@@ -21,25 +21,39 @@ namespace x42.Features.xServer.Models
         public int NetworkProtocol { get; set; }
 
         /// <summary>
-        ///     Public Network Address of the server requesting to be registered.
+        ///     Network Address of the server requesting to be registered.
         /// </summary>
         [Required(ErrorMessage = "The Network address is missing.")]
         [StringLength(128, ErrorMessage = "The Network Address cannot exceed 128 characters.")]
         public string NetworkAddress { get; set; }
 
         /// <summary>
-        ///     Public Port of the server requesting to be registered.
+        ///     Network Port of the server requesting to be registered.
         /// </summary>
         [Required(ErrorMessage = "The Port is missing.")]
         [Range(1, 65535, ErrorMessage = "The Port cannot be below 1 and not exceed 65535.")]
         public long NetworkPort { get; set; }
 
         /// <summary>
-        ///     The Public Server Key Address of the server requesting to be registered.
+        ///     The key address of the server requesting to be registered.
         /// </summary>
-        [Required(ErrorMessage = "The server key address is missing.")]
-        [StringLength(128, ErrorMessage = "The server key address cannot exceed 128 characters.")]
-        public string ServerKeyAddress { get; set; }
+        [Required(ErrorMessage = "The key address is missing.")]
+        [StringLength(128, ErrorMessage = "The key address cannot exceed 128 characters.")]
+        public string KeyAddress { get; set; }
+
+        /// <summary>
+        ///     The sign address of the server requesting to be registered.
+        /// </summary>
+        [Required(ErrorMessage = "The sign address is missing.")]
+        [StringLength(128, ErrorMessage = "The sign address cannot exceed 128 characters.")]
+        public string SignAddress { get; set; }
+
+        /// <summary>
+        ///     The fee address of the server requesting to be registered.
+        /// </summary>
+        [Required(ErrorMessage = "The fee address is missing.")]
+        [StringLength(128, ErrorMessage = "The fee address cannot exceed 128 characters.")]
+        public string FeeAddress { get; set; }
 
         /// <summary>
         ///     The Signature of the server requesting to be registered.

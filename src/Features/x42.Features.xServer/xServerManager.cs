@@ -16,6 +16,7 @@ using NBitcoin.Protocol;
 using System.Collections.Concurrent;
 using NBitcoin;
 using System.Net.Sockets;
+using System.Linq;
 
 namespace x42.Features.xServer
 {
@@ -157,6 +158,29 @@ namespace x42.Features.xServer
             {
                 result.ResultMessage = "Failed to access xServer";
                 result.Success = false;
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
+        public List<PairResult> GetAvailablePairs()
+        {
+            var result = new List<PairResult>();
+            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t3Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                var client = new RestClient(xServerURL);
+                var getPairsRestRequest = new RestRequest("/getavailablepairs", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                var getPairResult = client.Execute<List<PairResult>>(getPairsRestRequest);
+                if (getPairResult.StatusCode == HttpStatusCode.OK)
+                {
+                    result = getPairResult.Data;
+                }
             }
             return result;
         }

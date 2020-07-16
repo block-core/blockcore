@@ -117,5 +117,25 @@ namespace x42.Features.xServer.Controllers
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
         }
+
+        /// <summary>
+        ///     Get available price lock pairs
+        /// </summary>
+        /// <returns>A list with all of the available pairs for a price lock.</returns>
+        [HttpGet]
+        [Route("getavailablepairs")]
+        public IActionResult GetAvailablePairs()
+        {
+            try
+            {
+                var result = this.xServerManager.GetAvailablePairs();
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
     }
 }

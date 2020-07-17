@@ -137,5 +137,26 @@ namespace x42.Features.xServer.Controllers
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
         }
+
+        /// <summary>
+        ///     Create a price lock.
+        /// </summary>
+        /// <param name="priceLockRequest">The object with all of the nessesary data to create a price lock.</param>
+        /// <returns>A <see cref="PriceLockResult" /> with price lock results.</returns>
+        [HttpPost]
+        [Route("createpricelock")]
+        public IActionResult CreatePriceLock([FromBody] CreatePriceLockRequest priceLockRequest)
+        {
+            try
+            {
+                var result = this.xServerManager.CreatePriceLock(priceLockRequest);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
     }
 }

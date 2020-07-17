@@ -17,6 +17,7 @@ using System.Collections.Concurrent;
 using NBitcoin;
 using System.Net.Sockets;
 using System.Linq;
+using RestSharp.Serializers.NewtonsoftJson;
 
 namespace x42.Features.xServer
 {
@@ -181,6 +182,39 @@ namespace x42.Features.xServer
                 {
                     result = getPairResult.Data;
                 }
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
+        public PriceLockResult CreatePriceLock(CreatePriceLockRequest priceLockRequest)
+        {
+            var result = new PriceLockResult();
+            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t3Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var createPriceLockRequest = new RestRequest("/createpricelock", Method.POST);
+                var request = JsonConvert.SerializeObject(priceLockRequest);
+                createPriceLockRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
+                createPriceLockRequest.RequestFormat = DataFormat.Json;
+
+                var createPLResult = client.Execute<PriceLockResult>(createPriceLockRequest);
+                if (createPLResult.StatusCode == HttpStatusCode.OK)
+                {
+                    result = createPLResult.Data;
+                }
+                else
+                {
+                    result.ResultMessage = "Failed to access xServer";
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.ResultMessage = "Not connected to any tier 3 servers";
             }
             return result;
         }

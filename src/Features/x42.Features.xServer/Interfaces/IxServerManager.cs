@@ -37,5 +37,10 @@ namespace x42.Features.xServer.Interfaces
         ///     Get available price lock pairs
         /// </summary>
         List<PairResult> GetAvailablePairs();
+
+        /// <summary>
+        ///     Create a price lock.
+        /// </summary>
+        PriceLockResult CreatePriceLock(CreatePriceLockRequest priceLockRequest);
     }
 }

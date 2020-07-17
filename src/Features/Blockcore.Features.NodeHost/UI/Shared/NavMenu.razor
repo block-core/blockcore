@@ -4,7 +4,12 @@
 @inject IFullNode fullnode
 
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">@this.Network.CoinTicker Dashboard</a>
+
+    <a class="navbar-brand" href="/">
+        <img src="data:image/png;base64,@this.Network.FavoriteIcon()" alt="Logo" style="width:30px;">
+        @this.Network.CoinTicker Dashboard
+    </a>
+
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -32,6 +37,11 @@
                 }
             }
         }
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="about" Match="NavLinkMatch.All">
+                <span class="oi oi-info" aria-hidden="true"></span> About
+            </NavLink>
+        </li>
     </ul>
 </div>
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Database;
+using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
@@ -54,6 +55,104 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             var mnemonic = new Mnemonic(wordList, count);
 
             return mnemonic;
+        }
+
+        /// <summary>
+        /// This method is an attempt to fetch history and its complex calculation directly from disk
+        /// and avoid the need to fetch the entire history to memory
+        /// </summary>
+        public static WalletHistoryModel GetHistorySlim(IWalletManager walletManager, Network network, WalletHistoryRequest request)
+        {
+            if (!string.IsNullOrEmpty(request.Address))
+            {
+                throw new NotImplementedException("Search by address not implemented");
+            }
+
+            if (!string.IsNullOrEmpty(request.SearchQuery))
+            {
+                throw new NotImplementedException("Search by SearchQuery not implemented");
+            }
+
+            var model = new WalletHistoryModel();
+
+            // Get a list of all the transactions found in an account (or in a wallet if no account is specified), with the addresses associated with them.
+            IEnumerable<AccountHistorySlim> accountsHistory = walletManager.GetHistorySlim(request.WalletName, request.AccountName, skip: request.Skip ?? 0, take: request.Take ?? int.MaxValue);
+
+            foreach (AccountHistorySlim accountHistory in accountsHistory)
+            {
+                var transactionItems = new List<TransactionItemModel>();
+
+                foreach (FlatHistorySlim item in accountHistory.History)
+                {
+                    var modelItem = new TransactionItemModel
+                    {
+                        Type = item.Transaction.IsSent ? TransactionItemType.Send : TransactionItemType.Received,
+                        ToAddress = item.Transaction.Address,
+                        Amount = item.Transaction.IsSent == false ? item.Transaction.Amount : Money.Zero,
+                        Id = item.Transaction.IsSent ? item.Transaction.SentTo : item.Transaction.OutPoint.Hash,
+                        Timestamp = item.Transaction.CreationTime,
+                        ConfirmedInBlock = item.Transaction.BlockHeight,
+                        BlockIndex = item.Transaction.BlockIndex
+                    };
+
+                    if (item.Transaction.IsSent == true) // handle send entries
+                    {
+                        // First we look for staking transaction as they require special attention.
+                        // A staking transaction spends one of our inputs into 2 outputs or more, paid to the same address.
+                        if ((item.Transaction.IsCoinStake ?? false == true))
+                        {
+                            if (item.Transaction.IsSent == true)
+                            {
+                                modelItem.Type = TransactionItemType.Staked;
+                                var amount = item.Transaction.SentPayments.Sum(p => p.Amount);
+                                modelItem.Amount = amount - item.Transaction.Amount;
+                            }
+                            else
+                            {
+                                // We don't show in history transactions that are outputs of staking transactions.
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (item.Transaction.SentPayments.All(a => a.PayToSelf == true))
+                            {
+                                // if all outputs are to ourself
+                                // we don't show that in history
+                                continue;
+                            }
+
+                            modelItem.Amount = item.Transaction.SentPayments.Where(x => x.PayToSelf == false).Sum(p => p.Amount);
+                        }
+                    }
+                    else // handle receive entries
+                    {
+                        if (item.Address.IsChangeAddress())
+                        {
+                            // we don't display transactions sent to self
+                            continue;
+                        }
+
+                        if (item.Transaction.IsCoinStake.HasValue && item.Transaction.IsCoinStake.Value == true)
+                        {
+                            // We don't show in history transactions that are outputs of staking transactions.
+                            continue;
+                        }
+                    }
+
+                    transactionItems.Add(modelItem);
+                }
+
+                model.AccountsHistoryModel.Add(new AccountHistoryModel
+                {
+                    TransactionsHistory = transactionItems,
+                    Name = accountHistory.Account.Name,
+                    CoinType = network.Consensus.CoinType,
+                    HdPath = accountHistory.Account.HdPath
+                });
+            }
+
+            return model;
         }
 
         public static WalletHistoryModel GetHistory(IWalletManager walletManager, Network network, WalletHistoryRequest request)

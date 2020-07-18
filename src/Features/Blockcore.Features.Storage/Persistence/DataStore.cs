@@ -82,6 +82,12 @@ namespace Blockcore.Features.Storage.Persistence
             //}
         }
 
+        public IEnumerable<IdentityEntity> GetIdentities()
+        {
+            IEnumerable<IdentityEntity> identities = this.identityCol.FindAll();
+            return identities;
+        }
+
         public IdentityEntity GetIdentity(string id)
         {
             return this.identityCol.FindById(id);

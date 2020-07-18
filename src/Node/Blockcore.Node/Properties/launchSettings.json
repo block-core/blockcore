@@ -30,7 +30,7 @@
     },
     "CITY (STORAGE)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=CITY --mode=storage -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+      "commandLineArgs": "--chain=CITY --mode=storage -enableUI=0 -enableWS=0 -enableAuth=1 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
     },
     "CITY (MAIN/RPC)": {
       "commandName": "Project",

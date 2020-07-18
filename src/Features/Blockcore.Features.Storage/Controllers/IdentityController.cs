@@ -7,6 +7,7 @@ using Blockcore.Controllers;
 using Blockcore.Features.Storage.Models;
 using Blockcore.Features.Storage.Persistence;
 using MessagePack;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 
@@ -16,6 +17,7 @@ namespace Blockcore.Features.Storage.Controllers
     /// All write operations to the identity controller must be signed and will be validated. 
     /// Identities can only be edited by the owner of the private key, which must sign the data before submitting to the API.
     /// </summary>
+    [Authorize]
     [Route("api/identity")]
     public class IdentityController : FeatureController
     {
@@ -25,6 +27,17 @@ namespace Blockcore.Features.Storage.Controllers
         public IdentityController(IDataStore dataStore)
         {
             this.dataStore = (DataStore)dataStore;
+        }
+
+        /// <summary>
+        /// Returns all registered identities. This API will be removed and is only available for testing.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("")]
+        public async Task<IActionResult> GetIdentities()
+        {
+            IEnumerable<IdentityEntity> identities = this.dataStore.GetIdentities();
+            return Ok(identities);
         }
 
         /// <summary>
@@ -41,25 +54,14 @@ namespace Blockcore.Features.Storage.Controllers
                 return BadRequest();
             }
 
-            // If we can't find the data.
-            if (address != currentPublicKey)
+            var document = this.dataStore.GetIdentity(address);
+
+            if (document == null)
             {
                 return NotFound();
             }
 
-            //var response = new Response();
-            //response.Root = currentPublicKey;
-            //response.Containers = new List<string>();
-            //response.Containers.Add("gridmap");
-            //response.Containers.Add("pos");
-            //response.Containers.Add("friends");
-            //response.Containers.Add("reviews");
-            //response.Containers.Add("devices");
-            //response.Containers.Add("pos");
-
-            return Ok(address);
-
-            //return NoContent();
+            return Ok(document);
         }
 
         /// <summary>
@@ -104,7 +106,8 @@ namespace Blockcore.Features.Storage.Controllers
             entity.Signature = document.Signature;
 
             // The EntityId should combine type/path and address (pubkey).
-            entity.EntityId = "identity/" + address;
+            // entity.EntityId = "identity/" + address;
+            entity.EntityId = address;
 
             entity.Document = document.Body;
 

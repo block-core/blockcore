@@ -254,7 +254,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
                 // Assert.
                 GetTransactionModel resultSendingWallet = txSendingWallet.Result.ToObject<GetTransactionModel>();
-                resultSendingWallet.Amount.Should().Be((decimal)-1.00000000);
+                resultSendingWallet.Amount.Should().Be((decimal)-97999999.9999);
                 resultSendingWallet.Fee.Should().Be((decimal)-0.0001);
                 resultSendingWallet.Confirmations.Should().Be(0);
                 resultSendingWallet.TransactionId.Should().Be(txId);
@@ -262,9 +262,9 @@ namespace Blockcore.IntegrationTests.Wallet
                 resultSendingWallet.BlockIndex.Should().BeNull();
                 resultSendingWallet.BlockTime.Should().BeNull();
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
-                resultSendingWallet.Details.Count.Should().Be(1);
+                resultSendingWallet.Details.Count.Should().Be(2);
 
-                GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Single();
+                GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Last();
                 detailsSendingWallet.Address.Should().Be(unusedaddresses.Single());
                 detailsSendingWallet.Amount.Should().Be((decimal)-1.00000000);
                 detailsSendingWallet.Fee.Should().Be((decimal)-0.0001);
@@ -363,7 +363,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
                 // Assert.
                 GetTransactionModel resultSendingWallet = txSendingWallet.Result.ToObject<GetTransactionModel>();
-                resultSendingWallet.Amount.Should().Be((decimal)-1.00000000);
+                resultSendingWallet.Amount.Should().Be((decimal)-97999999.9999M);
                 resultSendingWallet.Fee.Should().Be((decimal)-0.0001);
                 resultSendingWallet.Confirmations.Should().Be(1);
                 resultSendingWallet.Isgenerated.Should().BeNull();
@@ -373,9 +373,9 @@ namespace Blockcore.IntegrationTests.Wallet
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
                 resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
-                resultSendingWallet.Details.Count.Should().Be(1);
+                resultSendingWallet.Details.Count.Should().Be(2);
 
-                GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Single();
+                GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Last();
                 detailsSendingWallet.Address.Should().Be(unusedaddresses.First());
                 detailsSendingWallet.Amount.Should().Be((decimal)-1.00000000);
                 detailsSendingWallet.Fee.Should().Be((decimal)-0.0001);
@@ -475,7 +475,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
                 // Assert.
                 GetTransactionModel resultSendingWallet = txSendingWallet.Result.ToObject<GetTransactionModel>();
-                resultSendingWallet.Amount.Should().Be((decimal)-2.00000000);
+                resultSendingWallet.Amount.Should().Be((decimal)-97999999.9999);
                 resultSendingWallet.Fee.Should().Be((decimal)-0.0001);
                 resultSendingWallet.Confirmations.Should().Be(1);
                 resultSendingWallet.Isgenerated.Should().BeNull();
@@ -485,7 +485,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
                 resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
-                resultSendingWallet.Details.Count.Should().Be(2);
+                resultSendingWallet.Details.Count.Should().Be(3);
 
                 GetTransactionDetailsModel detailsSendingWalletFirstRecipient = resultSendingWallet.Details.Single(d => d.Address == unusedaddresses.First());
                 detailsSendingWalletFirstRecipient.Address.Should().Be(unusedaddresses.First());
@@ -597,7 +597,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
                 // Assert.
                 GetTransactionModel resultSendingWallet = txSendingWallet.Result.ToObject<GetTransactionModel>();
-                resultSendingWallet.Amount.Should().Be((decimal)0.00000000);
+                resultSendingWallet.Amount.Should().Be((decimal)-97999998.9999);
                 resultSendingWallet.Fee.Should().Be((decimal)-0.0001);
                 resultSendingWallet.Confirmations.Should().Be(1);
                 resultSendingWallet.Isgenerated.Should().BeNull();
@@ -607,7 +607,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeGreaterThan((DateTimeOffset.Now - TimeSpan.FromMinutes(1)).ToUnixTimeSeconds());
                 resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
-                resultSendingWallet.Details.Count.Should().Be(2);
+                resultSendingWallet.Details.Count.Should().Be(3);
 
                 GetTransactionDetailsModel detailsReceivingWallet = resultSendingWallet.Details.Single(d => d.Category == GetTransactionDetailsCategoryModel.Receive);
                 detailsReceivingWallet.Address.Should().Be(unusedaddresses.Single());
@@ -615,7 +615,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 detailsReceivingWallet.Fee.Should().BeNull();
                 detailsReceivingWallet.OutputIndex.Should().Be(1);
 
-                GetTransactionDetailsModel secondDetailsReceivingWallet = resultSendingWallet.Details.Single(d => d.Category == GetTransactionDetailsCategoryModel.Send);
+                GetTransactionDetailsModel secondDetailsReceivingWallet = resultSendingWallet.Details.Last(d => d.Category == GetTransactionDetailsCategoryModel.Send);
                 secondDetailsReceivingWallet.Address.Should().Be(unusedaddresses.Single());
                 secondDetailsReceivingWallet.Amount.Should().Be((decimal)-1.00000000);
                 secondDetailsReceivingWallet.Fee.Should().Be((decimal)-0.0001);
@@ -689,7 +689,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
                 // Assert.
                 GetTransactionModel resultSendingWallet = txSendingWallet.Result.ToObject<GetTransactionModel>();
-                resultSendingWallet.Amount.Should().Be((decimal)-98000002.00000000);
+                resultSendingWallet.Amount.Should().Be((decimal)-98000003.99990000);
                 resultSendingWallet.Fee.Should().Be((decimal)-0.0001);
                 resultSendingWallet.Confirmations.Should().Be(1);
                 resultSendingWallet.Isgenerated.Should().BeNull();
@@ -699,9 +699,9 @@ namespace Blockcore.IntegrationTests.Wallet
                 resultSendingWallet.BlockTime.Should().Be(blockModelAtTip.Time);
                 resultSendingWallet.TimeReceived.Should().BeLessOrEqualTo(blockModelAtTip.Time);
                 resultSendingWallet.TransactionTime.Should().Be(((PosTransaction)trx).Time);
-                resultSendingWallet.Details.Count.Should().Be(1);
+                resultSendingWallet.Details.Count.Should().Be(2);
 
-                GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Single();
+                GetTransactionDetailsModel detailsSendingWallet = resultSendingWallet.Details.Last();
                 detailsSendingWallet.Address.Should().Be(unusedaddresses.Single());
                 detailsSendingWallet.Amount.Should().Be((decimal)-98000002.00000000);
                 detailsSendingWallet.Category.Should().Be(GetTransactionDetailsCategoryModel.Send);

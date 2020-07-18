@@ -810,7 +810,7 @@ namespace Blockcore.Features.Wallet
 
                 foreach (HdAccount account in accounts)
                 {
-                    Money spendableAmount = null;
+                    Money spendableAmount = Money.Zero;
 
                     if (calculatSpendable)
                     {
@@ -831,7 +831,7 @@ namespace Blockcore.Features.Wallet
                         Account = account,
                         AmountConfirmed = result.AmountConfirmed,
                         AmountUnconfirmed = result.AmountUnconfirmed,
-                        SpendableAmount = result.AmountConfirmed
+                        SpendableAmount = spendableAmount
                     });
                 }
             }

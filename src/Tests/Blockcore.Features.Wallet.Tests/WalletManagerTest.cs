@@ -884,6 +884,46 @@ namespace Blockcore.Features.Wallet.Tests
         }
 
         [Fact]
+        public void GetHistorySlimByNameWithExistingWalletReturnsAllAddressesWithTransactions()
+        {
+            var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
+                CreateDataFolder(this), new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
+            wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
+            {
+                Index = 0,
+                Name = "myAccount",
+                HdPath = "m/44'/0'/0'",
+                ExternalAddresses = new List<HdAddress>
+                {
+                    WalletTestsHelpers.CreateAddressWithEmptyTransaction(0, "myUsedExternalAddress"),
+                    WalletTestsHelpers.CreateAddressWithoutTransaction(1, "myUnusedExternalAddress"),
+                },
+                InternalAddresses = new List<HdAddress> {
+                    WalletTestsHelpers.CreateAddressWithEmptyTransaction(0, "myUsedInternalAddress"),
+                    WalletTestsHelpers.CreateAddressWithoutTransaction(1, "myUnusedInternalAddress"),
+                },
+                ExtendedPubKey = "blabla"
+            });
+            walletManager.Wallets.Add(wallet);
+
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Id = new uint256(1), Amount = 2, AccountIndex = 0, Address = "myUsedExternalAddress" });
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData { OutPoint = new OutPoint(new uint256(2), 1), Id = new uint256(1), Amount = 2, AccountIndex = 0, Address = "myUsedInternalAddress" });
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData { OutPoint = new OutPoint(new uint256(3), 1), Id = new uint256(2), Amount = 2, AccountIndex = 0, Address = "myUsedExternalAddress" });
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData { OutPoint = new OutPoint(new uint256(4), 1), Id = new uint256(3), Amount = 2, AccountIndex = 0, Address = "myUsedInternalAddress" });
+
+            List<AccountHistorySlim> result = walletManager.GetHistorySlim("myWallet").ToList();
+
+            Assert.NotEmpty(result);
+            Assert.Single(result);
+            AccountHistorySlim accountHistory = result.ElementAt(0);
+            Assert.NotNull(accountHistory.Account);
+            Assert.Equal("myAccount", accountHistory.Account.Name);
+            Assert.NotEmpty(accountHistory.History);
+            Assert.Equal(3, accountHistory.History.Count());
+        }
+
+        [Fact]
         public void GetHistoryByAccountWithExistingAccountReturnsAllAddressesWithTransactions()
         {
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),

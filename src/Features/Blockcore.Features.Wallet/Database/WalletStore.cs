@@ -5,6 +5,7 @@ using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Utilities;
+using DBreeze.Utils;
 using LiteDB;
 using NBitcoin;
 using NBitcoin.DataEncoders;
@@ -106,6 +107,104 @@ namespace Blockcore.Features.Wallet.Database
         public void InsertOrUpdate(TransactionOutputData item)
         {
             this.trxCol.Upsert(item);
+        }
+
+        public IEnumerable<WalletHistoryData> GetAccountHistory(int accountIndex, bool excludeColdStake, int skip = 0, int take = 100)
+        {
+            // The result of this method is not guaranteed to be the length
+            //  of the 'take' param. In case some of the inputs we have are
+            // in the same trx they will be grouped in to a single entry.
+
+            var historySpent = this.trxCol.Query()
+              .Where(x => x.AccountIndex == accountIndex)
+              .Where(x => x.SpendingDetails != null)
+              .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
+              .OrderByDescending(x => x.SpendingDetails.CreationTime)
+              .Skip(skip)
+              .Limit(take)
+              .ToList();
+
+            var historyUnspent = this.trxCol.Query()
+                .Where(x => x.AccountIndex == accountIndex)
+                .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
+                .OrderByDescending(x => x.CreationTime)
+                .Skip(skip)
+                .Limit(take)
+                .ToList();
+
+            var items = new List<WalletHistoryData>();
+
+            items.AddRange(historySpent
+                .GroupBy(g => g.SpendingDetails.TransactionId)
+                   .Select(s =>
+                   {
+                       var x = s.First();
+
+                       return new WalletHistoryData
+                       {
+                           IsSent = true,
+                           SentTo = x.SpendingDetails.TransactionId,
+                           IsCoinStake = x.SpendingDetails.IsCoinStake,
+                           CreationTime = x.SpendingDetails.CreationTime,
+                           BlockHeight = x.SpendingDetails.BlockHeight,
+                           BlockIndex = x.SpendingDetails.BlockIndex,
+                           SentPayments = x.SpendingDetails.Payments?.Select(p => new WalletHistoryPaymentData
+                           {
+                               Amount = p.Amount,
+                               PayToSelf = p.PayToSelf,
+                               DestinationAddress = p.DestinationAddress
+                           }).ToList(),
+
+                           // when spent the amount represents the
+                           // input that was spent not the output
+                           Amount = x.Amount
+                       };
+                   }));
+
+            items.AddRange(historyUnspent
+                .GroupBy(g => g.Id)
+                .Select(s =>
+                {
+                    var x = s.First();
+
+                    var ret = new WalletHistoryData
+                    {
+                        IsSent = false,
+                        OutPoint = x.OutPoint,
+                        BlockHeight = x.BlockHeight,
+                        BlockIndex = x.BlockIndex,
+                        IsCoinStake = x.IsCoinStake,
+                        CreationTime = x.CreationTime,
+                        ScriptPubKey = x.ScriptPubKey,
+                        Address = x.Address,
+                        Amount = x.Amount,
+                        IsCoinBase = x.IsCoinBase,
+                        IsColdCoinStake = x.IsColdCoinStake,
+                    };
+
+                    if (s.Count() > 1)
+                    {
+                        ret.Amount = s.Sum(b => b.Amount);
+                        ret.ReceivedOutputs = s.Select(b => new WalletHistoryData
+                        {
+                            IsSent = false,
+                            OutPoint = b.OutPoint,
+                            BlockHeight = b.BlockHeight,
+                            BlockIndex = b.BlockIndex,
+                            IsCoinStake = b.IsCoinStake,
+                            CreationTime = b.CreationTime,
+                            ScriptPubKey = b.ScriptPubKey,
+                            Address = b.Address,
+                            Amount = b.Amount,
+                            IsCoinBase = b.IsCoinBase,
+                            IsColdCoinStake = b.IsColdCoinStake,
+                        }).ToList();
+                    }
+
+                    return ret;
+                }));
+
+            return items.OrderByDescending(x => x.CreationTime).ThenBy(x => x.BlockIndex);
         }
 
         public IEnumerable<TransactionOutputData> GetForAddress(string address)

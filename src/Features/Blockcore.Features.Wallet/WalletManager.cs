@@ -23,6 +23,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
+using NBitcoin.Policy;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Wallet.Tests")]
 
@@ -733,6 +734,58 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
+        public IEnumerable<AccountHistorySlim> GetHistorySlim(string walletName, string accountName = null, int skip = 0, int take = 100)
+        {
+            Guard.NotEmpty(walletName, nameof(walletName));
+
+            // In order to calculate the fee properly we need to retrieve all the transactions with spending details.
+            Types.Wallet wallet = this.GetWalletByName(walletName);
+
+            var accountsHistory = new List<AccountHistorySlim>();
+
+            lock (this.lockObject)
+            {
+                var accounts = new List<HdAccount>();
+                if (!string.IsNullOrEmpty(accountName))
+                {
+                    HdAccount account = wallet.GetAccount(accountName);
+                    if (account == null)
+                        throw new WalletException($"No account with the name '{accountName}' could be found.");
+
+                    accounts.Add(account);
+                }
+                else
+                {
+                    accounts.AddRange(wallet.GetAccounts());
+                }
+
+                foreach (HdAccount account in accounts)
+                {
+                    accountsHistory.Add(this.GetHistorySlim(wallet, account, skip, take));
+                }
+            }
+
+            return accountsHistory;
+        }
+
+        /// <inheritdoc />
+        public AccountHistorySlim GetHistorySlim(Types.Wallet wallet, HdAccount account, int skip = 0, int take = 100)
+        {
+            Guard.NotNull(account, nameof(account));
+            FlatHistorySlim[] items;
+
+            lock (this.lockObject)
+            {
+                // Get transactions contained in the account.
+                var trxs = wallet.walletStore.GetAccountHistory(account.Index, account.IsNormalAccount(), skip: skip, take: take).ToList();
+
+                items = trxs.Select(s => new FlatHistorySlim { Transaction = s, Address = s.ScriptPubKey != null ? this.walletIndex[wallet.Name].ScriptToAddressLookup[s.ScriptPubKey] : null }).ToArray();
+            }
+
+            return new AccountHistorySlim { Account = account, History = items };
+        }
+
+        /// <inheritdoc />
         public IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null, bool calculatSpendable = false)
         {
             var balances = new List<AccountBalance>();
@@ -757,7 +810,7 @@ namespace Blockcore.Features.Wallet
 
                 foreach (HdAccount account in accounts)
                 {
-                    Money spendableAmount = null;
+                    Money spendableAmount = Money.Zero;
 
                     if (calculatSpendable)
                     {
@@ -778,7 +831,7 @@ namespace Blockcore.Features.Wallet
                         Account = account,
                         AmountConfirmed = result.AmountConfirmed,
                         AmountUnconfirmed = result.AmountUnconfirmed,
-                        SpendableAmount = result.AmountConfirmed
+                        SpendableAmount = spendableAmount
                     });
                 }
             }
@@ -1284,6 +1337,7 @@ namespace Blockcore.Features.Wallet
 
             uint256 transactionHash = transaction.GetHash();
             TransactionOutputData spentTransaction = wallet.walletStore.GetForOutput(outPoint);
+            this.walletIndex[spentTransactionWallet.Name].ScriptToAddressLookup.TryGetValue(spentTransaction.ScriptPubKey, out HdAddress spentDestination);
 
             // If the details of this spending transaction are seen for the first time.
             if (spentTransaction.SpendingDetails == null)
@@ -1299,27 +1353,28 @@ namespace Blockcore.Features.Wallet
                     if (paidToOutput.IsEmpty)
                         continue;
 
-                    // Exclude the keys involved in a staking transaction
-                    if (transaction.IsCoinStake)
+                    if (StandardTransactionPolicy.IsOpReturn(paidToOutput.ScriptPubKey.ToBytes()))
                         continue;
 
                     // Check if the destination script is one of the wallet's.
-                    if (this.walletIndex[spentTransactionWallet.Name].ScriptToAddressLookup.TryGetValue(paidToOutput.ScriptPubKey, out HdAddress addr))
+                    bool isPaytoSelf = false;
+                    if (this.walletIndex[spentTransactionWallet.Name].ScriptToAddressLookup.TryGetValue(paidToOutput.ScriptPubKey, out HdAddress destination))
                     {
-                        // Include the keys that are in the wallet but that are for receiving
-                        // addresses (which would mean the user paid itself).
-                        if (addr.IsChangeAddress())
-                            continue;
-                    }
-                    else
-                    {
-                        // Include the keys not included in our wallets (external payees).
+                        if ((spentDestination != null) && (HdOperations.GetAccountIndex(destination.HdPath) != HdOperations.GetAccountIndex(spentDestination.HdPath)))
+                        {
+                            // payments between the different accounts are not to self payments
+                            isPaytoSelf = false;
+                        }
+                        else
+                        {
+                            isPaytoSelf = true;
+                        }
                     }
 
                     // Figure out how to retrieve the destination address.
                     string destinationAddress = this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, paidToOutput.ScriptPubKey);
                     if (string.IsNullOrEmpty(destinationAddress))
-                        if (this.walletIndex[spentTransactionWallet.Name].ScriptToAddressLookup.TryGetValue(paidToOutput.ScriptPubKey, out HdAddress destination))
+                        if (destination != null)
                             destinationAddress = destination.Address;
 
                     payments.Add(new PaymentDetails
@@ -1327,7 +1382,8 @@ namespace Blockcore.Features.Wallet
                         DestinationScriptPubKey = paidToOutput.ScriptPubKey,
                         DestinationAddress = destinationAddress,
                         Amount = paidToOutput.Value,
-                        OutputIndex = transaction.Outputs.IndexOf(paidToOutput)
+                        OutputIndex = transaction.Outputs.IndexOf(paidToOutput),
+                        PayToSelf = isPaytoSelf,
                     });
                 }
 

@@ -224,12 +224,78 @@ namespace Blockcore.Features.Wallet.Tests
             store2.Dispose();
         }
 
+        [Fact]
+        public void WalletStore_GetAccountHistory()
+        {
+            DataFolder dataFolder = CreateDataFolder(this);
+
+            WalletStore store = new WalletStore(this.Network, dataFolder, new Types.Wallet { Name = "wallet1", EncryptedSeed = "EncryptedSeed1" });
+
+            string script = null;
+            script = new Key().PubKey.GetAddress(this.Network).ScriptPubKey.ToString();
+
+            TransactionOutputData trx = null;
+            ulong index = 20;
+            ulong time = 2000;
+            var dt = DateTimeOffset.Now;
+
+            // unconfirmed spent
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            // with 4 outputs
+            trx = Create(new OutPoint(new uint256(index++), 00), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0001), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0002), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0003), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails.BlockHeight = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+
+            // unconfirmed unspent
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            // with 4 outputs
+            trx = Create(new OutPoint(new uint256(index++), 00), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0001), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0002), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0003), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.BlockHeight = null; trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+
+            // confirmed spent
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            // with 4 outputs
+            trx = Create(new OutPoint(new uint256(index++), 00), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0001), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0002), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0003), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+
+            // confirmed unspent
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index++), 10), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            // with 4 outputs
+            trx = Create(new OutPoint(new uint256(index++), 00), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0001), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = true; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0002), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+            trx = Create(new OutPoint(new uint256(index), 0003), script, 2); trx.SpendingDetails.CreationTime = dt.AddMinutes(time--); trx.SpendingDetails = null; trx.IsColdCoinStake = false; store.InsertOrUpdate(trx);
+
+            var res = store.GetAccountHistory(2, false);
+            res.Should().HaveCount(22);
+            res = store.GetAccountHistory(2, true);
+            res.Should().HaveCount(15);
+        }
+
         private TransactionOutputData Create(OutPoint outPoint, string address, int accountIndex = 0)
         {
             return new TransactionOutputData
             {
                 OutPoint = outPoint,
                 Address = address,
+                Id = outPoint.Hash,
                 Amount = 5,
                 BlockHash = new uint256(50),
                 BlockHeight = 5,

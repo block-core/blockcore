@@ -213,8 +213,8 @@ namespace Blockcore.Features.ColdStaking.Tests
             HdAddress spentAddressResult = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0);
             Assert.Equal(1, wallet.walletStore.GetForAddress(spendingAddress.Address).Count());
             Assert.Equal(transaction.GetHash(), wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.TransactionId);
-            Assert.Equal(transaction.Outputs[1].Value, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.ElementAt(0).Amount);
-            Assert.Equal(transaction.Outputs[1].ScriptPubKey, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.ElementAt(0).DestinationScriptPubKey);
+            Assert.Equal(transaction.Outputs[1].Value, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.ElementAt(1).Amount);
+            Assert.Equal(transaction.Outputs[1].ScriptPubKey, wallet.walletStore.GetForAddress(spentAddressResult.Address).ElementAt(0).SpendingDetails.Payments.ElementAt(1).DestinationScriptPubKey);
 
             Assert.Equal(1, wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).Count());
             TransactionOutputData changeAddressResult = wallet.walletStore.GetForAddress(wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).InternalAddresses.ElementAt(0).Address).ElementAt(0);

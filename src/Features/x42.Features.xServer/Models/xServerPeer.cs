@@ -6,11 +6,11 @@
 
         public int NetworkProtocol { get; set; }
 
-        public string Address { get; set; }
+        public string NetworkAddress { get; set; }
 
         public long Priority { get; set; }
 
-        public long Port { get; set; }
+        public long NetworkPort { get; set; }
 
         public string Version { get; set; }
 

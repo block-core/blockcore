@@ -62,7 +62,7 @@ namespace x42.Features.xServer
                 }
 
                 builder.AppendLine(
-                    ($"{peer.Name} ({tier}): {peer.Address}:{peer.Port}").PadRight(LoggingConfiguration.ColumnLength + 25)
+                    ($"{peer.Name} ({tier}): {peer.NetworkAddress}:{peer.NetworkPort}").PadRight(LoggingConfiguration.ColumnLength + 25)
                     + ($"Response Time: {responseTime}").PadRight(LoggingConfiguration.ColumnLength + 14)
                     + ($"Version: {peer.Version}").PadRight(LoggingConfiguration.ColumnLength + 7)
                     );

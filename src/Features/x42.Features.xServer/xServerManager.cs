@@ -170,7 +170,7 @@ namespace x42.Features.xServer
             var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
             if (t3Node != null)
             {
-                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 var getPairsRestRequest = new RestRequest("/getavailablepairs", Method.GET)
                 {
@@ -193,7 +193,7 @@ namespace x42.Features.xServer
             var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
             if (t3Node != null)
             {
-                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
                 var createPriceLockRequest = new RestRequest("/createpricelock", Method.POST);
@@ -226,7 +226,7 @@ namespace x42.Features.xServer
             var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
             if (t3Node != null)
             {
-                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
                 var getPriceLockRequest = new RestRequest("/getpricelock", Method.GET);
@@ -257,7 +257,7 @@ namespace x42.Features.xServer
             var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
             if (t3Node != null)
             {
-                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
                 var paymentRequest = new RestRequest("/submitpayment", Method.POST);
@@ -356,7 +356,7 @@ namespace x42.Features.xServer
             lock (this.xServerPeersLock)
             {
                 var peersList = xServerPeerList.GetPeers();
-                int peerIndex = peersList.FindIndex(p => p.Address == peer.Address);
+                int peerIndex = peersList.FindIndex(p => p.NetworkAddress == peer.NetworkAddress);
                 if (removePeer)
                 {
                     peersList.Remove(peer);
@@ -391,8 +391,8 @@ namespace x42.Features.xServer
                 {
                     Name = "Public Seed",
                     NetworkProtocol = networkAddress.NetworkProtocol,
-                    Address = networkAddress.PublicAddress,
-                    Port = networkAddress.Port,
+                    NetworkAddress = networkAddress.PublicAddress,
+                    NetworkPort = networkAddress.Port,
                     Priority = -1,
                     Version = "N/A",
                     ResponseTime = 99999999,
@@ -406,7 +406,7 @@ namespace x42.Features.xServer
         {
             foreach (var peer in xServerPeerList.GetPeers())
             {
-                string xServerURL = Utils.GetServerUrl(peer.NetworkProtocol, peer.Address, peer.Port);
+                string xServerURL = Utils.GetServerUrl(peer.NetworkProtocol, peer.NetworkAddress, peer.NetworkPort);
                 var client = new RestClient(xServerURL);
                 var pingRequest = new RestRequest("/ping/", Method.GET);
                 var pingResponseTime = Stopwatch.StartNew();
@@ -456,8 +456,8 @@ namespace x42.Features.xServer
                                 {
                                     Name = xServer.Name,
                                     NetworkProtocol = xServer.NetworkProtocol,
-                                    Address = xServer.Address,
-                                    Port = xServer.Port,
+                                    NetworkAddress = xServer.NetworkAddress,
+                                    NetworkPort = xServer.NetworkPort,
                                     Priority = xServer.Priotiry,
                                     Version = ping.Version,
                                     ResponseTime = pingResponseTime.ElapsedMilliseconds,

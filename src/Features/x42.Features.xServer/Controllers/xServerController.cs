@@ -158,5 +158,47 @@ namespace x42.Features.xServer.Controllers
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
         }
+
+        /// <summary>
+        ///     Get a price lock.
+        /// </summary>
+        /// <param name="priceLockId">The ID of the price lock.</param>
+        /// <returns>A <see cref="PriceLockResult" /> with price lock information.</returns>
+        [HttpGet]
+        [Route("getpricelock")]
+        public IActionResult GetPriceLock(string priceLockId)
+        {
+            try
+            {
+                var result = this.xServerManager.GetPriceLock(priceLockId);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
+        ///     Submit the payment for a price lock.
+        /// </summary>
+        /// <param name="submitPaymentRequest">The object with all of the nessesary data to submit payment.</param>
+        /// <returns>A <see cref="SubmitPaymentResult" /> with submission results.</returns>
+        [HttpPost]
+        [Route("submitpayment")]
+        public IActionResult SubmitPayment([FromBody] SubmitPaymentRequest submitPaymentRequest)
+        {
+            try
+            {
+                var result = this.xServerManager.SubmitPayment(submitPaymentRequest);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
     }
 }

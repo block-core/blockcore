@@ -42,5 +42,15 @@ namespace x42.Features.xServer.Interfaces
         ///     Create a price lock.
         /// </summary>
         PriceLockResult CreatePriceLock(CreatePriceLockRequest priceLockRequest);
+
+        /// <summary>
+        ///     Get a price lock.
+        /// </summary>
+        PriceLockResult GetPriceLock(string priceLockId);
+
+        /// <summary>
+        ///     Submit the payment for a price lock.
+        /// </summary>
+        SubmitPaymentResult SubmitPayment(SubmitPaymentRequest submitPaymentRequest);
     }
 }

@@ -220,6 +220,70 @@ namespace x42.Features.xServer
         }
 
         /// <inheritdoc />
+        public PriceLockResult GetPriceLock(string priceLockId)
+        {
+            var result = new PriceLockResult();
+            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t3Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var getPriceLockRequest = new RestRequest("/getpricelock", Method.GET);
+                getPriceLockRequest.AddParameter("priceLockId", priceLockId);
+
+                var createPLResult = client.Execute<PriceLockResult>(getPriceLockRequest);
+                if (createPLResult.StatusCode == HttpStatusCode.OK)
+                {
+                    result = createPLResult.Data;
+                }
+                else
+                {
+                    result.ResultMessage = "Failed to access xServer";
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.ResultMessage = "Not connected to any tier 3 servers";
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
+        public SubmitPaymentResult SubmitPayment(SubmitPaymentRequest submitPaymentRequest)
+        {
+            var result = new SubmitPaymentResult();
+            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t3Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.Address, t3Node.Port);
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var paymentRequest = new RestRequest("/submitpayment", Method.POST);
+                var request = JsonConvert.SerializeObject(submitPaymentRequest);
+                paymentRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
+                paymentRequest.RequestFormat = DataFormat.Json;
+
+                var submitPaymentResult = client.Execute<SubmitPaymentResult>(paymentRequest);
+                if (submitPaymentResult.StatusCode == HttpStatusCode.OK)
+                {
+                    result = submitPaymentResult.Data;
+                }
+                else
+                {
+                    result.ResultMessage = "Failed to access xServer";
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.ResultMessage = "Not connected to any tier 3 servers";
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
         public TestResult TestXServerPorts(TestRequest testRequest)
         {
             TestResult testResult = new TestResult()

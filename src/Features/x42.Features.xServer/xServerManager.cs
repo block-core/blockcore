@@ -145,7 +145,7 @@ namespace x42.Features.xServer
             var result = new RegisterResult();
             string xServerURL = Utils.GetServerUrl(registerRequest.NetworkProtocol, registerRequest.NetworkAddress, registerRequest.NetworkPort);
             var client = new RestClient(xServerURL);
-            var registerRestRequest = new RestRequest("/register", Method.POST);
+            var registerRestRequest = new RestRequest("/registerserver", Method.POST);
             var request = JsonConvert.SerializeObject(registerRequest);
             registerRestRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
             registerRestRequest.RequestFormat = DataFormat.Json;

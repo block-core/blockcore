@@ -28,10 +28,10 @@ namespace x42.Features.xServer.Models
         public int NetworkProtocol { get; set; }
 
         /// <summary>xServer connection address.</summary>
-        public string Address { get; set; }
+        public string NetworkAddress { get; set; }
 
         /// <summary>xServer connection port.</summary>
-        public long Port { get; set; }
+        public long NetworkPort { get; set; }
 
         /// <summary>xServer priority.</summary>
         public long Priotiry { get; set; }

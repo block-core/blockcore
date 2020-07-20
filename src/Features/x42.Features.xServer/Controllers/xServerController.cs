@@ -200,5 +200,25 @@ namespace x42.Features.xServer.Controllers
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
         }
+
+        /// <summary>
+        ///     Will lookup the profile, and return the profile data.
+        /// </summary>
+        /// <returns>A JSON object containing the profile requested.</returns>
+        [HttpGet]
+        [Route("getprofile")]
+        public IActionResult GetProfile(string name = "", string keyAddress = "")
+        {
+            try
+            {
+                var result = this.xServerManager.GetProfile(name, keyAddress);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
     }
 }

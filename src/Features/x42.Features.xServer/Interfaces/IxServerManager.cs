@@ -52,5 +52,10 @@ namespace x42.Features.xServer.Interfaces
         ///     Submit the payment for a price lock.
         /// </summary>
         SubmitPaymentResult SubmitPayment(SubmitPaymentRequest submitPaymentRequest);
+
+        /// <summary>
+        ///     Will lookup the profile, and return the profile data.
+        /// </summary>
+        ProfileResult GetProfile(string name, string keyAddress);
     }
 }

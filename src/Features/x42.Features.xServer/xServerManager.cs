@@ -284,6 +284,46 @@ namespace x42.Features.xServer
         }
 
         /// <inheritdoc />
+        public ProfileResult GetProfile(string name, string keyAddress)
+        {
+            var result = new ProfileResult();
+            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t3Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var getPriceLockRequest = new RestRequest("/getprofile", Method.GET);
+                getPriceLockRequest.AddParameter("name", name);
+                getPriceLockRequest.AddParameter("keyAddress", keyAddress);
+
+                var createPLResult = client.Execute<ProfileResult>(getPriceLockRequest);
+                if (createPLResult.StatusCode == HttpStatusCode.OK)
+                {
+                    if (createPLResult.Data == null)
+                    {
+                        result.Success = false;
+                    }
+                    else
+                    {
+                        result = createPLResult.Data;
+                        result.Success = true;
+                    }
+                }
+                else
+                {
+                    result.ResultMessage = "Failed to access xServer";
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.ResultMessage = "Not connected to any tier 2 servers";
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
         public TestResult TestXServerPorts(TestRequest testRequest)
         {
             TestResult testResult = new TestResult()

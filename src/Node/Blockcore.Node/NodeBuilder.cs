@@ -50,7 +50,8 @@ namespace Blockcore.Node
 
             if (mode == Mode.Storage)
             {
-                nodeBuilder.UsePosConsensus();
+                //nodeBuilder.UsePosConsensus();
+                nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
             }
 
             return nodeBuilder;
@@ -76,8 +77,10 @@ namespace Blockcore.Node
                 nodeBuilder = new FullNodeBuilder()
                 .UseNodeSettings(settings)
                 .UseBlockStore()
+                .UseMempool()
                 .UseNodeHost()
                 .UseStorage()
+                .AddRPC()
                 .UseDiagnosticFeature();
             }
 

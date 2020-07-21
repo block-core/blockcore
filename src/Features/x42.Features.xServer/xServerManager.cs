@@ -287,10 +287,10 @@ namespace x42.Features.xServer
         public ProfileResult GetProfile(string name, string keyAddress)
         {
             var result = new ProfileResult();
-            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two).OrderBy(n => n.ResponseTime).FirstOrDefault();
-            if (t3Node != null)
+            var t2Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t2Node != null)
             {
-                string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
+                string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
                 var getPriceLockRequest = new RestRequest("/getprofile", Method.GET);
@@ -307,6 +307,47 @@ namespace x42.Features.xServer
                     else
                     {
                         result = createPLResult.Data;
+                        result.Success = true;
+                    }
+                }
+                else
+                {
+                    result.ResultMessage = "Failed to access xServer";
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.ResultMessage = "Not connected to any tier 2 servers";
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
+        public ReserveProfileResult ReserveProfile(ProfileReserveRequest reserveRequest)
+        {
+            var result = new ReserveProfileResult();
+            var t2Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t2Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var reserveProfileRequest = new RestRequest("/reserveprofile", Method.POST);
+                var request = JsonConvert.SerializeObject(reserveRequest);
+                reserveProfileRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
+                reserveProfileRequest.RequestFormat = DataFormat.Json;
+
+                var reserveProfileResult = client.Execute<ReserveProfileResult>(reserveProfileRequest);
+                if (reserveProfileResult.StatusCode == HttpStatusCode.OK)
+                {
+                    if (reserveProfileResult.Data == null)
+                    {
+                        result.Success = false;
+                    }
+                    else
+                    {
+                        result = reserveProfileResult.Data;
                         result.Success = true;
                     }
                 }

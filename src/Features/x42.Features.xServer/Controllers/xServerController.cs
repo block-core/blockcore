@@ -220,5 +220,26 @@ namespace x42.Features.xServer.Controllers
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
         }
+
+        /// <summary>
+        ///     Reserves a profile to the network.
+        /// </summary>
+        /// <param name="reserveRequest">The object with all of the nessesary data to reserve a profile.</param>
+        /// <returns>A <see cref="ReserveProfileResult" /> with reservation result.</returns>
+        [HttpPost]
+        [Route("reserveprofile")]
+        public IActionResult ReserveProfile([FromBody] ProfileReserveRequest reserveRequest)
+        {
+            try
+            {
+                var result = this.xServerManager.ReserveProfile(reserveRequest);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
     }
 }

@@ -57,5 +57,10 @@ namespace x42.Features.xServer.Interfaces
         ///     Will lookup the profile, and return the profile data.
         /// </summary>
         ProfileResult GetProfile(string name, string keyAddress);
+
+        /// <summary>
+        ///     Reserves a profile to the network.
+        /// </summary>
+        ReserveProfileResult ReserveProfile(ProfileReserveRequest reserveRequest);
     }
 }

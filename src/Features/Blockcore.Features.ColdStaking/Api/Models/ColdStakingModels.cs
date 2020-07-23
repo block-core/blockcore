@@ -75,6 +75,43 @@ namespace Blockcore.Features.ColdStaking.Api.Models
     }
 
     /// <summary>
+    /// The data structure used by a client creating a cold staking account.
+    /// Refer to <see cref="Controllers.ColdStakingController.CreateColdStakingAccount"/>.
+    /// </summary>
+    public class GetProfileAddressRequest
+    {
+        /// <summary>The wallet name.</summary>
+        [Required]
+        [JsonProperty(PropertyName = "walletName")]
+        public string WalletName { get; set; }
+
+        /// <summary>The wallet password.</summary>
+        [Required]
+        [JsonProperty(PropertyName = "walletPassword")]
+        public string WalletPassword { get; set; }
+
+        /// <summary>Determines from which of the cold staking accounts the address will be taken.</summary>
+        [Required]
+        [JsonProperty(PropertyName = "isColdWalletAccount")]
+        public bool IsColdWalletAccount { get; set; }
+
+        /// <summary>
+        /// Whether to return the P2WPKH (segwit bech32) addresses, or a regular P2PKH address
+        /// </summary>
+        [Required]
+        [JsonProperty(PropertyName = "segwit")]
+        public bool Segwit { get; set; }
+
+
+        /// <summary>Creates a string containing the properties of this object.</summary>
+        /// <returns>A string containing the properties of the object.</returns>
+        public override string ToString()
+        {
+            return $"{nameof(this.WalletName)}={this.WalletName},{nameof(this.IsColdWalletAccount)}={this.IsColdWalletAccount}";
+        }
+    }
+
+    /// <summary>
     /// The response data structure received by a client creating a cold staking account.
     /// Refer to <see cref="CreateColdStakingAccountRequest"/>.
     /// </summary>

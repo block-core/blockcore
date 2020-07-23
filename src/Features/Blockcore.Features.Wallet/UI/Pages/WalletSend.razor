@@ -122,6 +122,7 @@
                                         <textarea @bind="TransactionHex" class="form-control bg-secondary text-light" rows="4">@TransactionHex</textarea>
                                     </div>
                                 </div>
+                                <button class="btn btn-primary mt-3" @onclick="() => { NavigateToWallet(walletname, accountname); }">View Wallet</button>
                             </div>
                         </div>
                         }
@@ -136,21 +137,13 @@
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-
     private string Address { get; set; }
-
     private decimal Amount { get; set; }
-
     private decimal Fee { get; set; }
-
     private string Password { get; set; }
-
     uint256 SentTransactionHash { get; set; }
-
     string TransactionHex { get; set; }
-
     string Alert { get; set; }
-
     string Success { get; set; }
     protected override void OnInitialized()
     {
@@ -280,9 +273,11 @@
             this.Alert = ex.Message;
             return;
         }
-
+        this.Password = "";
+        this.Address = "";
+        this.Amount = 0;
+        this.Fee = 0;
         this.Success = "Coins sent. TransactionID: " + this.SentTransactionHash;
-
     }
     private void NavigateToBroadcastTx(string walletName, string accountname)
     {
@@ -300,7 +295,6 @@
     {
         NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
     }
-
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);

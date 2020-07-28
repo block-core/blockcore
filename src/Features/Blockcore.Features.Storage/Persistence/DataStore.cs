@@ -17,7 +17,7 @@ namespace Blockcore.Features.Storage.Persistence
         private LiteRepository repo;
         private readonly Network network;
 
-        private ILiteCollection<IdentityEntity> identityCol;
+        private ILiteCollection<IdentityDocument> identityCol;
         private ILiteCollection<DataEntity> dataCol;
 
         // public IdentityEntity NodeIdentity { get; private set; }
@@ -53,7 +53,7 @@ namespace Blockcore.Features.Storage.Persistence
             this.repo = new LiteRepository(this.db);
 
             this.dataCol = this.db.GetCollection<DataEntity>("data");
-            this.identityCol = this.db.GetCollection<IdentityEntity>("identity");
+            this.identityCol = this.db.GetCollection<IdentityDocument>("identity");
 
             //this.trxCol.EnsureIndex(x => x.OutPoint, true);
             //this.trxCol.EnsureIndex(x => x.Address, false);
@@ -82,25 +82,25 @@ namespace Blockcore.Features.Storage.Persistence
             //}
         }
 
-        public IEnumerable<IdentityEntity> GetIdentities()
+        public IEnumerable<IdentityDocument> GetIdentities()
         {
-            IEnumerable<IdentityEntity> identities = this.identityCol.FindAll();
+            IEnumerable<IdentityDocument> identities = this.identityCol.FindAll();
             return identities;
         }
 
-        public IdentityEntity GetIdentity(string id)
+        public IdentityDocument GetIdentity(string id)
         {
-            return this.identityCol.FindById(id);
+            return this.identityCol.FindById("identity/" + id);
         }
 
-        public void SetIdentity(IdentityEntity identity)
+        public void SetIdentity(IdentityDocument identity)
         {
             this.identityCol.Upsert(identity);
         }
 
         public bool RemoveIdentity(string id)
         {
-            return this.identityCol.Delete(id);
+            return this.identityCol.Delete("identity/" + id);
         }
 
         //public int CountForAddress(string address)

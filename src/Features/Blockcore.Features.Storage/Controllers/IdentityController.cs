@@ -36,7 +36,7 @@ namespace Blockcore.Features.Storage.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetIdentities()
         {
-            IEnumerable<IdentityEntity> identities = this.dataStore.GetIdentities();
+            IEnumerable<IdentityDocument> identities = this.dataStore.GetIdentities();
             return Ok(identities);
         }
 
@@ -48,13 +48,12 @@ namespace Blockcore.Features.Storage.Controllers
         [HttpGet("{address}")]
         public async Task<IActionResult> GetIdentity([FromRoute] string address)
         {
-            // Just an example.
             if (string.IsNullOrWhiteSpace(address))
             {
                 return BadRequest();
             }
 
-            var document = this.dataStore.GetIdentity(address);
+            IdentityDocument document = this.dataStore.GetIdentity(address);
 
             if (document == null)
             {
@@ -72,24 +71,24 @@ namespace Blockcore.Features.Storage.Controllers
         [HttpPut("{address}")]
         public async Task<IActionResult> PutIdentity([FromRoute] string address, [FromBody] IdentityDocument document)
         {
-            // Just an example.
             if (string.IsNullOrWhiteSpace(address))
             {
                 return BadRequest();
             }
 
-            // Make sure the route address and document owner is the same.
-            if (address != document.Owner)
+            // Make sure that only identity documents is submitted to this API.
+            if (document.GetContainer() != "identity")
             {
-                // Invalid address (public key)
                 return BadRequest();
             }
 
-            // Testing to sign only name.
-            byte[] entityBytes = MessagePackSerializer.Serialize(document.Body);
-            
-            // THIS WORKS, VALIDATES TO TRUE WHEN ONLY STRING IS USED!
-            //entityBytes = Encoding.UTF8.GetBytes(document.Body.Name);
+            // Make sure the route address and document owner is the same.
+            if (address != document.GetIdentifier())
+            {
+                return BadRequest();
+            }
+
+            byte[] entityBytes = MessagePackSerializer.Serialize(document.Content);
 
             var bitcoinAddress = (BitcoinPubKeyAddress)BitcoinPubKeyAddress.Create(address, ProfileNetwork.Instance);
 
@@ -101,17 +100,7 @@ namespace Blockcore.Features.Storage.Controllers
                 return BadRequest();
             }
 
-            IdentityEntity entity = new IdentityEntity();
-            entity.Owner = document.Owner;
-            entity.Signature = document.Signature;
-
-            // The EntityId should combine type/path and address (pubkey).
-            // entity.EntityId = "identity/" + address;
-            entity.EntityId = address;
-
-            entity.Document = document.Body;
-
-            dataStore.SetIdentity(entity);
+            this.dataStore.SetIdentity(document);
 
             return Ok(valid.ToString());
         }
@@ -124,17 +113,19 @@ namespace Blockcore.Features.Storage.Controllers
         [HttpDelete("{address}")]
         public async Task<IActionResult> DeleteIdentity([FromRoute] string address)
         {
-            // Just an example.
             if (string.IsNullOrWhiteSpace(address))
             {
                 return BadRequest();
             }
 
-            // If we can't find the data.
-            if (address != currentPublicKey)
+            IdentityDocument document = this.dataStore.GetIdentity(address);
+
+            if (document == null)
             {
                 return NotFound();
             }
+
+            // Perform validation of signature and allow delete.
 
             return Ok(address);
         }

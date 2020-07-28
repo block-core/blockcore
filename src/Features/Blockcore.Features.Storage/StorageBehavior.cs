@@ -136,7 +136,7 @@ namespace Blockcore.Features.Storage
                 if (name == "identity")
                 {
                     // Get all identities.
-                    IEnumerable<IdentityEntity> identities = this.dataStore.GetIdentities();
+                    IEnumerable<IdentityDocument> identities = this.dataStore.GetIdentities();
 
                     // Send the identities in pages to the peer node.
                     await this.SendIdentityAsync(peer, identities);
@@ -151,22 +151,23 @@ namespace Blockcore.Features.Storage
 
             this.logger.LogDebug($"Received {message.Items.Length} items from peer '{0}' for collection {collection}.", peer.RemoteSocketEndpoint);
 
-            IdentityEntity[] identities = ConvertIdentity(message.Items);
+            IdentityDocument[] identities = ConvertIdentity(message.Items);
 
-            foreach (IdentityEntity identity in identities)
+            foreach (IdentityDocument identity in identities)
             {
-                this.dataStore.SetIdentity(identity);
+                // TODO: Temporarily disable persistence of identities.
+                // this.dataStore.SetIdentity(identity);
             }
         }
 
-        private async Task SendIdentityAsync(INetworkPeer peer, IEnumerable<IdentityEntity> identities)
+        private async Task SendIdentityAsync(INetworkPeer peer, IEnumerable<IdentityDocument> identities)
         {
-            var queue = new Queue<IdentityEntity>(identities);
+            var queue = new Queue<IdentityDocument>(identities);
 
             while (queue.Count > 0)
             {
                 // Send 2 and 2 documents, just for prototype. Increase this later.
-                IdentityEntity[] items = queue.TakeAndRemove(2).ToArray();
+                IdentityDocument[] items = queue.TakeAndRemove(2).ToArray();
 
                 if (peer.IsConnected)
                 {
@@ -237,11 +238,11 @@ namespace Blockcore.Features.Storage
             return strings.ToArray();
         }
 
-        private VarString[] ConvertIdentity(IdentityEntity[] list)
+        private VarString[] ConvertIdentity(IdentityDocument[] list)
         {
             var strings = new List<VarString>();
 
-            foreach (IdentityEntity item in list)
+            foreach (IdentityDocument item in list)
             {
                 string json = JsonConvert.SerializeObject(item);
                 strings.Add(new VarString(Encoders.ASCII.DecodeData(json)));
@@ -250,14 +251,14 @@ namespace Blockcore.Features.Storage
             return strings.ToArray();
         }
 
-        private IdentityEntity[] ConvertIdentity(VarString[] list)
+        private IdentityDocument[] ConvertIdentity(VarString[] list)
         {
-            var identities = new List<IdentityEntity>();
+            var identities = new List<IdentityDocument>();
 
             foreach (VarString item in list)
             {
                 string jsonText = Encoders.ASCII.EncodeData(item.GetString(true));
-                IdentityEntity identity = JsonConvert.DeserializeObject<IdentityEntity>(jsonText);
+                IdentityDocument identity = JsonConvert.DeserializeObject<IdentityDocument>(jsonText);
 
                 identities.Add(identity);
             }

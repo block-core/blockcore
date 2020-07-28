@@ -49,6 +49,9 @@ namespace Blockcore.Features.NodeHost
         {
             NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
+            // Make the configuration available to custom features.
+            services.AddSingleton(this.Configuration);
+
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConfiguration(this.Configuration.GetSection("Logging"));

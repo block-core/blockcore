@@ -434,32 +434,33 @@ namespace x42.Features.xServer
 
         private void SyncPeerToPeersList(xServerPeers xServerPeerList, xServerPeer peer, bool seedCheck = false, bool removePeer = false)
         {
-            lock (this.xServerPeersLock)
+
+            var peersList = xServerPeerList.GetPeers();
+            int peerIndex = peersList.FindIndex(p => p.NetworkAddress == peer.NetworkAddress);
+            if (removePeer)
             {
-                var peersList = xServerPeerList.GetPeers();
-                int peerIndex = peersList.FindIndex(p => p.NetworkAddress == peer.NetworkAddress);
-                if (removePeer)
+                peersList.Remove(peer);
+            }
+            else if (seedCheck)
+            {
+                if (peerIndex == -1)
                 {
-                    peersList.Remove(peer);
+                    peersList.Add(peer);
                 }
-                else if (seedCheck)
+            }
+            else
+            {
+                if (peerIndex >= 0)
                 {
-                    if (peerIndex == -1)
-                    {
-                        peersList.Add(peer);
-                    }
+                    peersList[peerIndex] = peer;
                 }
                 else
                 {
-                    if (peerIndex >= 0)
-                    {
-                        peersList[peerIndex] = peer;
-                    }
-                    else
-                    {
-                        peersList.Add(peer);
-                    }
+                    peersList.Add(peer);
                 }
+            }
+            lock (this.xServerPeersLock)
+            {
                 xServerPeerList.ReplacePeers(peersList);
             }
         }
@@ -479,7 +480,7 @@ namespace x42.Features.xServer
                     ResponseTime = 99999999,
                     Tier = (int)TierLevel.Seed
                 };
-                SyncPeerToPeersList(xServerPeerList, seedPeer, true);
+                SyncPeerToPeersList(xServerPeerList, seedPeer, seedCheck: true);
             }
         }
 

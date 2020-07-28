@@ -48,6 +48,11 @@ namespace x42.Features.xServer
         private const int CheckXServerRate = 600;
 
         /// <summary>
+        /// Sets the period by which the xServer refresh check occurs (secs).
+        /// </summary>
+        private const int RefreshXServerRate = 60;
+
+        /// <summary>
         /// Protects access to the list of xServer Peers.
         /// </summary>
         private readonly object xServerPeersLock;
@@ -66,6 +71,11 @@ namespace x42.Features.xServer
         /// Will discover and manage xServers.
         /// </summary>
         private IAsyncLoop xServerDiscoveryLoop;
+
+        /// <summary>
+        /// Will discover and manage xServers.
+        /// </summary>
+        private IAsyncLoop xServerRefreshLoop;
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -124,12 +134,21 @@ namespace x42.Features.xServer
             this.xServerDiscoveryLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{nameof(xServerFeature)}.xServerSeedRefresh", async token =>
             {
                 await XServerDiscoveryAsync(this.xServerPeerList).ConfigureAwait(false);
-                await RemoveUnresponsivePeersAsync(this.xServerPeerList).ConfigureAwait(false);
-                this.logger.LogInformation($"Saving cached xServer Seeds to {this.xServerPeerList.Path}");
+                this.logger.LogInformation($"Saving new xServer Seeds to {this.xServerPeerList.Path}");
                 await this.xServerPeerList.Save().ConfigureAwait(false);
             },
             this.nodeLifetime.ApplicationStopping,
             repeatEvery: TimeSpan.FromSeconds(CheckXServerRate),
+            startAfter: TimeSpans.Second);
+
+            this.xServerRefreshLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{nameof(xServerFeature)}.xServerSeedRefresh", async token =>
+            {
+                await UpdatePeersAsync(this.xServerPeerList).ConfigureAwait(false);
+                this.logger.LogInformation($"Saving refreshed xServer Seeds to {this.xServerPeerList.Path}");
+                await this.xServerPeerList.Save().ConfigureAwait(false);
+            },
+            this.nodeLifetime.ApplicationStopping,
+            repeatEvery: TimeSpan.FromSeconds(RefreshXServerRate),
             startAfter: TimeSpans.Second);
         }
 
@@ -137,6 +156,7 @@ namespace x42.Features.xServer
         public void Stop()
         {
             this.xServerDiscoveryLoop?.Dispose();
+            this.xServerRefreshLoop?.Dispose();
         }
 
         /// <inheritdoc />
@@ -484,7 +504,7 @@ namespace x42.Features.xServer
             }
         }
 
-        private async Task RemoveUnresponsivePeersAsync(xServerPeers xServerPeerList)
+        private async Task UpdatePeersAsync(xServerPeers xServerPeerList)
         {
             foreach (var peer in xServerPeerList.GetPeers())
             {
@@ -494,7 +514,15 @@ namespace x42.Features.xServer
                 var pingResponseTime = Stopwatch.StartNew();
                 var pingResult = await client.ExecuteAsync<PingResult>(pingRequest).ConfigureAwait(false);
                 pingResponseTime.Stop();
-                if (pingResult.StatusCode != HttpStatusCode.OK)
+                if (pingResult.StatusCode == HttpStatusCode.OK)
+                {
+                    var pingData = pingResult.Data;
+                    peer.Version = pingData.Version;
+                    peer.ResponseTime = pingResponseTime.ElapsedMilliseconds;
+                    peer.Tier = pingData.Tier;
+                    SyncPeerToPeersList(xServerPeerList, peer);
+                }
+                else
                 {
                     SyncPeerToPeersList(xServerPeerList, peer, removePeer: true);
                 }
@@ -543,7 +571,7 @@ namespace x42.Features.xServer
                                     Priority = xServer.Priotiry,
                                     Version = ping.Version,
                                     ResponseTime = pingResponseTime.ElapsedMilliseconds,
-                                    Tier = xServer.Tier
+                                    Tier = ping.Tier
                                 };
                                 SyncPeerToPeersList(xServerPeerList, newPeer);
                             }

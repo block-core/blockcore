@@ -3,7 +3,7 @@ using System.Net;
 using Blockcore.Base;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
-using Blockcore.Features.BlockStore.Controllers;
+using Blockcore.Features.BlockStore.Api.Contollers;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;

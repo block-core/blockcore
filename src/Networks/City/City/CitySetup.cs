@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.Versioning;
 using City.Networks;
 using City.Networks.Setup;
 using NBitcoin;

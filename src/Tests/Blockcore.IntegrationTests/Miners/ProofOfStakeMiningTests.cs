@@ -76,11 +76,15 @@ namespace Blockcore.IntegrationTests.Miners
                 var minerA = builder.CreateStratisPosNode(network, "stake-1-minerA", configParameters: configParameters).OverrideDateTimeProvider().WithWallet().Start();
 
                 var addressUsed = TestHelper.MineBlocks(minerA, (int)network.Consensus.PremineHeight).AddressUsed;
+                var wallet = minerA.FullNode.WalletManager().Wallets.Single(w => w.Name == "mywallet");
+                var allTrx = wallet.walletStore.GetForAddress(addressUsed.Address);
 
                 // Since the pre-mine will not be immediately spendable, the transactions have to be counted directly from the address.
-                addressUsed.Transactions.Count().Should().Be((int)network.Consensus.PremineHeight);
+                allTrx.Count().Should().Be((int)network.Consensus.PremineHeight);
 
-                addressUsed.Transactions.Sum(s => s.Amount).Should().Be(network.Consensus.PremineReward + network.Consensus.ProofOfWorkReward);
+                allTrx.Sum(s => s.Amount).Should().Be(network.Consensus.PremineReward + network.Consensus.ProofOfWorkReward);
+                var balance = minerA.FullNode.WalletManager().GetAddressBalance(addressUsed.Address);
+                balance.AmountConfirmed.Should().Be(network.Consensus.PremineReward + network.Consensus.ProofOfWorkReward);
 
                 // Mine blocks to maturity.
                 TestHelper.MineBlocks(minerA, (int)network.Consensus.CoinbaseMaturity + 1);

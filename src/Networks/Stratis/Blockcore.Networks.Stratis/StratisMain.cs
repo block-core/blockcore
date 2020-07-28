@@ -77,11 +77,12 @@ namespace Blockcore.Networks.Stratis
             var consensusOptions = new PosConsensusOptions
             {
                 MaxBlockBaseSize = 1_000_000,
+                MaxBlockSerializedSize = 1_000_000,
                 MaxStandardVersion = 2,
                 MaxStandardTxWeight = 100_000,
                 MaxBlockSigopsCost = 20_000,
                 MaxStandardTxSigopsCost = 20_000 / 5,
-                WitnessScaleFactor = 4
+                WitnessScaleFactor = 1,
             };
 
             var buriedDeployments = new BuriedDeploymentsArray

@@ -1,10 +1,11 @@
 ﻿@using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
 
-<div class="input-group">
-        <input type="text" readonly class="form-control" value="@Text" />
+<div class="input-group row">
+        <input type="text" readonly class="form-control bg-secondary text-light" value="@Text" />
         <div class="input-group-append">
-            <button class="btn btn-sm btn-primary mr-1" @onclick="CopyTextToClipboard">Copy</button>
+            <button class="btn btn-sm btn-secondary ml-1" @onclick="CopyTextToClipboard">
+                <span class="oi oi-clipboard" aria-hidden="true"></span></button>
         </div>
 </div>
 

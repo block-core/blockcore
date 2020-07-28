@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
@@ -77,6 +78,14 @@ namespace Blockcore.IntegrationTests
                 TestHelper.WaitForNodeToSync(miningNode, listeningNode);
                 TestBase.WaitLoop(() => miningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
                 TestBase.WaitLoop(() => listeningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
+                TestBase.WaitLoop(() => miningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+                TestBase.WaitLoop(() => listeningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+
+                TestBase.WaitLoop(() =>
+                {
+                    return miningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount))
+                     && listeningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount));
+                });
 
                 dataFolderPath = miningNode.DataFolder;
                 listenerFolderPath = listeningNode.DataFolder;
@@ -121,6 +130,14 @@ namespace Blockcore.IntegrationTests
                 TestHelper.WaitForNodeToSync(miningNode, listeningNode);
                 TestBase.WaitLoop(() => miningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
                 TestBase.WaitLoop(() => listeningNode.FullNode.WalletManager().WalletTipHeight == blockCount);
+                TestBase.WaitLoop(() => miningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+                TestBase.WaitLoop(() => listeningNode.FullNode.ChainBehaviorState.BlockStoreTip.Height == blockCount);
+
+                TestBase.WaitLoop(() =>
+                {
+                    return miningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount))
+                     && listeningNode.FullNode.WalletManager().Wallets.All(a => a.AccountsRoot.All(b => b.LastBlockSyncedHeight == blockCount));
+                });
 
                 dataFolderPath = miningNode.DataFolder;
                 listenerFolderPath = listeningNode.DataFolder;

@@ -13,9 +13,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
     <ProjectReference Include="..\..\Networks\City\City\Blockcore.Networks.City.csproj" />
+    <ProjectReference Include="..\..\Networks\OpenExo\OpenExo\OpenExo.csproj" />
+    <ProjectReference Include="..\..\Networks\Rutanio\Rutanio\Rutanio.csproj" />
     <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\Networks\x42\x42\x42.Networks.csproj" />
     <ProjectReference Include="..\..\Networks\Xds\Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />    
     <ProjectReference Include="..\..\Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />

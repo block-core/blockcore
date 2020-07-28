@@ -15,109 +15,121 @@
 @inject IBroadcasterManager BroadcasterManager
 
 @{
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Send coins from: @walletname</strong></h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>Send coins</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <Dropdown TItem="string" OnSelected="@OnSelected" >
+                <InitialTip>@walletname</InitialTip>
+                <ChildContent>
+                        @foreach (var walletName in this.WalletManager.GetWalletsNames()) 
+                        {
+                            foreach (var account in this.WalletManager.GetAccounts(walletName))
+                            {
+                            <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                            }
+                        }
+                </ChildContent>
+            </Dropdown>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >
+                <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
+            </button>
+            <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
+        </div>
     </div>
-</div>
 
-var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
-<div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h5>Main Balance</h5>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center align-self-start">
-                            <h3 class="text-left">@accountBalance.AmountConfirmed</h3>
-                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+    <div class="row mb-3">
+        <div class="col-xl-12 col-sm-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Main Balance</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@accountBalance.AmountConfirmed</h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
                         </div>
                     </div>
+                    <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
                 </div>
-                <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
+<div class="row">
+    <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text" id="basic-addon1">To Address:</span>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Address</label>
+                        <div class="col-sm-10">
+                            <input @bind="Address" type="text" class="form-control bg-secondary text-light" placeholder="Where you want to send coins? Please enter the address" />
+                        </div>
                     </div>
-                    <input @bind="Address" type="text" class="form-control" placeholder="Where you want to send coins? Please enter the address" />
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Amount (@this.Network.CoinTicker.ToUpper())</label>
+                        <div class="input-group col-sm-10">
+                            <input @bind="Amount" type="text" class="form-control bg-secondary text-light" placeholder="Amount" />
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary ml-1" @onclick="SendMax">Max</button>
+                            </div>
+                        </div>
                     </div>
-                    <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
-                    <div class="input-group-append">
-                        <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Fee</label>
+                        <div class="input-group col-sm-10">
+                            <input @bind="Fee" type="text" class="form-control bg-secondary text-light" placeholder="Fee" />
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary ml-1" @onclick="() => { EstimateFee(FeeType.Low); }">Low</button>
+                                <button class="btn btn-secondary ml-1" @onclick="() => { EstimateFee(FeeType.Medium); }">Medium</button>
+                                <button class="btn btn-secondary ml-1" @onclick="() => { EstimateFee(FeeType.High); }">High</button>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                            <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
+                        </div>
                     </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Fee:</span>
-                    </div>
-                    <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary" @onclick="EstimateFee">Estimate Fee</button>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Password:</span>
-                    </div>
-                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
-                </div>
-
                     <div class="input-group mb-3">
                         @if (IsSending)
-                            { <button class="btn btn-danger mr-1" disabled>
-                                <span class="spinner-border spinner-border-sm"></span> Working...</button> }
+                        {
+                            <button class="btn btn-danger mr-1" disabled>
+                                <span class="spinner-border spinner-border-sm"></span> Working...
+                            </button>
+                        }
                         else
-                            { <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button> }
-                    </div>    
-
-                <div class="input-group">
-                    <div class="alert-warning">@Alert</div>
-                </div>
-                
-                <div class="input-group">
-                    <div class="alert-info">@Success</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@* 
-// TODO add confirmation screeen
-    <h3>Transaction Details</h3>
-
-<div class="row mb-3">
-    <div class="col-xl-12 col-sm-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-            <p>Transaction hash: @SentTransactionHash</p>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 15em" class="input-group-text">Raw Transaction</span>
+                        {
+                            <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button>
+                        }
                     </div>
-                    <textarea @bind="TransactionHex" class="form-control" rows="5">@TransactionHex</textarea>
+
+                    <div class="input-group">
+                        <div class="text-danger">@Alert</div>
+                    </div>
+
+                    @if (Success != null)
+                        {
+                        <h4>Transaction Broadcast</h4>
+                        <div class="row mb-3">
+                            <div class="col-xl-12 col-sm-12 ">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p>Transaction hash: @SentTransactionHash</p>
+                                        <span>Raw Transaction</span>
+                                        <textarea @bind="TransactionHex" class="form-control bg-secondary text-light" rows="4">@TransactionHex</textarea>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary mt-3" @onclick="() => { NavigateToWallet(walletname, accountname); }">View Wallet</button>
+                            </div>
+                        </div>
+                        }
                 </div>
             </div>
         </div>
     </div>
-</div> *@
 }
 @code
 {
@@ -125,27 +137,19 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-
     private string Address { get; set; }
-
     private decimal Amount { get; set; }
-
     private decimal Fee { get; set; }
-
     private string Password { get; set; }
-
     uint256 SentTransactionHash { get; set; }
-
     string TransactionHex { get; set; }
-
     string Alert { get; set; }
-
     string Success { get; set; }
     protected override void OnInitialized()
     {
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
     }
-    public void EstimateFee()
+    public void EstimateFee(FeeType feeType = FeeType.Low)
     {
         if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
         if (this.Amount == 0) { this.Alert = "Please enter the number of coins you want to send"; return; }
@@ -161,22 +165,53 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
         var context = new TransactionBuildContext(this.Network)
         {
             AccountReference = new WalletAccountReference(walletname, accountname),
-            FeeType = FeeType.Low,
+            FeeType = feeType,
             Recipients = recipients,
             Sign = false
         };
 
-        this.Fee = this.WalletTransactionHandler.EstimateFee(context).ToDecimal(MoneyUnit.BTC);
+        try
+        {
+            this.Fee = this.WalletTransactionHandler.EstimateFee(context).ToDecimal(MoneyUnit.BTC);
+        }
+        catch (NBitcoin.NotEnoughFundsException nef)
+        {
+            if (nef.Missing is Money money)
+            {
+                var minFee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
+                this.Fee = Math.Max(minFee, money.ToDecimal(MoneyUnit.BTC));
+            }
+            else
+            {
+                this.Alert = nef.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            this.Alert = ex.Message;
+        }
     }
+    public void SendMax()
+    {
+        if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
+        this.Alert = string.Empty;
+
+        var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+
+        this.Amount = accountBalance.AmountConfirmed.ToUnit(MoneyUnit.BTC);
+
+        this.EstimateFee();
+
+        this.Amount = this.Amount - this.Fee;
+    }
+
     private bool IsSending { get; set; }
     private async Task callSendCoins()
     {
         IsSending = true;
         StateHasChanged();
-        await Task.Delay(1); 
-        {
-            SendCoins();
-        }
+        await Task.Delay(1);  // flush changes
+        await SendCoins();
         IsSending = false;
         StateHasChanged();
         await Task.Delay(1);
@@ -197,45 +232,72 @@ var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Sin
             return;
         }
 
-        var recipients = new List<Recipient>();
-        recipients.Add(new Recipient
+        try
         {
-            ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
-            Amount = new Money(Amount, MoneyUnit.BTC)
-        });
+            var recipients = new List<Recipient>();
+            recipients.Add(new Recipient
+            {
+                ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
+                Amount = new Money(Amount, MoneyUnit.BTC)
+            });
 
-        var context = new TransactionBuildContext(this.Network)
+            var context = new TransactionBuildContext(this.Network)
+            {
+                AccountReference = new WalletAccountReference(walletname, accountname),
+                Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
+                WalletPassword = Password,
+                Recipients = recipients,
+                UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
+                TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
+            };
+
+            Transaction transactionResult = this.WalletTransactionHandler.BuildTransaction(context);
+
+            this.SentTransactionHash = transactionResult.GetHash();
+            this.TransactionHex = transactionResult.ToHex(this.Network.Consensus.ConsensusFactory);
+
+            Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
+
+            await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
+
+            var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
+
+            if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
+            {
+                this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
+                return;
+            }
+        }
+        catch (Exception ex)
         {
-            AccountReference = new WalletAccountReference(walletname, accountname),
-            Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
-            WalletPassword = Password,
-            Recipients = recipients,
-            UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
-            TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
-        };
-
-        Transaction transactionResult = this.WalletTransactionHandler.BuildTransaction(context);
-
-        this.SentTransactionHash = transactionResult.GetHash();
-        this.TransactionHex = transactionResult.ToHex(this.Network.Consensus.ConsensusFactory);
-
-        Transaction transaction = this.Network.CreateTransaction(this.TransactionHex);
-
-        await this.BroadcasterManager.BroadcastTransactionAsync(transaction);
-
-        var transactionBroadCastEntry = this.BroadcasterManager.GetTransaction(transaction.GetHash());
-
-        if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
-        {
-            this.Alert = "An error occurred: " + transactionBroadCastEntry.ErrorMessage;
+            this.Alert = ex.Message;
             return;
         }
-        this.Success = "Coins sent.";
-
-        NavigationManager.NavigateTo("walletaccount/" + walletname + "/" + accountname);
+        this.Password = "";
+        this.Address = "";
+        this.Amount = 0;
+        this.Fee = 0;
+        this.Success = "Coins sent. TransactionID: " + this.SentTransactionHash;
     }
     private void NavigateToBroadcastTx(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletbroadcasttx/" + walletName + "/" + accountname);
+    }
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+    }
+    private void NavigateToReceiveWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+    }
+    private void NavigateToSendWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToWallet(selection,"account 0");
     }
 }

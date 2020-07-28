@@ -20,6 +20,11 @@ namespace Blockcore.Node
                    .Select(arg => arg.Replace("--chain=", string.Empty, ignoreCase: true, CultureInfo.InvariantCulture))
                    .FirstOrDefault();
 
+                if (string.IsNullOrWhiteSpace(chain))
+                {
+                    chain = "BTC";
+                }
+
                 NodeSettings nodeSettings = NetworkSelector.Create(chain, args);
                 IFullNodeBuilder nodeBuilder = NodeBuilder.Create(chain, nodeSettings);
 

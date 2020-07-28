@@ -210,9 +210,31 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <summary>
         /// Gets the history of the transactions in addresses contained in this account.
         /// </summary>
+        /// <param name="wallet">The wallet instance.</param>
         /// <param name="account">The account for which to get history.</param>
         /// <returns>The history for this account.</returns>
-        AccountHistory GetHistory(HdAccount account);
+        AccountHistory GetHistory(Types.Wallet wallet, HdAccount account);
+
+        /// <summary>
+        /// Gets the history of transactions contained in an account.
+        /// If no account name is specified, history will be returned for all accounts in the wallet.
+        /// </summary>
+        /// <param name="walletName">The wallet name.</param>
+        /// <param name="accountName">The account name.</param>
+        /// <param name="skip">Items to skip.</param>
+        /// <param name="take">Items to take.</param>
+        /// <returns>Collection of address history and transaction pairs.</returns>
+        IEnumerable<AccountHistorySlim> GetHistorySlim(string walletName, string accountName = null, int skip = 0, int take = 100);
+
+        /// <summary>
+        /// Gets the history of the transactions in addresses contained in this account.
+        /// </summary>
+        /// <param name="wallet">The wallet instance.</param>
+        /// <param name="account">The account for which to get history.</param>
+        /// <param name="skip">Items to skip.</param>
+        /// <param name="take">Items to take.</param>
+        /// <returns>The history for this account.</returns>
+        AccountHistorySlim GetHistorySlim(Types.Wallet wallet, HdAccount account, int skip = 0, int take = 100);
 
         /// <summary>
         /// Gets the balance of transactions contained in an account.
@@ -220,8 +242,9 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="walletName">The wallet name.</param>
         /// <param name="accountName">The account name.</param>
+        /// <param name="calculatSpendable">Whether to calculate also the spendable balance.</param>
         /// <returns>Collection of account balances.</returns>
-        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null);
+        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null, bool calculatSpendable = false);
 
         /// <summary>
         /// Gets the balance of transactions for this specific address.

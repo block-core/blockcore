@@ -40,6 +40,9 @@ namespace Blockcore.Features.RPC
         /// <summary>List of IP addresses that are allowed to connect to RPC interfaces.</summary>
         public List<IPAddressBlock> AllowIp { get; set; }
 
+        /// <summary>Can load the RPCContentType with or without charset.</summary>
+        public string RPCContentType { get; set; }
+
         /// <summary>
         /// Initializes an instance of the object from the node configuration.
         /// </summary>
@@ -71,6 +74,7 @@ namespace Blockcore.Features.RPC
 
             this.Server = config.GetOrDefault<bool>("server", false, this.logger);
             this.RPCPort = config.GetOrDefault<int>("rpcport", nodeSettings.Network.DefaultRPCPort, this.logger);
+            this.RPCContentType = config.GetOrDefault("rpccontenttype", "application/json; charset=utf-8", this.logger);
 
             if (this.Server)
             {
@@ -157,6 +161,7 @@ namespace Blockcore.Features.RPC
             builder.AppendLine($"-rpcport=<0-65535>        Listen for JSON-RPC connections on <port>. Default: {network.DefaultRPCPort}");
             builder.AppendLine($"-rpcbind=<ip:port>        Bind to given address to listen for JSON-RPC connections. This option can be specified multiple times. Default: bind to all interfaces");
             builder.AppendLine($"-rpcallowip=<ip>          Allow JSON-RPC connections from specified source. This option can be specified multiple times.");
+            builder.AppendLine($"-rpccontentype=<string>   Use application/json to connect with other daemons like ElectrumX");
 
             defaults.Logger.LogInformation(builder.ToString());
         }

@@ -16,7 +16,9 @@ using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
@@ -215,23 +217,24 @@ namespace Blockcore.Features.Miner.Tests
             var walletSecret = new WalletSecret() { WalletName = "wallet", WalletPassword = "password" };
             var wallet = new Wallet.Types.Wallet()
             {
-                Network = this.network
+                Network = this.network,
+                walletStore = new WalletMemoryStore()
             };
 
             var milliseconds550MinutesAgo = (uint)Math.Max(this.chainIndexer.Tip.Header.Time - TimeSpan.FromMinutes(550).Milliseconds, 0);
             this.AddAccountWithSpendableOutputs(wallet);
-            var spendableTransactions = wallet.GetAllSpendableTransactions(this.chainIndexer.Tip.Height, 0).ToList();
+            var spendableTransactions = wallet.GetAllSpendableTransactions(wallet.walletStore, this.chainIndexer.Tip.Height, 0).ToList();
 
             this.walletManager.Setup(w => w.GetSpendableTransactionsInWalletForStaking(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(spendableTransactions);
 
             var fetchedUtxos = spendableTransactions
-                .Select(t => 
+                .Select(t =>
                 new UnspentOutput(
-                    new OutPoint( t.Transaction.Id, 0), 
-                    new Coins(0, new TxOut(t.Transaction.Amount ?? Money.Zero, t.Address.ScriptPubKey), 
-                    false, 
-                    false, 
+                    new OutPoint(t.Transaction.Id, 0),
+                    new Coins(0, new TxOut(t.Transaction.Amount ?? Money.Zero, t.Address.ScriptPubKey),
+                    false,
+                    false,
                     milliseconds550MinutesAgo)))
                 .ToArray();
             var fetchCoinsResponse = new FetchCoinsResponse();
@@ -268,13 +271,14 @@ namespace Blockcore.Features.Miner.Tests
 
         private void AddAccountWithSpendableOutputs(Wallet.Types.Wallet wallet)
         {
+            WalletMemoryStore store = wallet.walletStore as WalletMemoryStore;
             var account = new HdAccount();
-            account.ExternalAddresses.Add(new HdAddress { Index = 1, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(15), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue - 1 } } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 1, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(16), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue } } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 2, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(17), Index = 0, Amount = 2 * Money.COIN } } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 2, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(18), Index = 0, Amount = 2 * Money.CENT } } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 3, Transactions = new List<TransactionData> { new TransactionData { Id = new uint256(19), Index = 0, Amount = 1 * Money.NANO } } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 4, Transactions = null });
+            account.ExternalAddresses.Add(new HdAddress { Index = 1, Address = "1" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(15), 0), Address = "1", Id = new uint256(15), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue - 1 } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 1, Address = "2" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(16), 0), Address = "1", Id = new uint256(16), Index = 0, Amount = this.posMinting.MinimumStakingCoinValue } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "3" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(17), 0), Address = "2", Id = new uint256(17), Index = 0, Amount = 2 * Money.COIN } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "4" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(18), 0), Address = "2", Id = new uint256(18), Index = 0, Amount = 2 * Money.CENT } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 3, Address = "5" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(19), 0), Address = "3", Id = new uint256(19), Index = 0, Amount = 1 * Money.NANO } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 4, Address = "6" }); //store.Add(null);
             wallet.AccountsRoot.Add(new AccountRoot() { Accounts = new[] { account }, CoinType = KnownCoinTypes.Stratis });
         }
 

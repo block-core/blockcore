@@ -1,0 +1,55 @@
+﻿@page "/about"
+
+@using Blockcore.Utilities.Extensions
+
+@inject IFullNode FullNode
+@inject NBitcoin.Network Network
+@inject NBitcoin.ChainIndexer ChainIndexer
+@inject Blockcore.Connection.IConnectionManager ConnectionManager
+@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+@inject NavigationManager NavigationManager
+
+@{
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2"><strong>About @this.Network.CoinTicker.ToUpper()</strong></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <span class="float-right">
+            <a class="btn btn-sm btn-primary mr-1" href="/docs/index.html" target="_blank" role="button"><span class="oi oi-code" aria-hidden="true"></span> Open API</a>
+            <a class="btn btn-sm btn-primary mr-1" href="/ws-ui/index.html" target="_blank" role="button"><span class="oi oi-link-intact" aria-hidden="true"></span> Web Socket</a>
+            <a class="btn btn-sm btn-primary mr-1" href="https://www.blockcore.net" target="_blank" role="button"><span class="oi oi-external-link" aria-hidden="true"></span> Blockcore</a>
+        </span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-xl-12 col-sm-12 ">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <h5 class="card-title">Node Information</h5>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="min-width: 11em">Agent name:</td>
+                                <td>@this.ConnectionManager.ConnectionSettings.Agent</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 11em">Node version:</td>
+                                <td>@this.FullNode.Version?.ToString()</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 11em">Protocol version:</td>
+                                <td>@this.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 11em">Current tip Hash:</td>
+                                <td>@this.ChainIndexer.Tip.HashBlock</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

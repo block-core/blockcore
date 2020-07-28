@@ -85,8 +85,8 @@ namespace Blockcore.Features.RPC
         blockchain         getdifficulty
         blockchain         getmempoolinfo
         blockchain         getrawmempool                Yes
-        blockchain         gettxout                    Yes
-        blockchain         gettxoutproof
+        blockchain         gettxout                     Yes
+        blockchain         gettxoutproof                Yes
         blockchain         verifytxoutproof
         blockchain         gettxoutsetinfo
         blockchain         verifychain
@@ -151,7 +151,7 @@ namespace Blockcore.Features.RPC
         wallet             listreceivedbyaccount
         wallet             listreceivedbyaddress
         wallet             listsinceblock
-        wallet             listtransactions
+        wallet             listtransactions             Yes
         wallet             listunspent                  Yes
         wallet             lockunspent                  Yes
         wallet             move

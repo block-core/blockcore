@@ -12,6 +12,8 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Utilities;
+using Blockcore.Features.WalletWatchOnly;
+using Blockcore.Features.Notifications;
 using x42.Features.xServer;
 
 namespace x42.Daemon
@@ -29,7 +31,10 @@ namespace x42.Daemon
                     .UseBlockStore()
                     .UsePosConsensus()
                     .UseMempool()
+                    .UseBlockNotification()
+                    .UseTransactionNotification()
                     .UseColdStakingWallet()
+                    .UseWatchOnlyWallet()
                     .AddPowPosMining()
                     .UseNodeHost()
                     .AddRPC()

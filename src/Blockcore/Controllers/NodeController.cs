@@ -18,6 +18,7 @@ using Blockcore.Primitives;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Blockcore.Utilities.ModelStateErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -34,6 +35,7 @@ namespace Blockcore.Controllers
     /// <summary>
     /// Provides methods that interact with the full node.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
@@ -475,6 +477,7 @@ namespace Blockcore.Controllers
         /// <seealso cref="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Simple_requests"/>
         /// </remarks>
         /// <returns><see cref="OkResult"/></returns>
+        [Authorize(Policy = "OnlyAdmins")]
         [HttpPost]
         [Route("shutdown")]
         [Route("stop")]
@@ -492,6 +495,7 @@ namespace Blockcore.Controllers
         /// </summary>
         /// <param name="request">The request containing the loggers to modify.</param>
         /// <returns><see cref="OkResult"/></returns>
+        [Authorize(Policy = "OnlyAdmins")]
         [HttpPut]
         [Route("loglevels")]
         public IActionResult UpdateLogLevel([FromBody] LogRulesRequest request)

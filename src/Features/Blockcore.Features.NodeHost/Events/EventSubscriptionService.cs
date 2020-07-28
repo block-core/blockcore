@@ -59,6 +59,8 @@ namespace Blockcore.Features.NodeHost.Events
             }
         }
 
+        public bool HasConsumers => this.consumers.Count > 0;
+
         public void SetHub<T>(IHubContext<T> hubContext) where T : Hub
         {
             Guard.Assert(hubContext is IHubContext<EventsHub>);

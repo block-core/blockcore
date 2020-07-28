@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Policy;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
+using DBreeze.Utils;
 using NBitcoin;
+using NBitcoin.Crypto;
 using Newtonsoft.Json;
 
 namespace Blockcore.Tests.Wallet.Common
@@ -15,16 +21,17 @@ namespace Blockcore.Tests.Wallet.Common
     /// </summary>
     public class WalletTestsHelpers
     {
-        public static HdAccount CreateAccount(string name)
+        public static HdAccount CreateAccount(string name, int index = 0)
         {
             return new HdAccount
             {
                 Name = name,
                 HdPath = "1/2/3/4/5",
+                Index = index
             };
         }
 
-        public static SpendingDetails CreateSpendingDetails(TransactionData changeTransaction, PaymentDetails paymentDetails)
+        public static SpendingDetails CreateSpendingDetails(TransactionOutputData changeTransaction, PaymentDetails paymentDetails)
         {
             var spendingDetails = new SpendingDetails
             {
@@ -47,16 +54,19 @@ namespace Blockcore.Tests.Wallet.Common
             };
         }
 
-        public static TransactionData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null)
+        public static TransactionOutputData CreateTransaction(uint256 id, Money amount, int? blockHeight, SpendingDetails spendingDetails = null, DateTimeOffset? creationTime = null, Script script = null, string address = null, int accountIndex = 0)
         {
             if (creationTime == null)
             {
                 creationTime = new DateTimeOffset(new DateTime(2017, 6, 23, 1, 2, 3));
             }
 
-            return new TransactionData
+            return new TransactionOutputData
             {
+                OutPoint = new OutPoint(id, blockHeight ?? 1),
+                Address = address ?? script?.ToHex(),
                 Amount = amount,
+                AccountIndex = accountIndex,
                 Id = id,
                 CreationTime = creationTime.Value,
                 BlockHeight = blockHeight,
@@ -135,6 +145,7 @@ namespace Blockcore.Tests.Wallet.Common
             {
                 Name = name,
                 AccountsRoot = new List<AccountRoot>(),
+                walletStore = new WalletMemoryStore(),
                 BlockLocator = null
             };
         }
@@ -156,8 +167,16 @@ namespace Blockcore.Tests.Wallet.Common
                 ChainCode = extendedKey.ChainCode,
                 CreationTime = DateTimeOffset.Now,
                 Network = KnownNetworks.Main,
-                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = KnownNetworks.Main.Consensus.CoinType } },
+                walletStore = new WalletMemoryStore(),
+                BlockLocator = new List<uint256>() { KnownNetworks.Main.GenesisHash },
+                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = KnownNetworks.Main.Consensus.CoinType, LastBlockSyncedHash = KnownNetworks.Main.GenesisHash, LastBlockSyncedHeight = 0 } },
             };
+
+            var data = walletFile.walletStore.GetData();
+            data.BlockLocator = walletFile.BlockLocator;
+            data.WalletName = walletFile.Name;
+            data.WalletTip = new Utilities.HashHeightPair(KnownNetworks.Main.GenesisHash, 0);
+            walletFile.walletStore.SetData(data);
 
             return (walletFile, extendedKey);
         }
@@ -184,7 +203,9 @@ namespace Blockcore.Tests.Wallet.Common
 
         public static Transaction SetupValidTransaction(Features.Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, Script destinationScript, HdAddress changeAddress, Money amount, Money fee)
         {
-            TransactionData spendingTransaction = spendingAddress.Transactions.ElementAt(0);
+            TransactionOutputData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
+            spendingTransaction.Address = spendingAddress.Address;
+
             var coin = new Coin(spendingTransaction.Id, (uint)spendingTransaction.Index, spendingTransaction.Amount, spendingTransaction.ScriptPubKey);
 
             Key privateKey = Key.Parse(wallet.EncryptedSeed, password, wallet.Network);
@@ -212,6 +233,8 @@ namespace Blockcore.Tests.Wallet.Common
             {
                 wallet.AccountsRoot.Add(new AccountRoot()
                 {
+                    LastBlockSyncedHash = new uint256(0),
+                    LastBlockSyncedHeight = 0,
                     CoinType = KnownCoinTypes.Bitcoin,
                     Accounts = new List<HdAccount>
                     {
@@ -236,7 +259,7 @@ namespace Blockcore.Tests.Wallet.Common
                 Index = index,
                 Address = addressName,
                 ScriptPubKey = new Script(),
-                Transactions = new List<TransactionData>()
+                //Transactions = new List<TransactionData>()
             };
         }
 
@@ -247,7 +270,7 @@ namespace Blockcore.Tests.Wallet.Common
                 Index = index,
                 Address = addressName,
                 ScriptPubKey = new Script(),
-                Transactions = new List<TransactionData> { new TransactionData() }
+                //Transactions = new List<TransactionData> { new TransactionData() }
             };
         }
 
@@ -256,9 +279,12 @@ namespace Blockcore.Tests.Wallet.Common
             var addresses = new List<HdAddress>();
             for (int i = 0; i < count; i++)
             {
+                var key = new Key().ScriptPubKey;
+
                 var address = new HdAddress
                 {
-                    ScriptPubKey = new Key().ScriptPubKey
+                    Address = key.ToString(),
+                    ScriptPubKey = key
                 };
                 addresses.Add(address);
             }
@@ -398,7 +424,7 @@ namespace Blockcore.Tests.Wallet.Common
             return chain;
         }
 
-        public static ICollection<HdAddress> CreateSpentTransactionsOfBlockHeights(Network network, params int[] blockHeights)
+        public static ICollection<HdAddress> CreateSpentTransactionsOfBlockHeights(WalletMemoryStore store, Network network, params int[] blockHeights)
         {
             var addresses = new List<HdAddress>();
 
@@ -409,16 +435,18 @@ namespace Blockcore.Tests.Wallet.Common
                 {
                     Address = key.PubKey.GetAddress(network).ToString(),
                     ScriptPubKey = key.ScriptPubKey,
-                    Transactions = new List<TransactionData> {
-                        new TransactionData
+                };
+
+                store.Add(new List<TransactionOutputData> {
+                        new TransactionOutputData
                         {
+                            Address = address.Address,
+                            OutPoint = new OutPoint(new uint256(Hashes.Hash256(key.PubKey.ToBytes())), height),
                             BlockHeight = height,
                             Amount = new Money(new Random().Next(500000, 1000000)),
                             SpendingDetails = new SpendingDetails(),
                             Id = new uint256(),
-                        }
-                    }
-                };
+                        } });
 
                 addresses.Add(address);
             }
@@ -426,7 +454,7 @@ namespace Blockcore.Tests.Wallet.Common
             return addresses;
         }
 
-        public static ICollection<HdAddress> CreateUnspentTransactionsOfBlockHeights(Network network, params int[] blockHeights)
+        public static ICollection<HdAddress> CreateUnspentTransactionsOfBlockHeights(WalletMemoryStore store, Network network, params int[] blockHeights)
         {
             var addresses = new List<HdAddress>();
 
@@ -437,14 +465,25 @@ namespace Blockcore.Tests.Wallet.Common
                 {
                     Address = key.PubKey.GetAddress(network).ToString(),
                     ScriptPubKey = key.ScriptPubKey,
-                    Transactions = new List<TransactionData> {
-                        new TransactionData
+                    //Transactions = new List<TransactionData> {
+                    //    new TransactionData
+                    //    {
+                    //        BlockHeight = height,
+                    //        Amount = new Money(new Random().Next(500000, 1000000))
+                    //    }
+                    //}
+                };
+
+                store.Add(new List<TransactionOutputData>
+                {
+                        new TransactionOutputData
                         {
+                            OutPoint = new OutPoint( new uint256(Hashes.SHA256(key.PubKey.ToBytes())), height),
+                            Address = address.Address,
                             BlockHeight = height,
                             Amount = new Money(new Random().Next(500000, 1000000))
                         }
-                    }
-                };
+                });
 
                 addresses.Add(address);
             }
@@ -452,12 +491,14 @@ namespace Blockcore.Tests.Wallet.Common
             return addresses;
         }
 
-        public static TransactionData CreateTransactionDataFromFirstBlock((ChainIndexer chain, uint256 blockHash, Block block) chainInfo)
+        public static TransactionOutputData CreateTransactionDataFromFirstBlock((ChainIndexer chain, uint256 blockHash, Block block) chainInfo)
         {
             Transaction transaction = chainInfo.block.Transactions[0];
 
-            var addressTransaction = new TransactionData
+            var addressTransaction = new TransactionOutputData
             {
+                OutPoint = new OutPoint(transaction, 0),
+                Address = transaction.Outputs[0].ScriptPubKey.ToHex(),
                 Amount = transaction.TotalOut,
                 BlockHash = chainInfo.blockHash,
                 BlockHeight = chainInfo.chain.GetHeader(chainInfo.blockHash).Height,
@@ -493,7 +534,7 @@ namespace Blockcore.Tests.Wallet.Common
             return (chain, block.GetHash(), block);
         }
 
-        public static List<Block> AddBlocksWithCoinbaseToChain(Network network, ChainIndexer chainIndexer, HdAddress address, int blocks = 1)
+        public static List<Block> AddBlocksWithCoinbaseToChain(WalletMemoryStore store, Network network, ChainIndexer chainIndexer, HdAddress address, int blocks = 1)
         {
             var blockList = new List<Block>();
 
@@ -515,8 +556,10 @@ namespace Blockcore.Tests.Wallet.Common
 
                 chainIndexer.SetTip(block.Header);
 
-                var addressTransaction = new TransactionData
+                var addressTransaction = new TransactionOutputData
                 {
+                    OutPoint = new OutPoint(coinbase.GetHash(), 0),
+                    Address = address.Address,
                     Amount = coinbase.TotalOut,
                     BlockHash = block.GetHash(),
                     BlockHeight = chainIndexer.GetHeader(block.GetHash()).Height,
@@ -526,8 +569,7 @@ namespace Blockcore.Tests.Wallet.Common
                     ScriptPubKey = coinbase.Outputs[0].ScriptPubKey,
                 };
 
-                address.Transactions.Add(addressTransaction);
-
+                store.InsertOrUpdate(addressTransaction);
                 blockList.Add(block);
             }
 
@@ -563,14 +605,36 @@ namespace Blockcore.Tests.Wallet.Common
             if (this.walletsGenerated.TryGetValue((name, password), out Features.Wallet.Types.Wallet existingWallet))
             {
                 string serializedExistingWallet = JsonConvert.SerializeObject(existingWallet, Formatting.None);
-                return JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
+                var wal1 = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
+                wal1.BlockLocator = existingWallet.BlockLocator;
+                wal1.AccountsRoot.Single().LastBlockSyncedHash = existingWallet.AccountsRoot.Single().LastBlockSyncedHash;
+                wal1.AccountsRoot.Single().LastBlockSyncedHeight = existingWallet.AccountsRoot.Single().LastBlockSyncedHeight;
+                wal1.walletStore = new WalletMemoryStore();
+                var data1 = wal1.walletStore.GetData();
+                data1.BlockLocator = existingWallet.BlockLocator;
+                data1.WalletName = existingWallet.Name;
+                data1.WalletTip = new Utilities.HashHeightPair(existingWallet.AccountsRoot.Single().LastBlockSyncedHash, existingWallet.AccountsRoot.Single().LastBlockSyncedHeight.Value);
+                wal1.walletStore.SetData(data1);
+
+                return wal1;
             }
 
             Features.Wallet.Types.Wallet newWallet = WalletTestsHelpers.GenerateBlankWallet(name, password);
             this.walletsGenerated.Add((name, password), newWallet);
 
             string serializedNewWallet = JsonConvert.SerializeObject(newWallet, Formatting.None);
-            return JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedNewWallet);
+            var wal = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedNewWallet);
+            wal.walletStore = new WalletMemoryStore();
+            wal.BlockLocator = newWallet.BlockLocator;
+            wal.AccountsRoot.Single().LastBlockSyncedHash = newWallet.AccountsRoot.Single().LastBlockSyncedHash;
+            wal.AccountsRoot.Single().LastBlockSyncedHeight = newWallet.AccountsRoot.Single().LastBlockSyncedHeight;
+
+            var data = wal.walletStore.GetData();
+            data.BlockLocator = wal.BlockLocator;
+            data.WalletName = wal.Name;
+            data.WalletTip = new Utilities.HashHeightPair(wal.AccountsRoot.Single().LastBlockSyncedHash, wal.AccountsRoot.Single().LastBlockSyncedHeight.Value);
+            wal.walletStore.SetData(data);
+            return wal;
         }
     }
 }

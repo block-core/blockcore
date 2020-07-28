@@ -20,6 +20,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.Wallet;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
@@ -247,8 +248,10 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             transaction.Outputs.Add(new TxOut(Money.Coins(101), address.ScriptPubKey));
 
-            address.Transactions.Add(new TransactionData()
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData()
             {
+                OutPoint = new OutPoint(transaction.GetHash(), 0),
+                Address = address.Address,
                 Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
                 Id = transaction.GetHash(),
@@ -623,26 +626,26 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             // Verify that we actually have an cold staking activation UTXO in the wallet of 202 coins.
             // This should normally not be returned by the GetAllTransactions, and should never be included in balance calculations.
-            Assert.True(accounts[0].ExternalAddresses.ToArray()[1].Transactions.ToArray()[0].IsColdCoinStake);
-            Assert.Equal(new Money(202, MoneyUnit.BTC), accounts[0].ExternalAddresses.ToArray()[1].Transactions.ToArray()[0].Amount);
+            Assert.True(wallet1.walletStore.GetForAddress(accounts[0].ExternalAddresses.ToArray()[1].Address).ToArray()[0].IsColdCoinStake);
+            Assert.Equal(new Money(202, MoneyUnit.BTC), wallet1.walletStore.GetForAddress(accounts[0].ExternalAddresses.ToArray()[1].Address).ToArray()[0].Amount);
 
             Assert.Single(wallet1.GetAllTransactions().ToArray()); // Default to NormalAccounts, should filter out cold staking (trx3) from normal wallet.
             Assert.Single(wallet1.GetAllTransactions(Wallet.Types.Wallet.NormalAccounts).ToArray());
-            Assert.Single(wallet1.GetAllSpendableTransactions(5, 0, Wallet.Types.Wallet.NormalAccounts).ToArray()); // Default to NormalAccounts
+            Assert.Single(wallet1.GetAllSpendableTransactions(wallet1.walletStore, 5, 0, Wallet.Types.Wallet.NormalAccounts).ToArray()); // Default to NormalAccounts
             Assert.Equal(2, wallet1.GetAllTransactions(Wallet.Types.Wallet.AllAccounts).ToArray().Length);
-            Assert.Equal(2, wallet1.GetAllSpendableTransactions(5, 0, Wallet.Types.Wallet.AllAccounts).ToArray().Length); // Specified AllAccounts, should include cold-staking transaction.
+            Assert.Equal(2, wallet1.GetAllSpendableTransactions(wallet1.walletStore, 5, 0, Wallet.Types.Wallet.AllAccounts).ToArray().Length); // Specified AllAccounts, should include cold-staking transaction.
 
             // Verify balance on normal account
-            var balance1 = accounts[0].GetBalances(true);
-            var balance2 = accounts[0].GetBalances(false);
+            var balance1 = accounts[0].GetBalances(wallet1.walletStore, true);
+            var balance2 = accounts[0].GetBalances(wallet1.walletStore, false);
 
             Assert.Equal(new Money(101, MoneyUnit.BTC), balance1.ConfirmedAmount);
             Assert.Equal(new Money(303, MoneyUnit.BTC), balance2.ConfirmedAmount);
 
             // Verify balance on special account.
             // Verify balance on normal account
-            var balance3 = accounts[1].GetBalances(true);
-            var balance4 = accounts[1].GetBalances(false);
+            var balance3 = accounts[1].GetBalances(wallet1.walletStore, true);
+            var balance4 = accounts[1].GetBalances(wallet1.walletStore, false);
 
             // The only transaction that exists in the cold staking wallet, is a normal one, and should be returned for both balance queries.
             Assert.Equal(new Money(101, MoneyUnit.BTC), balance3.ConfirmedAmount);
@@ -844,7 +847,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         private Transaction AddSpendableColdstakingTransactionToWallet(Wallet.Types.Wallet wallet, bool script = false)
         {
             // Get first unused cold staking address.
-            this.coldStakingManager.GetOrCreateColdStakingAccount(wallet.Name, true, walletPassword);
+            HdAccount account = this.coldStakingManager.GetOrCreateColdStakingAccount(wallet.Name, true, walletPassword);
             HdAddress address = this.coldStakingManager.GetFirstUnusedColdStakingAddress(wallet.Name, true);
 
             TxDestination hotPubKey = BitcoinAddress.Create(hotWalletAddress1, wallet.Network).ScriptPubKey.GetDestination(wallet.Network);
@@ -861,8 +864,11 @@ namespace Blockcore.Features.ColdStaking.Tests
             if (script)
                 address.RedeemScript = scriptPubKey;
 
-            address.Transactions.Add(new TransactionData()
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData()
             {
+                OutPoint = new OutPoint(transaction.GetHash(), 0),
+                Address = address.Address,
+                AccountIndex = account.Index,
                 Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
                 Id = transaction.GetHash(),
@@ -903,8 +909,10 @@ namespace Blockcore.Features.ColdStaking.Tests
             if (script)
                 address.RedeemScript = scriptPubKey;
 
-            address.Transactions.Add(new TransactionData()
+            wallet.walletStore.InsertOrUpdate(new TransactionOutputData()
             {
+                OutPoint = new OutPoint(transaction.GetHash(), 0),
+                Address = address.Address,
                 Hex = transaction.ToHex(this.Network.Consensus.ConsensusFactory),
                 Amount = transaction.Outputs[0].Value,
                 Id = transaction.GetHash(),

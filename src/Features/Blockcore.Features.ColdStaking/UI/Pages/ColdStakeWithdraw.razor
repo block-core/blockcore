@@ -14,8 +14,28 @@
 @inject NodeDeployments NodeDeployments
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Cold Staking Withdrawal To: @walletname</strong></h1>
+    <h1 class="h2"><strong>Cold Staking Withdrawal</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+       @if (this.ColdStakingManager.GetWalletsNames().Count() > 1) {
+            <Dropdown TItem="string" OnSelected="@OnSelected" >
+                <InitialTip>@walletname</InitialTip>
+                <ChildContent>
+                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames()) {
+                            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                                if (coldStakingWalletEnabled != null) {
+                                    foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
+                                    {
+                                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                                    }
+                                }
+                            }
+                </ChildContent>
+            </Dropdown>
+        }
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
+            <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake</button>
+        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
+            <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate</button>
     </div>
 </div>
 
@@ -24,7 +44,7 @@ var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingCold
 var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
 <div class="row mb-3">
-    <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+    <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Main Balance</h5>
@@ -40,7 +60,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
             </div>
         </div>
     </div>
-        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+        <div class="col-xl-6 col-sm-6 ">
         <div class="card">
             <div class="card-body">
                 <h5>Cold Balance</h5>
@@ -57,57 +77,64 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         </div>
     </div>
 </div>
-
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Address:</span>
+                        <span style="min-width: 10em" class="input-group-text m-1" id="basic-addon1">Address:</span>
                     </div>
-                    <input @bind="Address" type="text" class="form-control" placeholder="Please enter your address" />
-                    <button class="btn btn-primary btn-sm" @onclick="GenerateAddress">Get address from: @walletname</button>
+                    <input @bind="Address" type="text" class="form-control bg-secondary text-light m-1" placeholder="Please enter your address" />
+                    <button class="btn btn-secondary m-1" @onclick="GenerateAddress">@walletname</button>
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Amount:</span>
+                        <span style="min-width: 10em" class="input-group-text m-1">Amount(@this.Network.CoinTicker.ToUpper()):</span>
                     </div>
-                    <input @bind="Amount" type="text" class="form-control" placeholder="amount" />
+                    <input @bind="Amount" type="text" class="form-control bg-secondary text-light m-1" placeholder="amount" />
                     <div class="input-group-append">
-                        <span style="min-width: 3em" class="input-group-text">@this.Network.CoinTicker.ToUpper()</span>
+                        <button class="btn btn-secondary m-1" @onclick="MaxAmount">Max</button>
                     </div>
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Fee:</span>
+                        <span style="min-width: 10em" class="input-group-text m-1">Fee:</span>
                     </div>
-                    <input @bind="Fee" type="text" class="form-control" placeholder="fee" />
+                    <input @bind="Fee" type="text" class="form-control bg-secondary text-light m-1" placeholder="fee" />
                     <div class="input-group-append">
-                        <span style="min-width: 10em" class="input-group-text">Optional (<abbr title="The low fee may not be enough for every transaction">default to low</abbr>)</span>
+                        <span style="min-width: 6em" class="input-group-text m-1"><abbr title="The low fee may not be enough for every transaction">Default to low</abbr></span>
                     </div>
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text">Password:</span>
+                        <span style="min-width: 10em" class="input-group-text m-1">Password:</span>
                     </div>
-                    <input @bind="Password" type="password" class="form-control" placeholder="Please enter your password" />
+                    <input @bind="Password" type="password" class="form-control bg-secondary text-light m-1" placeholder="Please enter your password" />
                 </div>
-                <div class="input-group mb-3">
-                    <button class="btn btn-primary" @onclick="Withdraw">Withdraw Now</button>
-                </div>
+
+                @if (IsWithdrawing)
+                {
+                    <button class="btn btn-danger ml-1" disabled>
+                        <span class="spinner-border spinner-border-sm"></span> Working ...
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-primary ml-1" @onclick="callWithdraw">Withdraw Now</button>
+                }
+
                 <div class="input-group">
-                    <div class="alert-warning">@Alert</div>
+                    <div class="text-danger">@Alert</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 }
-
 @code
 {
     ColdStakingManager ColdStakingManager;
@@ -144,7 +171,23 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
 
         this.Address = segwit ? result.Bech32Address : result.Address;
     }
+    public void MaxAmount()
+    {
+        var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingColdAddresses").Single();
+        this.Amount = accountBalance.AmountConfirmed.ToDecimal(MoneyUnit.BTC) - this.Fee;
+    }
 
+    private bool IsWithdrawing { get; set; }
+    private async Task callWithdraw()
+    {
+        IsWithdrawing = true;
+        StateHasChanged();
+        await Task.Delay(1);  // flush changes
+        await Withdraw();
+        IsWithdrawing = false;
+        StateHasChanged();
+        await Task.Delay(1);
+    }
     private async Task Withdraw()
     {
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
@@ -179,5 +222,26 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         }
         //TODO: Add confirmation screen
         NavigationManager.NavigateTo("coldstakeview/" + walletname + "/coldStakingColdAddresses");
+    }
+        private void NavigateToWithdraw(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-withdraw/" + walletName);
+    }
+    private void NavigateToSetup(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-setup/" + walletName);
+    }
+    private void NavigateToDelegate(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
+    }
+    private void NavigateToColdStakeView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakeView(selection);
     }
 }

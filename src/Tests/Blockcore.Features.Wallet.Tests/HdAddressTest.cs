@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
 using NBitcoin;
 using Xunit;
@@ -93,35 +94,43 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentTransactionsWithAddressHavingUnspentTransactionsReturnsUnspentTransactions()
         {
+            WalletMemoryStore store = new WalletMemoryStore();
+
             var address = new HdAddress
             {
-                Transactions = new List<TransactionData> {
-                    new TransactionData { Id = new uint256(15)},
-                    new TransactionData { Id = new uint256(16), SpendingDetails = new SpendingDetails() },
-                    new TransactionData { Id = new uint256(17)},
-                    new TransactionData { Id = new uint256(18), SpendingDetails = new SpendingDetails() }
-                }
+                Address = "Address"
             };
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions();
+            store.Add(new List<TransactionOutputData> {
+                    new TransactionOutputData { Id = new uint256(15), OutPoint = new OutPoint(new uint256(15),1), Address = "Address"},
+                    new TransactionOutputData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
+                    new TransactionOutputData { Id = new uint256(17), OutPoint = new OutPoint(new uint256(17),1), Address = "Address"},
+                    new TransactionOutputData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
+                });
+
+            IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
 
             Assert.Equal(2, result.Count());
-            Assert.Equal(new uint256(15), result.ElementAt(0).Id);
-            Assert.Equal(new uint256(17), result.ElementAt(1).Id);
+            Assert.Contains(new uint256(15), result.Select(x => x.Id));
+            Assert.Contains(new uint256(17), result.Select(x => x.Id));
         }
 
         [Fact]
         public void UnspentTransactionsWithAddressNotHavingUnspentTransactionsReturnsEmptyList()
         {
+            WalletMemoryStore store = new WalletMemoryStore();
+
             var address = new HdAddress
             {
-                Transactions = new List<TransactionData> {
-                    new TransactionData { Id = new uint256(16), SpendingDetails = new SpendingDetails() },
-                    new TransactionData { Id = new uint256(18), SpendingDetails = new SpendingDetails() }
-                }
+                Address = "Address"
             };
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions();
+            store.Add(new List<TransactionOutputData> {
+                    new TransactionOutputData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
+                    new TransactionOutputData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
+                });
+
+            IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
 
             Assert.Empty(result);
         }
@@ -129,12 +138,14 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void UnspentTransactionsWithAddressWithoutTransactionsReturnsEmptyList()
         {
+            WalletMemoryStore store = new WalletMemoryStore();
+
             var address = new HdAddress
             {
-                Transactions = new List<TransactionData>()
+                Address = "Address"
             };
 
-            IEnumerable<TransactionData> result = address.UnspentTransactions();
+            IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
 
             Assert.Empty(result);
         }

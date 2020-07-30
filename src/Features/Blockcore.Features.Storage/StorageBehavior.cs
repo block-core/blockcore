@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Connection;
 using Blockcore.Features.Storage.Models;
@@ -45,18 +46,19 @@ namespace Blockcore.Features.Storage
         /// </summary>
         private readonly object lockObject;
 
-        /// <summary>
-        /// The min fee the peer asks to relay transactions.
-        /// </summary>
-        public Money MinFeeFilter { get; set; }
-
         private readonly DataStore dataStore;
+
+        private readonly StorageSchemas schemas;
+
+        private readonly StorageSyncronizer sync;
 
         public StorageBehavior(
             IConnectionManager connectionManager,
             IInitialBlockDownloadState initialBlockDownloadState,
             ILoggerFactory loggerFactory,
             IDataStore dataStore,
+            StorageSchemas schemas,
+            StorageSyncronizer sync,
             Network network)
         {
             this.dataStore = (DataStore)dataStore; // TODO: When the interface is fixed, we don't need to reference the type directly.
@@ -64,6 +66,8 @@ namespace Blockcore.Features.Storage
             this.initialBlockDownloadState = initialBlockDownloadState;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
+            this.schemas = schemas;
+            this.sync = sync;
             this.network = network;
             this.lockObject = new object();
         }
@@ -72,6 +76,17 @@ namespace Blockcore.Features.Storage
         protected override void AttachCore()
         {
             this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
+
+            IEnumerable<string> signatures = this.dataStore.GetSignatures("identity", 10, 1);
+        }
+
+        private async Task OnStateChangedAsync(INetworkPeer peer, NetworkPeerState oldState)
+        {
+            if (peer.State == NetworkPeerState.HandShaked)
+            {
+                await SendFeatureHandshake().ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc />
@@ -83,7 +98,7 @@ namespace Blockcore.Features.Storage
         /// <inheritdoc />
         public override object Clone()
         {
-            return new StorageBehavior(this.connectionManager, this.initialBlockDownloadState, this.loggerFactory, this.dataStore, this.network);
+            return new StorageBehavior(this.connectionManager, this.initialBlockDownloadState, this.loggerFactory, this.dataStore, this.schemas, this.sync, this.network);
         }
 
         private async Task OnMessageReceivedAsync(INetworkPeer peer, IncomingMessage message)
@@ -106,6 +121,8 @@ namespace Blockcore.Features.Storage
 
         private async Task ProcessMessageAsync(INetworkPeer peer, IncomingMessage message)
         {
+            this.logger.LogInformation("Message: {Message}", message.Message.Command);
+
             switch (message.Message.Payload)
             {
                 case StoragePayload storagePayload:
@@ -128,20 +145,42 @@ namespace Blockcore.Features.Storage
                 return;
             }
 
-            // Process the query to get data.
-            foreach (VarString collection in message.Collections)
+            // Mark this peer that it supports storage messages. This is used for outside of behavior (the feature/etc.) to know which peers to forward messages too.
+            this.supported = true;
+
+            this.logger.LogInformation("RECEIVED StoragePayload MESSAGE!: {Action}", message.Action);
+
+            // The peer asked to receive signatures.
+            if (message.Action == StoragePayloadAction.SendSignatures)
             {
-                var name = Encoders.ASCII.EncodeData(collection.GetString(true));
-
-                if (name == "identity")
+                foreach (VarString collection in message.Collections)
                 {
-                    // Get all identities.
-                    IEnumerable<IdentityDocument> identities = this.dataStore.GetIdentities();
+                    var name = Encoders.ASCII.EncodeData(collection.GetString(true));
 
-                    // Send the identities in pages to the peer node.
-                    await this.SendIdentityAsync(peer, identities);
+                    if (name == "identity")
+                    {
+                        int size = 1;
+                        int page = 1;
+
+                        IEnumerable<string> signatures;
+
+                        while ((signatures = this.dataStore.GetSignatures(name, size, page)).Any())
+                        {
+                            if (peer.IsConnected)
+                            {
+                                break;
+                            }
+
+                            await this.SendSignaturesAsync(peer, signatures);
+
+                            page++;
+                        }
+                      
+                    }
                 }
             }
+
+
         }
 
         private async Task ProcessStorageInvPayloadAsync(INetworkPeer peer, StorageInvPayload message)
@@ -155,9 +194,55 @@ namespace Blockcore.Features.Storage
 
             foreach (IdentityDocument identity in identities)
             {
-                // TODO: Temporarily disable persistence of identities.
-                // this.dataStore.SetIdentity(identity);
+                IdentityDocument existingIdentity = this.dataStore.GetIdentity(identity.Id);
+
+                // If the supplied identity is older, don't update, but we will send our copy to the peer.
+                if (existingIdentity != null && existingIdentity.Version > identity.Version)
+                {
+                    var payload = new StorageInvPayload();
+                    payload.Collection = new VarString(Encoders.ASCII.DecodeData("identity"));
+                    payload.Items = ConvertIdentity(new IdentityDocument[1] { existingIdentity });
+                    await peer.SendMessageAsync(payload).ConfigureAwait(false);
+
+                    return;
+                }
+
+                // Only persist identities that we support version for.
+                if (!this.schemas.SupportedIdentityVersion(identity.Version))
+                {
+                    continue;
+                }
+
+                this.dataStore.SetIdentity(identity);
             }
+        }
+
+        private async Task SendSignaturesAsync(INetworkPeer peer, string collection, IEnumerable<string> signatures)
+        {
+            var payload = new StorageInvPayload();
+            payload.Collection = new VarString(Encoders.ASCII.DecodeData(collection));
+            payload.Items = ConvertASCII(signatures);
+
+            await peer.SendMessageAsync(payload).ConfigureAwait(false);
+
+            //var queue = new Queue<string>(signatures);
+
+            //while (queue.Count > 0)
+            //{
+            //    // Send 2 and 2 documents, just for prototype. Increase this later.
+            //    IdentityDocument[] items = queue.TakeAndRemove(2).ToArray();
+
+            //    if (peer.IsConnected)
+            //    {
+            //        this.logger.LogDebug("Sending items to peer '{0}'.", peer.RemoteSocketEndpoint);
+
+            //        var payload = new StorageInvPayload();
+            //        payload.Collection = new VarString(Encoders.ASCII.DecodeData("identity"));
+            //        payload.Items = ConvertIdentity(items);
+
+            //        await peer.SendMessageAsync(payload).ConfigureAwait(false);
+            //    }
+            //}
         }
 
         private async Task SendIdentityAsync(INetworkPeer peer, IEnumerable<IdentityDocument> identities)
@@ -188,6 +273,87 @@ namespace Blockcore.Features.Storage
             {
                 this.logger.LogDebug("Sending query for storage to peer '{0}'.", peer.RemoteSocketEndpoint);
                 await peer.SendMessageAsync(payload).ConfigureAwait(false);
+            }
+        }
+
+        //private bool hasSentHandshake = false;
+
+        private bool supported = false;
+
+        //private DateTime sentHandshakeTime;
+
+        ///// <summary>
+        ///// Check if the peer has timed out the verification for supported feature.
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool HasTimedout()
+        //{
+        //    // If we have not yet sent handshake, we have not timed out yet.
+        //    if (!this.hasSentHandshake)
+        //    {
+        //        return false;
+        //    }
+
+        //    TimeSpan span = (DateTime.UtcNow - this.sentHandshakeTime);
+
+        //    return span.TotalSeconds > 30;
+        //}
+
+        /// <summary>
+        /// Indicates that the peer has been verified to support the feature.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supported()
+        {
+            return this.supported;
+        }
+
+        public async Task SendFeatureHandshake()
+        {
+            //if (this.hasSentHandshake)
+            //{
+            //    return;
+            //}
+
+            INetworkPeer peer = this.AttachedPeer;
+
+            if (peer == null)
+            {
+                this.logger.LogTrace("(-)[NO_PEER]");
+                return;
+            }
+
+            this.logger.LogInformation("Sending storage feature check to peer '{0}'.", peer.RemoteSocketEndpoint);
+
+            try
+            {
+                var collections = new List<string>();
+
+                collections.Add("identity"); // Identity storage.
+                collections.Add("data"); // Generic data storage.
+                collections.Add("hub"); // Collection of hub metadata.
+
+                VarString[] list = ConvertASCII(collections);
+
+                // Send a message to the peer what kind of collections we support.
+                // If we don't get any response, we'll consider this peer unsupported of storage.
+                StoragePayload payload = new StoragePayload
+                {
+                    Version = 1,
+                    Collections = list,
+                    Action = StoragePayloadAction.SendSignatures
+                };
+
+                // this.sentHandshakeTime = DateTime.UtcNow;
+
+                await this.SendStorageQueryAsync(peer, payload).ConfigureAwait(false);
+
+                // this.hasSentHandshake = true;
+            }
+            catch (OperationCanceledException)
+            {
+                this.logger.LogTrace("(-)[CANCELED_EXCEPTION]");
+                return;
             }
         }
 
@@ -226,7 +392,7 @@ namespace Blockcore.Features.Storage
             }
         }
 
-        private VarString[] ConvertASCII(List<string> list)
+        private VarString[] ConvertASCII(IEnumerable<string> list)
         {
             var strings = new List<VarString>();
 

@@ -19,6 +19,7 @@ namespace Blockcore.Features.Storage.Persistence
 
         private ILiteCollection<IdentityDocument> identityCol;
         private ILiteCollection<DataEntity> dataCol;
+        private ILiteCollection<HubDocument> hubCol;
 
         // public IdentityEntity NodeIdentity { get; private set; }
 
@@ -45,8 +46,12 @@ namespace Blockcore.Features.Storage.Persistence
             this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
             //this.network = network;
 
+            this.collections = new Dictionary<string, object>();
+
             this.Init();
         }
+
+        private Dictionary<string, object> collections;
 
         private void Init()
         {
@@ -54,6 +59,11 @@ namespace Blockcore.Features.Storage.Persistence
 
             this.dataCol = this.db.GetCollection<DataEntity>("data");
             this.identityCol = this.db.GetCollection<IdentityDocument>("identity");
+            this.hubCol = this.db.GetCollection<HubDocument>("hub");
+
+            this.collections.Add("data", this.dataCol);
+            this.collections.Add("identity", this.identityCol);
+            this.collections.Add("hub", this.hubCol);
 
             //this.trxCol.EnsureIndex(x => x.OutPoint, true);
             //this.trxCol.EnsureIndex(x => x.Address, false);
@@ -101,6 +111,71 @@ namespace Blockcore.Features.Storage.Persistence
         public bool RemoveIdentity(string id)
         {
             return this.identityCol.Delete("identity/" + id);
+        }
+
+        public IEnumerable<string> GetSignatures(string collection, int pageSize, int pageNumber)
+        {
+            var sql = $"SELECT $.signature FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
+
+            List<string> signatures = new List<string>();
+
+            using (IBsonDataReader res = this.db.Execute(sql))
+            {
+                while (res.Read())
+                {
+                    signatures.Add(res["signature"].AsString);
+                }
+            }
+
+            return signatures;
+
+            //ILiteCollection<BsonDocument> col = this.db.GetCollection(collection);
+            //ILiteQueryable<BsonDocument> query = col.Query();
+            //IEnumerable<BsonDocument> resultsPage = query.Select(x => new BsonDocument
+            //{
+                
+            //    ["_id"] = x["_id"]
+            //}).Limit(pageSize).Offset((pageNumber - 1) * pageSize).ToEnumerable();
+
+            //return resultsPage;
+
+            //string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
+
+            //"SELECT $.Name, $.Phones[@.Type = "Mobile"] FROM customers";
+
+            //var sql = "SELECT " +
+            //            "@key as Confirmed," +
+            //            "FROM " + collection + " " +
+            //            $"WHERE SpendingDetails = null AND AccountIndex = {accountIndex} " +
+            //            $"{excludeColdStakeSql}" +
+            //            $"GROUP BY BlockHeight != null";
+
+            //using (var res = this.db.Execute(sql))
+            //{
+            //    var walletBalanceResult = new WalletBalanceResult();
+
+            //    while (res.Read())
+            //    {
+            //        if (res["Confirmed"] == false)
+            //            walletBalanceResult.AmountUnconfirmed = res["Amount"].AsInt64;
+            //        else
+            //            walletBalanceResult.AmountConfirmed = res["Amount"].AsInt64;
+            //    }
+
+            //    return walletBalanceResult;
+            //}
+
+            // All query results returns an IEnumerable<T>, so you can use Linq in results
+            //var results = this.identityCol
+            //    .FindAll() // two indexed queries
+            //    .Select(x => new { x.Name, x.Salary })
+            //    .OrderBy(x => x.Name);
+
+            //this.identityCol.Query().Select()
+
+
+            //IEnumerable<string> identities = this.collections[collection];
+            //return identities;
         }
 
         //public int CountForAddress(string address)

@@ -35,10 +35,23 @@ namespace Blockcore.Features.Storage.Controllers
 
         private readonly DataStore dataStore;
 
-        public WellKnownController(IConfigurationRoot configuration, IDataStore dataStore)
+        private readonly StorageSchemas schemas;
+
+        public WellKnownController(IConfigurationRoot configuration, IDataStore dataStore, StorageSchemas schemas)
         {
             this.configuration = configuration;
             this.dataStore = (DataStore)dataStore;
+            this.schemas = schemas;
+        }
+
+        /// <summary>
+        /// Returns the identity of the node.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("storage/schemas")]
+        public IActionResult GetSchemaVersions()
+        {
+            return Ok(this.schemas);
         }
 
         /// <summary>
@@ -46,7 +59,7 @@ namespace Blockcore.Features.Storage.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("identity")]
-        public async Task<IActionResult> GetNodeIdentity()
+        public IActionResult GetNodeIdentity()
         {
             string identifier = this.configuration.GetValue<string>("Blockcore:Node:Identifier");
             IdentityDocument identity = this.dataStore.GetIdentity(identifier);

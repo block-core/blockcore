@@ -22,6 +22,7 @@ using Blockcore.Features.NodeHost.Authentication;
 using Blockcore.Features.NodeHost.Authorization;
 using Blockcore.Features.NodeHost.Settings;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Hellang.Middleware.ProblemDetails;
 
 namespace Blockcore.Features.NodeHost
 {
@@ -60,6 +61,8 @@ namespace Blockcore.Features.NodeHost
             });
 
             services.Configure<BlockcoreSettings>(this.Configuration.GetSection("Blockcore"));
+
+            services.AddProblemDetails();
 
             // Add service and create Policy to allow Cross-Origin Requests
             services.AddCors
@@ -214,13 +217,11 @@ namespace Blockcore.Features.NodeHost
         {
             NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
+            app.UseProblemDetails();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseCors("CorsPolicy");
 
             // Register this before MVC and Swagger.

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Blockcore.Configuration;
 using Blockcore.Controllers;
 using Blockcore.Features.Storage.Models;
 using Blockcore.Features.Storage.Persistence;
@@ -21,12 +18,14 @@ namespace Blockcore.Features.Storage.Controllers
     [Route("api/identity")]
     public class IdentityController : FeatureController
     {
-        private string currentPublicKey = "PTe6MFNouKATrLF5YbjxR1bsei2zwzdyLU";
         private readonly DataStore dataStore;
 
-        public IdentityController(IDataStore dataStore)
+        private readonly StorageSchemas schemas;
+
+        public IdentityController(IDataStore dataStore, StorageSchemas schemas)
         {
             this.dataStore = (DataStore)dataStore;
+            this.schemas = schemas;
         }
 
         /// <summary>
@@ -79,13 +78,18 @@ namespace Blockcore.Features.Storage.Controllers
             // Make sure that only identity documents is submitted to this API.
             if (document.GetContainer() != "identity")
             {
-                return BadRequest();
+                return Problem("Container must be identity.");
             }
 
             // Make sure the route address and document owner is the same.
             if (address != document.GetIdentifier())
             {
                 return BadRequest();
+            }
+
+            if (!this.schemas.SupportedIdentityVersion(document.Version))
+            {
+                return Problem(title: "Incompatible version", detail: $"Unsupported document version: {document.Version}. Supported range: {this.schemas.IdentityMinVersion}-{this.schemas.IdentityMaxVersion}.", statusCode: 400);
             }
 
             byte[] entityBytes = MessagePackSerializer.Serialize(document.Content);

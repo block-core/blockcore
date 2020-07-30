@@ -1,22 +1,34 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
 using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.EventBus;
+using Blockcore.EventBus.CoreEvents.Peer;
+using Blockcore.Features.Storage.Models;
 using Blockcore.Features.Storage.Persistence;
+using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
+using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Blockcore.Features.Storage
 {
     public class StorageFeature : FullNodeFeature
     {
+        private readonly ILogger logger;
+
         /// <summary>The async loop we need to wait upon before we can shut down this manager.</summary>
         private IAsyncLoop asyncLoop;
 
@@ -35,22 +47,76 @@ namespace Blockcore.Features.Storage
 
         private readonly StorageBehavior storageBehavior;
 
+        private readonly IInitialBlockDownloadState ibd;
+
+        private readonly ISignals signals;
+
+        private readonly IConsensusManager consensusManager;
+
+        private SubscriptionToken peerConnectedSubscription;
+
+        private SubscriptionToken peerDisconnectedSubscription;
+
         public StorageFeature(
             IConnectionManager connection,
+            IConsensusManager consensusManager,
             INodeLifetime nodeLifetime,
+            IInitialBlockDownloadState ibd,
+            ISignals signals,
             IAsyncProvider asyncProvider,
+            ILoggerFactory loggerFactory,
             PayloadProvider payloadProvider,
             StorageBehavior storageBehavior)
         {
+            Guard.NotNull(loggerFactory, nameof(loggerFactory));
+
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+
+            this.consensusManager = consensusManager;
             this.connection = connection;
             this.nodeLifetime = nodeLifetime;
+            this.ibd = ibd;
+            this.signals = signals;
             this.payloadProvider = payloadProvider;
             this.asyncProvider = asyncProvider;
             this.storageBehavior = storageBehavior;
+
+            this.peersToVerify = ArrayList.Synchronized(new ArrayList());
+            this.verifiedPeers = ArrayList.Synchronized(new ArrayList());
+        }
+
+        private readonly ArrayList peersToVerify;
+
+        private readonly ArrayList verifiedPeers;
+
+        private void OnPeerConnected(PeerConnected peerEvent)
+        {
+            IReadOnlyNetworkPeerCollection peers = this.connection.ConnectedPeers;
+            this.peersToVerify.Add(peerEvent.PeerEndPoint);
+
+            INetworkPeer peer = peers.FindByEndpoint(peerEvent.PeerEndPoint);
+            this.logger.LogInformation("Peer {Peer} connected and we will investigate if they support storage feature.", peerEvent.PeerEndPoint.Address.ToString());
+        }
+
+        private void OnPeerDisconnected(PeerDisconnected peerEvent)
+        {
+            // Can we simply remove the entry based on the instance itself, or do we need to query based on IP/port?
+            this.peersToVerify.Remove(peerEvent.PeerEndPoint);
+
+            this.logger.LogInformation("Peer {Peer} disconnected and removed from verification list.", peerEvent.PeerEndPoint.Address.ToString());
+        }
+
+        public override void Dispose()
+        {
+            this.signals.Unsubscribe(this.peerConnectedSubscription);
+            this.signals.Unsubscribe(this.peerDisconnectedSubscription);
         }
 
         public override Task InitializeAsync()
         {
+            this.peerConnectedSubscription = this.signals.Subscribe<PeerConnected>(this.OnPeerConnected);
+            this.peerConnectedSubscription = this.signals.Subscribe<PeerDisconnected>(this.OnPeerDisconnected);
+
             // Register the behavior.
             this.connection.Parameters.TemplateBehaviors.Add(this.storageBehavior);
 
@@ -58,7 +124,7 @@ namespace Blockcore.Features.Storage
             this.payloadProvider.AddPayload(typeof(StoragePayload));
             this.payloadProvider.AddPayload(typeof(StorageInvPayload));
 
-            // Make a worker that will filter connected knows that has announced our custom payload behavior.
+            // Make a worker that will filter connected nodes that has announced our custom payload behavior.
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop("Storage.SyncWorker", async token =>
             {
                 IReadOnlyNetworkPeerCollection peers = this.connection.ConnectedPeers;
@@ -68,20 +134,50 @@ namespace Blockcore.Features.Storage
                     return;
                 }
 
-                // Announce the blocks on each nodes behavior which supports relaying.
-                IEnumerable<StorageBehavior> behaviors = peers.Where(x => x.PeerVersion?.Relay ?? false)
-                                                              .Select(x => x.Behavior<StorageBehavior>())
-                                                              .Where(x => x != null)
-                                                              .ToList();
-
-                foreach (StorageBehavior behavior in behaviors)
+                if (this.ibd.IsInitialBlockDownload())
                 {
-                    await behavior.SendTrickleAsync().ConfigureAwait(false);
+                    this.logger.LogTrace("Storage sync will continue after IBD.");
+                    return;
                 }
+
+                // Go through and verify peers, moving them out of the verify list.
+                //for (int i = this.peersToVerify.Count - 1; i >= 0; i--)
+                //{
+                //    IPEndPoint endpoint = (IPEndPoint)this.peersToVerify[i];
+
+                //    StorageBehavior peerBehavior = peers.Where(p => p.PeerEndPoint == endpoint)
+                //                    .Select(p => p.Behavior<StorageBehavior>())
+                //                    .Where(p => p != null)
+                //                    .SingleOrDefault();
+
+                //    if (peerBehavior != null)
+                //    {
+                //        // Check if we have received response on handshake, then remove for verify list.
+                //        if (peerBehavior.Supported() || peerBehavior.HasTimedout())
+                //        {
+                //            this.peersToVerify.RemoveAt(i);
+                //        }
+                //        else
+                //        {
+                //            await peerBehavior.SendFeatureHandshake().ConfigureAwait(false);
+                //        }
+                //    }
+                //}
+
+                // Announce the blocks on each nodes behavior which supports relaying.
+                //IEnumerable<StorageBehavior> behaviors = peers.Where(x => x.PeerVersion?.Relay ?? false)
+                //                                              .Select(x => x.Behavior<StorageBehavior>())
+                //                                              .Where(x => x != null)
+                //                                              .ToList();
+
+                //foreach (StorageBehavior behavior in behaviors)
+                //{
+                //    await behavior.SendTrickleAsync().ConfigureAwait(false);
+                //}
             },
                 this.nodeLifetime.ApplicationStopping,
-                repeatEvery: TimeSpan.FromMinutes(1), // Run full sync every 15 minutes, this is just a prototype so we want to keep testing the logic.
-                startAfter: TimeSpans.TenSeconds);
+                repeatEvery: TimeSpan.FromSeconds(30), // Run full sync every 15 minutes, this is just a prototype so we want to keep testing the logic.
+                startAfter: TimeSpans.TenSeconds); // TODO: Start after 1 minute, loop every 30 seconds.
 
             return Task.CompletedTask;
         }
@@ -96,6 +192,16 @@ namespace Blockcore.Features.Storage
         {
             LoggingConfiguration.RegisterFeatureNamespace<StorageFeature>("storage");
 
+            StorageSchemas schemas = new StorageSchemas
+            {
+                IdentityMaxVersion = 1,
+                IdentityMinVersion = 1,
+                HubMaxVersion = 1,
+                HubMinVersion = 1,
+                DataMaxVersion = 1,
+                DataMinVersion = 1
+            };
+
             fullNodeBuilder.ConfigureFeature(features =>
             {
                 features
@@ -104,6 +210,8 @@ namespace Blockcore.Features.Storage
                    {
                        services.AddSingleton<IDataStore, DataStore>();
                        services.AddSingleton<StorageBehavior>();
+                       services.AddSingleton<StorageSyncronizer>();
+                       services.AddSingleton(schemas);
                    });
             });
 

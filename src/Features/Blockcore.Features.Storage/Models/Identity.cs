@@ -8,7 +8,10 @@ namespace Blockcore.Features.Storage.Models
 {
     public class IdentityDocument : Document<Identity>
     {
-
+        /// <summary>
+        /// Version of identity that this document holds. This is not revisions of the document instance, but version of type definition used for compatibility.
+        /// </summary>
+        public short Version { get; set; }
     }
 
     [MessagePackObject]
@@ -20,11 +23,10 @@ namespace Blockcore.Features.Storage.Models
         public string Identifier { get; set; }
 
         /// <summary>
-        /// Block hash that was tip when this document was generated. Used to maintain correct sync between nodes.
+        /// Block height when this document was generated. Used to maintain correct sync between nodes.
         /// </summary>
-        [StringLength(100)]
         [Key(1)]
-        public string Block { get; set; }
+        public int Height { get; set; }
 
         [StringLength(512)]
         [Key(2)]
@@ -53,5 +55,12 @@ namespace Blockcore.Features.Storage.Models
         [StringLength(2000)]
         [Key(8)]
         public string Image { get; set; }
+
+        /// <summary>
+        /// The identity of hubs that this identity use for storage. Number of hubs is currently limited to 5.
+        /// </summary>
+        [MaxLength(5)]
+        [Key(9)]
+        public string[] Hubs { get; set; }
     }
 }

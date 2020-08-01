@@ -1,27 +1,25 @@
-﻿using NBitcoin;
+﻿using Blockcore.P2P.Protocol.Payloads;
+using NBitcoin;
 using NBitcoin.Protocol;
 
-namespace Blockcore.P2P.Protocol.Payloads
+namespace Blockcore.Features.Storage.Payloads
 {
-    public enum StoragePayloadAction
-    { 
-        SupportedCollections = 0,
-        SendCollections = 1,
-        SendSignatures = 2
-    }
-
-
+    /// <summary>
+    /// The StoragePayload is the type that initiates queries for data and information around storage. The StorageInvPayload is the response to these messages.
+    /// </summary>
     [Payload("storage")]
     public class StoragePayload : Payload
     {
         private VarString[] collections;
 
+        private ulong action;
+
+        private ushort version = 1;
+
         /// <summary>
         /// Name of collections that a node want to retrieve from other nodes.
         /// </summary>
         public VarString[] Collections { get { return this.collections; } set { this.collections = value; } }
-
-        private ulong action;
 
         public StoragePayloadAction Action
         {
@@ -29,14 +27,11 @@ namespace Blockcore.P2P.Protocol.Payloads
             {
                 return (StoragePayloadAction)this.action;
             }
-
             set
             {
                 this.action = (ulong)value;
             }
         }
-
-        private ushort version = 1;
 
         public ushort Version { get { return this.version; } set { this.version = value; } }
 

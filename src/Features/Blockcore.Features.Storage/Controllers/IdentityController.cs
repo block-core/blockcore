@@ -7,6 +7,7 @@ using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
+using Newtonsoft.Json;
 
 namespace Blockcore.Features.Storage.Controllers
 {
@@ -22,10 +23,13 @@ namespace Blockcore.Features.Storage.Controllers
 
         private readonly StorageSchemas schemas;
 
-        public IdentityController(IDataStore dataStore, StorageSchemas schemas)
+        private readonly StorageFeature storageFeature;
+
+        public IdentityController(IDataStore dataStore, StorageSchemas schemas, StorageFeature storageFeature)
         {
             this.dataStore = (DataStore)dataStore;
             this.schemas = schemas;
+            this.storageFeature = storageFeature;
         }
 
         /// <summary>
@@ -105,6 +109,11 @@ namespace Blockcore.Features.Storage.Controllers
             }
 
             this.dataStore.SetIdentity(document);
+
+            string json = JsonConvert.SerializeObject(document, JsonSettings.Storage);
+
+            // Announce the recently observed identity to connected nodes.
+            await this.storageFeature.AnnounceDocument("identity", json);
 
             return Ok(valid.ToString());
         }

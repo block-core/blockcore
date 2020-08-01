@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Connection;
 using Blockcore.Features.Storage.Models;
+using Blockcore.Features.Storage.Payloads;
 using Blockcore.Features.Storage.Persistence;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
@@ -166,60 +167,183 @@ namespace Blockcore.Features.Storage
 
                         while ((signatures = this.dataStore.GetSignatures(name, size, page)).Any())
                         {
-                            if (peer.IsConnected)
+                            if (!peer.IsConnected)
                             {
                                 break;
                             }
 
-                            await this.SendSignaturesAsync(peer, signatures);
+                            await this.SendSignaturesAsync(peer, name, signatures);
 
                             page++;
                         }
-                      
                     }
                 }
             }
-
-
         }
 
         private async Task ProcessStorageInvPayloadAsync(INetworkPeer peer, StorageInvPayload message)
         {
-            // Process the receiving of data that we made a request for.
-            string collection = Encoders.ASCII.EncodeData(message.Collection.GetString(true));
+            Guard.NotNull(peer, nameof(peer));
 
-            this.logger.LogDebug($"Received {message.Items.Length} items from peer '{0}' for collection {collection}.", peer.RemoteSocketEndpoint);
-
-            IdentityDocument[] identities = ConvertIdentity(message.Items);
-
-            foreach (IdentityDocument identity in identities)
+            if (peer != this.AttachedPeer)
             {
-                IdentityDocument existingIdentity = this.dataStore.GetIdentity(identity.Id);
-
-                // If the supplied identity is older, don't update, but we will send our copy to the peer.
-                if (existingIdentity != null && existingIdentity.Version > identity.Version)
-                {
-                    var payload = new StorageInvPayload();
-                    payload.Collection = new VarString(Encoders.ASCII.DecodeData("identity"));
-                    payload.Items = ConvertIdentity(new IdentityDocument[1] { existingIdentity });
-                    await peer.SendMessageAsync(payload).ConfigureAwait(false);
-
-                    return;
-                }
-
-                // Only persist identities that we support version for.
-                if (!this.schemas.SupportedIdentityVersion(identity.Version))
-                {
-                    continue;
-                }
-
-                this.dataStore.SetIdentity(identity);
+                this.logger.LogDebug("Attached peer '{0}' does not match the originating peer '{1}'.", this.AttachedPeer?.RemoteSocketEndpoint, peer.RemoteSocketEndpoint);
+                this.logger.LogTrace("(-)[PEER_MISMATCH]");
+                return;
             }
+
+            // Mark this peer that it supports storage messages. This is used for outside of behavior (the feature/etc.) to know which peers to forward messages too.
+            this.supported = true;
+
+            this.logger.LogInformation("RECEIVED StorageInvPayload collection name!: {Collection}", message.Collection);
+
+            if (message.Action == StoragePayloadAction.SendSignatures) // We just received a list of signatures, process them.
+            {
+                IEnumerable<string> items = ConvertASCII(message.Items);
+
+                foreach (string item in items)
+                {
+                    this.logger.LogInformation("Signature: {Signature}", item);
+                }
+
+                //foreach (VarString collection in message.Collections)
+                //{
+                //    var name = Encoders.ASCII.EncodeData(collection.GetString(true));
+
+                //    if (name == "identity")
+                //    {
+                //        int size = 1;
+                //        int page = 1;
+
+                //        IEnumerable<string> signatures;
+
+                //        while ((signatures = this.dataStore.GetSignatures(name, size, page)).Any())
+                //        {
+                //            if (!peer.IsConnected)
+                //            {
+                //                break;
+                //            }
+
+                //            await this.SendSignaturesAsync(peer, name, signatures);
+
+                //            page++;
+                //        }
+                //    }
+                //}
+            }
+            else if (message.Action == StoragePayloadAction.SendCollections) // We just received a list of documents, process them.
+            {
+                // Process the receiving of data that we made a request for.
+                string collection = Encoders.ASCII.EncodeData(message.Collection.GetString(true));
+
+                this.logger.LogDebug($"Received {message.Items.Length} items from peer '{0}' for collection {collection}.", peer.RemoteSocketEndpoint);
+
+                // TODO: Use generics to map collection string name in a dictionary with the type of the document.
+
+                if (collection == "identity")
+                {
+                    IdentityDocument[] identities = ConvertIdentity(message.Items);
+
+                    foreach (IdentityDocument identity in identities)
+                    {
+                        // Only persist identities that we support version for.
+                        if (!this.schemas.SupportedIdentityVersion(identity.Version))
+                        {
+                            continue;
+                        }
+
+                        IdentityDocument existingIdentity = this.dataStore.GetIdentity(identity.Id);
+
+                        // If the supplied identity is older, don't update,  // but we will send our copy to the peer. Do we?
+                        if (existingIdentity != null && existingIdentity.Content.Height > identity.Content.Height)
+                        {
+                            continue;
+                            //var payload = new StorageInvPayload();
+                            //payload.Collection = new VarString(Encoders.ASCII.DecodeData("identity"));
+                            //payload.Items = ConvertIdentity(new IdentityDocument[1] { existingIdentity });
+                            //await peer.SendMessageAsync(payload).ConfigureAwait(false);
+
+                            //return;
+                        }
+
+                        this.dataStore.SetIdentity(identity);
+                    }
+                }
+            }
+
+            //// Process the receiving of data that we made a request for.
+            //string collection = Encoders.ASCII.EncodeData(message.Collection.GetString(true));
+
+            //this.logger.LogDebug($"Received {message.Items.Length} items from peer '{0}' for collection {collection}.", peer.RemoteSocketEndpoint);
+
+            //IdentityDocument[] identities = ConvertIdentity(message.Items);
+
+            //foreach (IdentityDocument identity in identities)
+            //{
+            //    IdentityDocument existingIdentity = this.dataStore.GetIdentity(identity.Id);
+
+            //    // If the supplied identity is older, don't update, but we will send our copy to the peer.
+            //    if (existingIdentity != null && existingIdentity.Version > identity.Version)
+            //    {
+            //        var payload = new StorageInvPayload();
+            //        payload.Collection = new VarString(Encoders.ASCII.DecodeData("identity"));
+            //        payload.Items = ConvertIdentity(new IdentityDocument[1] { existingIdentity });
+            //        await peer.SendMessageAsync(payload).ConfigureAwait(false);
+
+            //        return;
+            //    }
+
+            //    // Only persist identities that we support version for.
+            //    if (!this.schemas.SupportedIdentityVersion(identity.Version))
+            //    {
+            //        continue;
+            //    }
+
+            //    this.dataStore.SetIdentity(identity);
+            //}
+        }
+
+        public async Task SendDocumentsAsync(string collection, IEnumerable<string> documents)
+        {
+            INetworkPeer peer = this.AttachedPeer;
+
+            if (peer == null)
+            {
+                this.logger.LogTrace("(-)[NO_PEER]");
+                return;
+            }
+
+            var payload = new StorageInvPayload();
+            payload.Action = StoragePayloadAction.SendCollections;
+            payload.Collection = new VarString(Encoders.ASCII.DecodeData(collection));
+            payload.Items = ConvertASCII(documents);
+
+            await peer.SendMessageAsync(payload).ConfigureAwait(false);
+
+            //var queue = new Queue<string>(signatures);
+
+            //while (queue.Count > 0)
+            //{
+            //    // Send 2 and 2 documents, just for prototype. Increase this later.
+            //    IdentityDocument[] items = queue.TakeAndRemove(2).ToArray();
+
+            //    if (!peer.IsConnected)
+            //    {
+            //        this.logger.LogDebug("Sending items to peer '{0}'.", peer.RemoteSocketEndpoint);
+
+            //        var payload = new StorageInvPayload();
+            //        payload.Collection = new VarString(Encoders.ASCII.DecodeData("identity"));
+            //        payload.Items = ConvertIdentity(items);
+
+            //        await peer.SendMessageAsync(payload).ConfigureAwait(false);
+            //    }
+            //}
         }
 
         private async Task SendSignaturesAsync(INetworkPeer peer, string collection, IEnumerable<string> signatures)
         {
             var payload = new StorageInvPayload();
+            payload.Action = StoragePayloadAction.SendSignatures;
             payload.Collection = new VarString(Encoders.ASCII.DecodeData(collection));
             payload.Items = ConvertASCII(signatures);
 
@@ -232,7 +356,7 @@ namespace Blockcore.Features.Storage
             //    // Send 2 and 2 documents, just for prototype. Increase this later.
             //    IdentityDocument[] items = queue.TakeAndRemove(2).ToArray();
 
-            //    if (peer.IsConnected)
+            //    if (!peer.IsConnected)
             //    {
             //        this.logger.LogDebug("Sending items to peer '{0}'.", peer.RemoteSocketEndpoint);
 
@@ -404,13 +528,26 @@ namespace Blockcore.Features.Storage
             return strings.ToArray();
         }
 
+        private IEnumerable<string> ConvertASCII(VarString[] list)
+        {
+            var strings = new List<string>();
+
+            foreach (VarString item in list)
+            {
+                var text = Encoders.ASCII.EncodeData(item.GetString(true));
+                strings.Add(text);
+            }
+
+            return strings.ToArray();
+        }
+
         private VarString[] ConvertIdentity(IdentityDocument[] list)
         {
             var strings = new List<VarString>();
 
             foreach (IdentityDocument item in list)
             {
-                string json = JsonConvert.SerializeObject(item);
+                string json = JsonConvert.SerializeObject(item, JsonSettings.Storage);
                 strings.Add(new VarString(Encoders.ASCII.DecodeData(json)));
             }
 

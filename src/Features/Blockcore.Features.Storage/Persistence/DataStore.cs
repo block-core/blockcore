@@ -106,6 +106,8 @@ namespace Blockcore.Features.Storage.Persistence
         public void SetIdentity(IdentityDocument identity)
         {
             this.identityCol.Upsert(identity);
+
+            // Announce 
         }
 
         public bool RemoveIdentity(string id)

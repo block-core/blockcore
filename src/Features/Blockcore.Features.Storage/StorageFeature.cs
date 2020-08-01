@@ -14,6 +14,7 @@ using Blockcore.Consensus;
 using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents.Peer;
 using Blockcore.Features.Storage.Models;
+using Blockcore.Features.Storage.Payloads;
 using Blockcore.Features.Storage.Persistence;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
@@ -110,6 +111,21 @@ namespace Blockcore.Features.Storage
         {
             this.signals.Unsubscribe(this.peerConnectedSubscription);
             this.signals.Unsubscribe(this.peerDisconnectedSubscription);
+        }
+
+        public async Task AnnounceDocument(string collection, string document)
+        {
+            IReadOnlyNetworkPeerCollection peers = this.connection.ConnectedPeers;
+
+            // Announce the blocks on each nodes behavior which supports the storage behavior.
+            IEnumerable<StorageBehavior> behaviors = peers.Select(x => x.Behavior<StorageBehavior>())
+                                                          .Where(x => x != null && x.Supported())
+                                                          .ToList();
+
+            foreach (StorageBehavior behavior in behaviors)
+            {
+                await behavior.SendDocumentsAsync(collection, new string[1] { document });
+            }
         }
 
         public override Task InitializeAsync()

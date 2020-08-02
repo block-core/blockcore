@@ -115,27 +115,70 @@ namespace Blockcore.Features.Storage.Persistence
             return this.identityCol.Delete("identity/" + id);
         }
 
-        public IEnumerable<string> GetSignatures(string collection, int pageSize, int pageNumber)
+        public T GetBySignature<T>(string signature, string collection)
         {
-            var sql = $"SELECT $.signature FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
+            var coll = (ILiteCollection<T>)this.collections[collection];
+            T item = coll.FindOne(Query.EQ("signature", signature));
+            return item;
+        }
 
-            List<string> signatures = new List<string>();
+        public bool ExistsBySignature(string signature, string collection)
+        {
+            var sql = $"SELECT COUNT($.signature) FROM {collection} WHERE signature = '{signature}';";
+            IBsonDataReader reader = this.db.Execute(sql);
+            BsonValue item = reader.SingleOrDefault();
 
-            using (IBsonDataReader res = this.db.Execute(sql))
+            return (item != null);
+        }
+
+        public IEnumerable<string> GetDocuments(string collection, IEnumerable<string> signatures)
+        {
+            //var skip = { (pageNumber - 1) * pageSize };
+
+            // TODO: Can we optimize this somehow?
+            BsonArray signaturesArray = new BsonArray();
+            foreach (var sig in signatures)
             {
-                while (res.Read())
-                {
-                    signatures.Add(res["signature"].AsString);
-                }
+                signaturesArray.Add(sig);
             }
 
-            return signatures;
+            // var coll = (ILiteCollection<object>)this.collections[collection];
+            IEnumerable<BsonDocument> items = this.db.GetCollection(collection).Find(Query.In("signature", signaturesArray));
+
+            List<string> results = new List<string>();
+
+            foreach (BsonDocument item in items)
+            {
+                var json = LiteDB.JsonSerializer.Serialize(item);
+                results.Add(json);
+            }
+
+            return results;
+
+            //var coll = (ILiteCollection<T>)this.collections[collection];
+            //T item = coll.FindOne(Query.EQ("signature", signature));
+            //return item;
+
+            //var sql = $"SELECT $ FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
+
+            //List<string> signatures = new List<string>();
+
+            //using (IBsonDataReader res = this.db.Execute(sql))
+            //{
+            //    while (res.Read())
+            //    {
+            //        res.Current.
+            //        signatures.Add(res["signature"].AsString);
+            //    }
+            //}
+
+            //return signatures;
 
             //ILiteCollection<BsonDocument> col = this.db.GetCollection(collection);
             //ILiteQueryable<BsonDocument> query = col.Query();
             //IEnumerable<BsonDocument> resultsPage = query.Select(x => new BsonDocument
             //{
-                
+
             //    ["_id"] = x["_id"]
             //}).Limit(pageSize).Offset((pageNumber - 1) * pageSize).ToEnumerable();
 
@@ -179,6 +222,72 @@ namespace Blockcore.Features.Storage.Persistence
             //IEnumerable<string> identities = this.collections[collection];
             //return identities;
         }
+
+        public IEnumerable<string> GetSignatures(string collection, int pageSize, int pageNumber)
+        {
+            var sql = $"SELECT $.signature FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
+
+            List<string> signatures = new List<string>();
+
+            using (IBsonDataReader res = this.db.Execute(sql))
+            {
+                while (res.Read())
+                {
+                    signatures.Add(res["signature"].AsString);
+                }
+            }
+
+            return signatures;
+
+            //ILiteCollection<BsonDocument> col = this.db.GetCollection(collection);
+            //ILiteQueryable<BsonDocument> query = col.Query();
+            //IEnumerable<BsonDocument> resultsPage = query.Select(x => new BsonDocument
+            //{
+
+            //    ["_id"] = x["_id"]
+            //}).Limit(pageSize).Offset((pageNumber - 1) * pageSize).ToEnumerable();
+
+            //return resultsPage;
+
+            //string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
+
+            //"SELECT $.Name, $.Phones[@.Type = "Mobile"] FROM customers";
+
+            //var sql = "SELECT " +
+            //            "@key as Confirmed," +
+            //            "FROM " + collection + " " +
+            //            $"WHERE SpendingDetails = null AND AccountIndex = {accountIndex} " +
+            //            $"{excludeColdStakeSql}" +
+            //            $"GROUP BY BlockHeight != null";
+
+            //using (var res = this.db.Execute(sql))
+            //{
+            //    var walletBalanceResult = new WalletBalanceResult();
+
+            //    while (res.Read())
+            //    {
+            //        if (res["Confirmed"] == false)
+            //            walletBalanceResult.AmountUnconfirmed = res["Amount"].AsInt64;
+            //        else
+            //            walletBalanceResult.AmountConfirmed = res["Amount"].AsInt64;
+            //    }
+
+            //    return walletBalanceResult;
+            //}
+
+            // All query results returns an IEnumerable<T>, so you can use Linq in results
+            //var results = this.identityCol
+            //    .FindAll() // two indexed queries
+            //    .Select(x => new { x.Name, x.Salary })
+            //    .OrderBy(x => x.Name);
+
+            //this.identityCol.Query().Select()
+
+
+            //IEnumerable<string> identities = this.collections[collection];
+            //return identities;
+        }
+
 
         //public int CountForAddress(string address)
         //{

@@ -124,7 +124,7 @@ namespace Blockcore.Features.Storage
 
             foreach (StorageBehavior behavior in behaviors)
             {
-                await behavior.SendDocumentsAsync(collection, new string[1] { document });
+                await behavior.SendJsonDocumentsAsync(collection, new string[1] { document });
             }
         }
 

@@ -14,7 +14,7 @@ namespace Blockcore.Features.Storage.Payloads
     {
         private VarString collection;
 
-        private VarString[] items;
+        private VarString[] items = new VarString[0];
 
         private ulong action;
 

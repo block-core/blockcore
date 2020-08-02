@@ -86,7 +86,11 @@ namespace Blockcore.Features.Storage
         {
             if (peer.State == NetworkPeerState.HandShaked)
             {
-                await SendFeatureHandshake().ConfigureAwait(false);
+                _ = Task.Run(async delegate
+                  {
+                      await Task.Delay(TimeSpan.FromSeconds(30));
+                      await SendFeatureHandshake().ConfigureAwait(false);
+                  });
             }
         }
 
@@ -118,6 +122,21 @@ namespace Blockcore.Features.Storage
                 this.logger.LogError("Exception occurred: {0}", ex.ToString());
                 throw;
             }
+        }
+
+        private async Task RequestDocumentsAsync(string collection, string[] signatures)
+        {
+            INetworkPeer peer = this.AttachedPeer;
+
+            StoragePayload payload = new StoragePayload
+            {
+                Version = 1,
+                Collections = ConvertASCII(new string[1] { collection }),
+                Action = StoragePayloadAction.SendDocuments,
+                Signatures = ConvertASCII(signatures)
+            };
+
+            await this.SendStorageQueryAsync(peer, payload).ConfigureAwait(false);
         }
 
         private async Task ProcessMessageAsync(INetworkPeer peer, IncomingMessage message)
@@ -160,7 +179,7 @@ namespace Blockcore.Features.Storage
 
                     if (name == "identity")
                     {
-                        int size = 1;
+                        int size = 3; // TODO: Tune the page size.
                         int page = 1;
 
                         IEnumerable<string> signatures;
@@ -179,6 +198,26 @@ namespace Blockcore.Features.Storage
                     }
                 }
             }
+            else if (message.Action == StoragePayloadAction.SendCollections) // Peer asked for collections, send all those documents chunked.
+            {
+                throw new Exception("Action \"SendCollections\" is currently unsupported.");
+                //var name = Encoders.ASCII.EncodeData(collection.GetString(true));
+
+                //// Reply with the documents requested.
+                //await this.SendDocumentsAsync(collection, ConvertASCII(message.Signatures));
+            }
+            else if (message.Action == StoragePayloadAction.SendDocuments) // Peer asked for documents
+            {
+                if (message.Collections.Length != 1)
+                {
+                    throw new Exception("The \"SendDocuments\" action require 1 and only 1 collection.");
+                }
+
+                var name = Encoders.ASCII.EncodeData(message.Collections[0].GetString(true));
+
+                // Reply with the documents requested.
+                await this.SendDocumentsAsync(name, ConvertASCII(message.Signatures));
+            }
         }
 
         private async Task ProcessStorageInvPayloadAsync(INetworkPeer peer, StorageInvPayload message)
@@ -195,7 +234,10 @@ namespace Blockcore.Features.Storage
             // Mark this peer that it supports storage messages. This is used for outside of behavior (the feature/etc.) to know which peers to forward messages too.
             this.supported = true;
 
-            this.logger.LogInformation("RECEIVED StorageInvPayload collection name!: {Collection}", message.Collection);
+            // Process the receiving of data that we made a request for.
+            string collection = Encoders.ASCII.EncodeData(message.Collection.GetString(true));
+
+            this.logger.LogInformation("RECEIVED StorageInvPayload collection name!: {Collection}", collection);
 
             if (message.Action == StoragePayloadAction.SendSignatures) // We just received a list of signatures, process them.
             {
@@ -204,6 +246,18 @@ namespace Blockcore.Features.Storage
                 foreach (string item in items)
                 {
                     this.logger.LogInformation("Signature: {Signature}", item);
+
+                    // Check if we have the signature.
+                    // SQL = "SELECT COUNT($.signature) FROM identity WHERE signature = 'IEot8JoTZ+D6ERh6YIKKb3jT1woFJgJ5cgmfd0t5D4W5OlQ8TKDZ+IL9rjjIapx6VzIBOhYWlzVnfynWf5m577M=';";
+                    var exists = this.dataStore.ExistsBySignature(item, collection);
+
+                    // If we don't have the document, request it immediately from the node.
+                    if (!exists)
+                    {
+                        // TODO: Consider buffering up a list of documents we want, chunks of e.g. 5 or 50, so we reduce chatter.
+                        // Until then, we'll simply request every single straight away.
+                        await this.RequestDocumentsAsync(collection, new string[1] { item });
+                    }
                 }
 
                 //foreach (VarString collection in message.Collections)
@@ -233,9 +287,6 @@ namespace Blockcore.Features.Storage
             }
             else if (message.Action == StoragePayloadAction.SendCollections) // We just received a list of documents, process them.
             {
-                // Process the receiving of data that we made a request for.
-                string collection = Encoders.ASCII.EncodeData(message.Collection.GetString(true));
-
                 this.logger.LogDebug($"Received {message.Items.Length} items from peer '{0}' for collection {collection}.", peer.RemoteSocketEndpoint);
 
                 // TODO: Use generics to map collection string name in a dictionary with the type of the document.
@@ -265,6 +316,10 @@ namespace Blockcore.Features.Storage
 
                             //return;
                         }
+
+                        // Appears that ID is not sent, even if it was, we should always take it from Content anyway to ensure nobody sends
+                        // us data that doesn't belong.
+                        identity.Id = "identity/" + identity.Content.Identifier;
 
                         this.dataStore.SetIdentity(identity);
                     }
@@ -303,7 +358,32 @@ namespace Blockcore.Features.Storage
             //}
         }
 
-        public async Task SendDocumentsAsync(string collection, IEnumerable<string> documents)
+        public async Task SendDocumentsAsync(string collection, IEnumerable<string> signatures)
+        {
+            INetworkPeer peer = this.AttachedPeer;
+
+            if (peer == null)
+            {
+                this.logger.LogTrace("(-)[NO_PEER]");
+                return;
+            }
+
+            if (signatures.Count() > 10)
+            {
+                throw new Exception("Maximum 10 documents is allowed to be requested at a time.");
+            }
+
+            IEnumerable<string> documents = this.dataStore.GetDocuments(collection, signatures);
+
+            var payload = new StorageInvPayload();
+            payload.Action = StoragePayloadAction.SendCollections;
+            payload.Collection = new VarString(Encoders.ASCII.DecodeData(collection));
+            payload.Items = ConvertASCII(documents); // Converts JSON strings to payload strings.
+
+            await peer.SendMessageAsync(payload).ConfigureAwait(false);
+        }
+
+        public async Task SendJsonDocumentsAsync(string collection, IEnumerable<string> documents)
         {
             INetworkPeer peer = this.AttachedPeer;
 
@@ -474,7 +554,7 @@ namespace Blockcore.Features.Storage
 
                 // this.hasSentHandshake = true;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
                 this.logger.LogTrace("(-)[CANCELED_EXCEPTION]");
                 return;

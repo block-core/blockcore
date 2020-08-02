@@ -8,6 +8,7 @@ namespace Blockcore.Features.Storage.Payloads
     {
         SupportedCollections = 0,
         SendCollections = 1,
-        SendSignatures = 2
+        SendSignatures = 2,
+        SendDocuments = 3
     }
 }

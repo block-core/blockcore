@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blockcore.Controllers;
 using Blockcore.Features.Storage.Models;
@@ -107,6 +108,19 @@ namespace Blockcore.Features.Storage.Controllers
                 // Invalid signature.
                 return BadRequest();
             }
+
+            // Use the Identifier from the signed document to find existing document.
+            IdentityDocument existingIdentity = this.dataStore.GetIdentity(document.Content.Identifier);
+
+            // If the supplied identity is older, don't update,  // but we will send our copy to the peer. Do we?
+            if (existingIdentity != null && existingIdentity.Content.Height > document.Content.Height)
+            {
+                return Problem("Your document has a height lower than previously and was not accepted. Increase the height and sign document again.");
+            }
+
+            // Appears that ID is not sent, even if it was, we should always take it from Content anyway to ensure nobody sends
+            // us data that doesn't belong.
+            document.Id = "identity/" + document.Content.Identifier;
 
             this.dataStore.SetIdentity(document);
 

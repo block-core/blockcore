@@ -10,7 +10,9 @@ namespace Blockcore.Features.Storage.Payloads
     [Payload("storage")]
     public class StoragePayload : Payload
     {
-        private VarString[] collections;
+        private VarString[] collections = new VarString[0];
+
+        private VarString[] signatures = new VarString[0];
 
         private ulong action;
 
@@ -35,6 +37,11 @@ namespace Blockcore.Features.Storage.Payloads
 
         public ushort Version { get { return this.version; } set { this.version = value; } }
 
+        /// <summary>
+        /// When requesting a copy of documents, it can be done by specifying a single collection and one or multiple signatures.
+        /// </summary>
+        public VarString[] Signatures { get { return this.signatures; } set { this.signatures = value; } }
+
         public StoragePayload(VarString[] collections)
         {
             this.collections = collections;
@@ -50,6 +57,7 @@ namespace Blockcore.Features.Storage.Payloads
             stream.ReadWrite(ref this.version);
             stream.ReadWrite(ref this.action);
             stream.ReadWrite(ref this.collections);
+            stream.ReadWrite(ref this.signatures);
         }
 
         public override string ToString()

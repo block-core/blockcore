@@ -79,7 +79,13 @@ namespace Blockcore.Features.Storage
             this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
             this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
 
-            IEnumerable<string> signatures = this.dataStore.GetSignatures("identity", 10, 1);
+            // IEnumerable<string> signatures = this.dataStore.GetSignatures("identity", 10, 1);
+        }
+
+        /// <inheritdoc />
+        protected override void DetachCore()
+        {
+            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
         }
 
         private async Task OnStateChangedAsync(INetworkPeer peer, NetworkPeerState oldState)
@@ -88,16 +94,11 @@ namespace Blockcore.Features.Storage
             {
                 _ = Task.Run(async delegate
                   {
-                      await Task.Delay(TimeSpan.FromSeconds(30));
+                      // Wait 15 seconds before starting the handshake.
+                      await Task.Delay(TimeSpan.FromSeconds(15));
                       await SendFeatureHandshake().ConfigureAwait(false);
                   });
             }
-        }
-
-        /// <inheritdoc />
-        protected override void DetachCore()
-        {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
@@ -287,13 +288,13 @@ namespace Blockcore.Features.Storage
             }
             else if (message.Action == StoragePayloadAction.SendCollections) // We just received a list of documents, process them.
             {
-                this.logger.LogDebug($"Received {message.Items.Length} items from peer '{0}' for collection {collection}.", peer.RemoteSocketEndpoint);
+                this.logger.LogDebug($"Received {message.Items.Length} items from peer '{peer.RemoteSocketEndpoint}' for collection {collection}.");
 
                 // TODO: Use generics to map collection string name in a dictionary with the type of the document.
 
                 if (collection == "identity")
                 {
-                    IdentityDocument[] identities = ConvertIdentity(message.Items);
+                    IdentityDocument[] identities = ConvertAndValidateIdentity(message.Items);
 
                     foreach (IdentityDocument identity in identities)
                     {
@@ -303,9 +304,9 @@ namespace Blockcore.Features.Storage
                             continue;
                         }
 
-                        IdentityDocument existingIdentity = this.dataStore.GetIdentity(identity.Id);
+                        IdentityDocument existingIdentity = this.dataStore.GetDocumentById<IdentityDocument>("identity", identity.Content.Identifier);
 
-                        // If the supplied identity is older, don't update,  // but we will send our copy to the peer. Do we?
+                        // If the supplied identity is older, don't update,
                         if (existingIdentity != null && existingIdentity.Content.Height > identity.Content.Height)
                         {
                             continue;
@@ -634,14 +635,20 @@ namespace Blockcore.Features.Storage
             return strings.ToArray();
         }
 
-        private IdentityDocument[] ConvertIdentity(VarString[] list)
+        private IdentityDocument[] ConvertAndValidateIdentity(VarString[] list)
         {
             var identities = new List<IdentityDocument>();
 
             foreach (VarString item in list)
             {
                 string jsonText = Encoders.ASCII.EncodeData(item.GetString(true));
+
                 IdentityDocument identity = JsonConvert.DeserializeObject<IdentityDocument>(jsonText);
+
+                // TODO: Validate signature of the document we received over p2p channel.
+
+                // Make sure that we read the .Id from the signed .Content, so it can't be manipulated.
+                identity.Id = "identity/" + identity.Content.Identifier;
 
                 identities.Add(identity);
             }

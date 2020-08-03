@@ -62,7 +62,7 @@ namespace Blockcore.Features.Storage.Controllers
         public IActionResult GetNodeIdentity()
         {
             string identifier = this.configuration.GetValue<string>("Blockcore:Node:Identifier");
-            IdentityDocument identity = this.dataStore.GetIdentity(identifier);
+            IdentityDocument identity = this.dataStore.GetDocumentById<IdentityDocument>("identity", identifier);
 
             // Just temporary sample data.
             identity.Content.Url = "https://city.hub.liberstad.com";

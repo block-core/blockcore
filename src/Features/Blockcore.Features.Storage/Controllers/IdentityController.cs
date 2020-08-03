@@ -57,7 +57,7 @@ namespace Blockcore.Features.Storage.Controllers
                 return BadRequest();
             }
 
-            IdentityDocument document = this.dataStore.GetIdentity(address);
+            IdentityDocument document = this.dataStore.GetDocumentById<IdentityDocument>("identity", address);
 
             if (document == null)
             {
@@ -110,7 +110,7 @@ namespace Blockcore.Features.Storage.Controllers
             }
 
             // Use the Identifier from the signed document to find existing document.
-            IdentityDocument existingIdentity = this.dataStore.GetIdentity(document.Content.Identifier);
+            IdentityDocument existingIdentity = this.dataStore.GetDocumentById<IdentityDocument>("identity", document.Content.Identifier);
 
             // If the supplied identity is older, don't update,  // but we will send our copy to the peer. Do we?
             if (existingIdentity != null && existingIdentity.Content.Height > document.Content.Height)
@@ -145,7 +145,7 @@ namespace Blockcore.Features.Storage.Controllers
                 return BadRequest();
             }
 
-            IdentityDocument document = this.dataStore.GetIdentity(address);
+            IdentityDocument document = this.dataStore.GetDocumentById<IdentityDocument>("identity", address);
 
             if (document == null)
             {

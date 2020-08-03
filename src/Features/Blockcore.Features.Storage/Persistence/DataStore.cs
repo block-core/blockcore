@@ -6,6 +6,7 @@ using Blockcore.Configuration;
 using Blockcore.Features.Storage.Models;
 using Blockcore.Utilities;
 using LiteDB;
+using Microsoft.VisualBasic;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 
@@ -98,16 +99,19 @@ namespace Blockcore.Features.Storage.Persistence
             return identities;
         }
 
-        public IdentityDocument GetIdentity(string id)
+        //public IdentityDocument GetIdentity(string id)
+        //{
+        //    return this.identityCol.FindById("identity/" + id);
+        //}
+
+        public T GetDocumentById<T>(string collection, string id)
         {
-            return this.identityCol.FindById("identity/" + id);
+            return ((ILiteCollection<T>)this.collections[collection]).FindById(new BsonValue($"{collection}/{id}"));
         }
 
         public void SetIdentity(IdentityDocument identity)
         {
             this.identityCol.Upsert(identity);
-
-            // Announce 
         }
 
         public bool RemoveIdentity(string id)

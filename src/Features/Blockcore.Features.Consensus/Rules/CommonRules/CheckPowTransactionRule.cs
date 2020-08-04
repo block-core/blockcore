@@ -86,13 +86,11 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
             var inOutPoints = new HashSet<OutPoint>();
             foreach (TxIn txin in tx.Inputs)
             {
-                if (inOutPoints.Contains(txin.PrevOut))
+                if (!inOutPoints.Add(txin.PrevOut))
                 {
                     this.Logger.LogTrace("(-)[TX_DUP_INPUTS]");
                     ConsensusErrors.BadTransactionDuplicateInputs.Throw();
                 }
-
-                inOutPoints.Add(txin.PrevOut);
             }
 
             if (tx.IsCoinBase)

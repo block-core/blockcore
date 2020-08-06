@@ -45,8 +45,8 @@ namespace Rutanio
             GenesisReward = Money.Zero,
             HashGenesisBlock = "0x00000347c656a618f9bfef80a14fa66cf26e34ed4caeba0e3f072eb8b9408ee6",
             HashMerkleRoot = "0xa74f9cb5ad97977b1e1079658f8290aa1e6122ee50df327a7e39480f94237c54",
-            DNS = new[] { "seednode1.rutan.cloud", "seednode2.rutan.network", "seednode3.rutan.cloud", "seednode4.rutan.network" },
-            Nodes = new[] { "vps101.rutan.cloud", "vps102.rutan.network", "vps201.rutan.cloud", "vps202.rutan.network" },
+            DNS = new[] { "seednode1.rutax.cloud", "seednode2.rutax.network", "seednode3.rutax.cloud", "seednode4.rutax.network" },
+            Nodes = new[] { "vps301.rutax.cloud", "vps302.rutax.network", "vps303.rutax.cloud", "vps304.rutax.network" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                  { 0, new CheckpointInfo(new uint256("0x00000347c656a618f9bfef80a14fa66cf26e34ed4caeba0e3f072eb8b9408ee6"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) }, //Premine
@@ -70,7 +70,8 @@ namespace Rutanio
                  { 100000, new CheckpointInfo(new uint256("0xdb024c71b8abceee321230b695e60f5bc6342d0168f8bdda639e08a7a1e149b8"), new uint256("0xbb966e8df430edcc1c591ecc3821bb766213212c274f4435c305142588bb28d2")) },
                  { 150000, new CheckpointInfo(new uint256("0xcab87f808e59ff30e8c741df899f993bb9b30cc78f0438a6c1ffac04abf9f124"), new uint256("0x201fd57cd71bbcf604ecb73a9770ded4210b046d857d5ce7865f2fa0e5e5c98e")) },
                  { 200000, new CheckpointInfo(new uint256("0xf1c63ee81dbdd9a419d75d74c1bfcef1a1d135745bf83d3c263ee77f0533d0bf"), new uint256("0x44c40d7991b88d56eea10154e32cd5c10087094f4f831b79be2c5dcfb085ee71")) },
-                 { 309000, new CheckpointInfo(new uint256("0x7e24a192fdfc29290a831cdc10a6adcfb55dfb457de1b5ed00d0a13ffa2ead17"), new uint256("0x01c332d8310b5d165aa64cd0a70849143c23b04b2689a5523d1f7dd52f670bc6")) }
+                 { 309000, new CheckpointInfo(new uint256("0x7e24a192fdfc29290a831cdc10a6adcfb55dfb457de1b5ed00d0a13ffa2ead17"), new uint256("0x01c332d8310b5d165aa64cd0a70849143c23b04b2689a5523d1f7dd52f670bc6")) },
+                 { 475000, new CheckpointInfo(new uint256("0x502700a3ab205f8e7120dcfad7d982dc30b3067f529e712032c724d8a21d7482"), new uint256("0x6bff1fd82fd6c13799c614f44b8f785e7ba976d1ff082a165309bac6e72dfd43")) }
             }
         };
 

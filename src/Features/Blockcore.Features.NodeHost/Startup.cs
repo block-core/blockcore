@@ -62,7 +62,7 @@ namespace Blockcore.Features.NodeHost
 
             services.Configure<BlockcoreSettings>(this.Configuration.GetSection("Blockcore"));
 
-            services.AddProblemDetails();
+            // services.AddProblemDetails();
 
             // Add service and create Policy to allow Cross-Origin Requests
             services.AddCors
@@ -217,7 +217,8 @@ namespace Blockcore.Features.NodeHost
         {
             NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
-            app.UseProblemDetails();
+            app.UseDeveloperExceptionPage();
+            // app.UseProblemDetails();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();

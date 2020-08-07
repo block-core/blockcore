@@ -210,12 +210,12 @@ namespace Blockcore.Features.Storage
 
             StorageSchemas schemas = new StorageSchemas
             {
-                IdentityMaxVersion = 1,
-                IdentityMinVersion = 1,
-                HubMaxVersion = 1,
-                HubMinVersion = 1,
-                DataMaxVersion = 1,
-                DataMinVersion = 1
+                IdentityMaxVersion = 2,
+                IdentityMinVersion = 2,
+                HubMaxVersion = 2,
+                HubMinVersion = 2,
+                DataMaxVersion = 2,
+                DataMinVersion = 2
             };
 
             fullNodeBuilder.ConfigureFeature(features =>

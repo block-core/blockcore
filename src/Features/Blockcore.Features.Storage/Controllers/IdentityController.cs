@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Blockcore.Controllers;
 using Blockcore.Features.Storage.Models;
@@ -8,6 +10,8 @@ using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
+using NBitcoin.Crypto;
+using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Features.Storage.Controllers
@@ -97,10 +101,11 @@ namespace Blockcore.Features.Storage.Controllers
                 return Problem(title: "Incompatible version", detail: $"Unsupported document version: {document.Version}. Supported range: {this.schemas.IdentityMinVersion}-{this.schemas.IdentityMaxVersion}.", statusCode: 400);
             }
 
-            byte[] entityBytes = MessagePackSerializer.Serialize(document.Content);
+            byte[] entityBytes = MessagePackSerializer.Serialize(document.Content, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
             var bitcoinAddress = (BitcoinPubKeyAddress)BitcoinPubKeyAddress.Create(address, ProfileNetwork.Instance);
 
+            // var valid = bitcoinAddress.VerifyDocument(entityBytes, document.Signature);
             var valid = bitcoinAddress.VerifyMessage(entityBytes, document.Signature);
 
             if (!valid)
@@ -112,7 +117,7 @@ namespace Blockcore.Features.Storage.Controllers
             // Use the Identifier from the signed document to find existing document.
             IdentityDocument existingIdentity = this.dataStore.GetDocumentById<IdentityDocument>("identity", document.Content.Identifier);
 
-            // If the supplied identity is older, don't update,  // but we will send our copy to the peer. Do we?
+            // If the supplied identity is older, don't update. This will allow equal heights to be updated. That means updating with same height might result in different states across the nodes.
             if (existingIdentity != null && existingIdentity.Content.Height > document.Content.Height)
             {
                 return Problem("Your document has a height lower than previously and was not accepted. Increase the height and sign document again.");

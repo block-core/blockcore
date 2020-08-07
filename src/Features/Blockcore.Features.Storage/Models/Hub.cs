@@ -10,7 +10,7 @@ namespace Blockcore.Features.Storage.Models
     }
 
     // TODO: Update this HubData type to contain information such as Features that are available on a node. The other values is retrieved from identity instead.
-    [MessagePackObject]
+    [MessagePackObject(keyAsPropertyName: true, sortKeys: true)]
     public class HubData
     {
         [StringLength(255, MinimumLength = 1)]

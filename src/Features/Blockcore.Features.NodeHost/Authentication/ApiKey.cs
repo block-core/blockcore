@@ -20,5 +20,7 @@ namespace Blockcore.Features.NodeHost.Authentication
         //public DateTime ValidTo { get; set; } // TODO: Add support for time-activated API keys.
 
         public IReadOnlyCollection<string> Roles { get; set; }
+
+        public IReadOnlyCollection<string> Paths { get; set; }
     }
 }

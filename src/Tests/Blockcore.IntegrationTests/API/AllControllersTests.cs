@@ -15,7 +15,7 @@ namespace Blockcore.IntegrationTests.API
         public void AllPostMethodsShouldHaveBody()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => a.FullName.StartsWith("Stratis") || a.FullName.StartsWith("NBitcoin"));
+                .Where(a => a.FullName.StartsWith("Blockcore") || a.FullName.StartsWith("NBitcoin"));
             var controllers = assemblies.SelectMany(GetControllersInAssembly()).ToList();
 
             foreach (var controller in controllers)

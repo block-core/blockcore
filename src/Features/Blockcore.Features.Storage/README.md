@@ -23,3 +23,21 @@ At this moment, both nodes have the same amount of documents with same IDs. They
 - Node A knows this is incoming through API, so it will distribute the whole identity to all connected nodes (Node B) immediately.
 - Node B will announce to its connected not, except sender, the signature it recently saw.
 - Node C will ask Node B to send, if it doesn't already have the document.
+
+
+## Document Signatures
+
+There has been various standards proposed for document signing up through the years and it is likely that one of them should 
+be adopted for use in this feature.
+
+JSON Web Signature (JWS): https://tools.ietf.org/html/rfc7515
+
+Linked Data Signatures vs. Javascript Object Signing and Encryption: http://manu.sporny.org/2013/lds-vs-jose/
+
+Linked Data Signatures: https://decentralized-id.com/rwot-dir/rwot3-sf/topics-and-advance-readings/blockchain-extensions-for-linked-data-signatures/
+
+Linked Data Proofs (what Linked Data Signatures has evolved into): https://w3c-ccg.github.io/ld-proofs/
+
+RDF Dataset Normalization: http://json-ld.github.io/normalization/spec/
+
+https://decentralized-id.com/

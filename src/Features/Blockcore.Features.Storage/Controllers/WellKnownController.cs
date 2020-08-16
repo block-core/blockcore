@@ -45,7 +45,7 @@ namespace Blockcore.Features.Storage.Controllers
         }
 
         /// <summary>
-        /// Returns the identity of the node.
+        /// Returns the supported schemas on this node.
         /// </summary>
         /// <returns></returns>
         [HttpGet("storage/schemas")]

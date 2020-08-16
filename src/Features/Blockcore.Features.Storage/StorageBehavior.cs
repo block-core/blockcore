@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Connection;
@@ -129,12 +130,13 @@ namespace Blockcore.Features.Storage
         {
             INetworkPeer peer = this.AttachedPeer;
 
+            // Send a request to the peer to retrieve the documents of these signatures in the specified collection.
             StoragePayload payload = new StoragePayload
             {
                 Version = 1,
                 Collections = ConvertASCII(new string[1] { collection }),
                 Action = StoragePayloadAction.SendDocuments,
-                Signatures = ConvertASCII(signatures)
+                Signatures = ConvertText(signatures)
             };
 
             await this.SendStorageQueryAsync(peer, payload).ConfigureAwait(false);
@@ -142,8 +144,6 @@ namespace Blockcore.Features.Storage
 
         private async Task ProcessMessageAsync(INetworkPeer peer, IncomingMessage message)
         {
-            this.logger.LogInformation("Message: {Message}", message.Message.Command);
-
             switch (message.Message.Payload)
             {
                 case StoragePayload storagePayload:
@@ -217,7 +217,7 @@ namespace Blockcore.Features.Storage
                 var name = Encoders.ASCII.EncodeData(message.Collections[0].GetString(true));
 
                 // Reply with the documents requested.
-                await this.SendDocumentsAsync(name, ConvertASCII(message.Signatures));
+                await this.SendDocumentsAsync(name, ConvertText(message.Signatures));
             }
         }
 
@@ -242,7 +242,7 @@ namespace Blockcore.Features.Storage
 
             if (message.Action == StoragePayloadAction.SendSignatures) // We just received a list of signatures, process them.
             {
-                IEnumerable<string> items = ConvertASCII(message.Items);
+                IEnumerable<string> items = ConvertText(message.Items);
 
                 foreach (string item in items)
                 {
@@ -255,43 +255,19 @@ namespace Blockcore.Features.Storage
                     // If we don't have the document, request it immediately from the node.
                     if (!exists)
                     {
+                        this.logger.LogInformation("Please send me this document: {Signature}", item);
+
                         // TODO: Consider buffering up a list of documents we want, chunks of e.g. 5 or 50, so we reduce chatter.
                         // Until then, we'll simply request every single straight away.
                         await this.RequestDocumentsAsync(collection, new string[1] { item });
                     }
                 }
-
-                //foreach (VarString collection in message.Collections)
-                //{
-                //    var name = Encoders.ASCII.EncodeData(collection.GetString(true));
-
-                //    if (name == "identity")
-                //    {
-                //        int size = 1;
-                //        int page = 1;
-
-                //        IEnumerable<string> signatures;
-
-                //        while ((signatures = this.dataStore.GetSignatures(name, size, page)).Any())
-                //        {
-                //            if (!peer.IsConnected)
-                //            {
-                //                break;
-                //            }
-
-                //            await this.SendSignaturesAsync(peer, name, signatures);
-
-                //            page++;
-                //        }
-                //    }
-                //}
             }
             else if (message.Action == StoragePayloadAction.SendCollections) // We just received a list of documents, process them.
             {
                 this.logger.LogDebug($"Received {message.Items.Length} items from peer '{peer.RemoteSocketEndpoint}' for collection {collection}.");
 
                 // TODO: Use generics to map collection string name in a dictionary with the type of the document.
-
                 if (collection == "identity")
                 {
                     IdentityDocument[] identities = ConvertAndValidateIdentity(message.Items);
@@ -379,7 +355,7 @@ namespace Blockcore.Features.Storage
             var payload = new StorageInvPayload();
             payload.Action = StoragePayloadAction.SendCollections;
             payload.Collection = new VarString(Encoders.ASCII.DecodeData(collection));
-            payload.Items = ConvertASCII(documents); // Converts JSON strings to payload strings.
+            payload.Items = ConvertText(documents); // Converts JSON strings to payload strings.
 
             await peer.SendMessageAsync(payload).ConfigureAwait(false);
         }
@@ -397,7 +373,7 @@ namespace Blockcore.Features.Storage
             var payload = new StorageInvPayload();
             payload.Action = StoragePayloadAction.SendCollections;
             payload.Collection = new VarString(Encoders.ASCII.DecodeData(collection));
-            payload.Items = ConvertASCII(documents);
+            payload.Items = ConvertText(documents);
 
             await peer.SendMessageAsync(payload).ConfigureAwait(false);
 
@@ -426,7 +402,7 @@ namespace Blockcore.Features.Storage
             var payload = new StorageInvPayload();
             payload.Action = StoragePayloadAction.SendSignatures;
             payload.Collection = new VarString(Encoders.ASCII.DecodeData(collection));
-            payload.Items = ConvertASCII(signatures);
+            payload.Items = ConvertText(signatures);
 
             await peer.SendMessageAsync(payload).ConfigureAwait(false);
 
@@ -622,6 +598,31 @@ namespace Blockcore.Features.Storage
             return strings.ToArray();
         }
 
+        private VarString[] ConvertText(IEnumerable<string> list)
+        {
+            var strings = new List<VarString>();
+
+            foreach (string item in list)
+            {
+                strings.Add(new VarString(Encoding.UTF8.GetBytes(item)));
+            }
+
+            return strings.ToArray();
+        }
+
+        private IEnumerable<string> ConvertText(VarString[] list)
+        {
+            var strings = new List<string>();
+
+            foreach (VarString item in list)
+            {
+                var text = Encoding.UTF8.GetString(item.GetString(true));
+                strings.Add(text);
+            }
+
+            return strings.ToArray();
+        }
+
         private VarString[] ConvertIdentity(IdentityDocument[] list)
         {
             var strings = new List<VarString>();
@@ -641,7 +642,8 @@ namespace Blockcore.Features.Storage
 
             foreach (VarString item in list)
             {
-                string jsonText = Encoders.ASCII.EncodeData(item.GetString(true));
+                string jsonText = Encoding.UTF8.GetString(item.GetString(true));
+                // string jsonText = Encoders.ASCII.EncodeData(item.GetString(.GetString(true));
 
                 IdentityDocument identity = JsonConvert.DeserializeObject<IdentityDocument>(jsonText);
 

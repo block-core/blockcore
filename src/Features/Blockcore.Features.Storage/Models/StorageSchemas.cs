@@ -19,7 +19,7 @@ namespace Blockcore.Features.Storage.Models
 
         public bool SupportedIdentityVersion(short version)
         {
-            return !(version > this.IdentityMaxVersion && version < this.IdentityMinVersion);
+            return !(version < this.IdentityMinVersion || version > this.IdentityMaxVersion);
         }
 
         /// <summary>

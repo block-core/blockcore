@@ -38,5 +38,18 @@ namespace Blockcore.Features.Storage.Models
         [JsonProperty(PropertyName = "@type")] // Follow the JSON-LD standard: https://json-ld.org/.
         [DataMember(Name = "@type")]
         public string Type { get; set; }
+
+        /// <summary>
+        /// State is used to indicate status of an entity and used when a document is marked for delete.
+        /// Can be anything between 0 and 65,535 (no negative values).
+        /// Current known states: 
+        /// 0: Normal and active documents.
+        /// 999: Deleted.
+        /// </summary>
+        [Required]
+        [Key("@state")]
+        [JsonProperty(PropertyName = "@state")]
+        [DataMember(Name = "@state")]
+        public ushort State { get; set; }
     }
 }

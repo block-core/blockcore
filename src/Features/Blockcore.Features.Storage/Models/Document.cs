@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using LiteDB;
+using Newtonsoft.Json;
 
 namespace Blockcore.Features.Storage.Models
 {
@@ -21,19 +23,19 @@ namespace Blockcore.Features.Storage.Models
         [BsonId]
         public string Id { get; set; }
 
-        public string Signature { get; set; }
+        public Signature Signature { get; set; }
 
         public T Content { get; set; }
 
         public string GetIdentifier()
         {
-            var values = this.Id.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
+            string[] values = this.Id.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
             return values[1];
         }
 
         public string GetContainer()
         {
-            var values = this.Id.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
+            string[] values = this.Id.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
             return values[0];
         }
     }

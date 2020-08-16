@@ -6,7 +6,6 @@ using Blockcore.Configuration;
 using Blockcore.Features.Storage.Models;
 using Blockcore.Utilities;
 using LiteDB;
-using Microsoft.VisualBasic;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 
@@ -122,13 +121,13 @@ namespace Blockcore.Features.Storage.Persistence
         public T GetBySignature<T>(string signature, string collection)
         {
             var coll = (ILiteCollection<T>)this.collections[collection];
-            T item = coll.FindOne(Query.EQ("signature", signature));
+            T item = coll.FindOne(Query.EQ("signature.value", signature));
             return item;
         }
 
         public bool ExistsBySignature(string signature, string collection)
         {
-            var sql = $"SELECT COUNT($.signature) FROM {collection} WHERE signature = '{signature}';";
+            var sql = $"SELECT COUNT($.signature.value) FROM {collection} WHERE signature.value = '{signature}';";
             IBsonDataReader reader = this.db.Execute(sql);
             BsonValue item = reader.SingleOrDefault();
 
@@ -147,7 +146,7 @@ namespace Blockcore.Features.Storage.Persistence
             }
 
             // var coll = (ILiteCollection<object>)this.collections[collection];
-            IEnumerable<BsonDocument> items = this.db.GetCollection(collection).Find(Query.In("signature", signaturesArray));
+            IEnumerable<BsonDocument> items = this.db.GetCollection(collection).Find(Query.In("signature.value", signaturesArray));
 
             List<string> results = new List<string>();
 
@@ -229,7 +228,7 @@ namespace Blockcore.Features.Storage.Persistence
 
         public IEnumerable<string> GetSignatures(string collection, int pageSize, int pageNumber)
         {
-            var sql = $"SELECT $.signature FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
+            var sql = $"SELECT $.signature.value FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
 
             List<string> signatures = new List<string>();
 
@@ -419,6 +418,27 @@ namespace Blockcore.Features.Storage.Persistence
                     return ret;
                 }
             );
+
+            // TODO: Implement handler for different versions of document to be backwards compatible.
+            //mapper.RegisterType<IdentityDocument>
+            //(
+            //    serialize: o =>
+            //    {
+            //        var doc = new BsonDocument();
+            //        doc["_id"] = o.Id;
+            //        doc["Field1"] = o.Field1;
+            //        //whatever you want to do
+            //        return doc;
+            //    },
+            //    deserialize: doc =>
+            //    {
+            //        var o = new IdentityDocument();
+            //        o.Id = doc["_id"];
+            //        o.Field1 = doc["Field1"];
+            //        //whatever you want to do
+            //        return o;
+            //    }
+            //);
 
             return mapper;
         }

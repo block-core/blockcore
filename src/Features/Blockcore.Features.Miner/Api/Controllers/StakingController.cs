@@ -190,8 +190,8 @@ namespace Blockcore.Features.Miner.Api.Controllers
         }
 
         [Route("getStakingNotExpired")]
-        [HttpGet]
-        public IActionResult GetStakingNotExpired(StakingNotExpiredRequest request)
+        [HttpPost]
+        public IActionResult GetStakingNotExpired([FromBody] StakingNotExpiredRequest request)
         {
             try
             {

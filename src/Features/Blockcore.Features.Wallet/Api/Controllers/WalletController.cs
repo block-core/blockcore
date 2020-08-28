@@ -804,7 +804,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// </summary>
         /// <returns>A JSON object containing information about the re sent transactions.</returns>
         [Route("resend-unconfirmed-transactions")]
-        [HttpPost]
+        [HttpGet]
         public IActionResult ResendUnconfirmedTransactions()
         {
             // checks the request is valid

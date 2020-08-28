@@ -75,7 +75,8 @@ namespace Blockcore.Tests.Controllers
             this.CreateNewController();
         }
 
-        private void CreateNewController() {
+        private void CreateNewController()
+        {
             this.controller = new NodeController(
                 this.chainIndexer,
                 this.chainState.Object,
@@ -254,11 +255,10 @@ namespace Blockcore.Tests.Controllers
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
-            var blockStore = new Mock<IBlockStore>();
-            blockStore.Setup(b => b.GetBlockIdByTransactionId(txId))
+            this.blockStore.Setup(b => b.GetBlockIdByTransactionId(txId))
                 .Returns(block.HashBlock);
             this.fullNode.Setup(f => f.NodeFeature<IBlockStore>(false))
-                .Returns(blockStore.Object);
+                .Returns(this.blockStore.Object);
             string txid = txId.ToString();
             bool verbose = true;
 

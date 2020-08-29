@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Blockcore.Features.Storage.Models
 {
     /// <summary>
-    /// The entity encapsulates the data.
+    /// The entity encapsulates the data. This is almost like JWS JSON Flattened format, but payload is serialized to JSON and not base64.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class Document<T>
@@ -23,13 +23,18 @@ namespace Blockcore.Features.Storage.Models
         [BsonId]
         public string Id { get; set; }
 
-        public Signature Signature { get; set; }
+        public string Header { get; set; }
 
+        public string Payload { get; set; }
+
+        public string Signature { get; set; }
+
+        // public Signature Signature { get; set; }
         public T Content { get; set; }
 
         public string GetIdentifier()
         {
-            string[] values = this.Id.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
+            string[] values = this.Id.Split(":", System.StringSplitOptions.RemoveEmptyEntries);
             return values[1];
         }
 

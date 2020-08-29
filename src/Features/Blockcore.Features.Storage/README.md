@@ -6,6 +6,14 @@ Custom feature for Blockcore that enables nodes to storage and sync identities a
 
 The primary document that the storage feature hold, is identities. These are free for anyone to create and is synced across all nodes that has the storage feature enabled.
 
+## Entity Types
+
+EntityBase - All signed documents should inherit this.
+Identity : EntityBase - Identity type.
+Message - Contains the Version and Content, as string type. JWT of JWS or JWE.
+IdentityDocument : Document<Identity> - Type that is saved to database.
+
+
 ## Syncing
 
 1. Upon new connection and handshake is verified.

@@ -283,7 +283,7 @@ namespace Blockcore.Features.Storage
                         IdentityDocument existingIdentity = this.dataStore.GetDocumentById<IdentityDocument>("identity", identity.Content.Identifier);
 
                         // If the supplied identity is older, don't update,
-                        if (existingIdentity != null && existingIdentity.Content.Height > identity.Content.Height)
+                        if (existingIdentity != null && existingIdentity.Content.Timestamp > identity.Content.Timestamp)
                         {
                             continue;
                             //var payload = new StorageInvPayload();
@@ -294,9 +294,10 @@ namespace Blockcore.Features.Storage
                             //return;
                         }
 
+                        // TODO: FIX THIS!
                         // Appears that ID is not sent, even if it was, we should always take it from Content anyway to ensure nobody sends
                         // us data that doesn't belong.
-                        identity.Id = "identity/" + identity.Content.Identifier;
+                        // identity.Id = "identity/" + identity.Content.Identifier;
 
                         this.dataStore.SetIdentity(identity);
                     }
@@ -649,8 +650,9 @@ namespace Blockcore.Features.Storage
 
                 // TODO: Validate signature of the document we received over p2p channel.
 
+                // TODO: UPDATE THIS!
                 // Make sure that we read the .Id from the signed .Content, so it can't be manipulated.
-                identity.Id = "identity/" + identity.Content.Identifier;
+                // identity.Id = "identity/" + identity.Content.Identifier;
 
                 identities.Add(identity);
             }

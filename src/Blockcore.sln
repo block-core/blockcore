@@ -140,7 +140,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenExo.Node", "Networks\Op
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Storage", "Features\Blockcore.Features.Storage\Blockcore.Features.Storage.csproj", "{B6743C67-E54D-47E7-A9ED-B13CAC53BAA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Features.Storage.Tests", "Tests\Blockcore.Features.Storage.Tests\Blockcore.Features.Storage.Tests.csproj", "{6FE403E4-F182-4390-8AEC-807660FD1812}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Storage.Tests", "Tests\Blockcore.Features.Storage.Tests\Blockcore.Features.Storage.Tests.csproj", "{6FE403E4-F182-4390-8AEC-807660FD1812}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

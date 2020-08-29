@@ -121,13 +121,13 @@ namespace Blockcore.Features.Storage.Persistence
         public T GetBySignature<T>(string signature, string collection)
         {
             var coll = (ILiteCollection<T>)this.collections[collection];
-            T item = coll.FindOne(Query.EQ("signature.value", signature));
+            T item = coll.FindOne(Query.EQ("signature", signature));
             return item;
         }
 
         public bool ExistsBySignature(string signature, string collection)
         {
-            var sql = $"SELECT COUNT($.signature.value) FROM {collection} WHERE signature.value = '{signature}';";
+            var sql = $"SELECT COUNT($.signature) FROM {collection} WHERE signature = '{signature}';";
             IBsonDataReader reader = this.db.Execute(sql);
             BsonValue item = reader.SingleOrDefault();
 
@@ -146,7 +146,7 @@ namespace Blockcore.Features.Storage.Persistence
             }
 
             // var coll = (ILiteCollection<object>)this.collections[collection];
-            IEnumerable<BsonDocument> items = this.db.GetCollection(collection).Find(Query.In("signature.value", signaturesArray));
+            IEnumerable<BsonDocument> items = this.db.GetCollection(collection).Find(Query.In("signature", signaturesArray));
 
             List<string> results = new List<string>();
 
@@ -228,7 +228,7 @@ namespace Blockcore.Features.Storage.Persistence
 
         public IEnumerable<string> GetSignatures(string collection, int pageSize, int pageNumber)
         {
-            var sql = $"SELECT $.signature.value FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
+            var sql = $"SELECT $.signature FROM {collection} LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
 
             List<string> signatures = new List<string>();
 

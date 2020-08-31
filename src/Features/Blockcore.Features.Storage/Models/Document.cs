@@ -38,10 +38,10 @@ namespace Blockcore.Features.Storage.Models
             return values[1];
         }
 
-        public string GetContainer()
-        {
-            string[] values = this.Id.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
-            return values[0];
-        }
+        //public string GetContainer()
+        //{
+        //    string[] values = this.Id.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
+        //    return values[0];
+        //}
     }
 }

@@ -105,7 +105,7 @@ namespace Blockcore.Features.Storage.Persistence
 
         public T GetDocumentById<T>(string collection, string id)
         {
-            return ((ILiteCollection<T>)this.collections[collection]).FindById(new BsonValue($"{collection}/{id}"));
+            return ((ILiteCollection<T>)this.collections[collection]).FindById(new BsonValue($"{id}"));
         }
 
         public void SetIdentity(IdentityDocument identity)
@@ -115,7 +115,7 @@ namespace Blockcore.Features.Storage.Persistence
 
         public bool RemoveIdentity(string id)
         {
-            return this.identityCol.Delete("identity/" + id);
+            return this.identityCol.Delete(id);
         }
 
         public T GetBySignature<T>(string signature, string collection)

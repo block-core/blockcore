@@ -89,7 +89,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             });
 
             Assert.NotNull(exception);
-            Assert.Equal("Only address type 'legacy' is currently supported.", exception.Message);
+            Assert.Equal("Only address type 'legacy' and 'bech32' are currently supported.", exception.Message);
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             });
 
             Assert.NotNull(exception);
-            Assert.Equal("Only address type 'legacy' is currently supported.", exception.Message);
+            Assert.Equal("Only address type 'legacy' and 'bech32' are currently supported.", exception.Message);
         }
     }
 }

@@ -51,6 +51,7 @@ namespace NBitcoin.Tests
             // Stop parsing at invalid value
             Assert.Throws<FormatException>(() => Encoders.Hex.DecodeData("1234 invalid 1234"));
         }
+
         [Fact]
         [Trait("UnitTest", "UnitTest")]
         public void CanAddEntropyToRandom()
@@ -61,6 +62,7 @@ namespace NBitcoin.Tests
                 Assert.Equal(50, RandomUtils.GetBytes(50).Length);
             }
         }
+
         [Fact]
         [Trait("Core", "Core")]
         public void Util_HexStr()
@@ -126,14 +128,12 @@ namespace NBitcoin.Tests
             pubkey = new PubKey("0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA6");
             Assert.Equal(new Script("OP_0 010966776006953D5567439E5E39F86A0D273BEE"), pubkey.GetSegwitAddress(KnownNetworks.Main).ScriptPubKey);
 
-
             //Test .ToNetwork()
             BitcoinPubKeyAddress addr = pubkey.GetAddress(this.networkMain);
             Assert.Equal("16UwLL9Risc3QfPqBUvKofHmBQ7wMtjvM", addr.ToString());
             Assert.Equal("mfcSEPR8EkJrpX91YkTJ9iscdAzppJrG9j", addr.ToNetwork(KnownNetworks.TestNet).ToString());
 
             Assert.Throws<FormatException>(() => Network.Parse<IBase58Data>("bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3", this.networkMain));
-
 
             Network.Parse<IBitcoinString>("bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3", this.networkMain);
 
@@ -237,7 +237,6 @@ namespace NBitcoin.Tests
             AssertEx.Equal(new Money(Money.COIN / 100000000).ToString(false), "0.00000001");
         }
 
-
         [Fact]
         [Trait("UnitTest", "UnitTest")]
         public void MoneyCoverage()
@@ -261,7 +260,6 @@ namespace NBitcoin.Tests
             Assert.Equal(500000000U, (uint)Money.Coins(5).Satoshi);
             Assert.Equal("5.00000000", Money.Coins(5).ToString());
         }
-
 
         [Fact]
         [Trait("UnitTest", "UnitTest")]
@@ -658,23 +656,12 @@ namespace NBitcoin.Tests
         {
             var address = new
             {
-                Base58 = "bWyXRVD4J3Y8bG8VQ8aQmnnztdMNzExRdaw",
-                ExpectedType = typeof(BitcoinColoredAddress),
-                Network = KnownNetworks.RegTest
-            };
-
-            IBitcoinString result = Network.Parse(address.Base58, address.Network);
-            Assert.IsType<BitcoinColoredAddress>(result);
-            Assert.True(result.Network == KnownNetworks.RegTest);
-
-            address = new
-            {
                 Base58 = new ExtKey().Neuter().ToString(KnownNetworks.RegTest),
                 ExpectedType = typeof(BitcoinExtPubKey),
                 Network = KnownNetworks.RegTest
             };
 
-            result = Network.Parse(address.Base58, address.Network);
+            IBitcoinString result = Network.Parse(address.Base58, address.Network);
             Assert.IsType<BitcoinExtPubKey>(result);
             Assert.True(result.Network == KnownNetworks.RegTest);
 
@@ -711,12 +698,6 @@ namespace NBitcoin.Tests
                     {
                         Base58 = "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
                         ExpectedType = typeof(BitcoinWitPubKeyAddress),
-                        Network = this.networkTestNet
-                    },
-                    new
-                    {
-                        Base58 = "bWqaKUZETiECYgmJNbNZUoanBxnAzoVjCNx",
-                        ExpectedType = typeof(BitcoinColoredAddress),
                         Network = this.networkTestNet
                     },
                     new
@@ -797,12 +778,6 @@ namespace NBitcoin.Tests
                         ExpectedType = typeof(BitcoinExtPubKey),
                         Network = this.networkMain
                     },
-                    new
-                    {
-                        Base58 = "akB4NBW9UuCmHuepksob6yfZs6naHtRCPNy",
-                        ExpectedType = typeof(BitcoinColoredAddress),
-                        Network = this.networkMain
-                    }
                 };
 
             foreach (var test in tests)
@@ -874,7 +849,6 @@ namespace NBitcoin.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => Utils.DateTimeToUnixTime(Utils.UnixTimeToDateTime(uint.MaxValue) + TimeSpan.FromSeconds(1)));
             Assert.Throws<ArgumentOutOfRangeException>(() => Utils.DateTimeToUnixTime(Utils.UnixTimeToDateTime(0) - TimeSpan.FromSeconds(1)));
         }
-
 
         [Fact]
         [Trait("UnitTest", "UnitTest")]

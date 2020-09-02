@@ -153,7 +153,6 @@ namespace Rutanio.Networks
             Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
             Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
@@ -277,7 +276,5 @@ namespace Rutanio.Networks
 
             return genesis;
         }
-
-
     }
 }

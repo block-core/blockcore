@@ -215,15 +215,6 @@ namespace NBitcoin
             this.Bearer = bearer;
         }
 
-        public ColoredCoin(Transaction tx, ColoredEntry entry)
-            : this(entry.Asset, new Coin(tx, entry.Index))
-        {
-            if (tx == null)
-                throw new ArgumentNullException("tx");
-            if (entry == null)
-                throw new ArgumentNullException("entry");
-        }
-
         public AssetId AssetId
         {
             get
@@ -284,39 +275,6 @@ namespace NBitcoin
         }
 
         #endregion ICoin Members
-
-        public static IEnumerable<ColoredCoin> Find(Transaction tx, ColoredTransaction colored)
-        {
-            return Find(null, tx, colored);
-        }
-
-        public static IEnumerable<ColoredCoin> Find(uint256 txId, Transaction tx, ColoredTransaction colored)
-        {
-            if (colored == null)
-                throw new ArgumentNullException("colored");
-            if (tx == null)
-                throw new ArgumentNullException("tx");
-            if (txId == null)
-                txId = tx.GetHash();
-            foreach (ColoredEntry entry in colored.Issuances.Concat(colored.Transfers))
-            {
-                TxOut txout = tx.Outputs[entry.Index];
-                yield return new ColoredCoin(entry.Asset, new Coin(new OutPoint(txId, entry.Index), txout));
-            }
-        }
-
-        public static IEnumerable<ColoredCoin> Find(Transaction tx, IColoredTransactionRepository repo)
-        {
-            return Find(null, tx, repo);
-        }
-
-        public static IEnumerable<ColoredCoin> Find(uint256 txId, Transaction tx, IColoredTransactionRepository repo)
-        {
-            if (txId == null)
-                txId = tx.GetHash();
-            ColoredTransaction colored = tx.GetColoredTransaction(repo);
-            return Find(txId, tx, colored);
-        }
 
         #region IColoredCoin Members
 

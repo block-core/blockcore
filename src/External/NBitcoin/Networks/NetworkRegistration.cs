@@ -22,7 +22,7 @@ namespace NBitcoin.Networks
         public static Network Register(Network network)
         {
             Network existing = GetNetwork(network.Name);
-            if(existing != null)
+            if (existing != null)
                 return existing;
 
             IEnumerable<string> networkNames = network.AdditionalNames != null ? new[] { network.Name }.Concat(network.AdditionalNames) : new[] { network.Name };
@@ -85,16 +85,7 @@ namespace NBitcoin.Networks
                 {
                     if (expectedType != null && expectedType.Value != type.Value)
                         continue;
-                    if (type.Value == Base58Type.COLORED_ADDRESS)
-                    {
-                        byte[] raw = Encoders.Base58Check.DecodeData(base58);
-                        byte[] version = network.GetVersionBytes(type.Value, false);
-                        if (version == null)
-                            continue;
-                        raw = raw.Skip(version.Length).ToArray();
-                        base58 = Encoders.Base58Check.EncodeData(raw);
-                        return GetNetworkFromBase58Data(base58, null);
-                    }
+
                     return network;
                 }
             }

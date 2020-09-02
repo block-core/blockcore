@@ -23,7 +23,6 @@ namespace NBitcoin
         CONFIRMATION_CODE,
         STEALTH_ADDRESS,
         ASSET_ID,
-        COLORED_ADDRESS,
         MAX_BASE58_TYPES,
     };
 
@@ -524,22 +523,6 @@ namespace NBitcoin
                 Base58Type? type = network.GetBase58Type(base58);
                 if (type.HasValue)
                 {
-                    if (type.Value == Base58Type.COLORED_ADDRESS)
-                    {
-                        string wrapped = BitcoinColoredAddress.GetWrappedBase58(base58, network);
-                        Base58Type? wrappedType = network.GetBase58Type(wrapped);
-                        if (wrappedType == null)
-                            continue;
-                        try
-                        {
-                            IBase58Data inner = network.CreateBase58Data(wrappedType.Value, wrapped);
-                            if (inner.Network != network)
-                                continue;
-                        }
-                        catch (FormatException)
-                        {
-                        }
-                    }
                     IBase58Data data = null;
                     try
                     {
@@ -578,19 +561,12 @@ namespace NBitcoin
                 return CreateStealthAddress(base58);
             if (type == Base58Type.ASSET_ID)
                 return CreateAssetId(base58);
-            if (type == Base58Type.COLORED_ADDRESS)
-                return CreateColoredAddress(base58);
             throw new NotSupportedException("Invalid Base58Data type : " + type.ToString());
         }
 
         public BitcoinScriptAddress CreateBitcoinScriptAddress(string base58)
         {
             return new BitcoinScriptAddress(base58, this);
-        }
-
-        private BitcoinColoredAddress CreateColoredAddress(string base58)
-        {
-            return new BitcoinColoredAddress(base58, this);
         }
 
         public OpenAsset.BitcoinAssetId CreateAssetId(string base58)

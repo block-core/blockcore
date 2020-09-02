@@ -116,7 +116,6 @@ namespace NBitcoin.Tests
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, this.networkMain.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 0x2a }, this.networkMain.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS]);
             Assert.Equal(new byte[] { 23 }, this.networkMain.Base58Prefixes[(int)Base58Type.ASSET_ID]);
-            Assert.Equal(new byte[] { 0x13 }, this.networkMain.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS]);
 
             Assert.Equal(210000, this.networkMain.Consensus.SubsidyHalvingInterval);
             Assert.Equal(750, this.networkMain.Consensus.MajorityEnforceBlockUpgrade);
@@ -197,7 +196,6 @@ namespace NBitcoin.Tests
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 0x2b }, network.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS]);
             Assert.Equal(new byte[] { 115 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
-            Assert.Equal(new byte[] { 0x13 }, network.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS]);
 
             Assert.Equal(210000, network.Consensus.SubsidyHalvingInterval);
             Assert.Equal(51, network.Consensus.MajorityEnforceBlockUpgrade);
@@ -278,7 +276,6 @@ namespace NBitcoin.Tests
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 0x2b }, network.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS]);
             Assert.Equal(new byte[] { 115 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
-            Assert.Equal(new byte[] { 0x13 }, network.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS]);
 
             Assert.Equal(150, network.Consensus.SubsidyHalvingInterval);
             Assert.Equal(750, network.Consensus.MajorityEnforceBlockUpgrade);
@@ -358,7 +355,6 @@ namespace NBitcoin.Tests
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 0x2a }, network.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS]);
             Assert.Equal(new byte[] { 23 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
-            Assert.Equal(new byte[] { 0x13 }, network.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS]);
 
             Assert.Equal(210000, network.Consensus.SubsidyHalvingInterval);
             Assert.Equal(750, network.Consensus.MajorityEnforceBlockUpgrade);
@@ -433,7 +429,6 @@ namespace NBitcoin.Tests
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 0x2a }, network.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS]);
             Assert.Equal(new byte[] { 23 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
-            Assert.Equal(new byte[] { 0x13 }, network.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS]);
 
             Assert.Equal(210000, network.Consensus.SubsidyHalvingInterval);
             Assert.Equal(750, network.Consensus.MajorityEnforceBlockUpgrade);
@@ -508,7 +503,6 @@ namespace NBitcoin.Tests
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 0x2a }, network.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS]);
             Assert.Equal(new byte[] { 23 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
-            Assert.Equal(new byte[] { 0x13 }, network.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS]);
 
             Assert.Equal(210000, network.Consensus.SubsidyHalvingInterval);
             Assert.Equal(750, network.Consensus.MajorityEnforceBlockUpgrade);

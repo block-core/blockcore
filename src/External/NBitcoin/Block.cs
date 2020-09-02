@@ -185,10 +185,5 @@ namespace NBitcoin
         {
             return new MerkleBlock(this, txIds);
         }
-
-        public MerkleBlock Filter(BloomFilter filter)
-        {
-            return new MerkleBlock(this, filter);
-        }
     }
 }

@@ -6,7 +6,6 @@ using System.Threading;
 using NBitcoin.DataEncoders;
 using NBitcoin.Networks;
 using NBitcoin.Protocol;
-using NBitcoin.Stealth;
 
 namespace NBitcoin
 {
@@ -21,7 +20,6 @@ namespace NBitcoin
         ENCRYPTED_SECRET_KEY_NO_EC,
         PASSPHRASE_CODE,
         CONFIRMATION_CODE,
-        STEALTH_ADDRESS,
         ASSET_ID,
         MAX_BASE58_TYPES,
     };
@@ -557,8 +555,6 @@ namespace NBitcoin
                 return CreateEncryptedKeyNoEC(base58);
             if (type == Base58Type.PASSPHRASE_CODE)
                 return CreatePassphraseCode(base58);
-            if (type == Base58Type.STEALTH_ADDRESS)
-                return CreateStealthAddress(base58);
             if (type == Base58Type.ASSET_ID)
                 return CreateAssetId(base58);
             throw new NotSupportedException("Invalid Base58Data type : " + type.ToString());
@@ -572,11 +568,6 @@ namespace NBitcoin
         public OpenAsset.BitcoinAssetId CreateAssetId(string base58)
         {
             return new OpenAsset.BitcoinAssetId(base58, this);
-        }
-
-        public BitcoinStealthAddress CreateStealthAddress(string base58)
-        {
-            return new BitcoinStealthAddress(base58, this);
         }
 
         private BitcoinPassphraseCode CreatePassphraseCode(string base58)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NBitcoin.OpenAsset;
-using NBitcoin.Stealth;
 
 namespace NBitcoin
 {
@@ -711,99 +710,6 @@ namespace NBitcoin
             return PayToScriptHashTemplate.Instance.ExtractScriptPubKeyParameters(scriptPubKey) as TxDestination
                     ??
                     PayToWitScriptHashTemplate.Instance.ExtractScriptPubKeyParameters(network, scriptPubKey);
-        }
-    }
-
-    public class StealthCoin : Coin
-    {
-        public StealthCoin()
-        {
-        }
-
-        public StealthCoin(OutPoint outpoint, TxOut txOut, Script redeem, StealthMetadata stealthMetadata, BitcoinStealthAddress address)
-            : base(outpoint, txOut)
-        {
-            this.StealthMetadata = stealthMetadata;
-            this.Address = address;
-            this.Redeem = redeem;
-        }
-
-        public StealthMetadata StealthMetadata
-        {
-            get;
-            set;
-        }
-
-        public BitcoinStealthAddress Address
-        {
-            get;
-            set;
-        }
-
-        public Script Redeem
-        {
-            get;
-            set;
-        }
-
-        public override Script GetScriptCode(Network network)
-        {
-            if (this._OverrideScriptCode != null)
-                return this._OverrideScriptCode;
-            if (this.Redeem == null)
-                return base.GetScriptCode(network);
-            else
-                return ScriptCoin.Create(network, this, this.Redeem).GetScriptCode(network);
-        }
-
-        public override HashVersion GetHashVersion(Network network)
-        {
-            if (this.Redeem == null)
-                return base.GetHashVersion(network);
-            else
-                return ScriptCoin.Create(network, this, this.Redeem).GetHashVersion(network);
-        }
-
-        /// <summary>
-        /// Scan the Transaction for StealthCoin given address and scan key
-        /// </summary>
-        /// <param name="tx">The transaction to scan</param>
-        /// <param name="address">The stealth address</param>
-        /// <param name="scan">The scan private key</param>
-        /// <returns></returns>
-        public static StealthCoin Find(Transaction tx, BitcoinStealthAddress address, Key scan)
-        {
-            StealthPayment payment = address.GetPayments(tx, scan).FirstOrDefault();
-            if (payment == null)
-                return null;
-            uint256 txId = tx.GetHash();
-            TxOut txout = tx.Outputs.First(o => o.ScriptPubKey == payment.ScriptPubKey);
-            return new StealthCoin(new OutPoint(txId, tx.Outputs.IndexOf(txout)), txout, payment.Redeem, payment.Metadata, address);
-        }
-
-        public StealthPayment GetPayment()
-        {
-            return new StealthPayment(this.TxOut.ScriptPubKey, this.Redeem, this.StealthMetadata);
-        }
-
-        public PubKey[] Uncover(PubKey[] spendPubKeys, Key scanKey)
-        {
-            var pubKeys = new PubKey[spendPubKeys.Length];
-            for (int i = 0; i < pubKeys.Length; i++)
-            {
-                pubKeys[i] = spendPubKeys[i].UncoverReceiver(scanKey, this.StealthMetadata.EphemKey);
-            }
-            return pubKeys;
-        }
-
-        public Key[] Uncover(Key[] spendKeys, Key scanKey)
-        {
-            var keys = new Key[spendKeys.Length];
-            for (int i = 0; i < keys.Length; i++)
-            {
-                keys[i] = spendKeys[i].Uncover(scanKey, this.StealthMetadata.EphemKey);
-            }
-            return keys;
         }
     }
 }

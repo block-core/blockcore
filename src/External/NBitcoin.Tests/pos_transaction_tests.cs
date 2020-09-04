@@ -11,7 +11,6 @@ using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.OpenAsset;
 using NBitcoin.Policy;
-using NBitcoin.Stealth;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -390,79 +389,6 @@ namespace NBitcoin.Tests
             return amounts
                 .Select(a => new Coin(RandOutpoint(), new TxOut(a, destination.PubKey.Hash)))
                 .ToArray();
-        }
-
-        [Fact]
-        [Trait("UnitTest", "UnitTest")]
-        public void CanBuildStealthTransaction()
-        {
-            Key[] stealthKeys = Enumerable.Range(0, 3).Select(_ => new Key()).ToArray();
-            var scanKey = new Key();
-
-            var darkSatoshi = new BitcoinStealthAddress(scanKey.PubKey, stealthKeys.Select(k => k.PubKey).ToArray(), 2, new BitField(3, 5), KnownNetworks.Main);
-
-            var bob = new Key();
-            var coins = new Coin[] {
-                new Coin()
-                {
-                    Outpoint = RandOutpoint(),
-                    TxOut = new TxOut("1.00",bob.PubKey.Hash)
-                } };
-
-            //Bob sends money to satoshi
-            var builder = new TransactionBuilder(this.stratisMain);
-            builder.StandardTransactionPolicy = EasyPolicy(this.stratisMain);
-            Transaction tx =
-                builder
-                .AddCoins(coins)
-                .AddKeys(bob)
-                .Send(darkSatoshi, "1.00")
-                .BuildTransaction(true);
-            Assert.True(builder.Verify(tx));
-
-            //Satoshi scans a StealthCoin in the transaction with his scan key
-            StealthCoin stealthCoin = StealthCoin.Find(tx, darkSatoshi, scanKey);
-            Assert.NotNull(stealthCoin);
-
-            //Satoshi sends back the money to Bob
-            builder = new TransactionBuilder(this.stratisMain);
-            builder.StandardTransactionPolicy = EasyPolicy(this.stratisMain);
-            tx =
-                builder
-                    .AddCoins(stealthCoin)
-                    .AddKeys(stealthKeys)
-                    .AddKeys(scanKey)
-                    .Send(bob.PubKey.Hash, "1.00")
-                    .BuildTransaction(true);
-
-            Assert.True(builder.Verify(tx)); //Signed !
-
-            //Same scenario, Satoshi wants to send money back to Bob
-            //However, his keys are spread on two machines
-            //He partially signs on the 1st machine
-            builder = new TransactionBuilder(this.stratisMain);
-            builder.StandardTransactionPolicy = EasyPolicy(this.stratisMain);
-            tx =
-                builder
-                    .AddCoins(stealthCoin)
-                    .AddKeys(stealthKeys.Skip(2).ToArray()) //Only one Stealth Key
-                    .AddKeys(scanKey)
-                    .Send(bob.PubKey.Hash, "1.00")
-                    .BuildTransaction(true);
-
-            Assert.False(builder.Verify(tx)); //Not fully signed
-
-            //Then he partially signs on the 2nd machine
-            builder = new TransactionBuilder(this.stratisMain);
-            builder.StandardTransactionPolicy = EasyPolicy(this.stratisMain);
-            tx =
-                builder
-                    .AddCoins(stealthCoin)
-                    .AddKeys(stealthKeys[0]) //Other key
-                    .AddKeys(scanKey)
-                    .SignTransaction(tx);
-
-            Assert.True(builder.Verify(tx)); //Fully signed !
         }
 
         private OutPoint RandOutpoint()

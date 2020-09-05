@@ -1,0 +1,72 @@
+{
+  "profiles": {
+    "BTC (MAIN/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "BTC (MAIN/RPC/LOW-MEM)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -maxblkmem=5 -dbcache=50"
+    },
+    "BTC (TEST/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -testnet"
+    },
+    "BTC (MAIN/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "BTC (TEST/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "BTC (MAIN/LOCAL/RPC/DEFAULT)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -defaultwalletname=default -defaultwalletpassword=default -unlockdefaultwallet -server"
+    },
+    "BTC (TEST/LOCAL/RPC/DEFAULT)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -defaultwalletname=default -defaultwalletpassword=default -unlockdefaultwallet -server -testnet"
+    },
+    "CITY (MAIN/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=CITY -enableauth=1 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "CITY (MAIN/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "CITY (TEST/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "STRAT (MAIN/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=STRAT -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "STRAT (TEST/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=STRAT -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "X42 (MAIN/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=X42-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "X42 (TEST/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=X42 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "XDS (MAIN/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "XDS (TEST/LOCAL/RPC)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "XDS (MAIN/LOCAL/RPC/UI/API/WS)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableUI=true -enableAPI=true -enableWS=true"
+    }
+  }
+}

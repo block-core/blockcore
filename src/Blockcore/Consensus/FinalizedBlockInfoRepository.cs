@@ -14,6 +14,17 @@ namespace Blockcore.Consensus
     /// Finalized block height is the height of the last block that can't be reorged.
     /// Blocks with height greater than finalized height can be reorged.
     /// <para>Finalized block height value is always <c>0</c> for blockchains without max reorg property.</para>
+    ///
+    /// The protection finality is to not allow rewinding the node bellow a certain height, whileh MaxReorgProtection does the same
+    /// MaxReorg does not protect from chain with different work. MaxReorg determins the chain by its height
+    /// while rewind uses work as indicator (the chain with most work is the winner),
+    /// this can cause the scenario where a chain with lower height but more work triggeres a reorg and consensus tip ends up in a lower height.
+    /// Now a second rewind can heppen that will go below MaxReorg of the initial hiegher (but lower work) tip,
+    /// for that we need finality, even if such a reorg happens finality will prevent the second reorg that will vioulate MAxReorgProtection.
+    ///
+    /// A - - - - - - - - - - - - - - - - - [current tip]
+    /// B   |    L - - - - -  - - [more work then chain A]
+    /// C   L - - - - - [more work then chain B but violate max reorg]
     /// </remarks>
     public interface IFinalizedBlockInfoRepository : IDisposable
     {

@@ -11,6 +11,7 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.Validators;
@@ -109,6 +110,7 @@ namespace Blockcore.Base
         private readonly Network network;
 
         private readonly INodeStats nodeStats;
+        private readonly IBroadcasterManager broadcasterManager;
         private readonly IProvenBlockHeaderStore provenBlockHeaderStore;
 
         private readonly IConsensusManager consensusManager;
@@ -148,6 +150,7 @@ namespace Blockcore.Base
             ITipsManager tipsManager,
             IKeyValueRepository keyValueRepo,
             INodeStats nodeStats,
+            IBroadcasterManager broadcasterManager,
             IProvenBlockHeaderStore provenBlockHeaderStore = null)
         {
             this.chainState = Guard.NotNull(chainState, nameof(chainState));
@@ -164,6 +167,7 @@ namespace Blockcore.Base
             this.blockStore = blockStore;
             this.network = network;
             this.nodeStats = nodeStats;
+            this.broadcasterManager = broadcasterManager;
             this.provenBlockHeaderStore = provenBlockHeaderStore;
             this.partialValidator = partialValidator;
             this.peerBanning = Guard.NotNull(peerBanning, nameof(peerBanning));
@@ -211,6 +215,7 @@ namespace Blockcore.Base
             connectionParameters.TemplateBehaviors.Add(new PeerBanningBehavior(this.loggerFactory, this.peerBanning, this.nodeSettings));
             connectionParameters.TemplateBehaviors.Add(new BlockPullerBehavior(this.blockPuller, this.initialBlockDownloadState, this.dateTimeProvider, this.loggerFactory));
             connectionParameters.TemplateBehaviors.Add(new ConnectionManagerBehavior(this.connectionManager, this.loggerFactory));
+            connectionParameters.TemplateBehaviors.Add(new BroadcasterBehavior(this.network, this.broadcasterManager, this.loggerFactory));
 
             this.StartAddressManager(connectionParameters);
 
@@ -306,8 +311,11 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public override void Dispose()
         {
-            this.logger.LogInformation("Flushing peers.");
-            this.flushAddressManagerLoop.Dispose();
+            if (this.flushAddressManagerLoop != null)
+            {
+                this.logger.LogInformation("Flushing peers.");
+                this.flushAddressManagerLoop.Dispose();
+            }
 
             this.logger.LogInformation("Disposing peer address manager.");
             this.peerAddressManager.Dispose();
@@ -397,6 +405,8 @@ namespace Blockcore.Base
                     services.AddSingleton<IKeyValueRepository, KeyValueRepository>();
                     services.AddSingleton<ITipsManager, TipsManager>();
                     services.AddSingleton<IAsyncProvider, AsyncProvider>();
+                    services.AddSingleton<IBroadcasterManager, BroadcasterManager>();
+                    services.AddSingleton<IBroadcastCheck, NoCheckBroadcastCheck>();
 
                     // Consensus
                     services.AddSingleton<ConsensusSettings>();

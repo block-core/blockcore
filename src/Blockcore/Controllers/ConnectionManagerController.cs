@@ -7,6 +7,7 @@ using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +16,7 @@ namespace Blockcore.Controllers
     /// <summary>
     /// A <see cref="FeatureController"/> that implements API and RPC methods for the connection manager.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
@@ -65,6 +67,7 @@ namespace Blockcore.Controllers
         /// <see cref="https://github.com/bitcoin/bitcoin/blob/0.14/src/rpc/net.cpp"/>
         /// <remarks>This is an API implementation of an RPC call.</remarks>
         /// <returns>Json formatted <see cref="List{T}<see cref="PeerNodeModel"/>"/> of connected nodes. Returns <see cref="IActionResult"/> formatted error if fails.</returns>
+        [AllowAnonymous]
         [Route("getpeerinfo")]
         [HttpGet]
         public IActionResult GetPeerInfo()

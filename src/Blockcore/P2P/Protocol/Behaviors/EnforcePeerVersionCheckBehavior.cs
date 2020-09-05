@@ -51,7 +51,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
             this.NodeSettings = nodeSettings;
             this.Network = network;
             this.LoggerFactory = loggerFactory;
-            this.Logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.Logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         protected Task OnMessageReceivedAsync(INetworkPeer peer, IncomingMessage message)

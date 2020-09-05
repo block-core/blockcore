@@ -84,7 +84,7 @@ namespace Blockcore.Consensus
             this.asyncLock = new AsyncLock();
             this.bestSentHeaderLock = new object();
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <summary>Presents cached headers to <see cref="Consensus.ConsensusManager"/> from the cache if any and removes consumed from the cache.</summary>

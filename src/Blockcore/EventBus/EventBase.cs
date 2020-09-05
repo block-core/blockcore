@@ -1,14 +1,10 @@
 ﻿using System;
+using Blockcore.Broadcasters;
 
 namespace Blockcore.EventBus
 {
-    /// <summary>
-    /// Basic abstract implementation of <see cref="IEvent"/>.
-    /// </summary>
-    /// <seealso cref="Blockcore.EventBus.IEvent" />
     public abstract class EventBase
     {
-        /// <inheritdoc />
         public Guid CorrelationId { get; }
 
         public EventBase()
@@ -21,5 +17,7 @@ namespace Blockcore.EventBus
         {
             return $"{this.CorrelationId.ToString()} - {this.GetType().Name}";
         }
+
+        public string EventName { get { return this.GetType().Name.ToLowerInvariant(); } }
     }
 }

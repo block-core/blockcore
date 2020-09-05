@@ -33,6 +33,7 @@ namespace Blockcore.Configuration
             this.WalletPath = Path.Combine(path);
             this.LogPath = Path.Combine(path, "logs");
             this.ApplicationsPath = Path.Combine(path, "apps");
+            this.WalletFolderPath = Path.Combine(path, "txdb");
             this.DnsMasterFilePath = path;
             this.SmartContractStatePath = Path.Combine(path, "contracts");
             this.ProvenBlockHeaderPath = Path.Combine(path, "provenheaders");
@@ -76,6 +77,9 @@ namespace Blockcore.Configuration
         /// <summary>Path to wallet files.</summary>
         /// <seealso cref="Features.Wallet.WalletManager.LoadWallet"/>
         public string WalletPath { get; internal set; }
+
+        /// <summary>Path to wallet folder.</summary>
+        public string WalletFolderPath { get; internal set; }
 
         /// <summary>Path to log files.</summary>
         /// <seealso cref="Logging.LoggingConfiguration"/>

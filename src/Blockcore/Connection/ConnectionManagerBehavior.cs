@@ -38,7 +38,7 @@ namespace Blockcore.Connection
 
         public ConnectionManagerBehavior(IConnectionManager connectionManager, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.infoLogger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
 

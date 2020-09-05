@@ -24,10 +24,10 @@ jobs:
 
     - uses: actions/checkout@v1
       
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.101' 
+    # - name: Setup .NET Core
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: '3.1.300' 
                                     
     - name: Restore
       run: dotnet restore ${{env.SOLUTION_PATH}}
@@ -37,3 +37,6 @@ jobs:
       
     - name: Unit Test
       run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+
+    - name: Integration Test
+      run: dotnet test -v=normal --no-build --filter FullyQualifiedName~IntegrationTests -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

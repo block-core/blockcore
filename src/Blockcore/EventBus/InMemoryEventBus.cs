@@ -87,18 +87,24 @@ namespace Blockcore.EventBus
         public void Publish<TEvent>(TEvent @event) where TEvent : EventBase
         {
             if (@event == null)
+            {
                 throw new ArgumentNullException(nameof(@event));
+            }
 
             List<ISubscription> allSubscriptions = new List<ISubscription>();
+
             lock (this.subscriptionsLock)
             {
                 if (this.subscriptions.ContainsKey(typeof(TEvent)))
+                {
                     allSubscriptions = this.subscriptions[typeof(TEvent)].ToList();
+                }
             }
 
             for (var index = 0; index < allSubscriptions.Count; index++)
             {
                 var subscription = allSubscriptions[index];
+
                 try
                 {
                     subscription.Publish(@event);

@@ -29,7 +29,7 @@ namespace Blockcore.P2P.Peer
         public Network Network { get; private set; }
 
         /// <summary>Version of the protocol that the server is running.</summary>
-        public ProtocolVersion Version { get; private set; }
+        public uint Version { get; private set; }
 
         /// <summary>The parameters that will be cloned and applied for each peer connecting to <see cref="NetworkPeerServer"/>.</summary>
         public NetworkPeerConnectionParameters InboundNetworkPeerConnectionParameters { get; set; }
@@ -82,7 +82,7 @@ namespace Blockcore.P2P.Peer
         public NetworkPeerServer(Network network,
             IPEndPoint localEndPoint,
             IPEndPoint externalEndPoint,
-            ProtocolVersion version,
+            uint version,
             ILoggerFactory loggerFactory,
             INetworkPeerFactory networkPeerFactory,
             IInitialBlockDownloadState initialBlockDownloadState,
@@ -91,7 +91,7 @@ namespace Blockcore.P2P.Peer
             IPeerAddressManager peerAddressManager,
             IDateTimeProvider dateTimeProvider)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{localEndPoint}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.signals = asyncProvider.Signals;
             this.networkPeerFactory = networkPeerFactory;
             this.networkPeerDisposer = new NetworkPeerDisposer(loggerFactory, asyncProvider);

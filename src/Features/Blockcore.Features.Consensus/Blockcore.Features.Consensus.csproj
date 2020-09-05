@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Blockcore Features Consensus</Description>
+    <AssemblyTitle>Blockcore.Features.Consensus</AssemblyTitle>
+    <AssemblyName>Blockcore.Features.Consensus</AssemblyName>
+    <PackageId>Blockcore.Features.Consensus</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Authors>Blockcore</Authors>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Deployments\**" />
+    <EmbeddedResource Remove="Deployments\**" />
+    <None Remove="Deployments\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="LevelDB.Standard" Version="2.1.6.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
+    <PackageReference Include="Microsoft.FASTER" Version="2020.2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
+    <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+</Project>

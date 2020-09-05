@@ -59,7 +59,7 @@ namespace Blockcore.P2P.Peer
     public class NetworkPeerRequirement
     {
         /// <summary>Minimal protocol version that the peer must support or <c>null</c> if there is no requirement for minimal protocol version.</summary>
-        public ProtocolVersion? MinVersion { get; set; }
+        public uint? MinVersion { get; set; }
 
         /// <summary>Specification of network services that the peer must provide.</summary>
         public NetworkPeerServices RequiredServices { get; set; }
@@ -179,14 +179,14 @@ namespace Blockcore.P2P.Peer
         }
 
         /// <inheritdoc/>
-        public ProtocolVersion Version
+        public uint Version
         {
             get
             {
-                ProtocolVersion peerVersion = this.PeerVersion == null ? this.MyVersion.Version : this.PeerVersion.Version;
-                ProtocolVersion myVersion = this.MyVersion.Version;
+                uint peerVersion = this.PeerVersion == null ? this.MyVersion.Version : this.PeerVersion.Version;
+                uint myVersion = this.MyVersion.Version;
                 uint min = Math.Min((uint)peerVersion, (uint)myVersion);
-                return (ProtocolVersion)min;
+                return min;
             }
         }
 
@@ -352,7 +352,7 @@ namespace Blockcore.P2P.Peer
 
             this.Connection = networkPeerFactory.CreateNetworkPeerConnection(this, client, this.ProcessMessageAsync);
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.Connection.Id}-{peerEndPoint}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Blockcore.P2P.Peer
         {
             this.Connection = networkPeerFactory.CreateNetworkPeerConnection(this, client, this.ProcessMessageAsync);
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.Connection.Id}-{peerEndPoint}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.logger.LogDebug("Connected to peer '{0}'.", this.PeerEndPoint);
 

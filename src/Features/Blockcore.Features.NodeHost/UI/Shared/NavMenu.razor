@@ -1,0 +1,57 @@
+﻿@using Blockcore.Interfaces.UI;
+
+@inject NBitcoin.Network Network
+@inject IFullNode fullnode
+
+<div class="top-row pl-4 navbar navbar-dark">
+
+    <a class="navbar-brand" href="/">
+        <img src="data:image/png;base64,@this.Network.FavoriteIcon()" alt="Logo" style="width:30px;">
+        @this.Network.CoinTicker Dashboard
+    </a>
+
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+
+        @{
+            var items = fullnode.NodeService<IEnumerable<INavigationItem>>();
+            foreach (var item in items.OrderBy(i => i.NavOrder))
+            {
+                if (item.IsVisible) {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="@item.Navigation">
+                            <span class="oi @item.Icon" aria-hidden="true"></span> @item.Name
+                            @* icon reference >> https://iconify.design/icon-sets/oi/ *@
+                        </NavLink>
+                    </li>
+                }
+            }
+        }
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="about" Match="NavLinkMatch.All">
+                <span class="oi oi-info" aria-hidden="true"></span> About
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

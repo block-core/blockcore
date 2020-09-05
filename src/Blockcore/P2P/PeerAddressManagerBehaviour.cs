@@ -57,7 +57,7 @@ namespace Blockcore.P2P
             Guard.NotNull(peerAddressManager, nameof(loggerFactory));
 
             this.dateTimeProvider = dateTimeProvider;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
             this.peerBanning = peerBanning;
             this.Mode = PeerAddressManagerBehaviourMode.AdvertiseDiscover;

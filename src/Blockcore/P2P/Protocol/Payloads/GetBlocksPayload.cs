@@ -9,18 +9,18 @@ namespace Blockcore.P2P.Protocol.Payloads
     [Payload("getblocks")]
     public class GetBlocksPayload : Payload
     {
-        private uint version = (uint)ProtocolVersion.PROTOCOL_VERSION;
+        private uint version;
 
-        public ProtocolVersion Version
+        public uint Version
         {
             get
             {
-                return (ProtocolVersion)this.version;
+                return this.version;
             }
 
             set
             {
-                this.version = (uint)value;
+                this.version = value;
             }
         }
 

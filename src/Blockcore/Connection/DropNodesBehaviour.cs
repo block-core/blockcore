@@ -34,7 +34,7 @@ namespace Blockcore.Connection
 
         public DropNodesBehaviour(ChainIndexer chainIndexer, IConnectionManager connectionManager, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName, $"[{this.GetHashCode():x}] ");
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
 
             this.chainIndexer = chainIndexer;

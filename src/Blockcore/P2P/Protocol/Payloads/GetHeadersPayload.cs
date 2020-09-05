@@ -9,13 +9,13 @@ namespace Blockcore.P2P.Protocol.Payloads
     [Payload("getheaders")]
     public class GetHeadersPayload : Payload
     {
-        private uint version = (uint)ProtocolVersion.PROTOCOL_VERSION;
+        private uint version;
 
-        public ProtocolVersion Version
+        public uint Version
         {
-            get => (ProtocolVersion)this.version;
+            get => this.version;
 
-            set => this.version = (uint)value;
+            set => this.version = value;
         }
 
         protected BlockLocator blockLocator;

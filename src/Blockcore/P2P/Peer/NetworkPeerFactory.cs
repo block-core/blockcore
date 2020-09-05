@@ -38,7 +38,7 @@ namespace Blockcore.P2P.Peer
         /// <param name="cancellation">Cancallation token that allows to interrupt establishing of the connection.</param>
         /// <param name="networkPeerDisposer">Maintains a list of connected peers and ensures their proper disposal. Or <c>null</c> if case disposal should be handled from user code.</param>
         /// <returns>Network peer connected to the specified counterparty.</returns>
-        Task<INetworkPeer> CreateConnectedNetworkPeerAsync(string endPoint, ProtocolVersion myVersion = ProtocolVersion.PROTOCOL_VERSION, bool isRelay = true, CancellationToken cancellation = default(CancellationToken), NetworkPeerDisposer networkPeerDisposer = null);
+        Task<INetworkPeer> CreateConnectedNetworkPeerAsync(string endPoint, uint myVersion, bool isRelay = true, CancellationToken cancellation = default(CancellationToken), NetworkPeerDisposer networkPeerDisposer = null);
 
         /// <summary>
         /// Creates a new network peer which is connected to a specified counterparty.
@@ -57,7 +57,7 @@ namespace Blockcore.P2P.Peer
         /// <param name="externalEndPoint">IP address and port that the server is reachable from the Internet on.</param>
         /// <param name="version">Version of the network protocol that the server should run.</param>
         /// <returns>Newly created network peer server, which is ready to be started.</returns>
-        NetworkPeerServer CreateNetworkPeerServer(IPEndPoint localEndPoint, IPEndPoint externalEndPoint, ProtocolVersion version = ProtocolVersion.PROTOCOL_VERSION);
+        NetworkPeerServer CreateNetworkPeerServer(IPEndPoint localEndPoint, IPEndPoint externalEndPoint, uint version);
 
         /// <summary>
         /// Creates a new representation of the network connection using TCP client object.
@@ -102,6 +102,7 @@ namespace Blockcore.P2P.Peer
 
         /// <summary>Configuration related to incoming and outgoing connections.</summary>
         private readonly ConnectionManagerSettings connectionManagerSettings;
+
         private readonly IAsyncProvider asyncProvider;
 
         /// <summary>Callback that is invoked just before a message is to be sent to a peer, or <c>null</c> when nothing needs to be called.</summary>
@@ -165,7 +166,7 @@ namespace Blockcore.P2P.Peer
         /// <inheritdoc/>
         public async Task<INetworkPeer> CreateConnectedNetworkPeerAsync(
             string endPoint,
-            ProtocolVersion myVersion = ProtocolVersion.PROTOCOL_VERSION,
+            uint myVersion,
             bool isRelay = true,
             CancellationToken cancellation = default(CancellationToken),
             NetworkPeerDisposer networkPeerDisposer = null)
@@ -214,7 +215,7 @@ namespace Blockcore.P2P.Peer
         }
 
         /// <inheritdoc/>
-        public NetworkPeerServer CreateNetworkPeerServer(IPEndPoint localEndPoint, IPEndPoint externalEndPoint, ProtocolVersion version = ProtocolVersion.PROTOCOL_VERSION)
+        public NetworkPeerServer CreateNetworkPeerServer(IPEndPoint localEndPoint, IPEndPoint externalEndPoint, uint version)
         {
             Guard.NotNull(localEndPoint, nameof(localEndPoint));
             Guard.NotNull(externalEndPoint, nameof(externalEndPoint));

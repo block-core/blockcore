@@ -265,3 +265,6 @@ src/.idea/.idea.Stratis.Bitcoin.FullNode/.idea/
 *.iml
 /src/.idea
 /src/Blockcore.Benchmark/BenchmarkDotNet.Artifacts/results
+.vscode/launch.json
+.vscode/tasks.json
+.gitignore

@@ -26,6 +26,8 @@ namespace Blockcore.Utilities.JsonConverters
             settings.Converters.Add(new TxDestinationJsonConverter());
             settings.Converters.Add(new LockTimeJsonConverter());
             settings.Converters.Add(new BitcoinStringJsonConverter(network));
+            settings.Converters.Add(new IPAddressConverter());
+            settings.Converters.Add(new IPEndPointConverter());
 
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }

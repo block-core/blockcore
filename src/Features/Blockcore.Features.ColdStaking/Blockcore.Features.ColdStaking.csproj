@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <AssemblyName>Blockcore.Features.ColdStaking</AssemblyName>
+    <PackageId>Blockcore.Features.ColdStaking</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Authors>Blockcore</Authors>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
+    <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Api\" />
+  </ItemGroup>
+</Project>

@@ -35,9 +35,6 @@ namespace Blockcore.Configuration
     /// </summary>
     public class NodeSettings : IDisposable
     {
-        /// <summary>The version of the protocol supported by the current implementation of the Full Node.</summary>
-        public const ProtocolVersion SupportedProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION;
-
         /// <summary>A factory responsible for creating a Full Node logger instance.</summary>
         public ILoggerFactory LoggerFactory { get; private set; }
 
@@ -76,11 +73,8 @@ namespace Blockcore.Configuration
         /// </summary>
         public TextFileConfiguration ConfigReader { get; private set; }
 
-        /// <summary>The version of the protocol supported by the Full Node.</summary>
-        public ProtocolVersion ProtocolVersion { get; private set; }
-
         /// <summary>The lowest version of the protocol which the Full Node supports.</summary>
-        public ProtocolVersion? MinProtocolVersion { get; set; }
+        public uint? MinProtocolVersion { get; set; }
 
         /// <summary>The network which the node is configured to run on. The network can be a "mainnet", "testnet",
         /// or "regtest" network. All three network configurations can be defined, and one is selected at the command
@@ -97,6 +91,9 @@ namespace Blockcore.Configuration
         /// <summary>The minimum fee for a kB of transactions on the node.</summary>
         public FeeRate MinTxFeeRate { get; private set; }
 
+        /// <summary>The optional maximum fee for a kB of transactions on the node.</summary>
+        public FeeRate MaxTxFeeRate { get; private set; }
+
         /// <summary>The default fee for a kB of transactions on the node. This value is used if no fee is specified for
         /// a transaction.
         /// </summary>
@@ -108,11 +105,6 @@ namespace Blockcore.Configuration
         /// is met. For this reason, the minimum relay transaction fee is usually lower than the minimum fee.
         /// </summary>
         public FeeRate MinRelayTxFeeRate { get; private set; }
-
-        /// <summary>
-        /// If true then the node will add and start the SignalR feature.
-        /// </summary>
-        public bool EnableSignalR { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the object.
@@ -131,8 +123,8 @@ namespace Blockcore.Configuration
         /// - Alternatively, if the file name is not supplied then a network-specific file
         ///   name would be determined. In this case we first need to determine the network.
         /// </remarks>
-        public NodeSettings(Network network = null, ProtocolVersion protocolVersion = SupportedProtocolVersion,
-            string agent = "Blockcore", string[] args = null, NetworksSelector networksSelector = null)
+        public NodeSettings(Network network = null, string agent = "Blockcore",
+            string[] args = null, NetworksSelector networksSelector = null)
         {
             // Create the default logger factory and logger.
             var loggerFactory = ExtendedLoggerFactory.Create();
@@ -140,14 +132,13 @@ namespace Blockcore.Configuration
 
             // Record arguments.
             this.Network = network;
-            this.ProtocolVersion = protocolVersion;
             this.Agent = agent;
             this.ConfigReader = new TextFileConfiguration(args ?? new string[] { });
 
             // Log arguments.
             this.Logger.LogDebug("Arguments: network='{0}', protocolVersion='{1}', agent='{2}', args='{3}'.",
                 this.Network == null ? "(None)" : this.Network.Name,
-                this.ProtocolVersion,
+                this.Network?.Consensus.ConsensusFactory.Protocol.ProtocolVersion,
                 this.Agent,
                 args == null ? "(None)" : string.Join(" ", args));
 
@@ -233,8 +224,6 @@ namespace Blockcore.Configuration
                     this.ReadConfigurationFile();
             }
 
-            this.EnableSignalR = this.ConfigReader.GetOrDefault<bool>("enableSignalR", false, this.Logger);
-
             // Create the custom logger factory.
             this.LoggerFactory.AddFilters(this.Log, this.DataFolder);
 
@@ -258,9 +247,9 @@ namespace Blockcore.Configuration
         /// <param name="network">Specification of the network the node runs on - regtest/testnet/mainnet.</param>
         /// <param name="protocolVersion">Supported protocol version for which to create the configuration.</param>
         /// <returns>Default node configuration.</returns>
-        public static NodeSettings Default(Network network, ProtocolVersion protocolVersion = SupportedProtocolVersion)
+        public static NodeSettings Default(Network network)
         {
-            return new NodeSettings(network, protocolVersion);
+            return new NodeSettings(network);
         }
 
         /// <summary>
@@ -316,6 +305,7 @@ namespace Blockcore.Configuration
             this.MinTxFeeRate = new FeeRate(config.GetOrDefault("mintxfee", this.Network.MinTxFee, this.Logger));
             this.FallbackTxFeeRate = new FeeRate(config.GetOrDefault("fallbackfee", this.Network.FallbackFee, this.Logger));
             this.MinRelayTxFeeRate = new FeeRate(config.GetOrDefault("minrelaytxfee", this.Network.MinRelayTxFee, this.Logger));
+            this.MaxTxFeeRate = new FeeRate(config.GetOrDefault("maxtxfee", this.Network.MaxTxFee, this.Logger));
         }
 
         /// <summary>
@@ -385,7 +375,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"-conf=<Path>              Path to the configuration file. Defaults to {defaults.ConfigurationFile}.");
             builder.AppendLine($"-datadir=<Path>           Path to the data directory. Defaults to {defaults.DataDir}.");
             builder.AppendLine($"-datadirroot=<Path>       The path to the root data directory, which holds all node data on the machine. Defaults to 'Blockcore'.");
-            builder.AppendLine($"-debug[=<string>]         Set 'Debug' logging level. Specify what to log via e.g. '-debug=Blockcore.Miner,Stratis.Bitcoin.Wallet'.");
+            builder.AppendLine($"-debug[=<string>]         Set 'Debug' logging level. Specify what to log via e.g. '-debug=Blockcore.Miner,Blockcore.Wallet'.");
             builder.AppendLine($"-loglevel=<string>        Direct control over the logging level: '-loglevel=trace/debug/info/warn/error/fatal'.");
 
             // Can be overridden in configuration file.
@@ -414,6 +404,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"regtest={(network.IsRegTest() ? 1 : 0)}");
             builder.AppendLine($"#Minimum fee rate. Defaults to {network.MinTxFee}.");
             builder.AppendLine($"#mintxfee={network.MinTxFee}");
+            builder.AppendLine($"#maxtxfee={network.MaxTxFee}");
             builder.AppendLine($"#Fallback fee rate. Defaults to {network.FallbackFee}.");
             builder.AppendLine($"#fallbackfee={network.FallbackFee}");
             builder.AppendLine($"#Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");

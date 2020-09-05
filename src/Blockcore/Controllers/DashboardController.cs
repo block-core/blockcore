@@ -1,4 +1,5 @@
 ﻿using Blockcore.AsyncWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blockcore.Controllers
@@ -6,6 +7,7 @@ namespace Blockcore.Controllers
     /// <summary>
     /// Controller providing HTML Dashboard
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

@@ -16,12 +16,7 @@ namespace NBitcoin
         /// <summary>
         /// Headers that are close to the tip
         /// </summary>
-        private readonly MemoryCountCache<uint256, BlockHeader> nearTipHeaders;
-
-        /// <summary>
-        /// Headers that are close to the tip
-        /// </summary>
-        private readonly MemoryCountCache<uint256, BlockHeader> recentHeaders;
+        private readonly MemoryCountCache<uint256, BlockHeader> headers;
 
         private readonly DB leveldb;
 
@@ -32,8 +27,7 @@ namespace NBitcoin
             this.network = network;
             this.ChainIndexer = chainIndexer;
             // this.headers = new Dictionary<uint256, BlockHeader>();
-            this.nearTipHeaders = new MemoryCountCache<uint256, BlockHeader>(601);
-            this.recentHeaders = new MemoryCountCache<uint256, BlockHeader>(100);
+            this.headers = new MemoryCountCache<uint256, BlockHeader>(601);
             this.locker = new object();
 
             // Open a connection to a new DB and create if not found
@@ -45,12 +39,7 @@ namespace NBitcoin
 
         public BlockHeader GetHeader(ChainedHeader chainedHeader, uint256 hash)
         {
-            if (this.nearTipHeaders.TryGetValue(hash, out BlockHeader blockHeader))
-            {
-                return blockHeader;
-            }
-
-            if (this.recentHeaders.TryGetValue(hash, out blockHeader))
+            if (this.headers.TryGetValue(hash, out BlockHeader blockHeader))
             {
                 return blockHeader;
             }
@@ -72,13 +61,7 @@ namespace NBitcoin
 
             // If the header is 500 blocks behind tip or 100 blocks ahead cache it.
             if ((chainedHeader.Height > this.ChainIndexer.Height - 500) && (chainedHeader.Height <= this.ChainIndexer.Height + 100))
-            {
-                this.nearTipHeaders.AddOrUpdate(hash, blockHeader);
-            }
-            else
-            {
-                this.recentHeaders.AddOrUpdate(hash, blockHeader);
-            }
+                this.headers.AddOrUpdate(hash, blockHeader);
 
             return blockHeader;
         }

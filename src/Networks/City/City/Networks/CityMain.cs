@@ -54,10 +54,10 @@ namespace City.Networks
             DefaultMaxOutboundConnections = 16;
             DefaultMaxInboundConnections = 109;
             MaxTipAge = 2 * 60 * 60;
-            MinTxFee = 4333;
+            MinTxFee = 10000;
             MaxTxFee = Money.Coins(1).Satoshi;
-            FallbackFee = 4333;
-            MinRelayTxFee = 4333;
+            FallbackFee = 10000;
+            MinRelayTxFee = 10000;
             MaxTimeOffsetSeconds = 25 * 60;
             DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 

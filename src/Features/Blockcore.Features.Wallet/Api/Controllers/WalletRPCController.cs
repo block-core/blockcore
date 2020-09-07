@@ -167,7 +167,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// Uses the first wallet and account.
         /// </summary>
         /// <param name="account">Parameter is deprecated.</param>
-        /// <param name="addressType">Address type, currently only 'legacy' is supported.</param>
+        /// <param name="addressType">Address type, currently only 'legacy' and 'bech32' is supported.</param>
         /// <returns>The new address.</returns>
         [ActionName("getnewaddress")]
         [ActionDescription("Returns a new wallet address for receiving payments.")]
@@ -178,18 +178,20 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             if (!string.IsNullOrEmpty(addressType))
             {
-                // Currently segwit and bech32 addresses are not supported.
-                if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase))
-                    throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' is currently supported.");
+                // Currently segwit addresses are not supported.
+                if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase) && !addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
+                    throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' and 'bech32' are currently supported.");
             }
 
             WalletAccountReference accountReference = this.GetWalletAccountReference();
 
             HdAddress hdAddress = this.walletManager.GetUnusedAddresses(accountReference, 1, alwaysnew: true).Single();
 
-            string base58Address = hdAddress.Address;
+            string address = hdAddress.Address; // legacy address
+            if (addressType != null && addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
+                address = hdAddress.Bech32Address;
 
-            return new NewAddressModel(base58Address);
+            return new NewAddressModel(address);
         }
 
         /// <summary>
@@ -197,7 +199,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// Uses the first wallet and account.
         /// </summary>
         /// <param name="account">Parameter is deprecated.</param>
-        /// <param name="addressType">Address type, currently only 'legacy' is supported.</param>
+        /// <param name="addressType">Address type, currently only 'legacy' and 'bech32' are supported.</param>
         /// <returns>The new address.</returns>
         [ActionName("getunusedaddress")]
         [ActionDescription("Returns the last unused address for receiving payments.")]
@@ -207,15 +209,18 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_METHOD_DEPRECATED, "Use of 'account' parameter has been deprecated");
 
             if (!string.IsNullOrEmpty(addressType))
-            {
-                // Currently segwit and bech32 addresses are not supported.
-                if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase))
-                    throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' is currently supported.");
+            {   
+                // Currently segwit addresses are not supported.
+                if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase) && !addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
+                    throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' and 'bech32' are currently supported.");
             }
             HdAddress hdAddress = this.walletManager.GetUnusedAddress(this.GetWalletAccountReference());
-            string base58Address = hdAddress.Address;
 
-            return new NewAddressModel(base58Address);
+            string address = hdAddress.Address; // legacy address
+            if (addressType != null && addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
+                address = hdAddress.Bech32Address;            
+
+            return new NewAddressModel(address);
         }
 
         /// <summary>

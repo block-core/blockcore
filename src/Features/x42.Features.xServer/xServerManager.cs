@@ -131,7 +131,7 @@ namespace x42.Features.xServer
         /// <inheritdoc />
         public void Start()
         {
-            this.xServerDiscoveryLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{nameof(xServerFeature)}.xServerSeedRefresh", async token =>
+            this.xServerDiscoveryLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{nameof(xServerFeature)}.xServerSeedDiscover", async token =>
             {
                 await XServerDiscoveryAsync(this.xServerPeerList).ConfigureAwait(false);
                 this.logger.LogInformation($"Saving new xServer Seeds to {this.xServerPeerList.Path}");
@@ -493,8 +493,8 @@ namespace x42.Features.xServer
                 {
                     Name = "Public Seed",
                     NetworkProtocol = networkAddress.NetworkProtocol,
-                    NetworkAddress = networkAddress.PublicAddress,
-                    NetworkPort = networkAddress.Port,
+                    NetworkAddress = networkAddress.NetworkAddress,
+                    NetworkPort = networkAddress.NetworkPort,
                     Priority = -1,
                     Version = "N/A",
                     ResponseTime = 99999999,
@@ -527,7 +527,6 @@ namespace x42.Features.xServer
                     SyncPeerToPeersList(xServerPeerList, peer, removePeer: true);
                 }
             }
-
         }
 
         private async Task XServerDiscoveryAsync(xServerPeers xServerPeerList)
@@ -539,7 +538,7 @@ namespace x42.Features.xServer
                 if (this.nodeLifetime.ApplicationStopping.IsCancellationRequested)
                     return;
 
-                string xServerURL = Utils.GetServerUrl(peer.NetworkProtocol, peer.PublicAddress, peer.Port);
+                string xServerURL = Utils.GetServerUrl(peer.NetworkProtocol, peer.NetworkAddress, peer.NetworkPort);
 
                 this.logger.LogDebug($"Attempting connection to {xServerURL}.");
 
@@ -555,6 +554,8 @@ namespace x42.Features.xServer
                         var xServers = topXServerResult.Data.XServers;
                         foreach (var xServer in xServers)
                         {
+                            xServerURL = Utils.GetServerUrl(xServer.NetworkProtocol, xServer.NetworkAddress, xServer.NetworkPort);
+                            client = new RestClient(xServerURL);
                             var pingRequest = new RestRequest("/ping/", Method.GET);
                             var pingResponseTime = Stopwatch.StartNew();
                             var pingResult = await client.ExecuteAsync<PingResult>(pingRequest, cancellation).ConfigureAwait(false);

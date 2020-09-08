@@ -260,13 +260,13 @@ namespace Blockcore.Controllers
         /// <remarks>Requires txindex=1, otherwise only txes that spend or create UTXOs for a wallet can be returned.</remarks>
         [Route("getrawtransaction")]
         [HttpGet]
-        public async Task<IActionResult> GetRawTransactionAsync([FromQuery] string txid, bool verbose = false, string blockHash = null)
+        public async Task<IActionResult> GetRawTransactionAsync([FromQuery] string trxid, bool verbose = false, string blockHash = null)
         {
             try
             {
-                Guard.NotEmpty(txid, nameof(txid));
+                Guard.NotEmpty(trxid, nameof(trxid));
 
-                if (!uint256.TryParse(txid, out uint256 trxid))
+                if (!uint256.TryParse(trxid, out uint256 trxhash))
                 {
                     throw new ArgumentException(nameof(trxid));
                 }
@@ -278,7 +278,7 @@ namespace Blockcore.Controllers
                 }
 
                 // Special exception for the genesis block coinbase transaction.
-                if (trxid == this.network.GetGenesis().GetMerkleRoot().Hash)
+                if (trxhash == this.network.GetGenesis().GetMerkleRoot().Hash)
                 {
                     throw new Exception("The genesis block coinbase is not considered an ordinary transaction and cannot be retrieved.");
                 }
@@ -289,12 +289,12 @@ namespace Blockcore.Controllers
                 if (hash == null)
                 {
                     // Look for the transaction in the mempool, and if not found, look in the indexed transactions.
-                    trx = (this.pooledTransaction == null ? null : await this.pooledTransaction.GetTransaction(trxid).ConfigureAwait(false)) ??
-                          this.blockStore.GetTransactionById(trxid);
+                    trx = (this.pooledTransaction == null ? null : await this.pooledTransaction.GetTransaction(trxhash).ConfigureAwait(false)) ??
+                          this.blockStore.GetTransactionById(trxhash);
 
                     if (trx == null)
                     {
-                        throw new Exception("No such mempool transaction. Use -txindex to enable blockchain transaction queries.");
+                        return this.Json(null);
                     }
                 }
                 else
@@ -307,7 +307,7 @@ namespace Blockcore.Controllers
                         throw new Exception("Block hash not found.");
                     }
 
-                    trx = chainedHeaderBlock.Block.Transactions.SingleOrDefault(t => t.GetHash() == trxid);
+                    trx = chainedHeaderBlock.Block.Transactions.SingleOrDefault(t => t.GetHash() == trxhash);
 
                     if (trx == null)
                     {
@@ -317,7 +317,7 @@ namespace Blockcore.Controllers
 
                 if (verbose)
                 {
-                    ChainedHeader block = chainedHeaderBlock != null ? chainedHeaderBlock.ChainedHeader : this.GetTransactionBlock(trxid);
+                    ChainedHeader block = chainedHeaderBlock != null ? chainedHeaderBlock.ChainedHeader : this.GetTransactionBlock(trxhash);
                     return this.Json(new TransactionVerboseModel(trx, this.network, block, this.chainState?.ConsensusTip));
                 }
                 else

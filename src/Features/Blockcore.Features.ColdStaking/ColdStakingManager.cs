@@ -663,7 +663,7 @@ namespace Blockcore.Features.ColdStaking
                 if (script.IsUnspendable)
                 {
                     var data = TxNullDataTemplate.Instance.ExtractScriptPubKeyParameters(script);
-                    if (data.Length == 1)
+                    if (data != null && data.Length == 1)
                     {
                         if (data[0].Length == 40)
                         {

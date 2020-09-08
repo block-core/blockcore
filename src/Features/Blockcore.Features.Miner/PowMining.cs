@@ -135,6 +135,13 @@ namespace Blockcore.Features.Miner
                     // Issues constructing block or verifying it. Should not halt mining.
                     this.logger.LogDebug("Consensus error exception occurred in miner loop: {0}", cee.ToString());
                 }
+                catch (ConsensusException ce)
+                {
+                    // All consensus exceptions should be ignored. It means that the miner
+                    // run into problems while constructing block or verifying it
+                    // but it should not halted the staking operation.
+                    this.logger.LogDebug("Consensus exception occurred in miner loop: {0}", ce.ToString());
+                }
                 catch
                 {
                     this.logger.LogTrace("(-)[UNHANDLED_EXCEPTION]");
@@ -310,7 +317,7 @@ namespace Blockcore.Features.Miner
 
             // BIP34 require the coinbase first input to start with the block height.
             int height = previousHeader.Height + 1;
-            block.Transactions[0].Inputs[0].ScriptSig = new Script(Op.GetPushOp(height)) + OpcodeType.OP_0; 
+            block.Transactions[0].Inputs[0].ScriptSig = new Script(Op.GetPushOp(height)) + OpcodeType.OP_0;
 
             this.blockProvider.BlockModified(previousHeader, block);
 

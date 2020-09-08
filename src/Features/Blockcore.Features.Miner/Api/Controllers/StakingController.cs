@@ -86,7 +86,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
         /// <returns>An <see cref="OkResult"/> object that produces a status code 200 HTTP response.</returns>
         [Route("startstaking")]
         [HttpPost]
-        public IActionResult StartStaking([FromBody]StartStakingRequest request)
+        public IActionResult StartStaking([FromBody] StartStakingRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -191,7 +191,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
         [Route("getStakingNotExpired")]
         [HttpPost]
-        public IActionResult GetStakingNotExpired(StakingNotExpiredRequest request)
+        public IActionResult GetStakingNotExpired([FromBody] StakingNotExpiredRequest request)
         {
             try
             {

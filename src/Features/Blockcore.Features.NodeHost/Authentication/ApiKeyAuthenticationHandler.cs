@@ -51,6 +51,19 @@ namespace Blockcore.Features.NodeHost.Authentication
 
             if (existingApiKey != null)
             {
+                // First verify the path access is enabled, if so we'll perform a validation here.
+                if (this.Request.Path.HasValue && existingApiKey.Paths != null && existingApiKey.Paths.Count > 0)
+                {
+                    string path = this.Request.Path.Value;
+                    bool hasAccess = existingApiKey.Paths.Any(p => path.StartsWith(p));
+
+                    if (!hasAccess)
+                    {
+                        // Return NoResult and return standard 401 Unauthorized result.
+                        return AuthenticateResult.NoResult();
+                    }
+                }
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, existingApiKey.Owner)

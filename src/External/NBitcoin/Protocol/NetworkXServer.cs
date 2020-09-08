@@ -2,16 +2,15 @@
 {
     public class NetworkXServer
     {
-        public string PublicAddress { get; set; }
-        public long Port { get; set; }
-
         public int NetworkProtocol { get; set; }
+        public string NetworkAddress { get; set; }
+        public long NetworkPort { get; set; }
 
         public NetworkXServer(string publicAddress, long port, int networkProtocol = 0)
         {
-            this.PublicAddress = publicAddress;
-            this.Port = port;
             this.NetworkProtocol = networkProtocol;
+            this.NetworkAddress = publicAddress;
+            this.NetworkPort = port;
         }
     }
 }

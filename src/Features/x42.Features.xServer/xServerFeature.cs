@@ -47,6 +47,7 @@ namespace x42.Features.xServer
 
         private void AddInlineStats(StringBuilder log)
         {
+            int MaximumProfileNameLength = 20;
             var connectedPeers = this.xServerManager.ConnectedSeeds;
             var builder = new StringBuilder();
             builder.AppendLine();
@@ -60,9 +61,13 @@ namespace x42.Features.xServer
                     tier = "Seed Node";
                     responseTime = "N/A";
                 }
-
+                string peerName = peer.Name;
+                if (peerName.Length > MaximumProfileNameLength)
+                {
+                    peerName = $"{peerName.Substring(0, MaximumProfileNameLength)}...";
+                }
                 builder.AppendLine(
-                    ($"{peer.Name} ({tier}): {peer.NetworkAddress}:{peer.NetworkPort}").PadRight(LoggingConfiguration.ColumnLength + 25)
+                    ($"{peerName} ({tier}): {peer.NetworkAddress}:{peer.NetworkPort}").PadRight(LoggingConfiguration.ColumnLength + 30)
                     + ($"Response Time: {responseTime}").PadRight(LoggingConfiguration.ColumnLength + 14)
                     + ($"Version: {peer.Version}").PadRight(LoggingConfiguration.ColumnLength + 7)
                     );

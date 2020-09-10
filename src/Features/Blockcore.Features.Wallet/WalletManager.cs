@@ -856,7 +856,7 @@ namespace Blockcore.Features.Wallet
 
                 foreach (Types.Wallet wallet in this.Wallets)
                 {
-                    hdAddress = wallet.GetAllAddresses().FirstOrDefault(a => a.Address == address);
+                    hdAddress = wallet.GetAllAddresses().FirstOrDefault(a => a.Address == address || a.Bech32Address == address);
                     if (hdAddress == null) continue;
 
                     // When this query to get balance on specific address, we will exclude the cold staking UTXOs.

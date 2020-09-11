@@ -171,7 +171,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 if (!string.IsNullOrEmpty(request.Address))
                 {
-                    query = query.Where(x => x.Address.Address == request.Address);
+                    query = query.Where(x => x.Address.Address == request.Address || x.Address.Bech32Address == request.Address);
                 }
 
                 // Sorting the history items by descending dates. That includes received and sent dates.

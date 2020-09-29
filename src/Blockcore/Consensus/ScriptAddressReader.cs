@@ -31,7 +31,7 @@ namespace Blockcore.Consensus
                     destinationAddress = this.GetColdStakeAddresses(network, script);
                     break;
                 case TxOutType.TX_SEGWIT:
-                    destinationAddress = script.GetDestinationAddress(network).ToString();
+                    destinationAddress.Address = script.GetDestinationAddress(network).ToString();
                     break;
                 case TxOutType.TX_NONSTANDARD:
                 case TxOutType.TX_MULTISIG:

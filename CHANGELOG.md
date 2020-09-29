@@ -1,3 +1,13 @@
+##  (2020-09-15)
+
+* Added segwit addresses to indexer. (#215) ([91940e2](https://github.com/block-core/blockcore/commit/91940e2)), closes [#215](https://github.com/block-core/blockcore/issues/215)
+* Added the Bech32Address as a query for history (#217) ([85113e9](https://github.com/block-core/blockcore/commit/85113e9)), closes [#217](https://github.com/block-core/blockcore/issues/217)
+* Added the Bech32Address to GetAddressBalance() (#216) ([55de7d2](https://github.com/block-core/blockcore/commit/55de7d2)), closes [#216](https://github.com/block-core/blockcore/issues/216)
+* Bump version ([f676338](https://github.com/block-core/blockcore/commit/f676338))
+* Update the changelog with details from 1.0.13 ([0f51e7d](https://github.com/block-core/blockcore/commit/0f51e7d))
+
+
+
 ##  (2020-09-07)
 
 * Add About Page (#185) ([4f3d3fd](https://github.com/block-core/blockcore/commit/4f3d3fd)), closes [#185](https://github.com/block-core/blockcore/issues/185)

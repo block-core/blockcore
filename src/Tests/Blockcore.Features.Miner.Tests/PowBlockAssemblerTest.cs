@@ -390,7 +390,7 @@ namespace Blockcore.Features.Miner.Tests
             {
                 FullValidationConsensusRule rule = null;
                 if (ruleType == typeof(FlushUtxosetRule))
-                    rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object);
+                    rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object, new Mock<IChainRepository>().Object, new Mock<ChainIndexer>().Object, new Mock<INodeLifetime>().Object, new Mock<IChainState>().Object);
                 else
                     rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
 

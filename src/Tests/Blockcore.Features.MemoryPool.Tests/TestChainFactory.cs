@@ -155,7 +155,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             }
 
             var mempoolValidator = new MempoolValidator(mempool, mempoolLock, dateTimeProvider, mempoolSettings, chain, inMemoryCoinView, loggerFactory, nodeSettings, consensusRules, mempoolRules, deployments);
-            
+
             var blocks = new List<Block>();
             var srcTxs = new List<Transaction>();
             DateTimeOffset now = DateTimeOffset.UtcNow;
@@ -182,7 +182,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                 inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(block.Transactions[0], 0), new Coins((uint)(i + 1), block.Transactions[0].Outputs.First(), block.Transactions[0].IsCoinBase)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
             }
 
-            return new TestChainContext { MempoolValidator = mempoolValidator, MempoolSettings = mempoolSettings, ChainIndexer = chain, SrcTxs = srcTxs};
+            return new TestChainContext { MempoolValidator = mempoolValidator, MempoolSettings = mempoolSettings, ChainIndexer = chain, SrcTxs = srcTxs };
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             {
                 FullValidationConsensusRule rule = null;
                 if (ruleType == typeof(FlushUtxosetRule))
-                    rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object);
+                    rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object, new Mock<IChainRepository>().Object, new Mock<ChainIndexer>().Object, new Mock<INodeLifetime>().Object, new Mock<IChainState>().Object);
                 else
                     rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
 
@@ -280,7 +280,6 @@ namespace Blockcore.Features.MemoryPool.Tests
                 srcTxs.Add(currentBlock.Transactions[0]);
 
                 inMemoryCoinView.SaveChanges(new List<UnspentOutput>() { new UnspentOutput(new OutPoint(currentBlock.Transactions[0], 0), new Coins((uint)(i + 1), currentBlock.Transactions[0].Outputs.First(), currentBlock.Transactions[0].IsCoinBase)) }, new HashHeightPair(chain.Tip.Previous), new HashHeightPair(chain.Tip));
-
             }
 
             // Just to make sure we can still make simple blocks

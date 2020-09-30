@@ -30,6 +30,8 @@ namespace Blockcore.Base
 
         private BlockLocator locator;
 
+        private object lockObj;
+
         public Network Network { get; }
 
         public ChainRepository(ILoggerFactory loggerFactory, IChainStore chainStore, Network network)
@@ -38,6 +40,7 @@ namespace Blockcore.Base
 
             this.chainStore = chainStore;
             this.Network = network;
+            this.lockObj = new object();
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
@@ -47,39 +50,42 @@ namespace Blockcore.Base
         {
             Task<ChainedHeader> task = Task.Run(() =>
             {
-                ChainedHeader tip = null;
-
-                ChainData data = this.chainStore.GetChainData(0);
-
-                if (data == null)
+                lock (this.lockObj)
                 {
-                    genesisHeader.SetChainStore(this.chainStore);
-                    return genesisHeader;
-                }
+                    ChainedHeader tip = null;
 
-                Guard.Assert(data.Hash == genesisHeader.HashBlock); // can't swap networks
-
-                int index = 0;
-                while (true)
-                {
-                    data = this.chainStore.GetChainData((index));
+                    ChainData data = this.chainStore.GetChainData(0);
 
                     if (data == null)
-                        break;
+                    {
+                        genesisHeader.SetChainStore(this.chainStore);
+                        return genesisHeader;
+                    }
 
-                    tip = new ChainedHeader(data.Hash, data.Work, tip);
-                    if (tip.Height == 0) tip.SetChainStore(this.chainStore);
-                    index++;
+                    Guard.Assert(data.Hash == genesisHeader.HashBlock); // can't swap networks
+
+                    int index = 0;
+                    while (true)
+                    {
+                        data = this.chainStore.GetChainData((index));
+
+                        if (data == null)
+                            break;
+
+                        tip = new ChainedHeader(data.Hash, data.Work, tip);
+                        if (tip.Height == 0) tip.SetChainStore(this.chainStore);
+                        index++;
+                    }
+
+                    if (tip == null)
+                    {
+                        genesisHeader.SetChainStore(this.chainStore);
+                        tip = genesisHeader;
+                    }
+
+                    this.locator = tip.GetLocator();
+                    return tip;
                 }
-
-                if (tip == null)
-                {
-                    genesisHeader.SetChainStore(this.chainStore);
-                    tip = genesisHeader;
-                }
-
-                this.locator = tip.GetLocator();
-                return tip;
             });
 
             return task;
@@ -92,26 +98,29 @@ namespace Blockcore.Base
 
             Task task = Task.Run(() =>
             {
-                ChainedHeader fork = this.locator == null ? null : chainIndexer.FindFork(this.locator);
-                ChainedHeader tip = chainIndexer.Tip;
-                ChainedHeader toSave = tip;
-
-                var headers = new List<ChainedHeader>();
-                while (toSave != fork)
+                lock (this.lockObj)
                 {
-                    headers.Add(toSave);
-                    toSave = toSave.Previous;
+                    ChainedHeader fork = this.locator == null ? null : chainIndexer.FindFork(this.locator);
+                    ChainedHeader tip = chainIndexer.Tip;
+                    ChainedHeader toSave = tip;
+
+                    var headers = new List<ChainedHeader>();
+                    while (toSave != fork)
+                    {
+                        headers.Add(toSave);
+                        toSave = toSave.Previous;
+                    }
+
+                    var items = headers.OrderBy(b => b.Height).Select(h => new ChainDataItem
+                    {
+                        Height = h.Height,
+                        Data = new ChainData { Hash = h.HashBlock, Work = h.ChainWorkBytes }
+                    });
+
+                    this.chainStore.PutChainData(items);
+
+                    this.locator = tip.GetLocator();
                 }
-
-                var items = headers.OrderBy(b => b.Height).Select(h => new ChainDataItem
-                {
-                    Height = h.Height,
-                    Data = new ChainData { Hash = h.HashBlock, Work = h.ChainWorkBytes }
-                });
-
-                this.chainStore.PutChainData(items);
-
-                this.locator = tip.GetLocator();
             });
 
             return task;

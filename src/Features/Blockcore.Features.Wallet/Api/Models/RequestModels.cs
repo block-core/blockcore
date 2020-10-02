@@ -321,8 +321,6 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// recipient will receive in STRAT (or a sidechain coin). If the transaction was realized,
         /// both the values would be used to create the UTXOs for the transaction recipients.
         /// </summary> 
-        [Required(ErrorMessage = "A list of recipients is required.")]
-        [MinLength(1)]
         public List<RecipientModel> Recipients { get; set; }
 
         /// <summary>

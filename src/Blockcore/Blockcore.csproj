@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Core\icon.png" />
+    <None Remove="NBitcoin\icon.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Core\icon.png" />
+    <EmbeddedResource Include="NBitcoin\icon.png" />
   </ItemGroup>
 
   <ItemGroup>

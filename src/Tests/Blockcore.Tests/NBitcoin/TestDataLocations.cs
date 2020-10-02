@@ -6,22 +6,22 @@ namespace NBitcoin.Tests
     {
         public static string GetFileFromDataFolder(string filename)
         {
-            return Path.Combine("Core", "data", filename);
+            return Path.Combine("NBitcoin", "data", filename);
         }
 
         public static string GetFileFromDataBlockFolder(string filename)
         {
-            return Path.Combine("Core", "data", "blocks", filename);
+            return Path.Combine("NBitcoin", "data", "blocks", filename);
         }
 
         public static string GetFileFromDataPosFolder(string filename)
         {
-            return Path.Combine("Core", "data_pos", filename);
+            return Path.Combine("NBitcoin", "data_pos", filename);
         }
 
         public static string GetFileFromDataPosBlockFolder(string filename)
         {
-            return Path.Combine("Core", "data_pos", "blocks", filename);
+            return Path.Combine("NBitcoin", "data_pos", "blocks", filename);
         }
     }
 }

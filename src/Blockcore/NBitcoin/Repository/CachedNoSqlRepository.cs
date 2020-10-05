@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Utilities;
 
 namespace NBitcoin
 {
@@ -10,10 +11,10 @@ namespace NBitcoin
         {
             public Raw()
             {
-
             }
 
             private byte[] _Data = new byte[0];
+
             public byte[] Data
             {
                 get
@@ -29,7 +30,7 @@ namespace NBitcoin
                 stream.ReadWriteAsVarString(ref this._Data);
             }
 
-            #endregion
+            #endregion IBitcoinSerializable Members
         }
 
         public CachedNoSqlRepository(NoSqlRepository inner) : base(inner.Network)

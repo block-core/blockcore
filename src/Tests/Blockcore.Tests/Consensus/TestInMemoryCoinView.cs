@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Utilities;
 using NBitcoin;
-using ReaderWriterLock = NBitcoin.ReaderWriterLock;
 
 namespace Blockcore.Tests.Consensus
 {

@@ -140,7 +140,6 @@ namespace x42.Networks
             this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
             this.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x35), (0x87), (0xCF) };
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x35), (0x83), (0x94) };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2b };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
 
             this.Bech32Encoders = new Bech32Encoder[2];

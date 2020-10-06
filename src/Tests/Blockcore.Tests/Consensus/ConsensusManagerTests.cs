@@ -312,7 +312,6 @@ namespace Blockcore.Tests.Consensus
 
             builder.blockPullerBlockDownloadCallback(additionalHeaders.HashBlock, additionalHeaders.Block, peer.Object.Connection.Id);
 
-
             Assert.False(builder.TestConsensusManager.CallbacksByBlocksRequestedHashContainsKeyForHash(additionalHeaders.HashBlock));
             Assert.Equal(900, builder.TestConsensusManager.GetExpectedBlockDataBytes());
             builder.AssertExpectedBlockSizesEmpty();
@@ -441,7 +440,6 @@ namespace Blockcore.Tests.Consensus
             Assert.Equal(builder.InitialChainTip, result.ChainedHeader);
         }
 
-
         [Fact]
         public void GetOrDownloadBlocksAsync_ChainedHeaderBlockNotInCT_CallsBlockDownloadedCallbackForBlock_BlocksNotDownloaded()
         {
@@ -520,7 +518,6 @@ namespace Blockcore.Tests.Consensus
 
             Assert.Null(result);
         }
-
 
         [Fact]
         public void BlockMinedAsync_CorrectPreviousTip_PartialValidationError_ThrowsConsensusException()
@@ -604,7 +601,6 @@ namespace Blockcore.Tests.Consensus
             Assert.Equal(builder.InitialChainTip, builder.TestConsensusManager.ConsensusManager.Tip);
         }
 
-
         [Fact]
         public void OnPartialValidationCompletedCallbackAsync_PartialValidationFails_BansPeer()
         {
@@ -627,14 +623,12 @@ namespace Blockcore.Tests.Consensus
                         ChainedHeaderToValidate = header,
                         Error = ConsensusErrors.BadTransactionScriptError
                     });
-
                 });
 
             builder.blockPullerBlockDownloadCallback(additionalHeaders.HashBlock, additionalHeaders.Block, peer.Object.Connection.Id);
 
             builder.AssertPeerBanned(peer.Object);
         }
-
 
         private static void AssertBlockSizes(Dictionary<uint256, long> blockSize, List<uint256> expectedBlocks, int expectedSize)
         {
@@ -655,7 +649,6 @@ namespace Blockcore.Tests.Consensus
             }
 
             var builder = contextBuilder.Build();
-
 
             if (initializeWithChainTip)
             {

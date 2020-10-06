@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\External\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />

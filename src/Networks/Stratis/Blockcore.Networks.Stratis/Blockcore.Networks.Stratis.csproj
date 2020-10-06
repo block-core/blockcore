@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\External\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
   </ItemGroup>

@@ -1634,7 +1634,7 @@ namespace Blockcore.Features.Wallet.Tests
             IActionResult result = controller.BuildTransaction(new BuildTransactionRequest
             {
                 AccountName = "Account 0",
-                Recipients = new List<RecipientModel>(),
+                Recipients = new List<RecipientModel>() { new RecipientModel() { Amount = "1.0", DestinationAddress = new Key().PubKey.Hash.GetAddress(this.Network).ToString() } },
                 WalletName = walletName,
                 ChangeAddress = usedReceiveAddress.Address
             });
@@ -1676,7 +1676,7 @@ namespace Blockcore.Features.Wallet.Tests
             IActionResult result = controller.BuildTransaction(new BuildTransactionRequest
             {
                 AccountName = "Account 0",
-                Recipients = new List<RecipientModel>(),
+                Recipients = new List<RecipientModel>() { new RecipientModel() { Amount = "1.0", DestinationAddress = new Key().PubKey.Hash.GetAddress(this.Network).ToString() } },
                 WalletName = walletName,
                 ChangeAddress = addressNotInWallet.Address
             });
@@ -1713,7 +1713,7 @@ namespace Blockcore.Features.Wallet.Tests
             IActionResult result = controller.BuildTransaction(new BuildTransactionRequest
             {
                 AccountName = "Account 0",
-                Recipients = new List<RecipientModel>(),
+                Recipients = new List<RecipientModel>() { new RecipientModel() { Amount = "1.0", DestinationAddress = new Key().PubKey.Hash.GetAddress(this.Network).ToString() } },
                 WalletName = walletName,
                 ChangeAddress = addressNotInWallet.Address
             });

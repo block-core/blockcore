@@ -364,8 +364,8 @@ namespace Blockcore.Features.BlockStore
                     this.logger.LogInformation(warningMessage.ToString());
                     using (var batch = new WriteBatch())
                     {
-                        var enumerator = this.rocksdb.NewIterator();//.GetEnumerator();
-                        while (enumerator.Valid())
+                        var enumerator = this.rocksdb.NewIterator();
+                        for (enumerator.SeekToFirst(); enumerator.Valid(); enumerator.Next())
                         {
                             if (enumerator.Key()[0] == BlockTableName)
                             {
@@ -391,7 +391,7 @@ namespace Blockcore.Features.BlockStore
                 else
                 {
                     var enumerator = this.rocksdb.NewIterator();
-                    while (enumerator.Valid())
+                    for (enumerator.SeekToFirst(); enumerator.Valid(); enumerator.Next())
                     {
                         // Clear tx from database.
                         if (enumerator.Key()[0] == TransactionTableName)

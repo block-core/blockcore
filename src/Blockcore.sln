@@ -74,6 +74,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{0C6FDC
 		Directory.Build.props = Directory.Build.props
 		None.ruleset = None.ruleset
 		stylecop.json = stylecop.json
+		test.runsettings = test.runsettings
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.Bitcoin", "Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj", "{7EE5025D-FA5E-484B-84C0-6B9C08D01CDD}"

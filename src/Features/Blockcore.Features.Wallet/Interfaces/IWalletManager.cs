@@ -82,6 +82,16 @@ namespace Blockcore.Features.Wallet.Interfaces
         Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null, int? coinType = null);
 
         /// <summary>
+        /// Gets the private key associated with an address in the wallet.
+        /// </summary>
+        /// <param name="password">The user's password.</param>
+        /// <param name="walletName">The name of the wallet.</param>
+        /// <param name="accountName">The name of the account.</param>
+        /// <param name="address">Address to extract the private key of.</param>
+        /// <returns>The private key associated with the given address, in WIF representation.</returns>
+        string RetrievePrivateKey(string password, string walletName, string accountName, string address);
+
+        /// <summary>
         /// Signs a string message.
         /// </summary>
         /// <param name="password">The user's password.</param>

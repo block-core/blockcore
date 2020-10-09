@@ -1182,6 +1182,39 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         }
 
         /// <summary>
+        /// Gets the private key of a specified wallet address.
+        /// </summary>
+        /// <param name="request">An object containing the necessary parameters to retrieve.</param>
+        /// <param name="cancellationToken">The Cancellation Token</param>
+        /// <returns>A JSON object containing the private key of the address in WIF representation.</returns>
+        /// <response code="200">Returns private key</response>
+        /// <response code="400">Invalid request, or unexpected exception occurred</response>
+        /// <response code="500">Request is null</response>
+        [Route("privatekey")]
+        [HttpPost]
+        public IActionResult RetrievePrivateKey([FromBody] RetrievePrivateKeyModel request)
+        {
+            Guard.NotNull(request, nameof(request));
+
+            // checks the request is valid
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            try
+            {
+                string result = this.walletManager.RetrievePrivateKey(request.Password, request.WalletName, request.AccountName, request.Address);
+                return this.Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
         /// Requests the node resyncs from a block specified by its block hash.
         /// Internally, the specified block is taken as the new wallet tip
         /// and all blocks after it are resynced.

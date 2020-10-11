@@ -320,6 +320,22 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
+        public string RetrievePrivateKey(string password, string walletName, string accountName, string address)
+        {
+            Guard.NotEmpty(password, nameof(password));
+            Guard.NotEmpty(walletName, nameof(walletName));
+            Guard.NotEmpty(address, nameof(address));
+
+            Types.Wallet wallet = this.GetWallet(walletName);
+
+            // Locate the address based on its base58 string representation.
+            HdAddress hdAddress = wallet.GetAddress(address, account => account.Name.Equals(accountName));
+
+            ISecret privateKey = wallet.GetExtendedPrivateKeyForAddress(password, hdAddress).PrivateKey.GetWif(this.network);
+            return privateKey.ToString();
+        }
+
+        /// <inheritdoc />
         public SignMessageResult SignMessage(string password, string walletName, string accountName, string externalAddress, string message)
         {
             Guard.NotEmpty(password, nameof(password));

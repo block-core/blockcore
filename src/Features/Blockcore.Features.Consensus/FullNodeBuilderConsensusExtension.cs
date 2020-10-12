@@ -18,7 +18,7 @@ namespace Blockcore.Features.Consensus
     /// </summary>
     public static class FullNodeBuilderConsensusExtension
     {
-        public static IFullNodeBuilder UsePowConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Leveldb)
+        public static IFullNodeBuilder UsePowConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Rocksdb)
         {
             LoggingConfiguration.RegisterFeatureNamespace<PowConsensusFeature>("powconsensus");
 
@@ -42,7 +42,7 @@ namespace Blockcore.Features.Consensus
             return fullNodeBuilder;
         }
 
-        public static IFullNodeBuilder UsePosConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Leveldb)
+        public static IFullNodeBuilder UsePosConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Rocksdb)
         {
             LoggingConfiguration.RegisterFeatureNamespace<PosConsensusFeature>("posconsensus");
 
@@ -81,6 +81,9 @@ namespace Blockcore.Features.Consensus
 
             if (coindbType == DbType.Faster)
                 services.AddSingleton<ICoindb, FasterCoindb>();
+
+            if (coindbType == DbType.Rocksdb)
+                services.AddSingleton<ICoindb, RocksdbCoindb>();
         }
     }
 
@@ -88,6 +91,7 @@ namespace Blockcore.Features.Consensus
     {
         Leveldb,
         Dbreeze,
-        Faster
+        Faster,
+        Rocksdb
     }
 }

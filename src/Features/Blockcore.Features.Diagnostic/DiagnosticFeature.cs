@@ -4,6 +4,7 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
 using Blockcore.Features.Diagnostic.Controllers;
 using Blockcore.Features.Diagnostic.PeerDiagnostic;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;

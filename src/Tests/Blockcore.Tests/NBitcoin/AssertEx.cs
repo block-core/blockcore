@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using Blockcore.Consensus.Script;
 using NBitcoin.Crypto;
 using Xunit;
 

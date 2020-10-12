@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Block;
 using Blockcore.Utilities;
 using NBitcoin;
 

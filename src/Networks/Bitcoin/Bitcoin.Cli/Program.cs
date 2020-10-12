@@ -7,6 +7,7 @@ using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
+using Blockcore.Networks;
 using Blockcore.Utilities.Extensions;
 using Flurl;
 using Flurl.Http;

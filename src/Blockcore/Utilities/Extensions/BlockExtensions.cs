@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 
 namespace Blockcore.Utilities.Extensions

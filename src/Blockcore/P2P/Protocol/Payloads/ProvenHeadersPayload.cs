@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Consensus.Block;
 using NBitcoin;
 
 namespace Blockcore.P2P.Protocol.Payloads

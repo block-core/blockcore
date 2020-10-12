@@ -11,6 +11,10 @@ using RocksDbSharp;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using System;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
 
 namespace Blockcore.Features.BlockStore
 {

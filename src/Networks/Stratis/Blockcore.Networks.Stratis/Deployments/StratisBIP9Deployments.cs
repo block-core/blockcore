@@ -1,4 +1,7 @@
-﻿using NBitcoin;
+﻿using Blockcore.Base.Deployments;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+using NBitcoin;
 
 namespace Blockcore.Networks.Stratis.Deployments
 {

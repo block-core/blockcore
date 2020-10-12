@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Script;
 using Blockcore.Mining;
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Blockcore.Features.Miner

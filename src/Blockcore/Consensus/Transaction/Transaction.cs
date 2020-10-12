@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Script;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.Formatters;
 using NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Transaction
 {
     public class OutPoint : IBitcoinSerializable
     {
@@ -176,12 +180,12 @@ namespace NBitcoin
         {
         }
 
-        public TxIn(Script scriptSig)
+        public TxIn(Script.Script scriptSig)
         {
             this.scriptSig = scriptSig;
         }
 
-        public TxIn(OutPoint prevout, Script scriptSig)
+        public TxIn(OutPoint prevout, Script.Script scriptSig)
         {
             this.prevout = prevout;
             this.scriptSig = scriptSig;
@@ -193,7 +197,7 @@ namespace NBitcoin
         }
 
         private OutPoint prevout = new OutPoint();
-        private Script scriptSig = Script.Empty;
+        private Script.Script scriptSig = Script.Script.Empty;
         private uint nSequence = uint.MaxValue;
 
         public Sequence Sequence
@@ -220,7 +224,7 @@ namespace NBitcoin
             }
         }
 
-        public Script ScriptSig
+        public Script.Script ScriptSig
         {
             get
             {
@@ -294,7 +298,7 @@ namespace NBitcoin
         public static TxIn CreateCoinbase(int height)
         {
             var txin = new TxIn();
-            txin.ScriptSig = new Script(Op.GetPushOp(height)) + OpcodeType.OP_0;
+            txin.ScriptSig = new Script.Script(Op.GetPushOp(height)) + OpcodeType.OP_0;
             return txin;
         }
 
@@ -403,7 +407,7 @@ namespace NBitcoin
             }
             var cscript = new ScriptCompressor(this._TxOut.ScriptPubKey);
             stream.ReadWrite(ref cscript);
-            if (!stream.Serializing) this._TxOut.ScriptPubKey = new Script(cscript.ScriptBytes);
+            if (!stream.Serializing) this._TxOut.ScriptPubKey = new Script.Script(cscript.ScriptBytes);
         }
 
         #endregion IBitcoinSerializable Members
@@ -427,7 +431,7 @@ namespace NBitcoin
             }
         }
 
-        public ScriptCompressor(Script script)
+        public ScriptCompressor(Script.Script script)
         {
             this._Script = script.ToBytes(true);
         }
@@ -436,15 +440,15 @@ namespace NBitcoin
         {
         }
 
-        public Script GetScript()
+        public Script.Script GetScript()
         {
-            return new Script(this._Script);
+            return new Script.Script(this._Script);
         }
 
         private byte[] Compress()
         {
             byte[] result = null;
-            Script script = Script.FromBytesUnsafe(this._Script);
+            Script.Script script = Script.Script.FromBytesUnsafe(this._Script);
             KeyId keyID = PayToPubkeyHashTemplate.Instance.ExtractScriptPubKeyParameters(script);
             if (keyID != null)
             {
@@ -481,7 +485,7 @@ namespace NBitcoin
             return null;
         }
 
-        private Script Decompress(uint nSize, byte[] data)
+        private Script.Script Decompress(uint nSize, byte[] data)
         {
             switch (nSize)
             {
@@ -558,9 +562,9 @@ namespace NBitcoin
 
     public class TxOut : IBitcoinSerializable, IDestination
     {
-        private Script publicKey = Script.Empty;
+        private Script.Script publicKey = Script.Script.Empty;
 
-        public Script ScriptPubKey
+        public Script.Script ScriptPubKey
         {
             get
             {
@@ -584,7 +588,7 @@ namespace NBitcoin
             if (destination != null) this.ScriptPubKey = destination.ScriptPubKey;
         }
 
-        public TxOut(Money value, Script scriptPubKey)
+        public TxOut(Money value, Script.Script scriptPubKey)
         {
             this.Value = value;
             this.ScriptPubKey = scriptPubKey;
@@ -679,7 +683,7 @@ namespace NBitcoin
             }
         }
 
-        public Script ScriptSig
+        public Script.Script ScriptSig
         {
             get
             {
@@ -709,24 +713,24 @@ namespace NBitcoin
             set;
         }
 
-        public bool VerifyScript(Network network, Script scriptPubKey, ScriptVerify scriptVerify = ScriptVerify.Standard)
+        public bool VerifyScript(Network network, Script.Script scriptPubKey, ScriptVerify scriptVerify = ScriptVerify.Standard)
         {
             return VerifyScript(network, scriptPubKey, scriptVerify, out ScriptError unused);
         }
 
-        public bool VerifyScript(Network network, Script scriptPubKey, out ScriptError error)
+        public bool VerifyScript(Network network, Script.Script scriptPubKey, out ScriptError error)
         {
-            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, out error);
+            return Script.Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, out error);
         }
 
-        public bool VerifyScript(Network network, Script scriptPubKey, ScriptVerify scriptVerify, out ScriptError error)
+        public bool VerifyScript(Network network, Script.Script scriptPubKey, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, scriptVerify, SigHash.Undefined, out error);
+            return Script.Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, scriptVerify, SigHash.Undefined, out error);
         }
 
-        public bool VerifyScript(Network network, Script scriptPubKey, Money value, ScriptVerify scriptVerify, out ScriptError error)
+        public bool VerifyScript(Network network, Script.Script scriptPubKey, Money value, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, value, scriptVerify, SigHash.Undefined, out error);
+            return Script.Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, value, scriptVerify, SigHash.Undefined, out error);
         }
 
         public bool VerifyScript(Network network, ICoin coin, ScriptVerify scriptVerify = ScriptVerify.Standard)
@@ -736,7 +740,7 @@ namespace NBitcoin
 
         public bool VerifyScript(Network network, ICoin coin, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.VerifyScript(network, coin.TxOut.ScriptPubKey, this.Transaction, (int)this.Index, coin.TxOut.Value, scriptVerify, SigHash.Undefined, out error);
+            return Script.Script.VerifyScript(network, coin.TxOut.ScriptPubKey, this.Transaction, (int)this.Index, coin.TxOut.Value, scriptVerify, SigHash.Undefined, out error);
         }
 
         public bool VerifyScript(Network network, ICoin coin, out ScriptError error)
@@ -752,7 +756,7 @@ namespace NBitcoin
 
         public uint256 GetSignatureHash(Network network, ICoin coin, SigHash sigHash = SigHash.All)
         {
-            return Script.SignatureHash(network, coin.GetScriptCode(network), this.Transaction, (int)this.Index, sigHash, coin.TxOut.Value, coin.GetHashVersion(network));
+            return Script.Script.SignatureHash(network, coin.GetScriptCode(network), this.Transaction, (int)this.Index, sigHash, coin.TxOut.Value, coin.GetHashVersion(network));
         }
     }
 
@@ -838,7 +842,7 @@ namespace NBitcoin
             return this.Where(r => r.IsTo(destination));
         }
 
-        public IEnumerable<TxOut> To(Script scriptPubKey)
+        public IEnumerable<TxOut> To(Script.Script scriptPubKey)
         {
             return this.Where(r => r.ScriptPubKey == scriptPubKey);
         }
@@ -938,7 +942,7 @@ namespace NBitcoin
         {
         }
 
-        public WitScript(Script scriptSig)
+        public WitScript(Script.Script scriptSig)
         {
             var pushes = new List<byte[]>();
             foreach (Op op in scriptSig.ToOps())
@@ -1048,7 +1052,7 @@ namespace NBitcoin
             return new WitScript(a._Pushes.Concat(b._Pushes).ToArray());
         }
 
-        public static implicit operator Script(WitScript witScript)
+        public static implicit operator Script.Script(WitScript witScript)
         {
             if (witScript == null)
                 return null;
@@ -1081,9 +1085,9 @@ namespace NBitcoin
             return ToScript().ToString();
         }
 
-        public Script ToScript()
+        public Script.Script ToScript()
         {
-            return new Script(this._Pushes.Select(p => Op.GetPushOp(p)).ToArray());
+            return new Script.Script(this._Pushes.Select(p => Op.GetPushOp(p)).ToArray());
         }
 
         public int PushCount
@@ -1111,7 +1115,7 @@ namespace NBitcoin
             {
                 return pubKey.PublicKey.WitHash;
             }
-            Script p2sh = PayToWitScriptHashTemplate.Instance.ExtractWitScriptParameters(this);
+            Script.Script p2sh = PayToWitScriptHashTemplate.Instance.ExtractWitScriptParameters(this);
             return p2sh != null ? p2sh.WitHash : null;
         }
     }
@@ -1473,7 +1477,7 @@ namespace NBitcoin
             return AddOutput(new TxOut(money, destination));
         }
 
-        public TxOut AddOutput(Money money, Script scriptPubKey)
+        public TxOut AddOutput(Money money, Script.Script scriptPubKey)
         {
             return AddOutput(new TxOut(money, scriptPubKey));
         }
@@ -1626,7 +1630,7 @@ namespace NBitcoin
             for (int i = 0; i < this.Inputs.Count; i++)
             {
                 TxIn txin = this.Inputs[i];
-                if (Script.IsNullOrEmpty(txin.ScriptSig))
+                if (Script.Script.IsNullOrEmpty(txin.ScriptSig))
                     throw new InvalidOperationException("ScriptSigs should be filled with either previous scriptPubKeys or redeem script (for P2SH)");
                 if (assumeP2SH)
                 {

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus.Block;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using OpenExo.Networks.Consensus;
 using OpenExo.Networks.Deployments;
 using OpenExo.Networks.Policies;
@@ -89,7 +93,7 @@ namespace OpenExo.Networks
                     BIP9DeploymentsParameters.DefaultTestnetThreshold)
             };
 
-            Consensus = new NBitcoin.Consensus(
+            Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,

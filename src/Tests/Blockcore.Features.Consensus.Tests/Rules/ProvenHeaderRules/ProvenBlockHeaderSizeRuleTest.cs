@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Tests.Common;
 using FluentAssertions;

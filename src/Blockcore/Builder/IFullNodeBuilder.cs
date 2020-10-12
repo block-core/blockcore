@@ -1,6 +1,7 @@
 ﻿using System;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
+using Blockcore.Networks;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 

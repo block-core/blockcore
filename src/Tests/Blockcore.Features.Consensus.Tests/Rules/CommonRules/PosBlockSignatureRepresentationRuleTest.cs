@@ -1,4 +1,7 @@
 ﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Tests.Common;
 using NBitcoin;

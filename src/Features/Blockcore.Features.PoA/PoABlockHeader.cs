@@ -1,4 +1,5 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus.Block;
+using NBitcoin;
 
 namespace Blockcore.Features.PoA
 {

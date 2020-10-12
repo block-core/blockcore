@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

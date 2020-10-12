@@ -1,4 +1,4 @@
-﻿namespace NBitcoin.Rules
+﻿namespace Blockcore.Consensus.Rules
 {
     public interface IConsensusRuleBase
     {

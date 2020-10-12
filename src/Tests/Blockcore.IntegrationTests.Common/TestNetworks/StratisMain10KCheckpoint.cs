@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using NBitcoin;

@@ -1,4 +1,7 @@
-﻿namespace NBitcoin
+﻿using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+
+namespace Blockcore.Base.Deployments
 {
     /// <summary>
     /// Contains the <see cref="ScriptVerify" /> and <see cref="Transaction.LockTimeFlags" /> flags to set

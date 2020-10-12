@@ -1,4 +1,6 @@
 ﻿using System;
+using Blockcore.Consensus.Script;
+using Blockcore.Networks;
 
 namespace NBitcoin.BuilderExtensions
 {

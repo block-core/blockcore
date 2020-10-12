@@ -1,6 +1,8 @@
-﻿using Blockcore.EventBus;
+﻿using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Transaction;
+using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;
-using Blockcore.Primitives;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;

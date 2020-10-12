@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using NBitcoin;
 
-namespace NBitcoin
+namespace Blockcore.P2P
 {
     public static class IpExtensions
     {

@@ -10,6 +10,8 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;

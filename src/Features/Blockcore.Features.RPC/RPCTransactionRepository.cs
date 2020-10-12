@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 
 namespace Blockcore.Features.RPC

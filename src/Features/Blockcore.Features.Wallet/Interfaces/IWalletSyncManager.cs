@@ -1,4 +1,7 @@
 ﻿using System;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Interfaces

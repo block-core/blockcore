@@ -1,4 +1,7 @@
 ﻿using System;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Utilities;
 using NBitcoin;
 

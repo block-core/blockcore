@@ -1,4 +1,6 @@
-﻿using Blockcore.Features.MemoryPool;
+﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Features.MemoryPool;
 using NBitcoin;
 
 namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers

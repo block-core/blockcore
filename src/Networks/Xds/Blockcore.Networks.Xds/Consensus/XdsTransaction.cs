@@ -1,4 +1,5 @@
 using System.IO;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 using NBitcoin.Crypto;
 

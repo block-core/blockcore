@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Consensus.Script;
+using Blockcore.Networks;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;

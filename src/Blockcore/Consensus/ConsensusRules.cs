@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NBitcoin.Rules;
+using Blockcore.Consensus.Rules;
 
-namespace NBitcoin
+namespace Blockcore.Consensus
 {
     public class ConsensusRules
     {

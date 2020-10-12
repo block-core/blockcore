@@ -1,4 +1,8 @@
 ﻿using System;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 
 namespace Blockcore.Base.Deployments

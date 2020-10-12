@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+using Blockcore.P2P;
+using NBitcoin;
 using NBitcoin.DataEncoders;
-using NBitcoin.Networks;
 using NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.Networks
 {
     public enum Base58Type
     {
@@ -565,9 +571,9 @@ namespace NBitcoin
             return new BitcoinScriptAddress(base58, this);
         }
 
-        public OpenAsset.BitcoinAssetId CreateAssetId(string base58)
+        public NBitcoin.OpenAsset.BitcoinAssetId CreateAssetId(string base58)
         {
-            return new OpenAsset.BitcoinAssetId(base58, this);
+            return new NBitcoin.OpenAsset.BitcoinAssetId(base58, this);
         }
 
         private BitcoinPassphraseCode CreatePassphraseCode(string base58)
@@ -771,7 +777,7 @@ namespace NBitcoin
 
             if (string.IsNullOrWhiteSpace(iconResource))
             {
-                assembly = typeof(NBitcoin.Network).Assembly;
+                assembly = typeof(Network).Assembly;
                 iconResource = assembly.GetManifestResourceNames().FirstOrDefault(r => r.Contains("icon"));
             }
 

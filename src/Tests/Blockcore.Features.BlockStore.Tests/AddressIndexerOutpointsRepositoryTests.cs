@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Blockcore.Configuration.Logging;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using LiteDB;
 using NBitcoin;

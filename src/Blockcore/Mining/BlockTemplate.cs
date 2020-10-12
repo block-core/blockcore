@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Consensus.Block;
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Blockcore.Mining

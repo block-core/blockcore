@@ -1,5 +1,6 @@
 ﻿using System;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
 using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

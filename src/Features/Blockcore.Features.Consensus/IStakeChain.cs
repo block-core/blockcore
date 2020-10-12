@@ -1,4 +1,6 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using NBitcoin;
 
 namespace Blockcore.Features.Consensus
 {

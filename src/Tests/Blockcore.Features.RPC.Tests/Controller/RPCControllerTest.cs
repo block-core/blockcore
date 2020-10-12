@@ -7,6 +7,7 @@ using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Features.RPC.Controllers;
 using Blockcore.Features.RPC.Models;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities.JsonErrors;

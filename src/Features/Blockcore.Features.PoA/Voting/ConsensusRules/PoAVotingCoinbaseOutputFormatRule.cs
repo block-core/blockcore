@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.Transaction;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

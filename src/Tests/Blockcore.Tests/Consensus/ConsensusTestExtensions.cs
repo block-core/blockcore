@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;
 using NBitcoin;

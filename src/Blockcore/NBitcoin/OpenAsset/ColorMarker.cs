@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using NBitcoin.DataEncoders;
 
 namespace NBitcoin.OpenAsset

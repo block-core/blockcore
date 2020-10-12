@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Types;
 using NBitcoin;

@@ -1,4 +1,6 @@
-﻿namespace NBitcoin
+﻿using Blockcore.Consensus.Script;
+
+namespace NBitcoin
 {
     /// <summary>
     /// Represent any type which represent an underlying ScriptPubKey

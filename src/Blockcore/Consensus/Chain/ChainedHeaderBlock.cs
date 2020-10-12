@@ -1,7 +1,7 @@
-﻿using Blockcore.Utilities;
-using NBitcoin;
+﻿using Blockcore.Consensus.Block;
+using Blockcore.Utilities;
 
-namespace Blockcore.Primitives
+namespace Blockcore.Consensus.Chain
 {
     /// <summary>
     /// Structure made of a block and its chained header.
@@ -9,7 +9,7 @@ namespace Blockcore.Primitives
     public sealed class ChainedHeaderBlock
     {
         /// <summary>The block.</summary>
-        public Block Block { get; private set; }
+        public Block.Block Block { get; private set; }
 
         /// <summary>Chained header of the <see cref="Block"/>.</summary>
         public ChainedHeader ChainedHeader { get; private set; }
@@ -19,7 +19,7 @@ namespace Blockcore.Primitives
         /// </summary>
         /// <param name="block">The block can be <c>null</c>.</param>
         /// <param name="chainedHeader">Chained header of the <paramref name="block"/>.</param>
-        public ChainedHeaderBlock(Block block, ChainedHeader chainedHeader)
+        public ChainedHeaderBlock(Block.Block block, ChainedHeader chainedHeader)
         {
             Guard.NotNull(chainedHeader, nameof(chainedHeader));
 

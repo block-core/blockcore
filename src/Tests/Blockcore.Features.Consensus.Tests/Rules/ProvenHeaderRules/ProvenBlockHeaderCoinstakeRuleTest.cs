@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Tests.Common;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Blockcore.Consensus.Transaction;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 using Blockcore.Controllers.Models;

@@ -1,4 +1,7 @@
-﻿namespace NBitcoin
+﻿using Blockcore.Consensus.Script;
+using Blockcore.Networks;
+
+namespace NBitcoin
 {
     public abstract class BitcoinExtKeyBase : Base58Data, IDestination
     {

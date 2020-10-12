@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Transaction;
+using NBitcoin;
 using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// A factory to create protocol types.
@@ -16,12 +19,12 @@ namespace NBitcoin
         /// <summary>
         /// The <see cref="Block"/> type.
         /// </summary>
-        private readonly TypeInfo blockType = typeof(Block).GetTypeInfo();
+        private readonly TypeInfo blockType = typeof(Block.Block).GetTypeInfo();
 
         /// <summary>
         /// The <see cref="Transaction"/> type.
         /// </summary>
-        private readonly TypeInfo transactionType = typeof(Transaction).GetTypeInfo();
+        private readonly TypeInfo transactionType = typeof(Transaction.Transaction).GetTypeInfo();
 
         public ConsensusProtocol Protocol { get; set; }
 
@@ -83,10 +86,10 @@ namespace NBitcoin
         /// <summary>
         /// Create a <see cref="Block"/> instance.
         /// </summary>
-        public virtual Block CreateBlock()
+        public virtual Block.Block CreateBlock()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return new Block(this.CreateBlockHeader());
+            return new Block.Block(this.CreateBlockHeader());
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -103,17 +106,17 @@ namespace NBitcoin
         /// <summary>
         /// Create a <see cref="Transaction"/> instance.
         /// </summary>
-        public virtual Transaction CreateTransaction()
+        public virtual Transaction.Transaction CreateTransaction()
         {
-            return new Transaction();
+            return new Transaction.Transaction();
         }
 
         /// <summary>
         /// Create a <see cref="Transaction"/> instance from a hex string representation.
         /// </summary>
-        public virtual Transaction CreateTransaction(string hex)
+        public virtual Transaction.Transaction CreateTransaction(string hex)
         {
-            var transaction = new Transaction();
+            var transaction = new Transaction.Transaction();
             transaction.FromBytes(Encoders.Hex.DecodeData(hex));
             return transaction;
         }
@@ -121,9 +124,9 @@ namespace NBitcoin
         /// <summary>
         /// Create a <see cref="Transaction"/> instance from a byte array representation.
         /// </summary>
-        public virtual Transaction CreateTransaction(byte[] bytes)
+        public virtual Transaction.Transaction CreateTransaction(byte[] bytes)
         {
-            var transaction = new Transaction();
+            var transaction = new Transaction.Transaction();
             transaction.FromBytes(bytes);
             return transaction;
         }
@@ -131,8 +134,8 @@ namespace NBitcoin
 
     public class ConsensusProtocol
     {
-        public uint ProtocolVersion { get; set; } = Protocol.ProtocolVersion.FEEFILTER_VERSION;
+        public uint ProtocolVersion { get; set; } = NBitcoin.Protocol.ProtocolVersion.FEEFILTER_VERSION;
 
-        public uint MinProtocolVersion { get; set; } = Protocol.ProtocolVersion.SENDHEADERS_VERSION;
+        public uint MinProtocolVersion { get; set; } = NBitcoin.Protocol.ProtocolVersion.SENDHEADERS_VERSION;
     }
 }

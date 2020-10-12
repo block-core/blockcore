@@ -2,9 +2,13 @@
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Blockcore.Configuration;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.WalletWatchOnly.Interfaces;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 

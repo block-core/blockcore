@@ -1,4 +1,7 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json.Linq;
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.Wallet.Types;
 using NBitcoin;
 

@@ -1,4 +1,5 @@
-﻿using Blockcore.Utilities;
+﻿using Blockcore.Consensus.Chain;
+using Blockcore.Utilities;
 using NBitcoin;
 
 namespace Blockcore.Features.BlockStore.Pruning

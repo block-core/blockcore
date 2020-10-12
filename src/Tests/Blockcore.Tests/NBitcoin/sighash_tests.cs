@@ -1,4 +1,7 @@
 ﻿using System;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using NBitcoin.DataEncoders;
 using Xunit;

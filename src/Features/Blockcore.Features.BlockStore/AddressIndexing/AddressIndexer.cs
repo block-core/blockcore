@@ -11,14 +11,17 @@ using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
-using Blockcore.Primitives;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using Script = NBitcoin.Script;
+using Script = Blockcore.Consensus.Script.Script;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
 {

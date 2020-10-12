@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using Blockcore.Consensus.Block;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using NBitcoin.DataEncoders;
 using Xunit;

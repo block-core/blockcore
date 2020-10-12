@@ -3,6 +3,8 @@ using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;

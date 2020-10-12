@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using NBitcoin;
 using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Block
 {
     /// <summary>
     /// A representation of a block signature.

@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
 using NBitcoin.DataEncoders;
 
 namespace NBitcoin.Tests

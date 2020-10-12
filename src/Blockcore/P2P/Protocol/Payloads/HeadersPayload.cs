@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.Block;
 using NBitcoin;
 using NBitcoin.Protocol;
 

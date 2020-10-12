@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Networks;
 using NBitcoin.BitcoinCore;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Script
 {
     /// <summary>
     /// Injected proxy to <see cref="StandardScripts"/>.
@@ -17,12 +18,12 @@ namespace NBitcoin
             StandardScripts.RegisterStandardScriptTemplate(scriptTemplate);
         }
 
-        public virtual bool IsStandardTransaction(Transaction tx, Network network)
+        public virtual bool IsStandardTransaction(Transaction.Transaction tx, Network network)
         {
             return StandardScripts.IsStandardTransaction(tx, network);
         }
 
-        public virtual bool AreOutputsStandard(Network network, Transaction tx)
+        public virtual bool AreOutputsStandard(Network network, Transaction.Transaction tx)
         {
             return StandardScripts.AreOutputsStandard(network, tx);
         }
@@ -37,7 +38,7 @@ namespace NBitcoin
             return StandardScripts.IsStandardScriptPubKey(network, scriptPubKey);
         }
 
-        public virtual bool AreInputsStandard(Network network, Transaction tx, CoinsView coinsView)
+        public virtual bool AreInputsStandard(Network network, Transaction.Transaction tx, CoinsView coinsView)
         {
             return StandardScripts.AreInputsStandard(network, tx, coinsView);
         }

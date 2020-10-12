@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;

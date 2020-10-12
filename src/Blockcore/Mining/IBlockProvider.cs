@@ -1,4 +1,7 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Script;
+using NBitcoin;
 
 namespace Blockcore.Mining
 {

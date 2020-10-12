@@ -13,6 +13,13 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Specialized;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using OpenExo.Networks.Consensus;
 using OpenExo.Networks.Setup;
 using OpenExo.Networks.Deployments;
@@ -98,7 +105,7 @@ namespace OpenExo.Networks
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
-            Consensus = new NBitcoin.Consensus(
+            Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,

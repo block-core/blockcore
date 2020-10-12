@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;

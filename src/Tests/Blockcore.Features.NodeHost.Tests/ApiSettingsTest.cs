@@ -2,6 +2,7 @@
 using Blockcore.Builder;
 using Blockcore.Configuration;
 using Blockcore.Features.Consensus;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;

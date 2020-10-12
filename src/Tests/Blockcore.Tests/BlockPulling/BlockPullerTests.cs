@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Blockcore.BlockPulling;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Tests.Common;

@@ -2,6 +2,7 @@
 using System.Linq;
 using Blockcore.Base;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.PoA.Payloads;
 using Blockcore.Interfaces;

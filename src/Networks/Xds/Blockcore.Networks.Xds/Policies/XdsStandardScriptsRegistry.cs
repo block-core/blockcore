@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 using NBitcoin.BitcoinCore;
 

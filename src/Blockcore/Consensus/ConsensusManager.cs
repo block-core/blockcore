@@ -8,13 +8,15 @@ using Blockcore.BlockPulling;
 using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.PerformanceCounters.ConsensusManager;
 using Blockcore.Consensus.ValidationResults;
 using Blockcore.Consensus.Validators;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.P2P.Peer;
-using Blockcore.Primitives;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
@@ -315,7 +317,7 @@ namespace Blockcore.Consensus
         }
 
         /// <inheritdoc />
-        public async Task<ChainedHeader> BlockMinedAsync(Block block, bool assumeValid = false)
+        public async Task<ChainedHeader> BlockMinedAsync(Block.Block block, bool assumeValid = false)
         {
             Guard.NotNull(block, nameof(block));
 
@@ -714,7 +716,7 @@ namespace Blockcore.Consensus
             while (current != fork)
             {
                 // Access the block before rewinding.
-                Block block = current.Block;
+                Block.Block block = current.Block;
 
                 if (block == null)
                 {
@@ -1075,7 +1077,7 @@ namespace Blockcore.Consensus
         }
 
         /// <summary>Method that is provided as a callback to <see cref="IBlockPuller"/>.</summary>
-        private void BlockDownloaded(uint256 blockHash, Block block, int peerId)
+        private void BlockDownloaded(uint256 blockHash, Block.Block block, int peerId)
         {
             if (this.nodeLifetime.ApplicationStopping.IsCancellationRequested)
             {
@@ -1259,7 +1261,7 @@ namespace Blockcore.Consensus
                 return chainedHeaderBlock;
             }
 
-            Block block = this.blockStore.GetBlock(blockHash);
+            Block.Block block = this.blockStore.GetBlock(blockHash);
             if (block != null)
             {
                 var newBlockPair = new ChainedHeaderBlock(block, chainedHeaderBlock.ChainedHeader);
@@ -1294,7 +1296,7 @@ namespace Blockcore.Consensus
             List<uint256> getFromStore = chainedHeaderBlocks.Where(kv => kv.Value != null && kv.Value.Block == null).Select(kv => kv.Key).ToList();
 
             // Read those blocks from store and create new chained header block entries for them.
-            foreach ((Block block, int index) in this.blockStore.GetBlocks(getFromStore).Select((b, n) => (b, n)))
+            foreach ((Block.Block block, int index) in this.blockStore.GetBlocks(getFromStore).Select((b, n) => (b, n)))
                 chainedHeaderBlocks[getFromStore[index]] = new ChainedHeaderBlock(block, chainedHeaderBlocks[getFromStore[index]].ChainedHeader);
 
             // Return the blocks in the requested order.

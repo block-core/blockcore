@@ -19,6 +19,7 @@ using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces.UI;
 using Blockcore.Mining;
+using Blockcore.Networks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

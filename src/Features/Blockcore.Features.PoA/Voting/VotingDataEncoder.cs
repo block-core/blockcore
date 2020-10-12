@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

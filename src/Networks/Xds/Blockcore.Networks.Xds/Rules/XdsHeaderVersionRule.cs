@@ -1,5 +1,6 @@
 ﻿using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Utilities;

@@ -1,4 +1,5 @@
 ﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Microsoft.Extensions.Logging;

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using NBitcoin;

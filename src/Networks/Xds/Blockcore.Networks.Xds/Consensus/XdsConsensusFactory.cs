@@ -2,6 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 

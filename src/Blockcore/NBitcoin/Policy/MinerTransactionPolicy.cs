@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Consensus.Transaction;
 
 namespace NBitcoin.Policy
 {

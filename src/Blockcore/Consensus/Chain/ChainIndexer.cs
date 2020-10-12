@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Networks;
+using NBitcoin;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Chain
 {
     /// <summary>
     /// An indexer that provides methods to query the best chain (the chain that is validated by the full consensus rules)

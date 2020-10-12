@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.Script;
 using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Types

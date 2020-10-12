@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Blockcore.Base;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;

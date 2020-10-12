@@ -1,6 +1,7 @@
 ﻿using System;
+using NBitcoin;
 
-namespace NBitcoin
+namespace Blockcore.Base.Deployments
 {
     public class BIP9DeploymentsParameters
     {

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Consensus.Block;
+using NBitcoin;
 
-namespace NBitcoin
+namespace Blockcore.Interfaces
 {
     public interface INBitcoinBlockRepository
     {

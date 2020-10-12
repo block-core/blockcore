@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 

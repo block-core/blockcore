@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Reflection;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.OpenAsset;
 using Newtonsoft.Json;

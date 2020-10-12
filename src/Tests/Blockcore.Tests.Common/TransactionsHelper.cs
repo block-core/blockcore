@@ -1,5 +1,10 @@
 ﻿using System;
 using Blockcore.Base.Deployments;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using FluentAssertions;
 using NBitcoin;

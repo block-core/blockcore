@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Reflection;
+using Blockcore.Consensus.Block;
 using NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// A default object factory to create instances that are not part of the types

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Blockcore.Consensus.Script;
+using Blockcore.Networks;
 using NBitcoin;
 using Newtonsoft.Json;
 using Blockcore.Utilities.JsonConverters;

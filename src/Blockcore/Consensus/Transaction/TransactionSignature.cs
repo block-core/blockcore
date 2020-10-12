@@ -1,12 +1,15 @@
 ﻿using System;
+using Blockcore.Consensus.Script;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Transaction
 {
     public class TransactionSignature
     {
-        private static readonly TransactionSignature _Empty = new TransactionSignature(new ECDSASignature(BouncyCastle.Math.BigInteger.ValueOf(0), BouncyCastle.Math.BigInteger.ValueOf(0)), SigHash.All);
+        private static readonly TransactionSignature _Empty = new TransactionSignature(new ECDSASignature(NBitcoin.BouncyCastle.Math.BigInteger.ValueOf(0), NBitcoin.BouncyCastle.Math.BigInteger.ValueOf(0)), SigHash.All);
         public static TransactionSignature Empty
         {
             get
@@ -112,12 +115,12 @@ namespace NBitcoin
             return (67 <= length && length <= 80) || length == 9; //9 = Empty signature
         }
 
-        public bool Check(Network network, PubKey pubKey, Script scriptPubKey, IndexedTxIn txIn, ScriptVerify verify = ScriptVerify.Standard)
+        public bool Check(Network network, PubKey pubKey, Script.Script scriptPubKey, IndexedTxIn txIn, ScriptVerify verify = ScriptVerify.Standard)
         {
             return Check(network, pubKey, scriptPubKey, txIn.Transaction, txIn.Index, verify);
         }
 
-        public bool Check(Network network, PubKey pubKey, Script scriptPubKey, Transaction tx, uint nIndex, ScriptVerify verify = ScriptVerify.Standard)
+        public bool Check(Network network, PubKey pubKey, Script.Script scriptPubKey, Transaction tx, uint nIndex, ScriptVerify verify = ScriptVerify.Standard)
         {
             return new ScriptEvaluationContext(network)
             {

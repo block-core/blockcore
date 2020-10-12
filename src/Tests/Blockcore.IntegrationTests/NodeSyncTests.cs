@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Consensus.Block;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
@@ -31,7 +32,7 @@ namespace Blockcore.IntegrationTests
             {
                 this.Name = Guid.NewGuid().ToString();
 
-                Type consensusType = typeof(NBitcoin.Consensus);
+                Type consensusType = typeof(Consensus.Consensus);
                 consensusType.GetProperty("MaxReorgLength").SetValue(this.Consensus, (uint)10);
             }
         }

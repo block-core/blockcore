@@ -5,6 +5,7 @@ using Blockcore.AsyncWork;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Connection;
+using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

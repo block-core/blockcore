@@ -1,4 +1,6 @@
 ﻿using System;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;

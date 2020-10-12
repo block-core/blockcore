@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NBitcoin
+namespace Blockcore.Base.Deployments
 {
     public class BuriedDeploymentsArray
     {

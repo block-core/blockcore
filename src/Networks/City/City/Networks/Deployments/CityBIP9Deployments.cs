@@ -1,3 +1,5 @@
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus.Script;
 using NBitcoin;
 
 namespace City.Networks.Deployments

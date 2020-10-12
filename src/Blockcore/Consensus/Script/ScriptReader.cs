@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NBitcoin;
 using NBitcoin.DataEncoders;
 using ooo = NBitcoin.BouncyCastle.Math;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Script
 {
     public class Op
     {

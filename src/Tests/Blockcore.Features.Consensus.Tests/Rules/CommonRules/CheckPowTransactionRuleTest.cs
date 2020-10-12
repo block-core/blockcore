@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using NBitcoin;
 using Xunit;

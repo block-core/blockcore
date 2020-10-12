@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Transaction;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Block
 {
     [Flags]
     public enum BlockFlag //block index flags
@@ -167,7 +171,7 @@ namespace NBitcoin
     /// <summary>
     /// A Proof Of Stake transaction.
     /// </summary>
-    public class PosTransaction : Transaction, IPosTransactionWithTime
+    public class PosTransaction : Transaction.Transaction, IPosTransactionWithTime
     {
         private uint nTime = Utils.DateTimeToUnixTime(DateTime.UtcNow);
 
@@ -360,19 +364,19 @@ namespace NBitcoin
         }
 
         /// <inheritdoc />
-        public override Transaction CreateTransaction()
+        public override Transaction.Transaction CreateTransaction()
         {
             return new PosTransaction();
         }
 
         /// <inheritdoc />
-        public override Transaction CreateTransaction(string hex)
+        public override Transaction.Transaction CreateTransaction(string hex)
         {
             return new PosTransaction(hex, this);
         }
 
         /// <inheritdoc />
-        public override Transaction CreateTransaction(byte[] bytes)
+        public override Transaction.Transaction CreateTransaction(byte[] bytes)
         {
             return new PosTransaction(bytes);
         }
@@ -485,7 +489,7 @@ namespace NBitcoin
         /// <para>In PoS blocks, coinstake transaction is the second transaction in the block.</para>
         /// <para>In PoW there isn't a coinstake transaction, return coinbase instead to be able to compute stake modifier for the next eventual PoS block.</para>
         /// </remarks>
-        public Transaction GetProtocolTransaction()
+        public Transaction.Transaction GetProtocolTransaction()
         {
             return (this.Transactions.Count > 1 && this.Transactions[1].IsCoinStake) ? this.Transactions[1] : this.Transactions[0];
         }

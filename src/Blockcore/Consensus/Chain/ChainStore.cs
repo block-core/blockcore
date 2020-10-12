@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.Crypto;
+using Blockcore.Consensus.Block;
+using NBitcoin;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Chain
 {
     public interface IChainStore
     {

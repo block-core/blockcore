@@ -1,4 +1,5 @@
 ﻿using Blockcore.Base;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Interfaces;

@@ -1,10 +1,14 @@
 ﻿using System.IO;
 using System.Linq;
 using Blockcore.Connection;
+using Blockcore.Consensus.Block;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.RPC;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using FluentAssertions.Common;

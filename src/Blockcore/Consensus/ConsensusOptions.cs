@@ -1,6 +1,6 @@
-﻿using NBitcoin.Protocol;
+﻿using Blockcore.Networks;
 
-namespace NBitcoin
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// An extension to <see cref="Consensus"/> to enable additional options to the consensus data.

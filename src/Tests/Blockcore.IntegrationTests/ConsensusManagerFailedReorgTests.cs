@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Consensus.Chain;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
@@ -6,7 +7,6 @@ using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.IntegrationTests.Common.TestNetworks;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
-using Blockcore.Primitives;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using Xunit;

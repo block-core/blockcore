@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;

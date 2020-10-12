@@ -1,6 +1,10 @@
 using System;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus.Block;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using Rutanio.Networks.Consensus;
 using Rutanio.Networks.Deployments;
 using Rutanio.Networks.Policies;
@@ -89,7 +93,7 @@ namespace Rutanio.Networks
                     BIP9DeploymentsParameters.DefaultTestnetThreshold)
             };
 
-            Consensus = new NBitcoin.Consensus(
+            Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,

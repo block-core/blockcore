@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Consensus.Script;
+using Blockcore.Consensus.Transaction;
 
 namespace NBitcoin.Policy
 {

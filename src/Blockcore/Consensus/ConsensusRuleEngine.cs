@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using Blockcore.Base;
 using Blockcore.Base.Deployments;
 using Blockcore.Configuration.Settings;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.PerformanceCounters.Rules;
 using Blockcore.Consensus.Rules;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -158,7 +161,7 @@ namespace Blockcore.Consensus
         }
 
         /// <inheritdoc/>
-        public virtual ValidationContext IntegrityValidation(ChainedHeader header, Block block)
+        public virtual ValidationContext IntegrityValidation(ChainedHeader header, Block.Block block)
         {
             Guard.NotNull(header, nameof(header));
             Guard.NotNull(block, nameof(block));
@@ -172,7 +175,7 @@ namespace Blockcore.Consensus
         }
 
         /// <inheritdoc/>
-        public virtual async Task<ValidationContext> FullValidationAsync(ChainedHeader header, Block block)
+        public virtual async Task<ValidationContext> FullValidationAsync(ChainedHeader header, Block.Block block)
         {
             Guard.NotNull(header, nameof(header));
             Guard.NotNull(block, nameof(block));
@@ -192,7 +195,7 @@ namespace Blockcore.Consensus
         }
 
         /// <inheritdoc/>
-        public virtual async Task<ValidationContext> PartialValidationAsync(ChainedHeader header, Block block)
+        public virtual async Task<ValidationContext> PartialValidationAsync(ChainedHeader header, Block.Block block)
         {
             Guard.NotNull(header, nameof(header));
             Guard.NotNull(block, nameof(block));

@@ -6,6 +6,8 @@ using System.Net;
 using System.Security;
 using Blockcore.Connection;
 using Blockcore.Connection.Broadcasting;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Transaction;
 using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Database;

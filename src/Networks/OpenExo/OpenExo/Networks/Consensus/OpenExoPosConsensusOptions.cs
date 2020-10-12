@@ -1,4 +1,6 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus;
+using Blockcore.Networks;
+using NBitcoin;
 
 
 namespace OpenExo.Networks.Consensus

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Blockcore.Consensus.TransactionInfo;
 
 namespace NBitcoin.Protocol.Payloads
 {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using DBreeze;

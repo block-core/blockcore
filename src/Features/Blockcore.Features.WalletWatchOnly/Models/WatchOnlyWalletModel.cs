@@ -4,6 +4,7 @@ using NBitcoin;
 using Newtonsoft.Json;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.Wallet;
+using Blockcore.Networks;
 using Blockcore.Utilities.JsonConverters;
 
 namespace Blockcore.Features.WalletWatchOnly.Models

@@ -1,6 +1,11 @@
 using System;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using City.Networks.Consensus;
 using City.Networks.Deployments;
 using City.Networks.Policies;
@@ -81,7 +86,7 @@ namespace City.Networks
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
-            Consensus = new NBitcoin.Consensus(
+            Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,

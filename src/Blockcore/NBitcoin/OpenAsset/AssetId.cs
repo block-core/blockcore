@@ -1,4 +1,6 @@
 ﻿using System;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Networks;
 using NBitcoin.DataEncoders;
 
 namespace NBitcoin.OpenAsset

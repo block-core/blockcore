@@ -1,4 +1,7 @@
-﻿namespace NBitcoin
+﻿using Blockcore.Consensus.ScriptInfo;
+using NBitcoin;
+
+namespace Blockcore.Consensus.TransactionInfo
 {
     public class PrecomputedTransactionData
     {

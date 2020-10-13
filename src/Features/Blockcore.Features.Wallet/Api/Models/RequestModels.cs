@@ -121,7 +121,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         public DateTime CreationDate { get; set; }
 
         /// <summary>
-        /// Optional CoinType to overwrite the default <see cref="NBitcoin.IConsensus.CoinType"/>.
+        /// Optional CoinType to overwrite the default <see cref="Blockcore.Consensus.IConsensus.CoinType"/>.
         /// </summary>
         public int? CoinType { get; set; }
     }

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockcore.Configuration;
+using Blockcore.Networks;
 using Blockcore.Utilities;
-using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Base
+namespace Blockcore.Consensus.Chain
 {
     public interface IChainRepository : IDisposable
     {

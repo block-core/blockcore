@@ -5,6 +5,7 @@ using Blockcore.Base;
 using Blockcore.Base.Deployments;
 using Blockcore.Base.Deployments.Models;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Controllers;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;

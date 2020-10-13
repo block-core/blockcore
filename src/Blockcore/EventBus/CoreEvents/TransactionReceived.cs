@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 
 namespace Blockcore.EventBus.CoreEvents

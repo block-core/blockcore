@@ -5,6 +5,7 @@ using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Features.Consensus;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;

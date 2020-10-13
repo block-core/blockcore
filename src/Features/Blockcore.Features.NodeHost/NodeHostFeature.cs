@@ -9,6 +9,7 @@ using Blockcore.Builder.Feature;
 using Blockcore.EventBus;
 using Blockcore.Features.NodeHost.Events;
 using Blockcore.Features.NodeHost.Hubs;
+using Blockcore.Networks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

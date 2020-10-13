@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;

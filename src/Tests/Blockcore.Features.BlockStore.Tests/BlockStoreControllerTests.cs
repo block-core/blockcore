@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Blockcore.Base;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Features.BlockStore.Api.Contollers;

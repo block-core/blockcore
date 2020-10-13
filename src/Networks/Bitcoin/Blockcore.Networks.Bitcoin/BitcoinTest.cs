@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Bitcoin.Policies;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
@@ -57,7 +62,7 @@ namespace Blockcore.Networks.Bitcoin
                 MinProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION,
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: new ConsensusOptions(), // Default - set to Bitcoin params.
                 coinType: 1,

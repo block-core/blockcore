@@ -1,10 +1,12 @@
 ﻿@page "/about"
 
 @using Blockcore.Utilities.Extensions
+@using Blockcore.Networks
+@using Blockcore.Consensus.Chain
 
 @inject IFullNode FullNode
-@inject NBitcoin.Network Network
-@inject NBitcoin.ChainIndexer ChainIndexer
+@inject Network Network
+@inject ChainIndexer ChainIndexer
 @inject Blockcore.Connection.IConnectionManager ConnectionManager
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 @inject NavigationManager NavigationManager

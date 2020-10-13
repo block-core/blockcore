@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Xunit;
 

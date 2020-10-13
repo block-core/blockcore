@@ -1,4 +1,6 @@
-﻿namespace NBitcoin
+﻿using Blockcore.Networks;
+
+namespace NBitcoin
 {
     public interface IBech32Data : IBitcoinString
     {

@@ -1,4 +1,7 @@
-﻿using NBitcoin;
+﻿using Blockcore.Base.Deployments;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using NBitcoin;
 
 namespace OpenExo.Networks.Deployments
 {

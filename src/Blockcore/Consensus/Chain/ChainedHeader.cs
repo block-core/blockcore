@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Chain
 {
     /// <summary>
     /// Represents the availability state of a block.
@@ -136,7 +139,7 @@ namespace NBitcoin
         public List<ChainedHeader> Next { get; private set; }
 
         /// <summary>
-        /// Set a different header store to the default <see cref="NBitcoin.ChainStore"/>, this can be done only on genesis header (height 0).
+        /// Set a different header store to the default <see cref="Chain.ChainStore"/>, this can be done only on genesis header (height 0).
         /// </summary>
         public void SetChainStore(IChainStore chainStore)
         {

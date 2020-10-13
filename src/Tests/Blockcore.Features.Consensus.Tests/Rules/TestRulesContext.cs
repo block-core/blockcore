@@ -9,16 +9,20 @@ using Blockcore.Base.Deployments;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Features.Consensus.Rules;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.Rules;
 using Xunit.Sdk;
 
 namespace Blockcore.Features.Consensus.Tests.Rules

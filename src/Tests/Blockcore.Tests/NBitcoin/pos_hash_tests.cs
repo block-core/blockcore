@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using HashLib;
 using NBitcoin.Crypto;

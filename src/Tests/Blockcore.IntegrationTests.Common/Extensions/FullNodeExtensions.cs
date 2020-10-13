@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Blockcore.Base;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Wallet;

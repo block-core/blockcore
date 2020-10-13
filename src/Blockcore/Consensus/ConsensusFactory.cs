@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
+using NBitcoin;
 using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.Consensus
 {
     /// <summary>
     /// A factory to create protocol types.
@@ -131,8 +134,8 @@ namespace NBitcoin
 
     public class ConsensusProtocol
     {
-        public uint ProtocolVersion { get; set; } = Protocol.ProtocolVersion.FEEFILTER_VERSION;
+        public uint ProtocolVersion { get; set; } = NBitcoin.Protocol.ProtocolVersion.FEEFILTER_VERSION;
 
-        public uint MinProtocolVersion { get; set; } = Protocol.ProtocolVersion.SENDHEADERS_VERSION;
+        public uint MinProtocolVersion { get; set; } = NBitcoin.Protocol.ProtocolVersion.SENDHEADERS_VERSION;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using NBitcoin;
 

@@ -1,8 +1,11 @@
 ﻿using System;
+using Blockcore.Consensus.Chain;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Crypto;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.BlockInfo
 {
     /// <summary>
     /// Nodes collect new transactions into a block, hash them into a hash tree,

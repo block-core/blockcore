@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;

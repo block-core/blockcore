@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;
 

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using NBitcoin;

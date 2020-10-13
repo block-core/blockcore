@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Networks;
 using NBitcoin.DataEncoders;
 
 namespace NBitcoin

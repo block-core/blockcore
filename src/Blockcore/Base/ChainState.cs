@@ -1,3 +1,4 @@
+using Blockcore.Consensus.Chain;
 using NBitcoin;
 
 namespace Blockcore.Base

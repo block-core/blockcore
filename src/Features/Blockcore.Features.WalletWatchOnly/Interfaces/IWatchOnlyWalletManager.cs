@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 
 namespace Blockcore.Features.WalletWatchOnly.Interfaces

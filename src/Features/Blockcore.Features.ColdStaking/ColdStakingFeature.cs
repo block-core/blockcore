@@ -17,6 +17,7 @@ using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces.UI;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;

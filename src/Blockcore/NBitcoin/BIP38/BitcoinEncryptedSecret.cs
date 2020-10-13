@@ -6,6 +6,7 @@ using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using System.Security.Cryptography;
+using Blockcore.Networks;
 
 namespace NBitcoin
 {

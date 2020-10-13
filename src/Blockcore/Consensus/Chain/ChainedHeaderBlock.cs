@@ -1,7 +1,7 @@
-﻿using Blockcore.Utilities;
-using NBitcoin;
+﻿using Blockcore.Consensus.BlockInfo;
+using Blockcore.Utilities;
 
-namespace Blockcore.Primitives
+namespace Blockcore.Consensus.Chain
 {
     /// <summary>
     /// Structure made of a block and its chained header.

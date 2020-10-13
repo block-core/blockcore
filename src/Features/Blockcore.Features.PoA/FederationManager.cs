@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Features.PoA.Events;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

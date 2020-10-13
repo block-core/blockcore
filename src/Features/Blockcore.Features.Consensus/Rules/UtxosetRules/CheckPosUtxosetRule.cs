@@ -1,7 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

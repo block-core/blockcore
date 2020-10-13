@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Blockcore.Consensus;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin.Protocol;
 
 namespace NBitcoin

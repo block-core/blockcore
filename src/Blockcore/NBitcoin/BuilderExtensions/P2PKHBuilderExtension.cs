@@ -1,4 +1,8 @@
-﻿namespace NBitcoin.BuilderExtensions
+﻿using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+
+namespace NBitcoin.BuilderExtensions
 {
     public class P2PKHBuilderExtension : BuilderExtension
     {

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Tests.Common;
 using Xunit;
 

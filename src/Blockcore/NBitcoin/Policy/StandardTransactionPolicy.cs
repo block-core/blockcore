@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
 
 namespace NBitcoin.Policy
 {
@@ -53,7 +56,7 @@ namespace NBitcoin.Policy
         public StandardTransactionPolicy(Network network)
         {
             this.network = network;
-            this.ScriptVerify = NBitcoin.ScriptVerify.Standard;
+            this.ScriptVerify = Blockcore.Consensus.ScriptInfo.ScriptVerify.Standard;
             this.MaxTransactionSize = 100000;
             this.MaxTxFee = new FeeRate(Money.Satoshis(network.MaxTxFee));
             this.MinRelayTxFee = new FeeRate(Money.Satoshis(network.MinRelayTxFee));

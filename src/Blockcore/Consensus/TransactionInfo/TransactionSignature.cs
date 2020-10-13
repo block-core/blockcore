@@ -1,12 +1,15 @@
 ﻿using System;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.TransactionInfo
 {
     public class TransactionSignature
     {
-        private static readonly TransactionSignature _Empty = new TransactionSignature(new ECDSASignature(BouncyCastle.Math.BigInteger.ValueOf(0), BouncyCastle.Math.BigInteger.ValueOf(0)), SigHash.All);
+        private static readonly TransactionSignature _Empty = new TransactionSignature(new ECDSASignature(NBitcoin.BouncyCastle.Math.BigInteger.ValueOf(0), NBitcoin.BouncyCastle.Math.BigInteger.ValueOf(0)), SigHash.All);
         public static TransactionSignature Empty
         {
             get

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Blockcore.Connection;
 using Blockcore.Controllers.Models;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities.Extensions;

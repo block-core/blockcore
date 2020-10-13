@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Configuration;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Networks;
 using Blockcore.Utilities;
+using NBitcoin;
 using RocksDbSharp;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.Chain
 {
     public class RocksdbChainStore : IChainStore, IDisposable
     {

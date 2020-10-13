@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Validators;
-using Blockcore.Primitives;
 using Moq;
 using NBitcoin;
 using Xunit;

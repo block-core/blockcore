@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NBitcoin
+namespace Blockcore.P2P
 {
     /// <summary>
     /// Represent a DNS seed.

@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.Formatters;
 using NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.TransactionInfo
 {
     public class OutPoint : IBitcoinSerializable
     {

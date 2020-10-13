@@ -1,5 +1,8 @@
 ﻿using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Networks;

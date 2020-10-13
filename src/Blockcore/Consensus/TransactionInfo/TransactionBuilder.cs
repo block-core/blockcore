@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.BuilderExtensions;
 using NBitcoin.Crypto;
 using NBitcoin.OpenAsset;
 using NBitcoin.Policy;
-using Builder = System.Func<NBitcoin.TransactionBuilder.TransactionBuildingContext, NBitcoin.IMoney>;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.TransactionInfo
 {
     [Flags]
     public enum ChangeType : int
@@ -407,9 +410,9 @@ namespace NBitcoin
                 set;
             }
 
-            private readonly List<Builder> _AdditionalBuilders = new List<Builder>();
+            private readonly List<Func<TransactionBuildingContext, IMoney>> _AdditionalBuilders = new List<Func<TransactionBuildingContext, IMoney>>();
 
-            public List<Builder> AdditionalBuilders
+            public List<Func<TransactionBuildingContext, IMoney>> AdditionalBuilders
             {
                 get
                 {
@@ -528,21 +531,21 @@ namespace NBitcoin
                 return changeAmount;
             }
 
-            internal List<Builder> Builders = new List<Builder>();
+            internal List<Func<TransactionBuildingContext, IMoney>> Builders = new List<Func<TransactionBuildingContext, IMoney>>();
             internal Dictionary<OutPoint, ICoin> Coins = new Dictionary<OutPoint, ICoin>();
-            internal List<Builder> IssuanceBuilders = new List<Builder>();
-            internal Dictionary<AssetId, List<Builder>> BuildersByAsset = new Dictionary<AssetId, List<Builder>>();
+            internal List<Func<TransactionBuildingContext, IMoney>> IssuanceBuilders = new List<Func<TransactionBuildingContext, IMoney>>();
+            internal Dictionary<AssetId, List<Func<TransactionBuildingContext, IMoney>>> BuildersByAsset = new Dictionary<AssetId, List<Func<TransactionBuildingContext, IMoney>>>();
             internal Script[] ChangeScript = new Script[3];
 
             internal void Shuffle()
             {
                 Shuffle(this.Builders);
-                foreach (KeyValuePair<AssetId, List<Builder>> builders in this.BuildersByAsset)
+                foreach (KeyValuePair<AssetId, List<Func<TransactionBuildingContext, IMoney>>> builders in this.BuildersByAsset)
                     Shuffle(builders.Value);
                 Shuffle(this.IssuanceBuilders);
             }
 
-            private void Shuffle(List<Builder> builders)
+            private void Shuffle(List<Func<TransactionBuildingContext, IMoney>> builders)
             {
                 Utils.Shuffle(builders, this._Parent._Rand);
             }
@@ -919,10 +922,10 @@ namespace NBitcoin
 
             AssertOpReturn("Colored Coin");
 
-            List<Builder> builders = this.CurrentGroup.BuildersByAsset.TryGet(asset.Id);
+            List<Func<TransactionBuildingContext, IMoney>> builders = this.CurrentGroup.BuildersByAsset.TryGet(asset.Id);
             if (builders == null)
             {
-                builders = new List<Builder>();
+                builders = new List<Func<TransactionBuildingContext, IMoney>>();
                 this.CurrentGroup.BuildersByAsset.Add(asset.Id, builders);
                 builders.Add(SetColoredChange);
             }
@@ -1130,7 +1133,7 @@ namespace NBitcoin
         /// </summary>
         /// <param name="sign">True if signs all inputs with the available keys</param>
         /// <returns>The transaction</returns>
-        /// <exception cref="NBitcoin.NotEnoughFundsException">Not enough funds are available</exception>
+        /// <exception cref="NotEnoughFundsException">Not enough funds are available</exception>
         public Transaction BuildTransaction(bool sign)
         {
             return BuildTransaction(sign, SigHash.All);
@@ -1142,7 +1145,7 @@ namespace NBitcoin
         /// <param name="sign">True if signs all inputs with the available keys</param>
         /// <param name="sigHash">The type of signature</param>
         /// <returns>The transaction</returns>
-        /// <exception cref="NBitcoin.NotEnoughFundsException">Not enough funds are available</exception>
+        /// <exception cref="NotEnoughFundsException">Not enough funds are available</exception>
         public Transaction BuildTransaction(bool sign, SigHash sigHash)
         {
             var ctx = new TransactionBuildingContext(this);
@@ -1164,11 +1167,11 @@ namespace NBitcoin
                 ctx.AdditionalFees = Money.Zero;
 
                 ctx.ChangeType = ChangeType.Colored;
-                foreach (Builder builder in group.IssuanceBuilders)
+                foreach (Func<TransactionBuildingContext, IMoney> builder in group.IssuanceBuilders)
                     builder(ctx);
 
-                List<KeyValuePair<AssetId, List<Builder>>> buildersByAsset = group.BuildersByAsset.ToList();
-                foreach (KeyValuePair<AssetId, List<Builder>> builders in buildersByAsset)
+                List<KeyValuePair<AssetId, List<Func<TransactionBuildingContext, IMoney>>>> buildersByAsset = group.BuildersByAsset.ToList();
+                foreach (KeyValuePair<AssetId, List<Func<TransactionBuildingContext, IMoney>>> builders in buildersByAsset)
                 {
                     IEnumerable<ColoredCoin> coins = group.Coins.Values.OfType<ColoredCoin>().Where(c => c.Amount.Id == builders.Key);
 
@@ -1214,7 +1217,7 @@ namespace NBitcoin
         private IEnumerable<ICoin> BuildTransaction(
             TransactionBuildingContext ctx,
             BuilderGroup group,
-            IEnumerable<Builder> builders,
+            IEnumerable<Func<TransactionBuildingContext, IMoney>> builders,
             IEnumerable<ICoin> coins,
             IMoney zero)
         {
@@ -1222,7 +1225,7 @@ namespace NBitcoin
             Money fees = this._TotalFee + ctx.AdditionalFees;
 
             // Replace the _SubstractFeeBuilder by another one with the fees substracts
-            List<Builder> builderList = builders.ToList();
+            List<Func<TransactionBuildingContext, IMoney>> builderList = builders.ToList();
             for (int i = 0; i < builderList.Count; i++)
             {
                 if (builderList[i].Target == this._SubstractFeeBuilder)

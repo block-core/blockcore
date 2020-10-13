@@ -1,10 +1,13 @@
 ﻿using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.Miner;
 using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
 using Blockcore.Mining;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

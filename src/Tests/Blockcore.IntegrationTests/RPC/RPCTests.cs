@@ -2,6 +2,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Blockcore.Connection;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;

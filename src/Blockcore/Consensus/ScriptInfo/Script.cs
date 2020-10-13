@@ -4,10 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.ScriptInfo
 {
     /// <summary>
     /// Script verification flags

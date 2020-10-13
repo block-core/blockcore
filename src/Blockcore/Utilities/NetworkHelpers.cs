@@ -1,6 +1,6 @@
 ﻿using System;
+using Blockcore.Networks;
 using NBitcoin;
-using NBitcoin.Networks;
 
 namespace Blockcore.Utilities
 {

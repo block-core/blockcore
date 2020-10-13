@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blockcore.Configuration;
+using Blockcore.Consensus;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Interfaces;

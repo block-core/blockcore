@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using NBitcoin.DataEncoders;
+using NBitcoin;
 
-namespace NBitcoin.Networks
+namespace Blockcore.Networks
 {
     /// <summary>
     /// A container for storing/retrieving known networks.

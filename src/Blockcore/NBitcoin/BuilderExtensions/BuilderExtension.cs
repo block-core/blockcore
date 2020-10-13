@@ -1,4 +1,7 @@
-﻿using NBitcoin.DataEncoders;
+﻿using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+using NBitcoin.DataEncoders;
 
 namespace NBitcoin.BuilderExtensions
 {

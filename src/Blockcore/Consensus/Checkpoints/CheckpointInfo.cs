@@ -1,4 +1,6 @@
-﻿namespace NBitcoin
+﻿using NBitcoin;
+
+namespace Blockcore.Consensus.Checkpoints
 {
     /// <summary>
     /// Description of checkpointed block.

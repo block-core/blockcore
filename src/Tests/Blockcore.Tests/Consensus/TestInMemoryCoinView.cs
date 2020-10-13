@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Utilities;
 using NBitcoin;

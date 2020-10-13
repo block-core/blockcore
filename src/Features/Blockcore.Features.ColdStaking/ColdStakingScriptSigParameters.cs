@@ -1,4 +1,6 @@
-﻿using NBitcoin;
+﻿using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using NBitcoin;
 
 namespace Blockcore.Features.ColdStaking
 {

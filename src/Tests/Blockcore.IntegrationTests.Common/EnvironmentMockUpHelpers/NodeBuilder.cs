@@ -14,6 +14,7 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.Runners;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.Tests.Common;
 using NBitcoin;

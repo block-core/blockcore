@@ -5,6 +5,7 @@ using System.Linq;
 using Blockcore.AsyncWork;
 using Blockcore.Broadcasters;
 using Blockcore.Connection;
+using Blockcore.Consensus.Chain;
 using Blockcore.EventBus;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Models;

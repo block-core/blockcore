@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.BlockInfo
 {
     [Flags]
     public enum BlockFlag //block index flags

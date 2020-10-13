@@ -2,6 +2,7 @@
 using Blockcore.Configuration;
 using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet;
@@ -9,6 +10,7 @@ using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Microsoft.AspNetCore.Mvc.Abstractions;

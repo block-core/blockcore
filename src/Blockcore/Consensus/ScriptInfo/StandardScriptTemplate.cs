@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+using NBitcoin;
 using NBitcoin.Crypto;
 
-namespace NBitcoin
+namespace Blockcore.Consensus.ScriptInfo
 {
     //TODO : Is*Conform can be used to parses the script
 

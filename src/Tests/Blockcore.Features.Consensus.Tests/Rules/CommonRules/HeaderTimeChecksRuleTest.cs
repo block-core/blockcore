@@ -1,6 +1,8 @@
 ﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using NBitcoin;

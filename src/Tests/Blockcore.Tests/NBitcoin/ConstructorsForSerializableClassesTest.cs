@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.BlockInfo;
 using Xunit;
 
 namespace NBitcoin.Tests

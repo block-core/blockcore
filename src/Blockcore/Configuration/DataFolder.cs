@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Utilities;
 using NBitcoin;
 

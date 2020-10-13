@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Base;
 using Blockcore.Configuration.Settings;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Validators;
-using Blockcore.Primitives;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Consensus
+namespace Blockcore.Consensus.Chain
 {
     /// <summary>
     /// Tree of chained block headers that are being claimed by the connected peers and the node itself.

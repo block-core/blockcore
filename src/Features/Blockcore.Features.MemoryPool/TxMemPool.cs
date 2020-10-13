@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Interfaces;

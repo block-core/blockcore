@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration.Settings;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;
 
-namespace Blockcore.Consensus
+namespace Blockcore.Consensus.Checkpoints
 {
     /// <summary>
     /// Interface of block header hash checkpoint provider.

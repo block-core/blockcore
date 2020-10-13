@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Consensus.Chain;
 
 namespace NBitcoin
 {

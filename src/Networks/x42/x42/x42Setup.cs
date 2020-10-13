@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.Checkpoints;
 using x42.Networks;
 using x42.Networks.Setup;
 using NBitcoin;

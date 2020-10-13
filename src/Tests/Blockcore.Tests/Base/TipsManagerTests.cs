@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Base;
+using Blockcore.Consensus.Chain;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.Networks;
 using NBitcoin.BouncyCastle.Asn1.X9;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.BouncyCastle.Math.EC;

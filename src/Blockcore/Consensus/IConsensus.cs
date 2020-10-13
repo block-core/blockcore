@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Base.Deployments;
+using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 
-namespace NBitcoin
+namespace Blockcore.Consensus
 {
     public interface IConsensus
     {

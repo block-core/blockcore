@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Bitcoin.Deployments;
@@ -10,7 +13,6 @@ using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
-using NBitcoin.Networks;
 using Xunit;
 
 namespace NBitcoin.Tests

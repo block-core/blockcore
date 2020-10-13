@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Blockcore.AsyncWork;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.Signals;
 using Blockcore.Utilities;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Chain;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;

@@ -1,6 +1,7 @@
 ﻿using System;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
 using NBitcoin;

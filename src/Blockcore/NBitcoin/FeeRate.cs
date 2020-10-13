@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Consensus.TransactionInfo;
 
 namespace NBitcoin
 {

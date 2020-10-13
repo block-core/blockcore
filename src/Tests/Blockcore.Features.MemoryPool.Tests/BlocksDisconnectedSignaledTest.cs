@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Tests.Common;

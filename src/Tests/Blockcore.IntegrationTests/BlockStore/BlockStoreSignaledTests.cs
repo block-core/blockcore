@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Connection;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore;
 using Blockcore.IntegrationTests.Common;

@@ -1,5 +1,6 @@
 ﻿using System;
 using Blockcore.Configuration.Settings;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.P2P.Protocol.Payloads;
 using NBitcoin;
@@ -22,7 +23,7 @@ namespace Blockcore.Consensus
         public ChainedHeader ChainedHeaderToValidate { get; set; }
 
         /// <summary>Downloaded or mined block to be validated.</summary>
-        public Block.Block BlockToValidate { get; set; }
+        public Block BlockToValidate { get; set; }
 
         /// <summary>If the block validation failed this will be set with the reason of failure.</summary>
         public ConsensusError Error { get; set; }

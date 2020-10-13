@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Blockcore.Builder;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;

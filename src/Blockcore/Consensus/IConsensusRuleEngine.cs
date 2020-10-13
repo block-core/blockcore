@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Blockcore.Utilities;
@@ -65,18 +66,18 @@ namespace Blockcore.Consensus
         /// <param name="header">The chained header that is going to be validated.</param>
         /// <param name="block">The block that is going to be validated.</param>
         /// <returns>Context that contains validation result related information.</returns>
-        ValidationContext IntegrityValidation(ChainedHeader header, Block.Block block);
+        ValidationContext IntegrityValidation(ChainedHeader header, Block block);
 
         /// <summary>Execute partial validation rules.</summary>
         /// <param name="header">The chained header that is going to be validated.</param>
         /// <param name="block">The block that is going to be validated.</param>
         /// <returns>Context that contains validation result related information.</returns>
-        Task<ValidationContext> PartialValidationAsync(ChainedHeader header, Block.Block block);
+        Task<ValidationContext> PartialValidationAsync(ChainedHeader header, Block block);
 
         /// <summary>Execute full validation rules.</summary>
         /// <param name="header">The chained header that is going to be validated.</param>
         /// <param name="block">The block that is going to be validated.</param>
         /// <returns>Context that contains validation result related information.</returns>
-        Task<ValidationContext> FullValidationAsync(ChainedHeader header, Block.Block block);
+        Task<ValidationContext> FullValidationAsync(ChainedHeader header, Block block);
     }
 }

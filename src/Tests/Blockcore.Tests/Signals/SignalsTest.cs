@@ -1,6 +1,6 @@
-﻿using Blockcore.Consensus.Block;
+﻿using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Signals;

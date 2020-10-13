@@ -1,5 +1,5 @@
-﻿using Blockcore.Consensus.Block;
-using Blockcore.Consensus.Script;
+﻿using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
 using NBitcoin;
 
 namespace Blockcore.Features.Consensus

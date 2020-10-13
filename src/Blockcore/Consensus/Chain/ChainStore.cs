@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using NBitcoin;
 
 namespace Blockcore.Consensus.Chain

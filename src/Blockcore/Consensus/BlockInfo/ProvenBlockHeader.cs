@@ -1,7 +1,8 @@
 ﻿using System;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 
-namespace Blockcore.Consensus.Block
+namespace Blockcore.Consensus.BlockInfo
 {
     /// <summary>
     /// <para>
@@ -43,12 +44,12 @@ namespace Blockcore.Consensus.Block
         /// <summary>
         /// Coinstake transaction.
         /// </summary>
-        private Transaction.Transaction coinstake;
+        private Transaction coinstake;
 
         /// <summary>
         /// Gets coinstake transaction.
         /// </summary>
-        public Transaction.Transaction Coinstake => this.coinstake;
+        public Transaction Coinstake => this.coinstake;
 
         /// <summary>
         /// Merkle proof that proves the coinstake tx is included in a block that is being represented by the provided header.

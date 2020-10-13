@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Base;
 using Blockcore.Configuration.Settings;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Validators;
 using Blockcore.Networks;
@@ -108,7 +108,7 @@ namespace Blockcore.Consensus.Chain
         /// <param name="chainedHeader">Chained header that represents <paramref name="block"/>.</param>
         /// <param name="block">Block data.</param>
         /// <returns><c>true</c> in the case where partial validation is required for the downloaded block, <c>false</c> otherwise.</returns>
-        bool BlockDataDownloaded(ChainedHeader chainedHeader, Block.Block block);
+        bool BlockDataDownloaded(ChainedHeader chainedHeader, Block block);
 
         /// <summary>
         /// A new list of headers are presented by a peer, the headers will try to be connected to the tree.
@@ -136,7 +136,7 @@ namespace Blockcore.Consensus.Chain
         /// <param name="block">The block.</param>
         /// <returns>Newly created and connected chained header for the specified block.</returns>
         /// <exception cref="ConsensusErrorException">Thrown if header validation failed.</exception>
-        ChainedHeader CreateChainedHeaderOfMinedBlock(Block.Block block);
+        ChainedHeader CreateChainedHeaderOfMinedBlock(Block block);
 
         /// <summary>
         /// Get the block and its chained header if it exists.
@@ -619,7 +619,7 @@ namespace Blockcore.Consensus.Chain
         }
 
         /// <inheritdoc />
-        public bool BlockDataDownloaded(ChainedHeader chainedHeader, Block.Block block)
+        public bool BlockDataDownloaded(ChainedHeader chainedHeader, Block block)
         {
             if (!chainedHeader.IsReferenceConnected)
             {
@@ -974,7 +974,7 @@ namespace Blockcore.Consensus.Chain
         }
 
         /// <inheritdoc />
-        public ChainedHeader CreateChainedHeaderOfMinedBlock(Block.Block block)
+        public ChainedHeader CreateChainedHeaderOfMinedBlock(Block block)
         {
             BlockHeader headerToBeCreated = block.Header;
             if (block is PosBlock posBlock)

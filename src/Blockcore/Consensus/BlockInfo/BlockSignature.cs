@@ -2,7 +2,7 @@
 using NBitcoin;
 using NBitcoin.DataEncoders;
 
-namespace Blockcore.Consensus.Block
+namespace Blockcore.Consensus.BlockInfo
 {
     /// <summary>
     /// A representation of a block signature.

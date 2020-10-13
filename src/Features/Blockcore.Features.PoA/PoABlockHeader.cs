@@ -1,4 +1,4 @@
-﻿using Blockcore.Consensus.Block;
+﻿using Blockcore.Consensus.BlockInfo;
 using NBitcoin;
 
 namespace Blockcore.Features.PoA

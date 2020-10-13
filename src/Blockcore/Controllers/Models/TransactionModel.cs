@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Script;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Converters;
 using Blockcore.Networks;
 using NBitcoin;
@@ -168,7 +168,7 @@ namespace Blockcore.Controllers.Models
         /// <param name="prevOut">The previous output being used as an input.</param>
         /// <param name="sequence">The transaction's sequence number.</param>
         /// <param name="scriptSig">The scriptSig</param>
-        public Vin(OutPoint prevOut, Sequence sequence, Consensus.Script.Script scriptSig)
+        public Vin(OutPoint prevOut, Sequence sequence, Consensus.ScriptInfo.Script scriptSig)
         {
             if (prevOut.Hash == uint256.Zero)
             {
@@ -253,8 +253,8 @@ namespace Blockcore.Controllers.Models
         /// <summary>
         /// Initializes a transaction <see cref="Script"/>, which contains the assembly and a hexadecimal representation of the script.
         /// </summary>
-        /// <param name="script">A <see cref="Consensus.Script.Script"/>.</param>
-        public Script(Consensus.Script.Script script)
+        /// <param name="script">A <see cref="Consensus.ScriptInfo.Script"/>.</param>
+        public Script(Consensus.ScriptInfo.Script script)
         {
             this.Asm = script.ToString();
             this.Hex = Encoders.Hex.EncodeData(script.ToBytes());
@@ -283,7 +283,7 @@ namespace Blockcore.Controllers.Models
         /// </summary>
         /// <param name="script">The script.</param>
         /// <param name="network">The network where the transaction was conducted.</param>
-        public ScriptPubKey(Consensus.Script.Script script, Network network) : base(script)
+        public ScriptPubKey(Consensus.ScriptInfo.Script script, Network network) : base(script)
         {
             var destinations = new List<TxDestination> { script.GetDestination(network) };
             this.Type = this.GetScriptType(script.FindTemplate(network));

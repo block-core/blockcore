@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Networks;
 using Blockcore.Utilities.Extensions;

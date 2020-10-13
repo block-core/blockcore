@@ -1,4 +1,4 @@
-﻿using Blockcore.Consensus.Script;
+﻿using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using NBitcoin;
@@ -9,7 +9,7 @@ namespace Blockcore.Consensus
     public class ScriptAddressReader : IScriptAddressReader
     {
         /// <inheritdoc cref="IScriptAddressReader.GetAddressFromScriptPubKey"/>
-        public string GetAddressFromScriptPubKey(Network network, Script.Script script)
+        public string GetAddressFromScriptPubKey(Network network, Script script)
         {
             ScriptTemplate scriptTemplate = network.StandardScriptsRegistry.GetTemplateFromScriptPubKey(script);
 

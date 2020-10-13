@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Blockcore.Consensus.Block;
-using Blockcore.Consensus.Script;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using Xunit;

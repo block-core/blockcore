@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
-using Blockcore.Consensus.Script;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;
-using static Blockcore.Consensus.Script.OpcodeType;
+using static Blockcore.Consensus.ScriptInfo.OpcodeType;
 
 namespace Blockcore.Features.ColdStaking
 {

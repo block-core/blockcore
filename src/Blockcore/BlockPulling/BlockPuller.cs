@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Base;
 using Blockcore.Configuration;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;

@@ -6,8 +6,8 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Script;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin.Protocol;
 
 namespace NBitcoin

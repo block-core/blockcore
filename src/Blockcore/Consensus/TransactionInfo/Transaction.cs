@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.Crypto;
@@ -11,7 +11,7 @@ using NBitcoin.DataEncoders;
 using NBitcoin.Formatters;
 using NBitcoin.Protocol;
 
-namespace Blockcore.Consensus.Transaction
+namespace Blockcore.Consensus.TransactionInfo
 {
     public class OutPoint : IBitcoinSerializable
     {
@@ -180,12 +180,12 @@ namespace Blockcore.Consensus.Transaction
         {
         }
 
-        public TxIn(Script.Script scriptSig)
+        public TxIn(Script scriptSig)
         {
             this.scriptSig = scriptSig;
         }
 
-        public TxIn(OutPoint prevout, Script.Script scriptSig)
+        public TxIn(OutPoint prevout, Script scriptSig)
         {
             this.prevout = prevout;
             this.scriptSig = scriptSig;
@@ -197,7 +197,7 @@ namespace Blockcore.Consensus.Transaction
         }
 
         private OutPoint prevout = new OutPoint();
-        private Script.Script scriptSig = Script.Script.Empty;
+        private Script scriptSig = Script.Empty;
         private uint nSequence = uint.MaxValue;
 
         public Sequence Sequence
@@ -224,7 +224,7 @@ namespace Blockcore.Consensus.Transaction
             }
         }
 
-        public Script.Script ScriptSig
+        public Script ScriptSig
         {
             get
             {
@@ -298,7 +298,7 @@ namespace Blockcore.Consensus.Transaction
         public static TxIn CreateCoinbase(int height)
         {
             var txin = new TxIn();
-            txin.ScriptSig = new Script.Script(Op.GetPushOp(height)) + OpcodeType.OP_0;
+            txin.ScriptSig = new Script(Op.GetPushOp(height)) + OpcodeType.OP_0;
             return txin;
         }
 
@@ -407,7 +407,7 @@ namespace Blockcore.Consensus.Transaction
             }
             var cscript = new ScriptCompressor(this._TxOut.ScriptPubKey);
             stream.ReadWrite(ref cscript);
-            if (!stream.Serializing) this._TxOut.ScriptPubKey = new Script.Script(cscript.ScriptBytes);
+            if (!stream.Serializing) this._TxOut.ScriptPubKey = new Script(cscript.ScriptBytes);
         }
 
         #endregion IBitcoinSerializable Members
@@ -431,7 +431,7 @@ namespace Blockcore.Consensus.Transaction
             }
         }
 
-        public ScriptCompressor(Script.Script script)
+        public ScriptCompressor(Script script)
         {
             this._Script = script.ToBytes(true);
         }
@@ -440,15 +440,15 @@ namespace Blockcore.Consensus.Transaction
         {
         }
 
-        public Script.Script GetScript()
+        public Script GetScript()
         {
-            return new Script.Script(this._Script);
+            return new Script(this._Script);
         }
 
         private byte[] Compress()
         {
             byte[] result = null;
-            Script.Script script = Script.Script.FromBytesUnsafe(this._Script);
+            Script script = Script.FromBytesUnsafe(this._Script);
             KeyId keyID = PayToPubkeyHashTemplate.Instance.ExtractScriptPubKeyParameters(script);
             if (keyID != null)
             {
@@ -485,7 +485,7 @@ namespace Blockcore.Consensus.Transaction
             return null;
         }
 
-        private Script.Script Decompress(uint nSize, byte[] data)
+        private Script Decompress(uint nSize, byte[] data)
         {
             switch (nSize)
             {
@@ -562,9 +562,9 @@ namespace Blockcore.Consensus.Transaction
 
     public class TxOut : IBitcoinSerializable, IDestination
     {
-        private Script.Script publicKey = Script.Script.Empty;
+        private Script publicKey = Script.Empty;
 
-        public Script.Script ScriptPubKey
+        public Script ScriptPubKey
         {
             get
             {
@@ -588,7 +588,7 @@ namespace Blockcore.Consensus.Transaction
             if (destination != null) this.ScriptPubKey = destination.ScriptPubKey;
         }
 
-        public TxOut(Money value, Script.Script scriptPubKey)
+        public TxOut(Money value, Script scriptPubKey)
         {
             this.Value = value;
             this.ScriptPubKey = scriptPubKey;
@@ -683,7 +683,7 @@ namespace Blockcore.Consensus.Transaction
             }
         }
 
-        public Script.Script ScriptSig
+        public Script ScriptSig
         {
             get
             {
@@ -713,24 +713,24 @@ namespace Blockcore.Consensus.Transaction
             set;
         }
 
-        public bool VerifyScript(Network network, Script.Script scriptPubKey, ScriptVerify scriptVerify = ScriptVerify.Standard)
+        public bool VerifyScript(Network network, Script scriptPubKey, ScriptVerify scriptVerify = ScriptVerify.Standard)
         {
             return VerifyScript(network, scriptPubKey, scriptVerify, out ScriptError unused);
         }
 
-        public bool VerifyScript(Network network, Script.Script scriptPubKey, out ScriptError error)
+        public bool VerifyScript(Network network, Script scriptPubKey, out ScriptError error)
         {
-            return Script.Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, out error);
+            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, out error);
         }
 
-        public bool VerifyScript(Network network, Script.Script scriptPubKey, ScriptVerify scriptVerify, out ScriptError error)
+        public bool VerifyScript(Network network, Script scriptPubKey, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, scriptVerify, SigHash.Undefined, out error);
+            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, null, scriptVerify, SigHash.Undefined, out error);
         }
 
-        public bool VerifyScript(Network network, Script.Script scriptPubKey, Money value, ScriptVerify scriptVerify, out ScriptError error)
+        public bool VerifyScript(Network network, Script scriptPubKey, Money value, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, value, scriptVerify, SigHash.Undefined, out error);
+            return Script.VerifyScript(network, scriptPubKey, this.Transaction, (int)this.Index, value, scriptVerify, SigHash.Undefined, out error);
         }
 
         public bool VerifyScript(Network network, ICoin coin, ScriptVerify scriptVerify = ScriptVerify.Standard)
@@ -740,7 +740,7 @@ namespace Blockcore.Consensus.Transaction
 
         public bool VerifyScript(Network network, ICoin coin, ScriptVerify scriptVerify, out ScriptError error)
         {
-            return Script.Script.VerifyScript(network, coin.TxOut.ScriptPubKey, this.Transaction, (int)this.Index, coin.TxOut.Value, scriptVerify, SigHash.Undefined, out error);
+            return Script.VerifyScript(network, coin.TxOut.ScriptPubKey, this.Transaction, (int)this.Index, coin.TxOut.Value, scriptVerify, SigHash.Undefined, out error);
         }
 
         public bool VerifyScript(Network network, ICoin coin, out ScriptError error)
@@ -756,7 +756,7 @@ namespace Blockcore.Consensus.Transaction
 
         public uint256 GetSignatureHash(Network network, ICoin coin, SigHash sigHash = SigHash.All)
         {
-            return Script.Script.SignatureHash(network, coin.GetScriptCode(network), this.Transaction, (int)this.Index, sigHash, coin.TxOut.Value, coin.GetHashVersion(network));
+            return Script.SignatureHash(network, coin.GetScriptCode(network), this.Transaction, (int)this.Index, sigHash, coin.TxOut.Value, coin.GetHashVersion(network));
         }
     }
 
@@ -842,7 +842,7 @@ namespace Blockcore.Consensus.Transaction
             return this.Where(r => r.IsTo(destination));
         }
 
-        public IEnumerable<TxOut> To(Script.Script scriptPubKey)
+        public IEnumerable<TxOut> To(Script scriptPubKey)
         {
             return this.Where(r => r.ScriptPubKey == scriptPubKey);
         }
@@ -942,7 +942,7 @@ namespace Blockcore.Consensus.Transaction
         {
         }
 
-        public WitScript(Script.Script scriptSig)
+        public WitScript(Script scriptSig)
         {
             var pushes = new List<byte[]>();
             foreach (Op op in scriptSig.ToOps())
@@ -1052,7 +1052,7 @@ namespace Blockcore.Consensus.Transaction
             return new WitScript(a._Pushes.Concat(b._Pushes).ToArray());
         }
 
-        public static implicit operator Script.Script(WitScript witScript)
+        public static implicit operator Script(WitScript witScript)
         {
             if (witScript == null)
                 return null;
@@ -1085,9 +1085,9 @@ namespace Blockcore.Consensus.Transaction
             return ToScript().ToString();
         }
 
-        public Script.Script ToScript()
+        public Script ToScript()
         {
-            return new Script.Script(this._Pushes.Select(p => Op.GetPushOp(p)).ToArray());
+            return new Script(this._Pushes.Select(p => Op.GetPushOp(p)).ToArray());
         }
 
         public int PushCount
@@ -1115,7 +1115,7 @@ namespace Blockcore.Consensus.Transaction
             {
                 return pubKey.PublicKey.WitHash;
             }
-            Script.Script p2sh = PayToWitScriptHashTemplate.Instance.ExtractWitScriptParameters(this);
+            Script p2sh = PayToWitScriptHashTemplate.Instance.ExtractWitScriptParameters(this);
             return p2sh != null ? p2sh.WitHash : null;
         }
     }
@@ -1477,7 +1477,7 @@ namespace Blockcore.Consensus.Transaction
             return AddOutput(new TxOut(money, destination));
         }
 
-        public TxOut AddOutput(Money money, Script.Script scriptPubKey)
+        public TxOut AddOutput(Money money, Script scriptPubKey)
         {
             return AddOutput(new TxOut(money, scriptPubKey));
         }
@@ -1630,7 +1630,7 @@ namespace Blockcore.Consensus.Transaction
             for (int i = 0; i < this.Inputs.Count; i++)
             {
                 TxIn txin = this.Inputs[i];
-                if (Script.Script.IsNullOrEmpty(txin.ScriptSig))
+                if (Script.IsNullOrEmpty(txin.ScriptSig))
                     throw new InvalidOperationException("ScriptSigs should be filled with either previous scriptPubKeys or redeem script (for P2SH)");
                 if (assumeP2SH)
                 {

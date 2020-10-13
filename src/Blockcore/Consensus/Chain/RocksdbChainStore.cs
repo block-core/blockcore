@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Configuration;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;

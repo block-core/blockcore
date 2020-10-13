@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool.Interfaces;

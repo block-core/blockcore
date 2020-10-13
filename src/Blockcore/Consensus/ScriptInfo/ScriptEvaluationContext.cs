@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.Crypto;
 
-namespace Blockcore.Consensus.Script
+namespace Blockcore.Consensus.ScriptInfo
 {
     public enum ScriptError
     {
@@ -69,7 +69,7 @@ namespace Blockcore.Consensus.Script
 
     public class TransactionChecker
     {
-        public TransactionChecker(Transaction.Transaction tx, int index, Money amount, PrecomputedTransactionData precomputedTransactionData)
+        public TransactionChecker(Transaction tx, int index, Money amount, PrecomputedTransactionData precomputedTransactionData)
         {
             if (tx == null)
                 throw new ArgumentNullException("tx");
@@ -79,7 +79,7 @@ namespace Blockcore.Consensus.Script
             this._PrecomputedTransactionData = precomputedTransactionData;
         }
 
-        public TransactionChecker(Transaction.Transaction tx, int index, Money amount = null)
+        public TransactionChecker(Transaction tx, int index, Money amount = null)
         {
             if (tx == null)
                 throw new ArgumentNullException("tx");
@@ -98,9 +98,9 @@ namespace Blockcore.Consensus.Script
             }
         }
 
-        private readonly Transaction.Transaction _Transaction;
+        private readonly Transaction _Transaction;
 
-        public Transaction.Transaction Transaction
+        public Transaction Transaction
         {
             get
             {
@@ -451,7 +451,7 @@ namespace Blockcore.Consensus.Script
             set;
         }
 
-        public bool VerifyScript(Script scriptSig, Script scriptPubKey, Transaction.Transaction txTo, int nIn, Money value)
+        public bool VerifyScript(Script scriptSig, Script scriptPubKey, Transaction txTo, int nIn, Money value)
         {
             return VerifyScript(scriptSig, scriptPubKey, new TransactionChecker(txTo, nIn, value));
         }
@@ -659,7 +659,7 @@ namespace Blockcore.Consensus.Script
 
         private const int MAX_SCRIPT_ELEMENT_SIZE = 520;
 
-        public bool EvalScript(Script s, Transaction.Transaction txTo, int nIn)
+        public bool EvalScript(Script s, Transaction txTo, int nIn)
         {
             return EvalScript(s, new TransactionChecker(txTo, nIn), 0);
         }
@@ -1567,7 +1567,7 @@ namespace Blockcore.Consensus.Script
 
         private bool CheckSequence(CScriptNum nSequence, TransactionChecker checker)
         {
-            Transaction.Transaction txTo = checker.Transaction;
+            Transaction txTo = checker.Transaction;
             int nIn = checker.Index;
             // Relative lock times are supported by comparing the passed
             // in operand to the sequence number of the input.
@@ -1616,7 +1616,7 @@ namespace Blockcore.Consensus.Script
 
         private bool CheckLockTime(CScriptNum nLockTime, TransactionChecker checker)
         {
-            Transaction.Transaction txTo = checker.Transaction;
+            Transaction txTo = checker.Transaction;
             int nIn = checker.Index;
             // There are two kinds of nLockTime: lock-by-blockheight
             // and lock-by-blocktime, distinguished by whether
@@ -2011,7 +2011,7 @@ namespace Blockcore.Consensus.Script
             return CheckSig(signature, pubKey, scriptPubKey, txIn.Transaction, txIn.Index);
         }
 
-        public bool CheckSig(TransactionSignature signature, PubKey pubKey, Script scriptPubKey, Transaction.Transaction txTo, uint nIn)
+        public bool CheckSig(TransactionSignature signature, PubKey pubKey, Script scriptPubKey, Transaction txTo, uint nIn)
         {
             return CheckSig(signature.ToBytes(), pubKey.ToBytes(), scriptPubKey, txTo, (int)nIn);
         }
@@ -2021,7 +2021,7 @@ namespace Blockcore.Consensus.Script
             return CheckSig(signature.ToBytes(), pubKey.ToBytes(), scriptPubKey, checker, (int)hashVersion);
         }
 
-        public bool CheckSig(byte[] vchSig, byte[] vchPubKey, Script scriptCode, Transaction.Transaction txTo, int nIn)
+        public bool CheckSig(byte[] vchSig, byte[] vchPubKey, Script scriptCode, Transaction txTo, int nIn)
         {
             return CheckSig(vchSig, vchPubKey, scriptCode, new TransactionChecker(txTo, nIn), 0);
         }

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using NBitcoin.DataEncoders;

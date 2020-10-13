@@ -1,7 +1,7 @@
 ﻿using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Connection;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.Networks;

@@ -1,4 +1,4 @@
-﻿using Blockcore.Consensus.Script;
+﻿using Blockcore.Consensus.ScriptInfo;
 
 namespace NBitcoin
 {

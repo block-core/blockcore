@@ -4,7 +4,7 @@ using System.Linq;
 using Blockcore.Base;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.RPC;

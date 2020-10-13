@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Networks;

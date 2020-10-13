@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 
-namespace Blockcore.Consensus.Script
+namespace Blockcore.Consensus.ScriptInfo
 {
     /// <summary>
     /// Script verification flags
@@ -646,7 +646,7 @@ namespace Blockcore.Consensus.Script
         }
 
         //https://en.bitcoin.it/wiki/OP_CHECKSIG
-        public static uint256 SignatureHash(Network network, ICoin coin, Transaction.Transaction txTo, SigHash nHashType = SigHash.All)
+        public static uint256 SignatureHash(Network network, ICoin coin, Transaction txTo, SigHash nHashType = SigHash.All)
         {
             IndexedTxIn input = txTo.Inputs.AsIndexedInputs().FirstOrDefault(i => i.PrevOut == coin.Outpoint);
             if (input == null)
@@ -654,13 +654,13 @@ namespace Blockcore.Consensus.Script
             return input.GetSignatureHash(network, coin, nHashType);
         }
 
-        public static uint256 SignatureHash(Network network, Script scriptCode, Transaction.Transaction txTo, int nIn, SigHash nHashType, Money amount = null, HashVersion sigversion = HashVersion.Original)
+        public static uint256 SignatureHash(Network network, Script scriptCode, Transaction txTo, int nIn, SigHash nHashType, Money amount = null, HashVersion sigversion = HashVersion.Original)
         {
             return SignatureHash(network, scriptCode, txTo, nIn, nHashType, amount, sigversion, null);
         }
 
         //https://en.bitcoin.it/wiki/OP_CHECKSIG
-        public static uint256 SignatureHash(Network network, Script scriptCode, Transaction.Transaction txTo, int nIn, SigHash nHashType, Money amount, HashVersion sigversion, PrecomputedTransactionData precomputedTransactionData)
+        public static uint256 SignatureHash(Network network, Script scriptCode, Transaction txTo, int nIn, SigHash nHashType, Money amount, HashVersion sigversion, PrecomputedTransactionData precomputedTransactionData)
         {
             if (sigversion == HashVersion.Witness)
             {
@@ -738,7 +738,7 @@ namespace Blockcore.Consensus.Script
             var scriptCopy = new Script(scriptCode._Script);
             scriptCopy.FindAndDelete(OpcodeType.OP_CODESEPARATOR);
 
-            Transaction.Transaction txCopy = network.CreateTransaction(txTo.ToBytes());
+            Transaction txCopy = network.CreateTransaction(txTo.ToBytes());
 
             //Set all TxIn script to empty string
             foreach (TxIn txin in txCopy.Inputs)
@@ -797,7 +797,7 @@ namespace Blockcore.Consensus.Script
             return preimage;
         }
 
-        internal static uint256 GetHashOutputs(Transaction.Transaction txTo)
+        internal static uint256 GetHashOutputs(Transaction txTo)
         {
             uint256 hashOutputs;
             BitcoinStream ss = CreateHashWriter(HashVersion.Witness);
@@ -809,7 +809,7 @@ namespace Blockcore.Consensus.Script
             return hashOutputs;
         }
 
-        internal static uint256 GetHashSequence(Transaction.Transaction txTo)
+        internal static uint256 GetHashSequence(Transaction txTo)
         {
             uint256 hashSequence;
             BitcoinStream ss = CreateHashWriter(HashVersion.Witness);
@@ -821,7 +821,7 @@ namespace Blockcore.Consensus.Script
             return hashSequence;
         }
 
-        internal static uint256 GetHashPrevouts(Transaction.Transaction txTo)
+        internal static uint256 GetHashPrevouts(Transaction txTo)
         {
             uint256 hashPrevouts;
             BitcoinStream ss = CreateHashWriter(HashVersion.Witness);
@@ -1098,40 +1098,40 @@ namespace Blockcore.Consensus.Script
             return compressor.ToBytes();
         }
 
-        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction.Transaction tx, int i, ScriptVerify scriptVerify = ScriptVerify.Standard, SigHash sigHash = SigHash.Undefined)
+        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction tx, int i, ScriptVerify scriptVerify = ScriptVerify.Standard, SigHash sigHash = SigHash.Undefined)
         {
             return VerifyScript(network, scriptSig, scriptPubKey, tx, i, null, scriptVerify, sigHash, out ScriptError unused);
         }
 
-        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction.Transaction tx, int i, Money value, ScriptVerify scriptVerify = ScriptVerify.Standard, SigHash sigHash = SigHash.Undefined)
+        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction tx, int i, Money value, ScriptVerify scriptVerify = ScriptVerify.Standard, SigHash sigHash = SigHash.Undefined)
         {
             return VerifyScript(network, scriptSig, scriptPubKey, tx, i, value, scriptVerify, sigHash, out ScriptError unused);
         }
 
-        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction.Transaction tx, int i, Money value, out ScriptError error)
+        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction tx, int i, Money value, out ScriptError error)
         {
             return VerifyScript(network, scriptSig, scriptPubKey, tx, i, value, ScriptVerify.Standard, SigHash.Undefined, out error);
         }
 
-        public static bool VerifyScript(Network network, Script scriptPubKey, Transaction.Transaction tx, int i, Money value, ScriptVerify scriptVerify = ScriptVerify.Standard, SigHash sigHash = SigHash.Undefined)
+        public static bool VerifyScript(Network network, Script scriptPubKey, Transaction tx, int i, Money value, ScriptVerify scriptVerify = ScriptVerify.Standard, SigHash sigHash = SigHash.Undefined)
         {
             Script scriptSig = tx.Inputs[i].ScriptSig;
             return VerifyScript(network, scriptSig, scriptPubKey, tx, i, value, scriptVerify, sigHash, out ScriptError unused);
         }
 
-        public static bool VerifyScript(Network network, Script scriptPubKey, Transaction.Transaction tx, int i, Money value, out ScriptError error)
+        public static bool VerifyScript(Network network, Script scriptPubKey, Transaction tx, int i, Money value, out ScriptError error)
         {
             Script scriptSig = tx.Inputs[i].ScriptSig;
             return VerifyScript(network, scriptSig, scriptPubKey, tx, i, value, ScriptVerify.Standard, SigHash.Undefined, out error);
         }
 
-        public static bool VerifyScript(Network network, Script scriptPubKey, Transaction.Transaction tx, int i, Money value, ScriptVerify scriptVerify, SigHash sigHash, out ScriptError error)
+        public static bool VerifyScript(Network network, Script scriptPubKey, Transaction tx, int i, Money value, ScriptVerify scriptVerify, SigHash sigHash, out ScriptError error)
         {
             Script scriptSig = tx.Inputs[i].ScriptSig;
             return VerifyScript(network, scriptSig, scriptPubKey, tx, i, value, scriptVerify, sigHash, out error);
         }
 
-        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction.Transaction tx, int i, Money value, ScriptVerify scriptVerify, SigHash sigHash, out ScriptError error)
+        public static bool VerifyScript(Network network, Script scriptSig, Script scriptPubKey, Transaction tx, int i, Money value, ScriptVerify scriptVerify, SigHash sigHash, out ScriptError error)
         {
             var eval = new ScriptEvaluationContext(network)
             {
@@ -1164,17 +1164,17 @@ namespace Blockcore.Consensus.Script
         [DllImport(LibConsensusDll, EntryPoint = "bitcoinconsensus_verify_script_with_amount", CallingConvention = CallingConvention.Cdecl)]
         private static extern int VerifyScriptConsensusWithAmount(byte[] scriptPubKey, uint scriptPubKeyLen, long amount, byte[] txTo, uint txToLen, uint nIn, ScriptVerify flags, ref BitcoinConsensusError err);
 
-        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction.Transaction tx, uint nIn, ScriptVerify flags)
+        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction tx, uint nIn, ScriptVerify flags)
         {
             return VerifyScriptConsensus(scriptPubKey, tx, nIn, flags, out BitcoinConsensusError unused);
         }
 
-        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction.Transaction tx, uint nIn, Money amount, ScriptVerify flags)
+        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction tx, uint nIn, Money amount, ScriptVerify flags)
         {
             return VerifyScriptConsensus(scriptPubKey, tx, nIn, amount, flags, out BitcoinConsensusError unused);
         }
 
-        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction.Transaction tx, uint nIn, ScriptVerify flags, out BitcoinConsensusError err)
+        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction tx, uint nIn, ScriptVerify flags, out BitcoinConsensusError err)
         {
             byte[] scriptPubKeyBytes = scriptPubKey.ToBytes();
             byte[] txToBytes = tx.ToBytes();
@@ -1183,7 +1183,7 @@ namespace Blockcore.Consensus.Script
             return valid == 1;
         }
 
-        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction.Transaction tx, uint nIn, Money amount, ScriptVerify flags, out BitcoinConsensusError err)
+        public static bool VerifyScriptConsensus(Script scriptPubKey, Transaction tx, uint nIn, Money amount, ScriptVerify flags, out BitcoinConsensusError err)
         {
             byte[] scriptPubKeyBytes = scriptPubKey.ToBytes();
             byte[] txToBytes = tx.ToBytes();
@@ -1235,7 +1235,7 @@ namespace Blockcore.Consensus.Script
             return new Script(this._Script);
         }
 
-        public static Script CombineSignatures(Network network, Script scriptPubKey, Transaction.Transaction transaction, int n, Script scriptSig1, Script scriptSig2)
+        public static Script CombineSignatures(Network network, Script scriptPubKey, Transaction transaction, int n, Script scriptSig1, Script scriptSig2)
         {
             return CombineSignatures(network, scriptPubKey, new TransactionChecker(transaction, n), new ScriptSigs()
             {

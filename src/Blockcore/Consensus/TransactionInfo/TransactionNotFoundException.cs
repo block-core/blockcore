@@ -1,7 +1,7 @@
 ﻿using System;
 using NBitcoin;
 
-namespace Blockcore.Consensus.Transaction
+namespace Blockcore.Consensus.TransactionInfo
 {
     public class TransactionNotFoundException : Exception
     {

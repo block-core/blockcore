@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using NBitcoin.BitcoinCore;
 using NBitcoin.Policy;
 
-namespace Blockcore.Consensus.Script
+namespace Blockcore.Consensus.ScriptInfo
 {
     public static class StandardScripts
     {
@@ -29,12 +29,12 @@ namespace Blockcore.Consensus.Script
                 standardTemplates.Add(scriptTemplate);
         }
 
-        public static bool IsStandardTransaction(Transaction.Transaction tx, Network network)
+        public static bool IsStandardTransaction(Transaction tx, Network network)
         {
             return new StandardTransactionPolicy(network).Check(tx, null).Length == 0;
         }
 
-        public static bool AreOutputsStandard(Network network, Transaction.Transaction tx)
+        public static bool AreOutputsStandard(Network network, Transaction tx)
         {
             return tx.Outputs.All(vout => IsStandardScriptPubKey(network, vout.ScriptPubKey));
         }
@@ -67,7 +67,7 @@ namespace Blockcore.Consensus.Script
         // script can be anything; an attacker could use a very
         // expensive-to-check-upon-redemption script like:
         //   DUP CHECKSIG DROP ... repeated 100 times... OP_1
-        public static bool AreInputsStandard(Network network, Transaction.Transaction tx, CoinsView coinsView)
+        public static bool AreInputsStandard(Network network, Transaction tx, CoinsView coinsView)
         {
             if (tx.IsCoinBase)
                 return true; // Coinbases don't use vin normally

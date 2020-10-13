@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
@@ -131,7 +131,7 @@ namespace Blockcore.Consensus.Chain
         public bool IsAssumedValid { get; set; }
 
         /// <summary>A pointer to the block data if available (this can be <c>null</c>), its availability will be represented by <see cref="BlockDataAvailability"/>.</summary>
-        public Block.Block Block { get; set; }
+        public Block Block { get; set; }
 
         /// <summary>
         /// Points to the next <see cref="ChainedHeader"/>, if a new branch of the chain is presented there can be more then one <see cref="Next"/> header.

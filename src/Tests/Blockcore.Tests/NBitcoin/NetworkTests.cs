@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Bitcoin.Deployments;

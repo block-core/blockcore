@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
@@ -36,7 +37,7 @@ namespace Blockcore.Consensus.Validators
         /// <param name="header">The chained header that is going to be validated.</param>
         /// <param name="block">The block that is going to be validated.</param>
         /// <param name="onPartialValidationCompletedAsyncCallback">A callback that is called when validation is complete.</param>
-        void StartPartialValidation(ChainedHeader header, Block.Block block, OnPartialValidationCompletedAsyncCallback onPartialValidationCompletedAsyncCallback);
+        void StartPartialValidation(ChainedHeader header, Block block, OnPartialValidationCompletedAsyncCallback onPartialValidationCompletedAsyncCallback);
 
         /// <summary>
         /// Executes the partial validation rule set on a block.
@@ -47,7 +48,7 @@ namespace Blockcore.Consensus.Validators
         /// <param name="header">The chained header that is going to be validated.</param>
         /// <param name="block">The block that is going to be validated.</param>
         /// <returns>Context that contains validation result related information.</returns>
-        Task<ValidationContext> ValidateAsync(ChainedHeader header, Block.Block block);
+        Task<ValidationContext> ValidateAsync(ChainedHeader header, Block block);
     }
 
     public interface IFullValidator
@@ -61,7 +62,7 @@ namespace Blockcore.Consensus.Validators
         /// <param name="header">The chained header that is going to be validated.</param>
         /// <param name="block">The block that is going to be validated.</param>
         /// <returns>Context that contains validation result related information.</returns>
-        Task<ValidationContext> ValidateAsync(ChainedHeader header, Block.Block block);
+        Task<ValidationContext> ValidateAsync(ChainedHeader header, Block block);
     }
 
     public interface IIntegrityValidator
@@ -76,7 +77,7 @@ namespace Blockcore.Consensus.Validators
         /// <param name="header">The chained header that is going to be validated.</param>
         /// <param name="block">The block that is going to be validated.</param>
         /// <returns>Context that contains validation result related information.</returns>
-        ValidationContext VerifyBlockIntegrity(ChainedHeader header, Block.Block block);
+        ValidationContext VerifyBlockIntegrity(ChainedHeader header, Block block);
     }
 
     /// <inheritdoc />
@@ -113,7 +114,7 @@ namespace Blockcore.Consensus.Validators
         }
 
         /// <inheritdoc />
-        public ValidationContext VerifyBlockIntegrity(ChainedHeader header, Block.Block block)
+        public ValidationContext VerifyBlockIntegrity(ChainedHeader header, Block block)
         {
             ValidationContext result = this.consensusRules.IntegrityValidation(header, block);
 
@@ -161,7 +162,7 @@ namespace Blockcore.Consensus.Validators
         }
 
         /// <inheritdoc />
-        public void StartPartialValidation(ChainedHeader header, Block.Block block, OnPartialValidationCompletedAsyncCallback onPartialValidationCompletedAsyncCallback)
+        public void StartPartialValidation(ChainedHeader header, Block block, OnPartialValidationCompletedAsyncCallback onPartialValidationCompletedAsyncCallback)
         {
             this.asyncQueue.Enqueue(new PartialValidationItem()
             {
@@ -172,7 +173,7 @@ namespace Blockcore.Consensus.Validators
         }
 
         /// <inheritdoc />
-        public async Task<ValidationContext> ValidateAsync(ChainedHeader header, Block.Block block)
+        public async Task<ValidationContext> ValidateAsync(ChainedHeader header, Block block)
         {
             ValidationContext result = await this.consensusRules.PartialValidationAsync(header, block).ConfigureAwait(false);
 
@@ -188,7 +189,7 @@ namespace Blockcore.Consensus.Validators
             public ChainedHeader ChainedHeader { get; set; }
 
             /// <summary>The block to be partially validated.</summary>
-            public Block.Block Block { get; set; }
+            public Block Block { get; set; }
 
             /// <summary>After validation a call back will be invoked asynchronously.</summary>
             public OnPartialValidationCompletedAsyncCallback PartialValidationCompletedAsyncCallback { get; set; }
@@ -214,7 +215,7 @@ namespace Blockcore.Consensus.Validators
         }
 
         /// <inheritdoc />
-        public async Task<ValidationContext> ValidateAsync(ChainedHeader header, Block.Block block)
+        public async Task<ValidationContext> ValidateAsync(ChainedHeader header, Block block)
         {
             ValidationContext result = await this.consensusRules.FullValidationAsync(header, block).ConfigureAwait(false);
 

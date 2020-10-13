@@ -1,5 +1,5 @@
 using Blockcore.Consensus;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Utilities;

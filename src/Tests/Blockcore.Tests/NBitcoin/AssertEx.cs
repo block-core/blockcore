@@ -1,33 +1,35 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.ScriptInfo;
 using NBitcoin.Crypto;
 using Xunit;
 
 namespace NBitcoin.Tests
 {
-    class AssertEx
+    internal class AssertEx
     {
         [DebuggerHidden]
         internal static void Error(string msg)
         {
             Assert.False(true, msg);
         }
+
         [DebuggerHidden]
         internal static void Equal<T>(T actual, T expected)
         {
             Assert.Equal(expected, actual);
         }
+
         [DebuggerHidden]
         internal static void CollectionEquals<T>(T[] actual, T[] expected)
         {
-            if(actual.Length != expected.Length)
+            if (actual.Length != expected.Length)
                 Assert.False(true, "Actual.Length(" + actual.Length + ") != Expected.Length(" + expected.Length + ")");
 
-            for(int i = 0; i < actual.Length; i++)
+            for (int i = 0; i < actual.Length; i++)
             {
-                if(!Equals(actual[i], expected[i]))
+                if (!Equals(actual[i], expected[i]))
                     Assert.False(true, "Actual[" + i + "](" + actual[i] + ") != Expected[" + i + "](" + expected[i] + ")");
             }
         }

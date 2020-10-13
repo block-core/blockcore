@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using NBitcoin;
 
 namespace Blockcore.Interfaces

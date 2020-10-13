@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Networks.Stratis.Policies;

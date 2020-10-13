@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using NBitcoin.Protocol;
 
 namespace Blockcore.Consensus

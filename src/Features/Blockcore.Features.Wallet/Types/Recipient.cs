@@ -1,4 +1,4 @@
-﻿using Blockcore.Consensus.Script;
+﻿using Blockcore.Consensus.ScriptInfo;
 using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Types

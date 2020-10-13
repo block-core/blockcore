@@ -9,7 +9,7 @@ using System.Text;
 using AspNetCore.Http.Extensions;
 using Blockcore.Connection;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.Miner.Api.Controllers;

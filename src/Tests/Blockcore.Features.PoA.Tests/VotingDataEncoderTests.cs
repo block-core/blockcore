@@ -2,8 +2,8 @@
 using System.Linq;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Script;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.PoA.Voting;
 using NBitcoin;
 using Xunit;

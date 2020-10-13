@@ -1,7 +1,7 @@
 ﻿using System;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Networks.Bitcoin.Rules;

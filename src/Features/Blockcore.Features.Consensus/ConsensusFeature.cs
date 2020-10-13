@@ -7,7 +7,7 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;

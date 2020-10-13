@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 
 namespace NBitcoin.BitcoinCore

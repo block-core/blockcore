@@ -8,7 +8,7 @@ using Blockcore.AsyncWork;
 using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.Validators;
 using Blockcore.Features.Miner;
 using Blockcore.Features.PoA.Voting;

@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
-using Blockcore.Consensus.Script;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

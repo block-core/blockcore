@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using Blockcore.Base;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;

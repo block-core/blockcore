@@ -1,5 +1,5 @@
 ﻿using System;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 
 namespace NBitcoin.BuilderExtensions

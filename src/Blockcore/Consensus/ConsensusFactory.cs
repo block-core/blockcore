@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using Blockcore.Consensus.Block;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 
@@ -19,12 +19,12 @@ namespace Blockcore.Consensus
         /// <summary>
         /// The <see cref="Block"/> type.
         /// </summary>
-        private readonly TypeInfo blockType = typeof(Block.Block).GetTypeInfo();
+        private readonly TypeInfo blockType = typeof(Block).GetTypeInfo();
 
         /// <summary>
         /// The <see cref="Transaction"/> type.
         /// </summary>
-        private readonly TypeInfo transactionType = typeof(Transaction.Transaction).GetTypeInfo();
+        private readonly TypeInfo transactionType = typeof(Transaction).GetTypeInfo();
 
         public ConsensusProtocol Protocol { get; set; }
 
@@ -86,10 +86,10 @@ namespace Blockcore.Consensus
         /// <summary>
         /// Create a <see cref="Block"/> instance.
         /// </summary>
-        public virtual Block.Block CreateBlock()
+        public virtual Block CreateBlock()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return new Block.Block(this.CreateBlockHeader());
+            return new Block(this.CreateBlockHeader());
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -106,17 +106,17 @@ namespace Blockcore.Consensus
         /// <summary>
         /// Create a <see cref="Transaction"/> instance.
         /// </summary>
-        public virtual Transaction.Transaction CreateTransaction()
+        public virtual Transaction CreateTransaction()
         {
-            return new Transaction.Transaction();
+            return new Transaction();
         }
 
         /// <summary>
         /// Create a <see cref="Transaction"/> instance from a hex string representation.
         /// </summary>
-        public virtual Transaction.Transaction CreateTransaction(string hex)
+        public virtual Transaction CreateTransaction(string hex)
         {
-            var transaction = new Transaction.Transaction();
+            var transaction = new Transaction();
             transaction.FromBytes(Encoders.Hex.DecodeData(hex));
             return transaction;
         }
@@ -124,9 +124,9 @@ namespace Blockcore.Consensus
         /// <summary>
         /// Create a <see cref="Transaction"/> instance from a byte array representation.
         /// </summary>
-        public virtual Transaction.Transaction CreateTransaction(byte[] bytes)
+        public virtual Transaction CreateTransaction(byte[] bytes)
         {
-            var transaction = new Transaction.Transaction();
+            var transaction = new Transaction();
             transaction.FromBytes(bytes);
             return transaction;
         }

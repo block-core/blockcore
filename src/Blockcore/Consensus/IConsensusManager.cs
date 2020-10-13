@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.P2P.Peer;
 using NBitcoin;
@@ -76,7 +76,7 @@ namespace Blockcore.Consensus
         /// <exception cref="ConsensusErrorException">Thrown if header validation failed.</exception>
         /// <exception cref="ConsensusException">Thrown if partial or full validation failed or if full validation wasn't required.</exception>
         /// <returns><see cref="ChainedHeader"/> of a block that was mined.</returns>
-        Task<ChainedHeader> BlockMinedAsync(Block.Block block, bool assumeValid = false);
+        Task<ChainedHeader> BlockMinedAsync(Block block, bool assumeValid = false);
     }
 
     /// <summary>

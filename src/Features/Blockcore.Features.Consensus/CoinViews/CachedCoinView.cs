@@ -7,7 +7,7 @@ using Blockcore.Base;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Networks;

@@ -5,7 +5,7 @@ using Blockcore.Base;
 using Blockcore.Base.Deployments;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;

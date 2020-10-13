@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Bitcoin.Policies;

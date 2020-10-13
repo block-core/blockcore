@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using Blockcore.Base.Deployments;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Rutanio.Networks.Consensus;

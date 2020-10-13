@@ -7,7 +7,7 @@ using NBitcoin;
 using NBitcoin.DataEncoders;
 using ooo = NBitcoin.BouncyCastle.Math;
 
-namespace Blockcore.Consensus.Script
+namespace Blockcore.Consensus.ScriptInfo
 {
     public class Op
     {

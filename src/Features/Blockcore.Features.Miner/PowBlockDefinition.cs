@@ -1,7 +1,7 @@
 ﻿using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Mining;

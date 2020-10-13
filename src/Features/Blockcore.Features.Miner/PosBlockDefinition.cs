@@ -1,8 +1,8 @@
 ﻿using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.Rules.CommonRules;

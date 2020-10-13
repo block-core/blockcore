@@ -8,7 +8,7 @@ using System.Text;
 using Blockcore.Connection;
 using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Exceptions;

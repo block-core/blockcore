@@ -1,4 +1,4 @@
-﻿using Blockcore.Consensus.Block;
+﻿using Blockcore.Consensus.BlockInfo;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.Crypto;

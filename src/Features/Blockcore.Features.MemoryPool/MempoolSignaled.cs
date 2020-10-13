@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Connection;
-using Blockcore.Consensus.Block;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Blockcore.Consensus.Block;
-using Blockcore.Consensus.Script;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
@@ -11,7 +11,7 @@ using NBitcoin.Crypto;
 using NBitcoin.OpenAsset;
 using NBitcoin.Policy;
 
-namespace Blockcore.Consensus.Transaction
+namespace Blockcore.Consensus.TransactionInfo
 {
     [Flags]
     public enum ChangeType : int
@@ -265,7 +265,7 @@ namespace Blockcore.Consensus.Transaction
 
             #region IKeyRepository Members
 
-            public Key FindKey(Script.Script scriptPubkey)
+            public Key FindKey(Script scriptPubkey)
             {
                 return this._TxBuilder.FindKey(this._Ctx, scriptPubkey);
             }
@@ -292,7 +292,7 @@ namespace Blockcore.Consensus.Transaction
                 this.txIn = txIn;
             }
 
-            public Key FindKey(Script.Script scriptPubKey)
+            public Key FindKey(Script scriptPubKey)
             {
                 foreach (Tuple<PubKey, ECDSASignature> tv in this._KnownSignatures.Where(tv => IsCompatibleKey(tv.Item1, scriptPubKey)))
                 {
@@ -308,7 +308,7 @@ namespace Blockcore.Consensus.Transaction
                 return null;
             }
 
-            public Script.Script ReplaceDummyKeys(Script.Script script)
+            public Script ReplaceDummyKeys(Script script)
             {
                 List<Op> ops = script.ToOps().ToList();
                 var result = new List<Op>();
@@ -321,7 +321,7 @@ namespace Blockcore.Consensus.Transaction
                     else
                         result.Add(op);
                 }
-                return new Script.Script(result.ToArray());
+                return new Script(result.ToArray());
             }
 
             public TransactionSignature Sign(Key key)
@@ -535,7 +535,7 @@ namespace Blockcore.Consensus.Transaction
             internal Dictionary<OutPoint, ICoin> Coins = new Dictionary<OutPoint, ICoin>();
             internal List<Func<TransactionBuildingContext, IMoney>> IssuanceBuilders = new List<Func<TransactionBuildingContext, IMoney>>();
             internal Dictionary<AssetId, List<Func<TransactionBuildingContext, IMoney>>> BuildersByAsset = new Dictionary<AssetId, List<Func<TransactionBuildingContext, IMoney>>>();
-            internal Script.Script[] ChangeScript = new Script.Script[3];
+            internal Script[] ChangeScript = new Script[3];
 
             internal void Shuffle()
             {
@@ -669,7 +669,7 @@ namespace Blockcore.Consensus.Transaction
         /// <summary>
         /// A callback used by the TransactionBuilder when it does not find the key for a scriptPubKey
         /// </summary>
-        public Func<Script.Script, Key> KeyFinder
+        public Func<Script, Key> KeyFinder
         {
             get;
             set;
@@ -775,7 +775,7 @@ namespace Blockcore.Consensus.Transaction
         /// <param name="scriptPubKey">The destination</param>
         /// <param name="amount">The amount</param>
         /// <returns></returns>
-        public TransactionBuilder Send(Script.Script scriptPubKey, Money amount)
+        public TransactionBuilder Send(Script scriptPubKey, Money amount)
         {
             if (amount < Money.Zero)
                 throw new ArgumentOutOfRangeException("amount", "amount can't be negative");
@@ -842,7 +842,7 @@ namespace Blockcore.Consensus.Transaction
         /// <param name="amount">The amount (supported : Money, AssetMoney, MoneyBag)</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">The coin type is not supported</exception>
-        public TransactionBuilder Send(Script.Script scriptPubKey, IMoney amount)
+        public TransactionBuilder Send(Script scriptPubKey, IMoney amount)
         {
             var bag = amount as MoneyBag;
             if (bag != null)
@@ -900,19 +900,19 @@ namespace Blockcore.Consensus.Transaction
                 return changeAmount;
 
             ColorMarker marker = ctx.GetColorMarker(false);
-            Script.Script script = ctx.Group.ChangeScript[(int)ChangeType.Colored];
+            Script script = ctx.Group.ChangeScript[(int)ChangeType.Colored];
             TxOut txout = ctx.Transaction.AddOutput(new TxOut(GetDust(script), script));
             marker.SetQuantity(ctx.Transaction.Outputs.Count - 2, changeAmount.Quantity);
             ctx.AdditionalFees += txout.Value;
             return changeAmount;
         }
 
-        public TransactionBuilder SendAsset(Script.Script scriptPubKey, AssetId assetId, ulong assetQuantity)
+        public TransactionBuilder SendAsset(Script scriptPubKey, AssetId assetId, ulong assetQuantity)
         {
             return SendAsset(scriptPubKey, new AssetMoney(assetId, assetQuantity));
         }
 
-        public TransactionBuilder SendAsset(Script.Script scriptPubKey, AssetMoney asset)
+        public TransactionBuilder SendAsset(Script scriptPubKey, AssetMoney asset)
         {
             if (asset.Quantity < 0)
                 throw new ArgumentOutOfRangeException("asset", "Asset amount can't be negative");
@@ -944,10 +944,10 @@ namespace Blockcore.Consensus.Transaction
 
         private Money GetDust()
         {
-            return GetDust(new Script.Script(new byte[25]));
+            return GetDust(new Script(new byte[25]));
         }
 
-        private Money GetDust(Script.Script script)
+        private Money GetDust(Script script)
         {
             if (this.StandardTransactionPolicy == null || this.StandardTransactionPolicy.MinRelayTxFee == null)
                 return Money.Zero;
@@ -993,7 +993,7 @@ namespace Blockcore.Consensus.Transaction
 
         private AssetId _IssuedAsset;
 
-        public TransactionBuilder IssueAsset(Script.Script scriptPubKey, AssetMoney asset)
+        public TransactionBuilder IssueAsset(Script scriptPubKey, AssetMoney asset)
         {
             AssertOpReturn("Colored Coin");
 
@@ -1107,7 +1107,7 @@ namespace Blockcore.Consensus.Transaction
             return SetChange(destination.ScriptPubKey, changeType);
         }
 
-        public TransactionBuilder SetChange(Script.Script scriptPubKey, ChangeType changeType = ChangeType.All)
+        public TransactionBuilder SetChange(Script scriptPubKey, ChangeType changeType = ChangeType.All)
         {
             if ((changeType & ChangeType.Colored) != 0)
             {
@@ -1266,7 +1266,7 @@ namespace Blockcore.Consensus.Transaction
 
             if (change.CompareTo(ctx.Dust) == 1)
             {
-                Script.Script changeScript = group.ChangeScript[(int)ctx.ChangeType];
+                Script changeScript = group.ChangeScript[(int)ctx.ChangeType];
 
                 if (changeScript == null)
                     throw new InvalidOperationException("A change address should be specified (" + ctx.ChangeType + ")");
@@ -1350,7 +1350,7 @@ namespace Blockcore.Consensus.Transaction
             TxDestination hash = ScriptCoin.GetRedeemHash(this.Network, coin.TxOut.ScriptPubKey);
             if (hash != null)
             {
-                Script.Script redeem = this._ScriptPubKeyToRedeem.TryGet(coin.TxOut.ScriptPubKey);
+                Script redeem = this._ScriptPubKeyToRedeem.TryGet(coin.TxOut.ScriptPubKey);
                 if (redeem != null && PayToWitScriptHashTemplate.Instance.CheckScriptPubKey(redeem))
                     redeem = this._ScriptPubKeyToRedeem.TryGet(redeem);
                 if (redeem == null)
@@ -1571,11 +1571,11 @@ namespace Blockcore.Consensus.Transaction
 
             if (coin is ScriptCoin scriptCoin)
             {
-                Script.Script p2sh = scriptCoin.GetP2SHRedeem();
+                Script p2sh = scriptCoin.GetP2SHRedeem();
                 if (p2sh != null)
                 {
                     coin = new Coin(scriptCoin.Outpoint, new TxOut(scriptCoin.Amount, p2sh));
-                    baseSize += new Script.Script(Op.GetPushOp(p2sh.ToBytes(true))).Length;
+                    baseSize += new Script(Op.GetPushOp(p2sh.ToBytes(true))).Length;
                     if (scriptCoin.RedeemType == RedeemType.WitnessV0)
                     {
                         coin = new ScriptCoin(coin, scriptCoin.Redeem);
@@ -1584,11 +1584,11 @@ namespace Blockcore.Consensus.Transaction
 
                 if (scriptCoin.RedeemType == RedeemType.WitnessV0)
                 {
-                    witSize += new Script.Script(Op.GetPushOp(scriptCoin.Redeem.ToBytes(true))).Length;
+                    witSize += new Script(Op.GetPushOp(scriptCoin.Redeem.ToBytes(true))).Length;
                 }
             }
 
-            Script.Script scriptPubkey = null;
+            Script scriptPubkey = null;
 
             try
             {
@@ -1678,19 +1678,19 @@ namespace Blockcore.Consensus.Transaction
         private void Sign(TransactionSigningContext ctx, ICoin coin, IndexedTxIn txIn)
         {
             TxIn input = txIn.TxIn;
-            Script.Script scriptSig = CreateScriptSig(ctx, coin, txIn);
+            Script scriptSig = CreateScriptSig(ctx, coin, txIn);
             if (scriptSig == null)
                 return;
             var scriptCoin = coin as ScriptCoin;
 
-            Script.Script signatures = null;
+            Script signatures = null;
             if (coin.GetHashVersion(this.Network) == HashVersion.Witness)
             {
                 signatures = txIn.WitScript;
                 if (scriptCoin != null)
                 {
                     if (scriptCoin.IsP2SH)
-                        txIn.ScriptSig = Script.Script.Empty;
+                        txIn.ScriptSig = Script.Empty;
                     if (scriptCoin.RedeemType == RedeemType.WitnessV0)
                         signatures = RemoveRedeem(signatures);
                 }
@@ -1710,7 +1710,7 @@ namespace Blockcore.Consensus.Transaction
                 if (scriptCoin != null)
                 {
                     if (scriptCoin.IsP2SH)
-                        txIn.ScriptSig = new Script.Script(Op.GetPushOp(scriptCoin.GetP2SHRedeem().ToBytes(true)));
+                        txIn.ScriptSig = new Script(Op.GetPushOp(scriptCoin.GetP2SHRedeem().ToBytes(true)));
                     if (scriptCoin.RedeemType == RedeemType.WitnessV0)
                         txIn.WitScript = txIn.WitScript + new WitScript(Op.GetPushOp(scriptCoin.Redeem.ToBytes(true)));
                 }
@@ -1725,21 +1725,21 @@ namespace Blockcore.Consensus.Transaction
             }
         }
 
-        private static Script.Script RemoveRedeem(Script.Script script)
+        private static Script RemoveRedeem(Script script)
         {
-            if (script == Script.Script.Empty)
+            if (script == Script.Empty)
                 return script;
             Op[] ops = script.ToOps().ToArray();
-            return new Script.Script(ops.Take(ops.Length - 1));
+            return new Script(ops.Take(ops.Length - 1));
         }
 
-        private Script.Script CombineScriptSigs(ICoin coin, Script.Script a, Script.Script b)
+        private Script CombineScriptSigs(ICoin coin, Script a, Script b)
         {
-            Script.Script scriptPubkey = coin.GetScriptCode(this.Network);
-            if (Script.Script.IsNullOrEmpty(a))
-                return b ?? Script.Script.Empty;
-            if (Script.Script.IsNullOrEmpty(b))
-                return a ?? Script.Script.Empty;
+            Script scriptPubkey = coin.GetScriptCode(this.Network);
+            if (Script.IsNullOrEmpty(a))
+                return b ?? Script.Empty;
+            if (Script.IsNullOrEmpty(b))
+                return a ?? Script.Empty;
 
             foreach (BuilderExtension extension in this.Extensions)
             {
@@ -1751,9 +1751,9 @@ namespace Blockcore.Consensus.Transaction
             return a.Length > b.Length ? a : b; //Heurestic
         }
 
-        private Script.Script CreateScriptSig(TransactionSigningContext ctx, ICoin coin, IndexedTxIn txIn)
+        private Script CreateScriptSig(TransactionSigningContext ctx, ICoin coin, IndexedTxIn txIn)
         {
-            Script.Script scriptPubKey = coin.GetScriptCode(this.Network);
+            Script scriptPubKey = coin.GetScriptCode(this.Network);
             var keyRepo = new TransactionBuilderKeyRepository(this, ctx);
             var signer = new TransactionBuilderSigner(this, coin, ctx.SigHash, txIn);
 
@@ -1763,15 +1763,15 @@ namespace Blockcore.Consensus.Transaction
             {
                 if (extension.CanGenerateScriptSig(this.Network, scriptPubKey))
                 {
-                    Script.Script scriptSig1 = extension.GenerateScriptSig(this.Network, scriptPubKey, keyRepo, signer);
-                    Script.Script scriptSig2 = extension.GenerateScriptSig(this.Network, scriptPubKey, signer2, signer2);
+                    Script scriptSig1 = extension.GenerateScriptSig(this.Network, scriptPubKey, keyRepo, signer);
+                    Script scriptSig2 = extension.GenerateScriptSig(this.Network, scriptPubKey, signer2, signer2);
                     if (scriptSig2 != null)
                     {
                         scriptSig2 = signer2.ReplaceDummyKeys(scriptSig2);
                     }
                     if (scriptSig1 != null && scriptSig2 != null && extension.CanCombineScriptSig(this.Network, scriptPubKey, scriptSig1, scriptSig2))
                     {
-                        Script.Script combined = extension.CombineScriptSig(this.Network, scriptPubKey, scriptSig1, scriptSig2);
+                        Script combined = extension.CombineScriptSig(this.Network, scriptPubKey, scriptSig1, scriptSig2);
                         return combined;
                     }
                     return scriptSig1 ?? scriptSig2;
@@ -1783,7 +1783,7 @@ namespace Blockcore.Consensus.Transaction
 
         private List<Tuple<PubKey, ECDSASignature>> _KnownSignatures = new List<Tuple<PubKey, ECDSASignature>>();
 
-        private Key FindKey(TransactionSigningContext ctx, Script.Script scriptPubKey)
+        private Key FindKey(TransactionSigningContext ctx, Script scriptPubKey)
         {
             Key key = this._Keys
                 .Concat(ctx.AdditionalKeys)
@@ -1795,7 +1795,7 @@ namespace Blockcore.Consensus.Transaction
             return key;
         }
 
-        private static bool IsCompatibleKey(PubKey k, Script.Script scriptPubKey)
+        private static bool IsCompatibleKey(PubKey k, Script scriptPubKey)
         {
             return k.ScriptPubKey == scriptPubKey ||  //P2PK
                     k.Hash.ScriptPubKey == scriptPubKey || //P2PKH
@@ -1898,11 +1898,11 @@ namespace Blockcore.Consensus.Transaction
             return this;
         }
 
-        private Dictionary<Script.Script, Script.Script> _ScriptPubKeyToRedeem = new Dictionary<Script.Script, Script.Script>();
+        private Dictionary<Script, Script> _ScriptPubKeyToRedeem = new Dictionary<Script, Script>();
 
-        public TransactionBuilder AddKnownRedeems(params Script.Script[] knownRedeems)
+        public TransactionBuilder AddKnownRedeems(params Script[] knownRedeems)
         {
-            foreach (Script.Script redeem in knownRedeems)
+            foreach (Script redeem in knownRedeems)
             {
                 this._ScriptPubKeyToRedeem.AddOrReplace(redeem.WitHash.ScriptPubKey.Hash.ScriptPubKey, redeem); //Might be P2SH(PWSH)
                 this._ScriptPubKeyToRedeem.AddOrReplace(redeem.Hash.ScriptPubKey, redeem); //Might be P2SH
@@ -1982,14 +1982,14 @@ namespace Blockcore.Consensus.Transaction
                 TxIn txIn = tx.Inputs[i];
 
                 ICoin coin = FindCoin(txIn.PrevOut);
-                Script.Script scriptPubKey = coin == null
+                Script scriptPubKey = coin == null
                     ? (DeduceScriptPubKey(txIn.ScriptSig) ?? DeduceScriptPubKey(signed2.Inputs[i].ScriptSig))
                     : coin.TxOut.ScriptPubKey;
 
                 Money amount = null;
                 if (coin != null)
                     amount = coin is IColoredCoin ? ((IColoredCoin)coin).Bearer.Amount : ((Coin)coin).Amount;
-                ScriptSigs result = Script.Script.CombineSignatures(
+                ScriptSigs result = Script.CombineSignatures(
                                     this.Network,
                                     scriptPubKey,
                                     new TransactionChecker(tx, i, amount),
@@ -2018,7 +2018,7 @@ namespace Blockcore.Consensus.Transaction
             };
         }
 
-        private Script.Script DeduceScriptPubKey(Script.Script scriptSig)
+        private Script DeduceScriptPubKey(Script scriptSig)
         {
             PayToScriptHashSigParameters p2sh = PayToScriptHashTemplate.Instance.ExtractScriptSigParameters(this.Network, scriptSig);
             if (p2sh != null && p2sh.RedeemScript != null)

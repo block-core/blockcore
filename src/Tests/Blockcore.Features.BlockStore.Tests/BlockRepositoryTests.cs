@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Consensus.Block;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;

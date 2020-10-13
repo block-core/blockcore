@@ -1,6 +1,6 @@
 using Blockcore.Base.Deployments;
-using Blockcore.Consensus.Script;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 namespace Rutanio.Networks.Deployments
 {

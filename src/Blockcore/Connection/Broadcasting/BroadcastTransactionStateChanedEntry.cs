@@ -1,5 +1,5 @@
 ﻿using System;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 
 namespace Blockcore.Connection.Broadcasting
 {

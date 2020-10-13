@@ -1,7 +1,7 @@
 ﻿
 
 using System.Collections.Generic;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Utilities;
 using NBitcoin;
 

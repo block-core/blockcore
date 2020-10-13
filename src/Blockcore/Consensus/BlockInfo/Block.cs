@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Blockcore.Consensus.Transaction;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Formatters;
 using Newtonsoft.Json.Linq;
 
-namespace Blockcore.Consensus.Block
+namespace Blockcore.Consensus.BlockInfo
 {
     public partial class Block : IBitcoinSerializable
     {
@@ -24,9 +24,9 @@ namespace Blockcore.Consensus.Block
         public long? BlockSize { get; protected set; }
 
         // network and disk
-        private List<Transaction.Transaction> transactions = new List<Transaction.Transaction>();
+        private List<Transaction> transactions = new List<Transaction>();
 
-        public List<Transaction.Transaction> Transactions { get { return this.transactions; } set { this.transactions = value; } }
+        public List<Transaction> Transactions { get { return this.transactions; } set { this.transactions = value; } }
 
         public MerkleNode GetMerkleRoot()
         {
@@ -76,7 +76,7 @@ namespace Blockcore.Consensus.Block
             return this.header.GetHash();
         }
 
-        public Transaction.Transaction AddTransaction(Transaction.Transaction tx)
+        public Transaction AddTransaction(Transaction tx)
         {
             this.Transactions.Add(tx);
             return tx;

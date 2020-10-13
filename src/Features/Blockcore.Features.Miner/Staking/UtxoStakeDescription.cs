@@ -1,4 +1,4 @@
-﻿using Blockcore.Consensus.Transaction;
+﻿using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;

@@ -31,6 +31,7 @@
     <PackageReference Include="NLog" Version="4.7.0" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.3" />
     <PackageReference Include="Polly" Version="7.2.1" />
+    <PackageReference Include="SnappyLib" Version="1.1.7" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -51,7 +52,6 @@
     <PackageReference Include="NStratis.HashLib" Version="1.0.0.1" />
     <PackageReference Include="RocksDbNative" Version="6.2.2" />
     <PackageReference Include="RocksDbSharp" Version="6.2.2" />
-    <PackageReference Include="Snappy.NET" Version="1.1.1.8" />
   </ItemGroup>
 
   <ItemGroup>

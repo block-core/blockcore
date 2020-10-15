@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
     <PackageReference Include="RocksDbNative" Version="6.2.2" />
     <PackageReference Include="RocksDbSharp" Version="6.2.2" />
-    <PackageReference Include="Snappy.NET" Version="1.1.1.8" />
+    <PackageReference Include="SnappyLib" Version="1.1.7" />
   </ItemGroup>
 
   <ItemGroup>

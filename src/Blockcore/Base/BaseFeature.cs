@@ -399,13 +399,11 @@ namespace Blockcore.Base
                     services.AddSingleton<IInvalidBlockHashStore, InvalidBlockHashStore>();
                     services.AddSingleton<IChainState, ChainState>();
                     services.AddSingleton<IChainRepository, ChainRepository>();
-                    // services.AddSingleton<IChainStore, LeveldbChainStore>();
-                    services.AddSingleton<IChainStore, RocksdbChainStore>();
+                    AddDbImplementation(services, fullNodeBuilder.NodeSettings);
                     services.AddSingleton<IFinalizedBlockInfoRepository, FinalizedBlockInfoRepository>();
                     services.AddSingleton<ITimeSyncBehaviorState, TimeSyncBehaviorState>();
                     services.AddSingleton<NodeDeployments>();
                     services.AddSingleton<IInitialBlockDownloadState, InitialBlockDownloadState>();
-                    services.AddSingleton<IKeyValueRepository, KeyValueRepository>();
                     services.AddSingleton<ITipsManager, TipsManager>();
                     services.AddSingleton<IAsyncProvider, AsyncProvider>();
                     services.AddSingleton<IBroadcasterManager, BroadcasterManager>();
@@ -486,6 +484,24 @@ namespace Blockcore.Base
             });
 
             return fullNodeBuilder;
+        }
+
+        private static void AddDbImplementation(IServiceCollection services, NodeSettings settings)
+        {
+            if (settings.DbType == DbType.Leveldb)
+            {
+                services.AddSingleton<IChainStore, LeveldbChainStore>();
+                services.AddSingleton<IKeyValueRepository, LeveldbKeyValueRepository>();
+
+                return;
+            }
+
+            if (settings.DbType == DbType.Rocksdb)
+            {
+                services.AddSingleton<IChainStore, RocksdbChainStore>();
+                services.AddSingleton<IKeyValueRepository, RocksdbKeyValueRepository>();
+                return;
+            }
         }
     }
 }

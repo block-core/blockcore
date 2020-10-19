@@ -1,13 +1,18 @@
-﻿using Blockcore.Base;
+﻿using System;
+using Blockcore.Base;
 using Blockcore.Builder;
+using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
+using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Interfaces;
+using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 
@@ -28,7 +33,7 @@ namespace Blockcore.Features.Consensus
                     .AddFeature<PowConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        AddCoindbImplementation(services, coindbType);
+                        AddDbImplementation(services, fullNodeBuilder.NodeSettings);
                         services.AddSingleton<ConsensusOptions, ConsensusOptions>();
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<IConsensusRuleEngine, PowConsensusRuleEngine>();
@@ -52,7 +57,7 @@ namespace Blockcore.Features.Consensus
                     .AddFeature<PosConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        AddCoindbImplementation(services, coindbType);
+                        AddDbImplementation(services, fullNodeBuilder.NodeSettings);
                         services.AddSingleton<IStakdb>(provider => (IStakdb)provider.GetService<ICoindb>());
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<StakeChainStore>().AddSingleton<IStakeChain, StakeChainStore>(provider => provider.GetService<StakeChainStore>());
@@ -71,27 +76,19 @@ namespace Blockcore.Features.Consensus
             return fullNodeBuilder;
         }
 
-        private static void AddCoindbImplementation(IServiceCollection services, DbType coindbType)
+        private static void AddDbImplementation(IServiceCollection services, NodeSettings settings)
         {
-            if (coindbType == DbType.Dbreeze)
-                services.AddSingleton<ICoindb, DBreezeCoindb>();
-
-            if (coindbType == DbType.Leveldb)
+            if (settings.DbType == DbType.Leveldb)
+            {
                 services.AddSingleton<ICoindb, LeveldbCoindb>();
+                return;
+            }
 
-            if (coindbType == DbType.Faster)
-                services.AddSingleton<ICoindb, FasterCoindb>();
-
-            if (coindbType == DbType.Rocksdb)
+            if (settings.DbType == DbType.Rocksdb)
+            {
                 services.AddSingleton<ICoindb, RocksdbCoindb>();
+                return;
+            }
         }
-    }
-
-    public enum DbType
-    {
-        Leveldb,
-        Dbreeze,
-        Faster,
-        Rocksdb
     }
 }

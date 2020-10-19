@@ -107,6 +107,11 @@ namespace Blockcore.Configuration
         public FeeRate MinRelayTxFeeRate { get; private set; }
 
         /// <summary>
+        /// The type of database to use for the node (this includes consensus, store, chain, and the common key value store).
+        /// </summary>
+        public DbType DbType { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the object.
         /// </summary>
         /// <param name="network">The network the node runs on - regtest/testnet/mainnet.</param>
@@ -188,6 +193,7 @@ namespace Blockcore.Configuration
 
             // Ensure the network being used is registered and we have the correct Network object reference.
             this.Network = NetworkRegistration.Register(this.Network);
+            this.DbType = this.ConfigReader.GetOrDefault<DbType>("dbtype", DbType.Leveldb, this.Logger);
 
             // Set the full data directory path.
             if (this.DataDir == null)
@@ -385,6 +391,8 @@ namespace Blockcore.Configuration
             builder.AppendLine($"-fallbackfee=<number>     Fallback fee rate. Defaults to {network.FallbackFee}.");
             builder.AppendLine($"-minrelaytxfee=<number>   Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");
 
+            builder.AppendLine($"-dbtype=<name>            Which db to use. options: {DbType.Leveldb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
+
             defaults.Logger.LogInformation(builder.ToString());
 
             ConnectionManagerSettings.PrintHelp(network);
@@ -410,6 +418,9 @@ namespace Blockcore.Configuration
             builder.AppendLine($"#Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");
             builder.AppendLine($"#minrelaytxfee={network.MinRelayTxFee}");
             builder.AppendLine();
+            builder.AppendLine($"#Which db to use. options: {DbType.Leveldb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
+            builder.AppendLine($"#dbtype=<name>");
+            builder.AppendLine();
 
             ConnectionManagerSettings.BuildDefaultConfigurationFile(builder, network);
         }
@@ -419,5 +430,13 @@ namespace Blockcore.Configuration
         {
             this.LoggerFactory.Dispose();
         }
+    }
+
+    public enum DbType
+    {
+        Leveldb,
+        DBTrie,
+        Faster,
+        Rocksdb
     }
 }

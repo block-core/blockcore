@@ -10,10 +10,14 @@ using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
+using RocksDbSharp;
+
 namespace Blockcore.Features.BlockStore.Pruning
+
 {
     /// <inheritdoc />
-    public class PrunedBlockRepository : IPrunedBlockRepository
+    public class RocksdbPrunedBlockRepository : IPrunedBlockRepository
+
     {
         private readonly IBlockRepository blockRepository;
         private readonly DataStoreSerializer dataStoreSerializer;
@@ -25,11 +29,13 @@ namespace Blockcore.Features.BlockStore.Pruning
         /// <inheritdoc />
         public HashHeightPair PrunedTip { get; private set; }
 
-        public PrunedBlockRepository(IBlockRepository blockRepository, DataStoreSerializer dataStoreSerializer, ILoggerFactory loggerFactory, StoreSettings storeSettings, Network network)
+        public RocksdbPrunedBlockRepository(IBlockRepository blockRepository, DataStoreSerializer dataStoreSerializer, ILoggerFactory loggerFactory, StoreSettings storeSettings, Network network)
         {
             this.blockRepository = blockRepository;
+
             this.dataStoreSerializer = dataStoreSerializer;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+
             this.storeSettings = storeSettings;
             this.network = network;
         }
@@ -37,7 +43,7 @@ namespace Blockcore.Features.BlockStore.Pruning
         /// <inheritdoc />
         public void Initialize()
         {
-            this.LoadPrunedTip(this.blockRepository.RocksDb);
+            this.LoadPrunedTip((RocksDb)this.blockRepository.DbInstance);
         }
 
         /// <inheritdoc />
@@ -51,7 +57,7 @@ namespace Blockcore.Features.BlockStore.Pruning
 
                 lock (this.blockRepository.Locker)
                 {
-                    this.blockRepository.RocksDb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
+                    ((RocksDb)this.blockRepository.DbInstance).Put(DBH.Key(RocksdbBlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
                 }
             }
 
@@ -63,8 +69,9 @@ namespace Blockcore.Features.BlockStore.Pruning
             if (this.PrunedTip == null)
             {
                 lock (this.blockRepository.Locker)
+
                 {
-                    byte[] row = rocksdb.Get(DBH.Key(BlockRepository.CommonTableName, prunedTipKey));
+                    byte[] row = rocksdb.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, prunedTipKey));
                     if (row != null)
                     {
                         this.PrunedTip = this.dataStoreSerializer.Deserialize<HashHeightPair>(row);
@@ -80,7 +87,7 @@ namespace Blockcore.Features.BlockStore.Pruning
 
             lock (this.blockRepository.Locker)
             {
-                this.blockRepository.RocksDb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
+                ((RocksDb)this.blockRepository.DbInstance).Put(DBH.Key(RocksdbBlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
             }
         }
     }

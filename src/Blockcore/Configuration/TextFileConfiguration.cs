@@ -227,6 +227,11 @@ namespace Blockcore.Configuration
                 return (T)(object)value;
             }
 
+            if (typeof(T).BaseType == typeof(Enum))
+            {
+                return (T)Enum.Parse(typeof(T), str, true);
+            }
+
             throw new NotSupportedException("Configuration value does not support type " + typeof(T).Name);
         }
     }

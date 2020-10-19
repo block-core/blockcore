@@ -4,51 +4,28 @@ using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Utilities.JsonConverters;
 using LevelDB;
-using RocksDbSharp;
 
 namespace Blockcore.Utilities
 {
-    /// <summary>Allows saving and loading single values to and from key-value storage.</summary>
-    public interface IKeyValueRepository : IDisposable
-    {
-        /// <summary>Persists byte array to the database.</summary>
-        void SaveBytes(string key, byte[] bytes);
-
-        /// <summary>Persists any object that <see cref="DataStoreSerializer"/> can serialize to the database.</summary>
-        void SaveValue<T>(string key, T value);
-
-        /// <summary>Persists any object to the database. Object is stored as JSON.</summary>
-        void SaveValueJson<T>(string key, T value);
-
-        /// <summary>Loads byte array from the database.</summary>
-        byte[] LoadBytes(string key);
-
-        /// <summary>Loads an object that <see cref="DataStoreSerializer"/> can deserialize from the database.</summary>
-        T LoadValue<T>(string key);
-
-        /// <summary>Loads JSON from the database and deserializes it.</summary>
-        T LoadValueJson<T>(string key);
-    }
-
-    public class KeyValueRepository : IKeyValueRepository
+    public class LeveldbKeyValueRepository : IKeyValueRepository
     {
         /// <summary>Access to database.</summary>
-        private readonly RocksDb rocksdb;
+        private readonly DB leveldb;
 
         private readonly DataStoreSerializer dataStoreSerializer;
 
-        public KeyValueRepository(DataFolder dataFolder, DataStoreSerializer dataStoreSerializer) : this(dataFolder.KeyValueRepositoryPath, dataStoreSerializer)
+        public LeveldbKeyValueRepository(DataFolder dataFolder, DataStoreSerializer dataStoreSerializer) : this(dataFolder.KeyValueRepositoryPath, dataStoreSerializer)
         {
         }
 
-        public KeyValueRepository(string folder, DataStoreSerializer dataStoreSerializer)
+        public LeveldbKeyValueRepository(string folder, DataStoreSerializer dataStoreSerializer)
         {
             Directory.CreateDirectory(folder);
             this.dataStoreSerializer = dataStoreSerializer;
 
             // Open a connection to a new DB and create if not found
-            var options = new DbOptions().SetCreateIfMissing(true);
-            this.rocksdb = RocksDb.Open(options, folder);
+            var options = new Options { CreateIfMissing = true };
+            this.leveldb = new DB(options, folder);
         }
 
         /// <inheritdoc />
@@ -56,7 +33,7 @@ namespace Blockcore.Utilities
         {
             byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
-            this.rocksdb.Put(keyBytes, bytes);
+            this.leveldb.Put(keyBytes, bytes);
         }
 
         /// <inheritdoc />
@@ -79,7 +56,7 @@ namespace Blockcore.Utilities
         {
             byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
-            byte[] row = this.rocksdb.Get(keyBytes);
+            byte[] row = this.leveldb.Get(keyBytes);
 
             if (row == null)
                 return null;
@@ -117,7 +94,7 @@ namespace Blockcore.Utilities
         /// <inheritdoc />
         public void Dispose()
         {
-            this.rocksdb.Dispose();
+            this.leveldb.Dispose();
         }
     }
 }

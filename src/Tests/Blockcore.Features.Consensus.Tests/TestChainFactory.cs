@@ -155,7 +155,7 @@ namespace Blockcore.Features.Consensus.Tests
 
             var dBreezeSerializer = new DataStoreSerializer(network.Consensus.ConsensusFactory);
 
-            var blockRepository = new BlockRepository(testChainContext.Network, dataFolder, testChainContext.LoggerFactory, dBreezeSerializer);
+            var blockRepository = new LeveldbBlockRepository(testChainContext.Network, dataFolder, testChainContext.LoggerFactory, dBreezeSerializer);
 
             var blockStoreFlushCondition = new BlockStoreQueueFlushCondition(testChainContext.ChainState, testChainContext.InitialBlockDownloadState);
 
@@ -271,6 +271,5 @@ namespace Blockcore.Features.Consensus.Tests
             var res = await testChainContext.Consensus.BlockMinedAsync(newBlock.Block);
             Assert.NotNull(res);
         }
-
     }
 }

@@ -34,7 +34,6 @@ namespace Blockcore.Consensus.Chain
         {
             this.network = network;
             this.ChainIndexer = chainIndexer;
-            // this.headers = new Dictionary<uint256, BlockHeader>();
             this.nearTipHeaders = new MemoryCountCache<uint256, BlockHeader>(601);
             this.recentHeaders = new MemoryCountCache<uint256, BlockHeader>(100);
             this.locker = new object();

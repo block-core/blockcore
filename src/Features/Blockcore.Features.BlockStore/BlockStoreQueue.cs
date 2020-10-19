@@ -154,7 +154,7 @@ namespace Blockcore.Features.BlockStore
 
             headers.Reverse();
 
-            BlockRepository blockRepository = (BlockRepository)this.blockRepository;
+            RocksdbBlockRepository blockRepository = (RocksdbBlockRepository)this.blockRepository;
 
             foreach (Block block in blockRepository.EnumeratehBatch(headers))
             {

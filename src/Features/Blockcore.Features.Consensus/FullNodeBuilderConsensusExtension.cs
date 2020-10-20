@@ -69,7 +69,7 @@ namespace Blockcore.Features.Consensus
                             .AddSingleton<INetworkDifficulty, ConsensusQuery>(provider => provider.GetService<ConsensusQuery>())
                             .AddSingleton<IGetUnspentTransaction, ConsensusQuery>(provider => provider.GetService<ConsensusQuery>());
                         services.AddSingleton<IProvenBlockHeaderStore, ProvenBlockHeaderStore>();
-                        services.AddSingleton<IProvenBlockHeaderRepository, ProvenBlockHeaderRepository>();
+                        AddProvenBlockHeaderImplementation(services, fullNodeBuilder.NodeSettings);
                     });
             });
 
@@ -87,6 +87,21 @@ namespace Blockcore.Features.Consensus
             if (settings.DbType == DbType.Rocksdb)
             {
                 services.AddSingleton<ICoindb, RocksdbCoindb>();
+                return;
+            }
+        }
+
+        private static void AddProvenBlockHeaderImplementation(IServiceCollection services, NodeSettings settings)
+        {
+            if (settings.DbType == DbType.Leveldb)
+            {
+                services.AddSingleton<IProvenBlockHeaderRepository, LeveldbProvenBlockHeaderRepository>();
+                return;
+            }
+
+            if (settings.DbType == DbType.Rocksdb)
+            {
+                services.AddSingleton<IProvenBlockHeaderRepository, RocksdbProvenBlockHeaderRepository>();
                 return;
             }
         }

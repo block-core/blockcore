@@ -17,9 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.BlockStore.Api.Contollers
+namespace Blockcore.Features.BlockStore.Api.Controllers
 {
-
     /// <summary>Controller providing operations on a blockstore.</summary>
     [Authorize]
     [ApiController]

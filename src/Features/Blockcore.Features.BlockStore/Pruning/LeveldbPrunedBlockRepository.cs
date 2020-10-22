@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using DBreeze.DataTypes;

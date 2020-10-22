@@ -2,10 +2,9 @@
 using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Utilities.JsonConverters;
-using LevelDB;
 using RocksDbSharp;
 
-namespace Blockcore.Utilities
+namespace Blockcore.Utilities.Store
 {
     public class RocksdbKeyValueRepository : IKeyValueRepository
     {

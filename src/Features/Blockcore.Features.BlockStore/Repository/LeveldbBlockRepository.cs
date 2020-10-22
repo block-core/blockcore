@@ -1,22 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using Blockcore.Configuration;
-using Blockcore.Interfaces;
-using Blockcore.Utilities;
-using DBreeze.Utils;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
-using System;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
+using Blockcore.Utilities;
+using DBreeze.Utils;
 using LevelDB;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
 
-namespace Blockcore.Features.BlockStore
+namespace Blockcore.Features.BlockStore.Repository
 {
     public class LeveldbBlockRepository : IBlockRepository
     {

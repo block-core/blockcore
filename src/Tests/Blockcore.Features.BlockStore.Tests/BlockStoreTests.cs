@@ -8,6 +8,7 @@ using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Signals;

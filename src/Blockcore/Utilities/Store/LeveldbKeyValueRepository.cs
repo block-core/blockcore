@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Utilities.JsonConverters;
 using LevelDB;
 
-namespace Blockcore.Utilities
+namespace Blockcore.Utilities.Store
 {
     public class LeveldbKeyValueRepository : IKeyValueRepository
     {

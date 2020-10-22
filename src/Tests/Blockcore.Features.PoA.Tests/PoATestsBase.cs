@@ -17,6 +17,7 @@ using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;

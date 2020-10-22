@@ -4,9 +4,8 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using NBitcoin;
-using RocksDbSharp;
 
-namespace Blockcore.Features.BlockStore
+namespace Blockcore.Features.BlockStore.Repository
 {
     /// <summary>
     /// <see cref="IBlockRepository"/> is the interface to all the logics interacting with the blocks stored in the database.

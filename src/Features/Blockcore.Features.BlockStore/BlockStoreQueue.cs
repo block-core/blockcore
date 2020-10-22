@@ -10,6 +10,7 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;

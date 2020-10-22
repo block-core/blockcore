@@ -5,7 +5,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
-using Blockcore.Features.BlockStore.Api.Contollers;
+using Blockcore.Features.BlockStore.Api.Controllers;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;

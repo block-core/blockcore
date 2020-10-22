@@ -5,6 +5,7 @@ using Blockcore.Base;
 using Blockcore.Consensus.Chain;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Xunit;

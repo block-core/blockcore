@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blockcore.Utilities
+namespace Blockcore.Utilities.Store
 {
     /// <summary>Allows saving and loading single values to and from key-value storage.</summary>
     public interface IKeyValueRepository : IDisposable

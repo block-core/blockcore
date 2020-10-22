@@ -14,6 +14,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Features.BlockStore.Pruning;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Interfaces;
 using Blockcore.Networks;

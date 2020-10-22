@@ -22,7 +22,7 @@ namespace Blockcore.Features.BlockStore.Pruning
         private readonly IBlockRepository blockRepository;
         private readonly DataStoreSerializer dataStoreSerializer;
         private readonly ILogger logger;
-        private static readonly byte[] prunedTipKey = new byte[2];
+        private static readonly byte[] prunedTipKey = new byte[2]; // the key of the index column
         private readonly StoreSettings storeSettings;
         private readonly Network network;
 

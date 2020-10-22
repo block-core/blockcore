@@ -20,7 +20,7 @@ namespace Blockcore.Features.BlockStore.Pruning
         private readonly IBlockRepository blockRepository;
         private readonly DataStoreSerializer dataStoreSerializer;
         private readonly ILogger logger;
-        private static readonly byte[] prunedTipKey = new byte[2];
+        private static readonly byte[] prunedTipKey = new byte[2]; // the key of the index column
         private readonly StoreSettings storeSettings;
         private readonly Network network;
 
@@ -55,7 +55,7 @@ namespace Blockcore.Features.BlockStore.Pruning
 
                 lock (this.blockRepository.Locker)
                 {
-                    ((DB)this.blockRepository.DbInstance).Put(DBH.Key(RocksdbBlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
+                    ((DB)this.blockRepository.DbInstance).Put(DBH.Key(LeveldbBlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
                 }
             }
 
@@ -69,7 +69,7 @@ namespace Blockcore.Features.BlockStore.Pruning
                 lock (this.blockRepository.Locker)
 
                 {
-                    byte[] row = rocksdb.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, prunedTipKey));
+                    byte[] row = rocksdb.Get(DBH.Key(LeveldbBlockRepository.CommonTableName, prunedTipKey));
                     if (row != null)
                     {
                         this.PrunedTip = this.dataStoreSerializer.Deserialize<HashHeightPair>(row);
@@ -85,7 +85,7 @@ namespace Blockcore.Features.BlockStore.Pruning
 
             lock (this.blockRepository.Locker)
             {
-                ((DB)this.blockRepository.DbInstance).Put(DBH.Key(RocksdbBlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
+                ((DB)this.blockRepository.DbInstance).Put(DBH.Key(LeveldbBlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
             }
         }
     }

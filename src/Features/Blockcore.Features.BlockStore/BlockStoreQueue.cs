@@ -154,9 +154,7 @@ namespace Blockcore.Features.BlockStore
 
             headers.Reverse();
 
-            RocksdbBlockRepository blockRepository = (RocksdbBlockRepository)this.blockRepository;
-
-            foreach (Block block in blockRepository.EnumeratehBatch(headers))
+            foreach (Block block in this.blockRepository.EnumeratehBatch(headers))
             {
                 if (block == null)
                     throw new Exception();

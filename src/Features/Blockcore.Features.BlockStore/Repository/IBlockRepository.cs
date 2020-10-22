@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using NBitcoin;
@@ -67,5 +68,10 @@ namespace Blockcore.Features.BlockStore
 
         /// <summary> Indicates that the node should store all transaction data in the database.</summary>
         bool TxIndex { get; }
+
+        /// <summary>
+        /// Enumerate the list of blocks from block store.
+        /// </summary>
+        IEnumerable<Block> EnumeratehBatch(List<ChainedHeader> headers);
     }
 }

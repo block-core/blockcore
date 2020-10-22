@@ -1,11 +1,6 @@
 name: build-push-docker-image
 
-on:
-  push:
-    branches-ignore:
-      - "**"
-    tags:
-      - "v*.*.*"
+on:  
   workflow_dispatch:
 
 jobs:

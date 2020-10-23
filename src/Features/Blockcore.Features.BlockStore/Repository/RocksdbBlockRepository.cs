@@ -267,7 +267,7 @@ namespace Blockcore.Features.BlockStore.Repository
             }
         }
 
-        public IEnumerable<Block> EnumeratehBatch(List<ChainedHeader> headers)
+        public IEnumerable<Block> EnumerateBatch(List<ChainedHeader> headers)
         {
             lock (this.Locker)
             {

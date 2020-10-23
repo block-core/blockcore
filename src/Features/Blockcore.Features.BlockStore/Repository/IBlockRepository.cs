@@ -71,6 +71,6 @@ namespace Blockcore.Features.BlockStore.Repository
         /// <summary>
         /// Enumerate the list of blocks from block store.
         /// </summary>
-        IEnumerable<Block> EnumeratehBatch(List<ChainedHeader> headers);
+        IEnumerable<Block> EnumerateBatch(List<ChainedHeader> headers);
     }
 }

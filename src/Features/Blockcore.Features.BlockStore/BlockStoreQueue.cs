@@ -155,7 +155,7 @@ namespace Blockcore.Features.BlockStore
 
             headers.Reverse();
 
-            foreach (Block block in this.blockRepository.EnumeratehBatch(headers))
+            foreach (Block block in this.blockRepository.EnumerateBatch(headers))
             {
                 if (block == null)
                     throw new Exception();

@@ -10,4 +10,4 @@ RUN dotnet publish *.csproj -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Blockcore.Node.dll", --chain=${eTicker}]
+ENTRYPOINT ["dotnet", "Blockcore.Node.dll"]

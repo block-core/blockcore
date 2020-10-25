@@ -24,14 +24,14 @@ namespace Blockcore.Tests.Builder
             this.featureCollectionDelegates = new List<Action<IFeatureCollection>>();
             this.featureCollection = new FeatureCollection();
 
-            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection);
+            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection, new TestPersistenceProviderManager(null));
             this.fullNodeBuilder.Network = KnownNetworks.TestNet;
         }
 
         [Fact]
         public void UseNodeSettingsConfiguresNodeBuilderWithNodeSettings()
         {
-            FullNodeBuilderNodeSettingsExtension.UseDefaultNodeSettings(this.fullNodeBuilder);
+            FullNodeBuilderNodeSettingsExtension.UseDefaultNodeSettings(this.fullNodeBuilder, null);
 
             Assert.NotNull(this.fullNodeBuilder.NodeSettings);
             Assert.Equal(NodeSettings.Default(this.fullNodeBuilder.Network).ConfigurationFile, this.fullNodeBuilder.NodeSettings.ConfigurationFile);
@@ -46,8 +46,10 @@ namespace Blockcore.Tests.Builder
         {
             var nodeSettings = new NodeSettings(this.fullNodeBuilder.Network, args: new string[] {
                 "-datadir=TestData/FullNodeBuilder/UseNodeSettings" });
+            var persistenceProviderManager = new TestPersistenceProviderManager(nodeSettings);
 
-            FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings);
+
+            FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings, persistenceProviderManager);
 
             Assert.NotNull(this.fullNodeBuilder.NodeSettings);
             Assert.Equal(nodeSettings.ConfigurationFile, this.fullNodeBuilder.NodeSettings.ConfigurationFile);
@@ -60,10 +62,10 @@ namespace Blockcore.Tests.Builder
         [Fact]
         public void UseNodeSettingsUsingTestNetConfiguresNodeBuilderWithTestnetSettings()
         {
-            var nodeSettings = new NodeSettings(KnownNetworks.TestNet, args:new string[] {
+            var nodeSettings = new NodeSettings(KnownNetworks.TestNet, args: new string[] {
                 "-datadir=TestData/FullNodeBuilder/UseNodeSettings" });
 
-            FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings);
+            FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings, new TestPersistenceProviderManager(nodeSettings));
 
             Assert.NotNull(this.fullNodeBuilder.NodeSettings);
             Assert.Equal(nodeSettings.ConfigurationFile, this.fullNodeBuilder.NodeSettings.ConfigurationFile);
@@ -76,10 +78,10 @@ namespace Blockcore.Tests.Builder
         [Fact]
         public void UseNodeSettingsUsingRegTestNetConfiguresNodeBuilderWithRegTestNet()
         {
-            var nodeSettings = new NodeSettings(KnownNetworks.RegTest, args:new string[] {
+            var nodeSettings = new NodeSettings(KnownNetworks.RegTest, args: new string[] {
                 "-datadir=TestData/FullNodeBuilder/UseNodeSettings" });
 
-            FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings);
+            FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings, new TestPersistenceProviderManager(nodeSettings));
 
             Assert.NotNull(this.fullNodeBuilder.NodeSettings);
             Assert.Equal(nodeSettings.ConfigurationFile, this.fullNodeBuilder.NodeSettings.ConfigurationFile);

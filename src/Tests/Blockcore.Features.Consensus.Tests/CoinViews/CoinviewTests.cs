@@ -49,7 +49,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
 
             //this.coindb = new DBreezeCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DataStoreSerializer(this.network.Consensus.ConsensusFactory));
             //this.coindb = new FasterCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DataStoreSerializer(this.network.Consensus.ConsensusFactory));
-            this.coindb = new LeveldbCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DataStoreSerializer(this.network.Consensus.ConsensusFactory));
+            this.coindb = new LevelDbCoindb(this.network, this.dataFolder, this.dateTimeProvider, this.loggerFactory, this.nodeStats, new DataStoreSerializer(this.network.Consensus.ConsensusFactory));
             this.coindb.Initialize();
 
             this.chainIndexer = new ChainIndexer(this.network);

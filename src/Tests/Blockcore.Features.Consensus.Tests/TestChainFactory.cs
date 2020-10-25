@@ -156,7 +156,7 @@ namespace Blockcore.Features.Consensus.Tests
 
             var dBreezeSerializer = new DataStoreSerializer(network.Consensus.ConsensusFactory);
 
-            var blockRepository = new LeveldbBlockRepository(testChainContext.Network, dataFolder, testChainContext.LoggerFactory, dBreezeSerializer);
+            var blockRepository = new LevelDbBlockRepository(testChainContext.Network, dataFolder, testChainContext.LoggerFactory, dBreezeSerializer);
 
             var blockStoreFlushCondition = new BlockStoreQueueFlushCondition(testChainContext.ChainState, testChainContext.InitialBlockDownloadState);
 

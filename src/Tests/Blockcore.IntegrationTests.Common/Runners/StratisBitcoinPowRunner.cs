@@ -14,6 +14,7 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using NBitcoin;
+using Blockcore.Tests.Common;
 
 namespace Blockcore.IntegrationTests.Common.Runners
 {
@@ -34,8 +35,11 @@ namespace Blockcore.IntegrationTests.Common.Runners
             else
                 settings = new NodeSettings(this.Network, agent: this.Agent, args: new string[] { "-conf=bitcoin.conf", "-datadir=" + this.DataFolder });
 
+            var persistenceProviderManager = new TestPersistenceProviderManager(settings);
+
+
             var builder = new FullNodeBuilder()
-                            .UseNodeSettings(settings)
+                            .UseNodeSettings(settings, persistenceProviderManager)
                             .UseBlockStore()
                             .UsePowConsensus()
                             .UseMempool()

@@ -22,7 +22,7 @@ namespace Blockcore.IntegrationTests.RPC
             var nodeSettings = new NodeSettings(this.Network, args: new string[] { $"-datadir={dir}", "-rpcuser=abc", "-rpcpassword=def", "-rpcport=91", "-server=1" });
 
             IFullNode node = new FullNodeBuilder()
-                .UseNodeSettings(nodeSettings)
+                .UseNodeSettings(nodeSettings, new TestPersistenceProviderManager(nodeSettings))
                 .UsePowConsensus()
                 .AddRPC()
                 .Build();

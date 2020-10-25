@@ -5,8 +5,10 @@ using System.Reflection;
 using Blockcore.Base;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
+using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -52,6 +54,9 @@ namespace Blockcore.Builder
         public NodeSettings NodeSettings { get; set; }
 
         /// <inheritdoc />
+        public IPersistenceProviderManager PersistenceProviderManager { get; set; }
+
+        /// <inheritdoc />
         public Network Network { get; set; }
 
         /// <summary>Collection of DI services.</summary>
@@ -64,7 +69,8 @@ namespace Blockcore.Builder
             this(new List<Action<IServiceCollection>>(),
                 new List<Action<IServiceProvider>>(),
                 new List<Action<IFeatureCollection>>(),
-                new FeatureCollection())
+                new FeatureCollection(),
+                null)
         {
         }
 
@@ -72,11 +78,14 @@ namespace Blockcore.Builder
         /// Initializes an instance of the object using specific NodeSettings instance and registers required services.
         /// </summary>
         /// <param name="nodeSettings">User defined node settings.</param>
-        public FullNodeBuilder(NodeSettings nodeSettings)
+        /// <param name="persistenceProviderManager">Persistence Provider Manager that will help registering needed persistence services.</param>
+        public FullNodeBuilder(NodeSettings nodeSettings, IPersistenceProviderManager persistenceProviderManager)
             : this(nodeSettings, new List<Action<IServiceCollection>>(),
                 new List<Action<IServiceProvider>>(),
                 new List<Action<IFeatureCollection>>(),
-                new FeatureCollection())
+                new FeatureCollection(),
+                persistenceProviderManager
+                )
         {
         }
 
@@ -88,9 +97,10 @@ namespace Blockcore.Builder
         /// <param name="configureDelegates">List of delegates that configure the service providers.</param>
         /// <param name="featuresRegistrationDelegates">List of delegates that add features to the collection.</param>
         /// <param name="features">Collection of features to be available to and/or used by the node.</param>
+        /// <param name="persistenceProviderManager">Persistence Provider Manager that will help registering needed persistence services.</param>
         internal FullNodeBuilder(NodeSettings nodeSettings, List<Action<IServiceCollection>> configureServicesDelegates, List<Action<IServiceProvider>> configureDelegates,
-            List<Action<IFeatureCollection>> featuresRegistrationDelegates, IFeatureCollection features)
-            : this(configureServicesDelegates, configureDelegates, featuresRegistrationDelegates, features)
+            List<Action<IFeatureCollection>> featuresRegistrationDelegates, IFeatureCollection features, IPersistenceProviderManager persistenceProviderManager)
+            : this(configureServicesDelegates, configureDelegates, featuresRegistrationDelegates, features, persistenceProviderManager)
         {
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
 
@@ -113,8 +123,9 @@ namespace Blockcore.Builder
         /// <param name="configureDelegates">List of delegates that configure the service providers.</param>
         /// <param name="featuresRegistrationDelegates">List of delegates that add features to the collection.</param>
         /// <param name="features">Collection of features to be available to and/or used by the node.</param>
+        /// <param name="persistenceProviderManager">Persistence Provider Manager that will help registering needed persistence services.</param>
         internal FullNodeBuilder(List<Action<IServiceCollection>> configureServicesDelegates, List<Action<IServiceProvider>> configureDelegates,
-            List<Action<IFeatureCollection>> featuresRegistrationDelegates, IFeatureCollection features)
+            List<Action<IFeatureCollection>> featuresRegistrationDelegates, IFeatureCollection features, IPersistenceProviderManager persistenceProviderManager)
         {
             Guard.NotNull(configureServicesDelegates, nameof(configureServicesDelegates));
             Guard.NotNull(configureDelegates, nameof(configureDelegates));
@@ -125,6 +136,7 @@ namespace Blockcore.Builder
             this.configureDelegates = configureDelegates;
             this.featuresRegistrationDelegates = featuresRegistrationDelegates;
             this.Features = features;
+            this.PersistenceProviderManager = persistenceProviderManager;
         }
 
         /// <inheritdoc />

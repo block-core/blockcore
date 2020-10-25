@@ -6,18 +6,18 @@ using RocksDbSharp;
 
 namespace Blockcore.Utilities.Store
 {
-    public class RocksdbKeyValueRepository : IKeyValueRepository
+    public class RocksDbKeyValueRepository : IKeyValueRepository
     {
         /// <summary>Access to database.</summary>
         private readonly RocksDb rocksdb;
 
         private readonly DataStoreSerializer dataStoreSerializer;
 
-        public RocksdbKeyValueRepository(DataFolder dataFolder, DataStoreSerializer dataStoreSerializer) : this(dataFolder.KeyValueRepositoryPath, dataStoreSerializer)
+        public RocksDbKeyValueRepository(DataFolder dataFolder, DataStoreSerializer dataStoreSerializer) : this(dataFolder.KeyValueRepositoryPath, dataStoreSerializer)
         {
         }
 
-        public RocksdbKeyValueRepository(string folder, DataStoreSerializer dataStoreSerializer)
+        public RocksDbKeyValueRepository(string folder, DataStoreSerializer dataStoreSerializer)
         {
             Directory.CreateDirectory(folder);
             this.dataStoreSerializer = dataStoreSerializer;

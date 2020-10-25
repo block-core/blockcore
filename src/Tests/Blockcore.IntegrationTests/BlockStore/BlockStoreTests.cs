@@ -36,7 +36,7 @@ namespace Blockcore.IntegrationTests.BlockStore
         [Fact]
         public void BlockRepositoryPutBatch()
         {
-            using (var blockRepository = new LeveldbBlockRepository(this.network, TestBase.CreateDataFolder(this), this.loggerFactory, this.dataStoreSerializer))
+            using (var blockRepository = new LevelDbBlockRepository(this.network, TestBase.CreateDataFolder(this), this.loggerFactory, this.dataStoreSerializer))
             {
                 blockRepository.SetTxIndex(true);
 

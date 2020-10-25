@@ -193,7 +193,7 @@ namespace Blockcore.Configuration
 
             // Ensure the network being used is registered and we have the correct Network object reference.
             this.Network = NetworkRegistration.Register(this.Network);
-            this.DbType = this.ConfigReader.GetOrDefault<DbType>("dbtype", DbType.Leveldb, this.Logger);
+            this.DbType = this.ConfigReader.GetOrDefault<DbType>("dbtype", DbType.LevelDb, this.Logger);
 
             // Set the full data directory path.
             if (this.DataDir == null)
@@ -391,7 +391,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"-fallbackfee=<number>     Fallback fee rate. Defaults to {network.FallbackFee}.");
             builder.AppendLine($"-minrelaytxfee=<number>   Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");
 
-            builder.AppendLine($"-dbtype=<name>            Which db to use. options: {DbType.Leveldb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
+            builder.AppendLine($"-dbtype=<name>            Which db to use. options: {DbType.LevelDb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
 
             defaults.Logger.LogInformation(builder.ToString());
 
@@ -418,7 +418,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"#Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");
             builder.AppendLine($"#minrelaytxfee={network.MinRelayTxFee}");
             builder.AppendLine();
-            builder.AppendLine($"#Which db to use. options: {DbType.Leveldb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
+            builder.AppendLine($"#Which db to use. options: {DbType.LevelDb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
             builder.AppendLine($"#dbtype=<name>");
             builder.AppendLine();
 
@@ -434,7 +434,7 @@ namespace Blockcore.Configuration
 
     public enum DbType
     {
-        Leveldb,
+        LevelDb,
         DBTrie,
         Faster,
         Rocksdb

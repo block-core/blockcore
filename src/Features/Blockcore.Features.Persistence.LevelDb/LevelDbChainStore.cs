@@ -9,7 +9,7 @@ using NBitcoin;
 
 namespace Blockcore.Consensus.Chain
 {
-    public class LeveldbChainStore : IChainStore, IDisposable
+    public class LevelDbChainStore : IChainStore, IDisposable
     {
         private readonly Network network;
 
@@ -30,7 +30,7 @@ namespace Blockcore.Consensus.Chain
 
         private object locker;
 
-        public LeveldbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
+        public LevelDbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
         {
             this.network = network;
             this.ChainIndexer = chainIndexer;

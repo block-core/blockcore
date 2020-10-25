@@ -122,7 +122,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             // Query the repository for the item that was inserted in the above code.
-            using (LeveldbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (LevelDbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
             {
                 var headerOut = await repo.GetAsync(blockHeight).ConfigureAwait(false);
 
@@ -142,7 +142,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
                 engine.Put(DBH.Key(BlockHashHeightTable, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(new uint256(), 1)));
             }
 
-            using (LeveldbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (LevelDbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
             {
                 // Select a different block height.
                 ProvenBlockHeader outHeader = await repo.GetAsync(2).ConfigureAwait(false);
@@ -180,9 +180,9 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
         }
 
-        private LeveldbProvenBlockHeaderRepository SetupRepository(Network network, string folder)
+        private LevelDbProvenBlockHeaderRepository SetupRepository(Network network, string folder)
         {
-            var repo = new LeveldbProvenBlockHeaderRepository(network, folder, this.LoggerFactory.Object, this.dataStoreSerializer);
+            var repo = new LevelDbProvenBlockHeaderRepository(network, folder, this.LoggerFactory.Object, this.dataStoreSerializer);
 
             Task task = repo.InitializeAsync();
 

@@ -9,7 +9,12 @@ using RocksDbSharp;
 
 namespace Blockcore.Consensus.Chain
 {
-    public class RocksdbChainStore : IChainStore, IDisposable
+    /// <summary>
+    /// Rocksdb implementation of the chain storage
+    /// </summary>
+    /// <seealso cref="Blockcore.Consensus.Chain.IChainStore" />
+    /// <seealso cref="System.IDisposable" />
+    public class RocksDbChainStore : IChainStore, IDisposable
     {
         private readonly Network network;
 
@@ -30,7 +35,7 @@ namespace Blockcore.Consensus.Chain
 
         private object locker;
 
-        public RocksdbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
+        public RocksDbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
         {
             this.network = network;
             this.ChainIndexer = chainIndexer;

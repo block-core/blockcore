@@ -11,6 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Persistence.LevelDb\Blockcore.Features.Persistence.LevelDb.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Persistence.Rocksdb\Blockcore.Features.Persistence.Rocksdb.csproj" />
     <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
     <ProjectReference Include="..\..\Networks\City\City\Blockcore.Networks.City.csproj" />
     <ProjectReference Include="..\..\Networks\OpenExo\OpenExo\OpenExo.csproj" />

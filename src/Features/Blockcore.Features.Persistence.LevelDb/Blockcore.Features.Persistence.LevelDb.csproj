@@ -1,25 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Blockcore Features BlockStore</Description>
-    <AssemblyTitle>Blockcore.Features.BlockStore</AssemblyTitle>
-    <AssemblyName>Blockcore.Features.BlockStore</AssemblyName>
-    <PackageId>Blockcore.Features.BlockStore</PackageId>
+    <Description>LevelDb persistence feature for Blockcore</Description>
+    <AssemblyTitle>Blockcore.Features.Persistence.LevelDb</AssemblyTitle>
+    <AssemblyName>Blockcore.Features.Persistence.LevelDb</AssemblyName>
+    <PackageId>Blockcore.Features.Persistence.LevelDb</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Authors>Blockcore</Authors>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DBreeze" Version="1.95.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
+    <PackageReference Include="LevelDB.Standard" Version="2.1.6.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

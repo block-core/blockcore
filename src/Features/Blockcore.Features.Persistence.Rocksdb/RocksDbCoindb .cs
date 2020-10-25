@@ -16,7 +16,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
     /// <summary>
     /// Persistent implementation of coinview using dBreeze database.
     /// </summary>
-    public class RocksdbCoindb : ICoindb, IStakdb, IDisposable
+    public class RocksDbCoindb : ICoindb, IStakdb, IDisposable
     {
         /// <summary>Database key under which the block hash of the coin view's current tip is stored.</summary>
         private static readonly byte[] blockHashKey = new byte[0];
@@ -45,13 +45,13 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         private DataStoreSerializer dataStoreSerializer;
 
-        public RocksdbCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
+        public RocksDbCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
             : this(network, dataFolder.CoindbPath, dateTimeProvider, loggerFactory, nodeStats, dataStoreSerializer)
         {
         }
 
-        public RocksdbCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider,
+        public RocksDbCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
@@ -276,7 +276,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         private void AddBenchStats(StringBuilder log)
         {
-            log.AppendLine("======Leveldb Bench======");
+            log.AppendLine("======LevelDb Bench======");
 
             BackendPerformanceSnapshot snapShot = this.performanceCounter.Snapshot();
 

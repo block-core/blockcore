@@ -1,15 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Blockcore.Consensus.BlockInfo;
+﻿using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using DBreeze.DataTypes;
-using LevelDB;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 using RocksDbSharp;
 
@@ -17,7 +11,7 @@ namespace Blockcore.Features.BlockStore.Pruning
 
 {
     /// <inheritdoc />
-    public class RocksdbPrunedBlockRepository : IPrunedBlockRepository
+    public class RocksDbPrunedBlockRepository : IPrunedBlockRepository
 
     {
         private readonly IBlockRepository blockRepository;
@@ -30,7 +24,7 @@ namespace Blockcore.Features.BlockStore.Pruning
         /// <inheritdoc />
         public HashHeightPair PrunedTip { get; private set; }
 
-        public RocksdbPrunedBlockRepository(IBlockRepository blockRepository, DataStoreSerializer dataStoreSerializer, ILoggerFactory loggerFactory, StoreSettings storeSettings, Network network)
+        public RocksDbPrunedBlockRepository(IBlockRepository blockRepository, DataStoreSerializer dataStoreSerializer, ILoggerFactory loggerFactory, StoreSettings storeSettings, Network network)
         {
             this.blockRepository = blockRepository;
 

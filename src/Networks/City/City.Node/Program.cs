@@ -14,6 +14,9 @@ using Blockcore.Features.RPC;
 using Blockcore.Utilities;
 using NBitcoin;
 using NBitcoin.Protocol;
+using Blockcore.Utilities.Store;
+using Blockcore.Features.Persistence.LevelDb;
+using Blockcore.Features.Persistence.Rocksdb;
 
 namespace City.Daemon
 {
@@ -24,9 +27,14 @@ namespace City.Daemon
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Networks.City, args: args);
+                var persistenceProviderManager = new PersistenceProviderManager(nodeSettings,
+                    new LevelDbPersistenceProvider(),
+                    new RocksDbPersistenceProvider()
+                    // append additional persistence providers here
+                    );
 
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-                    .UseNodeSettings(nodeSettings)
+                    .UseNodeSettings(nodeSettings, persistenceProviderManager)
                     .UseBlockStore()
                     .UsePosConsensus()
                     .UseMempool()

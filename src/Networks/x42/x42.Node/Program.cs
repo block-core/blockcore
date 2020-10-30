@@ -34,7 +34,6 @@ namespace x42.Daemon
                     .UseBlockNotification()
                     .UseTransactionNotification()
                     .UseColdStakingWallet()
-                    .UseWatchOnlyWallet()
                     .AddPowPosMining()
                     .UseNodeHost()
                     .AddRPC()

@@ -1,8 +1,18 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blockcore.Builder.Feature
 {
+    public enum FeatureInitializationState
+    {
+        Uninitialized,
+        Initializing,
+        Initialized,
+        Disposing,
+        Disposed
+    }
+
     /// <summary>
     /// Defines methods for features that are managed by the FullNode.
     /// </summary>
@@ -16,7 +26,7 @@ namespace Blockcore.Builder.Feature
         /// <summary>
         /// The state in which the feature currently is.
         /// </summary>
-        string State { get; set; }
+        FeatureInitializationState State { get; set; }
 
         /// <summary>
         /// Triggered when the FullNode host has fully started.
@@ -29,6 +39,10 @@ namespace Blockcore.Builder.Feature
         /// <exception cref="MissingDependencyException">should be thrown if dependency is missing</exception>
         /// <param name="services">Services and features registered to node.</param>
         void ValidateDependencies(IFullNodeServiceProvider services);
+
+        bool IsEnabled();
+
+        void WaitInitialized();
     }
 
     /// <summary>
@@ -47,7 +61,7 @@ namespace Blockcore.Builder.Feature
         public bool InitializeBeforeBase { get; set; }
 
         /// <inheritdoc />
-        public string State { get; set; }
+        public FeatureInitializationState State { get; set; }
 
         /// <inheritdoc />
         public abstract Task InitializeAsync();
@@ -60,6 +74,23 @@ namespace Blockcore.Builder.Feature
         /// <inheritdoc />
         public virtual void ValidateDependencies(IFullNodeServiceProvider services)
         {
+        }
+
+        public virtual bool IsEnabled()
+        {
+            return true;
+        }
+
+        public void WaitInitialized()
+        {
+            if (!this.IsEnabled())
+                throw new NotSupportedException($"{this.GetType()} is not enabled.");
+
+            // If this feature is awaiting initialization then wait a bit.
+            while (this.State == FeatureInitializationState.Uninitialized || this.State == FeatureInitializationState.Initializing)
+            {
+                Thread.Sleep(1000);
+            }
         }
     }
 }

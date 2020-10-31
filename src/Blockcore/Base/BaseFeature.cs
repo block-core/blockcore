@@ -410,7 +410,6 @@ namespace Blockcore.Base
                     services.AddSingleton<IAsyncProvider, AsyncProvider>();
                     services.AddSingleton<IBroadcasterManager, BroadcasterManager>();
                     services.AddSingleton<IBroadcastCheck, NoCheckBroadcastCheck>();
-                    services.AddSingleton<IPersistenceProviderManager>((provider)=> fullNodeBuilder.PersistenceProviderManager);
 
                     // Consensus
                     services.AddSingleton<ConsensusSettings>();

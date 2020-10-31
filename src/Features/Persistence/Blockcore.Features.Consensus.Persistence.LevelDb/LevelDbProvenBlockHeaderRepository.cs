@@ -8,12 +8,11 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using DBreeze.Utils;
 using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.ProvenBlockHeaders
+namespace Blockcore.Features.Consensus.Persistence.LevelDb
 {
     /// <summary>
     /// Persistent implementation of the <see cref="ProvenBlockHeader"/> DBreeze repository.

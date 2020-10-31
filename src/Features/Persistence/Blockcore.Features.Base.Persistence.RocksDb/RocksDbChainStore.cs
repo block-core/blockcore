@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Configuration;
+using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;
 using RocksDbSharp;
+using DB = RocksDbSharp.RocksDb;
 
-namespace Blockcore.Consensus.Chain
+namespace Blockcore.Features.Base.Persistence.RocksDb
 {
     /// <summary>
     /// Rocksdb implementation of the chain storage
@@ -31,7 +34,7 @@ namespace Blockcore.Consensus.Chain
         /// </summary>
         private readonly MemoryCountCache<uint256, BlockHeader> recentHeaders;
 
-        private readonly RocksDb rocksdb;
+        private readonly DB rocksdb;
 
         private object locker;
 
@@ -45,7 +48,7 @@ namespace Blockcore.Consensus.Chain
 
             // Open a connection to a new DB and create if not found
             var options = new DbOptions().SetCreateIfMissing(true);
-            this.rocksdb = RocksDb.Open(options, dataFolder.ChainPath);
+            this.rocksdb = DB.Open(options, dataFolder.ChainPath);
         }
 
         public ChainIndexer ChainIndexer { get; }

@@ -12,6 +12,7 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Features.Consensus.Persistence.LevelDb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;

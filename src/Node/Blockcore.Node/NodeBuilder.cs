@@ -10,9 +10,7 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.Dns;
-using Blockcore.Utilities.Store;
-using Blockcore.Features.Persistence.Rocksdb;
-using Blockcore.Features.Persistence.LevelDb;
+using Blockcore.Persistence;
 
 namespace Blockcore.Node
 {
@@ -23,8 +21,6 @@ namespace Blockcore.Node
         public static IFullNodeBuilder Create(string chain, NodeSettings settings)
         {
             chain = chain.ToUpperInvariant();
-
-            InitializePersistenceProviders(settings);
 
             IFullNodeBuilder nodeBuilder = CreateBaseBuilder(chain, settings);
 
@@ -46,19 +42,10 @@ namespace Blockcore.Node
             return nodeBuilder;
         }
 
-        private static void InitializePersistenceProviders(NodeSettings settings)
-        {
-            persistenceProviderManager = new PersistenceProviderManager(settings,
-                new LevelDbPersistenceProvider(),
-                new RocksDbPersistenceProvider()
-                // append additional persistence providers here
-                );
-        }
-
         private static IFullNodeBuilder CreateBaseBuilder(string chain, NodeSettings settings)
         {
             IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-            .UseNodeSettings(settings, persistenceProviderManager)
+            .UseNodeSettings(settings)
             .UseBlockStore()
             .UseMempool()
             .UseNodeHost()

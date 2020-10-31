@@ -44,7 +44,9 @@ namespace Blockcore.IntegrationTests.Common.Runners
 
             var persistenceProviderManager = new TestPersistenceProviderManager(settings);
 
-            IFullNodeBuilder builder = new FullNodeBuilder().UseNodeSettings(settings, persistenceProviderManager);
+            IFullNodeBuilder builder = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(persistenceProviderManager)
+                .UseNodeSettings(settings);
 
             this.callback(builder);
 

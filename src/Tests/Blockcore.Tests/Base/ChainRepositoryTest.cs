@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
-using DBreeze;
-using DBreeze.DataTypes;
 using LevelDB;
 using Microsoft.Extensions.Logging;
-using Moq;
 using NBitcoin;
 using Xunit;
 

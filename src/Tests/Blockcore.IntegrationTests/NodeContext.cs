@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
+using Blockcore.Features.Consensus.Persistence.LevelDb;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;

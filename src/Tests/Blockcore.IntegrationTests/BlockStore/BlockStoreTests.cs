@@ -4,6 +4,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore;
+using Blockcore.Features.BlockStore.Persistence.LevelDb;
 using Blockcore.Features.BlockStore.Repository;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;

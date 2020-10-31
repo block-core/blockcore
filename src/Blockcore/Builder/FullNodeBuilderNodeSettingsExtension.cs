@@ -15,14 +15,12 @@ namespace Blockcore.Builder
         /// </summary>
         /// <param name="builder">Full node builder to change node settings for.</param>
         /// <param name="nodeSettings">Node settings to be used.</param>
-        /// <param name="persistenceProviderManager">The persistence provider manager.</param>
         /// <returns>Interface to allow fluent code.</returns>
-        public static IFullNodeBuilder UseNodeSettings(this IFullNodeBuilder builder, NodeSettings nodeSettings, IPersistenceProviderManager persistenceProviderManager)
+        public static IFullNodeBuilder UseNodeSettings(this IFullNodeBuilder builder, NodeSettings nodeSettings)
         {
             var nodeBuilder = builder as FullNodeBuilder;
             nodeBuilder.NodeSettings = nodeSettings;
             nodeBuilder.Network = nodeSettings.Network;
-            nodeBuilder.PersistenceProviderManager = persistenceProviderManager;
 
             builder.ConfigureServices(service =>
             {
@@ -38,9 +36,9 @@ namespace Blockcore.Builder
         /// </summary>
         /// <param name="builder">Full node builder to change node settings for.</param>
         /// <returns>Interface to allow fluent code.</returns>
-        public static IFullNodeBuilder UseDefaultNodeSettings(this IFullNodeBuilder builder, IPersistenceProviderManager persistenceProviderManager)
+        public static IFullNodeBuilder UseDefaultNodeSettings(this IFullNodeBuilder builder)
         {
-            return builder.UseNodeSettings(NodeSettings.Default(builder.Network), persistenceProviderManager);
+            return builder.UseNodeSettings(NodeSettings.Default(builder.Network));
         }
     }
 }

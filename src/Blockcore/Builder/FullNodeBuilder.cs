@@ -5,13 +5,11 @@ using System.Reflection;
 using Blockcore.Base;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
-using Blockcore.Interfaces;
 using Blockcore.Networks;
+using Blockcore.Persistence;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Builder
 {
@@ -178,7 +176,7 @@ namespace Blockcore.Builder
             // Print command-line help
             if (this.NodeSettings?.PrintHelpAndExit ?? false)
             {
-                NodeSettings.PrintHelp(this.Network);
+                NodeSettings.PrintHelp(this.Network, this);
 
                 foreach (IFeatureRegistration featureRegistration in this.Features.FeatureRegistrations)
                 {
@@ -192,7 +190,7 @@ namespace Blockcore.Builder
             }
 
             // Create configuration file if required
-            this.NodeSettings?.CreateDefaultConfigurationFile(this.Features.FeatureRegistrations);
+            this.NodeSettings?.CreateDefaultConfigurationFile(this.Features.FeatureRegistrations, this);
 
             ServiceProvider fullNodeServiceProvider = this.Services.BuildServiceProvider();
             this.ConfigureServices(fullNodeServiceProvider);
@@ -224,6 +222,13 @@ namespace Blockcore.Builder
         private IServiceCollection BuildServices()
         {
             this.Services = new ServiceCollection();
+
+            // If no persistence provider has been set yet, create a default one
+            if (this.PersistenceProviderManager == null)
+            {
+                this.PersistenceProviderManager = new PersistenceProviderManager(this.NodeSettings);
+            }
+            this.PersistenceProviderManager.Initialize();
 
             // register services before features
             // as some of the features may depend on independent services

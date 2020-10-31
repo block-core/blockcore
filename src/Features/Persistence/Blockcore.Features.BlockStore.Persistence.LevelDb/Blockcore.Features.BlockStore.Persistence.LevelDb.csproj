@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>LevelDb persistence feature for Blockcore</Description>
-    <AssemblyTitle>Blockcore.Features.Persistence.LevelDb</AssemblyTitle>
-    <AssemblyName>Blockcore.Features.Persistence.LevelDb</AssemblyName>
-    <PackageId>Blockcore.Features.Persistence.LevelDb</PackageId>
+    <Description>LevelDb persistence for Blockcore BlockStore feature</Description>
+    <AssemblyTitle>Blockcore.Features.BlockStore.Persistence.LevelDb</AssemblyTitle>
+    <AssemblyName>Blockcore.Features.BlockStore.Persistence.LevelDb</AssemblyName>
+    <PackageId>Blockcore.Features.BlockStore.Persistence.LevelDb</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Authors>Blockcore</Authors>
     <IsPackable>true</IsPackable>
@@ -14,12 +14,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
-    <PackageReference Include="LevelDB.Standard" Version="2.1.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
-    <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
+    <ProjectReference Include="..\..\..\Blockcore\Blockcore.csproj" />
+    <ProjectReference Include="..\..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
+    <ProjectReference Include="..\Blockcore.Persistence.LevelDb\Blockcore.Persistence.LevelDb.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -9,6 +9,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.IntegrationTests.Common;

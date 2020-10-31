@@ -2,7 +2,7 @@
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Networks;
-using Blockcore.Utilities.Store;
+using Blockcore.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blockcore.Builder

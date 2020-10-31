@@ -1,15 +1,18 @@
 ﻿using System.IO;
 using System.Text;
 using Blockcore.Configuration;
+using Blockcore.Utilities;
 using Blockcore.Utilities.JsonConverters;
+using Blockcore.Utilities.Store;
 using RocksDbSharp;
+using DB = RocksDbSharp.RocksDb;
 
-namespace Blockcore.Utilities.Store
+namespace Blockcore.Features.Base.Persistence.RocksDb
 {
     public class RocksDbKeyValueRepository : IKeyValueRepository
     {
         /// <summary>Access to database.</summary>
-        private readonly RocksDb rocksdb;
+        private readonly DB rocksdb;
 
         private readonly DataStoreSerializer dataStoreSerializer;
 
@@ -24,7 +27,7 @@ namespace Blockcore.Utilities.Store
 
             // Open a connection to a new DB and create if not found
             var options = new DbOptions().SetCreateIfMissing(true);
-            this.rocksdb = RocksDb.Open(options, folder);
+            this.rocksdb = DB.Open(options, folder);
         }
 
         /// <inheritdoc />

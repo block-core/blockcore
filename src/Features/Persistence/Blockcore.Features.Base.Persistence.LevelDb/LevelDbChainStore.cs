@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Configuration;
+using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LevelDB;
 using NBitcoin;
 
-namespace Blockcore.Consensus.Chain
+namespace Blockcore.Features.Base.Persistence.LevelDb
 {
     public class LevelDbChainStore : IChainStore, IDisposable
     {

@@ -5,13 +5,15 @@ using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.Consensus.CoinViews.Coindb
+namespace Blockcore.Features.Consensus.Persistence.LevelDb
 {
     /// <summary>
     /// Persistent implementation of coinview using dBreeze database.

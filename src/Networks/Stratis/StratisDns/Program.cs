@@ -11,13 +11,8 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Utilities;
-using NBitcoin.Protocol;
-using Blockcore.Utilities.Store;
-using Blockcore.Features.Persistence.LevelDb;
-using Blockcore.Features.Persistence.Rocksdb;
 
 namespace StratisDnsD
 {
@@ -36,12 +31,6 @@ namespace StratisDnsD
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Stratis, args: args);
-                var persistenceProviderManager = new PersistenceProviderManager(nodeSettings,
-                    new LevelDbPersistenceProvider(),
-                    new RocksDbPersistenceProvider()
-                    // append additional persistence providers here
-                    );
-
                 var dnsSettings = new DnsSettings(nodeSettings);
 
                 if (string.IsNullOrWhiteSpace(dnsSettings.DnsHostName) || string.IsNullOrWhiteSpace(dnsSettings.DnsNameServer) || string.IsNullOrWhiteSpace(dnsSettings.DnsMailBox))
@@ -53,7 +42,7 @@ namespace StratisDnsD
                 {
                     // Build the Dns full node.
                     node = new FullNodeBuilder()
-                        .UseNodeSettings(nodeSettings, persistenceProviderManager)
+                        .UseNodeSettings(nodeSettings)
                         .UseBlockStore()
                         .UsePosConsensus()
                         .UseMempool()
@@ -68,7 +57,7 @@ namespace StratisDnsD
                 {
                     // Build the Dns node.
                     node = new FullNodeBuilder()
-                        .UseNodeSettings(nodeSettings, persistenceProviderManager)
+                        .UseNodeSettings(nodeSettings)
                         .UsePosConsensus()
                         .UseNodeHost()
                         .AddRPC()

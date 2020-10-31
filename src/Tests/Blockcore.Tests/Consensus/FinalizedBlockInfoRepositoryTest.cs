@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Consensus;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;

@@ -39,7 +39,8 @@ namespace Blockcore.IntegrationTests.Common.Runners
 
 
             var builder = new FullNodeBuilder()
-                            .UseNodeSettings(settings, persistenceProviderManager)
+                            .UsePersistenceProviderMananger(persistenceProviderManager)
+                            .UseNodeSettings(settings)
                             .UseBlockStore()
                             .UsePowConsensus()
                             .UseMempool()

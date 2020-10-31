@@ -13,10 +13,6 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Utilities;
-using NBitcoin.Protocol;
-using Blockcore.Utilities.Store;
-using Blockcore.Features.Persistence.LevelDb;
-using Blockcore.Features.Persistence.Rocksdb;
 
 namespace OpenExo.Node
 {
@@ -27,14 +23,9 @@ namespace OpenExo.Node
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Networks.OpenExo, args: args);
-                var persistenceProviderManager = new PersistenceProviderManager(nodeSettings,
-                    new LevelDbPersistenceProvider(),
-                    new RocksDbPersistenceProvider()
-                    // append additional persistence providers here
-                    );
 
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-                    .UseNodeSettings(nodeSettings, persistenceProviderManager)
+                    .UseNodeSettings(nodeSettings)
                     .UseBlockStore()
                     .UsePosConsensus()
                     .UseMempool()

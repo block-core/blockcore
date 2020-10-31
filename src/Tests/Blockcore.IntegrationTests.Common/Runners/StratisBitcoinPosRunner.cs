@@ -39,7 +39,8 @@ namespace Blockcore.IntegrationTests.Common.Runners
             settings.MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION;
 
             var builder = new FullNodeBuilder()
-                .UseNodeSettings(settings, persistenceProviderManager)
+                .UsePersistenceProviderMananger(persistenceProviderManager)
+                .UseNodeSettings(settings)
                 .UseBlockStore()
                 .UsePosConsensus()
                 .UseMempool()

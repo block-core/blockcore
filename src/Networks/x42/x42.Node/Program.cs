@@ -14,9 +14,6 @@ using Blockcore.Features.RPC;
 using Blockcore.Utilities;
 using Blockcore.Features.WalletWatchOnly;
 using Blockcore.Features.Notifications;
-using Blockcore.Utilities.Store;
-using Blockcore.Features.Persistence.LevelDb;
-using Blockcore.Features.Persistence.Rocksdb;
 
 namespace x42.Daemon
 {
@@ -27,14 +24,9 @@ namespace x42.Daemon
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Networks.x42, args: args);
-                var persistenceProviderManager = new PersistenceProviderManager(nodeSettings,
-                    new LevelDbPersistenceProvider(),
-                    new RocksDbPersistenceProvider()
-                    // append additional persistence providers here
-                    );
 
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-                    .UseNodeSettings(nodeSettings, persistenceProviderManager)
+                    .UseNodeSettings(nodeSettings)
                     .UseBlockStore()
                     .UsePosConsensus()
                     .UseMempool()

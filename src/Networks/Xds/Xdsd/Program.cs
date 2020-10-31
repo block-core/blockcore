@@ -12,10 +12,6 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Networks.Xds;
 using Blockcore.Utilities;
-using NBitcoin.Protocol;
-using Blockcore.Utilities.Store;
-using Blockcore.Features.Persistence.LevelDb;
-using Blockcore.Features.Persistence.Rocksdb;
 
 namespace StratisD
 {
@@ -29,14 +25,9 @@ namespace StratisD
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Xds, args: args);
-                var persistenceProviderManager = new PersistenceProviderManager(nodeSettings,
-                    new LevelDbPersistenceProvider(),
-                    new RocksDbPersistenceProvider()
-                    // append additional persistence providers here
-                    );
 
-                IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-                    .UseNodeSettings(nodeSettings, persistenceProviderManager)
+                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
+                    .UseNodeSettings(nodeSettings)
                     .UseBlockStore()
                     .UsePosConsensus()
                     .UseMempool()

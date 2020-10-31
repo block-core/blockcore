@@ -11,6 +11,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.PoA.Voting;
 using Blockcore.Networks;

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Base;
 using Blockcore.Consensus.Chain;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;

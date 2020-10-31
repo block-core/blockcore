@@ -8,14 +8,16 @@ using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using DBreeze.Utils;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using RocksDbSharp;
+using DB = RocksDbSharp.RocksDb;
 
-namespace Blockcore.Features.BlockStore.Repository
+namespace Blockcore.Features.BlockStore.Persistence.RocksDb
 {
     public class RocksdbBlockRepository : IBlockRepository
     {
@@ -23,7 +25,7 @@ namespace Blockcore.Features.BlockStore.Repository
         public static readonly byte CommonTableName = 2;
         public static readonly byte TransactionTableName = 3;
 
-        private readonly RocksDb rocksdb;
+        private readonly DB rocksdb;
 
         public object Locker { get; }
 
@@ -59,7 +61,7 @@ namespace Blockcore.Features.BlockStore.Repository
 
             Directory.CreateDirectory(folder);
             var options = new DbOptions().SetCreateIfMissing(true);
-            this.rocksdb = RocksDb.Open(options, folder);
+            this.rocksdb = DB.Open(options, folder);
             this.Locker = new object();
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);

@@ -13,8 +13,6 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Networks.Stratis;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Store;
-using Blockcore.Features.Persistence.LevelDb;
 
 namespace StratisD
 {
@@ -28,10 +26,9 @@ namespace StratisD
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Stratis, args: args);
-                var persistenceProviderManager = new PersistenceProviderManager(nodeSettings, new LevelDbPersistenceProvider());
 
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
-                    .UseNodeSettings(nodeSettings, persistenceProviderManager)
+                    .UseNodeSettings(nodeSettings)
                     .UseBlockStore()
                     .UsePosConsensus()
                     .UseMempool()

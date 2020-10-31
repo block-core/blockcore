@@ -1,6 +1,5 @@
 ﻿using Blockcore.Configuration;
-using Blockcore.Features.Persistence.LevelDb;
-using Blockcore.Utilities.Store;
+using Blockcore.Persistence;
 
 namespace Blockcore.Tests.Common
 {
@@ -8,11 +7,22 @@ namespace Blockcore.Tests.Common
     /// To be used when no test has to use persistence.
     /// Doesn't register anything.
     /// </summary>
-    /// <seealso cref="Blockcore.Utilities.Store.IPersistenceProviderManager" />
+    /// <seealso cref="Utilities.Store.IPersistenceProviderManager" />
     public class TestPersistenceProviderManager : PersistenceProviderManager
     {
-        public TestPersistenceProviderManager(NodeSettings nodeSettings) : base(nodeSettings ?? NodeSettings.Default(KnownNetworks.Main), new LevelDbPersistenceProvider())
+        public TestPersistenceProviderManager(NodeSettings nodeSettings) : base(nodeSettings)
         {
+        }
+
+        public override void Initialize()
+        {
+            // manually register LevelDb implementation
+            this.persistenceProviders["LevelDb".ToLowerInvariant()] = new System.Collections.Generic.List<IPersistenceProvider>
+            {
+                new Features.Base.Persistence.LevelDb.PersistenceProvider(),
+                new Features.Consensus.Persistence.LevelDb.PersistenceProvider(),
+                new Features.BlockStore.Persistence.LevelDb.PersistenceProvider(),
+            };
         }
     }
 }

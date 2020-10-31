@@ -14,8 +14,6 @@ using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
-using Blockcore.Features.Persistence.Rocksdb;
-using Blockcore.Features.Persistence.LevelDb;
 
 namespace BitcoinD
 {
@@ -29,14 +27,9 @@ namespace BitcoinD
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Bitcoin, args: args);
-                var persistenceProviderManager = new PersistenceProviderManager(nodeSettings,
-                    new LevelDbPersistenceProvider(),
-                    new RocksDbPersistenceProvider()
-                    // append additional persistence providers here
-                    );
 
                 IFullNode node = new FullNodeBuilder()
-                    .UseNodeSettings(nodeSettings, persistenceProviderManager)
+                    .UseNodeSettings(nodeSettings)
                     .UseBlockStore()
                     .UsePowConsensus()
                     .UseMempool()

@@ -76,9 +76,10 @@ namespace Blockcore.Tests.Builder.Feature
         public void DependencyCheckWithValidDependencies()
         {
             var settings = NodeSettings.Default(KnownNetworks.StratisRegTest);
-            var persistenceProviderManager = new TestPersistenceProviderManager(settings);
 
-            IFullNodeBuilder builder = new FullNodeBuilder().UseNodeSettings(settings, persistenceProviderManager);
+            IFullNodeBuilder builder = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(new TestPersistenceProviderManager(settings))
+                .UseNodeSettings(settings);
 
             builder.ConfigureFeature(features =>
             {
@@ -104,7 +105,10 @@ namespace Blockcore.Tests.Builder.Feature
         {
             var nodeSettings = NodeSettings.Default(KnownNetworks.StratisRegTest);
 
-            IFullNodeBuilder builder = new FullNodeBuilder().UseNodeSettings(nodeSettings, new TestPersistenceProviderManager(nodeSettings));
+            IFullNodeBuilder builder = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(new TestPersistenceProviderManager(nodeSettings))
+                .UseNodeSettings(nodeSettings);
+
             builder.ConfigureFeature(features =>
             {
                 features

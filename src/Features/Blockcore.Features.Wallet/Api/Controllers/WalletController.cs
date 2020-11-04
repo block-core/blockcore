@@ -482,6 +482,36 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         }
 
         /// <summary>
+        /// Slim version of the history of a wallet. This includes the transactions held by the entire wallet
+        /// or a single account if one is specified.
+        /// </summary>
+        /// <param name="request">An object containing the parameters used to retrieve a wallet's history.</param>
+        /// <returns>A JSON object containing the wallet history.</returns>
+        [Route("historyslim")]
+        [HttpGet]
+        public IActionResult GetHistorySlim([FromQuery] WalletHistoryRequest request)
+        {
+            Guard.NotNull(request, nameof(request));
+
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            try
+            {
+                WalletHistoryModel model = WalletModelBuilder.GetHistorySlim(this.walletManager, this.network, request);
+
+                return this.Json(model);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
         /// Gets the balance of a wallet in STRAT (or sidechain coin). Both the confirmed and unconfirmed balance are returned.
         /// </summary>
         /// <param name="request">An object containing the parameters used to retrieve a wallet's balance.</param>

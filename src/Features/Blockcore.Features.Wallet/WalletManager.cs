@@ -777,7 +777,7 @@ namespace Blockcore.Features.Wallet
             lock (this.lockObject)
             {
                 // Get transactions contained in the account.
-                var trxs = wallet.walletStore.GetAccountHistory(account.Index, account.IsNormalAccount(), skip: skip, take: take).ToList();
+                var trxs = wallet.walletStore.GetAccountHistory(account.Index, account.IsNormalAccount(), skip: skip).ToList();
 
                 items = trxs.Select(s => new FlatHistorySlim { Transaction = s, Address = s.ScriptPubKey != null ? this.walletIndex[wallet.Name].ScriptToAddressLookup[s.ScriptPubKey] : null }).ToArray();
             }

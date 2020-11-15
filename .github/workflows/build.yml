@@ -71,6 +71,7 @@ jobs:
       run: |
         echo RELEASE_NAME=${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }} >> $GITHUB_ENV
         echo RELEASE_PATH=${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }} >> $GITHUB_ENV
+      shell: bash
 
     - name: Package (Linux)
       if: matrix.os == 'ubuntu-latest'

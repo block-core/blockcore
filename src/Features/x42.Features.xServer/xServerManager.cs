@@ -177,7 +177,15 @@ namespace x42.Features.xServer
             }
             else
             {
-                result.ResultMessage = "Failed to access xServer";
+                var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(registerResult.Content);
+                if (errorResponse != null)
+                {
+                    result.ResultMessage = errorResponse.errors[0].message;
+                }
+                else
+                {
+                    result.ResultMessage = "Failed to access xServer";
+                }
                 result.Success = false;
             }
             return result;
@@ -228,7 +236,15 @@ namespace x42.Features.xServer
                 }
                 else
                 {
-                    result.ResultMessage = "Failed to access xServer";
+                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(createPLResult.Content);
+                    if (errorResponse != null)
+                    {
+                        result.ResultMessage = errorResponse.errors[0].message;
+                    }
+                    else
+                    {
+                        result.ResultMessage = "Failed to access xServer";
+                    }
                     result.Success = false;
                 }
             }
@@ -259,7 +275,15 @@ namespace x42.Features.xServer
                 }
                 else
                 {
-                    result.ResultMessage = "Failed to access xServer";
+                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(createPLResult.Content);
+                    if (errorResponse != null)
+                    {
+                        result.ResultMessage = errorResponse.errors[0].message;
+                    }
+                    else
+                    {
+                        result.ResultMessage = "Failed to access xServer";
+                    }
                     result.Success = false;
                 }
             }
@@ -292,7 +316,15 @@ namespace x42.Features.xServer
                 }
                 else
                 {
-                    result.ResultMessage = "Failed to access xServer";
+                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(submitPaymentResult.Content);
+                    if (errorResponse != null)
+                    {
+                        result.ResultMessage = errorResponse.errors[0].message;
+                    }
+                    else
+                    {
+                        result.ResultMessage = "Failed to access xServer";
+                    }
                     result.Success = false;
                 }
             }
@@ -332,7 +364,15 @@ namespace x42.Features.xServer
                 }
                 else
                 {
-                    result.ResultMessage = "Failed to access xServer";
+                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(createPLResult.Content);
+                    if (errorResponse != null)
+                    {
+                        result.ResultMessage = errorResponse.errors[0].message;
+                    }
+                    else
+                    {
+                        result.ResultMessage = "Failed to access xServer";
+                    }
                     result.Success = false;
                 }
             }
@@ -373,7 +413,15 @@ namespace x42.Features.xServer
                 }
                 else
                 {
-                    result.ResultMessage = "Failed to access xServer";
+                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(reserveProfileResult.Content);
+                    if (errorResponse != null)
+                    {
+                        result.ResultMessage = errorResponse.errors[0].message;
+                    }
+                    else
+                    {
+                        result.ResultMessage = "Failed to access xServer";
+                    }
                     result.Success = false;
                 }
             }

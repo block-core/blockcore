@@ -49,8 +49,9 @@ jobs:
 
     - name: Variables
       run: |
-        echo "::set-env name=VERSION::$(npm run version --silent)"
-        echo "::set-env name=RELEASE_CONFIGURATION::${{ matrix.runtime }}"
+        echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
+        echo RELEASE_CONFIGURATION=${{ matrix.runtime }} >> $GITHUB_ENV
+      shell: bash
 
     - name: Setup .NET Core (${{ matrix.dotnet_version }})
       uses: actions/setup-dotnet@v1
@@ -68,13 +69,13 @@ jobs:
 
     - name: Package Name
       run: |
-        echo "::set-env name=RELEASE_NAME::${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }}"
-        echo "::set-env name=RELEASE_PATH::${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }}"
+        echo RELEASE_NAME=${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }} >> $GITHUB_ENV
+        echo RELEASE_PATH=${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }} >> $GITHUB_ENV
 
     - name: Package (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
-        echo "::set-env name=RELEASE_PATH::./bin/publish/${{env.RELEASE_NAME}}"
+        echo RELEASE_PATH=./bin/publish/${{env.RELEASE_NAME}} >> $GITHUB_ENV
         cd ./bin/publish/
         tar cvzf ${{env.RELEASE_NAME}} *
 

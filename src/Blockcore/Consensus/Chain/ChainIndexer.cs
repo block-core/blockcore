@@ -221,6 +221,12 @@ namespace Blockcore.Consensus.Chain
         {
             lock (this.lockObject)
             {
+                // If node is looking for zero, we'll return the genesis block.
+                if (id == uint256.Zero)
+                {
+                    return this.blocksByHeight[0];
+                }
+
                 ChainedHeader result;
                 this.blocksById.TryGetValue(id, out result);
                 return result;

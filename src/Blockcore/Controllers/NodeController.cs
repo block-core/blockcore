@@ -10,13 +10,18 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Blockcore.Utilities.ModelStateErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -33,6 +38,7 @@ namespace Blockcore.Controllers
     /// <summary>
     /// Provides methods that interact with the full node.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
@@ -82,6 +88,8 @@ namespace Blockcore.Controllers
 
         private readonly ISelfEndpointTracker selfEndpointTracker;
 
+        private readonly IConsensusManager consensusManager;
+
         public NodeController(
             ChainIndexer chainIndexer,
             IChainState chainState,
@@ -97,7 +105,8 @@ namespace Blockcore.Controllers
             IGetUnspentTransaction getUnspentTransaction = null,
             INetworkDifficulty networkDifficulty = null,
             IPooledGetUnspentTransaction pooledGetUnspentTransaction = null,
-            IPooledTransaction pooledTransaction = null)
+            IPooledTransaction pooledTransaction = null,
+            IConsensusManager consensusManager = null)
         {
             Guard.NotNull(fullNode, nameof(fullNode));
             Guard.NotNull(network, nameof(network));
@@ -109,6 +118,7 @@ namespace Blockcore.Controllers
             Guard.NotNull(dateTimeProvider, nameof(dateTimeProvider));
             Guard.NotNull(asyncProvider, nameof(asyncProvider));
             Guard.NotNull(selfEndpointTracker, nameof(selfEndpointTracker));
+            Guard.NotNull(consensusManager, nameof(consensusManager));
 
             this.chainIndexer = chainIndexer;
             this.chainState = chainState;
@@ -126,6 +136,7 @@ namespace Blockcore.Controllers
             this.networkDifficulty = networkDifficulty;
             this.pooledGetUnspentTransaction = pooledGetUnspentTransaction;
             this.pooledTransaction = pooledTransaction;
+            this.consensusManager = consensusManager;
         }
 
         /// <summary>
@@ -245,45 +256,75 @@ namespace Blockcore.Controllers
         /// </summary>
         /// <param name="trxid">The transaction ID (a hash of the trancaction).</param>
         /// <param name="verbose">A flag that specifies whether to return verbose information about the transaction.</param>
+        /// <param name="blockHash">The hash of the block in which to look for the transaction.</param>
         /// <returns>Json formatted <see cref="TransactionBriefModel"/> or <see cref="TransactionVerboseModel"/>. <c>null</c> if transaction not found. Returns <see cref="IActionResult"/> formatted error if otherwise fails.</returns>
         /// <exception cref="ArgumentNullException">Thrown if fullNode, network, or chain are not available.</exception>
         /// <exception cref="ArgumentException">Thrown if trxid is empty or not a valid<see cref="uint256"/>.</exception>
         /// <remarks>Requires txindex=1, otherwise only txes that spend or create UTXOs for a wallet can be returned.</remarks>
         [Route("getrawtransaction")]
         [HttpGet]
-        public async Task<IActionResult> GetRawTransactionAsync([FromQuery] string trxid, bool verbose = false)
+        public async Task<IActionResult> GetRawTransactionAsync([FromQuery] string trxid, bool verbose = false, string blockHash = null)
         {
             try
             {
                 Guard.NotEmpty(trxid, nameof(trxid));
 
-                uint256 txid;
-                if (!uint256.TryParse(trxid, out txid))
+                if (!uint256.TryParse(trxid, out uint256 trxhash))
                 {
                     throw new ArgumentException(nameof(trxid));
                 }
 
-                // First tries to find a pooledTransaction. If can't, will retrieve it from the blockstore if it exists.
-                Transaction trx = this.pooledTransaction != null ? await this.pooledTransaction.GetTransaction(txid).ConfigureAwait(false) : null;
-                if (trx == null)
+                uint256 hash = null;
+                if (!string.IsNullOrEmpty(blockHash) && !uint256.TryParse(blockHash, out hash))
                 {
-                    trx = this.blockStore?.GetTransactionById(txid);
+                    throw new ArgumentException(nameof(blockHash));
                 }
 
-                if (trx == null)
+                // Special exception for the genesis block coinbase transaction.
+                if (trxhash == this.network.GetGenesis().GetMerkleRoot().Hash)
                 {
-                    return this.Json(null);
+                    throw new Exception("The genesis block coinbase is not considered an ordinary transaction and cannot be retrieved.");
+                }
+
+                Transaction trx = null;
+                ChainedHeaderBlock chainedHeaderBlock = null;
+
+                if (hash == null)
+                {
+                    // Look for the transaction in the mempool, and if not found, look in the indexed transactions.
+                    trx = (this.pooledTransaction == null ? null : await this.pooledTransaction.GetTransaction(trxhash).ConfigureAwait(false)) ??
+                          this.blockStore.GetTransactionById(trxhash);
+
+                    if (trx == null)
+                    {
+                        return this.Json(null);
+                    }
+                }
+                else
+                {
+                    // Retrieve the block specified by the block hash.
+                    chainedHeaderBlock = this.consensusManager.GetBlockData(hash);
+
+                    if (chainedHeaderBlock == null)
+                    {
+                        throw new Exception("Block hash not found.");
+                    }
+
+                    trx = chainedHeaderBlock.Block.Transactions.SingleOrDefault(t => t.GetHash() == trxhash);
+
+                    if (trx == null)
+                    {
+                        return this.Json(null);
+                    }
                 }
 
                 if (verbose)
                 {
-                    ChainedHeader block = this.GetTransactionBlock(txid, this.fullNode, this.chainIndexer);
+                    ChainedHeader block = chainedHeaderBlock != null ? chainedHeaderBlock.ChainedHeader : this.GetTransactionBlock(trxhash);
                     return this.Json(new TransactionVerboseModel(trx, this.network, block, this.chainState?.ConsensusTip));
                 }
                 else
-                {
                     return this.Json(new TransactionBriefModel(trx));
-                }
             }
             catch (Exception e)
             {
@@ -439,6 +480,7 @@ namespace Blockcore.Controllers
         /// <seealso cref="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Simple_requests"/>
         /// </remarks>
         /// <returns><see cref="OkResult"/></returns>
+        //[Authorize(Policy = "OnlyAdmins")]
         [HttpPost]
         [Route("shutdown")]
         [Route("stop")]
@@ -456,6 +498,7 @@ namespace Blockcore.Controllers
         /// </summary>
         /// <param name="request">The request containing the loggers to modify.</param>
         /// <returns><see cref="OkResult"/></returns>
+        //[Authorize(Policy = "OnlyAdmins")]
         [HttpPut]
         [Route("loglevels")]
         public IActionResult UpdateLogLevel([FromBody] LogRulesRequest request)
@@ -629,6 +672,24 @@ namespace Blockcore.Controllers
         internal static Target GetNetworkDifficulty(INetworkDifficulty networkDifficulty = null)
         {
             return networkDifficulty?.GetNetworkDifficulty();
+        }
+
+        /// <summary>
+        /// Retrieves the block that the transaction is in.
+        /// </summary>
+        /// <param name="trxid">The transaction id.</param>
+        /// <returns>Returns the <see cref="ChainedHeader"/> that the transaction is in. Returns <c>null</c> if not found.</returns>
+        private ChainedHeader GetTransactionBlock(uint256 trxid)
+        {
+            ChainedHeader block = null;
+
+            uint256 blockid = this.blockStore?.GetBlockIdByTransactionId(trxid);
+            if (blockid != null)
+            {
+                block = this.chainIndexer?.GetHeader(blockid);
+            }
+
+            return block;
         }
     }
 }

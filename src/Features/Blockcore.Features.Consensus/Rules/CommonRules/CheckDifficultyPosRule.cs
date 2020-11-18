@@ -1,4 +1,6 @@
 ﻿using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

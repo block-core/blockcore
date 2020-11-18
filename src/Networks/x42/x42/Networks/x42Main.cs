@@ -11,6 +11,13 @@ using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using x42.Networks.Consensus;
 using x42.Networks.Setup;
 using x42.Networks.Deployments;
@@ -24,14 +31,15 @@ namespace x42.Networks
         public x42Main()
         {
             // START MODIFICATIONS OF GENERATED CODE
-            var consensusOptions = new x42PosConsensusOptions(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                witnessScaleFactor: 4
-            );
+            var consensusOptions = new x42PosConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 4
+            };
             consensusOptions.MinBlockFeeRate = Money.Zero;
             // END MODIFICATIONS
 
@@ -53,6 +61,7 @@ namespace x42.Networks
             this.DefaultMaxInboundConnections = 109;
             this.MaxTipAge = 2 * 60 * 60;
             this.MinTxFee = Money.Zero;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = Money.Zero;
             this.MinRelayTxFee = Money.Zero;
             this.MaxTimeOffsetSeconds = 25 * 60;
@@ -150,9 +159,7 @@ namespace x42.Networks
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
             this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
             this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            this.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());

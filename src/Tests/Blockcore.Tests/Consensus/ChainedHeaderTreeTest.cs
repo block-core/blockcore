@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus;
-using Blockcore.Primitives;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;

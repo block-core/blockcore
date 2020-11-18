@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration.Logging;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -34,7 +35,7 @@ namespace Blockcore.Tests.Common.Logging
                .Returns(this.FullNodeLogger.Object)
                .Verifiable();
             /*
-            // TODO: Re-factor by moving to Stratis.Bitcoin.Features.RPC.Tests or Stratis.Bitcoin.IntegrationTests
+            // TODO: Re-factor by moving to Blockcore.Features.RPC.Tests or Blockcore.IntegrationTests
             this.mockLoggerFactory.Setup(l => l.CreateLogger(typeof(RPCFeature).FullName))
                 .Returns(this.rpcLogger.Object)
                  .Verifiable();

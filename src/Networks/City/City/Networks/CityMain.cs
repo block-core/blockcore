@@ -13,6 +13,13 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Specialized;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using City.Networks.Consensus;
 using City.Networks.Setup;
 using NBitcoin.Protocol;
@@ -25,14 +32,16 @@ namespace City.Networks
         public CityMain()
         {
             // START MODIFICATIONS OF GENERATED CODE
-            var consensusOptions = new CityPosConsensusOptions(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                witnessScaleFactor: 4
-            );
+            var consensusOptions = new CityPosConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 4
+            };
+
             // END MODIFICATIONS
 
             CoinSetup setup = CitySetup.Instance.Setup;
@@ -52,9 +61,10 @@ namespace City.Networks
             DefaultMaxOutboundConnections = 16;
             DefaultMaxInboundConnections = 109;
             MaxTipAge = 2 * 60 * 60;
-            MinTxFee = 4333;
-            FallbackFee = 4333;
-            MinRelayTxFee = 4333;
+            MinTxFee = 10000;
+            MaxTxFee = Money.Coins(1).Satoshi;
+            FallbackFee = 10000;
+            MinRelayTxFee = 10000;
             MaxTimeOffsetSeconds = 25 * 60;
             DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
@@ -97,7 +107,7 @@ namespace City.Networks
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
-            Consensus = new NBitcoin.Consensus(
+            Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
@@ -147,9 +157,7 @@ namespace City.Networks
             Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
             Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
             Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());

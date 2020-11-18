@@ -1,0 +1,80 @@
+﻿@page "/coldstaking-enablewallet"
+
+@using Blockcore.Features.ColdStaking
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Base.Deployments
+
+@inject IWalletManager WalletManager
+@inject NavigationManager NavigationManager
+@inject NodeDeployments NodeDeployments
+
+<h2><strong>Enable cold staking on an existing wallet</strong></h2>
+
+<div class="row ">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 10em" class="input-group-text" id="wallet-label">Wallet Name:</span>
+                    </div>
+
+                    <select @bind="WalletName" type="text" class="form-control bg-secondary text-light">
+                            <option value=""></option>
+                            @{
+                                foreach (var walletName in this.WalletManager.GetWalletsNames()) {
+                                var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                                    if (coldStakingWalletEnabled != null) {
+                                    } else {
+                                        foreach (var account in this.WalletManager.GetAccounts(walletName))
+                                        {
+                                            <option value="@walletName">@walletName</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span style="min-width: 10em" class="input-group-text">Password:</span>
+                    </div>
+                    <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
+                </div>
+
+                <div class="input-group mb-3">
+                    <button class="btn btn-primary" @onclick="CreateColdStakeAccount">Enable Cold Staking</button>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="text-danger">@Alert</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code
+{
+    ColdStakingManager ColdStakingManager;
+    string Alert { get; set; }
+    private string WalletName { get; set; }
+    private string Password { get; set; }
+
+    private void CreateColdStakeAccount()
+    {
+        if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter your password"; return; }
+        if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter your wallet name"; return; }
+        this.Alert = string.Empty;
+
+        this.ColdStakingManager.GetOrCreateColdStakingAccount(this.WalletName, true, this.Password);
+        this.ColdStakingManager.GetOrCreateColdStakingAccount(this.WalletName, false, this.Password);
+
+        NavigationManager.NavigateTo("coldstakeview/" + WalletName + "/coldStakingColdAddresses");
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        ColdStakingManager = this.WalletManager as ColdStakingManager;
+        return Task.CompletedTask;
+    }
+}

@@ -8,8 +8,10 @@ using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -20,6 +22,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
     /// <summary>
     /// API controller for calls related to PoW mining and PoS minting.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

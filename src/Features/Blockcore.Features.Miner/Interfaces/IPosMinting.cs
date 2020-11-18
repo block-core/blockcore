@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Mining;

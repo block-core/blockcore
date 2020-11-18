@@ -1,0 +1,38 @@
+@using Blockcore.UI.BlazorModal
+@inject ModalService ModalService
+
+@if (ShowForm)
+{
+
+<button class="btn btn-primary" @onclick="Submit">Submit</button>
+
+} else {
+<div class="row ">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-success">@Alert</h5>
+                <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@code
+{
+	bool ShowForm { get; set; } = true;
+    string Alert { get; set; }
+ 
+    private void CloseModal()
+    {
+        ModalService.Close();
+        //NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
+    }
+
+	private void Submit()
+	{
+		ShowForm = false;
+		this.Alert = "Update this message";
+	}
+}

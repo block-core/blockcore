@@ -1,0 +1,19 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<div class="input-group row">
+        <input type="text" readonly class="form-control bg-secondary text-light" value="@Text" />
+        <div class="input-group-append">
+            <button class="btn btn-sm btn-secondary ml-1" @onclick="CopyTextToClipboard">
+                <span class="oi oi-clipboard" aria-hidden="true"></span></button>
+        </div>
+</div>
+
+@code {    
+    [Parameter] public string Text { get; set; }
+
+    private async Task CopyTextToClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", Text);
+    }
+}

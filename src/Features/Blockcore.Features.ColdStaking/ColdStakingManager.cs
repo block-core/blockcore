@@ -5,6 +5,10 @@ using System.Runtime.CompilerServices;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Connection.Broadcasting;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.ColdStaking.Api.Controllers;
 using Blockcore.Features.ColdStaking.Api.Models;
 using Blockcore.Features.Wallet;
@@ -12,6 +16,7 @@ using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
@@ -98,8 +103,7 @@ namespace Blockcore.Features.ColdStaking
                 dateTimeProvider,
                 scriptAddressReader,
                 signals,
-                broadcasterManager
-                )
+                broadcasterManager)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(dateTimeProvider, nameof(dateTimeProvider));
@@ -279,7 +283,7 @@ namespace Blockcore.Features.ColdStaking
                 return null;
             }
 
-            HdAddress address = account.GetFirstUnusedReceivingAddress();
+            HdAddress address = account.GetFirstUnusedReceivingAddress(wallet.walletStore);
             if (address == null)
             {
                 this.logger.LogDebug("No unused address exists on account '{0}'. Adding new address.", account.Name);
@@ -579,7 +583,7 @@ namespace Blockcore.Features.ColdStaking
             UnspentOutputReference[] res = null;
             lock (this.lockObject)
             {
-                res = wallet.GetAllSpendableTransactions(this.ChainIndexer.Tip.Height, confirmations,
+                res = wallet.GetAllSpendableTransactions(wallet.walletStore, this.ChainIndexer.Tip.Height, confirmations,
                     a => a.Index == (isColdWalletAccount ? ColdWalletAccountIndex : HotWalletAccountIndex)).ToArray();
             }
 
@@ -633,7 +637,7 @@ namespace Blockcore.Features.ColdStaking
                 if (script.IsUnspendable)
                 {
                     var data = TxNullDataTemplate.Instance.ExtractScriptPubKeyParameters(script);
-                    if (data.Length == 1)
+                    if (data != null && data.Length == 1)
                     {
                         if (data[0].Length == 40)
                         {

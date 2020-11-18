@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Blockcore.Tests.Common

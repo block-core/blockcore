@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Configuration;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using DBreeze.Utils;
-using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using RocksDbSharp;
 
 namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 {
@@ -26,7 +28,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <summary>
         /// Access to database.
         /// </summary>
-        private readonly DB leveldb;
+        private readonly RocksDb rocksdb;
 
         private object locker;
 
@@ -85,8 +87,9 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             Directory.CreateDirectory(folder);
 
             // Open a connection to a new DB and create if not found
-            var options = new Options { CreateIfMissing = true };
-            this.leveldb = new DB(options, folder);
+            var options = new DbOptions().SetCreateIfMissing(true);
+            this.rocksdb = RocksDb.Open(options, folder);
+
             this.locker = new object();
 
             this.network = network;
@@ -115,20 +118,20 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <inheritdoc />
         public Task<ProvenBlockHeader> GetAsync(int blockHeight)
         {
-            Task<ProvenBlockHeader> task = Task.Run(() =>
+            var task = Task.Run((Func<ProvenBlockHeader>)(() =>
             {
                 byte[] row = null;
 
                 lock (this.locker)
                 {
-                    row = this.leveldb.Get(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(blockHeight)));
+                    row = this.rocksdb.Get(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(blockHeight)));
                 }
 
                 if (row != null)
                     return this.dataStoreSerializer.Deserialize<ProvenBlockHeader>(row);
 
                 return null;
-            });
+            }));
 
             return task;
         }
@@ -166,7 +169,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
             lock (this.locker)
             {
-                this.leveldb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dataStoreSerializer.Serialize(newTip));
+                this.rocksdb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dataStoreSerializer.Serialize(newTip));
             }
         }
 
@@ -183,7 +186,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
                 lock (this.locker)
                 {
-                    this.leveldb.Write(batch);
+                    this.rocksdb.Write(batch);
                 }
             }
 
@@ -202,7 +205,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             byte[] row = null;
             lock (this.locker)
             {
-                row = this.leveldb.Get(DBH.Key(blockHashHeightTable, blockHashHeightKey));
+                row = this.rocksdb.Get(DBH.Key(blockHashHeightTable, blockHashHeightKey));
             }
 
             if (row != null)
@@ -214,7 +217,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <inheritdoc />
         public void Dispose()
         {
-            this.leveldb?.Dispose();
+            this.rocksdb?.Dispose();
         }
     }
 }

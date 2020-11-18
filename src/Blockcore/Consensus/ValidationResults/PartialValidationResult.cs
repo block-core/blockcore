@@ -1,4 +1,4 @@
-﻿using Blockcore.Primitives;
+﻿using Blockcore.Consensus.Chain;
 
 namespace Blockcore.Consensus.ValidationResults
 {

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
@@ -11,6 +14,7 @@ using Blockcore.Networks.Xds.Consensus;
 using Blockcore.Networks.Xds.Deployments;
 using Blockcore.Networks.Xds.Policies;
 using Blockcore.Networks.Xds.Rules;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
@@ -44,8 +48,9 @@ namespace Blockcore.Networks.Xds
             this.DefaultBanTimeSeconds = 8000;
             this.MaxTipAge = 2 * 60 * 60;
             this.MinTxFee = Money.Coins(0.00001m).Satoshi;
-            this.FallbackFee = this.MinTxFee;
-            this.MinRelayTxFee = this.MinTxFee;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
+            this.FallbackFee = Money.Coins(0.00001m).Satoshi;
+            this.MinRelayTxFee = Money.Coins(0.00001m).Satoshi;
             this.AbsoluteMinTxFee = Money.Coins(0.01m).Satoshi;
 
             var consensusFactory = new XdsConsensusFactory();
@@ -56,14 +61,15 @@ namespace Blockcore.Networks.Xds
             this.GenesisReward = Money.Zero;
             this.Genesis = consensusFactory.ComputeGenesisBlock(this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, this.GenesisReward);
 
-            var consensusOptions = new XdsConsensusOptions(
-               maxBlockBaseSize: 1_000_000,
-               maxStandardVersion: 2,
-               maxStandardTxWeight: 100_000,
-               maxBlockSigopsCost: 20_000,
-               maxStandardTxSigopsCost: 20_000 / 5,
-               witnessScaleFactor: 4
-           );
+            var consensusOptions = new XdsConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 4
+            };
 
             var buriedDeployments = new BuriedDeploymentsArray
             {
@@ -85,7 +91,7 @@ namespace Blockcore.Networks.Xds
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: (int)this.GenesisNonce,
@@ -132,9 +138,7 @@ namespace Blockcore.Networks.Xds
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { 0x04, 0x88, 0xAD, 0xE4 };
             this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
             this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            this.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             var encoder = new Bech32Encoder(this.CoinTicker.ToLowerInvariant());
             this.Bech32Encoders = new Bech32Encoder[2];

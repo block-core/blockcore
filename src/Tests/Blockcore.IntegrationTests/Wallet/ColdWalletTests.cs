@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using Blockcore.Builder;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking;
@@ -13,6 +15,7 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
@@ -129,6 +132,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Set up cold staking account on cold wallet.
                 coldWalletManager.GetOrCreateColdStakingAccount(WalletName, true, Password);
                 HdAddress coldWalletAddress = coldWalletManager.GetFirstUnusedColdStakingAddress(WalletName, true);
+                IWalletStore walletStore = coldWalletManager.GetWalletByName(WalletName).walletStore;
 
                 // Set up cold staking account on hot wallet.
                 hotWalletManager.GetOrCreateColdStakingAccount(WalletName, false, Password);
@@ -203,7 +207,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 {
                     // Keep mining to ensure that staking outputs reach maturity.
                     TestHelper.MineBlocks(stratisSender, 1, true);
-                    return coldWalletAddress.Transactions.Count > 1;
+                    return walletStore.CountForAddress(coldWalletAddress.Address) > 1;
                 }, cancellationToken: cancellationToken);
 
                 // Wait for money from staking.

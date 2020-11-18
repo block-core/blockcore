@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
@@ -8,6 +14,7 @@ using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Networks.Stratis.Policies;
 using Blockcore.Networks.Stratis.Rules;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
@@ -51,6 +58,7 @@ namespace Blockcore.Networks.Stratis
             this.DefaultAPIPort = 37221;
             this.MaxTipAge = 2 * 60 * 60;
             this.MinTxFee = 10000;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = 10000;
             this.MinRelayTxFee = 10000;
             this.RootFolderName = StratisRootFolderName;
@@ -73,14 +81,16 @@ namespace Blockcore.Networks.Stratis
             this.Genesis = genesisBlock;
 
             // Taken from StratisX.
-            var consensusOptions = new PosConsensusOptions(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                witnessScaleFactor: 4
-            );
+            var consensusOptions = new PosConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxBlockSerializedSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 1,
+            };
 
             var buriedDeployments = new BuriedDeploymentsArray
             {
@@ -118,7 +128,7 @@ namespace Blockcore.Networks.Stratis
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: 105,
@@ -166,9 +176,7 @@ namespace Blockcore.Networks.Stratis
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
             this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
             this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            this.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             this.Checkpoints = new Dictionary<int, CheckpointInfo>
             {

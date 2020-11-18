@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using DBreeze.DataTypes;
 using LevelDB;
@@ -34,7 +37,7 @@ namespace Blockcore.Features.BlockStore.Pruning
         /// <inheritdoc />
         public void Initialize()
         {
-            this.LoadPrunedTip(this.blockRepository.Leveldb);
+            this.LoadPrunedTip(this.blockRepository.RocksDb);
         }
 
         /// <inheritdoc />
@@ -48,20 +51,20 @@ namespace Blockcore.Features.BlockStore.Pruning
 
                 lock (this.blockRepository.Locker)
                 {
-                    this.blockRepository.Leveldb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
+                    this.blockRepository.RocksDb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
                 }
             }
 
             return;
         }
 
-        private void LoadPrunedTip(DB leveldb)
+        private void LoadPrunedTip(RocksDbSharp.RocksDb rocksdb)
         {
             if (this.PrunedTip == null)
             {
                 lock (this.blockRepository.Locker)
                 {
-                    byte[] row = leveldb.Get(DBH.Key(BlockRepository.CommonTableName, prunedTipKey));
+                    byte[] row = rocksdb.Get(DBH.Key(BlockRepository.CommonTableName, prunedTipKey));
                     if (row != null)
                     {
                         this.PrunedTip = this.dataStoreSerializer.Deserialize<HashHeightPair>(row);
@@ -77,7 +80,7 @@ namespace Blockcore.Features.BlockStore.Pruning
 
             lock (this.blockRepository.Locker)
             {
-                this.blockRepository.Leveldb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
+                this.blockRepository.RocksDb.Put(DBH.Key(BlockRepository.CommonTableName, prunedTipKey), this.dataStoreSerializer.Serialize(this.PrunedTip));
             }
         }
     }

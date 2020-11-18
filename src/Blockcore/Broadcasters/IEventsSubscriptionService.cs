@@ -9,6 +9,8 @@ namespace Blockcore.Broadcasters
     {
         void Init();
 
+        bool HasConsumers { get; }
+
         void Subscribe(string id, string name);
 
         void Unsubscribe(string id, string name);

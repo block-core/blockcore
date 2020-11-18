@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.EventBus.CoreEvents.Peer;
+using Blockcore.Networks;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;

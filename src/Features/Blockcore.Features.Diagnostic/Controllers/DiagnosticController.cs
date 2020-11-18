@@ -10,6 +10,7 @@ using Blockcore.Features.Diagnostic.PeerDiagnostic;
 using Blockcore.Features.Diagnostic.Utils;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blockcore.Features.Diagnostic.Controllers
@@ -17,6 +18,7 @@ namespace Blockcore.Features.Diagnostic.Controllers
     /// <summary>
     /// Controller providing diagnostic operations on fullnode.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]/[action]")]

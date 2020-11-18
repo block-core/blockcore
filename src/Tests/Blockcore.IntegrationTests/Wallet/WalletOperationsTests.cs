@@ -5,10 +5,13 @@ using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
@@ -54,9 +57,13 @@ namespace Blockcore.IntegrationTests.Wallet
             CoreNode stratisNode = this.builder.CreateStratisPosNode(this.network).Start();
 
             string walletsFolderPath = stratisNode.FullNode.DataFolder.WalletPath;
+            string dbWalletsFolderPath = stratisNode.FullNode.DataFolder.WalletFolderPath;
             string filename = $"{this.walletWithFundsName}.wallet.json";
+            string dbfilename = $"{this.walletWithFundsName}.db";
             this.WalletWithFundsFilePath = Path.Combine(walletsFolderPath, filename);
             File.Copy(Path.Combine("Wallet", "Data", filename), this.WalletWithFundsFilePath, true);
+            Directory.CreateDirectory(dbWalletsFolderPath);
+            File.Copy(Path.Combine("Wallet", "Data", dbfilename), Path.Combine(dbWalletsFolderPath, dbfilename), true);
 
             var result = $"http://localhost:{stratisNode.ApiPort}/api".AppendPathSegment("wallet/load").PostJsonAsync(new WalletLoadRequest
             {
@@ -598,7 +605,6 @@ namespace Blockcore.IntegrationTests.Wallet
             importedWallet.Name = walletName;
             File.WriteAllText(Path.Combine(walletsFolderPath, $"{walletName}.wallet.json"), JsonConvert.SerializeObject(importedWallet, Formatting.Indented));
 
-
             // Act.
             var response = await $"http://localhost:{this.fixture.Node.ApiPort}/api".AppendPathSegment("wallet/load").PostJsonAsync(new WalletLoadRequest
             {
@@ -718,7 +724,6 @@ namespace Blockcore.IntegrationTests.Wallet
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errors.Mnemonic.Should().ContainSingle();
             errors.Mnemonic.First().Should().Be("A mnemonic is required.");
-
         }
 
         [Fact]
@@ -863,7 +868,6 @@ namespace Blockcore.IntegrationTests.Wallet
                 Mnemonic = mnemonic,
                 CreationDate = DateTime.Parse("2018-1-1")
             }).ReceiveString();
-
 
             // Assert.
 
@@ -1120,7 +1124,6 @@ namespace Blockcore.IntegrationTests.Wallet
             errors.Should().ContainSingle();
             errors.First().Message.Should().Be($"No wallet with name '{walletName}' could be found.");
         }
-
 
         [Fact]
         public async Task GetAddressesInAccount()
@@ -1493,7 +1496,7 @@ namespace Blockcore.IntegrationTests.Wallet
         public async Task SignMessage()
         {
             // Act.
-            string signatureResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
+            SignMessageResult signatureResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
                 .AppendPathSegment("wallet/signmessage")
                 .PostJsonAsync(new SignMessageRequest
                 {
@@ -1503,11 +1506,12 @@ namespace Blockcore.IntegrationTests.Wallet
                     Password = this.fixture.walletWithFundsPassword,
                     Message = this.fixture.signatureMessage
                 })
-                .ReceiveJson<string>();
+                .ReceiveJson<SignMessageResult>();
 
             // Assert.
-            signatureResult.Should().Be(this.fixture.validSignature, $"Signature is invalid.");
-            Encoders.Base64.DecodeData(signatureResult).Should().BeOfType<byte[]>($"Signature was not a {typeof(byte[])} type.");
+            signatureResult.SignedAddress.Should().Be(this.fixture.addressWithFunds, $"Returned address is invalid.");
+            signatureResult.Signature.Should().Be(this.fixture.validSignature, $"Signature is invalid.");
+            Encoders.Base64.DecodeData(signatureResult.Signature).Should().BeOfType<byte[]>($"Signature was not a {typeof(byte[])} type.");
         }
 
         [Fact]

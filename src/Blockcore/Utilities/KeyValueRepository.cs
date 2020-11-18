@@ -4,6 +4,7 @@ using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Utilities.JsonConverters;
 using LevelDB;
+using RocksDbSharp;
 
 namespace Blockcore.Utilities
 {
@@ -32,7 +33,7 @@ namespace Blockcore.Utilities
     public class KeyValueRepository : IKeyValueRepository
     {
         /// <summary>Access to database.</summary>
-        private readonly DB leveldb;
+        private readonly RocksDb rocksdb;
 
         private readonly DataStoreSerializer dataStoreSerializer;
 
@@ -46,8 +47,8 @@ namespace Blockcore.Utilities
             this.dataStoreSerializer = dataStoreSerializer;
 
             // Open a connection to a new DB and create if not found
-            var options = new Options { CreateIfMissing = true };
-            this.leveldb = new DB(options, folder);
+            var options = new DbOptions().SetCreateIfMissing(true);
+            this.rocksdb = RocksDb.Open(options, folder);
         }
 
         /// <inheritdoc />
@@ -55,7 +56,7 @@ namespace Blockcore.Utilities
         {
             byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
-            this.leveldb.Put(keyBytes, bytes);
+            this.rocksdb.Put(keyBytes, bytes);
         }
 
         /// <inheritdoc />
@@ -78,7 +79,7 @@ namespace Blockcore.Utilities
         {
             byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
-            byte[] row = this.leveldb.Get(keyBytes);
+            byte[] row = this.rocksdb.Get(keyBytes);
 
             if (row == null)
                 return null;
@@ -116,7 +117,7 @@ namespace Blockcore.Utilities
         /// <inheritdoc />
         public void Dispose()
         {
-            this.leveldb.Dispose();
+            this.rocksdb.Dispose();
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4D5CA268BE4FCC48BB555E5B82CFF411/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4D5CA268BE4FCC48BB555E5B82CFF411/Description/@EntryValue">BddSpecificationTemplate</s:String>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4D5CA268BE4FCC48BB555E5B82CFF411/Text/@EntryValue">$HEADER$using Stratis.Bitcoin.IntegrationTests.TestFramework;&#xD;
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4D5CA268BE4FCC48BB555E5B82CFF411/Text/@EntryValue">$HEADER$using Blockcore.IntegrationTests.TestFramework;&#xD;
 using Xunit;&#xD;
-using Stratis.Bitcoin.Tests.Common.TestFramework;&#xD;
+using Blockcore.Tests.Common.TestFramework;&#xD;
 // Disable warnings about "this" qualifier to make the Specification more readable&#xD;
 // ReSharper disable ArrangeThisQualifier&#xD;
 &#xD;
@@ -61,7 +61,7 @@ namespace $NAMESPACE$&#xD;
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4D5CA268BE4FCC48BB555E5B82CFF411/Section/=AA27F2FA714E4B428DCB24B2E7453910/Order/@EntryValue">0</s:Int64>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4D5CA268BE4FCC48BB555E5B82CFF411/Section/=AA27F2FA714E4B428DCB24B2E7453910/SectionPlain/Text/@EntryValue">using System.Threading.Tasks;
 using FluentAssertions;
-using Stratis.Bitcoin.Tests.Common.TestFramework;
+using Blockcore.Tests.Common.TestFramework;
 using Xunit.Abstractions;
 
 namespace $NAMESPACE$

@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Types;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
@@ -81,6 +86,16 @@ namespace Blockcore.Features.Wallet.Interfaces
         Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null, int? coinType = null);
 
         /// <summary>
+        /// Gets the private key associated with an address in the wallet.
+        /// </summary>
+        /// <param name="password">The user's password.</param>
+        /// <param name="walletName">The name of the wallet.</param>
+        /// <param name="accountName">The name of the account.</param>
+        /// <param name="address">Address to extract the private key of.</param>
+        /// <returns>The private key associated with the given address, in WIF representation.</returns>
+        string RetrievePrivateKey(string password, string walletName, string accountName, string address);
+
+        /// <summary>
         /// Signs a string message.
         /// </summary>
         /// <param name="password">The user's password.</param>
@@ -89,7 +104,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="externalAddress">Address to use to sign.</param>
         /// <param name="message">Message to sign.</param>
         /// <returns>The generated signature.</returns>
-        string SignMessage(string password, string walletName, string accountName, string externalAddress, string message);
+        SignMessageResult SignMessage(string password, string walletName, string accountName, string externalAddress, string message);
 
         /// <summary>
         /// Verifies the signed message.
@@ -209,9 +224,31 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <summary>
         /// Gets the history of the transactions in addresses contained in this account.
         /// </summary>
+        /// <param name="wallet">The wallet instance.</param>
         /// <param name="account">The account for which to get history.</param>
         /// <returns>The history for this account.</returns>
-        AccountHistory GetHistory(HdAccount account);
+        AccountHistory GetHistory(Types.Wallet wallet, HdAccount account);
+
+        /// <summary>
+        /// Gets the history of transactions contained in an account.
+        /// If no account name is specified, history will be returned for all accounts in the wallet.
+        /// </summary>
+        /// <param name="walletName">The wallet name.</param>
+        /// <param name="accountName">The account name.</param>
+        /// <param name="skip">Items to skip.</param>
+        /// <param name="take">Items to take.</param>
+        /// <returns>Collection of address history and transaction pairs.</returns>
+        IEnumerable<AccountHistorySlim> GetHistorySlim(string walletName, string accountName = null, int skip = 0, int take = 100);
+
+        /// <summary>
+        /// Gets the history of the transactions in addresses contained in this account.
+        /// </summary>
+        /// <param name="wallet">The wallet instance.</param>
+        /// <param name="account">The account for which to get history.</param>
+        /// <param name="skip">Items to skip.</param>
+        /// <param name="take">Items to take.</param>
+        /// <returns>The history for this account.</returns>
+        AccountHistorySlim GetHistorySlim(Types.Wallet wallet, HdAccount account, int skip = 0, int take = 100);
 
         /// <summary>
         /// Gets the balance of transactions contained in an account.
@@ -219,8 +256,9 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="walletName">The wallet name.</param>
         /// <param name="accountName">The account name.</param>
+        /// <param name="calculatSpendable">Whether to calculate also the spendable balance.</param>
         /// <returns>Collection of account balances.</returns>
-        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null);
+        IEnumerable<AccountBalance> GetBalances(string walletName, string accountName = null, bool calculatSpendable = false);
 
         /// <summary>
         /// Gets the balance of transactions for this specific address.

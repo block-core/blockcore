@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;
 
@@ -163,6 +164,29 @@ namespace Blockcore.Features.Wallet.Helpers
             }
 
             throw new FormatException($"Could not parse CoinType from HdPath {hdPath}.");
+        }
+
+        /// <summary>
+        /// Gets the account index of coin this HD path is for.
+        /// </summary>
+        /// <param name="hdPath">The HD path.</param>
+        /// <returns>The type of coin. <seealso cref="https://github.com/satoshilabs/slips/blob/master/slip-0044.md"/>.</returns>
+        /// <exception cref="FormatException">An exception is thrown if the HD path is not well-formed.</exception>
+        /// <remarks>Refer to <seealso cref="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#path-levels"/> for the format of the HD path.</remarks>
+        public static int GetAccountIndex(string hdPath)
+        {
+            Guard.NotEmpty(hdPath, nameof(hdPath));
+
+            string[] pathElements = hdPath.Split('/');
+            if (pathElements.Length < 4)
+                throw new FormatException($"Could not parse CoinType from HdPath {hdPath}.");
+
+            if (int.TryParse(pathElements[3].Replace("'", string.Empty), out int accountIndex))
+            {
+                return accountIndex;
+            }
+
+            throw new FormatException($"Could not parse account index from HdPath {hdPath}.");
         }
 
         /// <summary>

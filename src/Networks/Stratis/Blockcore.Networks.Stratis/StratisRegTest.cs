@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Networks.Stratis.Policies;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
@@ -51,14 +56,15 @@ namespace Blockcore.Networks.Stratis
             this.Genesis = genesisBlock;
 
             // Taken from StratisX.
-            var consensusOptions = new PosConsensusOptions(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                witnessScaleFactor: 4
-            );
+            var consensusOptions = new PosConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 4
+            };
 
             var buriedDeployments = new BuriedDeploymentsArray
             {
@@ -82,7 +88,7 @@ namespace Blockcore.Networks.Stratis
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: 105,

@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using Blockcore.Base;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.Wallet.Api.Models;
@@ -43,14 +46,14 @@ namespace Blockcore.IntegrationTests
 
         private class ConsensusOptionsTest : PosConsensusOptions
         {
-            public ConsensusOptionsTest() : base(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                witnessScaleFactor: 4)
+            public ConsensusOptionsTest()
             {
+                MaxBlockBaseSize = 1_000_000;
+                MaxStandardVersion = 2;
+                MaxStandardTxWeight = 100_000;
+                MaxBlockSigopsCost = 20_000;
+                MaxStandardTxSigopsCost = 20_000 / 5;
+                WitnessScaleFactor = 4;
             }
 
             public override int GetStakeMinConfirmations(int height, Network network)
@@ -73,7 +76,7 @@ namespace Blockcore.IntegrationTests
             {
                 this.Name = Guid.NewGuid().ToString();
 
-                Type consensusType = typeof(NBitcoin.Consensus);
+                Type consensusType = typeof(Consensus.Consensus);
                 consensusType.GetProperty("MaxReorgLength").SetValue(this.Consensus, (uint)20);
             }
         }

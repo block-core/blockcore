@@ -7,16 +7,19 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.PoA.Voting;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-
 
 namespace Blockcore.Features.PoA.Tests
 {
@@ -75,7 +78,6 @@ namespace Blockcore.Features.PoA.Tests
             this.votingManager.Initialize();
 
             this.chainState = new ChainState();
-
 
             this.rulesEngine = new PoAConsensusRuleEngine(this.network, this.loggerFactory, new DateTimeProvider(), this.ChainIndexer, new NodeDeployments(this.network, this.ChainIndexer),
                 this.consensusSettings, new Checkpoints(this.network, this.consensusSettings), new Mock<ICoinView>().Object, this.chainState, new InvalidBlockHashStore(timeProvider),
@@ -139,18 +141,19 @@ namespace Blockcore.Features.PoA.Tests
 
             var baseOptions = this.Consensus.Options as PoAConsensusOptions;
 
-            this.Consensus.Options = new PoAConsensusOptions(
-                maxBlockBaseSize: baseOptions.MaxBlockBaseSize,
-                maxStandardVersion: baseOptions.MaxStandardVersion,
-                maxStandardTxWeight: baseOptions.MaxStandardTxWeight,
-                maxBlockSigopsCost: baseOptions.MaxBlockSigopsCost,
-                maxStandardTxSigopsCost: baseOptions.MaxStandardTxSigopsCost,
-                genesisFederationMembers: genesisFederationMembers,
-                targetSpacingSeconds: 60,
-                votingEnabled: baseOptions.VotingEnabled,
-                autoKickIdleMembers: baseOptions.AutoKickIdleMembers,
-                federationMemberMaxIdleTimeSeconds: baseOptions.FederationMemberMaxIdleTimeSeconds
-            );
+            this.Consensus.Options = new PoAConsensusOptions
+            {
+                MaxBlockBaseSize = baseOptions.MaxBlockBaseSize,
+                MaxStandardVersion = baseOptions.MaxStandardVersion,
+                MaxStandardTxWeight = baseOptions.MaxStandardTxWeight,
+                MaxBlockSigopsCost = baseOptions.MaxBlockSigopsCost,
+                MaxStandardTxSigopsCost = baseOptions.MaxStandardTxSigopsCost,
+                GenesisFederationMembers = genesisFederationMembers,
+                TargetSpacingSeconds = 60,
+                VotingEnabled = baseOptions.VotingEnabled,
+                AutoKickIdleMembers = baseOptions.AutoKickIdleMembers,
+                FederationMemberMaxIdleTimeSeconds = baseOptions.FederationMemberMaxIdleTimeSeconds
+            };
 
             this.Consensus.SetPrivatePropertyValue(nameof(this.Consensus.MaxReorgLength), (uint)5);
         }

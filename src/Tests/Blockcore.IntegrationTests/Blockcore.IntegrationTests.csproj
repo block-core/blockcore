@@ -27,12 +27,13 @@
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
     <PackageReference Include="NSubstitute" Version="4.2.1" />
+    <PackageReference Include="RocksDbNative" Version="6.2.2" />
+    <PackageReference Include="RocksDbSharp" Version="6.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
     <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
-    <ProjectReference Include="..\..\External\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
@@ -68,6 +69,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Wallet\Data\test.wallet.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Wallet\Data\wallet-with-funds.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Wallet\Data\wallet-with-funds.wallet.json">

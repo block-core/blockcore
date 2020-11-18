@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Bitcoin.Policies;
 using Blockcore.Networks.Bitcoin.Rules;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
@@ -35,6 +42,7 @@ namespace Blockcore.Networks.Bitcoin
             this.MaxTimeOffsetSeconds = BitcoinMaxTimeOffsetSeconds;
             this.MaxTipAge = BitcoinDefaultMaxTipAgeInSeconds;
             this.MinTxFee = 1000;
+            this.MaxTxFee = Money.Coins(0.1m).Satoshi;
             this.FallbackFee = 20000;
             this.MinRelayTxFee = 1000;
             this.CoinTicker = "BTC";
@@ -73,7 +81,7 @@ namespace Blockcore.Networks.Bitcoin
                 MinProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION,
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: new ConsensusOptions(), // Default - set to Bitcoin params.
                 coinType: 0,
@@ -118,9 +126,7 @@ namespace Blockcore.Networks.Bitcoin
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
             this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
             this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            this.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             var encoder = new Bech32Encoder("bc");
             this.Bech32Encoders = new Bech32Encoder[2];

@@ -1,4 +1,5 @@
 ﻿using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Networks.Stratis.Rules;
 using NBitcoin;

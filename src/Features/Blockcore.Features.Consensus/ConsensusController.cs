@@ -5,9 +5,11 @@ using Blockcore.Base;
 using Blockcore.Base.Deployments;
 using Blockcore.Base.Deployments.Models;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Controllers;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -17,6 +19,7 @@ namespace Blockcore.Features.Consensus
     /// <summary>
     /// A <see cref="FeatureController"/> that provides API and RPC methods from the consensus loop.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <AssemblyName>x42.Node</AssemblyName>
     <OutputType>Exe</OutputType>
     <Authors>Blockcore</Authors>
@@ -13,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\External\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
@@ -21,7 +18,9 @@
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Diagnostic\Blockcore.Features.Diagnostic.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+    <ProjectReference Include="..\..\..\Features\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\..\..\Features\Blockcore.Features.WalletWatchOnly\Blockcore.Features.WalletWatchOnly.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
     <ProjectReference Include="..\x42\x42.Networks.csproj" />
   </ItemGroup>

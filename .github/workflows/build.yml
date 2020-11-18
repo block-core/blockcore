@@ -36,11 +36,6 @@ jobs:
       run: |
         echo "::set-env name=VERSION::$(npm run version --silent)"
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.101' 
-
     - name: Unit Test
       run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 

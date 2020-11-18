@@ -10,6 +10,7 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.Protocol;

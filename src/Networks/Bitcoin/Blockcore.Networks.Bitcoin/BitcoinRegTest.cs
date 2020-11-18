@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Bitcoin.Policies;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
@@ -56,7 +61,7 @@ namespace Blockcore.Networks.Bitcoin
                 MinProtocolVersion = ProtocolVersion.SENDHEADERS_VERSION,
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: new ConsensusOptions(), // Default - set to Bitcoin params.
                 coinType: 0,
@@ -96,7 +101,6 @@ namespace Blockcore.Networks.Bitcoin
             this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
             this.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x35), (0x87), (0xCF) };
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x35), (0x83), (0x94) };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2b };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
 
             var encoder = new Bech32Encoder("tb");

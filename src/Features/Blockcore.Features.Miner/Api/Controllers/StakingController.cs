@@ -9,6 +9,7 @@ using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -18,6 +19,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
     /// <summary>
     /// Controller providing operations on mining feature.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
@@ -84,7 +86,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
         /// <returns>An <see cref="OkResult"/> object that produces a status code 200 HTTP response.</returns>
         [Route("startstaking")]
         [HttpPost]
-        public IActionResult StartStaking([FromBody]StartStakingRequest request)
+        public IActionResult StartStaking([FromBody] StartStakingRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -189,7 +191,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
         [Route("getStakingNotExpired")]
         [HttpPost]
-        public IActionResult GetStakingNotExpired(StakingNotExpiredRequest request)
+        public IActionResult GetStakingNotExpired([FromBody] StakingNotExpiredRequest request)
         {
             try
             {

@@ -4,6 +4,7 @@ using Blockcore.Builder;
 using Blockcore.Configuration;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.Protocol;

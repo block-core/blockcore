@@ -9,6 +9,7 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.NodeHost;
+using Blockcore.Features.Dns;
 
 namespace Blockcore.Node
 {
@@ -27,6 +28,8 @@ namespace Blockcore.Node
                     break;
                 case "CITY":
                 case "STRAT":
+                case "RUTA":
+                case "EXOS":
                 case "X42":
                 case "XDS":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
@@ -46,7 +49,21 @@ namespace Blockcore.Node
             .AddRPC()
             .UseDiagnosticFeature();
 
+            UseDnsFullNode(nodeBuilder, settings);
+
             return nodeBuilder;
         }
+        static void UseDnsFullNode(IFullNodeBuilder nodeBuilder, NodeSettings nodeSettings)
+        {
+            if (nodeSettings.ConfigReader.GetOrDefault("dnsfullnode", false, nodeSettings.Logger))
+            {
+                var dnsSettings = new DnsSettings(nodeSettings);
+
+                if (string.IsNullOrWhiteSpace(dnsSettings.DnsHostName) || string.IsNullOrWhiteSpace(dnsSettings.DnsNameServer) || string.IsNullOrWhiteSpace(dnsSettings.DnsMailBox))
+                    throw new ConfigurationException("When running as a DNS Seed service, the -dnshostname, -dnsnameserver and -dnsmailbox arguments must be specified on the command line.");
+
+                nodeBuilder.UseDns();
+            }
+        }        
     }
 }

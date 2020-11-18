@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

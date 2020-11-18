@@ -8,6 +8,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using AspNetCore.Http.Extensions;
 using Blockcore.Connection;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.Miner.Api.Controllers;
@@ -434,9 +436,8 @@ namespace Blockcore.IntegrationTests.API
         {
             var commands = JsonDataSerializer.Instance.Deserialize<List<RpcCommandModel>>(this.responseText);
 
-            commands.Count.Should().Be(35);
+            commands.Count.Should().Be(36);
 
-            commands.Count.Should().Be(35);
             commands.Should().Contain(x => x.Command == "stop");
             commands.Should().Contain(x => x.Command == "getrawtransaction <txid> [<verbose>] [<blockhash>]");
             commands.Should().Contain(x => x.Command == "decoderawtransaction <hex>");

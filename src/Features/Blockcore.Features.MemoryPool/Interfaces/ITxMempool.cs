@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool.Fee;
 using NBitcoin;

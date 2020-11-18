@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.Versioning;
+using Blockcore.Consensus.Checkpoints;
 using City.Networks;
 using City.Networks.Setup;
 using NBitcoin;

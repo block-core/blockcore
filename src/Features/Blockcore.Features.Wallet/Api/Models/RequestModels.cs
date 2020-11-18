@@ -121,7 +121,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         public DateTime CreationDate { get; set; }
 
         /// <summary>
-        /// Optional CoinType to overwrite the default <see cref="NBitcoin.IConsensus.CoinType"/>.
+        /// Optional CoinType to overwrite the default <see cref="Blockcore.Consensus.IConsensus.CoinType"/>.
         /// </summary>
         public int? CoinType { get; set; }
     }
@@ -321,8 +321,6 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// recipient will receive in STRAT (or a sidechain coin). If the transaction was realized,
         /// both the values would be used to create the UTXOs for the transaction recipients.
         /// </summary> 
-        [Required(ErrorMessage = "A list of recipients is required.")]
-        [MinLength(1)]
         public List<RecipientModel> Recipients { get; set; }
 
         /// <summary>
@@ -654,6 +652,40 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// The name of the account for which to get the extended public key.
         /// <summary>
         public string AccountName { get; set; }
+    }
+
+    /// <summary>
+    /// A class containing the necessary parameters for a private key retrieval request.  
+    /// </summary>
+    public class RetrievePrivateKeyModel : RequestModel
+    {
+        public RetrievePrivateKeyModel()
+        {
+            this.AccountName = WalletManager.DefaultAccount;
+        }
+
+        /// <summary>
+        /// The password for the wallet.
+        /// </summary>
+        [Required]
+        public string Password { get; set; }
+
+        /// <summary>
+        /// The name of the wallet from which to get the private key.
+        /// </summary>
+        [Required]
+        public string WalletName { get; set; }
+
+        /// <summary>
+        /// The name of the account for which to get the private key.
+        /// <summary>
+        public string AccountName { get; set; }
+
+        /// <summary>
+        /// The address to retrieve the private key for.
+        /// </summary>
+        [Required]
+        public string Address { get; set; }
     }
 
     /// <summary>

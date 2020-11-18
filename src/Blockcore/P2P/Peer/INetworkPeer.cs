@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;

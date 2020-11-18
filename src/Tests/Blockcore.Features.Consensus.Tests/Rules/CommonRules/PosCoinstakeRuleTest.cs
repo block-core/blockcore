@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using NBitcoin;
 using Xunit;

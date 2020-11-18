@@ -10,8 +10,9 @@ namespace Blockcore.Features.Wallet.Tests
         public void GetFirstUnusedAccountWithoutAccountsReturnsNull()
         {
             AccountRoot accountRoot = CreateAccountRoot(KnownCoinTypes.Stratis);
+            WalletMemoryStore store = new WalletMemoryStore();
 
-            HdAccount result = accountRoot.GetFirstUnusedAccount();
+            HdAccount result = accountRoot.GetFirstUnusedAccount(store);
 
             Assert.Null(result);
         }
@@ -20,6 +21,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void GetFirstUnusedAccountReturnsAccountWithLowerIndexHavingNoAddresses()
         {
             AccountRoot accountRoot = CreateAccountRoot(KnownCoinTypes.Stratis);
+            WalletMemoryStore store = new WalletMemoryStore();
             HdAccount unused = CreateAccount("unused1");
             unused.Index = 2;
             accountRoot.Accounts.Add(unused);
@@ -38,7 +40,7 @@ namespace Blockcore.Features.Wallet.Tests
             used2.Index = 4;
             accountRoot.Accounts.Add(used2);
 
-            HdAccount result = accountRoot.GetFirstUnusedAccount();
+            HdAccount result = accountRoot.GetFirstUnusedAccount(store);
 
             Assert.NotNull(result);
             Assert.Equal(1, result.Index);

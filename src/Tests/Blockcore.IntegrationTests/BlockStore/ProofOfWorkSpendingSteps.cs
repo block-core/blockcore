@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Api.Models;

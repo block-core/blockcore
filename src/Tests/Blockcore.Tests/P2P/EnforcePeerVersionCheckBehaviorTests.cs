@@ -2,6 +2,9 @@
 using System.Threading.Tasks;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.Checkpoints;
 using x42.Networks;
 using x42.Networks.Setup;
 using NBitcoin;
@@ -103,13 +104,13 @@ namespace x42
             PubKeyAddress = 65,
             ScriptAddress = 196,
             SecretAddress = 65 + 128,
-            GenesisTime = 1588635707,
+            GenesisTime = 1591458972,
             GenesisNonce = 2433759,
             GenesisBits = new Target(new uint256("0000ffff00000000000000000000000000000000000000000000000000000000")),
             GenesisVersion = 1,
             GenesisReward = Money.Zero,
-            HashGenesisBlock = "0x11bd504102b42b24680d7b4f9b9e9521adc1b690253494d108193cdfcdd2ef0b",
-            HashMerkleRoot = "0x87e7f7df2fbe9fa56c627e59342e0d8142eb5e44c5e5769609059a60f17d0702",
+            HashGenesisBlock = "0xa92bf124a1e6f237015440d5f1e1999bdef8e321f2d3fdc367eb2f7733b17854",
+            HashMerkleRoot = "0xd0695e2d2562e7054b599c053fad4a72997f2e9629a2f9760e57584cf850ae57",
             DNS = new[] { "testnet1.x42seed.host" },
             Nodes = new[] { "63.32.82.169", "35.155.194.159" },
             Checkpoints = new Dictionary<int, CheckpointInfo>

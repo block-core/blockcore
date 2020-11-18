@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Base.Deployments.Models;
+using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
 using NBitcoin;
 

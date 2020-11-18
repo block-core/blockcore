@@ -6,7 +6,12 @@ using Blockcore.Base.Deployments;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
@@ -16,6 +21,7 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
@@ -390,7 +396,7 @@ namespace Blockcore.Features.Miner.Tests
             {
                 FullValidationConsensusRule rule = null;
                 if (ruleType == typeof(FlushUtxosetRule))
-                    rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object);
+                    rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object, new Mock<IChainRepository>().Object, new Mock<ChainIndexer>().Object, new Mock<INodeLifetime>().Object, new Mock<IChainState>().Object);
                 else
                     rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
 

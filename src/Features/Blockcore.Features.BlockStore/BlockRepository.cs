@@ -7,10 +7,14 @@ using Blockcore.Configuration;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using DBreeze.Utils;
-using LevelDB;
+using RocksDbSharp;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using System;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
 
 namespace Blockcore.Features.BlockStore
 {
@@ -20,7 +24,7 @@ namespace Blockcore.Features.BlockStore
     public interface IBlockRepository : IBlockStore
     {
         /// <summary> The dbreeze database engine.</summary>
-        DB Leveldb { get; }
+        RocksDb RocksDb { get; }
 
         /// <summary>Really ugly temporary hack.</summary>
         object Locker { get; }
@@ -83,7 +87,7 @@ namespace Blockcore.Features.BlockStore
         internal static readonly byte CommonTableName = 2;
         internal static readonly byte TransactionTableName = 3;
 
-        private readonly DB leveldb;
+        private readonly RocksDb rocksdb;
 
         public object Locker { get; }
 
@@ -101,7 +105,7 @@ namespace Blockcore.Features.BlockStore
         /// <inheritdoc />
         public bool TxIndex { get; private set; }
 
-        public DB Leveldb => this.leveldb;
+        public RocksDb RocksDb => this.rocksdb;
 
         private readonly DataStoreSerializer dataStoreSerializer;
         private readonly IReadOnlyDictionary<uint256, Transaction> genesisTransactions;
@@ -118,8 +122,8 @@ namespace Blockcore.Features.BlockStore
             Guard.NotEmpty(folder, nameof(folder));
 
             Directory.CreateDirectory(folder);
-            var options = new Options { CreateIfMissing = true };
-            this.leveldb = new DB(options, folder);
+            var options = new DbOptions().SetCreateIfMissing(true);
+            this.rocksdb = RocksDb.Open(options, folder);
             this.Locker = new object();
 
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
@@ -166,7 +170,7 @@ namespace Blockcore.Features.BlockStore
             Transaction res = null;
             lock (this.Locker)
             {
-                byte[] transactionRow = this.leveldb.Get(DBH.Key(TransactionTableName, trxid.ToBytes()));
+                byte[] transactionRow = this.rocksdb.Get(DBH.Key(TransactionTableName, trxid.ToBytes()));
 
                 if (transactionRow == null)
                 {
@@ -174,7 +178,7 @@ namespace Blockcore.Features.BlockStore
                     return null;
                 }
 
-                byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, transactionRow));
+                byte[] blockRow = this.rocksdb.Get(DBH.Key(BlockTableName, transactionRow));
 
                 if (blockRow != null)
                 {
@@ -219,14 +223,14 @@ namespace Blockcore.Features.BlockStore
                         continue;
                     }
 
-                    byte[] transactionRow = this.leveldb.Get(DBH.Key(TransactionTableName, trxids[i].ToBytes()));
+                    byte[] transactionRow = this.rocksdb.Get(DBH.Key(TransactionTableName, trxids[i].ToBytes()));
                     if (transactionRow == null)
                     {
                         this.logger.LogTrace("(-)[NO_TX_ROW]:null");
                         return null;
                     }
 
-                    byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, transactionRow));
+                    byte[] blockRow = this.rocksdb.Get(DBH.Key(BlockTableName, transactionRow));
 
                     if (blockRow != null)
                     {
@@ -263,7 +267,7 @@ namespace Blockcore.Features.BlockStore
             uint256 res = null;
             lock (this.Locker)
             {
-                byte[] transactionRow = this.leveldb.Get(DBH.Key(TransactionTableName, trxid.ToBytes()));
+                byte[] transactionRow = this.rocksdb.Get(DBH.Key(TransactionTableName, trxid.ToBytes()));
                 if (transactionRow != null)
                     res = new uint256(transactionRow);
             }
@@ -305,7 +309,7 @@ namespace Blockcore.Features.BlockStore
                     }
                 }
 
-                this.leveldb.Write(batch);
+                this.rocksdb.Write(batch);
             }
 
             if (this.TxIndex)
@@ -323,7 +327,7 @@ namespace Blockcore.Features.BlockStore
                 foreach ((Transaction transaction, Block block) in transactions)
                     batch.Put(DBH.Key(TransactionTableName, transaction.GetHash().ToBytes()), block.GetHash().ToBytes());
 
-                this.leveldb.Write(batch);
+                this.rocksdb.Write(batch);
             }
         }
 
@@ -333,7 +337,7 @@ namespace Blockcore.Features.BlockStore
             {
                 foreach (ChainedHeader chainedHeader in headers)
                 {
-                    byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, chainedHeader.HashBlock.ToBytes()));
+                    byte[] blockRow = this.rocksdb.Get(DBH.Key(BlockTableName, chainedHeader.HashBlock.ToBytes()));
                     Block block = blockRow != null ? this.dataStoreSerializer.Deserialize<Block>(blockRow) : null;
                     yield return block;
                 }
@@ -364,12 +368,12 @@ namespace Blockcore.Features.BlockStore
                     this.logger.LogInformation(warningMessage.ToString());
                     using (var batch = new WriteBatch())
                     {
-                        var enumerator = this.leveldb.GetEnumerator();
-                        while (enumerator.MoveNext())
+                        var enumerator = this.rocksdb.NewIterator();
+                        for (enumerator.SeekToFirst(); enumerator.Valid(); enumerator.Next())
                         {
-                            if (enumerator.Current.Key[0] == BlockTableName)
+                            if (enumerator.Key()[0] == BlockTableName)
                             {
-                                var block = this.dataStoreSerializer.Deserialize<Block>(enumerator.Current.Value);
+                                var block = this.dataStoreSerializer.Deserialize<Block>(enumerator.Value());
                                 foreach (Transaction transaction in block.Transactions)
                                 {
                                     batch.Put(DBH.Key(TransactionTableName, transaction.GetHash().ToBytes()), block.GetHash().ToBytes());
@@ -383,19 +387,19 @@ namespace Blockcore.Features.BlockStore
                             }
                         }
 
-                        this.leveldb.Write(batch);
+                        this.rocksdb.Write(batch);
                     }
 
                     this.logger.LogInformation("Reindex completed successfully.");
                 }
                 else
                 {
-                    var enumerator = this.leveldb.GetEnumerator();
-                    while (enumerator.MoveNext())
+                    var enumerator = this.rocksdb.NewIterator();
+                    for (enumerator.SeekToFirst(); enumerator.Valid(); enumerator.Next())
                     {
                         // Clear tx from database.
-                        if (enumerator.Current.Key[0] == TransactionTableName)
-                            this.leveldb.Delete(enumerator.Current.Key);
+                        if (enumerator.Key()[0] == TransactionTableName)
+                            this.rocksdb.Remove(enumerator.Key());
                     }
                 }
             }
@@ -421,7 +425,7 @@ namespace Blockcore.Features.BlockStore
         private bool? LoadTxIndex()
         {
             bool? res = null;
-            byte[] row = this.leveldb.Get(DBH.Key(CommonTableName, TxIndexKey));
+            byte[] row = this.rocksdb.Get(DBH.Key(CommonTableName, TxIndexKey));
             if (row != null)
             {
                 this.TxIndex = BitConverter.ToBoolean(row);
@@ -434,7 +438,7 @@ namespace Blockcore.Features.BlockStore
         private void SaveTxIndex(bool txIndex)
         {
             this.TxIndex = txIndex;
-            this.leveldb.Put(DBH.Key(CommonTableName, TxIndexKey), BitConverter.GetBytes(txIndex));
+            this.rocksdb.Put(DBH.Key(CommonTableName, TxIndexKey), BitConverter.GetBytes(txIndex));
         }
 
         /// <inheritdoc />
@@ -450,7 +454,7 @@ namespace Blockcore.Features.BlockStore
         {
             if (this.TipHashAndHeight == null)
             {
-                byte[] row = this.leveldb.Get(DBH.Key(CommonTableName, RepositoryTipKey));
+                byte[] row = this.rocksdb.Get(DBH.Key(CommonTableName, RepositoryTipKey));
                 if (row != null)
                     this.TipHashAndHeight = this.dataStoreSerializer.Deserialize<HashHeightPair>(row);
             }
@@ -461,7 +465,7 @@ namespace Blockcore.Features.BlockStore
         private void SaveTipHashAndHeight(HashHeightPair newTip)
         {
             this.TipHashAndHeight = newTip;
-            this.leveldb.Put(DBH.Key(CommonTableName, RepositoryTipKey), this.dataStoreSerializer.Serialize(newTip));
+            this.rocksdb.Put(DBH.Key(CommonTableName, RepositoryTipKey), this.dataStoreSerializer.Serialize(newTip));
         }
 
         /// <inheritdoc />
@@ -506,7 +510,7 @@ namespace Blockcore.Features.BlockStore
             {
                 // Lazy loading is on so we don't fetch the whole value, just the row.
                 byte[] key = hash.ToBytes();
-                byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, key));
+                byte[] blockRow = this.rocksdb.Get(DBH.Key(BlockTableName, key));
                 if (blockRow != null)
                     res = true;
             }
@@ -517,7 +521,7 @@ namespace Blockcore.Features.BlockStore
         protected virtual void OnDeleteTransactions(List<(Transaction, Block)> transactions)
         {
             foreach ((Transaction transaction, Block block) in transactions)
-                this.leveldb.Delete(DBH.Key(TransactionTableName, transaction.GetHash().ToBytes()));
+                this.rocksdb.Remove(DBH.Key(TransactionTableName, transaction.GetHash().ToBytes()));
         }
 
         protected virtual void OnDeleteBlocks(List<Block> blocks)
@@ -534,7 +538,7 @@ namespace Blockcore.Features.BlockStore
             }
 
             foreach (Block block in blocks)
-                this.leveldb.Delete(DBH.Key(BlockTableName, block.GetHash().ToBytes()));
+                this.rocksdb.Remove(DBH.Key(BlockTableName, block.GetHash().ToBytes()));
         }
 
         public List<Block> GetBlocksFromHashes(List<uint256> hashes)
@@ -556,7 +560,7 @@ namespace Blockcore.Features.BlockStore
                     continue;
                 }
 
-                byte[] blockRow = this.leveldb.Get(DBH.Key(BlockTableName, key.Item2));
+                byte[] blockRow = this.rocksdb.Get(DBH.Key(BlockTableName, key.Item2));
                 if (blockRow != null)
                 {
                     results[key.Item1] = this.dataStoreSerializer.Deserialize<Block>(blockRow);
@@ -605,7 +609,7 @@ namespace Blockcore.Features.BlockStore
         /// <inheritdoc />
         public void Dispose()
         {
-            this.leveldb.Dispose();
+            this.rocksdb.Dispose();
         }
     }
 }

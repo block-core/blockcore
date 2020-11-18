@@ -1,6 +1,11 @@
 using System;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using x42.Networks.Consensus;
 using x42.Networks.Policies;
 using x42.Networks.Setup;
@@ -17,15 +22,16 @@ namespace x42.Networks
         public x42Test()
         {
             // START MODIFICATIONS OF GENERATED CODE
-            var consensusOptions = new x42PosConsensusOptions(
-                maxBlockBaseSize: 1_000_000,
-                maxStandardVersion: 2,
-                maxStandardTxWeight: 100_000,
-                maxBlockSigopsCost: 20_000,
-                maxStandardTxSigopsCost: 20_000 / 5,
-                witnessScaleFactor: 4
-            );
-            consensusOptions.MinBlockFeeRate = Money.Zero;
+            var consensusOptions = new x42PosConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 4,
+                MinBlockFeeRate = Money.Zero
+            };
             // END MODIFICATIONS
 
             CoinSetup setup = x42Setup.Instance.Setup;
@@ -52,7 +58,7 @@ namespace x42.Networks
             this.MinTxFee = Money.Zero;
             this.FallbackFee = Money.Zero;
             this.MinRelayTxFee = Money.Zero;
-            
+
             var consensusFactory = new PosConsensusFactory();
 
             // Create the genesis block.
@@ -81,9 +87,9 @@ namespace x42.Networks
 
             var bip9Deployments = new x42BIP9Deployments
             {
-                [x42BIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
-                [x42BIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
-                [x42BIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2020, 3, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 3, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold)
+                [x42BIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [x42BIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [x42BIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive)
             };
 
             consensusFactory.Protocol = new ConsensusProtocol()
@@ -105,7 +111,7 @@ namespace x42.Networks
                 bip9Deployments: bip9Deployments,
                 bip34Hash: null,
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
-                maxReorgLength: 9,
+                maxReorgLength: 100,
                 defaultAssumeValid: null,
                 maxMoney: Money.Coins(42 * 1000000),
                 coinbaseMaturity: 10,
@@ -139,7 +145,6 @@ namespace x42.Networks
             this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
             this.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x35), (0x87), (0xCF) };
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x35), (0x83), (0x94) };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2b };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
 
             this.Bech32Encoders = new Bech32Encoder[2];

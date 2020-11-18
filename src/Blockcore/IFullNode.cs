@@ -1,5 +1,6 @@
 ﻿using System;
 using Blockcore.Builder;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Hosting;
 
@@ -20,7 +21,7 @@ namespace Blockcore
         IFullNodeServiceProvider Services { get; }
 
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
-        NBitcoin.Network Network { get; }
+        Network Network { get; }
 
         /// <summary>Software version of the full node.</summary>
         Version Version { get; }

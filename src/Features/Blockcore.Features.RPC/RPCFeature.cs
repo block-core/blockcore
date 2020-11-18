@@ -6,6 +6,7 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Features.Consensus;
+using Blockcore.Networks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -57,6 +58,9 @@ namespace Blockcore.Features.RPC
             builder.AppendLine("#rpcbind=127.0.0.1");
             builder.AppendLine("#Ip address allowed to connect to RPC (default all: 0.0.0.0 and ::)");
             builder.AppendLine("#rpcallowip=127.0.0.1");
+            builder.AppendLine("#Can load the RPCContentType with or without charset. (default: application/json; chartset=utf-8)");
+            builder.AppendLine("#rpccontenttype=application/json");
+
         }
 
         public override Task InitializeAsync()

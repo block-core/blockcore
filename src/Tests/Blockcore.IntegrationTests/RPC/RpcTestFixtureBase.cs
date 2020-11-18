@@ -38,7 +38,7 @@ namespace Blockcore.IntegrationTests.RPC
 
         /// <summary>
         /// Disposes of the test fixtures resources.
-        /// Note: do not call this dispose in the class itself xunit will handle it. 
+        /// Note: do not call this dispose in the class itself xunit will handle it.
         /// </summary>
         public virtual void Dispose()
         {

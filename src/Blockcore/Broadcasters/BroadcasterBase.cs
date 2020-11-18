@@ -40,14 +40,17 @@ namespace Blockcore.Broadcasters
                 $"Broadcast {this.GetType().Name}",
                 async token =>
                 {
-                    foreach (EventBase clientEvent in this.GetMessages())
+                    if (this.eventsHub.HasConsumers)
                     {
-                        this.eventsHub.OnEvent(clientEvent);
+                        foreach (EventBase clientEvent in this.GetMessages())
+                        {
+                            this.eventsHub.OnEvent(clientEvent);
+                        }
                     }
                 },
                 this.nodeLifetime.ApplicationStopping,
                 repeatEvery: TimeSpan.FromSeconds(Math.Max(broadcasterSettings.BroadcastFrequencySeconds, 5)),
-                startAfter: TimeSpans.FiveSeconds);
+                startAfter: TimeSpans.TenSeconds);
         }
 
         protected abstract IEnumerable<EventBase> GetMessages();

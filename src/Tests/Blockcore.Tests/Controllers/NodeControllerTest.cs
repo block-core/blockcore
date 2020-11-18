@@ -7,9 +7,14 @@ using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Connection;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers;
 using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;
@@ -45,6 +50,7 @@ namespace Blockcore.Tests.Controllers
         private readonly Mock<IPooledTransaction> pooledTransaction;
         private readonly Mock<IAsyncProvider> asyncProvider;
         private readonly Mock<ISelfEndpointTracker> selfEndpointTracker;
+        private readonly Mock<IConsensusManager> consensusManager;
 
         private NodeController controller;
 
@@ -68,7 +74,13 @@ namespace Blockcore.Tests.Controllers
             this.pooledTransaction = new Mock<IPooledTransaction>();
             this.asyncProvider = new Mock<IAsyncProvider>();
             this.selfEndpointTracker = new Mock<ISelfEndpointTracker>();
+            this.consensusManager = new Mock<IConsensusManager>();
 
+            this.CreateNewController();
+        }
+
+        private void CreateNewController()
+        {
             this.controller = new NodeController(
                 this.chainIndexer,
                 this.chainState.Object,
@@ -84,7 +96,8 @@ namespace Blockcore.Tests.Controllers
                 this.getUnspentTransaction.Object,
                 this.networkDifficulty.Object,
                 this.pooledGetUnspentTransaction.Object,
-                this.pooledTransaction.Object);
+                this.pooledTransaction.Object,
+                this.consensusManager.Object);
         }
 
         [Fact]
@@ -126,10 +139,8 @@ namespace Blockcore.Tests.Controllers
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns((Transaction)null)
                 .Verifiable();
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
 
             string txid = txId.ToString();
             bool verbose = false;
@@ -150,10 +161,9 @@ namespace Blockcore.Tests.Controllers
             Transaction transaction = this.CreateTransaction();
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns(transaction);
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
             bool verbose = false;
 
@@ -189,10 +199,9 @@ namespace Blockcore.Tests.Controllers
             Transaction transaction = this.CreateTransaction();
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns(transaction);
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
             bool verbose = false;
 
@@ -210,10 +219,9 @@ namespace Blockcore.Tests.Controllers
             this.blockStore.Setup(f => f.GetTransactionById(txId))
                 .Returns((Transaction)null)
                 .Verifiable();
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
             bool verbose = false;
 
@@ -231,10 +239,7 @@ namespace Blockcore.Tests.Controllers
                 .ReturnsAsync((Transaction)null);
             Transaction transaction = this.CreateTransaction();
 
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+            this.CreateNewController();
 
             var json = (JsonResult)this.controller.DecodeRawTransaction(new DecodeRawTransactionModel() { RawHex = transaction.ToHex() });
             var resultModel = (TransactionVerboseModel)json.Value;
@@ -254,11 +259,10 @@ namespace Blockcore.Tests.Controllers
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
-            var blockStore = new Mock<IBlockStore>();
-            blockStore.Setup(b => b.GetBlockIdByTransactionId(txId))
+            this.blockStore.Setup(b => b.GetBlockIdByTransactionId(txId))
                 .Returns(block.HashBlock);
             this.fullNode.Setup(f => f.NodeFeature<IBlockStore>(false))
-                .Returns(blockStore.Object);
+                .Returns(this.blockStore.Object);
             string txid = txId.ToString();
             bool verbose = true;
 
@@ -403,11 +407,11 @@ namespace Blockcore.Tests.Controllers
         public async Task GetTxOutAsync_NotIncludeInMempool_GetUnspentTransactionNotAvailable_ReturnsNullAsync()
         {
             var txId = new uint256(1243124);
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
+
             uint vout = 0;
             bool includeMemPool = false;
 
@@ -423,10 +427,9 @@ namespace Blockcore.Tests.Controllers
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync((UnspentOutput)null)
                 .Verifiable();
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
             uint vout = 0;
             bool includeMemPool = true;
@@ -441,10 +444,9 @@ namespace Blockcore.Tests.Controllers
         public async Task GetTxOutAsync_IncludeMempool_PooledGetUnspentTransactionNotAvailable_UnspentTransactionNotFound_ReturnsNullAsync()
         {
             var txId = new uint256(1243124);
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
             uint vout = 0;
             bool includeMemPool = true;
@@ -463,10 +465,9 @@ namespace Blockcore.Tests.Controllers
             this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
             uint vout = 0;
             bool includeMemPool = false;
@@ -491,10 +492,9 @@ namespace Blockcore.Tests.Controllers
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
-            this.controller = new NodeController(this.chainIndexer, this.chainState.Object,
-                this.connectionManager.Object, this.dateTimeProvider.Object, this.fullNode.Object,
-                this.LoggerFactory.Object, this.nodeSettings, this.network, this.asyncProvider.Object, this.selfEndpointTracker.Object, this.blockStore.Object, this.getUnspentTransaction.Object,
-                this.networkDifficulty.Object, this.pooledGetUnspentTransaction.Object, this.pooledTransaction.Object);
+
+            this.CreateNewController();
+
             string txid = txId.ToString();
             uint vout = 0;
             bool includeMemPool = true;

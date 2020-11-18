@@ -1,4 +1,6 @@
 ﻿using System;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities.JsonConverters;
 using NBitcoin;

@@ -8,11 +8,15 @@ using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Controllers.Models;
 using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using NBitcoin.Networks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -85,8 +89,8 @@ namespace Blockcore.Features.RPC
         blockchain         getdifficulty
         blockchain         getmempoolinfo
         blockchain         getrawmempool                Yes
-        blockchain         gettxout                    Yes
-        blockchain         gettxoutproof
+        blockchain         gettxout                     Yes
+        blockchain         gettxoutproof                Yes
         blockchain         verifytxoutproof
         blockchain         gettxoutsetinfo
         blockchain         verifychain
@@ -151,7 +155,7 @@ namespace Blockcore.Features.RPC
         wallet             listreceivedbyaccount
         wallet             listreceivedbyaddress
         wallet             listsinceblock
-        wallet             listtransactions
+        wallet             listtransactions             Yes
         wallet             listunspent                  Yes
         wallet             lockunspent                  Yes
         wallet             move

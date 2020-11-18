@@ -1,3 +1,102 @@
+##  (2020-09-15)
+
+* Added segwit addresses to indexer. (#215) ([91940e2](https://github.com/block-core/blockcore/commit/91940e2)), closes [#215](https://github.com/block-core/blockcore/issues/215)
+* Added the Bech32Address as a query for history (#217) ([85113e9](https://github.com/block-core/blockcore/commit/85113e9)), closes [#217](https://github.com/block-core/blockcore/issues/217)
+* Added the Bech32Address to GetAddressBalance() (#216) ([55de7d2](https://github.com/block-core/blockcore/commit/55de7d2)), closes [#216](https://github.com/block-core/blockcore/issues/216)
+* Bump version ([f676338](https://github.com/block-core/blockcore/commit/f676338))
+* Update the changelog with details from 1.0.13 ([0f51e7d](https://github.com/block-core/blockcore/commit/0f51e7d))
+
+
+
+##  (2020-09-07)
+
+* Add About Page (#185) ([4f3d3fd](https://github.com/block-core/blockcore/commit/4f3d3fd)), closes [#185](https://github.com/block-core/blockcore/issues/185)
+* add null check (#209) ([bfcb5aa](https://github.com/block-core/blockcore/commit/bfcb5aa)), closes [#209](https://github.com/block-core/blockcore/issues/209)
+* Add path-based filtering support for API keys (#205) ([f4b3c46](https://github.com/block-core/blockcore/commit/f4b3c46)), closes [#205](https://github.com/block-core/blockcore/issues/205)
+* Add VerifyMessage overload that takes byte[] ([2a1d8f4](https://github.com/block-core/blockcore/commit/2a1d8f4))
+* bump version ([6c84da2](https://github.com/block-core/blockcore/commit/6c84da2))
+* Enhance getrawtransaction method by including the block that the transaction was included in. (#184) ([f2debd7](https://github.com/block-core/blockcore/commit/f2debd7)), closes [#184](https://github.com/block-core/blockcore/issues/184)
+* Feature/api auth (#182) ([7c66609](https://github.com/block-core/blockcore/commit/7c66609)), closes [#182](https://github.com/block-core/blockcore/issues/182)
+* Fix failing tests ([ce0fa5b](https://github.com/block-core/blockcore/commit/ce0fa5b))
+* Fix stratis consensus options to be similar to stratis code base ([6c28848](https://github.com/block-core/blockcore/commit/6c28848))
+* Fix test to use litedb with memory stream ([7e093f6](https://github.com/block-core/blockcore/commit/7e093f6))
+* Fix the fee values for City Chain network configuration from 4333 to 10000 ([04b2a46](https://github.com/block-core/blockcore/commit/04b2a46))
+* fixes #197 (#198) ([bd62c43](https://github.com/block-core/blockcore/commit/bd62c43)), closes [#197](https://github.com/block-core/blockcore/issues/197) [#198](https://github.com/block-core/blockcore/issues/198)
+* Improve loading of peers.json (#207) ([ea12be0](https://github.com/block-core/blockcore/commit/ea12be0)), closes [#207](https://github.com/block-core/blockcore/issues/207)
+* Minor edit to API integration tests ([47dbd11](https://github.com/block-core/blockcore/commit/47dbd11))
+* Prevent pow miner from crashing on consensus bug ([4287b38](https://github.com/block-core/blockcore/commit/4287b38))
+* Reading history from db instead of loading all entries in memory (#186) ([caf9ef3](https://github.com/block-core/blockcore/commit/caf9ef3)), closes [#186](https://github.com/block-core/blockcore/issues/186)
+* Reducing duplicate code in NodeControllerTests ([ac5e5f2](https://github.com/block-core/blockcore/commit/ac5e5f2))
+* Remove Authorize attributes on a couple of API calls ([aa9d884](https://github.com/block-core/blockcore/commit/aa9d884))
+* Remove parameters after coins sent  (#188) ([9ed85ef](https://github.com/block-core/blockcore/commit/9ed85ef)), closes [#188](https://github.com/block-core/blockcore/issues/188)
+* Support bech32 addresses in rpc methods (#211) ([2da28a6](https://github.com/block-core/blockcore/commit/2da28a6)), closes [#211](https://github.com/block-core/blockcore/issues/211)
+* Update the seeders information (#203) ([579de7e](https://github.com/block-core/blockcore/commit/579de7e)), closes [#203](https://github.com/block-core/blockcore/issues/203)
+* use FromBody for getStakingNotExpired api endpoint ([7a30a04](https://github.com/block-core/blockcore/commit/7a30a04))
+* Wallet moved to litedb  (#179) ([b52aa03](https://github.com/block-core/blockcore/commit/b52aa03)), closes [#179](https://github.com/block-core/blockcore/issues/179)
+
+
+
+## <small>1.0.12 (2020-07-10)</small>
+
+* Add favorite icon handling for the UI (#167) ([29194d6](https://github.com/block-core/blockcore/commit/29194d6)), closes [#167](https://github.com/block-core/blockcore/issues/167)
+* Added CoinTicker to Agent name (#174) ([581caa5](https://github.com/block-core/blockcore/commit/581caa5)), closes [#174](https://github.com/block-core/blockcore/issues/174)
+* Added DNS Service to Blockcore.Node (#176) ([a0acb1a](https://github.com/block-core/blockcore/commit/a0acb1a)), closes [#176](https://github.com/block-core/blockcore/issues/176)
+* Added DNS Service to Rutanio.Node (#175) ([ee79a8f](https://github.com/block-core/blockcore/commit/ee79a8f)), closes [#175](https://github.com/block-core/blockcore/issues/175)
+* Added listtransactions RPC (#159) ([1e6013a](https://github.com/block-core/blockcore/commit/1e6013a)), closes [#159](https://github.com/block-core/blockcore/issues/159)
+* Added Rutanio favicon (#168) ([97ed570](https://github.com/block-core/blockcore/commit/97ed570)), closes [#168](https://github.com/block-core/blockcore/issues/168)
+* Adding OpenExO Network (EXOS) (#169) ([57acad0](https://github.com/block-core/blockcore/commit/57acad0)), closes [#169](https://github.com/block-core/blockcore/issues/169)
+* Adding Rutanio Network (RUTA) (#161) ([6dac1ff](https://github.com/block-core/blockcore/commit/6dac1ff)), closes [#161](https://github.com/block-core/blockcore/issues/161)
+* bump version ([2e01a8c](https://github.com/block-core/blockcore/commit/2e01a8c))
+* Changed the x42 MaxOpReturnRelay to 83 (#165) ([3ad6e00](https://github.com/block-core/blockcore/commit/3ad6e00)), closes [#165](https://github.com/block-core/blockcore/issues/165)
+* Default to BTC if no chain is specified for the generic node host ([05e932b](https://github.com/block-core/blockcore/commit/05e932b))
+* Fix error & improve coins sent message (#172) ([e254313](https://github.com/block-core/blockcore/commit/e254313)), closes [#172](https://github.com/block-core/blockcore/issues/172)
+* Fixed Rutanio.Node build (#177) ([7d49a73](https://github.com/block-core/blockcore/commit/7d49a73)), closes [#177](https://github.com/block-core/blockcore/issues/177)
+* Make nav menu order configurable (#178) ([f408324](https://github.com/block-core/blockcore/commit/f408324)), closes [#178](https://github.com/block-core/blockcore/issues/178)
+* Rutanio CSV activation windows updated, and cleanup rutanio favicon  (#171) ([5020f38](https://github.com/block-core/blockcore/commit/5020f38)), closes [#171](https://github.com/block-core/blockcore/issues/171)
+* Update Rutanio Agent on Network Selector (#181) ([31addf0](https://github.com/block-core/blockcore/commit/31addf0)), closes [#181](https://github.com/block-core/blockcore/issues/181)
+
+
+
+## <small>1.0.11 (2020-06-22)</small>
+
+* Add modal component service & create add node modal (#152) ([48b2bd9](https://github.com/block-core/blockcore/commit/48b2bd9)), closes [#152](https://github.com/block-core/blockcore/issues/152)
+* Added gettxoutproof RPC (#160) ([7e99384](https://github.com/block-core/blockcore/commit/7e99384)), closes [#160](https://github.com/block-core/blockcore/issues/160)
+* Bump version ([266c9d4](https://github.com/block-core/blockcore/commit/266c9d4))
+* Create send max button and fee types (#148) ([75fa06c](https://github.com/block-core/blockcore/commit/75fa06c)), closes [#148](https://github.com/block-core/blockcore/issues/148)
+* Reset x42 Testnet (#149) ([81a7f68](https://github.com/block-core/blockcore/commit/81a7f68)), closes [#149](https://github.com/block-core/blockcore/issues/149)
+* UI Changes (#157) ([229cfa8](https://github.com/block-core/blockcore/commit/229cfa8)), closes [#157](https://github.com/block-core/blockcore/issues/157)
+
+
+
+## <small>1.0.10 (2020-06-02)</small>
+
+* Add correct deployment info for City Chain ([6f0e662](https://github.com/block-core/blockcore/commit/6f0e662))
+* Add max fee to network (#140) ([b3169a7](https://github.com/block-core/blockcore/commit/b3169a7)), closes [#140](https://github.com/block-core/blockcore/issues/140)
+* Added blockmintxfee setting to BlockDefinitionOptions (#133) ([b83d16f](https://github.com/block-core/blockcore/commit/b83d16f)), closes [#133](https://github.com/block-core/blockcore/issues/133)
+* Added fee for OP_RETURN for x42. (#139) ([80a668f](https://github.com/block-core/blockcore/commit/80a668f)), closes [#139](https://github.com/block-core/blockcore/issues/139)
+* Allow zero fee's while estimating spendable amount. (#144) ([99774a8](https://github.com/block-core/blockcore/commit/99774a8)), closes [#144](https://github.com/block-core/blockcore/issues/144)
+* Bump version to 1.0.10 ([e661a61](https://github.com/block-core/blockcore/commit/e661a61))
+* Create a DefaultMaxBlockSigopsCost to make it more clear when acting on that field ([3d82f68](https://github.com/block-core/blockcore/commit/3d82f68))
+* Fix bug when txinfo is not found in mempool ([873a883](https://github.com/block-core/blockcore/commit/873a883))
+* Remove the constructors from options (#146) ([c2c3757](https://github.com/block-core/blockcore/commit/c2c3757)), closes [#146](https://github.com/block-core/blockcore/issues/146)
+* Rename files to be the same as the class name ([cb5d61b](https://github.com/block-core/blockcore/commit/cb5d61b))
+* Suppress xml comment warnings ([9ad3fb7](https://github.com/block-core/blockcore/commit/9ad3fb7))
+* UI updates (#131) ([fce1e98](https://github.com/block-core/blockcore/commit/fce1e98)), closes [#131](https://github.com/block-core/blockcore/issues/131)
+* When segwit address is used to sign, we need to return the address signed with. (#142) ([0c246e4](https://github.com/block-core/blockcore/commit/0c246e4)), closes [#142](https://github.com/block-core/blockcore/issues/142)
+
+
+
+## <small>1.0.9 (2020-05-24)</small>
+
+* Add FeeFilter capabilities protocol version 70013 (#127) ([5f6f330](https://github.com/block-core/blockcore/commit/5f6f330)), closes [#127](https://github.com/block-core/blockcore/issues/127)
+* Bump master to 1.0.9 ([dd28205](https://github.com/block-core/blockcore/commit/dd28205))
+* move protocol out of the consensus calss and in to the consensus factory (#128) ([2e4816b](https://github.com/block-core/blockcore/commit/2e4816b)), closes [#128](https://github.com/block-core/blockcore/issues/128)
+* Move ProtocolVersion to the Consensus class (#126) ([11eeb36](https://github.com/block-core/blockcore/commit/11eeb36)), closes [#126](https://github.com/block-core/blockcore/issues/126)
+* Remove the const PROTOCOL_VERSION and use the version per chain on the consensus factory (#130) ([28ff37f](https://github.com/block-core/blockcore/commit/28ff37f)), closes [#130](https://github.com/block-core/blockcore/issues/130)
+* Remove unused folders ([a7787ce](https://github.com/block-core/blockcore/commit/a7787ce))
+
+
+
 ##  (2020-05-15)
 
 *   Fix data folder on tests ([93fc2e7](https://github.com/block-core/blockcore/commit/93fc2e7))

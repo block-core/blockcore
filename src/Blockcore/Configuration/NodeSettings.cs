@@ -7,10 +7,10 @@ using System.Text;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.Networks;
 using NBitcoin.Protocol;
 using NLog.Extensions.Logging;
 
@@ -90,6 +90,9 @@ namespace Blockcore.Configuration
 
         /// <summary>The minimum fee for a kB of transactions on the node.</summary>
         public FeeRate MinTxFeeRate { get; private set; }
+
+        /// <summary>The optional maximum fee for a kB of transactions on the node.</summary>
+        public FeeRate MaxTxFeeRate { get; private set; }
 
         /// <summary>The default fee for a kB of transactions on the node. This value is used if no fee is specified for
         /// a transaction.
@@ -302,6 +305,7 @@ namespace Blockcore.Configuration
             this.MinTxFeeRate = new FeeRate(config.GetOrDefault("mintxfee", this.Network.MinTxFee, this.Logger));
             this.FallbackTxFeeRate = new FeeRate(config.GetOrDefault("fallbackfee", this.Network.FallbackFee, this.Logger));
             this.MinRelayTxFeeRate = new FeeRate(config.GetOrDefault("minrelaytxfee", this.Network.MinRelayTxFee, this.Logger));
+            this.MaxTxFeeRate = new FeeRate(config.GetOrDefault("maxtxfee", this.Network.MaxTxFee, this.Logger));
         }
 
         /// <summary>
@@ -371,7 +375,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"-conf=<Path>              Path to the configuration file. Defaults to {defaults.ConfigurationFile}.");
             builder.AppendLine($"-datadir=<Path>           Path to the data directory. Defaults to {defaults.DataDir}.");
             builder.AppendLine($"-datadirroot=<Path>       The path to the root data directory, which holds all node data on the machine. Defaults to 'Blockcore'.");
-            builder.AppendLine($"-debug[=<string>]         Set 'Debug' logging level. Specify what to log via e.g. '-debug=Blockcore.Miner,Stratis.Bitcoin.Wallet'.");
+            builder.AppendLine($"-debug[=<string>]         Set 'Debug' logging level. Specify what to log via e.g. '-debug=Blockcore.Miner,Blockcore.Wallet'.");
             builder.AppendLine($"-loglevel=<string>        Direct control over the logging level: '-loglevel=trace/debug/info/warn/error/fatal'.");
 
             // Can be overridden in configuration file.
@@ -400,6 +404,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"regtest={(network.IsRegTest() ? 1 : 0)}");
             builder.AppendLine($"#Minimum fee rate. Defaults to {network.MinTxFee}.");
             builder.AppendLine($"#mintxfee={network.MinTxFee}");
+            builder.AppendLine($"#maxtxfee={network.MaxTxFee}");
             builder.AppendLine($"#Fallback fee rate. Defaults to {network.FallbackFee}.");
             builder.AppendLine($"#fallbackfee={network.FallbackFee}");
             builder.AppendLine($"#Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");

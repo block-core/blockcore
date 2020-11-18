@@ -11,15 +11,17 @@ using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
-using Blockcore.Primitives;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using FileMode = LiteDB.FileMode;
-using Script = NBitcoin.Script;
+using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
 {
@@ -83,7 +85,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         private LiteDatabase db;
 
-        private LiteCollection<AddressIndexerTipData> tipDataStore;
+        private ILiteCollection<AddressIndexerTipData> tipDataStore;
 
         /// <summary>A mapping between addresses and their balance changes.</summary>
         /// <remarks>All access should be protected by <see cref="lockObject"/>.</remarks>
@@ -176,8 +178,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
             string dbPath = Path.Combine(this.dataFolder.RootPath, AddressIndexerDatabaseFilename);
 
-            FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? FileMode.Exclusive : FileMode.Shared;
-            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode });
+            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
 
             this.addressIndexRepository = new AddressIndexRepository(this.db, this.loggerFactory);
 

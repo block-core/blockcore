@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -160,7 +163,7 @@ namespace Blockcore.Features.Wallet
 
             // Create a recipient with a dummy destination address as it's required by NBitcoin's transaction builder.
             List<Recipient> recipients = new[] { new Recipient { Amount = new Money(maxSpendableAmount), ScriptPubKey = new Key().ScriptPubKey } }.ToList();
-            Money fee;
+            Money fee = Money.Zero;
 
             try
             {
@@ -179,8 +182,11 @@ namespace Blockcore.Features.Wallet
                 this.AddCoins(context);
                 this.AddFee(context);
 
-                // Throw an exception if this code is reached, as building a transaction without any funds for the fee should always throw an exception.
-                throw new WalletException("This should be unreachable; please find and fix the bug that caused this to be reached.");
+                if (this.network.MinTxFee > Money.Zero)
+                {
+                    // Throw an exception if this code is reached, as building a transaction without any funds for the fee should always throw an exception.
+                    throw new WalletException("This should be unreachable; please find and fix the bug that caused this to be reached.");
+                }
             }
             catch (NotEnoughFundsException e)
             {
@@ -301,7 +307,7 @@ namespace Blockcore.Features.Wallet
 
             // Get total spendable balance in the account.
             long balance = context.UnspentOutputs.Sum(t => t.Transaction.Amount);
-            long totalToSend = context.Recipients.Sum(s => s.Amount);
+            long totalToSend = context.Recipients.Sum(s => s.Amount) + (context.OpReturnAmount ?? Money.Zero);
             if (balance < totalToSend)
                 throw new WalletException("Not enough funds.");
 
@@ -426,11 +432,11 @@ namespace Blockcore.Features.Wallet
         /// <param name="context">The context associated with the current transaction being built.</param>
         protected void AddOpReturnOutput(TransactionBuildContext context)
         {
-            if (string.IsNullOrEmpty(context.OpReturnData) && context.OpReturnRawData == null) 
+            if (string.IsNullOrEmpty(context.OpReturnData) && context.OpReturnRawData == null)
                 return;
-            
+
             byte[] bytes = context.OpReturnRawData ?? Encoding.UTF8.GetBytes(context.OpReturnData);
-          
+
             // TODO: Get the template from the network standard scripts instead
             Script opReturnScript = TxNullDataTemplate.Instance.GenerateScriptPubKey(bytes);
             context.TransactionBuilder.Send(opReturnScript, context.OpReturnAmount ?? Money.Zero);

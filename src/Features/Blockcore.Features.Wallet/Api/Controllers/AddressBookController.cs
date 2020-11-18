@@ -8,6 +8,7 @@ using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Blockcore.Utilities.ModelStateErrors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +17,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
     /// <summary>
     /// Controller providing operations on a wallet.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]

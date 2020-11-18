@@ -420,5 +420,14 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="fromDate">The date after which the transactions should be removed.</param>
         /// <returns>A list of objects made up of a transactions ID along with the time at which they were created.</returns>
         HashSet<(uint256, DateTimeOffset)> RemoveTransactionsFromDate(string walletName, DateTimeOffset fromDate);
+
+        /// <summary>
+        /// Sweeps the funds from the private keys to the destination address.
+        /// </summary>
+        /// <param name="privateKeys">Private keys to sweep funds from in wif format.</param>
+        /// <param name="destAddress">Destination address to sweep funds to.</param>
+        /// <param name="broadcast">Broadcast the transaction to the network.</param>
+        /// <returns>List of sweep transactions.</returns>
+        IEnumerable<string> Sweep(IEnumerable<string> privateKeys, string destAddress, bool broadcast);
     }
 }

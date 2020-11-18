@@ -1,8 +1,7 @@
-﻿using Blockcore.Consensus.ScriptInfo;
-using Blockcore.Consensus.TransactionInfo;
+﻿using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 
-namespace Blockcore.Features.ColdStaking
+namespace Blockcore.Consensus.ScriptInfo
 {
     /// <summary>
     /// The scriptSig parameters used for cold staking script.

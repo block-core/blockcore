@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Features.ColdStaking;
 using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.Crypto;

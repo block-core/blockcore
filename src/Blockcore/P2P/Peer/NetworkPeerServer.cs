@@ -237,7 +237,7 @@ namespace Blockcore.P2P.Peer
 
             var clientLocalEndPoint = tcpClient.Client.LocalEndPoint as IPEndPoint;
 
-            bool endpointCanBeWhiteListed = this.connectionManagerSettings.Whitelist.Any(x => x.MatchIpOnly(clientLocalEndPoint));
+            bool endpointCanBeWhiteListed = this.connectionManagerSettings.Whitelist.Any(x => x.MatchIpOnly(clientRemoteEndPoint));
 
             if (endpointCanBeWhiteListed)
             {

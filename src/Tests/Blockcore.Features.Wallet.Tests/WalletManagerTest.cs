@@ -28,6 +28,7 @@ using Moq;
 using NBitcoin;
 using NBitcoin.Protocol;
 using Newtonsoft.Json;
+using NLog.Time;
 using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests
@@ -3020,11 +3021,12 @@ namespace Blockcore.Features.Wallet.Tests
             // Add two unconfirmed transactions.
             uint256 trxId = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
             int counter = 0;
+            DateTimeOffset creationTime = default;
 
-            var trxUnconfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(0).Address };
-            var trxUnconfirmed2 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 2), Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(0).Address };
-            var trxConfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 3), Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, Address = firstAccount.ExternalAddresses.ElementAt(1).Address };
-            var trxConfirmed2 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 4), Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, Address = firstAccount.InternalAddresses.ElementAt(1).Address };
+            var trxUnconfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Amount = 10, Id = trxId >> counter++, Address = firstAccount.ExternalAddresses.ElementAt(0).Address, CreationTime = creationTime };
+            var trxUnconfirmed2 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 2), Amount = 10, Id = trxId >> counter++, Address = firstAccount.InternalAddresses.ElementAt(0).Address, CreationTime = creationTime };
+            var trxConfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 3), Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, Address = firstAccount.ExternalAddresses.ElementAt(1).Address, CreationTime = creationTime };
+            var trxConfirmed2 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 4), Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, Address = firstAccount.InternalAddresses.ElementAt(1).Address, CreationTime = creationTime };
 
             wallet.walletStore.InsertOrUpdate(trxUnconfirmed1);
             wallet.walletStore.InsertOrUpdate(trxConfirmed1);
@@ -3041,8 +3043,8 @@ namespace Blockcore.Features.Wallet.Tests
             List<TransactionOutputData> remainingTrxs = firstAccount.GetCombinedAddresses().SelectMany(a => wallet.walletStore.GetForAddress(a.Address)).ToList();
             Assert.Equal(2, remainingTrxs.Count());
             Assert.Equal(2, result.Count);
-            Assert.Contains((trxUnconfirmed1.Id, trxConfirmed1.CreationTime), result);
-            Assert.Contains((trxUnconfirmed2.Id, trxConfirmed2.CreationTime), result);
+            Assert.Contains(result, i => i.Item1 == trxUnconfirmed1.Id);
+            Assert.Contains(result, i => i.Item1 == trxUnconfirmed2.Id);
             Assert.DoesNotContain(trxUnconfirmed1, remainingTrxs);
             Assert.DoesNotContain(trxUnconfirmed2, remainingTrxs);
         }
@@ -3164,17 +3166,19 @@ namespace Blockcore.Features.Wallet.Tests
             uint256 trxId = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
             int counter = 0;
 
+            DateTimeOffset creationTime = default;
+
             // Confirmed transaction with confirmed spending.
-            var confirmedSpendingDetails = new SpendingDetails { TransactionId = trxId >> counter++, BlockHeight = 500002 };
-            var trxConfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 3), Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, SpendingDetails = confirmedSpendingDetails, Address = firstAccount.ExternalAddresses.ElementAt(1).Address };
+            var confirmedSpendingDetails = new SpendingDetails { TransactionId = trxId >> counter++, BlockHeight = 500002, CreationTime = creationTime };
+            var trxConfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 3), Amount = 10, Id = trxId >> counter++, BlockHeight = 50000, SpendingDetails = confirmedSpendingDetails, Address = firstAccount.ExternalAddresses.ElementAt(1).Address, CreationTime = creationTime };
 
             // Confirmed transaction with unconfirmed spending.
             uint256 unconfirmedTransactionId = trxId >> counter++;
-            var unconfirmedSpendingDetails1 = new SpendingDetails { TransactionId = unconfirmedTransactionId };
-            var trxConfirmed2 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, SpendingDetails = unconfirmedSpendingDetails1, Address = firstAccount.InternalAddresses.ElementAt(1).Address };
+            var unconfirmedSpendingDetails1 = new SpendingDetails { TransactionId = unconfirmedTransactionId, CreationTime = creationTime };
+            var trxConfirmed2 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Amount = 10, Id = trxId >> counter++, BlockHeight = 50001, SpendingDetails = unconfirmedSpendingDetails1, Address = firstAccount.InternalAddresses.ElementAt(1).Address, CreationTime = creationTime };
 
             // Unconfirmed transaction.
-            var trxUnconfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 2), Amount = 10, Id = unconfirmedTransactionId, Address = firstAccount.ExternalAddresses.ElementAt(0).Address };
+            var trxUnconfirmed1 = new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 2), Amount = 10, Id = unconfirmedTransactionId, Address = firstAccount.ExternalAddresses.ElementAt(0).Address, CreationTime = creationTime };
 
             wallet.walletStore.InsertOrUpdate(trxUnconfirmed1);
             wallet.walletStore.InsertOrUpdate(trxConfirmed1);
@@ -3196,7 +3200,7 @@ namespace Blockcore.Features.Wallet.Tests
             List<TransactionOutputData> remainingTrxs = firstAccount.GetCombinedAddresses().SelectMany(a => wallet.walletStore.GetForAddress(a.Address)).ToList();
             Assert.Equal(2, remainingTrxs.Count);
             Assert.Single(result);
-            Assert.Contains((unconfirmedTransactionId, trxUnconfirmed1.CreationTime), result);
+            Assert.Contains(result, i => i.Item1 == unconfirmedTransactionId);
             Assert.DoesNotContain(trxUnconfirmed1, remainingTrxs);
             Assert.Null(remainingTrxs.Single(s => s.OutPoint == trxConfirmed2.OutPoint).SpendingDetails);
         }

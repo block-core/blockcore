@@ -4,6 +4,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
@@ -35,7 +36,7 @@ namespace Blockcore.IntegrationTests.BlockStore
         [Fact]
         public void BlockRepositoryPutBatch()
         {
-            using (var blockRepository = new BlockRepository(this.network, TestBase.CreateDataFolder(this), this.loggerFactory, this.dataStoreSerializer))
+            using (var blockRepository = new LeveldbBlockRepository(this.network, TestBase.CreateDataFolder(this), this.loggerFactory, this.dataStoreSerializer))
             {
                 blockRepository.SetTxIndex(true);
 

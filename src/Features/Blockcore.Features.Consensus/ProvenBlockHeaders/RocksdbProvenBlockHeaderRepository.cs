@@ -18,7 +18,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
     /// <summary>
     /// Persistent implementation of the <see cref="ProvenBlockHeader"/> DBreeze repository.
     /// </summary>
-    public class ProvenBlockHeaderRepository : IProvenBlockHeaderRepository
+    public class RocksdbProvenBlockHeaderRepository : IProvenBlockHeaderRepository
     {
         /// <summary>
         /// Instance logger.
@@ -59,10 +59,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// Initializes a new instance of the object.
         /// </summary>
         /// <param name="network">Specification of the network the node runs on - RegTest/TestNet/MainNet.</param>
-        /// <param name="folder"><see cref="ProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
+        /// <param name="folder"><see cref="RocksdbProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
         /// <param name="loggerFactory">Factory to create a logger for this type.</param>
         /// <param name="dataStoreSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
-        public ProvenBlockHeaderRepository(Network network, DataFolder folder, ILoggerFactory loggerFactory,
+        public RocksdbProvenBlockHeaderRepository(Network network, DataFolder folder, ILoggerFactory loggerFactory,
             DataStoreSerializer dataStoreSerializer)
         : this(network, folder.ProvenBlockHeaderPath, loggerFactory, dataStoreSerializer)
         {
@@ -72,10 +72,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// Initializes a new instance of the object.
         /// </summary>
         /// <param name="network">Specification of the network the node runs on - RegTest/TestNet/MainNet.</param>
-        /// <param name="folder"><see cref="ProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
+        /// <param name="folder"><see cref="RocksdbProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
         /// <param name="loggerFactory">Factory to create a logger for this type.</param>
         /// <param name="dataStoreSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
-        public ProvenBlockHeaderRepository(Network network, string folder, ILoggerFactory loggerFactory,
+        public RocksdbProvenBlockHeaderRepository(Network network, string folder, ILoggerFactory loggerFactory,
             DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));

@@ -1,87 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using Blockcore.Configuration;
-using Blockcore.Interfaces;
-using Blockcore.Utilities;
-using DBreeze.Utils;
-using RocksDbSharp;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
-using System;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
+using Blockcore.Utilities;
+using DBreeze.Utils;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
+using RocksDbSharp;
 
-namespace Blockcore.Features.BlockStore
+namespace Blockcore.Features.BlockStore.Repository
 {
-    /// <summary>
-    /// <see cref="IBlockRepository"/> is the interface to all the logics interacting with the blocks stored in the database.
-    /// </summary>
-    public interface IBlockRepository : IBlockStore
-    {
-        /// <summary> The dbreeze database engine.</summary>
-        RocksDb RocksDb { get; }
-
-        /// <summary>Really ugly temporary hack.</summary>
-        object Locker { get; }
-
-        /// <summary>
-        /// Deletes blocks and indexes for transactions that belong to deleted blocks.
-        /// <para>
-        /// It should be noted that this does not delete the entries from disk (only the references are removed) and
-        /// as such the file size remains the same.
-        /// </para>
-        /// </summary>
-        /// <remarks>TODO: This will need to be revisited once DBreeze has been fixed or replaced with a solution that works.</remarks>
-        /// <param name="hashes">List of block hashes to be deleted.</param>
-        void DeleteBlocks(List<uint256> hashes);
-
-        /// <summary>
-        /// Persist the next block hash and insert new blocks into the database.
-        /// </summary>
-        /// <param name="newTip">Hash and height of the new repository's tip.</param>
-        /// <param name="blocks">Blocks to be inserted.</param>
-        void PutBlocks(HashHeightPair newTip, List<Block> blocks);
-
-        /// <summary>
-        /// Wipe out blocks and their transactions then replace with a new block.
-        /// </summary>
-        /// <param name="newTip">Hash and height of the new repository's tip.</param>
-        /// <param name="hashes">List of all block hashes to be deleted.</param>
-        /// <exception cref="DBreezeException">Thrown if an error occurs during database operations.</exception>
-        void Delete(HashHeightPair newTip, List<uint256> hashes);
-
-        /// <summary>
-        /// Determine if a block already exists
-        /// </summary>
-        /// <param name="hash">The hash.</param>
-        /// <returns><c>true</c> if the block hash can be found in the database, otherwise return <c>false</c>.</returns>
-        bool Exist(uint256 hash);
-
-        /// <summary>
-        /// Iterate over every block in the database.
-        /// If <see cref="TxIndex"/> is true, we store the block hash alongside the transaction hash in the transaction table, otherwise clear the transaction table.
-        /// </summary>
-        void ReIndex();
-
-        /// <summary>
-        /// Set whether to index transactions by block hash, as well as storing them inside of the block.
-        /// </summary>
-        /// <param name="txIndex">Whether to index transactions.</param>
-        void SetTxIndex(bool txIndex);
-
-        /// <summary>Hash and height of the repository's tip.</summary>
-        HashHeightPair TipHashAndHeight { get; }
-
-        /// <summary> Indicates that the node should store all transaction data in the database.</summary>
-        bool TxIndex { get; }
-    }
-
-    public class BlockRepository : IBlockRepository
+    public class RocksdbBlockRepository : IBlockRepository
     {
         internal static readonly byte BlockTableName = 1;
         internal static readonly byte CommonTableName = 2;
@@ -105,18 +41,18 @@ namespace Blockcore.Features.BlockStore
         /// <inheritdoc />
         public bool TxIndex { get; private set; }
 
-        public RocksDb RocksDb => this.rocksdb;
+        public object DbInstance => this.rocksdb;
 
         private readonly DataStoreSerializer dataStoreSerializer;
         private readonly IReadOnlyDictionary<uint256, Transaction> genesisTransactions;
 
-        public BlockRepository(Network network, DataFolder dataFolder,
+        public RocksdbBlockRepository(Network network, DataFolder dataFolder,
             ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer)
             : this(network, dataFolder.BlockPath, loggerFactory, dataStoreSerializer)
         {
         }
 
-        public BlockRepository(Network network, string folder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer)
+        public RocksdbBlockRepository(Network network, string folder, ILoggerFactory loggerFactory, DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotEmpty(folder, nameof(folder));
@@ -331,7 +267,7 @@ namespace Blockcore.Features.BlockStore
             }
         }
 
-        public IEnumerable<Block> EnumeratehBatch(List<ChainedHeader> headers)
+        public IEnumerable<Block> EnumerateBatch(List<ChainedHeader> headers)
         {
             lock (this.Locker)
             {

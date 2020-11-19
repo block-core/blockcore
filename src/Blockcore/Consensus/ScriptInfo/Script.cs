@@ -1012,6 +1012,24 @@ namespace Blockcore.Consensus.ScriptInfo
         }
 
         /// <summary>
+        /// Extract ColdStakingScript addresses from scriptPubKey
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns>Both hot and cold <c>BitcoinAddress</c> addresses</returns>
+        public (BitcoinAddress hotAddress, BitcoinAddress coldAddress) GetColdStakeDestinationAddress(Network network)
+        {
+            bool hasAddresses = ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(this, out KeyId hotKeyId, out KeyId coldKeyId);
+            if (hasAddresses)
+            {
+                return (hotKeyId.GetAddress(network), coldKeyId.GetAddress(network));
+            }
+            else
+            {
+                return (null, null);
+            }
+        }
+
+        /// <summary>
         /// Extract P2SH/P2PH/P2WSH/P2WPKH id from scriptPubKey
         /// </summary>
         /// <param name="network"></param>

@@ -215,6 +215,7 @@ namespace Blockcore.Features.BlockStore
                         services.AddSingleton<StoreSettings>();
                         services.AddSingleton<IBlockStoreQueueFlushCondition, BlockStoreQueueFlushCondition>();
                         services.AddSingleton<IAddressIndexer, AddressIndexer>();
+                        services.AddSingleton<IUtxoIndexer, UtxoIndexer>();
 
                         services.AddSingleton<IPruneBlockStoreService, PruneBlockStoreService>();
                     });

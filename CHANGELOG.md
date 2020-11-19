@@ -1,3 +1,26 @@
+##  (2020-11-19)
+
+*  Updated CI Var for GitHub workflow change. (#239) ([36db5eb](https://github.com/block-core/blockcore/commit/36db5eb)), closes [#239](https://github.com/block-core/blockcore/issues/239)
+* (late) bump version ([776db01](https://github.com/block-core/blockcore/commit/776db01))
+* Add abstraction to the db types (#232) ([34bcfa4](https://github.com/block-core/blockcore/commit/34bcfa4)), closes [#232](https://github.com/block-core/blockcore/issues/232)
+* Add API to retreive private key from wallet address (#227) ([1b6ab3d](https://github.com/block-core/blockcore/commit/1b6ab3d)), closes [#227](https://github.com/block-core/blockcore/issues/227)
+* Add support to retrieve genesis if empty hash is supplied (#238) ([e2d72a9](https://github.com/block-core/blockcore/commit/e2d72a9)), closes [#238](https://github.com/block-core/blockcore/issues/238)
+* Added checkpoint, and changed segwit to always active (#233) ([25dfd87](https://github.com/block-core/blockcore/commit/25dfd87)), closes [#233](https://github.com/block-core/blockcore/issues/233)
+* CS address in script reader (#237) ([5ad34b9](https://github.com/block-core/blockcore/commit/5ad34b9)), closes [#237](https://github.com/block-core/blockcore/issues/237)
+* Fix OpenExo prefix comments (#221) ([b2a9869](https://github.com/block-core/blockcore/commit/b2a9869)), closes [#221](https://github.com/block-core/blockcore/issues/221)
+* Fix the whitelist to verify against remote IP ([1c0ad77](https://github.com/block-core/blockcore/commit/1c0ad77))
+* Fix unit tests (#213) ([56509ff](https://github.com/block-core/blockcore/commit/56509ff)), closes [#213](https://github.com/block-core/blockcore/issues/213)
+* Fixing the NBitcoin changes namespaces (#228) ([63c4d0e](https://github.com/block-core/blockcore/commit/63c4d0e)), closes [#228](https://github.com/block-core/blockcore/issues/228)
+* Flush chain repo and wait for store to catch up before flushing conse… (#223) ([734324a](https://github.com/block-core/blockcore/commit/734324a)), closes [#223](https://github.com/block-core/blockcore/issues/223)
+* Move NBitcoin to core (#212) ([ceea5a1](https://github.com/block-core/blockcore/commit/ceea5a1)), closes [#212](https://github.com/block-core/blockcore/issues/212)
+* Port of stratx implementation of sweep (#236) ([3e78dc0](https://github.com/block-core/blockcore/commit/3e78dc0)), closes [#236](https://github.com/block-core/blockcore/issues/236)
+* Port stratis fixes for OP_RETURN in transaction building (#224) ([de310f4](https://github.com/block-core/blockcore/commit/de310f4)), closes [#224](https://github.com/block-core/blockcore/issues/224)
+* Update the UserAgent to align with industry standard naming ([c9feecb](https://github.com/block-core/blockcore/commit/c9feecb))
+* Use rocksdb for utxo and block store and chain headers (#226) ([7e90c31](https://github.com/block-core/blockcore/commit/7e90c31)), closes [#226](https://github.com/block-core/blockcore/issues/226)
+* Use the whitelist and not bind list to check whitelisting during IBD ([6450bc3](https://github.com/block-core/blockcore/commit/6450bc3))
+
+
+
 ##  (2020-09-15)
 
 * Added segwit addresses to indexer. (#215) ([91940e2](https://github.com/block-core/blockcore/commit/91940e2)), closes [#215](https://github.com/block-core/blockcore/issues/215)

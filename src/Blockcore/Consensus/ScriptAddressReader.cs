@@ -1,4 +1,6 @@
-﻿using Blockcore.Interfaces;
+﻿using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Interfaces;
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Blockcore.Consensus
@@ -24,15 +26,19 @@ namespace Blockcore.Consensus
                 case TxOutType.TX_PUBKEYHASH:
                     destinationAddress.Address = script.GetDestinationAddress(network).ToString();
                     break;
+
                 case TxOutType.TX_SCRIPTHASH:
                     destinationAddress.Address = script.GetDestinationAddress(network).ToString();
                     break;
+
                 case TxOutType.TX_COLDSTAKE:
                     destinationAddress = this.GetColdStakeAddresses(network, script);
                     break;
+
                 case TxOutType.TX_SEGWIT:
                     destinationAddress.Address = script.GetDestinationAddress(network).ToString();
                     break;
+
                 case TxOutType.TX_NONSTANDARD:
                 case TxOutType.TX_MULTISIG:
                 case TxOutType.TX_NULL_DATA:

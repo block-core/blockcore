@@ -6,19 +6,22 @@ using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Stratis;
-using Blockcore.Primitives;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using LiteDB;
 using Moq;
 using NBitcoin;
 using Xunit;
-using Script = NBitcoin.Script;
+using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.BlockStore.Tests
 {

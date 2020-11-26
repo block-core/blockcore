@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NBitcoin.Rules;
+using Blockcore.Consensus.Rules;
 
 namespace Blockcore.Consensus.PerformanceCounters.Rules
 {

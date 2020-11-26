@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration.Logging;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Blockcore.Networks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using NBitcoin;
 

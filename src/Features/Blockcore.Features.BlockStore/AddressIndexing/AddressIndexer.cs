@@ -14,12 +14,18 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Interfaces;
-using Blockcore.Primitives;
+using Blockcore.Networks;
 using Blockcore.Utilities;
-using Script = NBitcoin.Script;
+using LiteDB;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
+using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
 {
@@ -137,6 +143,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// </summary>
         public const int SyncBuffer = 50;
 
+        public bool isSaving;
+        public int skippedSavingsTimes;
+
         public IFullNodeFeature InitializingFeature { get; set; }
 
         public AddressIndexer(StoreSettings storeSettings, DataFolder dataFolder, ILoggerFactory loggerFactory, Network network, INodeStats nodeStats,
@@ -154,7 +163,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             this.scriptAddressReader = new ScriptAddressReader();
 
             this.lockObject = new object();
-            this.flushChangesInterval = TimeSpan.FromMinutes(2);
+            this.flushChangesInterval = TimeSpan.FromMinutes(10);
             this.lastFlushTime = this.dateTimeProvider.GetUtcNow();
             this.cancellation = new CancellationTokenSource();
             this.chainIndexer = chainIndexer;
@@ -241,7 +250,8 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 {
                     this.logger.LogDebug("Flushing changes.");
 
-                    this.SaveAll();
+                    // TODO: Fix this
+                    // this.SaveAll();
 
                     this.lastFlushTime = this.dateTimeProvider.GetUtcNow();
 
@@ -360,8 +370,11 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 this.outpointsRepository.RewindDataAboveHeight(rewindToHeader.Height);
 
                 this.IndexerTip = rewindToHeader;
-
+            }
+            if (IsReadyToSave())
+            {
                 this.SaveAll();
+                this.lastFlushTime = this.dateTimeProvider.GetUtcNow();
             }
         }
 
@@ -371,19 +384,28 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
             lock (this.lockObject)
             {
-                this.addressIndexRepository.SaveAllItems();
-                this.outpointsRepository.SaveAllItems();
+                if (!this.isSaving)
+                {
+                    this.isSaving = true;
+                    this.addressIndexRepository.SaveAllItems();
+                    this.outpointsRepository.SaveAllItems();
 
-                AddressIndexerTipData tipData = this.tipDataStore.FindAll().FirstOrDefault();
+                    AddressIndexerTipData tipData = this.tipDataStore.FindAll().FirstOrDefault();
 
-                if (tipData == null)
-                    tipData = new AddressIndexerTipData();
+                    if (tipData == null)
+                        tipData = new AddressIndexerTipData();
 
-                tipData.Height = this.IndexerTip.Height;
-                tipData.TipHashBytes = this.IndexerTip.HashBlock.ToBytes();
+                    tipData.Height = this.IndexerTip.Height;
+                    tipData.TipHashBytes = this.IndexerTip.HashBlock.ToBytes();
 
-                this.tipDataStore.Upsert(tipData);
-                this.lastSavedHeight = this.IndexerTip.Height;
+                    this.tipDataStore.Upsert(tipData);
+                    this.lastSavedHeight = this.IndexerTip.Height;
+                    this.isSaving = false;
+                }
+                else
+                {
+                    this.skippedSavingsTimes++;
+                }
             }
 
             this.logger.LogDebug("Address indexer saved.");

@@ -4,6 +4,10 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
 
 namespace Blockcore.Features.BlockStore
 {

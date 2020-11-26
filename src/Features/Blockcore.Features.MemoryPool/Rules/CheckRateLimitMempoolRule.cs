@@ -1,4 +1,6 @@
-﻿using Blockcore.Features.MemoryPool.Interfaces;
+﻿using Blockcore.Consensus.Chain;
+using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

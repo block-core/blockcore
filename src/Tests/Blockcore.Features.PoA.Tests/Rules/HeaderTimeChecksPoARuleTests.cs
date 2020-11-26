@@ -2,6 +2,8 @@
 using Blockcore.Base;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;

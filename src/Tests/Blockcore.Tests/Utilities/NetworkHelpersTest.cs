@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using NBitcoin;

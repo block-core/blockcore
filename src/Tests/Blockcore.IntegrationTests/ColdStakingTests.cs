@@ -2,6 +2,8 @@
 using Blockcore.Base.Deployments;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Networks;

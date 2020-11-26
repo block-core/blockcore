@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

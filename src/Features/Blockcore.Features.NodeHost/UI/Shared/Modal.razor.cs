@@ -1,5 +1,5 @@
-using BlazorModal.Services;
 using System;
+using Blockcore.UI.BlazorModal;
 using Microsoft.AspNetCore.Components;
 
 namespace BlazorModal

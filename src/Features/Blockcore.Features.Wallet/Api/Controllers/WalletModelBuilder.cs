@@ -7,6 +7,7 @@ using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Api.Controllers

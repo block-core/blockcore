@@ -7,7 +7,7 @@ using NBitcoin;
 using Blockcore.Configuration;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
-using NBitcoin.Protocol;
+using Blockcore.Networks;
 
 namespace x42.Features.xServer
 {

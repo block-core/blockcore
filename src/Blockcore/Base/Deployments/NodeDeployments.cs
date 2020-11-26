@@ -1,4 +1,6 @@
-﻿using Blockcore.Utilities;
+﻿using Blockcore.Consensus.Chain;
+using Blockcore.Networks;
+using Blockcore.Utilities;
 using NBitcoin;
 
 namespace Blockcore.Base.Deployments

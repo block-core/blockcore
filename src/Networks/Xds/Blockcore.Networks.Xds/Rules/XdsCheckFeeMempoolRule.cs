@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;

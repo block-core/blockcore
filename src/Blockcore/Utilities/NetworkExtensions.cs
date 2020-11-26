@@ -1,4 +1,5 @@
-﻿using NBitcoin;
+﻿using Blockcore.Networks;
+using NBitcoin;
 
 namespace Blockcore.Utilities
 {

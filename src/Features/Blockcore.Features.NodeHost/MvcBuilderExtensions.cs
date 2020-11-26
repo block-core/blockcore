@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BlazorModal.Services;
 using Blockcore.Builder.Feature;
+using Blockcore.UI.BlazorModal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 

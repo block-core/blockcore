@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

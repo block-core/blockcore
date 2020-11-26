@@ -8,6 +8,7 @@ using Blockcore.AsyncWork;
 using Blockcore.Configuration.Settings;
 using Blockcore.EventBus.CoreEvents.Peer;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
@@ -236,7 +237,7 @@ namespace Blockcore.P2P.Peer
 
             var clientLocalEndPoint = tcpClient.Client.LocalEndPoint as IPEndPoint;
 
-            bool endpointCanBeWhiteListed = this.connectionManagerSettings.Bind.Where(x => x.Whitelisted).Any(x => x.Endpoint.Contains(clientLocalEndPoint));
+            bool endpointCanBeWhiteListed = this.connectionManagerSettings.Whitelist.Any(x => x.MatchIpOnly(clientRemoteEndPoint));
 
             if (endpointCanBeWhiteListed)
             {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 

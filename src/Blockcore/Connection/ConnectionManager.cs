@@ -12,6 +12,7 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
@@ -133,7 +134,7 @@ namespace Blockcore.Connection
             this.disconnectedPerfCounter = new PerformanceCounter();
 
             this.Parameters.Version = this.NodeSettings.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion;
-            this.Parameters.UserAgent = $"{this.ConnectionSettings.Agent}:{versionProvider.GetVersion()}({this.Network.CoinTicker};{this.Parameters.Version})";
+            this.Parameters.UserAgent = $"/{this.ConnectionSettings.Agent}:{versionProvider.GetVersion()}({this.Network.CoinTicker};{this.Parameters.Version})/";
 
             nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name, 1100);
         }

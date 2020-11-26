@@ -7,12 +7,17 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.PoA.Voting;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
@@ -63,7 +68,7 @@ namespace Blockcore.Features.PoA.Tests
             this.asyncProvider = new AsyncProvider(this.loggerFactory, this.signals, new Mock<INodeLifetime>().Object);
 
             var dataFolder = new DataFolder(TestBase.CreateTestDir(this));
-            var finalizedBlockRepo = new FinalizedBlockInfoRepository(new KeyValueRepository(dataFolder, this.DataStoreSerializer), this.loggerFactory, this.asyncProvider);
+            var finalizedBlockRepo = new FinalizedBlockInfoRepository(new LeveldbKeyValueRepository(dataFolder, this.DataStoreSerializer), this.loggerFactory, this.asyncProvider);
             finalizedBlockRepo.LoadFinalizedBlockInfoAsync(this.network).GetAwaiter().GetResult();
 
             this.resultExecutorMock = new Mock<IPollResultExecutor>();
@@ -87,7 +92,7 @@ namespace Blockcore.Features.PoA.Tests
         public static IFederationManager CreateFederationManager(object caller, Network network, LoggerFactory loggerFactory, ISignals signals)
         {
             string dir = TestBase.CreateTestDir(caller);
-            var keyValueRepo = new KeyValueRepository(dir, new DataStoreSerializer(network.Consensus.ConsensusFactory));
+            var keyValueRepo = new LeveldbKeyValueRepository(dir, new DataStoreSerializer(network.Consensus.ConsensusFactory));
 
             var settings = new NodeSettings(network, args: new string[] { $"-datadir={dir}" });
             var federationManager = new FederationManager(settings, network, loggerFactory, keyValueRepo, signals);

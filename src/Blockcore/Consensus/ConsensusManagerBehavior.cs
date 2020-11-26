@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Connection;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
@@ -25,7 +27,7 @@ namespace Blockcore.Consensus
         /// <inheritdoc cref="Consensus.ConsensusManager"/>
         protected IConsensusManager ConsensusManager { get; private set; }
 
-        /// <inheritdoc cref="NBitcoin.ChainIndexer"/>
+        /// <inheritdoc cref="Chain.ChainIndexer"/>
         protected ChainIndexer ChainIndexer { get; private set; }
 
         /// <inheritdoc cref="IPeerBanning"/>

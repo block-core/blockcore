@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.PoA.Payloads;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Peer;

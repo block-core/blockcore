@@ -1,4 +1,5 @@
-﻿using NBitcoin;
+﻿using Blockcore.Networks;
+using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 

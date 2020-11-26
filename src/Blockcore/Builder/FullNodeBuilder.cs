@@ -5,6 +5,7 @@ using System.Reflection;
 using Blockcore.Base;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

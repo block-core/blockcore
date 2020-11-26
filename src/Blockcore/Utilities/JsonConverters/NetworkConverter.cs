@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Networks;
 using NBitcoin;
 using Newtonsoft.Json;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
 using NBitcoin;

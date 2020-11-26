@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 
 namespace Blockcore.Features.Consensus

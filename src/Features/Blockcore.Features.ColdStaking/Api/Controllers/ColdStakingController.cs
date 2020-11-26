@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.ColdStaking.Api.Models;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Blockcore.Utilities.ModelStateErrors;

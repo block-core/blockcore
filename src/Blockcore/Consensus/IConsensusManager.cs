@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.P2P.Peer;
-using Blockcore.Primitives;
 using NBitcoin;
 
 namespace Blockcore.Consensus

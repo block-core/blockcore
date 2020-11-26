@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Types;
 using NBitcoin;
@@ -80,6 +84,16 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>A mnemonic defining the wallet's seed used to generate addresses.</returns>
         Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null, int? coinType = null);
+
+        /// <summary>
+        /// Gets the private key associated with an address in the wallet.
+        /// </summary>
+        /// <param name="password">The user's password.</param>
+        /// <param name="walletName">The name of the wallet.</param>
+        /// <param name="accountName">The name of the account.</param>
+        /// <param name="address">Address to extract the private key of.</param>
+        /// <returns>The private key associated with the given address, in WIF representation.</returns>
+        string RetrievePrivateKey(string password, string walletName, string accountName, string address);
 
         /// <summary>
         /// Signs a string message.
@@ -406,5 +420,14 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="fromDate">The date after which the transactions should be removed.</param>
         /// <returns>A list of objects made up of a transactions ID along with the time at which they were created.</returns>
         HashSet<(uint256, DateTimeOffset)> RemoveTransactionsFromDate(string walletName, DateTimeOffset fromDate);
+
+        /// <summary>
+        /// Sweeps the funds from the private keys to the destination address.
+        /// </summary>
+        /// <param name="privateKeys">Private keys to sweep funds from in wif format.</param>
+        /// <param name="destAddress">Destination address to sweep funds to.</param>
+        /// <param name="broadcast">Broadcast the transaction to the network.</param>
+        /// <returns>List of sweep transactions.</returns>
+        IEnumerable<string> Sweep(IEnumerable<string> privateKeys, string destAddress, bool broadcast);
     }
 }

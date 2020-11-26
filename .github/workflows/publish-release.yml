@@ -5,6 +5,7 @@ on:
     types: [published]
   repository_dispatch:
     types: [publish-packages]
+  workflow_dispatch:
 
 jobs:
 
@@ -21,7 +22,7 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
+      uses: NuGet/setup-nuget@v1.0.5
 
     # - name: Set GITHUB_OWNER
     #   run: echo "::set-env name=GITHUB_OWNER::$(echo ${{github.repository}} | cut -d "/" -f 1)"

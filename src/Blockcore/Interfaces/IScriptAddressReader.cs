@@ -1,4 +1,6 @@
 ﻿using Blockcore.Consensus;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Blockcore.Interfaces
@@ -11,9 +13,6 @@ namespace Blockcore.Interfaces
         /// <summary>
         /// Extracts an address from a given Script, if available. Otherwise returns <see cref="string.Empty"/>
         /// </summary>
-        /// <param name="network"></param>
-        /// <param name="script"></param>
-        /// <returns></returns>
         ScriptAddressResult GetAddressFromScriptPubKey(Network network, Script script);
     }
 }

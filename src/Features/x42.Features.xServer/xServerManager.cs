@@ -12,12 +12,12 @@ using Blockcore.Configuration;
 using Blockcore.Utilities;
 using x42.Features.xServer.Interfaces;
 using x42.Features.xServer.Models;
-using NBitcoin.Protocol;
 using System.Collections.Concurrent;
 using NBitcoin;
 using System.Net.Sockets;
 using System.Linq;
 using RestSharp.Serializers.NewtonsoftJson;
+using Blockcore.Networks;
 
 namespace x42.Features.xServer
 {

@@ -8,7 +8,12 @@ using Blockcore.Base.Deployments;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.ColdStaking.Api.Controllers;
 using Blockcore.Features.ColdStaking.Api.Models;
 using Blockcore.Features.Consensus;
@@ -35,8 +40,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
 using NBitcoin.Policy;
-using NBitcoin.Protocol;
 using Xunit;
+using Blockcore.Networks;
 
 namespace Blockcore.Features.ColdStaking.Tests
 {

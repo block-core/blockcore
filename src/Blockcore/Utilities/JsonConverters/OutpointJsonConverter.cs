@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 using Newtonsoft.Json;
 

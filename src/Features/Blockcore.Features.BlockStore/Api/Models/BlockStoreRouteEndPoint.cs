@@ -7,5 +7,6 @@
         public const string GetAddressIndexerTip = "addressindexertip";
         public const string GetBlock = "block";
         public const string GetBlockCount = "GetBlockCount";
+        public const string GetUtxoSet = "getutxoset";
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Configuration;
+using Blockcore.Consensus.Chain;
+using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

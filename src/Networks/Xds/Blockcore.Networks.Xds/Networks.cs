@@ -1,6 +1,4 @@
-﻿using NBitcoin;
-
-namespace Blockcore.Networks.Xds
+﻿namespace Blockcore.Networks.Xds
 {
     public static class Networks
     {
@@ -8,7 +6,7 @@ namespace Blockcore.Networks.Xds
         {
             get
             {
-                return new NetworksSelector(() => new XdsMain(), () => null, () => null);
+                return new NetworksSelector(() => new XdsMain(), () => new XdsTest(), () => new XdsRegTest());
             }
         }
     }

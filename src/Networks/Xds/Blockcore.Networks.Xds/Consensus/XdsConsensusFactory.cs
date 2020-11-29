@@ -55,10 +55,10 @@ namespace Blockcore.Networks.Xds.Consensus
             return CreateTransaction(Encoders.Hex.DecodeData(hex));
         }
 
-        public Block ComputeGenesisBlock(uint genesisTime, uint genesisNonce, uint genesisBits, int genesisVersion, Money genesisReward, bool? mine = false)
+        public Block ComputeGenesisBlock(uint genesisTime, uint genesisNonce, uint genesisBits, int genesisVersion, Money genesisReward, NetworkType networkType, bool? mine = false)
         {
             if (mine == true)
-                MineGenesisBlock(genesisTime, genesisBits, genesisVersion, genesisReward);
+                MineGenesisBlock(genesisTime, genesisBits, genesisVersion, genesisReward, networkType);
 
             string pszTimestamp = "https://www.blockchain.com/btc/block/611000";
 
@@ -89,25 +89,51 @@ namespace Blockcore.Networks.Xds.Consensus
             genesis.UpdateMerkleRoot();
 
             if (mine == false)
-                if (genesis.GetHash() != uint256.Parse("0000000e13c5bf36c155c7cb1681053d607c191fc44b863d0c5aef6d27b8eb8f") ||
-                    genesis.Header.HashMerkleRoot != uint256.Parse("e3c549956232f0878414d765e83c3f9b1b084b0fa35643ddee62857220ea02b0"))
-                    throw new InvalidOperationException("Invalid network");
-            return genesis;
+            {
+                switch (networkType)
+                {
+                    case NetworkType.Mainnet:
+                        if (genesis.GetHash() ==
+                            uint256.Parse("0000000e13c5bf36c155c7cb1681053d607c191fc44b863d0c5aef6d27b8eb8f") &&
+                            genesis.Header.HashMerkleRoot ==
+                            uint256.Parse("e3c549956232f0878414d765e83c3f9b1b084b0fa35643ddee62857220ea02b0"))
+                            return genesis;
+                        break;
+                    case NetworkType.Testnet:
+                        if (genesis.GetHash() ==
+                            uint256.Parse("00000d2ff9f3620b5487ed8ec154ce1947fec525e91e6973d1aeae93c53db7a3") &&
+                            genesis.Header.HashMerkleRoot ==
+                            uint256.Parse("e3c549956232f0878414d765e83c3f9b1b084b0fa35643ddee62857220ea02b0"))
+                            return genesis;
+                        break;
+                    case NetworkType.Regtest:
+                        if (genesis.GetHash() ==
+                            uint256.Parse("00000e48aeeedabface6d45c0de52c7d0edaec14662ab4f56401361f70d12cc6") &&
+                            genesis.Header.HashMerkleRoot ==
+                            uint256.Parse("e3c549956232f0878414d765e83c3f9b1b084b0fa35643ddee62857220ea02b0"))
+                            return genesis;
+                        break;
+                }
+            }
+            else if (mine == null)
+                return genesis;
+
+            throw new InvalidOperationException($"Invalid {networkType}.");
         }
 
-        private void MineGenesisBlock(uint genesisTime, uint genesisBits, int genesisVersion, Money genesisReward)
+        private void MineGenesisBlock(uint genesisTime, uint genesisBits, int genesisVersion, Money genesisReward, NetworkType networkType)
         {
             Parallel.ForEach(new long[] { 0, 1, 2, 3, 4, 5, 6, 7 }, l =>
             {
                 if (Utils.UnixTimeToDateTime(genesisTime) > DateTime.UtcNow)
                     throw new Exception("Time must not be in the future");
                 uint nonce = 0;
-                while (!ComputeGenesisBlock(genesisTime, nonce, genesisBits, genesisVersion, genesisReward, null).GetHash().ToString().StartsWith("00000000"))
+                while (!ComputeGenesisBlock(genesisTime, nonce, genesisBits, genesisVersion, genesisReward, networkType, null).GetHash().ToString().StartsWith("00000000"))
                 {
                     nonce += 8;
                 }
 
-                Block genesisBlock = ComputeGenesisBlock(genesisTime, nonce, genesisBits, genesisVersion, genesisReward, null);
+                Block genesisBlock = ComputeGenesisBlock(genesisTime, nonce, genesisBits, genesisVersion, genesisReward, networkType, null);
                 throw new Exception($"Found: Nonce:{nonce}, Hash: {genesisBlock.GetHash()}, Hash Merkle Root: {genesisBlock.Header.HashMerkleRoot}");
             });
         }

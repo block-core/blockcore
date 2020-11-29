@@ -35,6 +35,7 @@ namespace Blockcore.Networks.Xds
         public XdsMain()
         {
             this.Name = nameof(XdsMain);
+            this.NetworkType = NetworkType.Mainnet;
             this.CoinTicker = "XDS";
             this.RootFolderName = "xds";
             this.DefaultConfigFilename = "xds.conf";
@@ -59,7 +60,7 @@ namespace Blockcore.Networks.Xds
             this.GenesisBits = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
             this.GenesisVersion = 1;
             this.GenesisReward = Money.Zero;
-            this.Genesis = consensusFactory.ComputeGenesisBlock(this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, this.GenesisReward);
+            this.Genesis = consensusFactory.ComputeGenesisBlock(this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, this.GenesisReward, NetworkType.Mainnet);
 
             var consensusOptions = new XdsConsensusOptions
             {

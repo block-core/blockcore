@@ -141,9 +141,6 @@ namespace Blockcore.Networks.Xds
             this.DNSSeeds = new List<DNSSeedData>();
             this.SeedNodes = new List<NetworkAddress>
             {
-                new NetworkAddress(IPAddress.Parse("178.62.62.160"), this.DefaultPort),
-                new NetworkAddress(IPAddress.Parse("206.189.33.114"), this.DefaultPort),
-                new NetworkAddress(IPAddress.Parse("159.65.148.135"), this.DefaultPort),
             };
 
             RegisterRules(this.Consensus);

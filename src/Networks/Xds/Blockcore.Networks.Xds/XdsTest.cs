@@ -38,7 +38,7 @@ namespace Blockcore.Networks.Xds
             this.DefaultMaxInboundConnections = 109;
             this.MaxTimeOffsetSeconds = 25 * 60;
             this.DefaultBanTimeSeconds = 8000;
-            this.MaxTipAge = 2 * 60 * 60;
+            this.MaxTipAge = int.MaxValue;
             this.MinTxFee = Money.Coins(0.00001m).Satoshi;
             this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = Money.Coins(0.00001m).Satoshi;

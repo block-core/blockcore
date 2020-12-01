@@ -29,7 +29,7 @@ namespace Blockcore.Networks.Xds
         {
             this.Name = nameof(XdsTest);
             this.NetworkType = NetworkType.Testnet;
-            this.CoinTicker = "XDT";
+            this.CoinTicker = "XDST";
             this.Magic = 0x58445331 + TestNetMagicNumberOffset;
             this.DefaultPort = 38333 + TestNetMagicNumberOffset;
             this.DefaultRPCPort = 48333 + TestNetMagicNumberOffset;

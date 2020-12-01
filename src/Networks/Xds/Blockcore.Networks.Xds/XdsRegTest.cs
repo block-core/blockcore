@@ -28,7 +28,7 @@ namespace Blockcore.Networks.Xds
         {
             this.Name = nameof(XdsRegTest);
             this.NetworkType = NetworkType.Regtest;
-            this.CoinTicker = "XDR";
+            this.CoinTicker = "XDSR";
             this.Magic = 0x58445331 + RegTestMagicNumberOffset;
             this.DefaultPort = 38333 + RegTestMagicNumberOffset;
             this.DefaultRPCPort = 48333 + RegTestMagicNumberOffset;

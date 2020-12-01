@@ -163,7 +163,7 @@ namespace Blockcore.Networks.Xds
             RegisterRules(this.Consensus);
         }
 
-        private static void RegisterRules(IConsensus consensus)
+        protected static void RegisterRules(IConsensus consensus)
         {
             consensus.ConsensusRules
                 .Register<HeaderTimeChecksRule>()

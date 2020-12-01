@@ -153,6 +153,11 @@ namespace Blockcore.Networks.Xds
                 new NetworkAddress(IPAddress.Parse("178.62.62.160"), this.DefaultPort),
                 new NetworkAddress(IPAddress.Parse("206.189.33.114"), this.DefaultPort),
                 new NetworkAddress(IPAddress.Parse("159.65.148.135"), this.DefaultPort),
+                new NetworkAddress(IPAddress.Parse("161.35.156.96"), this.DefaultPort),
+                new NetworkAddress(IPAddress.Parse("134.122.89.152"), this.DefaultPort),
+                new NetworkAddress(IPAddress.Parse("146.90.234.3"), this.DefaultPort),
+                new NetworkAddress(IPAddress.Parse("80.211.88.141"), this.DefaultPort),
+                new NetworkAddress(IPAddress.Parse("89.10.227.34"), this.DefaultPort),
             };
 
             RegisterRules(this.Consensus);

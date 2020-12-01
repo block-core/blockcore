@@ -6,7 +6,6 @@ namespace NBitcoin.Tests
     public class AssetMoneyTests
     {
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void AssetMoneyToStringTest()
         {
             var assetId = new OpenAsset.AssetId("8f316d9a09");
@@ -17,7 +16,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void AssetMoneyMultiply()
         {
             var assetId = new OpenAsset.AssetId("8f316d9a09");
@@ -32,7 +30,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void AssetMoneyGreaterThan()
         {
             var assetId = new OpenAsset.AssetId("8f316d9a09");
@@ -44,7 +41,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void AssetMoneyLessThan()
         {
             var assetId = new OpenAsset.AssetId("8f316d9a09");

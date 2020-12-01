@@ -30,7 +30,8 @@ namespace Blockcore.Tests.Utilities
         /// is just calculating the expected delay without actually measuring it.
         /// </para>
         /// </summary>
-        [Fact(Skip = "This test is long running and its not clear what is being tested")]
+        [Fact]
+        [Trait("Unstable", "True")]
         public void StopwatchDisposable_MeasuresPerformanceCorrectly()
         {
             // Don't run this test in a Mac environment as it takes too long,

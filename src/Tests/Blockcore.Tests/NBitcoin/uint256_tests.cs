@@ -18,7 +18,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void uintTests()
         {
             var v = new uint256("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -62,7 +61,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSortuin256()
         {
             SortedDictionary<uint256, uint256> values = new SortedDictionary<uint256, uint256>();
@@ -98,7 +96,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void spanUintSerializationTests()
         {
             var v = new uint256(RandomUtils.GetBytes(32));
@@ -110,7 +107,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void uitnSerializationTests()
         {
             var ms = new MemoryStream();

@@ -220,7 +220,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 // Set the date ranges such that ColdStaking will 'Start' immediately after the initial confirmation window.
                 // Minimum number of 'votes' required within the confirmation window to reach 'LockedIn' state.

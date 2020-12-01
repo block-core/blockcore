@@ -788,6 +788,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void StakeSegwitBlock_On_SBFN_Check_StratisX_Syncs_When_SBFN_Initiates_Connection()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -932,6 +933,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void Mine_On_StratisX_SBFN_Syncs_Via_Intermediary_Gateway_Node()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this).WithLogsEnabled())

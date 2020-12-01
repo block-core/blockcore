@@ -521,7 +521,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 var sharedMnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve).ToString();
 
@@ -586,7 +586,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 var sharedMnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve).ToString();
 
@@ -630,7 +630,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 var minerA = builder.CreateStratisPosNode(network, "cm-11-minerA").OverrideDateTimeProvider().WithWallet().Start();
                 var minerB = builder.CreateStratisPosNode(network, "cm-11-minerB").OverrideDateTimeProvider().Start();
@@ -679,7 +679,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 // MinerA requires a physical wallet to stake with.
                 var minerA = builder.CreateStratisPosNode(network, "minerA").WithWallet().Start();

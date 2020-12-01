@@ -20,8 +20,8 @@ namespace Blockcore.Features.Wallet.Database
         private LiteDatabase db;
         private LiteRepository repo;
         private readonly Network network;
-        private ILiteCollection<WalletData> dataCol;
-        private ILiteCollection<TransactionOutputData> trxCol;
+        private LiteCollection<WalletData> dataCol;
+        private LiteCollection<TransactionOutputData> trxCol;
 
         public WalletData WalletData { get; private set; }
 
@@ -118,21 +118,17 @@ namespace Blockcore.Features.Wallet.Database
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
 
-            var historySpent = this.trxCol.Query()
+            var historySpent = this.trxCol.Find(Query.All(), skip: skip, limit: take)
               .Where(x => x.AccountIndex == accountIndex)
               .Where(x => x.SpendingDetails != null)
               .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
               .OrderByDescending(x => x.SpendingDetails.CreationTime)
-              .Skip(skip)
-              .Limit(take)
               .ToList();
 
-            var historyUnspent = this.trxCol.Query()
+            var historyUnspent = this.trxCol.Find(Query.All(), skip: skip, limit: take)
                 .Where(x => x.AccountIndex == accountIndex)
                 .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
                 .OrderByDescending(x => x.CreationTime)
-                .Skip(skip)
-                .Limit(take)
                 .ToList();
 
             var items = new List<WalletHistoryData>();
@@ -224,58 +220,46 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
+            var transactionGroups = this.trxCol.Find(Query.All())
+              .Where(x => x.Address == address)
+              .Where(x => x.SpendingDetails == null)
+              .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
+              .GroupBy(x => x.BlockHeight != null)
+              .ToList();
 
-            var sql = "SELECT " +
-                        "@key as Confirmed," +
-                        "SUM(*.Amount) " +
-                        "FROM transactions " +
-                        $"WHERE SpendingDetails = null AND Address = '{address}' " +
-                        $"{excludeColdStakeSql}" +
-                        $"GROUP BY BlockHeight != null";
+            var walletBalanceResult = new WalletBalanceResult();
 
-            using (var res = this.db.Execute(sql))
+            foreach (var transactionGroup in transactionGroups)
             {
-                var walletBalanceResult = new WalletBalanceResult();
-
-                while (res.Read())
-                {
-                    if (res["Confirmed"] == false)
-                        walletBalanceResult.AmountUnconfirmed = res["Amount"].AsInt64;
-                    else
-                        walletBalanceResult.AmountConfirmed = res["Amount"].AsInt64;
-                }
-
-                return walletBalanceResult;
+                var firstTransaction = transactionGroup.First();
+                if (firstTransaction.IsConfirmed() == false)
+                    walletBalanceResult.AmountUnconfirmed = transactionGroup.Sum(a => a.Amount);
+                else
+                    walletBalanceResult.AmountConfirmed = transactionGroup.Sum(a => a.Amount);
             }
+            return walletBalanceResult;
         }
 
         public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
+            var transactionGroups = this.trxCol.Find(Query.All())
+              .Where(x => x.AccountIndex == accountIndex)
+              .Where(x => x.SpendingDetails == null)
+              .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
+              .GroupBy(x => x.BlockHeight != null)
+              .ToList();
 
-            var sql = "SELECT " +
-                        "@key as Confirmed," +
-                        "SUM(*.Amount) " +
-                        "FROM transactions " +
-                        $"WHERE SpendingDetails = null AND AccountIndex = {accountIndex} " +
-                        $"{excludeColdStakeSql}" +
-                        $"GROUP BY BlockHeight != null";
+            var walletBalanceResult = new WalletBalanceResult();
 
-            using (var res = this.db.Execute(sql))
+            foreach (var transactionGroup in transactionGroups)
             {
-                var walletBalanceResult = new WalletBalanceResult();
-
-                while (res.Read())
-                {
-                    if (res["Confirmed"] == false)
-                        walletBalanceResult.AmountUnconfirmed = res["Amount"].AsInt64;
-                    else
-                        walletBalanceResult.AmountConfirmed = res["Amount"].AsInt64;
-                }
-
-                return walletBalanceResult;
+                var firstTransaction = transactionGroup.First();
+                if (firstTransaction.IsConfirmed() == false)
+                    walletBalanceResult.AmountUnconfirmed = transactionGroup.Sum(a => a.Amount);
+                else
+                    walletBalanceResult.AmountConfirmed = transactionGroup.Sum(a => a.Amount);
             }
+            return walletBalanceResult;
         }
 
         public TransactionOutputData GetForOutput(OutPoint outPoint)

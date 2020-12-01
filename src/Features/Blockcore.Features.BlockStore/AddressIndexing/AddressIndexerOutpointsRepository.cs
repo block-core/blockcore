@@ -18,11 +18,11 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         /// <summary>Represents the output collection.</summary>
         /// <remarks>Should be protected by <see cref="LockObject"/></remarks>
-        private readonly ILiteCollection<OutPointData> addressIndexerOutPointData;
+        private readonly LiteCollection<OutPointData> addressIndexerOutPointData;
 
         /// <summary>Represents the rewind data collection.</summary>
         /// <remarks>Should be protected by <see cref="LockObject"/></remarks>
-        private readonly ILiteCollection<AddressIndexerRewindData> addressIndexerRewindData;
+        private readonly LiteCollection<AddressIndexerRewindData> addressIndexerRewindData;
 
         private readonly ILogger logger;
 

@@ -13,7 +13,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
     {
         private const string DbAddressDataKey = "AddrData";
 
-        private readonly ILiteCollection<AddressIndexerData> addressIndexerDataCollection;
+        private readonly LiteCollection<AddressIndexerData> addressIndexerDataCollection;
 
         private readonly ILogger logger;
 

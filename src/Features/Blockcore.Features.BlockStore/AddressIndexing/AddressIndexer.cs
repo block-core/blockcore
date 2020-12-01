@@ -85,7 +85,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         private LiteDatabase db;
 
-        private ILiteCollection<AddressIndexerTipData> tipDataStore;
+        private LiteCollection<AddressIndexerTipData> tipDataStore;
 
         /// <summary>A mapping between addresses and their balance changes.</summary>
         /// <remarks>All access should be protected by <see cref="lockObject"/>.</remarks>

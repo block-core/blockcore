@@ -141,61 +141,6 @@ namespace Blockcore.Networks.Xds
             RegisterRules(this.Consensus);
         }
 
-        private static void RegisterRules(IConsensus consensus)
-        {
-            consensus.ConsensusRules
-                .Register<HeaderTimeChecksRule>()
-                .Register<HeaderTimeChecksPosRule>()
-                .Register<PosFutureDriftRule>()
-                .Register<CheckDifficultyPosRule>()
-                .Register<XdsHeaderVersionRule>()
-                .Register<ProvenHeaderSizeRule>()
-                .Register<ProvenHeaderCoinstakeRule>()
-                .Register<BlockMerkleRootRule>()
-                .Register<PosBlockSignatureRepresentationRule>()
-                .Register<PosBlockSignatureRule>()
-                .Register<SetActivationDeploymentsPartialValidationRule>()
-                .Register<PosTimeMaskRule>()
-                .Register<XdsRequireWitnessRule>()
-                .Register<XdsEmptyScriptSigRule>()
-                .Register<XdsOutputNotWhitelistedRule>()
-                .Register<TransactionLocktimeActivationRule>()
-                .Register<CoinbaseHeightActivationRule>()
-                .Register<WitnessCommitmentsRule>()
-                .Register<BlockSizeRule>()
-                .Register<EnsureCoinbaseRule>()
-                .Register<CheckPowTransactionRule>()
-                .Register<CheckPosTransactionRule>()
-                .Register<CheckSigOpsRule>()
-                .Register<PosCoinstakeRule>()
-                .Register<SetActivationDeploymentsFullValidationRule>()
-                .Register<CheckDifficultyHybridRule>()
-#pragma warning disable CS0618 // Type or member is obsolete
-                .Register<LoadCoinviewRule>()
-#pragma warning restore CS0618 // Type or member is obsolete
-                .Register<TransactionDuplicationActivationRule>()
-                .Register<XdsPosCoinviewRule>()
-                .Register<PosColdStakingRule>()
-#pragma warning disable CS0618 // Type or member is obsolete
-                .Register<SaveCoinviewRule>();
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            consensus.MempoolRules = new List<Type>
-            {
-                typeof(XdsPreMempoolChecksMempoolRule),
-                typeof(CheckConflictsMempoolRule),
-                typeof(CheckCoinViewMempoolRule),
-                typeof(CreateMempoolEntryMempoolRule),
-                typeof(XdsRequireWitnessMempoolRule),
-                typeof(XdsEmptyScriptSigMempoolRule),
-                typeof(XdsOutputNotWhitelistedMempoolRule),
-                typeof(CheckSigOpsMempoolRule),
-                typeof(XdsCheckFeeMempoolRule),
-                typeof(CheckRateLimitMempoolRule),
-                typeof(CheckAncestorsMempoolRule),
-                typeof(CheckReplacementMempoolRule),
-                typeof(CheckAllInputsMempoolRule)
-            };
-        }
+        
     }
 }

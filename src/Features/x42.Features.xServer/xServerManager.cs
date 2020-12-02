@@ -218,8 +218,8 @@ namespace x42.Features.xServer
         public PriceLockResult CreatePriceLock(CreatePriceLockRequest priceLockRequest)
         {
             var result = new PriceLockResult();
-            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
-            if (t3Node != null)
+            var t3Nodes = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime);
+            foreach (var t3Node in t3Nodes)
             {
                 string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
@@ -233,6 +233,7 @@ namespace x42.Features.xServer
                 if (createPLResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = createPLResult.Data;
+                    return result;
                 }
                 else
                 {
@@ -248,7 +249,7 @@ namespace x42.Features.xServer
                     result.Success = false;
                 }
             }
-            else
+            if (t3Nodes.Count() == 0)
             {
                 result.ResultMessage = "Not connected to any tier 3 servers";
             }
@@ -259,8 +260,8 @@ namespace x42.Features.xServer
         public PriceLockResult GetPriceLock(string priceLockId)
         {
             var result = new PriceLockResult();
-            var t3Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime).FirstOrDefault();
-            if (t3Node != null)
+            var t3Nodes = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Three).OrderBy(n => n.ResponseTime);
+            foreach (var t3Node in t3Nodes)
             {
                 string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
@@ -272,6 +273,7 @@ namespace x42.Features.xServer
                 if (createPLResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = createPLResult.Data;
+                    return result;
                 }
                 else
                 {
@@ -287,7 +289,7 @@ namespace x42.Features.xServer
                     result.Success = false;
                 }
             }
-            else
+            if (t3Nodes.Count() == 0)
             {
                 result.ResultMessage = "Not connected to any tier 3 servers";
             }

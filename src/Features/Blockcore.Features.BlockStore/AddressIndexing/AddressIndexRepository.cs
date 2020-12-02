@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Controllers.Models;
-using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
+using Blockcore.Utilities;
+using Blockcore.Controllers.Models;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
 {
@@ -13,14 +13,14 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
     {
         private const string DbAddressDataKey = "AddrData";
 
-        private readonly ILiteCollection<AddressIndexerData> addressIndexerDataCollection;
+        private readonly LiteCollection<AddressIndexerData> addressIndexerDataCollection;
 
         private readonly ILogger logger;
 
         public AddressIndexRepository(LiteDatabase db, ILoggerFactory loggerFactory, int maxBalanceChangesToKeep = 50_000) : base(maxBalanceChangesToKeep)
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-            this.addressIndexerDataCollection = db.GetCollection<AddressIndexerData>(DbAddressDataKey);
+            this.addressIndexerDataCollection = (LiteCollection<AddressIndexerData>)db.GetCollection<AddressIndexerData>(DbAddressDataKey);
             this.addressIndexerDataCollection.EnsureIndex("BalanceChangedHeightIndex", "$.BalanceChanges[*].BalanceChangedHeight", false);
         }
 

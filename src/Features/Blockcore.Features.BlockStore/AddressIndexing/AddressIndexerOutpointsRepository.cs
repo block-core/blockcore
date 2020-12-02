@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
+using Blockcore.Utilities;
+using Blockcore.Consensus.TransactionInfo;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
 {
@@ -18,11 +17,11 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         /// <summary>Represents the output collection.</summary>
         /// <remarks>Should be protected by <see cref="LockObject"/></remarks>
-        private readonly ILiteCollection<OutPointData> addressIndexerOutPointData;
+        private readonly LiteCollection<OutPointData> addressIndexerOutPointData;
 
         /// <summary>Represents the rewind data collection.</summary>
         /// <remarks>Should be protected by <see cref="LockObject"/></remarks>
-        private readonly ILiteCollection<AddressIndexerRewindData> addressIndexerRewindData;
+        private readonly LiteCollection<AddressIndexerRewindData> addressIndexerRewindData;
 
         private readonly ILogger logger;
 
@@ -31,8 +30,8 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         public AddressIndexerOutpointsRepository(LiteDatabase db, ILoggerFactory loggerFactory, int maxItems = 60_000)
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-            this.addressIndexerOutPointData = db.GetCollection<OutPointData>(DbOutputsDataKey);
-            this.addressIndexerRewindData = db.GetCollection<AddressIndexerRewindData>(DbOutputsRewindDataKey);
+            this.addressIndexerOutPointData = (LiteCollection<OutPointData>)db.GetCollection<OutPointData>(DbOutputsDataKey);
+            this.addressIndexerRewindData = (LiteCollection<AddressIndexerRewindData>)db.GetCollection<AddressIndexerRewindData>(DbOutputsRewindDataKey);
             this.maxCacheItems = maxItems;
         }
 

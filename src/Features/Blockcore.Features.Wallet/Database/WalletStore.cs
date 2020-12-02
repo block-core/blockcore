@@ -20,8 +20,8 @@ namespace Blockcore.Features.Wallet.Database
         private LiteDatabase db;
         private LiteRepository repo;
         private readonly Network network;
-        private ILiteCollection<WalletData> dataCol;
-        private ILiteCollection<TransactionOutputData> trxCol;
+        private LiteCollection<WalletData> dataCol;
+        private LiteCollection<TransactionOutputData> trxCol;
 
         public WalletData WalletData { get; private set; }
 
@@ -118,51 +118,75 @@ namespace Blockcore.Features.Wallet.Database
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
 
-            var historySpent = this.trxCol.Query()
-              .Where(x => x.AccountIndex == accountIndex)
-              .Where(x => x.SpendingDetails != null)
-              .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
+            Query historySpentQuery =
+                Query.And(
+                    Query.EQ("AccountIndex", new BsonValue(accountIndex)),
+                    Query.Not("SpendingDetails", BsonValue.Null)
+                );
+            if (excludeColdStake)
+            {
+                historySpentQuery =
+                    Query.And(
+                        Query.EQ("AccountIndex", new BsonValue(accountIndex)),
+                        Query.Not("IsColdCoinStake", new BsonValue(true)),
+                        Query.Not("SpendingDetails", BsonValue.Null)
+                    );
+            }
+
+            var historySpent = this.trxCol
+              .Find(historySpentQuery,
+                skip: skip,
+                limit: take)
               .OrderByDescending(x => x.SpendingDetails.CreationTime)
-              .Skip(skip)
-              .Limit(take)
               .ToList();
 
-            var historyUnspent = this.trxCol.Query()
-                .Where(x => x.AccountIndex == accountIndex)
-                .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
+
+            Query historyUnSpentQuery = Query.EQ("AccountIndex", new BsonValue(accountIndex));
+            if (excludeColdStake)
+            {
+                historyUnSpentQuery =
+                    Query.And(
+                        Query.EQ("AccountIndex", new BsonValue(accountIndex)),
+                        Query.Not("IsColdCoinStake", new BsonValue(true))
+                    );
+            }
+
+            var historyUnspent = this.trxCol
+                .Find(
+                    historyUnSpentQuery,
+                    skip: skip,
+                    limit: take)
                 .OrderByDescending(x => x.CreationTime)
-                .Skip(skip)
-                .Limit(take)
                 .ToList();
 
             var items = new List<WalletHistoryData>();
 
             items.AddRange(historySpent
                 .GroupBy(g => g.SpendingDetails.TransactionId)
-                   .Select(s =>
-                   {
-                       var x = s.First();
-
-                       return new WalletHistoryData
+                       .Select(s =>
                        {
-                           IsSent = true,
-                           SentTo = x.SpendingDetails.TransactionId,
-                           IsCoinStake = x.SpendingDetails.IsCoinStake,
-                           CreationTime = x.SpendingDetails.CreationTime,
-                           BlockHeight = x.SpendingDetails.BlockHeight,
-                           BlockIndex = x.SpendingDetails.BlockIndex,
-                           SentPayments = x.SpendingDetails.Payments?.Select(p => new WalletHistoryPaymentData
-                           {
-                               Amount = p.Amount,
-                               PayToSelf = p.PayToSelf,
-                               DestinationAddress = p.DestinationAddress
-                           }).ToList(),
+                           var x = s.First();
 
-                           // when spent the amount represents the
-                           // input that was spent not the output
-                           Amount = x.Amount
-                       };
-                   }));
+                           return new WalletHistoryData
+                           {
+                               IsSent = true,
+                               SentTo = x.SpendingDetails.TransactionId,
+                               IsCoinStake = x.SpendingDetails.IsCoinStake,
+                               CreationTime = x.SpendingDetails.CreationTime,
+                               BlockHeight = x.SpendingDetails.BlockHeight,
+                               BlockIndex = x.SpendingDetails.BlockIndex,
+                               SentPayments = x.SpendingDetails.Payments?.Select(p => new WalletHistoryPaymentData
+                               {
+                                   Amount = p.Amount,
+                                   PayToSelf = p.PayToSelf,
+                                   DestinationAddress = p.DestinationAddress
+                               }).ToList(),
+
+                               // when spent the amount represents the
+                               // input that was spent not the output
+                               Amount = x.Amount
+                           };
+                       }));
 
             items.AddRange(historyUnspent
                 .GroupBy(g => g.Id)
@@ -224,58 +248,52 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
-
-            var sql = "SELECT " +
-                        "@key as Confirmed," +
-                        "SUM(*.Amount) " +
-                        "FROM transactions " +
-                        $"WHERE SpendingDetails = null AND Address = '{address}' " +
-                        $"{excludeColdStakeSql}" +
-                        $"GROUP BY BlockHeight != null";
-
-            using (var res = this.db.Execute(sql))
-            {
-                var walletBalanceResult = new WalletBalanceResult();
-
-                while (res.Read())
+            var transactions = this.trxCol
+              .Find(Query.And(Query.EQ("Address", new BsonValue(address)), Query.EQ("SpendingDetails", BsonValue.Null)))
+              .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
+              .GroupBy(x => x.BlockHeight != null)
+              .Select(o =>
+                new
                 {
-                    if (res["Confirmed"] == false)
-                        walletBalanceResult.AmountUnconfirmed = res["Amount"].AsInt64;
-                    else
-                        walletBalanceResult.AmountConfirmed = res["Amount"].AsInt64;
-                }
+                    Confirmed = o.Key,
+                    Amount = o.Sum(x => x.Amount)
+                }).ToList();
 
-                return walletBalanceResult;
+            var walletBalanceResult = new WalletBalanceResult();
+
+            foreach (var transaction in transactions)
+            {
+                if (transaction.Confirmed == false)
+                    walletBalanceResult.AmountUnconfirmed = transaction.Amount;
+                else
+                    walletBalanceResult.AmountConfirmed = transaction.Amount;
             }
+            return walletBalanceResult;
         }
 
         public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
-
-            var sql = "SELECT " +
-                        "@key as Confirmed," +
-                        "SUM(*.Amount) " +
-                        "FROM transactions " +
-                        $"WHERE SpendingDetails = null AND AccountIndex = {accountIndex} " +
-                        $"{excludeColdStakeSql}" +
-                        $"GROUP BY BlockHeight != null";
-
-            using (var res = this.db.Execute(sql))
-            {
-                var walletBalanceResult = new WalletBalanceResult();
-
-                while (res.Read())
+            var transactions = this.trxCol
+              .Find(Query.And(Query.EQ("AccountIndex", new BsonValue(accountIndex)), Query.EQ("SpendingDetails", BsonValue.Null)))
+              .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
+              .GroupBy(x => x.BlockHeight != null)
+              .Select(o =>
+                new
                 {
-                    if (res["Confirmed"] == false)
-                        walletBalanceResult.AmountUnconfirmed = res["Amount"].AsInt64;
-                    else
-                        walletBalanceResult.AmountConfirmed = res["Amount"].AsInt64;
-                }
+                    Confirmed = o.Key,
+                    Amount = o.Sum(x => x.Amount)
+                }).ToList();
 
-                return walletBalanceResult;
+            var walletBalanceResult = new WalletBalanceResult();
+
+            foreach (var transaction in transactions)
+            {
+                if (transaction.Confirmed == false)
+                    walletBalanceResult.AmountUnconfirmed = transaction.Amount;
+                else
+                    walletBalanceResult.AmountConfirmed = transaction.Amount;
             }
+            return walletBalanceResult;
         }
 
         public TransactionOutputData GetForOutput(OutPoint outPoint)

@@ -6,6 +6,7 @@ namespace Blockcore.IntegrationTests.Wallet
     public partial class Wallet_address_generation_and_funds_visibility
     {
         [Fact]
+        [Trait("Unstable", "True")]
         public void Coins_beyond_gap_limit_not_visble_in_balance()
         {
             Given(a_default_gap_limit_of_20);
@@ -25,6 +26,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void Coins_beyond_default_gap_limit_ARE_visble_in_balance_when_gap_limit_overridden()
         {
             Given(a_gap_limit_of_21);

@@ -118,16 +118,44 @@ namespace Blockcore.Features.Wallet.Database
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
 
-            var historySpent = this.trxCol.Find(Query.All(), skip: skip, limit: take)
-              .Where(x => x.AccountIndex == accountIndex)
-              .Where(x => x.SpendingDetails != null)
-              .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
+            Query historySpentQuery =
+                Query.And(
+                    Query.EQ("AccountIndex", new BsonValue(accountIndex)),
+                    Query.Not("SpendingDetails", BsonValue.Null)
+                );
+            if (excludeColdStake)
+            {
+                historySpentQuery =
+                    Query.And(
+                        Query.EQ("AccountIndex", new BsonValue(accountIndex)),
+                        Query.Not("IsColdCoinStake", new BsonValue(true)),
+                        Query.Not("SpendingDetails", BsonValue.Null)
+                    );
+            }
+
+            var historySpent = this.trxCol
+              .Find(historySpentQuery,
+                skip: skip,
+                limit: take)
               .OrderByDescending(x => x.SpendingDetails.CreationTime)
               .ToList();
 
-            var historyUnspent = this.trxCol.Find(Query.All(), skip: skip, limit: take)
-                .Where(x => x.AccountIndex == accountIndex)
-                .Where(x => excludeColdStake ? (x.IsColdCoinStake != true) : true)
+
+            Query historyUnSpentQuery = Query.EQ("AccountIndex", new BsonValue(accountIndex));
+            if (excludeColdStake)
+            {
+                historyUnSpentQuery =
+                    Query.And(
+                        Query.EQ("AccountIndex", new BsonValue(accountIndex)),
+                        Query.Not("IsColdCoinStake", new BsonValue(true))
+                    );
+            }
+
+            var historyUnspent = this.trxCol
+                .Find(
+                    historyUnSpentQuery,
+                    skip: skip,
+                    limit: take)
                 .OrderByDescending(x => x.CreationTime)
                 .ToList();
 
@@ -135,30 +163,30 @@ namespace Blockcore.Features.Wallet.Database
 
             items.AddRange(historySpent
                 .GroupBy(g => g.SpendingDetails.TransactionId)
-                   .Select(s =>
-                   {
-                       var x = s.First();
-
-                       return new WalletHistoryData
+                       .Select(s =>
                        {
-                           IsSent = true,
-                           SentTo = x.SpendingDetails.TransactionId,
-                           IsCoinStake = x.SpendingDetails.IsCoinStake,
-                           CreationTime = x.SpendingDetails.CreationTime,
-                           BlockHeight = x.SpendingDetails.BlockHeight,
-                           BlockIndex = x.SpendingDetails.BlockIndex,
-                           SentPayments = x.SpendingDetails.Payments?.Select(p => new WalletHistoryPaymentData
-                           {
-                               Amount = p.Amount,
-                               PayToSelf = p.PayToSelf,
-                               DestinationAddress = p.DestinationAddress
-                           }).ToList(),
+                           var x = s.First();
 
-                           // when spent the amount represents the
-                           // input that was spent not the output
-                           Amount = x.Amount
-                       };
-                   }));
+                           return new WalletHistoryData
+                           {
+                               IsSent = true,
+                               SentTo = x.SpendingDetails.TransactionId,
+                               IsCoinStake = x.SpendingDetails.IsCoinStake,
+                               CreationTime = x.SpendingDetails.CreationTime,
+                               BlockHeight = x.SpendingDetails.BlockHeight,
+                               BlockIndex = x.SpendingDetails.BlockIndex,
+                               SentPayments = x.SpendingDetails.Payments?.Select(p => new WalletHistoryPaymentData
+                               {
+                                   Amount = p.Amount,
+                                   PayToSelf = p.PayToSelf,
+                                   DestinationAddress = p.DestinationAddress
+                               }).ToList(),
+
+                               // when spent the amount represents the
+                               // input that was spent not the output
+                               Amount = x.Amount
+                           };
+                       }));
 
             items.AddRange(historyUnspent
                 .GroupBy(g => g.Id)
@@ -220,44 +248,50 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
         {
-            var transactionGroups = this.trxCol.Find(Query.All())
-              .Where(x => x.Address == address)
-              .Where(x => x.SpendingDetails == null)
+            var transactions = this.trxCol
+              .Find(Query.And(Query.EQ("Address", new BsonValue(address)), Query.EQ("SpendingDetails", BsonValue.Null)))
               .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
               .GroupBy(x => x.BlockHeight != null)
-              .ToList();
+              .Select(o =>
+                new
+                {
+                    Confirmed = o.Key,
+                    Amount = o.Sum(x => x.Amount)
+                }).ToList();
 
             var walletBalanceResult = new WalletBalanceResult();
 
-            foreach (var transactionGroup in transactionGroups)
+            foreach (var transaction in transactions)
             {
-                var firstTransaction = transactionGroup.First();
-                if (firstTransaction.IsConfirmed() == false)
-                    walletBalanceResult.AmountUnconfirmed = transactionGroup.Sum(a => a.Amount);
+                if (transaction.Confirmed == false)
+                    walletBalanceResult.AmountUnconfirmed = transaction.Amount;
                 else
-                    walletBalanceResult.AmountConfirmed = transactionGroup.Sum(a => a.Amount);
+                    walletBalanceResult.AmountConfirmed = transaction.Amount;
             }
             return walletBalanceResult;
         }
 
         public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
         {
-            var transactionGroups = this.trxCol.Find(Query.All())
-              .Where(x => x.AccountIndex == accountIndex)
-              .Where(x => x.SpendingDetails == null)
+            var transactions = this.trxCol
+              .Find(Query.And(Query.EQ("AccountIndex", new BsonValue(accountIndex)), Query.EQ("SpendingDetails", BsonValue.Null)))
               .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
               .GroupBy(x => x.BlockHeight != null)
-              .ToList();
+              .Select(o =>
+                new
+                {
+                    Confirmed = o.Key,
+                    Amount = o.Sum(x => x.Amount)
+                }).ToList();
 
             var walletBalanceResult = new WalletBalanceResult();
 
-            foreach (var transactionGroup in transactionGroups)
+            foreach (var transaction in transactions)
             {
-                var firstTransaction = transactionGroup.First();
-                if (firstTransaction.IsConfirmed() == false)
-                    walletBalanceResult.AmountUnconfirmed = transactionGroup.Sum(a => a.Amount);
+                if (transaction.Confirmed == false)
+                    walletBalanceResult.AmountUnconfirmed = transaction.Amount;
                 else
-                    walletBalanceResult.AmountConfirmed = transactionGroup.Sum(a => a.Amount);
+                    walletBalanceResult.AmountConfirmed = transaction.Amount;
             }
             return walletBalanceResult;
         }

@@ -160,6 +160,55 @@ namespace x42.Features.xServer
         }
 
         /// <inheritdoc />
+        public ServerRegisterResult SearchForXServer(string profileName = "", string signAddress = "")
+        {
+            var result = new ServerRegisterResult();
+            var xservers = this.xServerPeerList.GetPeers().OrderBy(n => n.ResponseTime);
+            foreach (var xserver in xservers)
+            {
+                string xServerURL = Utils.GetServerUrl(xserver.NetworkProtocol, xserver.NetworkAddress, xserver.NetworkPort);
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var searchForXServerRequest = new RestRequest("/searchforxserver", Method.GET);
+                searchForXServerRequest.AddParameter("profileName", profileName);
+                searchForXServerRequest.AddParameter("signAddress", signAddress);
+
+                var registerResult = client.Execute<ServerRegisterResult>(searchForXServerRequest);
+                if (registerResult.StatusCode == HttpStatusCode.OK)
+                {
+                    result = registerResult.Data;
+                    if (result.Id > 0)
+                    {
+                        result.Success = true;
+                        return result;
+                    }
+                    else
+                    {
+                        result.Success = false;
+                        result.ResultMessage = "No xServers found";
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(result.ResultMessage))
+                    {
+                        var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(registerResult.Content);
+                        if (errorResponse != null)
+                        {
+                            result.ResultMessage = errorResponse.errors[0].message;
+                        }
+                        else
+                        {
+                            result.ResultMessage = "Failed to access xServer";
+                        }
+                    }
+                    result.Success = false;
+                }
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
         public RegisterResult RegisterXServer(RegisterRequest registerRequest)
         {
             var result = new RegisterResult();

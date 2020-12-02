@@ -24,6 +24,11 @@ namespace x42.Features.xServer.Interfaces
         List<xServerPeer> ConnectedSeeds { get; }
 
         /// <summary>
+        ///     Searches for the xServer by profile name or sign address.
+        /// </summary>
+        ServerRegisterResult SearchForXServer(string profileName = "", string signAddress = "");
+
+        /// <summary>
         ///     Registers the xServer and returns the result.
         /// </summary>
         RegisterResult RegisterXServer(RegisterRequest registerRequest);

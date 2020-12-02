@@ -67,6 +67,31 @@ namespace x42.Features.xServer.Controllers
         }
 
         /// <summary>
+        ///     Searches for the xServer by profile name or sign address.
+        /// </summary>
+        /// <returns>A JSON object containing the xServer search result.</returns>
+        [Route("searchforxserver")]
+        [HttpGet]
+        public IActionResult SearchForXServer(string profileName = "", string signAddress = "")
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            try
+            {
+                var result = this.xServerManager.SearchForXServer(profileName, signAddress);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
         ///     Will broadcast the registration for xServer
         /// </summary>
         /// <param name="registerRequest">The object with all of the nessesary data to register a xServer.</param>

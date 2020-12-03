@@ -94,6 +94,7 @@ namespace Blockcore.IntegrationTests
     public class SegWitTests
     {
         [Fact]
+        [Trait("Unstable", "True")]
         public void TestSegwit_MinedOnCore_ActivatedOn_StratisNode()
         {
             // This test only verifies that the BIP9 machinery is operating correctly on the Stratis PoW node.
@@ -265,6 +266,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void TestSegwit_AlwaysActivatedOn_StratisNode()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -706,6 +708,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void SegwitWalletTransactionBuildingTest_SendToBech32AndNormalDestination()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -834,6 +837,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void StakeSegwitBlock_On_SBFN_Check_StratisX_Syncs_When_StratisX_Initiates_Connection()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -881,6 +885,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void StakeSegwitBlock_On_SBFN_Connected_To_SBFN_Check_StratisX_Syncs_When_StratisX_Connects_Later()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

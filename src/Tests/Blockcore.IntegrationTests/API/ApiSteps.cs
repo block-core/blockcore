@@ -129,7 +129,7 @@ namespace Blockcore.IntegrationTests.API
             this.posNodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, this.CurrentTest.DisplayName));
 
             this.powNetwork = new BitcoinRegTestOverrideCoinbaseMaturity(1);
-            this.posNetwork = new StratisOverrideRegTest();
+            this.posNetwork = new StratisRegTest();
         }
 
         protected override void AfterTest()
@@ -503,8 +503,8 @@ namespace Blockcore.IntegrationTests.API
         private void general_information_about_the_wallet_and_node_is_returned()
         {
             var generalInfoResponse = JsonDataSerializer.Instance.Deserialize<WalletGeneralInfoModel>(this.responseText);
-            generalInfoResponse.WalletFilePath.Should().ContainAll(StratisRegTest, $"{WalletName}.wallet.json");
-            generalInfoResponse.Network.Name.Should().Be(StratisRegTest);
+            generalInfoResponse.WalletFilePath.Should().ContainAll(this.posNetwork.Name, $"{WalletName}.wallet.json");
+            generalInfoResponse.Network.Name.Should().Be(this.posNetwork.Name);
             generalInfoResponse.ChainTip.Should().Be(0);
             generalInfoResponse.IsChainSynced.Should().BeFalse();
             generalInfoResponse.ConnectedNodes.Should().Be(0);

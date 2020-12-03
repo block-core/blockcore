@@ -16,6 +16,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void Coins_are_visible_when_addresses_have_been_requested_prior_to_syncing_blocks()
         {
             Given(a_default_gap_limit_of_20);

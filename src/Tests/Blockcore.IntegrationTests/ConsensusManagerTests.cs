@@ -368,7 +368,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var syncerNetwork = new BitcoinOverrideRegTest("regtest1");
+                var syncerNetwork = new BitcoinOverrideRegTest("regtest15");
 
                 // Inject a rule that will fail at block 11 of the new chain
                 syncerNetwork.Consensus.ConsensusRules.FullValidationRules.Insert(1, typeof(FailValidation11_2));

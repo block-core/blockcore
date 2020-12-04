@@ -35,8 +35,8 @@ jobs:
     - name: Build
       run: dotnet build -c ${{env.BUILD_CONFIGURATION}} -v m ${{env.SOLUTION_PATH}}
       
-    #- name: Unit Test
-    #  run: dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+    - name: Unit Test
+      run: dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Integration Test
       run: dotnet test -v=normal --filter "FullyQualifiedName~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

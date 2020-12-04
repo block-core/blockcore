@@ -47,7 +47,7 @@ dotnet_diagnostic.CS1570.severity                                 = none
 dotnet_diagnostic.CS1571.severity                                 = none
 dotnet_diagnostic.CS1572.severity                                 = none
 dotnet_diagnostic.CS1570.severity                                 = none
-dotnet_diagnostic.CSxxxx.severity                                 = none
+dotnet_diagnostic.CS1587.severity                                 = none
 dotnet_diagnostic.CSxxxx.severity                                 = none
 dotnet_diagnostic.CSxxxx.severity                                 = none
 
@@ -177,6 +177,9 @@ dotnet_diagnostic.CS1658.severity = none
 
 # CS1573: Parameter has no matching param tag in the XML comment (but other parameters do)
 dotnet_diagnostic.CS1573.severity = none
+
+# xUnit2013: Do not use equality check to check for collection size.
+dotnet_diagnostic.xUnit2013.severity = none
 
 [*.{cs,vb}]
 dotnet_sort_system_directives_first = true

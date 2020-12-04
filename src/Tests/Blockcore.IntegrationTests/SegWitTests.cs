@@ -544,6 +544,8 @@ namespace Blockcore.IntegrationTests
                 var miner = node.FullNode.NodeService<IPowMining>() as PowMining;
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), (ulong)(node.FullNode.Network.Consensus.CoinbaseMaturity + 1), int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
+
                 // Send a transaction from first node to itself so that it has a proper segwit input to spend.
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
                 var witAddress = destinationAddress.Bech32Address;
@@ -575,6 +577,7 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
@@ -617,6 +620,7 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
             }
@@ -638,6 +642,8 @@ namespace Blockcore.IntegrationTests
 
                 var miner = node.FullNode.NodeService<IPowMining>() as PowMining;
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), (ulong)(maturity + 2), int.MaxValue);
+
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 // Send a transaction from first node to itself so that it has a proper segwit input to spend.
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
@@ -668,6 +674,7 @@ namespace Blockcore.IntegrationTests
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length > 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
@@ -701,6 +708,7 @@ namespace Blockcore.IntegrationTests
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length > 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
@@ -708,7 +716,6 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
-        [Trait("Unstable", "True")]
         public void SegwitWalletTransactionBuildingTest_SendToBech32AndNormalDestination()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -724,6 +731,8 @@ namespace Blockcore.IntegrationTests
 
                 var miner = node.FullNode.NodeService<IPowMining>() as PowMining;
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), (ulong)(maturity + 1), int.MaxValue);
+
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
                 var witAddress = destinationAddress.Bech32Address;
@@ -753,6 +762,7 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
@@ -785,6 +795,7 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
             }

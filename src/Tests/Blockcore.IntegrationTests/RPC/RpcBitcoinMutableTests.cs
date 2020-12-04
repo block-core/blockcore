@@ -189,6 +189,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void TryValidateAddress()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -218,6 +219,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanGetTxOutNoneFromRPC()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -249,6 +251,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void RawTransactionIsConformsToRPC()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

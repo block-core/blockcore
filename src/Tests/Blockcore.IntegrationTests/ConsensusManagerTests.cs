@@ -517,6 +517,7 @@ namespace Blockcore.IntegrationTests
 
         /// <summary>This test assumes CoinbaseMaturity is 10 and at block 2 there is a huge premine, adjust the test if this changes.</summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void ConsensusManager_Fork_Occurs_When_Stake_Coins_Are_Spent_And_Found_In_Rewind_Data()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

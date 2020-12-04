@@ -81,10 +81,10 @@
                 <button class="btn btn-sm btn-primary mr-1" @onclick="ShowWalletRecover">
                     <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet
                 </button>
-                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { Rebroadcast(); }">
+                <button class="btn btn-sm btn-primary mr-1" @onclick="Rebroadcast">
                     <span class="oi oi-globe" aria-hidden="true"></span> Re-broadcast
                 </button>
-                <button class="btn btn-sm btn-danger" @onclick="() => { Resync(); }">
+                <button class="btn btn-sm btn-danger" @onclick="Resync">
                     <span class="oi oi-flash" aria-hidden="true"></span> Resync wallets
                 </button>
             </div>

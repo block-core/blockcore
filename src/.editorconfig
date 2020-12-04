@@ -48,7 +48,7 @@ dotnet_diagnostic.CS1571.severity                                 = none
 dotnet_diagnostic.CS1572.severity                                 = none
 dotnet_diagnostic.CS1570.severity                                 = none
 dotnet_diagnostic.CS1587.severity                                 = none
-dotnet_diagnostic.CSxxxx.severity                                 = none
+dotnet_diagnostic.CS1580.severity                                 = none
 dotnet_diagnostic.CSxxxx.severity                                 = none
 
 # migrated from rulset
@@ -170,7 +170,13 @@ dotnet_diagnostic.SA1642.severity = none
 dotnet_diagnostic.SA1643.severity = none
 dotnet_diagnostic.SA1649.severity = none
 dotnet_diagnostic.SA1652.severity = none
-
+dotnet_diagnostic.SA1612.severity = none
+dotnet_diagnostic.SA1614.severity = none
+dotnet_diagnostic.SA1648.severity = none
+dotnet_diagnostic.SA1005.severity = none
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1107.severity = none
+dotnet_diagnostic.SA1114.severity = none
 
 # CS1658: Warning is overriding an error
 dotnet_diagnostic.CS1658.severity = none

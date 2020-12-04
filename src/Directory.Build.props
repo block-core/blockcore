@@ -6,7 +6,6 @@
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <CodeAnalysisRuleset>$(MSBuildThisFileDirectory)None.ruleset</CodeAnalysisRuleset>
     <PackageProjectUrl>https://www.blockcore.net</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/block-core/blockcore</RepositoryUrl>

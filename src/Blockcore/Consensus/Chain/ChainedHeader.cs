@@ -60,7 +60,7 @@ namespace Blockcore.Consensus.Chain
     public class ChainedHeader
     {
         /// <summary>Value of 2^256.</summary>
-        private static BigInteger Pow256 = BigInteger.ValueOf(2).Pow(256);
+        private static BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
 
         /// <summary>Window length for calculating median time span.</summary>
         private const int MedianTimeSpan = 11;
@@ -76,9 +76,6 @@ namespace Blockcore.Consensus.Chain
 
         /// <summary>Height of the entry in the chain. The genesis block has height 0.</summary>
         public int Height { get; private set; }
-
-        /// <summary>Block header for this entry.</summary>
-        //public BlockHeader Header { get; private set; }
 
         public BlockHeader Header
         {
@@ -253,8 +250,10 @@ namespace Blockcore.Consensus.Chain
             this.CalculateChainWork();
 
             if (header is PosBlockHeader posBlockHeader)
+            {
                 if (posBlockHeader.ProvenBlockHeader != null)
                     this.ProvenBlockHeader = posBlockHeader.ProvenBlockHeader;
+            }
         }
 
         /// <summary>
@@ -284,10 +283,10 @@ namespace Blockcore.Consensus.Chain
         {
             BigInteger target = this.Header.Bits.ToBigInteger();
 
-            if ((target.CompareTo(BigInteger.Zero) <= 0) || (target.CompareTo(Pow256) >= 0))
+            if ((target.CompareTo(BigInteger.Zero) <= 0) || (target.CompareTo(pow256) >= 0))
                 return BigInteger.Zero;
 
-            return Pow256.Divide(target.Add(BigInteger.One));
+            return pow256.Divide(target.Add(BigInteger.One));
         }
 
         /// <summary>Gets a <see cref="BlockLocator"/> for this chain entry.</summary>

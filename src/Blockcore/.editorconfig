@@ -1,0 +1,14 @@
+# Editor configuration, see http://editorconfig.org
+
+
+[ScriptEvaluationContext.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[Script.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[TransactionBuilder.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[NBitcoin/**.cs]
+dotnet_analyzer_diagnostic.severity = none

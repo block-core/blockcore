@@ -6,7 +6,6 @@
     <AssemblyName>Blockcore</AssemblyName>
     <PackageId>Blockcore.Core</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <CodeAnalysisRuleSet>..\Blockcore.ruleset</CodeAnalysisRuleSet>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 

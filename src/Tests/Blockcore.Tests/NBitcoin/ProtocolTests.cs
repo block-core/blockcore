@@ -97,37 +97,40 @@ namespace NBitcoin.Tests
             }
         }
         */
+
         #region IDisposable Members
 
         public void Dispose()
         {
-        /*
-         * TODO: Consider porting to FN.
+            /*
+             * TODO: Consider porting to FN.
 
-            _Server1.Dispose();
-            _Server2.Dispose();
-            */
-            foreach(IDisposable dispo in this._Disposables)
+                _Server1.Dispose();
+                _Server2.Dispose();
+                */
+            foreach (IDisposable dispo in this._Disposables)
                 dispo.Dispose();
         }
 
-        #endregion
+        #endregion IDisposable Members
 
         public static string NATRuleName = "NBitcoin Tests";
 
         private List<IDisposable> _Disposables = new List<IDisposable>();
+
         internal void AddDisposable(IDisposable disposable)
         {
             this._Disposables.Add(disposable);
         }
     }
+
     public class ProtocolTests
     {
         /*
          * TODO: Consider porting to FN.
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //Copied from https://en.bitcoin.it/wiki/Protocol_specification (19/04/2014)
         public void CanParseMessages()
         {
@@ -185,7 +188,6 @@ namespace NBitcoin.Tests
                                 Assert.Equal(21, date.Hour);
                             })
                     },
-
                 };
 
             foreach(var test in tests)
@@ -404,7 +406,6 @@ namespace NBitcoin.Tests
                 node1.CreateNodeClient().SynchronizeChain(chain);
                 Assert.Equal(10, chain.Height);
 
-
                 var node2 = builder.CreateNode(true);
                 node2.CreateRPCClient().Generate(12);
 
@@ -465,7 +466,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ServerDisconnectCorrectlyFromDroppingClient()
         {
             using(var tester = new NodeServerTester())
@@ -484,7 +484,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanReceiveHandshake()
         {
             using(var tester = new NodeServerTester())
@@ -499,10 +498,8 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRespondToPong()
         {
-
             using(var tester = new NodeServerTester())
             {
                 var toS2 = tester.Node1;
@@ -520,13 +517,10 @@ namespace NBitcoin.Tests
                             break;
                     }
                 }
-
             }
-
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CantConnectToYourself()
         {
             using(var tester = new NodeServerTester())
@@ -540,7 +534,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanExchangeFastPingPong()
         {
             using(var tester = new NodeServerTester())
@@ -574,7 +567,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanConnectMultipleTimeToServer()
         {
             using(var tester = new NodeServerTester())
@@ -604,9 +596,7 @@ namespace NBitcoin.Tests
             }
         }
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseReject()
         {
             var hex = "f9beb4d972656a6563740000000000003a000000db7f7e7802747812156261642d74786e732d696e707574732d7370656e74577a9694da4ff41ae999f6591cff3749ad6a7db19435f3d8af5fecbcff824196";
@@ -658,7 +648,6 @@ namespace NBitcoin.Tests
             }
         }
 
-
         [Fact]
         [Trait("Protocol", "Protocol")]
         public void CanDownloadBlocks()
@@ -705,5 +694,6 @@ namespace NBitcoin.Tests
             }
         }
 
-*/    }
+*/
+    }
 }

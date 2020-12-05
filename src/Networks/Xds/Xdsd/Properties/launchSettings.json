@@ -2,7 +2,15 @@
   "profiles": {
     "Xds": {
       "commandName": "Project",
-      "commandLineArgs": "-addnode=159.65.148.135"
+      "commandLineArgs": "-addnode=178.62.62.160 -datadir=C:\\testtttt -apiport=48339"
+    },
+    "RocksDb": {
+      "commandName": "Project",
+      "commandLineArgs": "-addnode=178.62.62.160 -datadir=C:\\testtttt\\rocksdb -dbtype=rocksdb -apiport=48339"
+    },
+    "LevelDb": {
+      "commandName": "Project",
+      "commandLineArgs": "-addnode=178.62.62.160 -datadir=C:\\testtttt\\leveldb -dbtype=leveldb -apiport=48339"
     }
   }
 }

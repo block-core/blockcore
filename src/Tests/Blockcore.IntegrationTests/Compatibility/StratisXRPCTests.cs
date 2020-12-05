@@ -56,6 +56,7 @@ namespace Blockcore.IntegrationTests.Compatibility
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetBlockCount()
         {
             RPCClient rpc = this.rpcTestFixture.RpcClient;
@@ -65,6 +66,7 @@ namespace Blockcore.IntegrationTests.Compatibility
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetBalanceReturnsNonzero()
         {
             RPCClient rpc = this.rpcTestFixture.RpcClient;
@@ -101,6 +103,7 @@ namespace Blockcore.IntegrationTests.Compatibility
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetBlockCountAsyncWithValidChainReturnsCorrectCount()
         {
             RPCClient rpc = this.rpcTestFixture.RpcClient;
@@ -109,6 +112,7 @@ namespace Blockcore.IntegrationTests.Compatibility
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetPeersInfoWithValidPeersThenReturnsPeerInfo()
         {
             PeerInfo[] peers = this.rpcTestFixture.RpcClient.GetPeersInfo();
@@ -161,6 +165,7 @@ namespace Blockcore.IntegrationTests.Compatibility
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void InvalidCommandSendRPCException()
         {
             var ex = Assert.Throws<RPCException>(() => this.rpcTestFixture.RpcClient.SendCommand("donotexist"));

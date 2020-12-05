@@ -13,7 +13,6 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Utilities;
-using NBitcoin.Protocol;
 
 namespace OpenExo.Node
 {
@@ -32,7 +31,7 @@ namespace OpenExo.Node
                     .UseMempool()
                     .AddPowPosMining()
                     .UseColdStakingWallet()
-                    .UseDiagnosticFeature()                    
+                    .UseDiagnosticFeature()
                     .UseNodeHost()
                     .AddRPC();
 

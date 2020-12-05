@@ -1,23 +1,25 @@
 ﻿using System.IO;
 using System.Text;
 using Blockcore.Configuration;
+using Blockcore.Utilities;
 using Blockcore.Utilities.JsonConverters;
+using Blockcore.Utilities.Store;
 using LevelDB;
 
-namespace Blockcore.Utilities.Store
+namespace Blockcore.Features.Base.Persistence.LevelDb
 {
-    public class LeveldbKeyValueRepository : IKeyValueRepository
+    public class LevelDbKeyValueRepository : IKeyValueRepository
     {
         /// <summary>Access to database.</summary>
         private readonly DB leveldb;
 
         private readonly DataStoreSerializer dataStoreSerializer;
 
-        public LeveldbKeyValueRepository(DataFolder dataFolder, DataStoreSerializer dataStoreSerializer) : this(dataFolder.KeyValueRepositoryPath, dataStoreSerializer)
+        public LevelDbKeyValueRepository(DataFolder dataFolder, DataStoreSerializer dataStoreSerializer) : this(dataFolder.KeyValueRepositoryPath, dataStoreSerializer)
         {
         }
 
-        public LeveldbKeyValueRepository(string folder, DataStoreSerializer dataStoreSerializer)
+        public LevelDbKeyValueRepository(string folder, DataStoreSerializer dataStoreSerializer)
         {
             Directory.CreateDirectory(folder);
             this.dataStoreSerializer = dataStoreSerializer;

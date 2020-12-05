@@ -38,4 +38,4 @@ jobs:
       run: dotnet build --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Integration Test
-      run: dotnet test -v=normal --no-build --filter FullyQualifiedName~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      run: dotnet test -v=normal --no-build --filter 'FullyQualifiedName~IntegrationTests&Unstable!=True' --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

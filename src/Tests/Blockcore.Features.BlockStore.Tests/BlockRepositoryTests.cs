@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore.Persistence.LevelDb;
+using Blockcore.Features.BlockStore.Persistence.RocksDb;
 using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Networks;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
+using LevelDB;
 using NBitcoin;
-using RocksDbSharp;
 using Xunit;
 
 namespace Blockcore.Features.BlockStore.Tests
@@ -23,10 +25,10 @@ namespace Blockcore.Features.BlockStore.Tests
             {
             }
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                byte[] blockRow = engine.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]));
-                bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1])));
+                byte[] blockRow = engine.Get(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]));
+                bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1])));
 
                 Assert.Equal(this.Network.GetGenesis().GetHash(), this.DataStoreSerializer.Deserialize<HashHeightPair>(blockRow).Hash);
                 Assert.False(txIndexRow);
@@ -38,20 +40,20 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(new uint256(56), 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(new uint256(56), 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
             {
             }
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                byte[] blockRow = engine.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]));
-                bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1])));
+                byte[] blockRow = engine.Get(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]));
+                bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1])));
 
                 Assert.Equal(new HashHeightPair(new uint256(56), 1), this.DataStoreSerializer.Deserialize<HashHeightPair>(blockRow));
                 Assert.True(txIndexRow);
@@ -63,10 +65,10 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -80,11 +82,11 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
                 var blockId = new uint256(8920);
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -100,16 +102,16 @@ namespace Blockcore.Features.BlockStore.Tests
             Transaction trans = this.Network.CreateTransaction();
             trans.Version = 125;
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
                 Block block = this.Network.CreateBlock();
                 block.Header.GetHash();
                 block.Transactions.Add(trans);
 
-                engine.Put(DBH.Key(RocksdbBlockRepository.BlockTableName, block.Header.GetHash().ToBytes()), block.ToBytes());
-                engine.Put(DBH.Key(RocksdbBlockRepository.TransactionTableName, trans.GetHash().ToBytes()), block.Header.GetHash().ToBytes());
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.Header.GetHash().ToBytes()), block.ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.TransactionTableName, trans.GetHash().ToBytes()), block.Header.GetHash().ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -123,10 +125,10 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -140,10 +142,10 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -157,11 +159,11 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.TransactionTableName, new uint256(26).ToBytes()), new uint256(42).ToBytes());
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.TransactionTableName, new uint256(26).ToBytes()), new uint256(42).ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -195,10 +197,10 @@ namespace Blockcore.Features.BlockStore.Tests
             block2.Transactions.Add(transaction);
             blocks.Add(block2);
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(uint256.Zero, 1)));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -206,12 +208,12 @@ namespace Blockcore.Features.BlockStore.Tests
                 repository.PutBlocks(new HashHeightPair(nextBlockHash, 100), blocks);
             }
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                byte[] blockHashKeyRow = engine.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]));
+                byte[] blockHashKeyRow = engine.Get(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]));
 
-                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(RocksdbBlockRepository.BlockTableName);
-                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(RocksdbBlockRepository.TransactionTableName);
+                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(LevelDbBlockRepository.BlockTableName);
+                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(LevelDbBlockRepository.TransactionTableName);
 
                 Assert.Equal(new HashHeightPair(nextBlockHash, 100), this.DataStoreSerializer.Deserialize<HashHeightPair>(blockHashKeyRow));
                 Assert.Equal(2, blockDict.Count);
@@ -235,9 +237,9 @@ namespace Blockcore.Features.BlockStore.Tests
         public void SetTxIndexUpdatesTxIndex()
         {
             string dir = CreateTestDir(this);
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -245,9 +247,9 @@ namespace Blockcore.Features.BlockStore.Tests
                 repository.SetTxIndex(false);
             }
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1])));
+                bool txIndexRow = BitConverter.ToBoolean(engine.Get(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1])));
                 Assert.False(txIndexRow);
             }
         }
@@ -258,9 +260,9 @@ namespace Blockcore.Features.BlockStore.Tests
             string dir = CreateTestDir(this);
             Block block = this.Network.Consensus.ConsensusFactory.CreateBlock();
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -282,10 +284,10 @@ namespace Blockcore.Features.BlockStore.Tests
                 blocks[i].Header.HashPrevBlock = blocks[i - 1].Header.GetHash();
             }
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
                 for (int i = 0; i < blocks.Length; i++)
-                    engine.Put(DBH.Key(RocksdbBlockRepository.BlockTableName, blocks[i].GetHash().ToBytes()), blocks[i].ToBytes());
+                    engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, blocks[i].GetHash().ToBytes()), blocks[i].ToBytes());
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -315,9 +317,9 @@ namespace Blockcore.Features.BlockStore.Tests
             string dir = CreateTestDir(this);
             Block block = this.Network.Consensus.ConsensusFactory.CreateBlock();
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
             }
 
             using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
@@ -344,11 +346,11 @@ namespace Blockcore.Features.BlockStore.Tests
             Block block = this.Network.CreateBlock();
             block.Transactions.Add(this.Network.CreateTransaction());
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
-                engine.Put(DBH.Key(RocksdbBlockRepository.TransactionTableName, block.Transactions[0].GetHash().ToBytes()), block.GetHash().ToBytes());
-                engine.Put(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
+                engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.TransactionTableName, block.Transactions[0].GetHash().ToBytes()), block.GetHash().ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
             var tip = new HashHeightPair(new uint256(45), 100);
@@ -358,11 +360,11 @@ namespace Blockcore.Features.BlockStore.Tests
                 repository.Delete(tip, new List<uint256> { block.GetHash() });
             }
 
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                byte[] blockHashKeyRow = engine.Get(DBH.Key(RocksdbBlockRepository.CommonTableName, new byte[0]));
-                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(RocksdbBlockRepository.BlockTableName);
-                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(RocksdbBlockRepository.TransactionTableName);
+                byte[] blockHashKeyRow = engine.Get(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[0]));
+                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(LevelDbBlockRepository.BlockTableName);
+                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(LevelDbBlockRepository.TransactionTableName);
 
                 Assert.Equal(tip, this.DataStoreSerializer.Deserialize<HashHeightPair>(blockHashKeyRow));
                 Assert.Empty(blockDict);
@@ -379,9 +381,9 @@ namespace Blockcore.Features.BlockStore.Tests
             block.Transactions.Add(transaction);
 
             // Set up database to mimic that created when TxIndex was off. No transactions stored.
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
             }
 
             // Turn TxIndex on and then reindex database, as would happen on node startup if -txindex and -reindex are set.
@@ -392,10 +394,10 @@ namespace Blockcore.Features.BlockStore.Tests
             }
 
             // Check that after indexing database, the transaction inside the block is now indexed.
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(RocksdbBlockRepository.BlockTableName);
-                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(RocksdbBlockRepository.TransactionTableName);
+                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(LevelDbBlockRepository.BlockTableName);
+                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(LevelDbBlockRepository.TransactionTableName);
 
                 // Block stored as expected.
                 Assert.Single(blockDict);
@@ -418,10 +420,10 @@ namespace Blockcore.Features.BlockStore.Tests
             block.Transactions.Add(transaction);
 
             // Set up database to mimic that created when TxIndex was on. Transaction from block is stored.
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                engine.Put(DBH.Key(RocksdbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
-                engine.Put(DBH.Key(RocksdbBlockRepository.TransactionTableName, transaction.GetHash().ToBytes()), block.GetHash().ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
+                engine.Put(DBH.Key(LevelDbBlockRepository.TransactionTableName, transaction.GetHash().ToBytes()), block.GetHash().ToBytes());
             }
 
             // Turn TxIndex off and then reindex database, as would happen on node startup if -txindex=0 and -reindex are set.
@@ -432,10 +434,10 @@ namespace Blockcore.Features.BlockStore.Tests
             }
 
             // Check that after indexing database, the transaction is no longer stored.
-            using (var engine = RocksDb.Open(new DbOptions().SetCreateIfMissing(true), dir))
+            using (var engine = new DB(new Options() { CreateIfMissing = true }, dir))
             {
-                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(RocksdbBlockRepository.BlockTableName);
-                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(RocksdbBlockRepository.TransactionTableName);
+                Dictionary<byte[], byte[]> blockDict = engine.SelectDictionary(LevelDbBlockRepository.BlockTableName);
+                Dictionary<byte[], byte[]> transDict = engine.SelectDictionary(LevelDbBlockRepository.TransactionTableName);
 
                 // Block still stored as expected.
                 Assert.Single(blockDict);
@@ -540,7 +542,7 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             var dBreezeSerializer = new DataStoreSerializer(main.Consensus.ConsensusFactory);
 
-            var repository = new RocksdbBlockRepository(main, dir, this.LoggerFactory.Object, dBreezeSerializer);
+            var repository = new LevelDbBlockRepository(main, dir, this.LoggerFactory.Object, dBreezeSerializer);
             repository.Initialize();
 
             return repository;

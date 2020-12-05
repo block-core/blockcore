@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>LevelDb persistence package for core features</Description>
-    <AssemblyTitle>Blockcore.Features.Persistence.LevelDb.Package</AssemblyTitle>
-    <AssemblyName>Blockcore.Features.Persistence.LevelDb.Package</AssemblyName>
-    <PackageId>Blockcore.Features.Persistence.LevelDb.Package</PackageId>
+    <AssemblyTitle>Blockcore.Features.Persistence.LevelDb.CorePackage</AssemblyTitle>
+    <AssemblyName>Blockcore.Features.Persistence.LevelDb.CorePackage</AssemblyName>
+    <PackageId>Blockcore.Features.Persistence.LevelDb.CorePackage</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Authors>Blockcore</Authors>
     <IsPackable>true</IsPackable>

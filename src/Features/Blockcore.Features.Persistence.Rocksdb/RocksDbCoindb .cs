@@ -7,16 +7,16 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using RocksDbSharp;
 
 namespace Blockcore.Features.Consensus.CoinViews.Coindb
 {
     /// <summary>
     /// Persistent implementation of coinview using dBreeze database.
     /// </summary>
-    public class LeveldbCoindb : ICoindb, IStakdb, IDisposable
+    public class RocksDbCoindb : ICoindb, IStakdb, IDisposable
     {
         /// <summary>Database key under which the block hash of the coin view's current tip is stored.</summary>
         private static readonly byte[] blockHashKey = new byte[0];
@@ -40,18 +40,18 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         private BackendPerformanceSnapshot latestPerformanceSnapShot;
 
-        /// <summary>Access to dBreeze database.</summary>
-        private readonly DB leveldb;
+        /// <summary>Access to rocksdb database.</summary>
+        private readonly RocksDb rocksdb;
 
         private DataStoreSerializer dataStoreSerializer;
 
-        public LeveldbCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
+        public RocksDbCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
             : this(network, dataFolder.CoindbPath, dateTimeProvider, loggerFactory, nodeStats, dataStoreSerializer)
         {
         }
 
-        public LeveldbCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider,
+        public RocksDbCoindb(Network network, string folder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
@@ -62,8 +62,8 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             // Open a connection to a new DB and create if not found
-            var options = new Options { CreateIfMissing = true };
-            this.leveldb = new DB(options, folder);
+            var options = new DbOptions().SetCreateIfMissing(true);
+            this.rocksdb = RocksDb.Open(options, folder);
 
             this.network = network;
             this.performanceCounter = new BackendPerformanceCounter(dateTimeProvider);
@@ -84,14 +84,14 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         private void SetBlockHash(HashHeightPair nextBlockHash)
         {
             this.blockHash = nextBlockHash;
-            this.leveldb.Put(new byte[] { blockTable }.Concat(blockHashKey).ToArray(), nextBlockHash.ToBytes());
+            this.rocksdb.Put(new byte[] { blockTable }.Concat(blockHashKey).ToArray(), nextBlockHash.ToBytes());
         }
 
         public HashHeightPair GetTipHash()
         {
             if (this.blockHash == null)
             {
-                var row = this.leveldb.Get(new byte[] { blockTable }.Concat(blockHashKey).ToArray());
+                var row = this.rocksdb.Get(new byte[] { blockTable }.Concat(blockHashKey).ToArray());
                 if (row != null)
                 {
                     this.blockHash = new HashHeightPair();
@@ -112,7 +112,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                 foreach (OutPoint outPoint in utxos)
                 {
-                    byte[] row = this.leveldb.Get(new byte[] { coinsTable }.Concat(outPoint.ToBytes()).ToArray());
+                    byte[] row = this.rocksdb.Get(new byte[] { coinsTable }.Concat(outPoint.ToBytes()).ToArray());
                     Coins outputs = row != null ? this.dataStoreSerializer.Deserialize<Coins>(row) : null;
 
                     this.logger.LogDebug("Outputs for '{0}' were {1}.", outPoint, outputs == null ? "NOT loaded" : "loaded");
@@ -147,7 +147,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                         if (coin.Coins == null)
                         {
                             this.logger.LogDebug("Outputs of transaction ID '{0}' are prunable and will be removed from the database.", coin.OutPoint);
-                            batch.Delete(new byte[] { coinsTable }.Concat(coin.OutPoint.ToBytes()).ToArray() );
+                            batch.Delete(new byte[] { coinsTable }.Concat(coin.OutPoint.ToBytes()).ToArray());
                         }
                         else
                         {
@@ -178,7 +178,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                     }
 
                     insertedEntities += unspentOutputs.Count;
-                    this.leveldb.Write(batch);
+                    this.rocksdb.Write(batch);
 
                     this.SetBlockHash(nextBlockHash);
                 }
@@ -195,7 +195,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
             {
                 HashHeightPair current = this.GetTipHash();
 
-                byte[] row = this.leveldb.Get(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(current.Height)).ToArray());
+                byte[] row = this.rocksdb.Get(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(current.Height)).ToArray());
 
                 if (row == null)
                 {
@@ -220,7 +220,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                 res = rewindData.PreviousBlockHash;
 
-                this.leveldb.Write(batch);
+                this.rocksdb.Write(batch);
 
                 this.SetBlockHash(rewindData.PreviousBlockHash);
             }
@@ -230,7 +230,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         public RewindData GetRewindData(int height)
         {
-            byte[] row = this.leveldb.Get(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(height)).ToArray());
+            byte[] row = this.rocksdb.Get(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(height)).ToArray());
             return row != null ? this.dataStoreSerializer.Deserialize<RewindData>(row) : null;
         }
 
@@ -251,7 +251,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                     }
                 }
 
-                this.leveldb.Write(batch);
+                this.rocksdb.Write(batch);
             }
         }
 
@@ -264,7 +264,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
             foreach (StakeItem blockStake in blocklist)
             {
                 this.logger.LogDebug("Loading POS block hash '{0}' from the database.", blockStake.BlockId);
-                byte[] stakeRow = this.leveldb.Get(new byte[] { stakeTable }.Concat(blockStake.BlockId.ToBytes(false)).ToArray());
+                byte[] stakeRow = this.rocksdb.Get(new byte[] { stakeTable }.Concat(blockStake.BlockId.ToBytes(false)).ToArray());
 
                 if (stakeRow != null)
                 {
@@ -276,7 +276,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         private void AddBenchStats(StringBuilder log)
         {
-            log.AppendLine("======Leveldb Bench======");
+            log.AppendLine("======LevelDb Bench======");
 
             BackendPerformanceSnapshot snapShot = this.performanceCounter.Snapshot();
 
@@ -291,7 +291,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         /// <inheritdoc />
         public void Dispose()
         {
-            this.leveldb.Dispose();
+            this.rocksdb.Dispose();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Consensus;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
@@ -24,7 +25,7 @@ namespace Blockcore.Tests.Consensus
         public async Task FinalizedHeightSavedOnDiskAsync()
         {
             string dir = CreateTestDir(this);
-            var kvRepo = new LeveldbKeyValueRepository(dir, new DataStoreSerializer(this.Network.Consensus.ConsensusFactory));
+            var kvRepo = new LevelDbKeyValueRepository(dir, new DataStoreSerializer(this.Network.Consensus.ConsensusFactory));
             var asyncMock = new Mock<IAsyncProvider>();
             asyncMock.Setup(a => a.RegisterTask(It.IsAny<string>(), It.IsAny<Task>()));
 
@@ -44,7 +45,7 @@ namespace Blockcore.Tests.Consensus
         public async Task FinalizedHeightCantBeDecreasedAsync()
         {
             string dir = CreateTestDir(this);
-            var kvRepo = new LeveldbKeyValueRepository(dir, new DataStoreSerializer(this.Network.Consensus.ConsensusFactory));
+            var kvRepo = new LevelDbKeyValueRepository(dir, new DataStoreSerializer(this.Network.Consensus.ConsensusFactory));
             var asyncMock = new Mock<IAsyncProvider>();
             asyncMock.Setup(a => a.RegisterTask(It.IsAny<string>(), It.IsAny<Task>()));
 

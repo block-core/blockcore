@@ -9,6 +9,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.IntegrationTests.Common;
@@ -287,7 +288,7 @@ namespace Blockcore.IntegrationTests
             var chain = new ChainIndexer(this.regTest);
             var data = new DataFolder(TestBase.CreateTestDir(this));
 
-            using (var repo = new ChainRepository(this.loggerFactory, new LeveldbChainStore(this.network, data, chain), this.network))
+            using (var repo = new ChainRepository(this.loggerFactory, new LevelDbChainStore(this.network, data, chain), this.network))
             {
                 chain.SetTip(repo.LoadAsync(chain.Genesis).GetAwaiter().GetResult());
                 Assert.True(chain.Tip == chain.Genesis);

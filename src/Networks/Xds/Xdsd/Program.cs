@@ -12,7 +12,6 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Networks.Xds;
 using Blockcore.Utilities;
-using NBitcoin.Protocol;
 
 namespace StratisD
 {
@@ -27,7 +26,7 @@ namespace StratisD
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Xds, args: args);
 
-                IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
+                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
                     .UseNodeSettings(nodeSettings)
                     .UseBlockStore()
                     .UsePosConsensus()

@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Base.Persistence.LevelDb\Blockcore.Features.Base.Persistence.LevelDb.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.BlockStore.Persistence.LevelDb\Blockcore.Features.BlockStore.Persistence.LevelDb.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Consensus.Persistence.LevelDb\Blockcore.Features.Consensus.Persistence.LevelDb.csproj" />
     <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
     <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />

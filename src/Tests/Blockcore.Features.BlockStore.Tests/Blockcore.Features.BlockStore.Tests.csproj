@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.BlockStore.Persistence.LevelDb\Blockcore.Features.BlockStore.Persistence.LevelDb.csproj" />
     <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.BlockStore.Persistence.RocksDb\Blockcore.Features.BlockStore.Persistence.RocksDb.csproj" />
     <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
     <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />

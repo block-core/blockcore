@@ -235,6 +235,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void ConsensusManagerSForkOccursNodeDisconnectedDueToMaxReorgViolation()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

@@ -3,6 +3,8 @@ using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
+using Blockcore.Networks;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 

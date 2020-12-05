@@ -1,5 +1,6 @@
 ﻿using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

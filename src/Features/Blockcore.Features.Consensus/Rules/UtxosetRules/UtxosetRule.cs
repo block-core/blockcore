@@ -1,8 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.Base;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
@@ -38,10 +41,23 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
     public class FlushUtxosetRule : UtxoStoreConsensusRule
     {
         private readonly IInitialBlockDownloadState initialBlockDownloadState;
+        private readonly IChainRepository chainRepository;
+        private readonly ChainIndexer chainIndexer;
+        private readonly INodeLifetime nodeLifetime;
+        private readonly IChainState chainState;
 
-        public FlushUtxosetRule(IInitialBlockDownloadState initialBlockDownloadState)
+        public FlushUtxosetRule(
+            IInitialBlockDownloadState initialBlockDownloadState,
+            IChainRepository chainRepository,
+            ChainIndexer chainIndexer,
+            INodeLifetime nodeLifetime,
+            IChainState chainState)
         {
             this.initialBlockDownloadState = initialBlockDownloadState;
+            this.chainRepository = chainRepository;
+            this.chainIndexer = chainIndexer;
+            this.nodeLifetime = nodeLifetime;
+            this.chainState = chainState;
         }
 
         /// <inheritdoc />
@@ -50,10 +66,59 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
             if (this.PowParent.UtxoSet is CachedCoinView cachedCoinView)
             {
                 bool inIBD = this.initialBlockDownloadState.IsInitialBlockDownload();
-                cachedCoinView.Flush(force: !inIBD);
+
+                if (!inIBD || cachedCoinView.ShouldFlush())
+                {
+                    // wait for blockstore to catch up
+                    this.WaitForBlockstore(this.PowParent.UtxoSet as CachedCoinView);
+
+                    // flush chain repository
+                    this.FlushChainRepo();
+
+                    cachedCoinView.Flush(true);
+                }
             }
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Before we continue to persist coindb we need to make sure the
+        /// store is not behind our tip, if it is we will wait to let store
+        /// catchup even if it means we need to block consensus form advancing
+        /// </summary>
+        /// <param name="cachedCoinView"></param>
+        private void WaitForBlockstore(CachedCoinView cachedCoinView)
+        {
+            if (this.chainState.BlockStoreTip != null)
+            {
+                int delaySec = 3;
+                int rewindDataWindow = cachedCoinView.CalculateRewindWindow();
+                HashHeightPair cachedCoinViewTip = cachedCoinView.GetTipHash();
+
+                while (cachedCoinViewTip.Height - rewindDataWindow + 1 > this.chainState.BlockStoreTip.Height)
+                {
+                    if (this.nodeLifetime.ApplicationStopping.IsCancellationRequested)
+                    {
+                        // node is closing do nothing.
+                        return;
+                    }
+
+                    // wait 3 seconds to let blockstore catch up
+                    this.Logger.LogWarning("Store tip `{0}` is behind coindb rewind data tip `{1}` waiting {2} seconds to let store catch up", this.chainState.BlockStoreTip.Height, cachedCoinViewTip.Height - rewindDataWindow + 1, delaySec);
+                    Task.Delay(delaySec * 1000).Wait();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Flush the chain repository before flushing the consensus coindb.
+        /// This is in order to avoid consensus being ahead of the chain of
+        /// headers in case of a node crash.
+        /// </summary>
+        private void FlushChainRepo()
+        {
+            this.chainRepository.SaveAsync(this.chainIndexer).Wait();
         }
     }
 

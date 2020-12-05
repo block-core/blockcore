@@ -8,6 +8,7 @@ using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.Notifications.Controllers;
 using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.P2P.Peer;

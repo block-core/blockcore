@@ -1,7 +1,9 @@
 ﻿using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Configuration;
+using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore.Pruning;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;

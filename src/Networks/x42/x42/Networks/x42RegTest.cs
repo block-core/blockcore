@@ -1,6 +1,11 @@
 using System;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using x42.Networks.Consensus;
 using x42.Networks.Policies;
 using x42.Networks.Setup;
@@ -119,7 +124,6 @@ namespace x42.Networks
             Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
             Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x35), (0x87), (0xCF) };
             Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x35), (0x83), (0x94) };
-            Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2b };
             Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
 
             Bech32Encoders = new Bech32Encoder[2];

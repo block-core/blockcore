@@ -13,21 +13,24 @@ using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
 using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.Validators;
 using Blockcore.Controllers;
 using Blockcore.EventBus;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.Rules;
 
 [assembly: InternalsVisibleTo("Blockcore.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Tests.Common")]
@@ -397,12 +400,11 @@ namespace Blockcore.Base
                     services.AddSingleton<IInvalidBlockHashStore, InvalidBlockHashStore>();
                     services.AddSingleton<IChainState, ChainState>();
                     services.AddSingleton<IChainRepository, ChainRepository>();
-                    services.AddSingleton<IChainStore, LeveldbChainStore>();
+                    AddDbImplementation(services, fullNodeBuilder.NodeSettings);
                     services.AddSingleton<IFinalizedBlockInfoRepository, FinalizedBlockInfoRepository>();
                     services.AddSingleton<ITimeSyncBehaviorState, TimeSyncBehaviorState>();
                     services.AddSingleton<NodeDeployments>();
                     services.AddSingleton<IInitialBlockDownloadState, InitialBlockDownloadState>();
-                    services.AddSingleton<IKeyValueRepository, KeyValueRepository>();
                     services.AddSingleton<ITipsManager, TipsManager>();
                     services.AddSingleton<IAsyncProvider, AsyncProvider>();
                     services.AddSingleton<IBroadcasterManager, BroadcasterManager>();
@@ -483,6 +485,24 @@ namespace Blockcore.Base
             });
 
             return fullNodeBuilder;
+        }
+
+        private static void AddDbImplementation(IServiceCollection services, NodeSettings settings)
+        {
+            if (settings.DbType == DbType.Leveldb)
+            {
+                services.AddSingleton<IChainStore, LeveldbChainStore>();
+                services.AddSingleton<IKeyValueRepository, LeveldbKeyValueRepository>();
+
+                return;
+            }
+
+            if (settings.DbType == DbType.Rocksdb)
+            {
+                services.AddSingleton<IChainStore, RocksdbChainStore>();
+                services.AddSingleton<IKeyValueRepository, RocksdbKeyValueRepository>();
+                return;
+            }
         }
     }
 }

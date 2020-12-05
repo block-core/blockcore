@@ -1,4 +1,7 @@
 ﻿using System;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
 

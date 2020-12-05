@@ -2,6 +2,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Blockcore.Connection;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
@@ -241,12 +243,15 @@ namespace Blockcore.IntegrationTests.RPC
             // Try creating with optional parameters.
             address = BitcoinAddress.Create(this.rpcTestFixture.RpcClient.SendCommand(RPCOperations.getnewaddress, new[] { string.Empty, "legacy" }).ResultString, this.rpcTestFixture.RpcClient.Network);
             Assert.NotNull(address);
+
+            address = BitcoinAddress.Create(this.rpcTestFixture.RpcClient.SendCommand(RPCOperations.getnewaddress, new[] { string.Empty, "bech32" }).ResultString, this.rpcTestFixture.RpcClient.Network);
+            Assert.NotNull(address);
         }
 
         [Fact]
         public void TestGetNewAddressWithUnsupportedAddressTypeThrowsRpcException()
         {
-            Assert.Throws<RPCException>(() => this.rpcTestFixture.RpcClient.SendCommand(RPCOperations.getnewaddress, new[] { string.Empty, "bech32" }));
+            Assert.Throws<RPCException>(() => this.rpcTestFixture.RpcClient.SendCommand(RPCOperations.getnewaddress, new[] { string.Empty, "p2sh" }));
         }
 
         [Fact]
@@ -276,7 +281,7 @@ namespace Blockcore.IntegrationTests.RPC
             var rpcBatch = this.rpcTestFixture.RpcClient.PrepareBatch();
             var unknownRpc = rpcBatch.SendCommandAsync("unknownmethod", "random");
             var address = new Key().ScriptPubKey.WitHash.ScriptPubKey.GetDestinationAddress(rpcBatch.Network);
-            var knownRpc = rpcBatch.SendCommandAsync("validateaddress",address.ToString());
+            var knownRpc = rpcBatch.SendCommandAsync("validateaddress", address.ToString());
 
             await rpcBatch.SendBatchAsync();
 
@@ -321,7 +326,6 @@ namespace Blockcore.IntegrationTests.RPC
         //[Fact]
         //public void CanAddNodes()
         //{
-
         //    using (var builder = NodeBuilder.Create(this))
         //    {
         //        CoreNode nodeA = builder.CreateStratisPosNode();

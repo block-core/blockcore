@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Moq;

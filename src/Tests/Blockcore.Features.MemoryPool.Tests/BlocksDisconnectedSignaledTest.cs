@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.MemoryPool.Interfaces;
-using Blockcore.Primitives;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;

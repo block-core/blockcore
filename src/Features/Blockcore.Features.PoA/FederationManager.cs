@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Features.PoA.Events;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
@@ -189,7 +191,7 @@ namespace Blockcore.Features.PoA
     public class FederationManager : FederationManagerBase
     {
         public FederationManager(NodeSettings nodeSettings, Network network, ILoggerFactory loggerFactory, IKeyValueRepository keyValueRepo, ISignals signals)
-            :base(nodeSettings, network, loggerFactory, keyValueRepo, signals)
+            : base(nodeSettings, network, loggerFactory, keyValueRepo, signals)
         {
         }
 

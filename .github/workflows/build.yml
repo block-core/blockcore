@@ -1,0 +1,57 @@
+name: Build
+
+on: 
+  push:
+    branches:
+      - master
+  repository_dispatch:
+    types: [build]
+  workflow_dispatch:
+
+jobs:
+  
+  buildAndUnitTest:
+
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+    
+    env:
+      SOLUTION_PATH: 'src/Blockcore.sln'
+      BUILD_CONFIGURATION: 'Release'
+
+    steps:
+
+    - uses: actions/checkout@v1
+      name: Checkout
+      
+    - name: Setup Node.js (12.x)
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: Variables
+      run: |
+        echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
+      shell: bash
+
+    - name: Unit Test
+      run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+
+    - name: Nuget Pack
+      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
+
+    - name: Release
+      if: matrix.os == 'ubuntu-latest'
+      uses: sondreb/action-release@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        folder: "${{github.workspace}}/package/"
+        draft: true
+        prerelease: false
+        body: ''
+        name: "Blockcore ${{env.VERSION}}"
+        tag: ${{env.VERSION}}

@@ -1,9 +1,15 @@
 using System;
 using System.Collections.Generic;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks;
 using Impleum.Networks.Policies;
 using Impleum.Networks.Rules;
 using NBitcoin;
@@ -66,7 +72,7 @@ namespace Impleum.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
-            this.Consensus = new NBitcoin.Consensus(
+            this.Consensus = new Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: ImpleumSetup.CoinType,
@@ -95,14 +101,18 @@ namespace Impleum.Networks
                 minimumChainWork: null,
                 isProofOfStake: true,
                 lastPowBlock: ImpleumSetup.LastPowBlock,
-                proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-                proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+                proofOfStakeLimit: new BigInteger(uint256
+                    .Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+                proofOfStakeLimitV2: new BigInteger(uint256
+                    .Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
                 proofOfStakeReward: Money.Coins(ImpleumSetup.PoSBlockReward),
                 proofOfStakeTimestampMask: ImpleumSetup.ProofOfStakeTimestampMask
-            );
+            )
+            {
+                PosEmptyCoinbase = ImpleumSetup.IsPoSv3(), 
+                PosUseTimeFieldInKernalHash = ImpleumSetup.IsPoSv3()
+            };
 
-            this.Consensus.PosEmptyCoinbase = ImpleumSetup.IsPoSv3();
-            this.Consensus.PosUseTimeFieldInKernalHash = ImpleumSetup.IsPoSv3();
 
             // TODO: Set your Base58Prefixes
             this.Base58Prefixes = new byte[12][];
@@ -116,9 +126,9 @@ namespace Impleum.Networks
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
             this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
             this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
+            //this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            this.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
+            //this.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(ImpleumSetup.Main.CoinTicker);

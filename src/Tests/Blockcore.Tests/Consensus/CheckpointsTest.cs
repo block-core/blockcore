@@ -2,6 +2,8 @@
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using NBitcoin;
 using Xunit;

@@ -11,6 +11,7 @@ using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.FeeFilter;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;

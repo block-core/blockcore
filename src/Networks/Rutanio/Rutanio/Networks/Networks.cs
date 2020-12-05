@@ -1,3 +1,4 @@
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Rutanio.Networks

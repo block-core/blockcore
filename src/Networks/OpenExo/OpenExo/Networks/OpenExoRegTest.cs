@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Networks;
+using Blockcore.P2P;
 using OpenExo.Networks.Consensus;
 using OpenExo.Networks.Deployments;
 using OpenExo.Networks.Policies;
@@ -76,7 +80,7 @@ namespace OpenExo.Networks
                 [OpenExoBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
             };
 
-            Consensus = new NBitcoin.Consensus(
+            Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,

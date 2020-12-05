@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.Checkpoints;
 using NBitcoin;
 
 namespace OpenExo.Networks.Setup

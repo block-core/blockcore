@@ -8,11 +8,15 @@ using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Controllers.Models;
 using Blockcore.Features.RPC.Exceptions;
+using Blockcore.Interfaces;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using NBitcoin.Networks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

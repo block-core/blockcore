@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using Blockcore.Builder;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking;

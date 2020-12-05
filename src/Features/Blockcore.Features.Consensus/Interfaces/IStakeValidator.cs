@@ -1,5 +1,9 @@
 ﻿using System;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Utilities;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;

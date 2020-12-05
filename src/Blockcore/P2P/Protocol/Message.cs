@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Blockcore.Consensus;
+using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using NBitcoin;
 using NBitcoin.Crypto;

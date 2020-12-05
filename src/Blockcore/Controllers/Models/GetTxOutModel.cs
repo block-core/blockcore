@@ -1,4 +1,7 @@
-﻿using Blockcore.Utilities;
+﻿using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Networks;
+using Blockcore.Utilities;
 using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;

@@ -7,6 +7,7 @@ using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.Networks;
 using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Api.Controllers
@@ -171,7 +172,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 if (!string.IsNullOrEmpty(request.Address))
                 {
-                    query = query.Where(x => x.Address.Address == request.Address);
+                    query = query.Where(x => x.Address.Address == request.Address || x.Address.Bech32Address == request.Address);
                 }
 
                 // Sorting the history items by descending dates. That includes received and sent dates.

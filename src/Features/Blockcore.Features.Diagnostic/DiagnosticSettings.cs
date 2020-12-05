@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Features.Diagnostic.PeerDiagnostic;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

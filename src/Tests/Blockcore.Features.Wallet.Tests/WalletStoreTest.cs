@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Blockcore.Configuration;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Consensus.ValidationResults;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
@@ -307,14 +310,14 @@ namespace Blockcore.Features.Wallet.Tests
                 IsCoinBase = true,
                 IsCoinStake = true,
                 IsColdCoinStake = false,
-                CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00"),
+                CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00", new CultureInfo("nl-BE")),
                 IsPropagated = false,
                 SpendingDetails = new SpendingDetails
                 {
                     BlockIndex = 10,
                     BlockHeight = 20,
                     Hex = "SpentTrxHex",
-                    CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00"),
+                    CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00", new CultureInfo("nl-BE")),
                     IsCoinStake = true,
                     TransactionId = new uint256(100),
                     Payments = new List<PaymentDetails>

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.PoA.Voting;
 using Blockcore.Features.PoA.Voting.ConsensusRules;
 using NBitcoin;

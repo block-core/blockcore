@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Controllers;
 using Blockcore.Controllers.Models;
-using Blockcore.Features.BlockStore.Api.Contollers;
+using Blockcore.Features.BlockStore.Api.Controllers;
 using Blockcore.Features.BlockStore.Api.Models;
 using Microsoft.Extensions.Logging;
 

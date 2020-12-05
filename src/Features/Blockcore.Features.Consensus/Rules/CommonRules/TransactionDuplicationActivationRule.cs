@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

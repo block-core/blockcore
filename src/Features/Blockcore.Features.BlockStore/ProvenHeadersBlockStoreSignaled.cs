@@ -1,8 +1,10 @@
 ﻿using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Connection;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
-using Blockcore.Primitives;
+using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;

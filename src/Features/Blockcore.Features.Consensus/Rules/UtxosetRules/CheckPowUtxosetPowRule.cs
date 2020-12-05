@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

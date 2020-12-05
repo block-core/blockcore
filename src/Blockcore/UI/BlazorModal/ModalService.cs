@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Components;
 using System;
+using Microsoft.AspNetCore.Components;
 
-namespace BlazorModal.Services
+namespace Blockcore.UI.BlazorModal
 {
     public class ModalService
     {

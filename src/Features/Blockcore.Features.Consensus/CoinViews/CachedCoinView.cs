@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Blockcore.Base;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
@@ -130,7 +135,16 @@ namespace Blockcore.Features.Consensus.CoinViews
 
         private readonly Random random;
 
-        public CachedCoinView(Network network, ICheckpoints checkpoints, ICoindb coindb, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, INodeStats nodeStats, ConsensusSettings consensusSettings, StakeChainStore stakeChainStore = null, IRewindDataIndexCache rewindDataIndexCache = null)
+        public CachedCoinView(
+            Network network,
+            ICheckpoints checkpoints,
+            ICoindb coindb,
+            IDateTimeProvider dateTimeProvider,
+            ILoggerFactory loggerFactory,
+            INodeStats nodeStats,
+            ConsensusSettings consensusSettings,
+            StakeChainStore stakeChainStore = null,
+            IRewindDataIndexCache rewindDataIndexCache = null)
         {
             Guard.NotNull(coindb, nameof(CachedCoinView.coindb));
 
@@ -304,36 +318,42 @@ namespace Blockcore.Features.Consensus.CoinViews
         }
 
         /// <summary>
+        /// Check if periodic flush is required.
+        /// The conditions to flash the cache are if <see cref="CacheFlushTimeIntervalSeconds"/> is elapsed
+        /// or if <see cref="MaxCacheSizeBytes"/> is reached.
+        /// </summary>
+        /// <returns>True if the coinview needs to flush</returns>
+        public bool ShouldFlush()
+        {
+            DateTime now = this.dateTimeProvider.GetUtcNow();
+            bool flushTimeLimit = (now - this.lastCacheFlushTime).TotalSeconds >= this.CacheFlushTimeIntervalSeconds;
+
+            // The size of the cache was reached and most likely TryEvictCacheLocked didn't work
+            // so the cache is polluted with flushable items, then we flush anyway.
+
+            long totalBytes = this.cacheSizeBytes + this.rewindDataSizeBytes;
+            bool flushSizeLimit = totalBytes > this.MaxCacheSizeBytes;
+
+            if (!flushTimeLimit && !flushSizeLimit)
+            {
+                return false;
+            }
+
+            this.logger.LogDebug("Flushing, reasons flushTimeLimit={0} flushSizeLimit={1}.", flushTimeLimit, flushSizeLimit);
+
+            return true;
+        }
+
+        /// <summary>
         /// Finds all changed records in the cache and persists them to the underlying coinview.
         /// </summary>
         /// <param name="force"><c>true</c> to enforce flush, <c>false</c> to flush only if <see cref="lastCacheFlushTime"/> is older than <see cref="CacheFlushTimeIntervalSeconds"/>.</param>
-        /// <remarks>
-        /// WARNING: This method can only be run from <see cref="ConsensusLoop.Execute(System.Threading.CancellationToken)"/> thread context
-        /// or when consensus loop is stopped. Otherwise, there is a risk of race condition when the consensus loop accepts new block.
-        /// </remarks>
         public void Flush(bool force = true)
         {
             if (!force)
             {
-                // Check if periodic flush is reuired.
-                // Ideally this will flush less frequent and always be behind
-                // blockstore which is currently set to 17 sec.
-
-                DateTime now = this.dateTimeProvider.GetUtcNow();
-                bool flushTimeLimit = (now - this.lastCacheFlushTime).TotalSeconds >= this.CacheFlushTimeIntervalSeconds;
-
-                // The size of the cache was reached and most likely TryEvictCacheLocked didn't work
-                // so the cahces is pulledted with flushable items, then we flush anyway.
-
-                long totalBytes = this.cacheSizeBytes + this.rewindDataSizeBytes;
-                bool flushSizeLimit = totalBytes > this.MaxCacheSizeBytes;
-
-                if (!flushTimeLimit && !flushSizeLimit)
-                {
+                if (!this.ShouldFlush())
                     return;
-                }
-
-                this.logger.LogDebug("Flushing, reasons flushTimeLimit={0} flushSizeLimit={1}.", flushTimeLimit, flushSizeLimit);
             }
 
             // Before flushing the coinview persist the stake store
@@ -408,7 +428,7 @@ namespace Blockcore.Features.Consensus.CoinViews
                     if (!this.cachedUtxoItems.TryGetValue(output.OutPoint, out CacheItem cacheItem))
                     {
                         // Add outputs to cache, this will happen for two cases
-                        // 1. if a chaced item was evicted
+                        // 1. if a cached item was evicted
                         // 2. for new outputs that are added
 
                         if (output.CreatedFromBlock)
@@ -428,8 +448,8 @@ namespace Blockcore.Features.Consensus.CoinViews
                         }
                         else
                         {
-                            // This can happen if the cashe item was evicted while
-                            // the block was being processed, fetch the outut again from disk.
+                            // This can happen if the cached item was evicted while
+                            // the block was being processed, fetch the output again from disk.
 
                             this.logger.LogDebug("Outpoint '{0}' is not found in cache, creating it.", output.OutPoint);
 
@@ -521,12 +541,12 @@ namespace Blockcore.Features.Consensus.CoinViews
 
                             this.logger.LogDebug("Coin override alllowed for utxo '{0}'.", cacheItem.OutPoint);
 
-                            // Deduct the crurrent script size form the
+                            // Deduct the current script size form the
                             // total cache size, it will be added again later.
                             this.cacheSizeBytes -= cacheItem.GetScriptSize;
 
-                            // Clear this in order to calculate the cache sie
-                            // this will get set later when overriden
+                            // Clear this in order to calculate the cache size
+                            // this will get set later when overridden
                             cacheItem.Coins = null;
                         }
 
@@ -573,27 +593,11 @@ namespace Blockcore.Features.Consensus.CoinViews
                 // When cache is flushed the rewind data will allow to rewind the node up to the
                 // number of rewind blocks.
                 // TODO: move rewind data to use block store.
-                // Rewind data can go away all togetehr if the node uses the blocks in block store
+                // Rewind data can go away all together if the node uses the blocks in block store
                 // to get the rewind information, blockstore persists much more frequent then coin cache
                 // So using block store for rewinds is not entirely impossible.
 
-                uint rewindDataWindow = 10;
-
-                if (this.blockHash.Height >= this.lastCheckpointHeight)
-                {
-                    if (this.network.Consensus.MaxReorgLength != 0)
-                    {
-                        rewindDataWindow = this.network.Consensus.MaxReorgLength + 1;
-                    }
-                    else
-                    {
-                        // TODO: make the rewind data window a configuration
-                        // parameter of evern a network parameter.
-
-                        // For POW assume BTC where a rewind data of 100 is more then enough.
-                        rewindDataWindow = 100;
-                    }
-                }
+                int rewindDataWindow = this.CalculateRewindWindow();
 
                 int rewindToRemove = this.blockHash.Height - (int)rewindDataWindow;
 
@@ -604,6 +608,33 @@ namespace Blockcore.Features.Consensus.CoinViews
                     this.rewindDataSizeBytes -= delete.TotalSize;
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculate the window of how many rewind items to keep in memory.
+        /// </summary>
+        /// <returns></returns>
+        public int CalculateRewindWindow()
+        {
+            uint rewindDataWindow = 10;
+
+            if (this.blockHash.Height >= this.lastCheckpointHeight)
+            {
+                if (this.network.Consensus.MaxReorgLength != 0)
+                {
+                    rewindDataWindow = this.network.Consensus.MaxReorgLength + 1;
+                }
+                else
+                {
+                    // TODO: make the rewind data window a configuration
+                    // parameter of every a network parameter.
+
+                    // For POW assume BTC where a rewind data of 100 is more then enough.
+                    rewindDataWindow = 100;
+                }
+            }
+
+            return (int)rewindDataWindow;
         }
 
         public HashHeightPair Rewind()

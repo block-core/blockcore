@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Interfaces;
-using Blockcore.Primitives;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
@@ -152,9 +155,7 @@ namespace Blockcore.Features.BlockStore
 
             headers.Reverse();
 
-            BlockRepository blockRepository = (BlockRepository)this.blockRepository;
-
-            foreach (Block block in blockRepository.EnumeratehBatch(headers))
+            foreach (Block block in this.blockRepository.EnumerateBatch(headers))
             {
                 if (block == null)
                     throw new Exception();

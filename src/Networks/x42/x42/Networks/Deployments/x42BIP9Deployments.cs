@@ -1,3 +1,6 @@
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 
 namespace x42.Networks.Deployments

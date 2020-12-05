@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using Blockcore.Controllers;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Interfaces;
-using Blockcore.Primitives;
+using Blockcore.Networks;
 using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 

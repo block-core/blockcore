@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Checkpoints;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Networks;
@@ -22,7 +24,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
         public RewindDataIndexCacheTest() : base(new StratisTest())
         {
             // override max reorg to 10
-            Type consensusType = typeof(NBitcoin.Consensus);
+            Type consensusType = typeof(Blockcore.Consensus.Consensus);
             consensusType.GetProperty("MaxReorgLength").SetValue(this.Network.Consensus, (uint)10);
         }
 

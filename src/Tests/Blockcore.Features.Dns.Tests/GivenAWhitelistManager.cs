@@ -6,6 +6,7 @@ using System.Net;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;

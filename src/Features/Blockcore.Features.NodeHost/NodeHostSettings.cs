@@ -2,6 +2,7 @@
 using System.Text;
 using System.Timers;
 using Blockcore.Configuration;
+using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

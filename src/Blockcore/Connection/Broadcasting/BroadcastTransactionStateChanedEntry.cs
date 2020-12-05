@@ -1,10 +1,11 @@
 ﻿using System;
+using Blockcore.Consensus.TransactionInfo;
 
 namespace Blockcore.Connection.Broadcasting
 {
     public class BroadcastTransactionStateChanedEntry
     {
-        public NBitcoin.Transaction Transaction { get; }
+        public Transaction Transaction { get; }
 
         public TransactionBroadcastState TransactionBroadcastState { get; set; }
 
@@ -12,7 +13,7 @@ namespace Blockcore.Connection.Broadcasting
 
         public bool CanRespondToGetData { get; set; }
 
-        public BroadcastTransactionStateChanedEntry(NBitcoin.Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage)
+        public BroadcastTransactionStateChanedEntry(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage)
         {
             this.Transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
             this.TransactionBroadcastState = transactionBroadcastState;

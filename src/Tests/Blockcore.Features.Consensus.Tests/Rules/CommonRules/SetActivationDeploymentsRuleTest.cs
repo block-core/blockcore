@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Blockcore.Base.Deployments;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using NBitcoin;
 using Xunit;
-using static NBitcoin.Transaction;
+using static Blockcore.Consensus.TransactionInfo.Transaction;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {

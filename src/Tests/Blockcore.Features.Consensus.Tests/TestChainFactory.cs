@@ -8,9 +8,15 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Consensus.Validators;
 using Blockcore.Features.BlockStore;
+using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
@@ -19,6 +25,7 @@ using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.Miner;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.Signals;
@@ -149,7 +156,7 @@ namespace Blockcore.Features.Consensus.Tests
 
             var dBreezeSerializer = new DataStoreSerializer(network.Consensus.ConsensusFactory);
 
-            var blockRepository = new BlockRepository(testChainContext.Network, dataFolder, testChainContext.LoggerFactory, dBreezeSerializer);
+            var blockRepository = new LeveldbBlockRepository(testChainContext.Network, dataFolder, testChainContext.LoggerFactory, dBreezeSerializer);
 
             var blockStoreFlushCondition = new BlockStoreQueueFlushCondition(testChainContext.ChainState, testChainContext.InitialBlockDownloadState);
 
@@ -265,6 +272,5 @@ namespace Blockcore.Features.Consensus.Tests
             var res = await testChainContext.Consensus.BlockMinedAsync(newBlock.Block);
             Assert.NotNull(res);
         }
-
     }
 }

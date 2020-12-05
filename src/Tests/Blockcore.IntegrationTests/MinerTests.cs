@@ -10,7 +10,12 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
@@ -175,7 +180,7 @@ namespace Blockcore.IntegrationTests
                 {
                     FullValidationConsensusRule rule = null;
                     if (ruleType == typeof(FlushUtxosetRule))
-                        rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object);
+                        rule = new FlushUtxosetRule(new Mock<IInitialBlockDownloadState>().Object, new Mock<IChainRepository>().Object, new Mock<ChainIndexer>().Object, new Mock<INodeLifetime>().Object, new Mock<IChainState>().Object);
                     else
                         rule = Activator.CreateInstance(ruleType) as FullValidationConsensusRule;
 

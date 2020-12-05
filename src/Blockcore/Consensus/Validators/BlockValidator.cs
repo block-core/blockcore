@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;

@@ -1,4 +1,6 @@
-using NBitcoin;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 
 namespace Impleum.Networks.Deployments
 {

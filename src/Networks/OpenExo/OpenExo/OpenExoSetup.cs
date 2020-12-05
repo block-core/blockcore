@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.Consensus.Checkpoints;
 using OpenExo.Networks;
 using OpenExo.Networks.Setup;
 using NBitcoin;
@@ -35,8 +36,8 @@ namespace OpenExo
             DefaultRPCPort = 4561,
             DefaultAPIPort = 39120,
             DefaultSignalRPort = 39620,
-            PubKeyAddress = 28,  // R https://en.bitcoin.it/wiki/List_of_address_prefixes
-            ScriptAddress = 87, // r
+            PubKeyAddress = 28,  // C https://en.bitcoin.it/wiki/List_of_address_prefixes
+            ScriptAddress = 87, // c
             SecretAddress = 156,
             GenesisTime = 1523205120,
             GenesisNonce = 842767,

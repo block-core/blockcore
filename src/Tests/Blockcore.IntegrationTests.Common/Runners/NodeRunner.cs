@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.Networks;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 

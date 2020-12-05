@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using Blockcore.Consensus.Rules;
 using Blockcore.Utilities;
-using NBitcoin.Rules;
 
 namespace Blockcore.Consensus.PerformanceCounters.Rules
 {

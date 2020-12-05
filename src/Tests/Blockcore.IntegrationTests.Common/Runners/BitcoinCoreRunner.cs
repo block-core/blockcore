@@ -46,7 +46,7 @@ namespace Blockcore.IntegrationTests.Common.Runners
                     return false;
                 }
             }, cancellationToken: new CancellationTokenSource(duration).Token,
-                failureReason: $"Failed to kill {this.GetType()} process number:{this.process.Id} within {duration} seconds");
+                failureReason: $"Failed to kill {this.GetType()} process number:{this.process?.Id} within {duration} seconds");
         }
 
         public override void Start()

@@ -31,6 +31,7 @@ namespace Blockcore.Tests.Utilities
         /// </para>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void StopwatchDisposable_MeasuresPerformanceCorrectly()
         {
             // Don't run this test in a Mac environment as it takes too long,

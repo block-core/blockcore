@@ -198,6 +198,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanHandleReorgs()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -233,6 +234,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void TestDBreezeInsertOrder()
         {
             using (NodeContext ctx = NodeContext.Create(this))

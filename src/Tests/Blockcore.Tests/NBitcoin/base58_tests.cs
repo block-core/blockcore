@@ -8,7 +8,6 @@ using Xunit;
 
 namespace NBitcoin.Tests
 {
-    [Trait("Core", "Core")]
     public class base58_tests
     {
         public static IEnumerable<object[]> DataSet
@@ -76,9 +75,7 @@ namespace NBitcoin.Tests
             AssertEx.CollectionEquals(result, expected2);
         }
 
-
         [Fact]
-        [Trait("Core", "Core")]
         public void base58_keys_valid_parse()
         {
             TestCase[] tests = TestCase.read_json(TestDataLocations.GetFileFromDataFolder("base58_keys_valid.json"));
@@ -135,10 +132,8 @@ namespace NBitcoin.Tests
             }
         }
 
-
         // Goal: check that generated keys match test vectors
         [Fact]
-        [Trait("Core", "Core")]
         public void base58_keys_valid_gen()
         {
             TestCase[] tests = TestCase.read_json(TestDataLocations.GetFileFromDataFolder("base58_keys_valid.json"));

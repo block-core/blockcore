@@ -23,6 +23,8 @@
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\..\..\Features\Persistence\Blockcore.Features.Persistence.LevelDb.CorePackage\Blockcore.Features.Persistence.LevelDb.CorePackage.csproj" />
+    <ProjectReference Include="..\..\..\Features\Persistence\Blockcore.Features.Persistence.RocksDb.CorePackage\Blockcore.Features.Persistence.RocksDb.CorePackage.csproj" />
     <ProjectReference Include="..\..\..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
 </Project>

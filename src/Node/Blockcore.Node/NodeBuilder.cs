@@ -10,11 +10,14 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.Dns;
+using Blockcore.Persistence;
 
 namespace Blockcore.Node
 {
     public static class NodeBuilder
     {
+        public static PersistenceProviderManager persistenceProviderManager;
+
         public static IFullNodeBuilder Create(string chain, NodeSettings settings)
         {
             chain = chain.ToUpperInvariant();
@@ -64,6 +67,6 @@ namespace Blockcore.Node
 
                 nodeBuilder.UseDns();
             }
-        }        
+        }
     }
 }

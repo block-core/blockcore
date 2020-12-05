@@ -268,6 +268,7 @@ namespace Blockcore.Features.NodeHost.Tests
         private static NodeHostSettings FullNodeSetup(NodeSettings nodeSettings)
         {
             return new FullNodeBuilder()
+                .UsePersistenceProviderMananger(new TestPersistenceProviderManager(nodeSettings))
                 .UseNodeSettings(nodeSettings)
                 .UseNodeHost()
                 .UsePowConsensus()

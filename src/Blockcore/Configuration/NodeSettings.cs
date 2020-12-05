@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
@@ -109,7 +110,7 @@ namespace Blockcore.Configuration
         /// <summary>
         /// The type of database to use for the node (this includes consensus, store, chain, and the common key value store).
         /// </summary>
-        public DbType DbType { get; private set; }
+        public string DbType { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the object.
@@ -193,7 +194,7 @@ namespace Blockcore.Configuration
 
             // Ensure the network being used is registered and we have the correct Network object reference.
             this.Network = NetworkRegistration.Register(this.Network);
-            this.DbType = this.ConfigReader.GetOrDefault<DbType>("dbtype", DbType.Leveldb, this.Logger);
+            this.DbType = this.ConfigReader.GetOrDefault<string>("dbtype", null, this.Logger);
 
             // Set the full data directory path.
             if (this.DataDir == null)
@@ -262,7 +263,8 @@ namespace Blockcore.Configuration
         /// Creates the configuration file if it does not exist.
         /// </summary>
         /// <param name="features">The features for which to include settings in the configuration file.</param>
-        public void CreateDefaultConfigurationFile(List<IFeatureRegistration> features)
+        /// <param name="fullNodeBuilder">The full node builder.</param>
+        public void CreateDefaultConfigurationFile(List<IFeatureRegistration> features, IFullNodeBuilder fullNodeBuilder)
         {
             // If the config file does not exist yet then create it now.
             if (!File.Exists(this.ConfigurationFile))
@@ -271,7 +273,7 @@ namespace Blockcore.Configuration
 
                 var builder = new StringBuilder();
 
-                BuildDefaultConfigurationFile(builder, this.Network);
+                BuildDefaultConfigurationFile(builder, this.Network, fullNodeBuilder);
 
                 foreach (IFeatureRegistration featureRegistration in features)
                 {
@@ -364,7 +366,7 @@ namespace Blockcore.Configuration
         /// Displays command-line help.
         /// </summary>
         /// <param name="network">The network to extract values from.</param>
-        public static void PrintHelp(Network network)
+        public static void PrintHelp(Network network, IFullNodeBuilder fullNodeBuilder)
         {
             Guard.NotNull(network, nameof(network));
 
@@ -391,7 +393,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"-fallbackfee=<number>     Fallback fee rate. Defaults to {network.FallbackFee}.");
             builder.AppendLine($"-minrelaytxfee=<number>   Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");
 
-            builder.AppendLine($"-dbtype=<name>            Which db to use. options: {DbType.Leveldb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
+            builder.AppendLine($"-dbtype=<name>            Which db to use. Defaults to {fullNodeBuilder.PersistenceProviderManager.GetDefaultProvider()}. Available options: {string.Join(", ", fullNodeBuilder.PersistenceProviderManager.GetAvailableProviders())}.");
 
             defaults.Logger.LogInformation(builder.ToString());
 
@@ -403,7 +405,8 @@ namespace Blockcore.Configuration
         /// </summary>
         /// <param name="builder">The string builder to add the settings to.</param>
         /// <param name="network">The network to base the defaults off.</param>
-        public static void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
+        /// <param name="fullNodeBuilder">The full node builder.</param>
+        public static void BuildDefaultConfigurationFile(StringBuilder builder, Network network, IFullNodeBuilder fullNodeBuilder)
         {
             builder.AppendLine("####Node Settings####");
             builder.AppendLine($"#Test network. Defaults to 0.");
@@ -418,7 +421,7 @@ namespace Blockcore.Configuration
             builder.AppendLine($"#Minimum relay fee rate. Defaults to {network.MinRelayTxFee}.");
             builder.AppendLine($"#minrelaytxfee={network.MinRelayTxFee}");
             builder.AppendLine();
-            builder.AppendLine($"#Which db to use. options: {DbType.Leveldb} (default),{DbType.Rocksdb},{DbType.Faster},{DbType.DBTrie}.");
+            builder.AppendLine($"#Which db to use. Defaults to {fullNodeBuilder.PersistenceProviderManager.GetDefaultProvider()}. Available options: {string.Join(", ", fullNodeBuilder.PersistenceProviderManager.GetAvailableProviders())}.");
             builder.AppendLine($"#dbtype=<name>");
             builder.AppendLine();
 
@@ -430,13 +433,5 @@ namespace Blockcore.Configuration
         {
             this.LoggerFactory.Dispose();
         }
-    }
-
-    public enum DbType
-    {
-        Leveldb,
-        DBTrie,
-        Faster,
-        Rocksdb
     }
 }

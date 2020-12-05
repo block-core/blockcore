@@ -1,28 +1,23 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Blockcore.Base;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
-using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
-using Blockcore.Configuration.Settings;
 using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Features.BlockStore.Pruning;
-using Blockcore.Features.BlockStore.Repository;
-using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.BlockStore.Tests")]
 
@@ -205,7 +200,7 @@ namespace Blockcore.Features.BlockStore
                     {
                         services.AddSingleton<IBlockStoreQueue, BlockStoreQueue>().AddSingleton<IBlockStore>(provider => provider.GetService<IBlockStoreQueue>());
 
-                        AddDbImplementation(services, fullNodeBuilder.NodeSettings);
+                        fullNodeBuilder.PersistenceProviderManager.RequirePersistence<BlockStoreFeature>(services);
 
                         if (fullNodeBuilder.Network.Consensus.IsProofOfStake)
                             services.AddSingleton<BlockStoreSignaled, ProvenHeadersBlockStoreSignaled>();
@@ -222,23 +217,6 @@ namespace Blockcore.Features.BlockStore
             });
 
             return fullNodeBuilder;
-        }
-
-        private static void AddDbImplementation(IServiceCollection services, NodeSettings settings)
-        {
-            if (settings.DbType == DbType.Leveldb)
-            {
-                services.AddSingleton<IBlockRepository, LeveldbBlockRepository>();
-                services.AddSingleton<IPrunedBlockRepository, LeveldbPrunedBlockRepository>();
-                return;
-            }
-
-            if (settings.DbType == DbType.Rocksdb)
-            {
-                services.AddSingleton<IBlockRepository, RocksdbBlockRepository>();
-                services.AddSingleton<IPrunedBlockRepository, RocksdbPrunedBlockRepository>();
-                return;
-            }
         }
     }
 }

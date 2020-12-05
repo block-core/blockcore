@@ -8,17 +8,16 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using DBreeze.Utils;
+using LevelDB;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using RocksDbSharp;
 
-namespace Blockcore.Features.Consensus.ProvenBlockHeaders
+namespace Blockcore.Features.Consensus.Persistence.LevelDb
 {
     /// <summary>
     /// Persistent implementation of the <see cref="ProvenBlockHeader"/> DBreeze repository.
     /// </summary>
-    public class RocksdbProvenBlockHeaderRepository : IProvenBlockHeaderRepository
+    public class LevelDbProvenBlockHeaderRepository : IProvenBlockHeaderRepository
     {
         /// <summary>
         /// Instance logger.
@@ -28,7 +27,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <summary>
         /// Access to database.
         /// </summary>
-        private readonly RocksDb rocksdb;
+        private readonly DB leveldb;
 
         private object locker;
 
@@ -59,10 +58,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// Initializes a new instance of the object.
         /// </summary>
         /// <param name="network">Specification of the network the node runs on - RegTest/TestNet/MainNet.</param>
-        /// <param name="folder"><see cref="RocksdbProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
+        /// <param name="folder"><see cref="ProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
         /// <param name="loggerFactory">Factory to create a logger for this type.</param>
         /// <param name="dataStoreSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
-        public RocksdbProvenBlockHeaderRepository(Network network, DataFolder folder, ILoggerFactory loggerFactory,
+        public LevelDbProvenBlockHeaderRepository(Network network, DataFolder folder, ILoggerFactory loggerFactory,
             DataStoreSerializer dataStoreSerializer)
         : this(network, folder.ProvenBlockHeaderPath, loggerFactory, dataStoreSerializer)
         {
@@ -72,10 +71,10 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// Initializes a new instance of the object.
         /// </summary>
         /// <param name="network">Specification of the network the node runs on - RegTest/TestNet/MainNet.</param>
-        /// <param name="folder"><see cref="RocksdbProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
+        /// <param name="folder"><see cref="ProvenBlockHeaderRepository"/> folder path to the DBreeze database files.</param>
         /// <param name="loggerFactory">Factory to create a logger for this type.</param>
         /// <param name="dataStoreSerializer">The serializer to use for <see cref="IBitcoinSerializable"/> objects.</param>
-        public RocksdbProvenBlockHeaderRepository(Network network, string folder, ILoggerFactory loggerFactory,
+        public LevelDbProvenBlockHeaderRepository(Network network, string folder, ILoggerFactory loggerFactory,
             DataStoreSerializer dataStoreSerializer)
         {
             Guard.NotNull(network, nameof(network));
@@ -87,8 +86,8 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             Directory.CreateDirectory(folder);
 
             // Open a connection to a new DB and create if not found
-            var options = new DbOptions().SetCreateIfMissing(true);
-            this.rocksdb = RocksDb.Open(options, folder);
+            var options = new Options { CreateIfMissing = true };
+            this.leveldb = new DB(options, folder);
 
             this.locker = new object();
 
@@ -124,7 +123,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
                 lock (this.locker)
                 {
-                    row = this.rocksdb.Get(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(blockHeight)));
+                    row = this.leveldb.Get(DBH.Key(provenBlockHeaderTable, BitConverter.GetBytes(blockHeight)));
                 }
 
                 if (row != null)
@@ -169,7 +168,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
             lock (this.locker)
             {
-                this.rocksdb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dataStoreSerializer.Serialize(newTip));
+                this.leveldb.Put(DBH.Key(blockHashHeightTable, blockHashHeightKey), this.dataStoreSerializer.Serialize(newTip));
             }
         }
 
@@ -186,7 +185,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 
                 lock (this.locker)
                 {
-                    this.rocksdb.Write(batch);
+                    this.leveldb.Write(batch);
                 }
             }
 
@@ -205,7 +204,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             byte[] row = null;
             lock (this.locker)
             {
-                row = this.rocksdb.Get(DBH.Key(blockHashHeightTable, blockHashHeightKey));
+                row = this.leveldb.Get(DBH.Key(blockHashHeightTable, blockHashHeightKey));
             }
 
             if (row != null)
@@ -217,7 +216,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// <inheritdoc />
         public void Dispose()
         {
-            this.rocksdb?.Dispose();
+            this.leveldb?.Dispose();
         }
     }
 }

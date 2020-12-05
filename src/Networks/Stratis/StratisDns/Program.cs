@@ -11,10 +11,8 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Utilities;
-using NBitcoin.Protocol;
 
 namespace StratisDnsD
 {
@@ -33,7 +31,6 @@ namespace StratisDnsD
             try
             {
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Stratis, args: args);
-
                 var dnsSettings = new DnsSettings(nodeSettings);
 
                 if (string.IsNullOrWhiteSpace(dnsSettings.DnsHostName) || string.IsNullOrWhiteSpace(dnsSettings.DnsNameServer) || string.IsNullOrWhiteSpace(dnsSettings.DnsMailBox))

@@ -18,7 +18,7 @@ namespace Impleum.Networks
 
           this.Name = ImpleumSetup.RegTest.Name;
           this.CoinTicker = ImpleumSetup.RegTest.CoinTicker;
-          this.Magic = ConversionTools.ConvertToUInt32(ImpleumSetup.Magic, true);
+          this.Magic = ImpleumSetup.Magic;
           this.RootFolderName = ImpleumSetup.RegTest.RootFolderName;
           this.DefaultPort = ImpleumSetup.RegTest.DefaultPort;
           this.DefaultRPCPort = ImpleumSetup.RegTest.DefaultRPCPort;

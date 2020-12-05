@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.P2P;
 using NBitcoin;
@@ -8,143 +9,101 @@ using NBitcoin.Protocol;
 
 namespace Impleum
 {
-   public class ImpleumSetup
-   {
-      public const string FileNamePrefix = "impleum";
-      public const string ConfigFileName = "impleum.conf";
-      public const string Magic = "51-11-41-31";
-      public const int CoinType = 769; // SLIP-0044: https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-      public const decimal PremineReward = 1000000;
-      public const decimal PoWBlockReward = 48;
-      public const decimal PoSBlockReward = 5;
-      public const int LastPowBlock = 100000;
-      public const string GenesisText = "https://cryptocrimson.com/news/apple-payment-request-api-ripple-interledger-protocol"; // The New York Times, 2020-04-16
-      public static TimeSpan TargetSpacing = TimeSpan.FromSeconds(64);
-      public const uint ProofOfStakeTimestampMask = 0x0000000F; // 0x0000003F // 64 sec
-      public const int PoSVersion = 3;
+    public class ImpleumSetup
+    {
+        public const string ConfigFileName = "impleumx.conf";
+        public static readonly uint Magic = BitConverter.ToUInt32(Encoding.ASCII.GetBytes("ImpX"));
 
-      public class Main
-      {
-         public const string Name = "ImpleumMain";
-         public const string RootFolderName = "impleum";
-         public const string CoinTicker = "IMPL";
-         public const int DefaultPort = 16171;
-         public const int DefaultRPCPort = 16172;
-         public const int DefaultAPIPort = 16173;
-         public const int DefaultSignalRPort = 16174;
-         public const int PubKeyAddress = 102; // B https://en.bitcoin.it/wiki/List_of_address_prefixes
-         public const int ScriptAddress = 125; // b
-         public const int SecretAddress = 191;
+        /// <summary>
+        /// ImpleumX cointype. For Impleum it was 769
+        /// </summary>
+        public const int CoinType = 770; // SLIP-0044: https://github.com/satoshilabs/slips/blob/master/slip-0044.md 
 
-         public const uint GenesisTime = 1523364655;
-         public const uint GenesisNonce = 2380297;
-         public const uint GenesisBits = 0x1e0fffff;
-         public const int GenesisVersion = 1;
-         public static Money GenesisReward = Money.Zero;
-         public const string HashGenesisBlock = "0x02a8be139ec629b13df22e7abc7f9ad5239df39efaf2f5bf3ab5e4d102425dbe";
-         public const string HashMerkleRoot = "0xbd3233dd8d4e7ce3ee8097f4002b4f9303000a5109e02a402d41d2faf74eb244";
+        public const decimal PremineReward = 8500000;
+        public const decimal PoWBlockReward = 18;
+        public const decimal PoSBlockReward = 1;
+        public const long MaxSupply = 10000000 * Money.COIN;
+        public const int LastPowBlock = 675;
+        public const string GenesisText = "https://www.bloomberg.com/opinion/articles/2020-11-29/bitcoin-and-china-are-winning-the-covid-19-monetary-revolution"; // Bloomberg, 2020-11-2
+        public static TimeSpan TargetSpacing = TimeSpan.FromSeconds(45);
+        public const uint ProofOfStakeTimestampMask = 0x0000000F; // 0x0000003F // 64 sec
+        public const int PoSVersion = 4;
 
-         public static List<DNSSeedData> DNS = new List<DNSSeedData>
-         {
-            // TODO: Add additional DNS seeds here
-            new DNSSeedData("impleum.com", "impleum.com"),
-            new DNSSeedData("explorer.impleum.com", "explorer.impleum.com"),
-            new DNSSeedData("seed.impl.blockcore.net", "seed.impl.blockcore.net"),
-         };
+        internal class Main
+        {
+            public const string Name = "ImpleumXMain";
+            public const string RootFolderName = "impleumx";
+            public const string CoinTicker = "IMPLX";
+            public const int DefaultPort = 18105;
+            public const int DefaultRPCPort = 18104;
+            public const int DefaultAPIPort = 18103;
+            public const int PubKeyAddress = 76; // X https://en.bitcoin.it/wiki/List_of_address_prefixes
+            public const int ScriptAddress = 141; // y or z
+            public const int SecretAddress = PubKeyAddress + 128;
 
-         public static List<NetworkAddress> Nodes = new List<NetworkAddress>
-         {
-            // TODO: Add additional seed nodes here
-            new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
-            new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort),
-         };
+            public const uint GenesisTime = 1607175143; // ~5 December 2020 - https://www.unixtimestamp.com/
+            public const uint GenesisNonce = 2380297; // Set to 1 until correct value found
+            public const uint GenesisBits = 0x1e0fffff; // The difficulty target
+            public const int GenesisVersion = 536870912; // 'Empty' BIP9 deployments as they are all activated from genesis already
+            public static Money GenesisReward = Money.Zero;
+            public const string HashGenesisBlock = "0x02a8be139ec629b13df22e7abc7f9ad5239df39efaf2f5bf3ab5e4d102425dbe";
+            public const string HashMerkleRoot = "0xbd3233dd8d4e7ce3ee8097f4002b4f9303000a5109e02a402d41d2faf74eb244";
 
-         public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
-         {
-            // TODO: Add checkpoints as the network progresses.
-         };
-      }
+            public static List<DNSSeedData> DNS = new List<DNSSeedData>
+            {
+                // new DNSSeedData("impleum.com", "impleum.com"),
+              //   new DNSSeedData("explorer.impleum.com", "explorer.impleum.com"),
+              //   new DNSSeedData("seed.impl.blockcore.net", "seed.impl.blockcore.net"),
+            };
 
-      public class RegTest
-      {
-         public const string Name = "ImpleumRegTest";
-         public const string RootFolderName = "ImpleumRegTest";
-         public const string CoinTicker = "TIMPL";
-         public const int DefaultPort = 26171;
-         public const int DefaultRPCPort = 26172;
-         public const int DefaultAPIPort = 26173;
-         public const int DefaultSignalRPort = 26174;
-         public const int PubKeyAddress = 111;
-         public const int ScriptAddress = 196;
-         public const int SecretAddress = 239;
+            public static List<NetworkAddress> Nodes = new List<NetworkAddress>
+            {
+            //    new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
+             //   new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort)
+            };
 
-         public const uint GenesisTime = 1523364655;
-         public const uint GenesisNonce = 2380297;
-         public const uint GenesisBits = 0x1e0fffff;
-         public const int GenesisVersion = 1;
-         public static Money GenesisReward = Money.Zero;
-         public const string HashGenesisBlock = "0x02a8be139ec629b13df22e7abc7f9ad5239df39efaf2f5bf3ab5e4d102425dbe";
-         public const string HashMerkleRoot = "0xbd3233dd8d4e7ce3ee8097f4002b4f9303000a5109e02a402d41d2faf74eb244";
+            public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
+            {
+                // TODO: Add checkpoints as the network progresses.
+            };
+        }
 
-         public static List<DNSSeedData> DNS = new List<DNSSeedData>
-         {
-            // TODO: Add additional DNS seeds here
-            new DNSSeedData("seedregtest1.impl.blockcore.net", "seedregtest1.impl.blockcore.net"),
-            new DNSSeedData("seedregtest2.impl.blockcore.net", "seedregtest2.impl.blockcore.net"),
-            new DNSSeedData("seedregtest.impl.blockcore.net", "seedregtest.impl.blockcore.net"),
-         };
 
-         public static List<NetworkAddress> Nodes = new List<NetworkAddress>
-         {
-            // TODO: Add additional seed nodes here
-            new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
-            new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort),
-         };
+        internal class Test
+        {
+            public const string Name = "ImpleumXTest";
+            public const string RootFolderName = "impleumxTest";
+            public const string CoinTicker = "TIMPLX";
+            public const int DefaultPort = 36171;
+            public const int DefaultRPCPort = 36172;
+            public const int DefaultAPIPort = 36173;
+            public const int PubKeyAddress = 111;
+            public const int ScriptAddress = 196;
+            public const int SecretAddress = 239;
 
-         public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
-         {
-            // TODO: Add checkpoints as the network progresses.
-         };
-      }
+            public const uint GenesisTime = 1523364655;
+            public const uint GenesisNonce = 2380297;
+            public const uint GenesisBits = 0x1e0fffff;
+            public const int GenesisVersion = 1;
+            public static Money GenesisReward = Money.Zero;
+            public const string HashGenesisBlock = "0x02a8be139ec629b13df22e7abc7f9ad5239df39efaf2f5bf3ab5e4d102425dbe";
+            public const string HashMerkleRoot = "0xbd3233dd8d4e7ce3ee8097f4002b4f9303000a5109e02a402d41d2faf74eb244";
 
-      public class Test
-      {
-         public const string Name = "ImpleumTest";
-         public const string RootFolderName = "ImpleumTest";
-         public const string CoinTicker = "TIMPL";
-         public const int DefaultPort = 36171;
-         public const int DefaultRPCPort = 36172;
-         public const int DefaultAPIPort = 36173;
-         public const int DefaultSignalRPort = 36174;
-         public const int PubKeyAddress = 111;
-         public const int ScriptAddress = 196;
-         public const int SecretAddress = 239;
+            public static List<DNSSeedData> DNS = new List<DNSSeedData>
+            {
+                new DNSSeedData("seedtest1.impl.blockcore.net", "seedtest1.impl.blockcore.net"),
+                new DNSSeedData("seedtest2.impl.blockcore.net", "seedtest2.impl.blockcore.net"),
+                new DNSSeedData("seedtest.impl.blockcore.net", "seedtest.impl.blockcore.net")
+            };
 
-         public const uint GenesisTime = 1523364655;
-         public const uint GenesisNonce = 2380297;
-         public const uint GenesisBits = 0x1e0fffff;
-         public const int GenesisVersion = 1;
-         public static Money GenesisReward = Money.Zero;
-         public const string HashGenesisBlock = "0x02a8be139ec629b13df22e7abc7f9ad5239df39efaf2f5bf3ab5e4d102425dbe";
-         public const string HashMerkleRoot = "0xbd3233dd8d4e7ce3ee8097f4002b4f9303000a5109e02a402d41d2faf74eb244";
+            public static List<NetworkAddress> Nodes = new List<NetworkAddress>
+            {
+                new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
+                new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort),
+            };
 
-         public static List<DNSSeedData> DNS = new List<DNSSeedData>
-         {
-            // TODO: Add additional DNS seeds here
-            new DNSSeedData("seedtest1.impl.blockcore.net", "seedtest1.impl.blockcore.net"),
-            new DNSSeedData("seedtest2.impl.blockcore.net", "seedtest2.impl.blockcore.net"),
-            new DNSSeedData("seedtest.impl.blockcore.net", "seedtest.impl.blockcore.net"),
-         };
-
-         public static List<NetworkAddress> Nodes = new List<NetworkAddress>
-         {
-            // TODO: Add additional seed nodes here
-            new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
-            new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort),
-         };
-
-         public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
-         {
+            public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
+            {
                 { 0, new CheckpointInfo(new uint256("0x02a8be139ec629b13df22e7abc7f9ad5239df39efaf2f5bf3ab5e4d102425dbe"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) },
                 { 2, new CheckpointInfo(new uint256("0x49c9ce21a7916a4026e782a4728ba626b02cc6caf35615c4d7c9400ad22b5282"), new uint256("0xeda93767b1d501313d9dd2cc77e1dbb256101b351eb17e3a4ab9663d3f0a3cd3")) }, // Premine
                 { 35, new CheckpointInfo(new uint256("0x477d36da0993b3a5e279fd0eba7ab4825b4ff54f0c3e55b8df4e7e6c1afe6939"), new uint256("0xa5bef352cb2182f7ca80f5d6d7a4e6ce4325bcd78bab63979d4ec8871e95a53d")) },
@@ -159,17 +118,51 @@ namespace Impleum
                 { 215001, new CheckpointInfo(new uint256("0x04c2b9fe7e52e0c6d54fbdf5018fcda8709457b1c12b0dc8eae185b2018de19a"), new uint256("0xe24b26116717993c4a97f4c4f4487695eba8f53fab5f8c023f1fb6c2d3d4c179")) },
                 { 250000, new CheckpointInfo(new uint256("0x36bca99e22d680d6bb4b2dd7b844e1a939925d5bebe320f1d9f5c7c8adb87882"), new uint256("0xc099f94116a37d314688a75afc6a3a15cc7b04e0fec0383db28647243200c5e5")) },
                 { 475000, new CheckpointInfo(new uint256("0x5438e23dda186146b0e58de04206ff455392501474d3907c615a6e55116b02fd"), new uint256("0x615285eae6d269e32898fdcac811278ddefb4bde759fa061cde4aa2053cd6585")) }
-         };
-      }
+            };
+        }
 
-      public static bool IsPoSv3()
-      {
-         return PoSVersion == 3;
-      }
+        internal class RegTest
+        {
+            public const string Name = "ImpleumXRegTest";
+            public const string RootFolderName = "impleumxRegTest";
+            public const string CoinTicker = "TIMPLX";
+            public const int DefaultPort = 26171;
+            public const int DefaultRPCPort = 26172;
+            public const int DefaultAPIPort = 26173;
+            public const int PubKeyAddress = 111;
+            public const int ScriptAddress = 196;
+            public const int SecretAddress = 239;
 
-      public static bool IsPoSv4()
-      {
-         return PoSVersion == 4;
-      }
-   }
+            public const uint GenesisTime = 1523364655;
+            public const uint GenesisNonce = 2380297;
+            public const uint GenesisBits = 0x1e0fffff;
+            public const int GenesisVersion = 1;
+            public static Money GenesisReward = Money.Zero;
+            public const string HashGenesisBlock = "0x02a8be139ec629b13df22e7abc7f9ad5239df39efaf2f5bf3ab5e4d102425dbe";
+            public const string HashMerkleRoot = "0xbd3233dd8d4e7ce3ee8097f4002b4f9303000a5109e02a402d41d2faf74eb244";
+
+            public static List<DNSSeedData> DNS = new List<DNSSeedData>
+            {
+                new DNSSeedData("seedregtest1.impl.blockcore.net", "seedregtest1.impl.blockcore.net"),
+                new DNSSeedData("seedregtest2.impl.blockcore.net", "seedregtest2.impl.blockcore.net"),
+                new DNSSeedData("seedregtest.impl.blockcore.net", "seedregtest.impl.blockcore.net"),
+            };
+
+            public static List<NetworkAddress> Nodes = new List<NetworkAddress>
+            {
+                new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
+                new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort)
+            };
+
+            public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
+            {
+                // TODO: Add checkpoints as the network progresses.
+            };
+        }
+
+        public static bool IsPoSv3() => PoSVersion == 3;
+
+        public static bool IsPoSv4() => PoSVersion == 4;
+
+    }
 }

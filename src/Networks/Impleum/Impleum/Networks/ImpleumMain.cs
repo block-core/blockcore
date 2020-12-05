@@ -10,6 +10,7 @@ using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Networks;
+using Impleum.Networks.Deployments;
 using Impleum.Networks.Policies;
 using Impleum.Networks.Rules;
 using NBitcoin;
@@ -27,7 +28,7 @@ namespace Impleum.Networks
 
             this.Name = ImpleumSetup.Main.Name;
             this.CoinTicker = ImpleumSetup.Main.CoinTicker;
-            this.Magic = ConversionTools.ConvertToUInt32(ImpleumSetup.Magic);
+            this.Magic = ImpleumSetup.Magic;
             this.RootFolderName = ImpleumSetup.Main.RootFolderName;
             this.DefaultPort = ImpleumSetup.Main.DefaultPort;
             this.DefaultRPCPort = ImpleumSetup.Main.DefaultRPCPort;
@@ -36,11 +37,11 @@ namespace Impleum.Networks
             this.DefaultMaxOutboundConnections = 16;
             this.DefaultMaxInboundConnections = 109;
             this.MaxTipAge = 2 * 60 * 60;
-            this.MinTxFee = 16171;
-            this.FallbackFee = 16171;
-            this.MinRelayTxFee = 16171;
+            this.MinTxFee = 10000;
+            this.FallbackFee = 10000;
+            this.MinRelayTxFee = 10000;
             this.MaxTimeOffsetSeconds = 25 * 60;
-            this.DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
+            this.DefaultBanTimeSeconds = 11250; // 500 (MaxReorg) * 45 (TargetSpacing) / 2 = 3 hours, 7 minutes and 30 seconds
 
             var consensusFactory = new PosConsensusFactory();
 
@@ -52,7 +53,7 @@ namespace Impleum.Networks
                ImpleumSetup.Main.GenesisReward,
                ImpleumSetup.GenesisText);
 
-            Genesis = genesisBlock;
+            this.Genesis = genesisBlock;
 
             // Taken from StratisX.
             var consensusOptions = new PosConsensusOptions()
@@ -72,22 +73,30 @@ namespace Impleum.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
+            var bip9Deployments = new ImpleumBIP9Deployments()
+            {
+                // Always active.
+                [ImpleumBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [ImpleumBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [ImpleumBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold)
+            };
+
             this.Consensus = new Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: ImpleumSetup.CoinType,
                 hashGenesisBlock: genesisBlock.GetHash(),
-                subsidyHalvingInterval: 216171,
+                subsidyHalvingInterval: 210000,
                 majorityEnforceBlockUpgrade: 750,
                 majorityRejectBlockOutdated: 950,
                 majorityWindow: 1000,
                 buriedDeployments: buriedDeployments,
-                bip9Deployments: new NoBIP9Deployments(),
+                bip9Deployments: bip9Deployments,
                 bip34Hash: null,
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 500,
                 defaultAssumeValid: null,
-                maxMoney: long.MaxValue,
+                maxMoney: ImpleumSetup.MaxSupply,
                 coinbaseMaturity: 50,
                 premineHeight: 2,
                 premineReward: Money.Coins(ImpleumSetup.PremineReward),
@@ -126,9 +135,7 @@ namespace Impleum.Networks
             this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
             this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
             this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            //this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
-            //this.Base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
             this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(ImpleumSetup.Main.CoinTicker);

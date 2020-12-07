@@ -6,7 +6,6 @@
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <CodeAnalysisRuleset>$(MSBuildThisFileDirectory)None.ruleset</CodeAnalysisRuleset>
     <PackageProjectUrl>https://www.blockcore.net</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/block-core/blockcore</RepositoryUrl>
@@ -43,5 +42,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1591;1572;1573;1574</NoWarn>
     <DocumentationFile></DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>

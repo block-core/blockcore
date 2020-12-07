@@ -228,6 +228,7 @@ namespace Blockcore.Builder
             {
                 this.PersistenceProviderManager = new PersistenceProviderManager(this.NodeSettings);
             }
+
             this.PersistenceProviderManager.Initialize();
 
             // register services before features

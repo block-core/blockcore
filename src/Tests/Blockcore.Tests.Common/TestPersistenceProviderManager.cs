@@ -16,13 +16,26 @@ namespace Blockcore.Tests.Common
 
         public override void Initialize()
         {
-            // manually register LevelDb implementation
-            this.persistenceProviders["LevelDb".ToLowerInvariant()] = new System.Collections.Generic.List<IPersistenceProvider>
+            if (this.nodeSettings != null && this.nodeSettings.Network.Consensus.IsProofOfStake)
             {
-                new Features.Base.Persistence.LevelDb.PersistenceProvider(),
-                new Features.Consensus.Persistence.LevelDb.PersistenceProvider(),
-                new Features.BlockStore.Persistence.LevelDb.PersistenceProvider(),
-            };
+                // manually register LevelDb implementation
+                this.persistenceProviders["LevelDb".ToLowerInvariant()] = new System.Collections.Generic.List<IPersistenceProvider>
+                {
+                    new Features.Base.Persistence.LevelDb.PersistenceProvider(),
+                    new Features.Consensus.Persistence.LevelDb.PosPersistenceProvider(),
+                    new Features.BlockStore.Persistence.LevelDb.PersistenceProvider(),
+                };
+            }
+            else
+            {
+                // manually register LevelDb implementation
+                this.persistenceProviders["LevelDb".ToLowerInvariant()] = new System.Collections.Generic.List<IPersistenceProvider>
+                {
+                    new Features.Base.Persistence.LevelDb.PersistenceProvider(),
+                    new Features.Consensus.Persistence.LevelDb.PowPersistenceProvider(),
+                    new Features.BlockStore.Persistence.LevelDb.PersistenceProvider(),
+                };
+            }
         }
     }
 }

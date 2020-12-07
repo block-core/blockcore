@@ -16,7 +16,7 @@ namespace Blockcore.Tests.Common
 
         public override void Initialize()
         {
-            if (this.nodeSettings.Network.Consensus.IsProofOfStake)
+            if (this.nodeSettings != null && this.nodeSettings.Network.Consensus.IsProofOfStake)
             {
                 // manually register LevelDb implementation
                 this.persistenceProviders["LevelDb".ToLowerInvariant()] = new System.Collections.Generic.List<IPersistenceProvider>

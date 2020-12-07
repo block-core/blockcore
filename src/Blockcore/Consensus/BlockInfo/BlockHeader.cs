@@ -22,15 +22,18 @@ namespace Blockcore.Consensus.BlockInfo
         /// <summary>Current header version.</summary>
         public virtual int CurrentVersion => 3;
 
-        private static BigInteger Pow256 = BigInteger.ValueOf(2).Pow(256);
+        private static BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
 
         private uint256 hashPrevBlock;
+
         public uint256 HashPrevBlock { get { return this.hashPrevBlock; } set { this.hashPrevBlock = value; } }
 
         private uint time;
+
         public uint Time { get { return this.time; } set { this.time = value; } }
 
         private uint bits;
+
         public Target Bits { get { return this.bits; } set { this.bits = value; } }
 
         protected int version;
@@ -38,9 +41,11 @@ namespace Blockcore.Consensus.BlockInfo
         public int Version { get { return this.version; } set { this.version = value; } }
 
         private uint nonce;
+
         public uint Nonce { get { return this.nonce; } set { this.nonce = value; } }
 
         private uint256 hashMerkleRoot;
+
         public uint256 HashMerkleRoot { get { return this.hashMerkleRoot; } set { this.hashMerkleRoot = value; } }
 
         public bool IsNull { get { return (this.bits == 0); } }
@@ -55,6 +60,7 @@ namespace Blockcore.Consensus.BlockInfo
             {
                 return Utils.UnixTimeToDateTime(this.time);
             }
+
             set
             {
                 this.time = Utils.DateTimeToUnixTime(value);
@@ -98,7 +104,7 @@ namespace Blockcore.Consensus.BlockInfo
             stream.ReadWrite(ref this.nonce);
         }
 
-        #endregion
+        #endregion IBitcoinSerializable Members
 
         /// <summary>Populates stream with items that will be used during hash calculation.</summary>
         protected virtual void ReadWriteHashingStream(BitcoinStream stream)
@@ -173,7 +179,7 @@ namespace Blockcore.Consensus.BlockInfo
         public bool CheckProofOfWork()
         {
             BigInteger bits = this.Bits.ToBigInteger();
-            if ((bits.CompareTo(BigInteger.Zero) <= 0) || (bits.CompareTo(Pow256) >= 0))
+            if ((bits.CompareTo(BigInteger.Zero) <= 0) || (bits.CompareTo(pow256) >= 0))
                 return false;
 
             return this.GetPoWHash() <= this.Bits.ToUInt256();

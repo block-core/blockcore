@@ -9,7 +9,7 @@ namespace Blockcore.Consensus.ScriptInfo
 {
     public static class StandardScripts
     {
-        public static readonly List<ScriptTemplate> standardTemplates = new List<ScriptTemplate>
+        public static readonly List<ScriptTemplate> StandardTemplates = new List<ScriptTemplate>
         {
             PayToPubkeyHashTemplate.Instance,
             PayToPubkeyTemplate.Instance,
@@ -25,8 +25,8 @@ namespace Blockcore.Consensus.ScriptInfo
         /// <param name="scriptTemplate">The standard script template to register.</param>
         public static void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {
-            if (!standardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
-                standardTemplates.Add(scriptTemplate);
+            if (!StandardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
+                StandardTemplates.Add(scriptTemplate);
         }
 
         public static bool IsStandardTransaction(Transaction tx, Network network)
@@ -41,12 +41,12 @@ namespace Blockcore.Consensus.ScriptInfo
 
         public static ScriptTemplate GetTemplateFromScriptPubKey(Script script)
         {
-            return standardTemplates.FirstOrDefault(t => t.CheckScriptPubKey(script));
+            return StandardTemplates.FirstOrDefault(t => t.CheckScriptPubKey(script));
         }
 
         public static bool IsStandardScriptPubKey(Network network, Script scriptPubKey)
         {
-            return standardTemplates.Any(template => template.CheckScriptPubKey(scriptPubKey));
+            return StandardTemplates.Any(template => template.CheckScriptPubKey(scriptPubKey));
         }
 
         private static bool IsStandardScriptSig(Network network, Script scriptSig, Script scriptPubKey)

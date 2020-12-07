@@ -523,7 +523,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisOverrideRegTest();
+                var network = new StratisOverrideRegTest("stake_coins");
 
                 var sharedMnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve).ToString();
 
@@ -588,7 +588,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisOverrideRegTest();
+                var network = new StratisOverrideRegTest("mined_coins");
 
                 var sharedMnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve).ToString();
 

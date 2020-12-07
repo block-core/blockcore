@@ -64,9 +64,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{0C6FDCCE-6D75-441F-86FA-2AD177196BF8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Blockcore.ruleset = Blockcore.ruleset
 		Directory.Build.props = Directory.Build.props
-		None.ruleset = None.ruleset
 		stylecop.json = stylecop.json
 		test.runsettings = test.runsettings
 	EndProjectSection

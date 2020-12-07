@@ -6,6 +6,7 @@ on:
       - master
   repository_dispatch:
     types: [build]
+  workflow_dispatch:
 
 jobs:
   
@@ -34,10 +35,11 @@ jobs:
 
     - name: Variables
       run: |
-        echo "::set-env name=VERSION::$(npm run version --silent)"
+        echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
+      shell: bash
 
     - name: Unit Test
-      run: dotnet test -v=normal --no-build --filter FullyQualifiedName!~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      run: dotnet test -v=normal --no-build --filter 'FullyQualifiedName!~IntegrationTests&Unstable!=True' --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Nuget Pack
       run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}

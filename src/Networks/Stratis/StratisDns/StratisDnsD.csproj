@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Features\Persistence\Blockcore.Features.Persistence.Rocksdb.CorePackage\Blockcore.Features.Persistence.Rocksdb.CorePackage.csproj" />
     <ProjectReference Include="..\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
@@ -25,5 +26,6 @@
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
     <ProjectReference Include="..\..\..\Features\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
     <ProjectReference Include="..\..\..\Blockcore\Blockcore.csproj" />
+    <ProjectReference Include="..\..\..\Features\Persistence\Blockcore.Features.Persistence.LevelDb.CorePackage\Blockcore.Features.Persistence.LevelDb.CorePackage.csproj" />
   </ItemGroup>
 </Project>

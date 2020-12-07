@@ -19,7 +19,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void murmurhash3()
         {
             // Test MurmurHash3 with various inputs. Of course this is retested in the
@@ -59,6 +58,7 @@ namespace NBitcoin.Tests
    in = 00 01 02 ... 3e (63 bytes)
    from: https://131002.net/siphash/siphash24.c
 */
+
         private ulong[] siphash_4_2_testvec = new ulong[]{
     0x726fdb47dd0e0e31, 0x74f839c593dc67fd, 0x0d6c8009d9a94f5a, 0x85676696d7fb7e2d,
     0xcf2794e0277187b7, 0x18765564cd99a68d, 0xcbc9466e58fee3ce, 0xab0200f58b01d137,
@@ -79,7 +79,6 @@ namespace NBitcoin.Tests
 };
 
         [Fact]
-        [Trait("Core", "Core")]
         public void siphash()
         {
             var hasher = new Hashes.SipHasher(0x0706050403020100UL, 0x0F0E0D0C0B0A0908UL);
@@ -131,14 +130,12 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hash256()
         {
             Assert.Equal(uint256.Parse("0x0000066e91e46e5a264d42c89e1204963b2ee6be230b443e9159020539d972af"), this.stratisMain.GetGenesis().GetHash());
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hash160()
         {
             var data = new byte[] { 1, 2, 3, 4 };
@@ -151,7 +148,6 @@ namespace NBitcoin.Tests
         {
             Assert.Equal(Hashes.MurmurHash3(seed, Encoders.Hex.DecodeData(data)), expected);
         }
-
 
         //==================X13Hash======================
         //===============================================
@@ -172,9 +168,7 @@ namespace NBitcoin.Tests
         // hamsi             - 73ed6f3bd1805c003de63ae11f76630d35602c1a1b9504ba3f42233176425213622c9c630c830175b4f8a81f633e8bb98c663e142bcc88b0baaa7dd9e73a6907
         // fugue             - af72d939050259913e440b23bee62e3b9604129ec8424d265a6ee4916e060000e51eead6ded2b584283ac0e04c1ea582e1a757245b5e8c408520216139e17848
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashX13Genesis()
         {
             // genesis uses an x13 hash
@@ -184,7 +178,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashBlake()
         {
             string paramIn = "01000000000000000000000000000000000000000000000000000000000000000000000018157f44917c2514c1f339346200f8b27d8ffaae9d8205bfae51030bc26ba265b88ba557ffff0f1eddf21b00";
@@ -194,7 +187,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashBlueMidnightWish()
         {
             string paramIn = "042733333794f07574f6ca059eef16bacbfc5d563e5342d64fded94c6f6fbd139db7ebe1d48b962156391383ccb7f6064fe4583c64df954e5418b9a08908a082";
@@ -204,7 +196,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashGroestl()
         {
             string paramIn = "b2e1d72db8a3807d6d929a0e1349250cae0e99475d94bd869d0163755574a89078e08f604ff32833585dc45d28a69c0b269abb3fcd5c4ee09afc8ca32fa7e40d";
@@ -214,7 +205,7 @@ namespace NBitcoin.Tests
         }
 
         //[Fact]
-        //[Trait("UnitTest", "UnitTest")]
+        //
         //public void hashSkein()
         //{
         //    var paramIn = "317024467e25cb6f1014f1b7a98c63b2ccc925b05a72180b0cdf23f42fabe653ddf51d11ce471dca48282b22261bbc7f5a729189c52554443a635889c7d47db6";
@@ -224,7 +215,6 @@ namespace NBitcoin.Tests
         //}
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashSkeinCustom()
         {
             string paramIn = "317024467e25cb6f1014f1b7a98c63b2ccc925b05a72180b0cdf23f42fabe653ddf51d11ce471dca48282b22261bbc7f5a729189c52554443a635889c7d47db6";
@@ -234,7 +224,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashJH()
         {
             string paramIn = "a4d126f16372bd2df3e22bc95f61e696a72a1bee32e62ca90fedc24e94dbdf314446dc00a5e6bc2907d73c7210e6cb780be00b49b26b7a6f2db29249f2bd884b";
@@ -244,7 +233,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashKeccak()
         {
             string paramIn = "c295dd0155177a9104a80ec27b245600f0de17db4aee4a16a1cf386db29b6a8e5ea74c32bb6c317f388f6585d4b338e53959399e75fcaa16045a4094da19cb6d";
@@ -254,7 +242,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashLuffa()
         {
             string paramIn = "c4f7a14f01cab51c317b7b0064932004ac72a85d8686a9165e1f8b8a968113cd7a3398554ef1c92a3c296c192f9314a2365bc0f7775d4e478787055a9b2ce897";
@@ -264,7 +251,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashCubeHash()
         {
             string paramIn = "8bc3589bea395cdd461226ccbea9cfa463edc5d556ff8c60f8053502135781747ae56b521ced7208fcf6c30dc6f9169b51f5452021b6951fa3d8240f3972d740";
@@ -274,7 +260,7 @@ namespace NBitcoin.Tests
         }
 
         //[Fact]
-        //[Trait("UnitTest", "UnitTest")]
+        //
         //public void hashSHAvite3()
         //{
         //    var paramIn = "50ddc199803de46305083d0852bc4005fc473ed05ec56347ae65e9875c0571da7375bb227678805e7ef868015bd4bf714bae038937538dd7819cc58b6d03ca7b";
@@ -284,7 +270,6 @@ namespace NBitcoin.Tests
         //}
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashSHAvite3Custom()
         {
             string paramIn = "50ddc199803de46305083d0852bc4005fc473ed05ec56347ae65e9875c0571da7375bb227678805e7ef868015bd4bf714bae038937538dd7819cc58b6d03ca7b";
@@ -294,7 +279,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashSIMD()
         {
             string paramIn = "0bb309f45b7ec5b115a3318f0b2f0e431c8e415a3d6848087e7905e4e47c52874b79947e4bdee71668d1b1487716da57ac1f8d87e149ce1eee9080d6cc2827df";
@@ -304,7 +288,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashEcho()
         {
             string paramIn = "921ca1f5fc388ff8217e5bc787acb7e5b462063c12dca18b56b8bff0791d5c338b6604b74cd2c77ed7ac3a5a3843deb27e82f077c71a11a7308fc90864a0bd89";
@@ -314,7 +297,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashHamsi()
         {
             string paramIn = "ad8f8a4b105ffb83bb7546da799e29caa5bc9f2d0b584bdbf7d3275c65bdaae849e277187321d7d323e827c901530f6073bb967a198f3e3ba52c3a01716a442b";
@@ -324,7 +306,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void hashFugue()
         {
             string paramIn = "73ed6f3bd1805c003de63ae11f76630d35602c1a1b9504ba3f42233176425213622c9c630c830175b4f8a81f633e8bb98c663e142bcc88b0baaa7dd9e73a6907";

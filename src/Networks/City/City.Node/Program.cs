@@ -12,8 +12,6 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
 using Blockcore.Features.RPC;
 using Blockcore.Utilities;
-using NBitcoin;
-using NBitcoin.Protocol;
 
 namespace City.Daemon
 {

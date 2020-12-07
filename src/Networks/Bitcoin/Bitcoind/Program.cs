@@ -13,6 +13,7 @@ using Blockcore.Features.Wallet;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 
 namespace BitcoinD
 {

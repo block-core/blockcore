@@ -13,7 +13,6 @@ namespace Blockcore.Tests.Utilities
     public class JsonConverterTests
     {
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSerializeInJson()
         {
             var k = new Key();

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Configuration;
+using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LevelDB;
 using NBitcoin;
 
-namespace Blockcore.Consensus.Chain
+namespace Blockcore.Features.Base.Persistence.LevelDb
 {
-    public class LeveldbChainStore : IChainStore, IDisposable
+    public class LevelDbChainStore : IChainStore, IDisposable
     {
         private readonly Network network;
 
@@ -30,7 +32,7 @@ namespace Blockcore.Consensus.Chain
 
         private object locker;
 
-        public LeveldbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
+        public LevelDbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
         {
             this.network = network;
             this.ChainIndexer = chainIndexer;

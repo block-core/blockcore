@@ -51,6 +51,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test CanGetTxOutFromRPC</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetTxOutWithValidTxThenReturnsCorrectUnspentTx()
         {
             RPCClient rpc = this.rpcTestFixture.RpcClient;
@@ -67,6 +68,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test CanGetTxOutAsyncFromRPC</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public async Task GetTxOutAsyncWithValidTxThenReturnsCorrectUnspentTxAsync()
         {
             RPCClient rpc = this.rpcTestFixture.RpcClient;
@@ -83,6 +85,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test CanUseAsyncRPC</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetBlockCountAsyncWithValidChainReturnsCorrectCount()
         {
             RPCClient rpc = this.rpcTestFixture.RpcClient;
@@ -94,6 +97,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test CanGetPeersInfo</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetPeersInfoWithValidPeersThenReturnsPeerInfo()
         {
             PeerInfo[] peers = this.rpcTestFixture.RpcClient.GetPeersInfo();
@@ -104,6 +108,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test EstimateFeeRate</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void EstimateFeeRateReturnsCorrectValues()
         {
             RPCClient rpc = this.rpcTestFixture.RpcClient;
@@ -116,6 +121,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test TestFundRawTransaction</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void FundRawTransactionWithValidTxsThenReturnsCorrectResponse()
         {
             var k = new Key();
@@ -152,6 +158,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void InvalidCommandSendRPCException()
         {
             var ex = Assert.Throws<RPCException>(() => this.rpcTestFixture.RpcClient.SendCommand("donotexist"));

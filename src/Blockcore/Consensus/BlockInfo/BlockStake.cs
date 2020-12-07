@@ -15,9 +15,11 @@ namespace Blockcore.Consensus.BlockInfo
     public enum BlockFlag //block index flags
     {
         BLOCK_PROOF_OF_STAKE = (1 << 0), // is proof-of-stake block
+
         BLOCK_STAKE_ENTROPY = (1 << 1), // entropy bit for stake modifier
+
         BLOCK_STAKE_MODIFIER = (1 << 2), // regenerated stake modifier
-    };
+    }
 
     public class BlockStake : IBitcoinSerializable
     {
@@ -45,6 +47,7 @@ namespace Blockcore.Consensus.BlockInfo
             {
                 return (BlockFlag)this.flags;
             }
+
             set
             {
                 this.flags = (int)value;
@@ -67,11 +70,13 @@ namespace Blockcore.Consensus.BlockInfo
             stream.ReadWrite(ref this.Mint);
             stream.ReadWrite(ref this.StakeModifier);
             stream.ReadWrite(ref this.StakeModifierV2);
+
             if (this.IsProofOfStake())
             {
                 stream.ReadWrite(ref this.PrevoutStake);
                 stream.ReadWrite(ref this.StakeTime);
             }
+
             stream.ReadWrite(ref this.HashProof);
         }
 
@@ -181,6 +186,7 @@ namespace Blockcore.Consensus.BlockInfo
             {
                 return this.nTime;
             }
+
             set
             {
                 this.nTime = value;
@@ -250,6 +256,7 @@ namespace Blockcore.Consensus.BlockInfo
                     stream.ReadWrite<TxOutList, TxOut>(ref this.vout);
                     this.vout.Transaction = this;
                 }
+
                 if (((flags & 1) != 0) && witSupported)
                 {
                     /* The witness flag is present, and we support witnesses. */
@@ -257,6 +264,7 @@ namespace Blockcore.Consensus.BlockInfo
                     var wit = new Witness(this.Inputs);
                     wit.ReadWrite(stream);
                 }
+
                 if (flags != 0)
                 {
                     /* Unknown flag in the serialization */
@@ -279,6 +287,7 @@ namespace Blockcore.Consensus.BlockInfo
                         flags |= 1;
                     }
                 }
+
                 if (flags != 0)
                 {
                     /* Use extended format in case witnesses are to be serialized. */
@@ -286,6 +295,7 @@ namespace Blockcore.Consensus.BlockInfo
                     stream.ReadWrite<TxInList, TxIn>(ref vinDummy);
                     stream.ReadWrite(ref flags);
                 }
+
                 stream.ReadWrite<TxInList, TxIn>(ref this.vin);
                 this.vin.Transaction = this;
                 stream.ReadWrite<TxOutList, TxOut>(ref this.vout);
@@ -296,6 +306,7 @@ namespace Blockcore.Consensus.BlockInfo
                     wit.ReadWrite(stream);
                 }
             }
+
             stream.ReadWriteStruct(ref this.nLockTime);
         }
     }

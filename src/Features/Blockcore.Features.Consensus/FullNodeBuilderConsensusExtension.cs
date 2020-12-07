@@ -28,7 +28,7 @@ namespace Blockcore.Features.Consensus
                     .AddFeature<PowConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        fullNodeBuilder.PersistenceProviderManager.RequirePersistence<ConsensusFeature>(services);
+                        fullNodeBuilder.PersistenceProviderManager.RequirePersistence<PowConsensusFeature>(services);
 
                         services.AddSingleton<ConsensusOptions, ConsensusOptions>();
                         services.AddSingleton<ICoinView, CachedCoinView>();
@@ -53,7 +53,7 @@ namespace Blockcore.Features.Consensus
                     .AddFeature<PosConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        fullNodeBuilder.PersistenceProviderManager.RequirePersistence<ConsensusFeature>(services);
+                        fullNodeBuilder.PersistenceProviderManager.RequirePersistence<PosConsensusFeature>(services);
 
                         services.AddSingleton<IStakdb>(provider => (IStakdb)provider.GetService<ICoindb>());
                         services.AddSingleton<ICoinView, CachedCoinView>();

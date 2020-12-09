@@ -282,7 +282,10 @@ namespace x42.Features.xServer
                 if (createPLResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = createPLResult.Data;
-                    return result;
+                    if (result.Success)
+                    {
+                        return result;
+                    }
                 }
                 else
                 {

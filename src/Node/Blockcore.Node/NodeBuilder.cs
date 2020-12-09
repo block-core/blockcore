@@ -11,6 +11,8 @@ using Blockcore.Features.Wallet;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.Dns;
 using Blockcore.Persistence;
+using Blockcore.Features.Notifications;
+using Blockcore.Features.WalletWatchOnly;
 
 namespace Blockcore.Node
 {
@@ -29,11 +31,13 @@ namespace Blockcore.Node
                 case "BTC":
                     nodeBuilder.UsePowConsensus().AddMining().UseWallet();
                     break;
+                case "X42":
+                    nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet().UseWatchOnlyWallet();
+                    break;
                 case "CITY":
                 case "STRAT":
                 case "RUTA":
                 case "EXOS":
-                case "X42":
                 case "XDS":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
                     break;
@@ -48,6 +52,8 @@ namespace Blockcore.Node
             .UseNodeSettings(settings)
             .UseBlockStore()
             .UseMempool()
+            .UseBlockNotification()
+            .UseTransactionNotification()
             .UseNodeHost()
             .AddRPC()
             .UseDiagnosticFeature();

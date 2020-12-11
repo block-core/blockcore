@@ -2,7 +2,7 @@ using Blockcore.Base.Deployments;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 
-namespace Impleum.Networks.Deployments
+namespace Blockcore.Networks.Impleum.Deployments
 {
     /// <summary>
     /// BIP9 deployments for the Blockcore sample coin network.

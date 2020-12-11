@@ -2,13 +2,12 @@ using System;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
-using Blockcore.Networks;
-using Impleum.Networks.Policies;
+using Blockcore.Networks.Impleum.Policies;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 
-namespace Impleum.Networks
+namespace Blockcore.Networks.Impleum
 {
    public class ImpleumRegTest : ImpleumMain
    {
@@ -18,7 +17,7 @@ namespace Impleum.Networks
 
           this.Name = ImpleumSetup.RegTest.Name;
           this.CoinTicker = ImpleumSetup.RegTest.CoinTicker;
-          this.Magic = ImpleumSetup.Magic;
+          this.Magic = ImpleumSetup.RegTest.Magic;
           this.RootFolderName = ImpleumSetup.RegTest.RootFolderName;
           this.DefaultPort = ImpleumSetup.RegTest.DefaultPort;
           this.DefaultRPCPort = ImpleumSetup.RegTest.DefaultRPCPort;
@@ -54,12 +53,12 @@ namespace Impleum.Networks
             [BuriedDeployments.BIP66] = 0
          };
 
-         this.Consensus = new Consensus(
+         this.Consensus = new Consensus.Consensus(
              consensusFactory: consensusFactory,
              consensusOptions: consensusOptions,
-             coinType: ImpleumSetup.CoinType,
+             coinType: 1,
              hashGenesisBlock: genesisBlock.GetHash(),
-             subsidyHalvingInterval: 216171,
+             subsidyHalvingInterval: 210000,
              majorityEnforceBlockUpgrade: 750,
              majorityRejectBlockOutdated: 950,
              majorityWindow: 1000,
@@ -69,7 +68,7 @@ namespace Impleum.Networks
              minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
              maxReorgLength: 500,
              defaultAssumeValid: null,
-             maxMoney: long.MaxValue,
+             maxMoney: ImpleumSetup.MaxSupply,
              coinbaseMaturity: 10,
              premineHeight: 2,
              premineReward: Money.Coins(ImpleumSetup.PremineReward),
@@ -82,7 +81,7 @@ namespace Impleum.Networks
              powLimit: new Target(new uint256("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
              minimumChainWork: null,
              isProofOfStake: true,
-             lastPowBlock: ImpleumSetup.LastPowBlock,
+             lastPowBlock: ImpleumSetup.RegTest.LastPowBlock,
              proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
              proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
              proofOfStakeReward: Money.Coins(ImpleumSetup.PoSBlockReward),

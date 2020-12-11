@@ -40,6 +40,10 @@ namespace Blockcore.Node
                 case "EXOS":
                     nodeSettings = new NodeSettings(networksSelector: OpenExo.Networks.Networks.OpenExo, args: args);
                     break;
+
+                case "IMPLX":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.Impleum.Networks.Impleum, args: args);
+                    break;
             }
 
             return nodeSettings;

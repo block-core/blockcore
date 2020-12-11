@@ -5,7 +5,7 @@ using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 
-namespace Impleum.Networks.Rules
+namespace Blockcore.Networks.Impleum.Rules
 {
    /// <summary>
    /// Checks if <see cref="ImpleumMain"/> network block's header has a valid block version.
@@ -40,7 +40,7 @@ namespace Impleum.Networks.Rules
 
          if (chainedHeader.Header.Version < 7)
          {
-            Logger.LogTrace("(-)[BAD_VERSION]");
+            this.Logger.LogTrace("(-)[BAD_VERSION]");
 
             ConsensusErrors.BadVersion.Throw();
          }

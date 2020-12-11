@@ -9,15 +9,14 @@ using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
-using Blockcore.Networks;
-using Impleum.Networks.Deployments;
-using Impleum.Networks.Policies;
-using Impleum.Networks.Rules;
+using Blockcore.Networks.Impleum.Deployments;
+using Blockcore.Networks.Impleum.Policies;
+using Blockcore.Networks.Impleum.Rules;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 
-namespace Impleum.Networks
+namespace Blockcore.Networks.Impleum
 {
     public class ImpleumMain : Network
     {
@@ -28,7 +27,7 @@ namespace Impleum.Networks
 
             this.Name = ImpleumSetup.Main.Name;
             this.CoinTicker = ImpleumSetup.Main.CoinTicker;
-            this.Magic = ImpleumSetup.Magic;
+            this.Magic = ImpleumSetup.Main.Magic;
             this.RootFolderName = ImpleumSetup.Main.RootFolderName;
             this.DefaultPort = ImpleumSetup.Main.DefaultPort;
             this.DefaultRPCPort = ImpleumSetup.Main.DefaultRPCPort;
@@ -54,7 +53,7 @@ namespace Impleum.Networks
                ImpleumSetup.GenesisText);
 
             this.Genesis = genesisBlock;
-
+            
             // Taken from StratisX.
             var consensusOptions = new PosConsensusOptions()
             {
@@ -81,7 +80,7 @@ namespace Impleum.Networks
                 [ImpleumBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold)
             };
 
-            this.Consensus = new Consensus(
+            this.Consensus = new Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: ImpleumSetup.CoinType,
@@ -109,7 +108,7 @@ namespace Impleum.Networks
                 powLimit: new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
                 minimumChainWork: null,
                 isProofOfStake: true,
-                lastPowBlock: ImpleumSetup.LastPowBlock,
+                lastPowBlock: ImpleumSetup.Main.LastPowBlock,
                 proofOfStakeLimit: new BigInteger(uint256
                     .Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
                 proofOfStakeLimitV2: new BigInteger(uint256
@@ -118,7 +117,7 @@ namespace Impleum.Networks
                 proofOfStakeTimestampMask: ImpleumSetup.ProofOfStakeTimestampMask
             )
             {
-                PosEmptyCoinbase = ImpleumSetup.IsPoSv3(), 
+                PosEmptyCoinbase = ImpleumSetup.IsPoSv3(),
                 PosUseTimeFieldInKernalHash = ImpleumSetup.IsPoSv3()
             };
 
@@ -239,7 +238,7 @@ namespace Impleum.Networks
                 ScriptSig = new Script(Op.GetPushOp(0), new Op()
                 {
                     Code = (OpcodeType)0x1,
-                    PushData = new[] { (byte)63 }
+                    PushData = new[] { (byte)42 }
                 }, Op.GetPushOp(Encoders.ASCII.DecodeData(genesisText)))
             });
 

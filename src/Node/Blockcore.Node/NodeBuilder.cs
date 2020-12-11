@@ -39,6 +39,7 @@ namespace Blockcore.Node
                 case "RUTA":
                 case "EXOS":
                 case "XDS":
+                case "IMPLX":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
                     break;
             }

@@ -37,7 +37,7 @@ namespace Blockcore.Networks.Impleum
             public const int PubKeyAddress = 76; // X https://en.bitcoin.it/wiki/List_of_address_prefixes
             public const int ScriptAddress = 141; // y or z
             public const int SecretAddress = PubKeyAddress + 128;
-            public static readonly uint Magic = BitConverter.ToUInt32(Encoding.ASCII.GetBytes("ImpX"));
+            public static readonly uint Magic = BitConverter.ToUInt32(Encoding.ASCII.GetBytes("ImpX")); //1483763017
             public const int LastPowBlock = 675;
 
             public const uint GenesisTime = 1607706917; // ~11 December 2020 - https://www.unixtimestamp.com/

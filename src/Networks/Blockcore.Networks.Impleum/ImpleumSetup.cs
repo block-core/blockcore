@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.P2P;
@@ -21,7 +20,7 @@ namespace Blockcore.Networks.Impleum
         public const decimal PremineReward = 8734567;
         public const decimal PoWBlockReward = 1;
         public const decimal PoSBlockReward = 1;
-        public const long MaxSupply = 10000000 * Money.COIN;
+        public const long MaxSupply = 21000000;
         public const string GenesisText = "Bloomberg 11/30/2020 Bitcoin Is Winning the Covid-19 Monetary Revolution"; // Bloomberg, 2020-11-2
         public static TimeSpan TargetSpacing = TimeSpan.FromSeconds(45);
         public const uint ProofOfStakeTimestampMask = 0x0000000F; // 0x0000003F // 64 sec
@@ -52,14 +51,14 @@ namespace Blockcore.Networks.Impleum
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
                 // new DNSSeedData("impleum.com", "impleum.com"),
-              //   new DNSSeedData("explorer.impleum.com", "explorer.impleum.com"),
-              //   new DNSSeedData("seed.impl.blockcore.net", "seed.impl.blockcore.net"),
+                //   new DNSSeedData("explorer.impleum.com", "explorer.impleum.com"),
+                //   new DNSSeedData("seed.impl.blockcore.net", "seed.impl.blockcore.net"),
             };
 
             public static List<NetworkAddress> Nodes = new List<NetworkAddress>
             {
-            //    new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
-             //   new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort)
+                //    new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
+                //   new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort)
             };
 
             public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>

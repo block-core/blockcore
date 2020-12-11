@@ -95,7 +95,7 @@ namespace Blockcore.Networks.Impleum
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 500,
                 defaultAssumeValid: null,
-                maxMoney: ImpleumSetup.MaxSupply,
+                maxMoney: Money.Coins(ImpleumSetup.MaxSupply),
                 coinbaseMaturity: 50,
                 premineHeight: 2,
                 premineReward: Money.Coins(ImpleumSetup.PremineReward),

@@ -38,6 +38,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void Pow_CanStratisSyncFromCore()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -56,6 +57,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void Pow_CanStratisSyncFromStratis()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -79,6 +81,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void Pow_CanCoreSyncFromStratis()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

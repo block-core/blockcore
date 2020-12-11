@@ -48,6 +48,7 @@ namespace Blockcore.Consensus.Chain
     public class ChainDataItem
     {
         public int Height { get; set; }
+
         public ChainData Data { get; set; }
     }
 

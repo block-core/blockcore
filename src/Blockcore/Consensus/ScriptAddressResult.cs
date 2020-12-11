@@ -37,6 +37,5 @@
         /// Will return the script cold public address if exists, Otherwise returns <see cref="string.Empty"/>
         /// </summary>
         public string ColdAddress { get; set; } = string.Empty;
-
     }
 }

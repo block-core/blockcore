@@ -14,6 +14,8 @@ using Blockcore.Networks;
 using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.Protocol;
+using Blockcore.Utilities.Store;
+using Blockcore.Tests.Common;
 
 namespace Blockcore.IntegrationTests.Common.Runners
 {
@@ -31,11 +33,13 @@ namespace Blockcore.IntegrationTests.Common.Runners
         public override void BuildNode()
         {
             var settings = new NodeSettings(this.Network, this.Agent, args: new string[] { "-conf=stratis.conf", "-datadir=" + this.DataFolder });
+            var persistenceProviderManager = new TestPersistenceProviderManager(settings);
 
             // For stratisX tests we need the minimum protocol version to be 70000.
             settings.MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION;
 
             var builder = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(persistenceProviderManager)
                 .UseNodeSettings(settings)
                 .UseBlockStore()
                 .UsePosConsensus()
@@ -70,7 +74,9 @@ namespace Blockcore.IntegrationTests.Common.Runners
         public static IFullNode BuildStakingNode(string dataDir, bool staking = true)
         {
             var nodeSettings = new NodeSettings(networksSelector: Networks.Stratis.Networks.Stratis, args: new string[] { $"-datadir={dataDir}", $"-stake={(staking ? 1 : 0)}", "-walletname=dummy", "-walletpassword=dummy" });
-            var fullNodeBuilder = new FullNodeBuilder(nodeSettings);
+            var persistenceProviderManager = new TestPersistenceProviderManager(nodeSettings);
+
+            var fullNodeBuilder = new FullNodeBuilder(nodeSettings, persistenceProviderManager);
             IFullNode fullNode = fullNodeBuilder
                                 .UseBlockStore()
                                 .UsePosConsensus()

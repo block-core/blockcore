@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Xds": {
-      "commandName": "Project",
-      "commandLineArgs": "-addnode=159.65.148.135"
-    }
-  }
-}

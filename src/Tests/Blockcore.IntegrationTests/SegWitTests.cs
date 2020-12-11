@@ -94,6 +94,7 @@ namespace Blockcore.IntegrationTests
     public class SegWitTests
     {
         [Fact]
+        [Trait("Unstable", "True")]
         public void TestSegwit_MinedOnCore_ActivatedOn_StratisNode()
         {
             // This test only verifies that the BIP9 machinery is operating correctly on the Stratis PoW node.
@@ -220,7 +221,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 // Set the date ranges such that ColdStaking will 'Start' immediately after the initial confirmation window.
                 // Minimum number of 'votes' required within the confirmation window to reach 'LockedIn' state.
@@ -265,6 +266,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void TestSegwit_AlwaysActivatedOn_StratisNode()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -522,6 +524,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void SegwitWalletTransactionBuildingAndPropagationTest()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -541,6 +544,8 @@ namespace Blockcore.IntegrationTests
 
                 var miner = node.FullNode.NodeService<IPowMining>() as PowMining;
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), (ulong)(node.FullNode.Network.Consensus.CoinbaseMaturity + 1), int.MaxValue);
+
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 // Send a transaction from first node to itself so that it has a proper segwit input to spend.
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
@@ -573,6 +578,7 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
@@ -615,6 +621,7 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
             }
@@ -636,6 +643,8 @@ namespace Blockcore.IntegrationTests
 
                 var miner = node.FullNode.NodeService<IPowMining>() as PowMining;
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), (ulong)(maturity + 2), int.MaxValue);
+
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 // Send a transaction from first node to itself so that it has a proper segwit input to spend.
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
@@ -666,6 +675,7 @@ namespace Blockcore.IntegrationTests
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length > 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
@@ -699,6 +709,7 @@ namespace Blockcore.IntegrationTests
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length > 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
@@ -721,6 +732,8 @@ namespace Blockcore.IntegrationTests
 
                 var miner = node.FullNode.NodeService<IPowMining>() as PowMining;
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), (ulong)(maturity + 1), int.MaxValue);
+
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
                 var witAddress = destinationAddress.Bech32Address;
@@ -750,6 +763,7 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
@@ -782,12 +796,14 @@ namespace Blockcore.IntegrationTests
 
                 miner.GenerateBlocks(new ReserveScript(mineAddress.ScriptPubKey), 1, int.MaxValue);
 
+                TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                 TestBase.WaitLoop(() => listener.CreateRPCClient().GetRawMempool().Length == 0, cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
             }
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void StakeSegwitBlock_On_SBFN_Check_StratisX_Syncs_When_SBFN_Initiates_Connection()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -833,6 +849,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void StakeSegwitBlock_On_SBFN_Check_StratisX_Syncs_When_StratisX_Initiates_Connection()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -880,6 +897,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void StakeSegwitBlock_On_SBFN_Connected_To_SBFN_Check_StratisX_Syncs_When_StratisX_Connects_Later()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -932,6 +950,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void Mine_On_StratisX_SBFN_Syncs_Via_Intermediary_Gateway_Node()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this).WithLogsEnabled())
@@ -953,7 +972,7 @@ namespace Blockcore.IntegrationTests
 
                 var config = new NodeConfigParameters
                 {
-                    {"whitebind", "0.0.0.0"},
+                    {"whitelist", "127.0.0.1"},
                     {"gateway", "1"}
                 };
 

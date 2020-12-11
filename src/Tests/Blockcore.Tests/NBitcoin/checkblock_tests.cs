@@ -17,7 +17,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCalculateMerkleRoot()
         {
             Block block = this.networkMain.CreateBlock();

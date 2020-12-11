@@ -71,6 +71,14 @@
     "XDS (MAIN/LOCAL/UI/API/WS)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableUI=true -enableAPI=true -enableWS=true"
+    },
+    "XDS (MAIN/LOCAL/ROCKSDB)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
+    },
+    "XDS (MAIN/LOCAL/LEVELDB)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=leveldbdata -dbtype=leveldb"
     }
   }
 }

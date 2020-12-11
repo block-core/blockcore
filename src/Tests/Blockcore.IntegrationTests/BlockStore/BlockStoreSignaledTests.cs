@@ -207,6 +207,7 @@ namespace Blockcore.IntegrationTests.BlockStore
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void QueueEmpties_WithNoPeersConnected()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

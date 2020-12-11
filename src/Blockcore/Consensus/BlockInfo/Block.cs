@@ -116,6 +116,7 @@ namespace Blockcore.Consensus.BlockInfo
 
                 instance.ReadWrite(bms);
             }
+
             return instance;
         }
 

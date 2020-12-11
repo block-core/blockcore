@@ -385,6 +385,8 @@ namespace Blockcore.Base
                 .AddFeature<BaseFeature>()
                 .FeatureServices(services =>
                 {
+                    fullNodeBuilder.PersistenceProviderManager.RequirePersistence<BaseFeature>(services);
+
                     services.AddSingleton(fullNodeBuilder.Network.Consensus.ConsensusFactory);
                     services.AddSingleton<DataStoreSerializer>();
                     services.AddSingleton(fullNodeBuilder.NodeSettings.LoggerFactory);
@@ -400,7 +402,6 @@ namespace Blockcore.Base
                     services.AddSingleton<IInvalidBlockHashStore, InvalidBlockHashStore>();
                     services.AddSingleton<IChainState, ChainState>();
                     services.AddSingleton<IChainRepository, ChainRepository>();
-                    AddDbImplementation(services, fullNodeBuilder.NodeSettings);
                     services.AddSingleton<IFinalizedBlockInfoRepository, FinalizedBlockInfoRepository>();
                     services.AddSingleton<ITimeSyncBehaviorState, TimeSyncBehaviorState>();
                     services.AddSingleton<NodeDeployments>();
@@ -485,24 +486,6 @@ namespace Blockcore.Base
             });
 
             return fullNodeBuilder;
-        }
-
-        private static void AddDbImplementation(IServiceCollection services, NodeSettings settings)
-        {
-            if (settings.DbType == DbType.Leveldb)
-            {
-                services.AddSingleton<IChainStore, LeveldbChainStore>();
-                services.AddSingleton<IKeyValueRepository, LeveldbKeyValueRepository>();
-
-                return;
-            }
-
-            if (settings.DbType == DbType.Rocksdb)
-            {
-                services.AddSingleton<IChainStore, RocksdbChainStore>();
-                services.AddSingleton<IKeyValueRepository, RocksdbKeyValueRepository>();
-                return;
-            }
         }
     }
 }

@@ -90,14 +90,14 @@ namespace Blockcore.Networks.Impleum
 
          this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (ImpleumSetup.RegTest.PubKeyAddress) };
          this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (ImpleumSetup.RegTest.ScriptAddress) };
-         this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
+         this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (ImpleumSetup.RegTest.SecretAddress) };
          this.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x35), (0x87), (0xCF) };
          this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x35), (0x83), (0x94) };
          //this.Base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2b };
          this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
 
          this.Bech32Encoders = new Bech32Encoder[2];
-         var encoder = new Bech32Encoder(ImpleumSetup.RegTest.CoinTicker);
+         var encoder = new Bech32Encoder(ImpleumSetup.RegTest.CoinTicker.ToLowerInvariant());
          this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
          this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 

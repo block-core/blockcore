@@ -36,7 +36,7 @@ namespace Blockcore.Networks.Impleum
             public const int DefaultAPIPort = 18103;
             public const int PubKeyAddress = 76; // X https://en.bitcoin.it/wiki/List_of_address_prefixes
             public const int ScriptAddress = 141; // y or z
-            public const int SecretAddress = PubKeyAddress + 128;
+            public const int SecretAddress = PubKeyAddress + ScriptAddress;
             public static readonly uint Magic = BitConverter.ToUInt32(Encoding.ASCII.GetBytes("ImpX")); //1483763017
             public const int LastPowBlock = 675;
 
@@ -78,7 +78,7 @@ namespace Blockcore.Networks.Impleum
             public const int DefaultAPIPort = 28103;
             public const int PubKeyAddress = 104;
             public const int ScriptAddress = 129;
-            public const int SecretAddress = PubKeyAddress + 128;
+            public const int SecretAddress = PubKeyAddress + ScriptAddress;
             public static readonly uint Magic = BitConverter.ToUInt32(Encoding.ASCII.GetBytes("TmpX"));
             public const int LastPowBlock = 12500;
 
@@ -119,7 +119,7 @@ namespace Blockcore.Networks.Impleum
             public const int DefaultAPIPort = 38103;
             public const int PubKeyAddress = 104;
             public const int ScriptAddress = 129;
-            public const int SecretAddress = PubKeyAddress + 128;
+            public const int SecretAddress = PubKeyAddress + ScriptAddress;
             public static readonly uint Magic = BitConverter.ToUInt32(Encoding.ASCII.GetBytes("RmpX"));
             public const int LastPowBlock = 12500;
 

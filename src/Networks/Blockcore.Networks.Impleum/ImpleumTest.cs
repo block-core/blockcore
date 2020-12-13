@@ -22,6 +22,7 @@ namespace Blockcore.Networks.Impleum
             this.DefaultPort = ImpleumSetup.Test.DefaultPort;
             this.DefaultRPCPort = ImpleumSetup.Test.DefaultRPCPort;
             this.DefaultAPIPort = ImpleumSetup.Test.DefaultAPIPort;
+            this.MinTxFee = 1000;
 
             var consensusFactory = new PosConsensusFactory();
 

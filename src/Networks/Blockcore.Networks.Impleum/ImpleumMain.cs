@@ -32,7 +32,7 @@ namespace Blockcore.Networks.Impleum
             this.DefaultPort = ImpleumSetup.Main.DefaultPort;
             this.DefaultRPCPort = ImpleumSetup.Main.DefaultRPCPort;
             this.DefaultAPIPort = ImpleumSetup.Main.DefaultAPIPort;
-
+            
             this.DefaultMaxOutboundConnections = 16;
             this.DefaultMaxInboundConnections = 109;
             this.MaxTipAge = 2 * 60 * 60;

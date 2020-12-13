@@ -50,15 +50,15 @@ namespace Blockcore.Networks.Impleum
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                // new DNSSeedData("impleum.com", "impleum.com"),
+                 new DNSSeedData("impleum.com", "impleum.com"),
                 //   new DNSSeedData("explorer.impleum.com", "explorer.impleum.com"),
                 //   new DNSSeedData("seed.impl.blockcore.net", "seed.impl.blockcore.net"),
             };
 
             public static List<NetworkAddress> Nodes = new List<NetworkAddress>
             {
-                //    new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
-                //   new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort)
+                    new NetworkAddress(IPAddress.Parse("85.209.44.7"), DefaultPort),
+                    new NetworkAddress(IPAddress.Parse("82.144.207.72"), DefaultPort)
             };
 
             public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
@@ -92,15 +92,15 @@ namespace Blockcore.Networks.Impleum
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                //new DNSSeedData("seedtest1.impl.blockcore.net", "seedtest1.impl.blockcore.net"),
+                new DNSSeedData("impleum.com", "impleum.com"),
                 //new DNSSeedData("seedtest2.impl.blockcore.net", "seedtest2.impl.blockcore.net"),
                 //new DNSSeedData("seedtest.impl.blockcore.net", "seedtest.impl.blockcore.net")
             };
 
             public static List<NetworkAddress> Nodes = new List<NetworkAddress>
             {
-                //new NetworkAddress(IPAddress.Parse("109.108.77.134"), DefaultPort),
-                //new NetworkAddress(IPAddress.Parse("62.80.181.141"), DefaultPort),
+                new NetworkAddress(IPAddress.Parse("85.209.44.7"), DefaultPort),
+                new NetworkAddress(IPAddress.Parse("82.144.207.72"), DefaultPort),
             };
 
             public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>

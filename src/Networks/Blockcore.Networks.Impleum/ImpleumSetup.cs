@@ -55,11 +55,12 @@ namespace Blockcore.Networks.Impleum
                 //   new DNSSeedData("seed.impl.blockcore.net", "seed.impl.blockcore.net"),
             };
 
-            public static List<NetworkAddress> Nodes = new List<NetworkAddress>
-            {
-                    new NetworkAddress(IPAddress.Parse("85.209.44.7"), DefaultPort),
-                    new NetworkAddress(IPAddress.Parse("82.144.207.72"), DefaultPort)
-            };
+            public static List<NetworkAddress> Nodes = new[] { "85.209.44.7", "82.144.207.72" },//Nodes = new List<NetworkAddress>
+                
+            //{
+            //        new NetworkAddress(IPAddress.Parse("85.209.44.7"), DefaultPort),
+            //        new NetworkAddress(IPAddress.Parse("82.144.207.72"), DefaultPort)
+            //};
 
             public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
             {
@@ -97,11 +98,12 @@ namespace Blockcore.Networks.Impleum
                 //new DNSSeedData("seedtest.impl.blockcore.net", "seedtest.impl.blockcore.net")
             };
 
-            public static List<NetworkAddress> Nodes = new List<NetworkAddress>
-            {
-                new NetworkAddress(IPAddress.Parse("85.209.44.7"), DefaultPort),
-                new NetworkAddress(IPAddress.Parse("82.144.207.72"), DefaultPort),
-            };
+           public static List<NetworkAddress> Nodes = new[] { "85.209.44.7", "82.144.207.72" },//Nodes = new List<NetworkAddress>
+                
+            //{
+            //        new NetworkAddress(IPAddress.Parse("85.209.44.7"), DefaultPort),
+            //        new NetworkAddress(IPAddress.Parse("82.144.207.72"), DefaultPort)
+            //};
 
             public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
             {

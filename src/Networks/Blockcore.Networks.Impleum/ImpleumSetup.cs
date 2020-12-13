@@ -50,7 +50,7 @@ namespace Blockcore.Networks.Impleum
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                 new DNSSeedData("impleum.com", "impleum.com"),
+                 new DNSSeedData("impleum.com", "impleum.com")
                 //   new DNSSeedData("explorer.impleum.com", "explorer.impleum.com"),
                 //   new DNSSeedData("seed.impl.blockcore.net", "seed.impl.blockcore.net"),
             };
@@ -93,7 +93,7 @@ namespace Blockcore.Networks.Impleum
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                new DNSSeedData("impleum.com", "impleum.com"),
+                new DNSSeedData("impleum.com", "impleum.com")
                 //new DNSSeedData("seedtest2.impl.blockcore.net", "seedtest2.impl.blockcore.net"),
                 //new DNSSeedData("seedtest.impl.blockcore.net", "seedtest.impl.blockcore.net")
             };

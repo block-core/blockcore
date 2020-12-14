@@ -37,6 +37,7 @@ namespace Blockcore.Networks.Impleum
             this.DefaultMaxInboundConnections = 109;
             this.MaxTipAge = 2 * 60 * 60;
             this.MinTxFee = 10000;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = 10000;
             this.MinRelayTxFee = 10000;
             this.MaxTimeOffsetSeconds = 25 * 60;

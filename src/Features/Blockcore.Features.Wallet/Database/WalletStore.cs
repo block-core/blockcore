@@ -45,7 +45,33 @@ namespace Blockcore.Features.Wallet.Database
             }
 
             BsonMapper mapper = this.Create();
-            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+            
+            if (!File.Exists(dbPath))
+            {
+                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+            }
+            else
+            {
+                // Only perform this check if the database file already exists.
+                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+
+                // Attempt to access the user version, this will crash if the loaded database is V5 and we use V4 packages.
+                try
+                {
+                    var userVersion = this.db.Engine.UserVersion;
+                }
+                catch (LiteDB.LiteException)
+                {
+                    var dbBackupPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.error.db");
+
+                    // Move the problematic database file, which might be a V5 database.
+                    File.Move(dbPath, dbBackupPath);
+
+                    // Re-create the database object after we renamed the file.
+                    this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+                }
+            }
+
             this.network = network;
 
             this.Init(wallet);

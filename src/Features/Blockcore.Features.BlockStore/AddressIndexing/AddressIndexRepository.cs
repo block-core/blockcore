@@ -57,6 +57,11 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         {
             this.SaveAllItems();
 
+            if (this.addressIndexerDataCollection.Count() == 0)
+            {
+                return new List<string>();
+            }
+
             // Need to specify index name explicitly so that it gets used for the query.
             IEnumerable<AddressIndexerData> affectedAddresses = this.addressIndexerDataCollection.Find(a => a.BalanceChanges.Select(ab => ab.BalanceChangedHeight).Any(ab => ab > height));
 

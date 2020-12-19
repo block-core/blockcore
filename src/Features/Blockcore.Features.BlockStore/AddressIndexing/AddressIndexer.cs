@@ -67,7 +67,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         private const string DbTipDataKey = "AddrTipData";
 
-        private const string AddressIndexerDatabaseFilename = "addressindex.litedb";
+        private const string AddressIndexerDatabaseFilename = "addressindex.db";
 
         /// <summary>Max supported reorganization length for networks without max reorg property.</summary>
         public const int FallBackMaxReorg = 200;

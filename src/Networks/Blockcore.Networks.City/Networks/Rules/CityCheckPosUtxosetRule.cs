@@ -1,7 +1,7 @@
 ﻿using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using NBitcoin;
 
-namespace City.Networks.Rules
+namespace Blockcore.Networks.City.Networks.Rules
 {
     /// <summary>
     /// Proof of stake override for the coinview rules - BIP68, MaxSigOps and BlockReward checks.

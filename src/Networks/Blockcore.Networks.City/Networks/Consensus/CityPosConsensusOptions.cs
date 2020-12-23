@@ -5,7 +5,7 @@ using Blockcore.Consensus;
 using Blockcore.Networks;
 using NBitcoin;
 
-namespace City.Networks.Consensus
+namespace Blockcore.Networks.City.Networks.Consensus
 {
     public class CityPosConsensusOptions : PosConsensusOptions
     {

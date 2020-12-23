@@ -1,31 +1,28 @@
 using System;
 using System.Collections.Generic;
-using Blockcore.Features.Consensus.Rules.CommonRules;
-using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
-using Blockcore.Features.Consensus.Rules.UtxosetRules;
-using Blockcore.Features.MemoryPool.Rules;
-using City.Networks.Policies;
-using City.Networks.Rules;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
-using System.Collections;
 using System.Linq;
-using System.Collections.Specialized;
 using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Networks;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.City.Networks.Consensus;
+using Blockcore.Networks.City.Networks.Deployments;
+using Blockcore.Networks.City.Networks.Policies;
+using Blockcore.Networks.City.Networks.Rules;
+using Blockcore.Networks.City.Networks.Setup;
 using Blockcore.P2P;
-using City.Networks.Consensus;
-using City.Networks.Setup;
+using NBitcoin;
+using NBitcoin.BouncyCastle.Math;
+using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using City.Networks.Deployments;
 
-namespace City.Networks
+namespace Blockcore.Networks.City.Networks
 {
     public class CityMain : Network
     {

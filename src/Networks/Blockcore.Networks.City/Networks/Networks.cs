@@ -1,7 +1,7 @@
 using Blockcore.Networks;
 using NBitcoin;
 
-namespace City.Networks
+namespace Blockcore.Networks.City.Networks
 {
    public static class Networks
    {

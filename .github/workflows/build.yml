@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - feature/net5
   repository_dispatch:
     types: [build]
   workflow_dispatch:

@@ -18,7 +18,7 @@ namespace Blockcore.Node
                     break;
 
                 case "CITY":
-                    nodeSettings = new NodeSettings(networksSelector: City.Networks.Networks.City, args: args);
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.City.Networks.Networks.City, args: args);
                     break;
 
                 case "STRAT":

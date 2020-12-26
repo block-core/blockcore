@@ -6,7 +6,7 @@ using Blockcore.Networks;
 using NBitcoin;
 using NBitcoin.BitcoinCore;
 
-namespace City.Networks.Policies
+namespace Blockcore.Networks.City.Networks.Policies
 {
    /// <summary>
    /// Blockcore sample coin-specific standard transaction definitions.

@@ -2,7 +2,7 @@ using Blockcore.Base.Deployments;
 using Blockcore.Consensus.ScriptInfo;
 using NBitcoin;
 
-namespace City.Networks.Deployments
+namespace Blockcore.Networks.City.Networks.Deployments
 {
     /// <summary>
     /// BIP9 deployments for the Blockcore sample coin network.

@@ -50,10 +50,10 @@ namespace Blockcore.Networks.Impleum
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                new DNSSeedData("seed1", "http://mn1.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed2", "http://mn2.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed3", "http://mn3.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed4", "http://mn4.uh420058.ukrdomen.com")
+                new DNSSeedData("seed1", "mn1.uh420058.ukrdomen.com"),
+                new DNSSeedData("seed2", "mn2.uh420058.ukrdomen.com"),
+                new DNSSeedData("seed3", "mn3.uh420058.ukrdomen.com"),
+                new DNSSeedData("seed4", "mn4.uh420058.ukrdomen.com")
             };
 
             public static List<NetworkAddress> Nodes = new List<NetworkAddress>

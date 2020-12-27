@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>1.0.18</Version>
+    <Version>1.0.17</Version>
     <RuntimeFrameworkVersion>5.0.1</RuntimeFrameworkVersion>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>

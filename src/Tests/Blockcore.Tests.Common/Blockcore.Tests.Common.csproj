@@ -4,6 +4,7 @@
     <AssemblyName>Blockcore.Tests.Common</AssemblyName>
     <PackageId>Blockcore.Tests.Common</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

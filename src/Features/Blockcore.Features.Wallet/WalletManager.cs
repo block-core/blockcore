@@ -2151,7 +2151,7 @@ namespace Blockcore.Features.Wallet
                 // Not many wallets will have this many inputs, but we have to ensure that the resulting transactions are
                 // small enough to be broadcast without standardness problems.
                 // Since there is only 1 output the size of the inputs is the only consideration.
-                if (total == 0 || currentOutputCount < 500)
+                if (total == 0 || currentOutputCount > 500)
                     continue;
 
                 BitcoinAddress destination = BitcoinAddress.Create(destAddress, this.network);

@@ -10,7 +10,9 @@ namespace Blockcore.Node
 {
     public class Program
     {
-        public static async Task MainAsync(string[] args)
+#pragma warning disable IDE1006 // Naming Styles
+        public static async Task Main(string[] args)
+#pragma warning restore IDE1006 // Naming Styles
         {
             try
             {

@@ -28,8 +28,11 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         private readonly int maxCacheItems;
 
+        private readonly LiteDatabase db;
+
         public AddressIndexerOutpointsRepository(LiteDatabase db, ILoggerFactory loggerFactory, int maxItems = 60_000)
         {
+            this.db = db;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.addressIndexerOutPointData = db.GetCollection<OutPointData>(DbOutputsDataKey);
             this.addressIndexerRewindData = db.GetCollection<AddressIndexerRewindData>(DbOutputsRewindDataKey);
@@ -67,7 +70,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             base.ItemRemovedLocked(item);
 
             if (item.Dirty)
+            { 
                 this.addressIndexerOutPointData.Upsert(item.Value);
+            }
         }
 
         public bool TryGetOutPointData(OutPoint outPoint, out OutPointData outPointData)
@@ -96,10 +101,13 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             lock (this.LockObject)
             {
                 CacheItem[] dirtyItems = this.Keys.Where(x => x.Dirty).ToArray();
+
                 this.addressIndexerOutPointData.Upsert(dirtyItems.Select(x => x.Value));
 
                 foreach (CacheItem dirtyItem in dirtyItems)
+                { 
                     dirtyItem.Dirty = false;
+                }
             }
         }
 
@@ -119,14 +127,16 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         {
             lock (this.LockObject)
             {
-                var itemsToPurge = this.addressIndexerRewindData.Find(x => x.BlockHeight < height).ToArray();
+                var itemsToPurge = this.addressIndexerRewindData.Find(x => x.BlockHeight < height).Select(x => x.BlockHash).ToArray();
 
                 for (int i = 0; i < itemsToPurge.Count(); i++)
                 {
-                    this.addressIndexerRewindData.Delete(itemsToPurge[i].BlockHash);
+                    this.addressIndexerRewindData.Delete(itemsToPurge[i]);
 
                     if (i % 100 == 0)
+                    { 
                         this.logger.LogInformation("Purging {0}/{1} rewind data items.", i, itemsToPurge.Count());
+                    }
                 }
             }
         }
@@ -145,7 +155,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 {
                     // Put the spent outputs back into the cache.
                     foreach (OutPointData outPointData in rewindData.SpentOutputs)
+                    { 
                         this.AddOutPointData(outPointData);
+                    }
 
                     // This rewind data item should now be removed from the collection.
                     this.addressIndexerRewindData.Delete(rewindData.BlockHash);

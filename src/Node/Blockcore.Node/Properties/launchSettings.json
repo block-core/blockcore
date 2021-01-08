@@ -78,7 +78,7 @@
     },
     "XDS (MAIN/LOCAL/ROCKSDB)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=XDS -server -txindex -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
+      "commandLineArgs": "--chain=XDS -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
     },
     "XDS (MAIN/LOCAL/LEVELDB)": {
       "commandName": "Project",

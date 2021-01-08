@@ -30,11 +30,11 @@
     },
     "CITY (MAIN)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=1"
+      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=0"
     },
     "CITY (MAIN/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=1"
+      "commandLineArgs": "--chain=CITY -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=0"
     },
     "CITY (TEST/LOCAL)": {
       "commandName": "Project",
@@ -52,9 +52,13 @@
       "commandName": "Project",
       "commandLineArgs": "--chain=STRAT -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
     },
+    "X42 (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=X42 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
     "X42 (MAIN/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=X42-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+      "commandLineArgs": "--chain=X42 -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
     },
     "X42 (TEST/LOCAL)": {
       "commandName": "Project",
@@ -74,7 +78,7 @@
     },
     "XDS (MAIN/LOCAL/ROCKSDB)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
+      "commandLineArgs": "--chain=XDS -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
     },
     "XDS (MAIN/LOCAL/LEVELDB)": {
       "commandName": "Project",

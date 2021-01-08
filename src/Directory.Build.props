@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Version>1.0.17</Version>
-    <RuntimeFrameworkVersion>3.1.4</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>3.1.10</RuntimeFrameworkVersion>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>

@@ -9,6 +9,7 @@ using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Features.BlockStore.Api.Models;
 using Blockcore.Features.BlockStore.Models;
+using Blockcore.Features.Consensus;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
@@ -48,6 +49,8 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
         /// <summary>UTXO indexer.</summary>
         private readonly IUtxoIndexer utxoIndexer;
 
+        private readonly IStakeChain stakeChain;
+
         public BlockStoreController(
             Network network,
             ILoggerFactory loggerFactory,
@@ -55,7 +58,8 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             IChainState chainState,
             ChainIndexer chainIndexer,
             IAddressIndexer addressIndexer,
-            IUtxoIndexer utxoIndexer)
+            IUtxoIndexer utxoIndexer,
+            IStakeChain stakeChain)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
@@ -69,6 +73,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             this.chainState = chainState;
             this.chainIndexer = chainIndexer;
             this.utxoIndexer = utxoIndexer;
+            this.stakeChain = stakeChain;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
@@ -136,6 +141,15 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                     blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.network.Consensus.ConsensusFactory);
                     blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockTarget()).ToUInt256().ToString();
                     blockModel.PosChainTrust = chainedHeader.ChainWork.ToString(); // this should be similar to ChainWork
+
+                    if (this.stakeChain != null)
+                    {
+                        BlockStake blockStake = this.stakeChain.Get(blockId);
+
+                        blockModel.PosModifierv2 = blockStake?.StakeModifierV2.ToString();
+                        blockModel.PosFlags = blockStake?.Flags == BlockFlag.BLOCK_PROOF_OF_STAKE ? "proof-of-stake" : "proof-of-work";
+                        blockModel.PosHashProof = blockStake?.HashProof.ToString();
+                    }
                 }
 
                 return this.Json(blockModel);

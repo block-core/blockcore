@@ -7,6 +7,7 @@ using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Features.BlockStore.Api.Controllers;
 using Blockcore.Features.BlockStore.Models;
+using Blockcore.Features.Consensus;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Wallet.Common;
@@ -165,6 +166,7 @@ namespace Blockcore.Features.BlockStore.Tests
             var chainState = new Mock<IChainState>();
             var addressIndexer = new Mock<IAddressIndexer>();
             var utxoIndexer = new Mock<IUtxoIndexer>();
+            var stakeChain = new Mock<IStakeChain>();
 
             ChainIndexer chainIndexer = WalletTestsHelpers.GenerateChainWithHeight(3, KnownNetworks.StratisTest);
 
@@ -173,7 +175,7 @@ namespace Blockcore.Features.BlockStore.Tests
             chainState.Setup(c => c.ConsensusTip)
                 .Returns(chainIndexer.GetHeader(2));
 
-            var controller = new BlockStoreController(KnownNetworks.StratisTest, logger.Object, store.Object, chainState.Object, chainIndexer, addressIndexer.Object, utxoIndexer.Object);
+            var controller = new BlockStoreController(KnownNetworks.StratisTest, logger.Object, store.Object, chainState.Object, chainIndexer, addressIndexer.Object, utxoIndexer.Object, stakeChain.Object);
 
             var json = (JsonResult)controller.GetBlockCount();
             int result = int.Parse(json.Value.ToString());
@@ -188,6 +190,7 @@ namespace Blockcore.Features.BlockStore.Tests
             var chainState = new Mock<IChainState>();
             var addressIndexer = new Mock<IAddressIndexer>();
             var utxoIndexer = new Mock<IUtxoIndexer>();
+            var stakeChain = new Mock<IStakeChain>();
 
             logger.Setup(l => l.CreateLogger(It.IsAny<string>())).Returns(Mock.Of<ILogger>);
 
@@ -196,7 +199,7 @@ namespace Blockcore.Features.BlockStore.Tests
             chain.Setup(c => c.GetHeader(It.IsAny<uint256>())).Returns(new ChainedHeader(block.Header, block.Header.GetHash(), 1));
             chain.Setup(x => x.Tip).Returns(new ChainedHeader(block.Header, block.Header.GetHash(), 1));
 
-            var controller = new BlockStoreController(KnownNetworks.StratisTest, logger.Object, store.Object, chainState.Object, chain.Object, addressIndexer.Object, utxoIndexer.Object);
+            var controller = new BlockStoreController(KnownNetworks.StratisTest, logger.Object, store.Object, chainState.Object, chain.Object, addressIndexer.Object, utxoIndexer.Object, stakeChain.Object);
 
             return (store, controller);
         }

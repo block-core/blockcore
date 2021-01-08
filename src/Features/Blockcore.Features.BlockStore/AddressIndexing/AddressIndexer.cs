@@ -367,7 +367,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 AddressIndexerTipData tipData = this.tipDataStore.FindAll().FirstOrDefault();
 
                 if (tipData == null)
+                { 
                     tipData = new AddressIndexerTipData();
+                }
 
                 tipData.Height = this.IndexerTip.Height;
                 tipData.TipHashBytes = this.IndexerTip.HashBlock.ToBytes();
@@ -510,7 +512,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                 // Remove outpoints that were consumed.
                 foreach (OutPoint consumedOutPoint in inputs.Select(x => x.PrevOut))
+                { 
                     this.outpointsRepository.RemoveOutPointData(consumedOutPoint);
+                }
             }
 
             return true;

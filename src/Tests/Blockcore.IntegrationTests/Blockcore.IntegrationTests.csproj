@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Http.Extensions" Version="1.0.1" />
-    <PackageReference Include="CSharpFunctionalExtensions" Version="2.13.3" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.14.0" />
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
     <PackageReference Include="NSubstitute" Version="4.2.2" />

@@ -1,8 +1,6 @@
 using Blockcore.Consensus;
-using Blockcore.Networks;
-using NBitcoin;
 
-namespace x42.Networks.Consensus
+namespace Blockcore.Networks.x42.Networks.Consensus
 {
     public class x42PosConsensusOptions : PosConsensusOptions
     {

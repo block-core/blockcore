@@ -1,5 +1,4 @@
 ﻿using Blockcore.Configuration;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Node
 {
@@ -26,7 +25,7 @@ namespace Blockcore.Node
                     break;
 
                 case "X42":
-                    nodeSettings = new NodeSettings(networksSelector: x42.Networks.Networks.x42, args: args);
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.x42.Networks.Networks.x42, args: args);
                     break;
 
                 case "XDS":

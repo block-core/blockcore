@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
 using NBitcoin;
 
-namespace x42.Networks.Setup
+namespace Blockcore.Networks.x42.Networks.Setup
 {
     internal class CoinSetup
     {

@@ -1,8 +1,8 @@
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.Networks.x42.Networks.Consensus;
 using NBitcoin;
-using x42.Networks.Consensus;
 
-namespace x42.Networks.Rules
+namespace Blockcore.Networks.x42.Networks.Rules
 {
     public sealed class x42PosCoinviewRule : CheckPosUtxosetRule
     {

@@ -1,6 +1,6 @@
 ﻿using Blockcore.Consensus;
 
-namespace x42.Networks.Consensus
+namespace Blockcore.Networks.x42.Networks.Consensus
 {
     public static class x42ConsensusErrors
     {

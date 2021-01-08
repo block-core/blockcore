@@ -4,9 +4,8 @@ using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
-namespace x42.Networks.Rules
+namespace Blockcore.Networks.x42.Networks.Rules
 {
     /// <summary>
     /// Checks if <see cref="x42Main"/> network block's header has a valid block version.

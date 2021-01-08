@@ -1,14 +1,13 @@
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
 
-namespace x42.Networks.Deployments
+namespace Blockcore.Networks.x42.Networks.Deployments
 {
-   /// <summary>
-   /// BIP9 deployments for the Blockcore sample coin network.
-   /// </summary>
-   public class x42BIP9Deployments : BIP9DeploymentsArray
+    /// <summary>
+    /// BIP9 deployments for the Blockcore sample coin network.
+    /// </summary>
+    public class x42BIP9Deployments : BIP9DeploymentsArray
     {
       // The position of each deployment in the deployments array. Note that this is decoupled from the actual position of the flag bit for the deployment in the block version.
       public const int TestDummy = 0;

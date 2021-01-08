@@ -1,14 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Blockcore.Features.Consensus.Rules.CommonRules;
-using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
-using Blockcore.Features.Consensus.Rules.UtxosetRules;
-using Blockcore.Features.MemoryPool.Rules;
-using x42.Networks.Policies;
-using x42.Networks.Rules;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 using System.Linq;
 using System.Net;
 using Blockcore.Base.Deployments;
@@ -16,15 +7,23 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Networks;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.x42.Networks.Consensus;
+using Blockcore.Networks.x42.Networks.Consensus.Rules;
+using Blockcore.Networks.x42.Networks.Deployments;
+using Blockcore.Networks.x42.Networks.Policies;
+using Blockcore.Networks.x42.Networks.Rules;
+using Blockcore.Networks.x42.Networks.Setup;
 using Blockcore.P2P;
-using x42.Networks.Consensus;
-using x42.Networks.Setup;
-using x42.Networks.Deployments;
+using NBitcoin;
+using NBitcoin.BouncyCastle.Math;
+using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using x42.Networks.Consensus.Rules;
 
-namespace x42.Networks
+namespace Blockcore.Networks.x42.Networks
 {
     public class x42Main : Network
     {

@@ -1,9 +1,6 @@
-using Blockcore.Networks;
-using NBitcoin;
-
-namespace x42.Networks
+namespace Blockcore.Networks.x42.Networks
 {
-   public static class Networks
+    public static class Networks
    {
       public static NetworksSelector x42
       {

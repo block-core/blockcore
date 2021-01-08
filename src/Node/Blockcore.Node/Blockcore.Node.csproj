@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Persistence.Rocksdb.CorePackage\Blockcore.Features.Persistence.Rocksdb.CorePackage.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.City\Blockcore.Networks.City.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Impleum\Blockcore.Networks.Impleum.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.OpenExo\Blockcore.Networks.OpenExo.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Rutanio\Blockcore.Networks.Rutanio.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />

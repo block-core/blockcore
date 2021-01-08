@@ -83,6 +83,18 @@
     "XDS (MAIN/LOCAL/LEVELDB)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=leveldbdata -dbtype=leveldb"
+    },
+    "IMPLX (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "IMPLX (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "IMPLX (TEST/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
     }
   }
 }

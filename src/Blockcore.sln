@@ -129,6 +129,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Persiste
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Features.Persistence.LevelDb.CorePackage", "Features\Persistence\Blockcore.Features.Persistence.LevelDb.CorePackage\Blockcore.Features.Persistence.LevelDb.CorePackage.csproj", "{4275AF0C-587B-4C9D-A100-0F2DD1702674}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.Impleum", "Networks\Blockcore.Networks.Impleum\Blockcore.Networks.Impleum.csproj", "{64E9C309-867E-45F6-A88E-7BC061305D0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -339,6 +341,10 @@ Global
 		{4275AF0C-587B-4C9D-A100-0F2DD1702674}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4275AF0C-587B-4C9D-A100-0F2DD1702674}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4275AF0C-587B-4C9D-A100-0F2DD1702674}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64E9C309-867E-45F6-A88E-7BC061305D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E9C309-867E-45F6-A88E-7BC061305D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E9C309-867E-45F6-A88E-7BC061305D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E9C309-867E-45F6-A88E-7BC061305D0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -397,6 +403,7 @@ Global
 		{BC0A50DF-0816-4613-B6B1-D1FEC384DFAE} = {2A20F4A8-01E8-4C44-A394-65C2DE6FBF28}
 		{8098D7F8-8B2F-451C-8DCB-90597B768F96} = {64694A14-97E0-4CBC-8032-754F9353B2DD}
 		{4275AF0C-587B-4C9D-A100-0F2DD1702674} = {64694A14-97E0-4CBC-8032-754F9353B2DD}
+		{64E9C309-867E-45F6-A88E-7BC061305D0B} = {3B56C02B-4468-4268-B797-851562789FCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

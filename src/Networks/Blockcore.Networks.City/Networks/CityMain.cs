@@ -1,31 +1,28 @@
 using System;
 using System.Collections.Generic;
-using Blockcore.Features.Consensus.Rules.CommonRules;
-using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
-using Blockcore.Features.Consensus.Rules.UtxosetRules;
-using Blockcore.Features.MemoryPool.Rules;
-using City.Networks.Policies;
-using City.Networks.Rules;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
-using System.Collections;
 using System.Linq;
-using System.Collections.Specialized;
 using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Networks;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.City.Networks.Consensus;
+using Blockcore.Networks.City.Networks.Deployments;
+using Blockcore.Networks.City.Networks.Policies;
+using Blockcore.Networks.City.Networks.Rules;
+using Blockcore.Networks.City.Networks.Setup;
 using Blockcore.P2P;
-using City.Networks.Consensus;
-using City.Networks.Setup;
+using NBitcoin;
+using NBitcoin.BouncyCastle.Math;
+using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using City.Networks.Deployments;
 
-namespace City.Networks
+namespace Blockcore.Networks.City.Networks
 {
     public class CityMain : Network
     {
@@ -63,7 +60,7 @@ namespace City.Networks
             MaxTipAge = 2 * 60 * 60;
             MinTxFee = 10000;
             MaxTxFee = Money.Coins(1).Satoshi;
-            FallbackFee = 10000;
+            FallbackFee = 15000;
             MinRelayTxFee = 10000;
             MaxTimeOffsetSeconds = 25 * 60;
             DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
@@ -221,7 +218,7 @@ namespace City.Networks
                 // rules that require the store to be loaded (coinview)
                 .Register<FetchUtxosetRule>()
                 .Register<TransactionDuplicationActivationRule>()
-                .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
+                .Register<CityCheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
                                                  // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
                                                  // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
                 .Register<PosColdStakingRule>()

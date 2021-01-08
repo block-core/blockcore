@@ -4,18 +4,17 @@ using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
-using Blockcore.Networks;
+using Blockcore.Networks.City.Networks.Consensus;
+using Blockcore.Networks.City.Networks.Deployments;
+using Blockcore.Networks.City.Networks.Policies;
+using Blockcore.Networks.City.Networks.Setup;
 using Blockcore.P2P;
-using City.Networks.Consensus;
-using City.Networks.Deployments;
-using City.Networks.Policies;
-using City.Networks.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace City.Networks
+namespace Blockcore.Networks.City.Networks
 {
     public class CityTest : CityMain
     {

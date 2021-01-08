@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Authors>Blockcore</Authors>
     <AssemblyTitle>Blockcore.Node</AssemblyTitle>
     <AssemblyName>Blockcore.Node</AssemblyName>
     <PackageId>Blockcore.Node</PackageId>

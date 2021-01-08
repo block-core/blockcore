@@ -972,7 +972,7 @@ namespace Blockcore.IntegrationTests
 
                 var config = new NodeConfigParameters
                 {
-                    {"whitebind", "0.0.0.0"},
+                    {"whitelist", "127.0.0.1"},
                     {"gateway", "1"}
                 };
 

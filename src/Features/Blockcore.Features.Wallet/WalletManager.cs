@@ -2148,39 +2148,26 @@ namespace Blockcore.Features.Wallet
                 currentOutputCount++;
                 total += txOut.Value;
 
-                // Not many wallets will have this many inputs, but we have to ensure that the resulting transactions are
-                // small enough to be broadcast without standardness problems.
-                // Since there is only 1 output the size of the inputs is the only consideration.
-                if (total == 0 || currentOutputCount < 500)
+                if (total == 0)
+                { 
                     continue;
+                }
 
-                BitcoinAddress destination = BitcoinAddress.Create(destAddress, this.network);
+                // If we reach a high total output count, we'll finalize the transaction and start building another one.
+                if (currentOutputCount > 500)
+                {
+                    PrepareTransaction(destAddress, ref builder, total, sweepTransactions);
 
-                builder.Send(destination, total);
-
-                // Cause the last destination to pay the fee, as we have no other funds to pay fees with.
-                builder.SubtractFees();
-
-                FeeRate feeRate = this.walletFeePolicy.GetFeeRate(FeeType.High.ToConfirmations());
-                builder.SendEstimatedFees(feeRate);
-
-                Transaction sweepTransaction = builder.BuildTransaction(true);
-
-                TransactionPolicyError[] errors = builder.Check(sweepTransaction);
-
-                // TODO: Perhaps return a model with an errors property to inform the user
-                if (errors.Length == 0)
-                    sweepTransactions.Add(sweepTransaction.ToHex());
-
-                // Reset the builder and related state, as we are now creating a fresh transaction.
-                builder = new TransactionBuilder(this.network);
-
-                currentOutputCount = 0;
-                total = 0;
+                    currentOutputCount = 0;
+                    total = 0;
+                }
             }
 
-            if (sweepTransactions.Count == 0)
-                return sweepTransactions;
+            // If there was a total of less than 500 inputs, or leftovers, we'll prepare the transaction.
+            if (currentOutputCount > 0)
+            {
+                PrepareTransaction(destAddress, ref builder, total, sweepTransactions);
+            }
 
             if (broadcast)
             {
@@ -2193,6 +2180,39 @@ namespace Blockcore.Features.Wallet
             }
 
             return sweepTransactions;
+        }
+
+        public void PrepareTransaction(string destAddress, ref TransactionBuilder builder, Money total, List<string> sweepTransactions)
+        {
+            BitcoinAddress destination = BitcoinAddress.Create(destAddress, this.network);
+
+            builder.Send(destination, total);
+
+            // Cause the last destination to pay the fee, as we have no other funds to pay fees with.
+            builder.SubtractFees();
+
+            FeeRate feeRate = this.walletFeePolicy.GetFeeRate(FeeType.High.ToConfirmations());
+            builder.SendEstimatedFees(feeRate);
+
+            Transaction sweepTransaction = builder.BuildTransaction(true);
+
+            TransactionPolicyError[] errors = builder.Check(sweepTransaction);
+
+            if (errors.Length == 0)
+            { 
+                sweepTransactions.Add(sweepTransaction.ToHex());
+            }
+            else
+            {
+                // If there are errors, simply append them to the list of return values.
+                foreach (var error in errors)
+                {
+                    sweepTransactions.Add(error.ToString());
+                }                
+            }
+
+            // Reset the builder and related state, as we are now creating a fresh transaction.
+            builder = new TransactionBuilder(this.network);
         }
     }
 }

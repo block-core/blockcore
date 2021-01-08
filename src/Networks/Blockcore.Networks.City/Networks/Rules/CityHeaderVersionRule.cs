@@ -6,7 +6,7 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace City.Networks.Rules
+namespace Blockcore.Networks.City.Networks.Rules
 {
    /// <summary>
    /// Checks if <see cref="CityMain"/> network block's header has a valid block version.

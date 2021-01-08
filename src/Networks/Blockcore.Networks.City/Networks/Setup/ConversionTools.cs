@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace City.Networks.Setup
+namespace Blockcore.Networks.City.Networks.Setup
 {
    public class ConversionTools
    {

@@ -19,6 +19,7 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LiteDB;
+using FileMode = LiteDB.FileMode;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Script = Blockcore.Consensus.ScriptInfo.Script;
@@ -85,7 +86,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         private LiteDatabase db;
 
-        private ILiteCollection<AddressIndexerTipData> tipDataStore;
+        private LiteCollection<AddressIndexerTipData> tipDataStore;
 
         /// <summary>A mapping between addresses and their balance changes.</summary>
         /// <remarks>All access should be protected by <see cref="lockObject"/>.</remarks>
@@ -178,7 +179,8 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
             string dbPath = Path.Combine(this.dataFolder.RootPath, AddressIndexerDatabaseFilename);
 
-            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
+            FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? FileMode.Exclusive : FileMode.Shared;
+            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode });
 
             this.addressIndexRepository = new AddressIndexRepository(this.db, this.loggerFactory);
 
@@ -365,7 +367,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 AddressIndexerTipData tipData = this.tipDataStore.FindAll().FirstOrDefault();
 
                 if (tipData == null)
+                { 
                     tipData = new AddressIndexerTipData();
+                }
 
                 tipData.Height = this.IndexerTip.Height;
                 tipData.TipHashBytes = this.IndexerTip.HashBlock.ToBytes();
@@ -508,7 +512,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                 // Remove outpoints that were consumed.
                 foreach (OutPoint consumedOutPoint in inputs.Select(x => x.PrevOut))
+                { 
                     this.outpointsRepository.RemoveOutPointData(consumedOutPoint);
+                }
             }
 
             return true;

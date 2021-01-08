@@ -21,7 +21,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
         public AddressIndexerOutpointsRepositoryTests()
         {
-            var db = new LiteDatabase(new ConnectionString() { Filename = this.RandomString(20) + ".litedb", Upgrade = true });
+            var db = new LiteDatabase(new ConnectionString() { Filename = this.RandomString(20) + ".db", Upgrade = true });
 
             this.repository = new AddressIndexerOutpointsRepository(db, new ExtendedLoggerFactory(), this.maxItems);
         }

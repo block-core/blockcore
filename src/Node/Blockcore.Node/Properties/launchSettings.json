@@ -95,6 +95,14 @@
     "IMPLX (TEST/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "EXOS (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=EXOS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "EXOS (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=EXOS -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
     }
   }
 }

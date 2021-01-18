@@ -11,6 +11,7 @@ using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.BCP.Networks.Deployments;
 using Blockcore.Networks.BCP.Networks.Policies;
 using Blockcore.Networks.BCP.Networks.Rules;
 using Blockcore.Networks.BCP.Networks.Setup;
@@ -65,7 +66,7 @@ namespace Blockcore.Networks.BCP.Networks
                GenesisReward,
                setup.GenesisText);
 
-            Genesis = genesisBlock;
+            this.Genesis = genesisBlock;
 
             var consensusOptions = new PosConsensusOptions
             {
@@ -84,7 +85,14 @@ namespace Blockcore.Networks.BCP.Networks
                 [BuriedDeployments.BIP66] = 0
             };
 
-            Consensus = new Blockcore.Consensus.Consensus(
+            var bip9Deployments = new BCPBIP9Deployments
+            {
+                [BCPBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [BCPBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [BCPBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive)
+            };
+
+            this.Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
@@ -94,7 +102,7 @@ namespace Blockcore.Networks.BCP.Networks
                 majorityRejectBlockOutdated: 950,
                 majorityWindow: 1000,
                 buriedDeployments: buriedDeployments,
-                bip9Deployments: new NoBIP9Deployments(),
+                bip9Deployments: bip9Deployments,
                 bip34Hash: null,
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 500,
@@ -118,9 +126,6 @@ namespace Blockcore.Networks.BCP.Networks
                 proofOfStakeReward: Money.Coins(setup.PoSBlockReward),
                 proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
             );
-
-            Consensus.PosEmptyCoinbase = BCPSetup.Instance.IsPoSv3();
-            Consensus.PosUseTimeFieldInKernalHash = BCPSetup.Instance.IsPoSv3();
 
             // TODO: Set your Base58Prefixes
             Base58Prefixes = new byte[12][];

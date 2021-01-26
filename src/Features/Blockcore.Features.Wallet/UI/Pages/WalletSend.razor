@@ -225,7 +225,7 @@
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
         if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
         if (this.Amount == 0) { this.Alert = "Please enter the number of coins you want to send"; return; }
-        if (this.Fee == 0) { this.Alert = "Please ensure you enter a fee"; return; }
+        if (this.Fee < this.ConnectionManager.Network.MinTxFee) { this.Alert = $"The fee is lower than minimum ({this.ConnectionManager.Network.MinTxFee})"; return; }
 
         this.Alert = string.Empty;
 

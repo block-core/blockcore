@@ -50,7 +50,7 @@ namespace Blockcore.IntegrationTests.Wallet
             this.walletFilePath = Path.Combine(walletsFolderPath, filename);
             File.Copy(Path.Combine("Wallet", "Data", filename), this.walletFilePath, true);
             Directory.CreateDirectory(dbWalletsFolderPath);
-            File.Copy(Path.Combine("Wallet", "Data", dbfilename), Path.Combine(dbWalletsFolderPath, dbfilename), true);
+            File.Copy(Path.Combine("Wallet", "Data", "txdb", dbfilename), Path.Combine(dbWalletsFolderPath, dbfilename), true);
 
             var result = $"http://localhost:{node.ApiPort}/api".AppendPathSegment("wallet/load").PostJsonAsync(new WalletLoadRequest
             {

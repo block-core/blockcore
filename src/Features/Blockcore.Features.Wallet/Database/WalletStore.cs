@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Blockcore.Configuration;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
@@ -45,15 +46,16 @@ namespace Blockcore.Features.Wallet.Database
             }
 
             BsonMapper mapper = this.Create();
-            
+            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
+
             if (!File.Exists(dbPath))
             {
-                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
             }
             else
             {
                 // Only perform this check if the database file already exists.
-                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
 
                 // Attempt to access the user version, this will crash if the loaded database is V5 and we use V4 packages.
                 try
@@ -68,7 +70,7 @@ namespace Blockcore.Features.Wallet.Database
                     File.Move(dbPath, dbBackupPath);
 
                     // Re-create the database object after we renamed the file.
-                    this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath }, mapper: mapper);
+                    this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
                 }
             }
 
@@ -165,7 +167,6 @@ namespace Blockcore.Features.Wallet.Database
                 limit: take)
               .OrderByDescending(x => x.SpendingDetails.CreationTime)
               .ToList();
-
 
             Query historyUnSpentQuery = Query.EQ("AccountIndex", new BsonValue(accountIndex));
             if (excludeColdStake)

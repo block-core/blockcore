@@ -12,6 +12,10 @@ namespace Blockcore.Node
 
             switch (chain)
             {
+                case "BCP":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.BCP.Networks.Networks.BCP, args: args);
+                    break;
+
                 case "BTC":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Bitcoin.Networks.Bitcoin, args: args);
                     break;

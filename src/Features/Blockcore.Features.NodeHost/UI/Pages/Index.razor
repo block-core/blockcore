@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+@implements IDisposable
+
 @using Blockcore.Utilities.Extensions
 @using Blockcore.Networks
 @using Blockcore.UI.BlazorModal
@@ -158,13 +160,18 @@
 }
 @code
 {
+    List<SubscriptionToken> subscriptionTokens;
+
     protected override void OnAfterRender(bool firstRender)
     {
-        if (this.Signals != null)
+        if (firstRender && this.Signals != null)
         {
-            this.Signals.Subscribe<BlockConnected>(this.ReloadEvent);
-            this.Signals.Subscribe<PeerConnected>(this.ReloadEvent);
-            this.Signals.Subscribe<PeerDisconnected>(this.ReloadEvent);
+            this.subscriptionTokens = new List<SubscriptionToken>()
+        {
+                this.Signals.Subscribe<BlockConnected>(this.ReloadEvent),
+                this.Signals.Subscribe<PeerConnected>(this.ReloadEvent),
+                this.Signals.Subscribe<PeerDisconnected>(this.ReloadEvent)
+            };
         }
     }
 
@@ -191,5 +198,16 @@
     private void AddNode()
     {
         ModalService.Show("Add Node", typeof(Modal.ModalAddNode));
+    }
+
+    public void Dispose()
+    {
+        if (subscriptionTokens != null)
+        {
+            foreach (var subscriptionToken in subscriptionTokens)
+            {
+                subscriptionToken.Dispose();
+            }
+        }
     }
 }

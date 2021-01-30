@@ -34,7 +34,7 @@ jobs:
     env:
       PROJECT_NAME: 'x42.Node'
       SOLUTION_PATH: 'src/Blockcore.sln'
-      PROJECT_PATH: 'src/Networks/x42/x42.Node/x42.Node.csproj'
+      PROJECT_PATH: 'src/Node/Blockcore.Node/Blockcore.Node.csproj'
       BUILD_CONFIGURATION: 'Release'
 
     steps:

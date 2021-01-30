@@ -160,33 +160,6 @@
 }
 @code
 {
-    List<SubscriptionToken> subscriptionTokens;
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender && this.Signals != null)
-        {
-            this.subscriptionTokens = new List<SubscriptionToken>()
-        {
-                this.Signals.Subscribe<BlockConnected>(this.ReloadEvent),
-                this.Signals.Subscribe<PeerConnected>(this.ReloadEvent),
-                this.Signals.Subscribe<PeerDisconnected>(this.ReloadEvent)
-            };
-        }
-    }
-
-    DateTime lastRefresh = DateTime.UtcNow;
-
-    private void ReloadEvent(object blockConnected)
-    {
-        if ((DateTime.UtcNow - lastRefresh).Seconds > 3)
-        {
-            lastRefresh = DateTime.UtcNow;
-
-            InvokeAsync(this.StateHasChanged);
-        }
-    }
-
     private void Shutdown()
     {
         this.FullNode?.NodeLifetime.StopApplication();
@@ -198,6 +171,33 @@
     private void AddNode()
     {
         ModalService.Show("Add Node", typeof(Modal.ModalAddNode));
+    }
+
+    List<SubscriptionToken> subscriptionTokens;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && this.Signals != null)
+        {
+            this.subscriptionTokens = new List<SubscriptionToken>()
+    {
+                this.Signals.Subscribe<BlockConnected>(this.ReloadEvent),
+                this.Signals.Subscribe<PeerConnected>(this.ReloadEvent),
+                this.Signals.Subscribe<PeerDisconnected>(this.ReloadEvent)
+            };
+        }
+    }
+
+    DateTime lastRefresh = DateTime.UtcNow;
+
+    private void ReloadEvent(object _)
+    {
+        if ((DateTime.UtcNow - lastRefresh).Seconds > 3)
+        {
+            lastRefresh = DateTime.UtcNow;
+
+            InvokeAsync(this.StateHasChanged);
+        }
     }
 
     public void Dispose()

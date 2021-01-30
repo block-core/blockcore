@@ -34,7 +34,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseOutpoint()
         {
             OutPoint outpoint = RandOutpoint();
@@ -48,7 +47,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanGetMedianBlock()
         {
             var chain = new ChainIndexer(this.networkMain);
@@ -90,7 +88,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanDetectFinalTransaction()
         {
             var tx = new Transaction();
@@ -150,7 +147,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanExtractTxOutDestinationEasily()
         {
             var secret = new BitcoinSecret("KyJTjvFpPF6DDX4fnT56d2eATPfxjdUPXFFUb85psnCdh34iyXRQ");
@@ -169,7 +165,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSignTransaction()
         {
             var key = new Key();
@@ -195,7 +190,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSelectCoin()
         {
             var selector = new DefaultCoinSelector(0);
@@ -235,7 +229,6 @@ namespace NBitcoin.Tests
         // for large input sizes.
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSelectCoinsInReasonableTimeDifferentScriptPubKeys()
         {
             var selector = new DefaultCoinSelector(0);
@@ -251,7 +244,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSelectCoinsInReasonableTimeNoGroupByScriptPubKey()
         {
             var selector = new DefaultCoinSelector(0)
@@ -279,7 +271,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanBuildIssueColoredCoinWithMultiSigP2SH()
         {
             var satoshi = new Key();
@@ -335,7 +326,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanGuessRedeemScriptWithInputKeys()
         {
             var k = new Key();
@@ -374,7 +364,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //https://github.com/NicolasDorier/NBitcoin/issues/34
         public void CanBuildAnyoneCanPayTransaction()
         {
@@ -492,7 +482,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanPrecomputeHashes()
         {
             Transaction tx = this.networkMain.CreateTransaction();
@@ -564,7 +553,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSwitchGroup()
         {
             var satoshi = new Key();
@@ -609,7 +597,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSplitFees()
         {
             var satoshi = new Key();
@@ -664,7 +651,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanVerifySequenceLock()
         {
             var now = new DateTimeOffset(1988, 7, 18, 0, 0, 0, TimeSpan.Zero);
@@ -730,7 +716,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanEstimateFees()
         {
             var alice = new Key();
@@ -793,7 +778,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void BigUIntCoverage()
         {
             Assert.True(new uint160("0102030405060708090102030405060708090102") == new uint160("0102030405060708090102030405060708090102"));
@@ -835,7 +819,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void OtherCoverage()
         {
             Assert.Equal(System.Net.IPAddress.Parse("127.0.0.1").MapToIPv6(), Utils.MapToIPv6(System.Net.IPAddress.Parse("127.0.0.1")));
@@ -844,7 +827,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void BitcoinStreamCoverage()
         {
             BitcoinStreamCoverageCore(new ulong[] { 1, 2, 3, 4 }, (BitcoinStream bs, ref ulong[] items) =>
@@ -899,7 +881,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSerializeInvalidTransactionsBackAndForth()
         {
             Transaction before = this.networkMain.CreateTransaction();
@@ -938,7 +919,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CantAskScriptCodeOnIncompleteCoin()
         {
             var k = new Key();
@@ -966,7 +946,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanBuildWitTransaction()
         {
             Action<Transaction, TransactionBuilder> AssertEstimatedSize = (tx, b) =>
@@ -1066,7 +1045,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanFilterUneconomicalCoins()
         {
             var builder = new TransactionBuilder(this.networkMain);
@@ -1096,7 +1074,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCheckSegwitPubkey()
         {
             var a = new Script("OP_DUP 033fbe0a2aa8dc28ee3b2e271e3fedc7568529ffa20df179b803bf9073c11b6a8b OP_CHECKSIG OP_IF OP_DROP 0382fdfb0a3898bc6504f63204e7d15a63be82a3b910b5b865690dc96d1249f98c OP_ELSE OP_CODESEPARATOR 033fbe0a2aa8dc28ee3b2e271e3fedc7568529ffa20df179b803bf9073c11b6a8b OP_ENDIF OP_CHECKSIG");
@@ -1114,7 +1091,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanEstimatedFeesCorrectlyIfFeesChangeTransactionSize()
         {
             Script redeem = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new Key().PubKey, new Key().PubKey, new Key().PubKey);
@@ -1140,7 +1116,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSubstractFees()
         {
             var alice = new Key();
@@ -1158,7 +1133,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanBuildWithKnownSignatures()
         {
             var k = new Key();
@@ -1177,7 +1151,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanBuildTransaction()
         {
             Key[] keys = Enumerable.Range(0, 5).Select(i => new Key()).ToArray();
@@ -1397,7 +1370,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //https://gist.github.com/gavinandresen/3966071
         public void CanBuildTransactionWithDustPrevention()
         {
@@ -1449,7 +1422,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //https://gist.github.com/gavinandresen/3966071
         public void CanPartiallySignTransaction()
         {
@@ -1539,7 +1512,6 @@ namespace NBitcoin.Tests
             ScriptVerify = ScriptVerify.Standard & ~ScriptVerify.LowS
         };
 
-        [Trait("UnitTest", "UnitTest")]
         [Fact]
         public void CanMutateSignature()
         {
@@ -1582,7 +1554,6 @@ namespace NBitcoin.Tests
         private ScriptVerify allowHighS = ScriptVerify.Standard & ~ScriptVerify.LowS;
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanUseLockTime()
         {
             Transaction tx = this.networkMain.CreateTransaction();
@@ -1603,7 +1574,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //http://brainwallet.org/#tx
         public void CanGetTransactionErrors()
         {
@@ -1652,7 +1623,6 @@ namespace NBitcoin.Tests
         //OP_DEPTH 5 OP_SUB OP_PICK OP_SIZE OP_NIP e 10 OP_WITHIN OP_DEPTH 6 OP_SUB OP_PICK OP_SIZE OP_NIP e 10 OP_WITHIN OP_BOOLAND OP_DEPTH 5 OP_SUB OP_PICK OP_SHA256 1d3a9b978502dbe93364a4ea7b75ae9758fd7683958f0f42c1600e9975d10350 OP_EQUAL OP_DEPTH 6 OP_SUB OP_PICK OP_SHA256 1c5f92551d47cb478129b6ba715f58e9cea74ced4eee866c61fc2ea214197dec OP_EQUAL OP_BOOLAND OP_BOOLAND OP_DEPTH 5 OP_SUB OP_PICK OP_SIZE OP_NIP OP_DEPTH 6 OP_SUB OP_PICK OP_SIZE OP_NIP OP_EQUAL OP_IF 1d3a9b978502dbe93364a4ea7b75ae9758fd7683958f0f42c1600e9975d10350 OP_ELSE 1c5f92551d47cb478129b6ba715f58e9cea74ced4eee866c61fc2ea214197dec OP_ENDIF 1d3a9b978502dbe93364a4ea7b75ae9758fd7683958f0f42c1600e9975d10350 OP_EQUAL OP_DEPTH 1 OP_SUB OP_PICK OP_DEPTH 2 OP_SUB OP_PICK OP_CHECKSIG OP_BOOLAND OP_DEPTH 5 OP_SUB OP_PICK OP_SIZE OP_NIP OP_DEPTH 6 OP_SUB OP_PICK OP_SIZE OP_NIP OP_EQUAL OP_IF 1d3a9b978502dbe93364a4ea7b75ae9758fd7683958f0f42c1600e9975d10350 OP_ELSE 1c5f92551d47cb478129b6ba715f58e9cea74ced4eee866c61fc2ea214197dec OP_ENDIF 1c5f92551d47cb478129b6ba715f58e9cea74ced4eee866c61fc2ea214197dec OP_EQUAL OP_DEPTH 3 OP_SUB OP_PICK OP_DEPTH 4 OP_SUB OP_PICK OP_CHECKSIG OP_BOOLAND OP_BOOLOR OP_BOOLAND OP_DEPTH 1 OP_SUB OP_PICK OP_DEPTH 2 OP_SUB OP_PICK OP_CHECKSIG OP_DEPTH 3 OP_SUB OP_PICK OP_DEPTH 4 OP_SUB OP_PICK OP_CHECKSIG OP_BOOLAND OP_BOOLOR OP_VERIFY
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestWtfScript()
         {
             Transaction source = this.networkMain.CreateTransaction("01000000024c8a18c4d9e623e81272e5c34669d67604637e6d8f64cbf79ba0bcc93c3472f30000000049483045022100bc793ca29e427838cbc24c127733be032178ab623519f796ce0fcdfef58a96f202206174c0f7d7b303e01fbb50052e0f5fcd75a964af5737a9ed2b95c20eef80cd7a01ffffffffd1f8b4607bd6a83db42d6f557f378758d4b03d9d1f2bb3b868bb9c55bbfc8679000000005747304402203424c812ee29c52a39bd6ce41b2a0d8a6210995b4049fa03be65105fc1abdb7402205bccaeb2c0d23d59f70a8175912c49100108d7217ad105bcb001d65be0c25c95010e8856df1cc6b5d55a12704c261963ffffffff01f049020000000000fd76017455947982775e60a57456947982775e60a59a74559479a820555086252d5d479dc034cddb75d6b9e8b6947e3690cec630531203e2f3dfdbfc8774569479a82034ebda879dc394c7522047b9bcc16b985d960b301b9d4f3addb05190b01b1300879a9a745594798277745694798277876320555086252d5d479dc034cddb75d6b9e8b6947e3690cec630531203e2f3dfdbfc672034ebda879dc394c7522047b9bcc16b985d960b301b9d4f3addb05190b01b13006820555086252d5d479dc034cddb75d6b9e8b6947e3690cec630531203e2f3dfdbfc877451947974529479ac9a745594798277745694798277876320555086252d5d479dc034cddb75d6b9e8b6947e3690cec630531203e2f3dfdbfc672034ebda879dc394c7522047b9bcc16b985d960b301b9d4f3addb05190b01b1300682034ebda879dc394c7522047b9bcc16b985d960b301b9d4f3addb05190b01b1300877453947974549479ac9a9b9a7451947974529479ac7453947974549479ac9a9b6900000000");
@@ -1664,7 +1634,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestOPNIP()
         {
             // (x1 x2 -- x2)
@@ -1682,7 +1651,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void OP_2ROT()
         {
             // (x1 x2 x3 x4 x5 x6 -- x3 x4 x5 x6 x1 x2)
@@ -1714,7 +1682,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestOPTuck()
         {
             // (x1 x2 -- x2 x1 x2)
@@ -1739,7 +1706,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCheckSegwitSig()
         {
             Transaction tx = this.networkMain.CreateTransaction("010000000001015d896079097272b13ed9cb22acfabeca9ce83f586d98cc15a08ea2f9c558013b0300000000ffffffff01605af40500000000160014a8cbb5eca9af499cecaa08457690ab367f23d95b0247304402200b6baba4287f3321ae4ec6ba66420d9a48c3f3bc331603e7dca6b12ca75cce6102207fa582041b025605c0474b99a2d3ab5080d6ea14ae3a50b7de92596abf40fb4b012102cdfc0f4701e0c8db3a0913de5f635d0ea76663a8f80925567358d558603fae3500000000");
@@ -1773,7 +1739,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseWitTransaction()
         {
             string hex = "010000000001015d896079097272b13ed9cb22acfabeca9ce83f586d98cc15a08ea2f9c558013b0300000000ffffffff01605af40500000000160014a8cbb5eca9af499cecaa08457690ab367f23d95b0247304402200b6baba4287f3321ae4ec6ba66420d9a48c3f3bc331603e7dca6b12ca75cce6102207fa582041b025605c0474b99a2d3ab5080d6ea14ae3a50b7de92596abf40fb4b012102cdfc0f4701e0c8db3a0913de5f635d0ea76663a8f80925567358d558603fae3500000000";
@@ -1795,7 +1760,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void bip143Test()
         {
             Transaction tx = this.networkMain.CreateTransaction("0100000002fff7f7881a8099afa6940d42d1e7f6362bec38171ea3edf433541db4e4ad969f0000000000eeffffffef51e1b804cc89d182d279655c3aa89e815b1b309fe287d9b2b55d57b90ec68a0100000000ffffffff02202cb206000000001976a9148280b37df378db99f66f85c95a783a76ac7a6d5988ac9093510d000000001976a9143bde42dbee7e4dbe6a21b2d50ce2f0167faa815988ac11000000");
@@ -1804,7 +1768,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void witnessHasPushSizeLimit()
         {
             var bob = new Key();
@@ -1823,7 +1786,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void DoNotThrowsWithSatoshiFormatAndNoOutputs()
         {
             Transaction tx = this.networkMain.CreateTransaction("02000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0401700101ffffffff02" +
@@ -1834,7 +1796,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //http://brainwallet.org/#tx
         public void CanParseTransaction()
         {
@@ -2018,7 +1980,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCacheHashes()
         {
             Transaction tx = this.networkMain.CreateTransaction();
@@ -2033,7 +1994,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CheckScriptCoinIsCoherent()
         {
             var key = new Key();
@@ -2070,7 +2030,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CheckWitnessSize()
         {
             var scriptPubKey = new Script(OpcodeType.OP_DROP, OpcodeType.OP_TRUE);
@@ -2100,7 +2059,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestSigHashes()
         {
             var secret = new BitcoinSecret("L5AQtV2HDm4xGsseLokK2VAT2EtYKcTm3c7HwqnJBFt9LdaQULsM");
@@ -2393,7 +2351,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Tx_Valid()
         {
             // Read tests from test/data/tx_valid.json
@@ -2480,7 +2437,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void SequenceStructParsedCorrectly()
         {
             Assert.True(new Sequence() == 0xFFFFFFFFU);
@@ -2509,7 +2465,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Tx_Invalid()
         {
             // Read tests from test/data/tx_valid.json
@@ -2571,7 +2526,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Test_Get()
         {
             byte[] dummyPubKey = TransactionSignature.Empty.ToBytes();
@@ -2774,7 +2728,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Test_witness()
         {
             var keystore = new CKeyStore();
@@ -2982,7 +2935,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Test_IsStandard()
         {
             var coins = new CoinsView(this.networkMain);

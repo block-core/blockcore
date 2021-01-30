@@ -24,7 +24,7 @@ namespace Blockcore.Tests.Builder
             this.featureCollectionDelegates = new List<Action<IFeatureCollection>>();
             this.featureCollection = new FeatureCollection();
 
-            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection);
+            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection, new TestPersistenceProviderManager(null));
             this.fullNodeBuilder.Network = KnownNetworks.TestNet;
         }
 
@@ -60,7 +60,7 @@ namespace Blockcore.Tests.Builder
         [Fact]
         public void UseNodeSettingsUsingTestNetConfiguresNodeBuilderWithTestnetSettings()
         {
-            var nodeSettings = new NodeSettings(KnownNetworks.TestNet, args:new string[] {
+            var nodeSettings = new NodeSettings(KnownNetworks.TestNet, args: new string[] {
                 "-datadir=TestData/FullNodeBuilder/UseNodeSettings" });
 
             FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings);
@@ -76,7 +76,7 @@ namespace Blockcore.Tests.Builder
         [Fact]
         public void UseNodeSettingsUsingRegTestNetConfiguresNodeBuilderWithRegTestNet()
         {
-            var nodeSettings = new NodeSettings(KnownNetworks.RegTest, args:new string[] {
+            var nodeSettings = new NodeSettings(KnownNetworks.RegTest, args: new string[] {
                 "-datadir=TestData/FullNodeBuilder/UseNodeSettings" });
 
             FullNodeBuilderNodeSettingsExtension.UseNodeSettings(this.fullNodeBuilder, nodeSettings);

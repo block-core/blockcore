@@ -16,7 +16,7 @@ namespace Blockcore.Base.Deployments
 
         // 75% of 144 blocks
         public const long DefaultRegTestThreshold = 108;
-        
+
         public BIP9DeploymentsParameters(string name, int bit, DateTimeOffset startTime, DateTimeOffset timeout, long threshold)
         {
             this.Bit = bit;
@@ -25,9 +25,9 @@ namespace Blockcore.Base.Deployments
             this.Threshold = threshold;
             this.Name = name.ToLower();
         }
-        
+
         public BIP9DeploymentsParameters(string name, int bit, long startTime, long timeout, long threshold)
-            : this(name, bit, (DateTimeOffset) Utils.UnixTimeToDateTime(startTime), Utils.UnixTimeToDateTime(timeout), threshold)
+            : this(name, bit, (DateTimeOffset)Utils.UnixTimeToDateTime(startTime), Utils.UnixTimeToDateTime(timeout), threshold)
         {
         }
 
@@ -53,12 +53,11 @@ namespace Blockcore.Base.Deployments
             private set;
         }
 
-        public string Name 
+        public string Name
         {
             get;
             private set;
         }
-
 
         /// <summary>Specifies the activation threshold for this deployment. The BIP9 specification originally set the threshold at >=1916 blocks (95% of 2016),
         /// or >=1512 for testnet (75% of 2016). </summary>

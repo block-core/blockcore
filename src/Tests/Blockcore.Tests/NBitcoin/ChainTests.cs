@@ -14,8 +14,8 @@ namespace NBitcoin.Tests
 {
     public class ChainTests
     {
-        readonly Network network;
-        readonly Network networkTest;
+        private readonly Network network;
+        private readonly Network networkTest;
 
         public ChainTests()
         {
@@ -24,7 +24,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSaveChain()
         {
             var chain = new ChainIndexer(this.network);
@@ -40,14 +39,12 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void IncompleteScriptDoesNotHang()
         {
             new Script(new byte[] { 0x4d }).ToString();
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseRandomScripts()
         {
             for (int i = 0; i < 600; i++)
@@ -58,7 +55,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanLoadAndSaveConcurrentChain()
         {
             var cchain = new ChainIndexer(this.network);
@@ -83,7 +79,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanBuildConcurrentChain()
         {
             var cchain = new ChainIndexer(this.network);
@@ -135,7 +130,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanBuildChain()
         {
             var chain = new ChainIndexer(this.network);
@@ -150,7 +144,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCalculateDifficulty()
         {
             var main = new ChainIndexer(this.network).Load(this.LoadMainChain());
@@ -171,7 +164,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanValidateChain()
         {
             var main = new ChainIndexer(this.network).Load(this.LoadMainChain());
@@ -193,7 +185,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanEnumerateAfterChainedBlock()
         {
             var chain = new ChainIndexer(this.network);
@@ -219,7 +210,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanBuildChain2()
         {
             ChainIndexer chainIndexer = this.CreateChain(10);
@@ -237,7 +227,6 @@ namespace NBitcoin.Tests
         /// <seealso cref="https://github.com/bitcoin/bitcoin/blob/master/src/test/skiplist_tests.cpp"/>
         /// </summary>
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ChainedHeaderVerifySkipListForGetAncestor()
         {
             int skipListLength = 300000;
@@ -277,7 +266,6 @@ namespace NBitcoin.Tests
         /// <seealso cref="https://github.com/bitcoin/bitcoin/blob/master/src/test/skiplist_tests.cpp"/>
         /// </summary>
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ChainedHeaderVerifySkipListForGetLocator()
         {
             int mainLength = 100000;

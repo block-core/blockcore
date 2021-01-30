@@ -8,7 +8,7 @@
         public static bool noClient = !Process.GetProcesses().Any(p => p.ProcessName.Contains("stratis"));
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //Copied from https://en.bitcoin.it/wiki/Protocol_specification (19/04/2014)
         public void CanParseMessages()
         {
@@ -68,7 +68,6 @@
                                 Assert.Equal(21, date.Hour);
                             })
                     },
-
                 };
 
             foreach (var test in tests)
@@ -312,7 +311,6 @@
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ServerDisconnectCorrectlyFromDroppingClient()
         {
             if (pos_RPCClientTests.noClient) return;
@@ -333,7 +331,6 @@
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanReceiveHandshake()
         {
             if (pos_RPCClientTests.noClient) return;
@@ -349,7 +346,6 @@
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRespondToPong()
         {
             if (pos_RPCClientTests.noClient) return;
@@ -371,13 +367,10 @@
                             break;
                     }
                 }
-
             }
-
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CantConnectToYourself()
         {
             if (pos_RPCClientTests.noClient) return;
@@ -393,7 +386,6 @@
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanExchangeFastPingPong()
         {
             if (pos_RPCClientTests.noClient) return;
@@ -429,7 +421,6 @@
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanConnectMultipleTimeToServer()
         {
             if (pos_RPCClientTests.noClient) return;
@@ -461,9 +452,7 @@
             }
         }
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseReject()
         {
             var hex = "7035220572656a6563740000000000003a000000db7f7e7802747812156261642d74786e732d696e707574732d7370656e74577a9694da4ff41ae999f6591cff3749ad6a7db19435f3d8af5fecbcff824196";
@@ -519,7 +508,6 @@
             }
         }
 
-
         [Fact]
         [Trait("Protocol", "Protocol")]
         public void CanDownloadBlocks()
@@ -570,5 +558,6 @@
             }
         }
 
-*/    }
+*/
+    }
 }

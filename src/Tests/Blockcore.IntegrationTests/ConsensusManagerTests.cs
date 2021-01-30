@@ -235,6 +235,7 @@ namespace Blockcore.IntegrationTests
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void ConsensusManagerSForkOccursNodeDisconnectedDueToMaxReorgViolation()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -368,7 +369,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var syncerNetwork = new BitcoinOverrideRegTest("regtest1");
+                var syncerNetwork = new BitcoinOverrideRegTest("regtest15");
 
                 // Inject a rule that will fail at block 11 of the new chain
                 syncerNetwork.Consensus.ConsensusRules.FullValidationRules.Insert(1, typeof(FailValidation11_2));
@@ -517,11 +518,12 @@ namespace Blockcore.IntegrationTests
 
         /// <summary>This test assumes CoinbaseMaturity is 10 and at block 2 there is a huge premine, adjust the test if this changes.</summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void ConsensusManager_Fork_Occurs_When_Stake_Coins_Are_Spent_And_Found_In_Rewind_Data()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest("stake_coins");
 
                 var sharedMnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve).ToString();
 
@@ -586,7 +588,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest("mined_coins");
 
                 var sharedMnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve).ToString();
 
@@ -630,7 +632,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 var minerA = builder.CreateStratisPosNode(network, "cm-11-minerA").OverrideDateTimeProvider().WithWallet().Start();
                 var minerB = builder.CreateStratisPosNode(network, "cm-11-minerB").OverrideDateTimeProvider().Start();
@@ -679,7 +681,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 // MinerA requires a physical wallet to stake with.
                 var minerA = builder.CreateStratisPosNode(network, "minerA").WithWallet().Start();

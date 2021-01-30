@@ -1,3 +1,23 @@
+##  (2020-12-22)
+
+* Add manual dispatch capability to workflows ([bd568d1](https://github.com/block-core/blockcore/commit/bd568d1))
+* Attempting to get all tests to pass (#240) ([77a49c0](https://github.com/block-core/blockcore/commit/77a49c0)), closes [#240](https://github.com/block-core/blockcore/issues/240)
+* consolidated and rebaased changes (#244) ([4200a18](https://github.com/block-core/blockcore/commit/4200a18)), closes [#244](https://github.com/block-core/blockcore/issues/244)
+* Fix build break ([68ded29](https://github.com/block-core/blockcore/commit/68ded29))
+* Fix build links ([6a507e0](https://github.com/block-core/blockcore/commit/6a507e0))
+* Fix failing test ([14f3bcb](https://github.com/block-core/blockcore/commit/14f3bcb))
+* Fix project references (#245) ([0ce71d5](https://github.com/block-core/blockcore/commit/0ce71d5)), closes [#245](https://github.com/block-core/blockcore/issues/245)
+* Fix TCITY network configuration ([cbf104a](https://github.com/block-core/blockcore/commit/cbf104a))
+* Improve structure for network definitions (#246) ([633119f](https://github.com/block-core/blockcore/commit/633119f)), closes [#246](https://github.com/block-core/blockcore/issues/246)
+* Remove all warnings from the solution (#243) ([faab7ff](https://github.com/block-core/blockcore/commit/faab7ff)), closes [#243](https://github.com/block-core/blockcore/issues/243)
+* Set last POW Block to 165_500 (#249) ([62151bd](https://github.com/block-core/blockcore/commit/62151bd)), closes [#249](https://github.com/block-core/blockcore/issues/249)
+* Temporarily enable additional event triggers for publish ([b4108cc](https://github.com/block-core/blockcore/commit/b4108cc))
+* Update changelog and version ([9c9d390](https://github.com/block-core/blockcore/commit/9c9d390))
+* Update coinbase consensus for City Chain (#248) ([9fc5e2d](https://github.com/block-core/blockcore/commit/9fc5e2d)), closes [#248](https://github.com/block-core/blockcore/issues/248)
+* Update to Release 16 ([cf752f5](https://github.com/block-core/blockcore/commit/cf752f5))
+
+
+
 ##  (2020-11-19)
 
 *  Updated CI Var for GitHub workflow change. (#239) ([36db5eb](https://github.com/block-core/blockcore/commit/36db5eb)), closes [#239](https://github.com/block-core/blockcore/issues/239)

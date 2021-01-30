@@ -9,6 +9,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking.Api.Controllers;
 using Blockcore.Features.ColdStaking.Api.Models;
 using Blockcore.Features.Wallet;
@@ -91,7 +92,8 @@ namespace Blockcore.Features.ColdStaking
             ILoggerFactory loggerFactory,
             IDateTimeProvider dateTimeProvider,
             ISignals signals = null,
-            IBroadcasterManager broadcasterManager = null) : base(
+            IBroadcasterManager broadcasterManager = null,
+            IUtxoIndexer utxoIndexer = null) : base(
                 loggerFactory,
                 network,
                 chainIndexer,
@@ -103,7 +105,8 @@ namespace Blockcore.Features.ColdStaking
                 dateTimeProvider,
                 scriptAddressReader,
                 signals,
-                broadcasterManager)
+                broadcasterManager,
+                utxoIndexer)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(dateTimeProvider, nameof(dateTimeProvider));

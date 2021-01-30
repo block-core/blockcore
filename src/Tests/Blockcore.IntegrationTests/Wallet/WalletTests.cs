@@ -213,6 +213,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void BuildTransaction_From_ManyUtxos_EnoughFundsForFee()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -220,7 +221,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 CoreNode node1 = builder.CreateStratisPowNode(this.network).WithWallet().Start();
                 CoreNode node2 = builder.CreateStratisPowNode(this.network).WithWallet().Start();
 
-                int maturity = (int) node1.FullNode.Network.Consensus.CoinbaseMaturity;
+                int maturity = (int)node1.FullNode.Network.Consensus.CoinbaseMaturity;
                 TestHelper.MineBlocks(node1, maturity + 1 + 15);
 
                 int currentBestHeight = maturity + 1 + 15;
@@ -267,7 +268,7 @@ namespace Blockcore.IntegrationTests.Wallet
                         }
                     });
 
-                JsonResult jsonResult = (JsonResult) result;
+                JsonResult jsonResult = (JsonResult)result;
                 Assert.NotNull(((WalletBuildTransactionModel)jsonResult.Value).TransactionId);
             }
         }

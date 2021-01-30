@@ -23,17 +23,20 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Http.Extensions" Version="1.0.1" />
-    <PackageReference Include="CSharpFunctionalExtensions" Version="2.7.1" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.14.0" />
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
-    <PackageReference Include="NSubstitute" Version="4.2.1" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
     <PackageReference Include="RocksDbNative" Version="6.2.2" />
     <PackageReference Include="RocksDbSharp" Version="6.2.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
-    <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Base.Persistence.LevelDb\Blockcore.Features.Base.Persistence.LevelDb.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.BlockStore.Persistence.LevelDb\Blockcore.Features.BlockStore.Persistence.LevelDb.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Consensus.Persistence.LevelDb\Blockcore.Features.Consensus.Persistence.LevelDb.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
@@ -50,8 +53,8 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -71,6 +74,9 @@
     <None Update="Wallet\Data\test.wallet.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Wallet\Data\txdb\wallet-with-funds.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Wallet\Data\wallet-with-funds.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -80,5 +86,9 @@
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Wallet\Data\txdb\" />
   </ItemGroup>
 </Project>

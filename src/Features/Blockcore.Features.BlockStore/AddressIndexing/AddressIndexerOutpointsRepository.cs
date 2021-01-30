@@ -27,8 +27,11 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         private readonly int maxCacheItems;
 
+        private readonly LiteDatabase db;
+
         public AddressIndexerOutpointsRepository(LiteDatabase db, ILoggerFactory loggerFactory, int maxItems = 60_000)
         {
+            this.db = db;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.addressIndexerOutPointData = (LiteCollection<OutPointData>)db.GetCollection<OutPointData>(DbOutputsDataKey);
             this.addressIndexerRewindData = (LiteCollection<AddressIndexerRewindData>)db.GetCollection<AddressIndexerRewindData>(DbOutputsRewindDataKey);
@@ -66,7 +69,9 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             base.ItemRemovedLocked(item);
 
             if (item.Dirty)
+            {
                 this.addressIndexerOutPointData.Upsert(item.Value);
+            }
         }
 
         public bool TryGetOutPointData(OutPoint outPoint, out OutPointData outPointData)
@@ -92,13 +97,13 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         public void SaveAllItems()
         {
-            lock (this.LockObject)
-            {
-                CacheItem[] dirtyItems = this.Keys.Where(x => x.Dirty).ToArray();
-                this.addressIndexerOutPointData.Upsert(dirtyItems.Select(x => x.Value));
+            CacheItem[] dirtyItems = this.Keys.Where(x => x.Dirty).ToArray();
 
-                foreach (CacheItem dirtyItem in dirtyItems)
-                    dirtyItem.Dirty = false;
+            this.addressIndexerOutPointData.Upsert(dirtyItems.Select(x => x.Value));
+
+            foreach (CacheItem dirtyItem in dirtyItems)
+            {
+                dirtyItem.Dirty = false;
             }
         }
 
@@ -106,49 +111,37 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// <param name="rewindData">The data to be persisted.</param>
         public void RecordRewindData(AddressIndexerRewindData rewindData)
         {
-            lock (this.LockObject)
-            {
-                this.addressIndexerRewindData.Upsert(rewindData);
-            }
+            this.addressIndexerRewindData.Upsert(rewindData);
         }
 
         /// <summary>Deletes rewind data items that were originated at height lower than <paramref name="height"/>.</summary>
         /// <param name="height">The threshold below which data will be deleted.</param>
         public void PurgeOldRewindData(int height)
         {
-            lock (this.LockObject)
-            {
-                var itemsToPurge = this.addressIndexerRewindData.Find(x => x.BlockHeight < height).ToArray();
+            // Delete all in one go based on query. This is more optimal than query, iterate and delete individual records.
+            int purgedCount = this.addressIndexerRewindData.Delete(x => x.BlockHeight < height);
 
-                for (int i = 0; i < itemsToPurge.Count(); i++)
-                {
-                    this.addressIndexerRewindData.Delete(itemsToPurge[i].BlockHash);
-
-                    if (i % 100 == 0)
-                        this.logger.LogInformation("Purging {0}/{1} rewind data items.", i, itemsToPurge.Count());
-                }
-            }
+            this.logger.LogInformation("Purged {0} rewind data items.", purgedCount);
         }
 
         /// <summary>Reverts changes made by processing blocks with height higher than <param name="height">.</param></summary>
         /// <param name="height">The height above which to restore outpoints.</param>
         public void RewindDataAboveHeight(int height)
         {
-            lock (this.LockObject)
+            IEnumerable<AddressIndexerRewindData> toRestore = this.addressIndexerRewindData.Find(x => x.BlockHeight > height);
+
+            this.logger.LogDebug("Restoring data for {0} blocks.", toRestore.Count());
+
+            foreach (AddressIndexerRewindData rewindData in toRestore)
             {
-                IEnumerable<AddressIndexerRewindData> toRestore = this.addressIndexerRewindData.Find(x => x.BlockHeight > height);
-
-                this.logger.LogDebug("Restoring data for {0} blocks.", toRestore.Count());
-
-                foreach (AddressIndexerRewindData rewindData in toRestore)
+                // Put the spent outputs back into the cache.
+                foreach (OutPointData outPointData in rewindData.SpentOutputs)
                 {
-                    // Put the spent outputs back into the cache.
-                    foreach (OutPointData outPointData in rewindData.SpentOutputs)
-                        this.AddOutPointData(outPointData);
-
-                    // This rewind data item should now be removed from the collection.
-                    this.addressIndexerRewindData.Delete(rewindData.BlockHash);
+                    this.AddOutPointData(outPointData);
                 }
+
+                // This rewind data item should now be removed from the collection.
+                this.addressIndexerRewindData.Delete(rewindData.BlockHash);
             }
         }
 

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Blockcore.Utilities.ModelStateErrors;
 using x42.Features.xServer.Interfaces;
 using x42.Features.xServer.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace x42.Features.xServer.Controllers
+namespace x42.Features.xServer.Api.Controllers
 {
     /// <summary>Controller providing operations for the xServer network.</summary>
     [ApiController]

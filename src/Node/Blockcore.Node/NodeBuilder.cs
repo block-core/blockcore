@@ -12,7 +12,7 @@ using Blockcore.Features.NodeHost;
 using Blockcore.Features.Dns;
 using Blockcore.Persistence;
 using Blockcore.Features.Notifications;
-using Blockcore.Features.WalletWatchOnly;
+using x42.Features.xServer;
 
 namespace Blockcore.Node
 {
@@ -32,7 +32,7 @@ namespace Blockcore.Node
                     nodeBuilder.UsePowConsensus().AddMining().UseWallet();
                     break;
                 case "X42":
-                    nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet().UseWatchOnlyWallet();
+                    nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet().UsexServer();
                     break;
                 case "BCP":
                 case "CITY":

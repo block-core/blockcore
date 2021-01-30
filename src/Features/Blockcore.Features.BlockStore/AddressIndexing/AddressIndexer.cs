@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using LiteDB;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.AsyncWork;
-using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
@@ -18,7 +15,6 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
-using Blockcore.Features.BlockStore.Models;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
@@ -46,10 +42,6 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// <summary>Returns verbose balances data.</summary>
         /// <param name="addresses">The set of addresses that will be queried.</param>
         VerboseAddressBalancesResult GetAddressIndexerState(string[] addresses);
-
-        IFullNodeFeature InitializingFeature { set; }
-
-        LastBalanceDecreaseTransactionModel GetLastBalanceDecreaseTransaction(string address);
     }
 
     public class AddressIndexer : IAddressIndexer
@@ -117,8 +109,6 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         private readonly IDateTimeProvider dateTimeProvider;
 
-        private readonly IUtxoIndexer utxoIndexer;
-
         private Task indexingTask;
 
         private DateTime lastFlushTime;
@@ -144,10 +134,8 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// </summary>
         public const int SyncBuffer = 50;
 
-        public IFullNodeFeature InitializingFeature { get; set; }
-
         public AddressIndexer(StoreSettings storeSettings, DataFolder dataFolder, ILoggerFactory loggerFactory, Network network, INodeStats nodeStats,
-            IConsensusManager consensusManager, IAsyncProvider asyncProvider, ChainIndexer chainIndexer, IDateTimeProvider dateTimeProvider, IUtxoIndexer utxoIndexer)
+            IConsensusManager consensusManager, IAsyncProvider asyncProvider, ChainIndexer chainIndexer, IDateTimeProvider dateTimeProvider)
         {
             this.storeSettings = storeSettings;
             this.network = network;
@@ -156,7 +144,6 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             this.consensusManager = consensusManager;
             this.asyncProvider = asyncProvider;
             this.dateTimeProvider = dateTimeProvider;
-            this.utxoIndexer = utxoIndexer;
             this.loggerFactory = loggerFactory;
             this.scriptAddressReader = new ScriptAddressReader();
 
@@ -199,7 +186,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
             this.logger.LogDebug("Address indexing is enabled.");
 
-            this.tipDataStore = (LiteCollection<AddressIndexerTipData>)this.db.GetCollection<AddressIndexerTipData>(DbTipDataKey);
+            this.tipDataStore = this.db.GetCollection<AddressIndexerTipData>(DbTipDataKey);
 
             lock (this.lockObject)
             {
@@ -339,7 +326,6 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             }
 
             this.SaveAll();
-
         }
 
         private void RewindAndSave(ChainedHeader rewindToHeader)
@@ -381,7 +367,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 AddressIndexerTipData tipData = this.tipDataStore.FindAll().FirstOrDefault();
 
                 if (tipData == null)
-                { 
+                {
                     tipData = new AddressIndexerTipData();
                 }
 
@@ -474,18 +460,13 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                     }
 
                     if (address.Address != string.Empty)
-                    {
                         this.ProcessBalanceChangeLocked(header.Height, address.Address, amountSpent, false);
-                    }
-                    if (address.HotAddress != string.Empty)
-                    {
-                        this.ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountSpent, false);
-                    }
-                    if (address.ColdAddress != string.Empty)
-                    {
-                        this.ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountSpent, false);
-                    }
 
+                    if (address.HotAddress != string.Empty)
+                        this.ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountSpent, false);
+
+                    if (address.ColdAddress != string.Empty)
+                        this.ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountSpent, false);
                 }
 
                 // Process outputs.
@@ -509,17 +490,13 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                         }
 
                         if (address.Address != string.Empty)
-                        {
                             this.ProcessBalanceChangeLocked(header.Height, address.Address, amountReceived, true);
-                        }
+
                         if (address.HotAddress != string.Empty)
-                        {
                             this.ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountReceived, true);
-                        }
+
                         if (address.ColdAddress != string.Empty)
-                        {
                             this.ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountReceived, true);
-                        }
                     }
                 }
 
@@ -535,7 +512,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                 // Remove outpoints that were consumed.
                 foreach (OutPoint consumedOutPoint in inputs.Select(x => x.PrevOut))
-                { 
+                {
                     this.outpointsRepository.RemoveOutPointData(consumedOutPoint);
                 }
             }
@@ -644,16 +621,10 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// <inheritdoc />
         public VerboseAddressBalancesResult GetAddressIndexerState(string[] addresses)
         {
-            // If the containing feature is not initialized then wait a bit.
-            this.InitializingFeature?.WaitInitialized();
-
             var result = new VerboseAddressBalancesResult(this.consensusManager.Tip.Height);
 
             if (addresses.Length == 0)
                 return result;
-
-            if (!this.storeSettings.AddressIndex)
-                throw new NotSupportedException("Address indexing is not enabled.");
 
             (bool isQueryable, string reason) = this.IsQueryable();
 
@@ -677,71 +648,6 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             }
 
             return result;
-        }
-
-        public LastBalanceDecreaseTransactionModel GetLastBalanceDecreaseTransaction(string address)
-        {
-            if (address == null)
-                return null;
-
-            (bool isQueryable, string reason) = this.IsQueryable();
-
-            if (!isQueryable)
-                return null;
-
-            int lastBalanceHeight;
-
-            lock (this.lockObject)
-            {
-                AddressIndexerData indexData = this.addressIndexRepository.GetOrCreateAddress(address);
-
-                AddressBalanceChange lastBalanceUpdate = indexData.BalanceChanges.Where(a => !a.Deposited).OrderByDescending(b => b.BalanceChangedHeight).FirstOrDefault();
-
-                if (lastBalanceUpdate == null)
-                    return null;
-
-                lastBalanceHeight = lastBalanceUpdate.BalanceChangedHeight;
-            }
-
-            // Height 0 is used as a placeholder height for compacted address balance records, so ignore them if they are the only record.
-            if (lastBalanceHeight == 0)
-                return null;
-
-            ChainedHeader header = this.chainIndexer.GetHeader(lastBalanceHeight);
-
-            if (header == null)
-                return null;
-
-            Block block = this.consensusManager.GetBlockData(header.HashBlock).Block;
-
-            if (block == null)
-                return null;
-
-            // Get the UTXO snapshot as of one block lower than the last balance change, so that we are definitely able to look up the inputs of each transaction in the next block.
-            ReconstructedCoinviewContext utxos = this.utxoIndexer.GetCoinviewAtHeight(lastBalanceHeight - 1);
-
-            Transaction foundTransaction = null;
-
-            foreach (Transaction transaction in block.Transactions)
-            {
-                if (transaction.IsCoinBase)
-                    continue;
-
-                foreach (TxIn txIn in transaction.Inputs)
-                {
-                    Transaction prevTx = utxos.Transactions[txIn.PrevOut.Hash];
-
-                    foreach (TxOut txOut in prevTx.Outputs)
-                    {
-                        if (this.scriptAddressReader.GetAddressFromScriptPubKey(this.network, txOut.ScriptPubKey) == address)
-                        {
-                            foundTransaction = transaction;
-                        }
-                    }
-                }
-            }
-
-            return foundTransaction == null ? null : new LastBalanceDecreaseTransactionModel() { BlockHeight = lastBalanceHeight, Transaction = new TransactionVerboseModel(foundTransaction, this.network) };
         }
 
         private (bool isQueryable, string reason) IsQueryable()

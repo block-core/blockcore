@@ -14,18 +14,17 @@ namespace Blockcore.Features.Wallet.Events
     /// <seealso cref="Blockcore.EventBus.EventBase" />
     public class TransactionFound : EventBase
     {
-        [JsonIgnore]
+        [JsonIgnore] // The "Transaction" cannot serialize for Web Socket.
         public Transaction FoundTransaction { get; }
 
-        public string TransactionHex { get; set; }
-
-        public string TransactionId { get; set; }
+        /// <summary>
+        /// Makes the transaction ID available for Web Socket consumers.
+        /// </summary>
+        public string TransactionId { get { return this.FoundTransaction.ToString(); } }
 
         public TransactionFound(Transaction foundTransaction)
         {
             this.FoundTransaction = foundTransaction;
-            this.TransactionHex = foundTransaction.ToHex();
-            this.TransactionId = foundTransaction.ToString();
         }
     }
 }

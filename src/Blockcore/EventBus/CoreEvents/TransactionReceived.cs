@@ -11,18 +11,17 @@ namespace Blockcore.EventBus.CoreEvents
     /// <seealso cref="EventBase" />
     public class TransactionReceived : EventBase
     {
-        [JsonIgnore]
+        [JsonIgnore] // The "Transaction" cannot serialize for Web Socket.
         public Transaction ReceivedTransaction { get; }
 
-        public string TransactionHex { get; set; }
-
-        public string TransactionId { get; set; }
+        /// <summary>
+        /// Makes the transaction ID available for Web Socket consumers.
+        /// </summary>
+        public string TransactionId { get { return this.ReceivedTransaction.ToString(); } }
 
         public TransactionReceived(Transaction receivedTransaction)
         {
             this.ReceivedTransaction = receivedTransaction;
-            this.TransactionHex = receivedTransaction.ToHex();
-            this.TransactionId = receivedTransaction.ToString();
         }
     }
 }

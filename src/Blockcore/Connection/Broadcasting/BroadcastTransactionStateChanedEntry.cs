@@ -7,12 +7,13 @@ namespace Blockcore.Connection.Broadcasting
 {
     public class BroadcastTransactionStateChanedEntry
     {
-        [JsonIgnore]
+        [JsonIgnore] // The "Transaction" cannot serialize for Web Socket.
         public Transaction Transaction { get; }
 
-        public string TransactionHex { get; }
-
-        public string TransactionId { get; }
+        /// <summary>
+        /// Makes the transaction ID available for Web Socket consumers.
+        /// </summary>
+        public string TransactionId { get { return this.Transaction.ToString(); } }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public TransactionBroadcastState TransactionBroadcastState { get; set; }
@@ -24,8 +25,6 @@ namespace Blockcore.Connection.Broadcasting
         public BroadcastTransactionStateChanedEntry(Transaction transaction, TransactionBroadcastState transactionBroadcastState, string errorMessage)
         {
             this.Transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
-            this.TransactionHex = transaction.ToHex();
-            this.TransactionId = transaction.ToString();
             this.TransactionBroadcastState = transactionBroadcastState;
             this.ErrorMessage = (errorMessage == null) ? string.Empty : errorMessage;
         }

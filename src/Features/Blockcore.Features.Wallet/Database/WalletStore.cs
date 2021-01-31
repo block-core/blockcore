@@ -162,10 +162,12 @@ namespace Blockcore.Features.Wallet.Database
             }
 
             var historySpent = this.trxCol
-              .Find(historySpentQuery,
-                skip: skip,
-                limit: take)
+              .Find(historySpentQuery)
+          //      skip: skip,
+          //      limit: take)
               .OrderByDescending(x => x.SpendingDetails.CreationTime)
+              .Skip(skip)
+              .Take(take)
               .ToList();
 
             Query historyUnSpentQuery = Query.EQ("AccountIndex", new BsonValue(accountIndex));
@@ -180,10 +182,12 @@ namespace Blockcore.Features.Wallet.Database
 
             var historyUnspent = this.trxCol
                 .Find(
-                    historyUnSpentQuery,
-                    skip: skip,
-                    limit: take)
+                    historyUnSpentQuery)
+             //       skip: skip,
+             //       limit: take)
                 .OrderByDescending(x => x.CreationTime)
+                .Skip(skip)
+                .Take(take)
                 .ToList();
 
             var items = new List<WalletHistoryData>();

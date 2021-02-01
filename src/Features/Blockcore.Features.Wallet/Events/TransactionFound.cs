@@ -17,10 +17,18 @@ namespace Blockcore.Features.Wallet.Events
         [JsonIgnore] // The "Transaction" cannot serialize for Web Socket.
         public Transaction FoundTransaction { get; }
 
+        private string transactionId;
+
         /// <summary>
         /// Makes the transaction ID available for Web Socket consumers.
         /// </summary>
-        public string TransactionId { get { return this.FoundTransaction.ToString(); } }
+        public string TransactionId
+        {
+            get
+            {
+                return this.transactionId ??= this.FoundTransaction.ToString();
+            }
+        }
 
         public TransactionFound(Transaction foundTransaction)
         {

@@ -14,10 +14,18 @@ namespace Blockcore.EventBus.CoreEvents
         [JsonIgnore] // The "Transaction" cannot serialize for Web Socket.
         public Transaction ReceivedTransaction { get; }
 
+        private string transactionId;
+
         /// <summary>
         /// Makes the transaction ID available for Web Socket consumers.
         /// </summary>
-        public string TransactionId { get { return this.ReceivedTransaction.ToString(); } }
+        public string TransactionId
+        {
+            get
+            {
+                return this.transactionId ??= this.ReceivedTransaction.ToString();
+            }
+        }
 
         public TransactionReceived(Transaction receivedTransaction)
         {

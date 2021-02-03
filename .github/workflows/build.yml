@@ -62,10 +62,10 @@ jobs:
       run: dotnet restore ${{env.SOLUTION_PATH}}
 
     - name: Build
-      run: dotnet build -c ${{env.BUILD_CONFIGURATION}} -r ${{env.RELEASE_CONFIGURATION}} -v m ${{env.SOLUTION_PATH}}
+      run: dotnet build -c ${{env.BUILD_CONFIGURATION}} -r ${{env.RELEASE_CONFIGURATION}} -v m ${{env.SOLUTION_PATH}} -p:ImportByWildcardBeforeSolution=false
 
     - name: Publish
-      run: dotnet publish -c ${{env.BUILD_CONFIGURATION}} -r ${{env.RELEASE_CONFIGURATION}} -v m -o ./bin/publish ${{env.PROJECT_PATH}}
+      run: dotnet publish -c ${{env.BUILD_CONFIGURATION}} -r ${{env.RELEASE_CONFIGURATION}} -v m -o ./bin/publish ${{env.PROJECT_PATH}} -p:ImportByWildcardBeforeSolution=false
 
     - name: Package Name
       run: |

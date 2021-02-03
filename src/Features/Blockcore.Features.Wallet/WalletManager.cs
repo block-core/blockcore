@@ -139,7 +139,7 @@ namespace Blockcore.Features.Wallet
             IScriptAddressReader scriptAddressReader,
             ISignals signals = null,
             IBroadcasterManager broadcasterManager = null, // no need to know about transactions the node will broadcast to.
-            IUtxoIndexer utxoIndexer = null) 
+            IUtxoIndexer utxoIndexer = null)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(network, nameof(network));
@@ -1205,10 +1205,7 @@ namespace Blockcore.Features.Wallet
                             foundReceivingTrx = true;
                             this.logger.LogDebug("Transaction '{0}' contained funds received by the user's wallet(s).", hash);
 
-                            if (this.signals != null)
-                            {
-                                this.signals.Publish(new Events.TransactionFound(transaction));
-                            }
+                            this.signals?.Publish(new Events.TransactionFound(transaction));
                         }
                     }
                 }
@@ -1226,6 +1223,8 @@ namespace Blockcore.Features.Wallet
                         this.AddSpendingTransactionToWallet(walletIndexItem.Value.Wallet, transaction, input.PrevOut, walletIndexItem.Value.Wallet, blockHeight, block);
                         foundSendingTrx = true;
                         this.logger.LogDebug("Transaction '{0}' contained funds sent by the user's wallet(s).", hash);
+
+                        this.signals?.Publish(new Events.TransactionSpent(transaction, input.PrevOut));
                     }
                 }
             }
@@ -2149,7 +2148,7 @@ namespace Blockcore.Features.Wallet
                 total += txOut.Value;
 
                 if (total == 0)
-                { 
+                {
                     continue;
                 }
 
@@ -2199,7 +2198,7 @@ namespace Blockcore.Features.Wallet
             TransactionPolicyError[] errors = builder.Check(sweepTransaction);
 
             if (errors.Length == 0)
-            { 
+            {
                 sweepTransactions.Add(sweepTransaction.ToHex());
             }
             else
@@ -2208,7 +2207,7 @@ namespace Blockcore.Features.Wallet
                 foreach (var error in errors)
                 {
                     sweepTransactions.Add(error.ToString());
-                }                
+                }
             }
 
             // Reset the builder and related state, as we are now creating a fresh transaction.

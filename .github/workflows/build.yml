@@ -59,7 +59,9 @@ jobs:
         dotnet-version: ${{ matrix.dotnet_version }}
 
     - name: Restore
-      run: dotnet restore ${{env.SOLUTION_PATH}}
+      run: |
+        dotnet nuget locals all --clear
+        dotnet restore ${{env.SOLUTION_PATH}}
 
     - name: Build
       run: dotnet build -c ${{env.BUILD_CONFIGURATION}} -r ${{env.RELEASE_CONFIGURATION}} -v m ${{env.SOLUTION_PATH}} -p:ImportByWildcardBeforeSolution=false

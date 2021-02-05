@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Blockcore.Configuration;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
@@ -13,7 +12,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.JsonConverters;
 using Dapper;
 using DBreeze.Utils;
-using LiteDB;
 using Microsoft.Data.Sqlite;
 using NBitcoin;
 using NBitcoin.DataEncoders;
@@ -33,6 +31,8 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletStore(Network network, Types.Wallet wallet)
         {
+            this.sqliteConnection = new SqliteConnection("Data Source=:memory:");
+
             this.network = network;
             this.Init(wallet);
         }

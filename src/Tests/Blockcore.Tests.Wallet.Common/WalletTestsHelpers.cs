@@ -449,7 +449,7 @@ namespace Blockcore.Tests.Wallet.Common
                             OutPoint = new OutPoint(new uint256(Hashes.Hash256(key.PubKey.ToBytes())), height),
                             BlockHeight = height,
                             Amount = new Money(new Random().Next(500000, 1000000)),
-                            SpendingDetails = new SpendingDetails(),
+                            SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) },
                             Id = new uint256(),
                         } });
 

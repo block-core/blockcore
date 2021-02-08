@@ -454,12 +454,12 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
 
             HdAddress accountAddress1 = WalletTestsHelpers.CreateAddress();
-            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), 1, new SpendingDetails(), address: accountAddress1.Address));
-            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), 1, new SpendingDetails(), address: accountAddress1.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(1), new Money(15000), 1,  new SpendingDetails { TransactionId = new uint256(1) }, address: accountAddress1.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(2), new Money(10000), 1,  new SpendingDetails { TransactionId = new uint256(1) }, address: accountAddress1.Address));
 
             HdAddress accountAddress2 = WalletTestsHelpers.CreateAddress();
-            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), 3, new SpendingDetails(), address: accountAddress2.Address));
-            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), 4, new SpendingDetails(), address: accountAddress2.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(3), new Money(20000), 3,  new SpendingDetails { TransactionId = new uint256(1) }, address: accountAddress2.Address));
+            wallet.walletStore.InsertOrUpdate(WalletTestsHelpers.CreateTransaction(new uint256(4), new Money(120000), 4,  new SpendingDetails { TransactionId = new uint256(1) }, address: accountAddress2.Address));
 
             account.ExternalAddresses.Add(accountAddress1);
             account.InternalAddresses.Add(accountAddress2);

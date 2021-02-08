@@ -73,11 +73,11 @@ namespace Blockcore.Features.Wallet.Database
 
         public Money Amount { get; set; }
 
-        public bool IsCoinBase { get; set; }
+        public bool? IsCoinBase { get; set; }
 
-        public bool IsCoinStake { get; set; }
+        public bool? IsCoinStake { get; set; }
 
-        public bool IsColdCoinStake { get; set; }
+        public bool? IsColdCoinStake { get; set; }
 
         public int IndexInTransaction { get; set; }
 

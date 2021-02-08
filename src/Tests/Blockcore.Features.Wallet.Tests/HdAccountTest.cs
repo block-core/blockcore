@@ -259,15 +259,15 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var store = new WalletMemoryStore();
             var account = new HdAccount();
-            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "2" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Address = "2", Id = new uint256(15), Index = 7, SpendingDetails = new SpendingDetails() } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "2" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Address = "2", Id = new uint256(15), Index = 7, SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) } } });
             account.ExternalAddresses.Add(new HdAddress { Index = 3, Address = "3" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(2), 1), Address = "3", Id = new uint256(18), Index = 8 } });
-            account.ExternalAddresses.Add(new HdAddress { Index = 1, Address = "1" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(3), 1), Address = "1", Id = new uint256(19), Index = 9, SpendingDetails = new SpendingDetails() } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 1, Address = "1" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(3), 1), Address = "1", Id = new uint256(19), Index = 9, SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) } } });
             account.ExternalAddresses.Add(new HdAddress { Index = 6 });
 
-            account.InternalAddresses.Add(new HdAddress { Index = 4, Address = "4" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(4), 1), Address = "4", Id = new uint256(15), Index = 10, SpendingDetails = new SpendingDetails() } });
+            account.InternalAddresses.Add(new HdAddress { Index = 4, Address = "4" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(4), 1), Address = "4", Id = new uint256(15), Index = 10, SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) } } });
             account.InternalAddresses.Add(new HdAddress { Index = 5, Address = "5" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(5), 1), Address = "5", Id = new uint256(18), Index = 11 } });
             account.InternalAddresses.Add(new HdAddress { Index = 6 });
-            account.InternalAddresses.Add(new HdAddress { Index = 6, Address = "6" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(6), 1), Address = "6", Id = new uint256(19), Index = 12, SpendingDetails = new SpendingDetails() } });
+            account.InternalAddresses.Add(new HdAddress { Index = 6, Address = "6" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(6), 1), Address = "6", Id = new uint256(19), Index = 12, SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) } } });
 
             IEnumerable<UnspentOutputReference> result = account.GetSpendableTransactions(store, 100, 10, 0);
 
@@ -283,8 +283,8 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var store = new WalletMemoryStore();
             var account = new HdAccount();
-            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "2" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Address = "2", Id = new uint256(15), Index = 7, SpendingDetails = new SpendingDetails() } });
-            account.InternalAddresses.Add(new HdAddress { Index = 4 }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(2), 1), Address = "4", Id = new uint256(15), Index = 10, SpendingDetails = new SpendingDetails() } });
+            account.ExternalAddresses.Add(new HdAddress { Index = 2, Address = "2" }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(1), 1), Address = "2", Id = new uint256(15), Index = 7, SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) } } });
+            account.InternalAddresses.Add(new HdAddress { Index = 4 }); store.Add(new List<TransactionOutputData> { new TransactionOutputData { OutPoint = new OutPoint(new uint256(2), 1), Address = "4", Id = new uint256(15), Index = 10, SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) } } });
 
             IEnumerable<UnspentOutputReference> result = account.GetSpendableTransactions(store, 100, 10, 0);
 

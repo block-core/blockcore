@@ -23,15 +23,26 @@ namespace Blockcore.Features.Wallet.Database
     {
         private readonly SqliteConnection sqliteConnection;
 
+        /// <summary>
+        /// A connection used only when the data store is in memory only.
+        /// SQLite in-memory mode will keep the db as long as there is one connection open.
+        /// https://github.com/dotnet/docs/blob/master/samples/snippets/standard/data/sqlite/InMemorySample/Program.cs
+        /// /// </summary>
+        private readonly SqliteConnection inmemorySqliteConnection;
+
         private readonly Network network;
 
         public WalletData WalletData { get; private set; }
 
-        // public BsonMapper Mapper => this.db.Mapper;
-
         public WalletStore(Network network, Types.Wallet wallet)
         {
-            this.sqliteConnection = new SqliteConnection("Data Source=:memory:");
+            var tmpconn = Guid.NewGuid().ToString();
+            this.inmemorySqliteConnection = new SqliteConnection($"Data Source={tmpconn};Mode=Memory;Cache=Shared");
+            this.inmemorySqliteConnection.Open();
+
+            this.sqliteConnection = new SqliteConnection($"Data Source={tmpconn};Mode=Memory;Cache=Shared");
+
+            this.CreateDatabase();
 
             this.network = network;
             this.Init(wallet);
@@ -123,11 +134,11 @@ namespace Blockcore.Features.Wallet.Database
 
         public void SetData(WalletData data)
         {
-            var sql = "INSERT INTO 'WalletData' " +
+            var sql = "INSERT INTO WalletData " +
                       "(Id, EncryptedSeed, WalletName, WalletTip, BlockLocator) " +
                       "VALUES (@Key, @EncryptedSeed, @WalletName, @WalletTip, @BlockLocator) " +
                       "ON CONFLICT(Id) DO UPDATE SET " +
-                      "WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
+                      "EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
 
             this.sqliteConnection.Execute(sql, data);
 
@@ -138,7 +149,7 @@ namespace Blockcore.Features.Wallet.Database
         {
             TransactionData insert = this.Convert(item);
 
-            var sql = "INSERT INTO 'TransactionData' " +
+            var sql = "INSERT INTO TransactionData " +
                       "(OutPoint, Address, Id, Amount, IndexInTransaction, BlockHeight, BlockHash, BlockIndex, CreationTime, ScriptPubKey, IsPropagated, IsCoinBase, IsCoinStake, IsColdCoinStake, AccountIndex, MerkleProof, Hex, SpendingDetailsTransactionId, SpendingDetailsBlockHeight, SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake, SpendingDetailsCreationTime, SpendingDetailsPayments, SpendingDetailsHex) " +
                       "VALUES (@OutPoint, @Address, @Id, @Amount, @IndexInTransaction, @BlockHeight, @BlockHash, @BlockIndex, @CreationTime, @ScriptPubKey, @IsPropagated, @IsCoinBase, @IsCoinStake, @IsColdCoinStake, @AccountIndex, @MerkleProof, @Hex, @SpendingDetailsTransactionId, @SpendingDetailsBlockHeight, @SpendingDetailsBlockIndex, @SpendingDetailsIsCoinStake, @SpendingDetailsCreationTime, @SpendingDetailsPayments, @SpendingDetailsHex) " +
                       "ON CONFLICT(OutPoint) DO UPDATE SET " +
@@ -150,7 +161,7 @@ namespace Blockcore.Features.Wallet.Database
         public int CountForAddress(string address)
         {
             var count = this.sqliteConnection.ExecuteScalar<int>(
-                "select count(*) from 'TransactionData' where Address = @address", new { address });
+                "select count(*) from TransactionData where Address = @address", new { address });
 
             return count;
         }
@@ -164,7 +175,7 @@ namespace Blockcore.Features.Wallet.Database
             var sql = "select * from TransactionData " +
                       "where AccountIndex == @accountIndex " +
                       "and SpendingDetailsTransactionId is not null " +
-                      (excludeColdStake ? "and IsColdCoinStake != true " : "") +
+                      (excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "") +
                       "order by SpendingDetailsCreationTime desc " +
                       "limit @take offset @skip ";
 
@@ -173,8 +184,8 @@ namespace Blockcore.Features.Wallet.Database
 
             sql = "select * from TransactionData " +
                   "where AccountIndex == @accountIndex " +
-                  // "and SpendingDetailsTransactionId is null " +
-                  (excludeColdStake ? "and IsColdCoinStake != true " : "") +
+                   "and SpendingDetailsTransactionId is null " +
+                  (excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "") +
                   "order by CreationTime desc " +
                   "limit @take offset @skip";
 
@@ -259,7 +270,7 @@ namespace Blockcore.Features.Wallet.Database
         public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
             var trxs = this.sqliteConnection.Query<TransactionData>(
-                "select * from 'TransactionData' " +
+                "select * from TransactionData " +
                 "where Address = @address",
                 new { address });
 
@@ -279,7 +290,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : string.Empty;
 
             var sql = "SELECT " +
                       "BlockHeight as Confirmed," +
@@ -304,7 +315,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND IsColdCoinStake != true " : string.Empty;
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : string.Empty;
 
             var sql = "SELECT " +
                       "BlockHeight as Confirmed," +
@@ -330,7 +341,7 @@ namespace Blockcore.Features.Wallet.Database
         public TransactionOutputData GetForOutput(OutPoint outPoint)
         {
             var trx = this.sqliteConnection.QueryFirstOrDefault<TransactionData>(
-                "select * from 'TransactionData' where OutPoint = @outPoint", new { outPoint });
+                "select * from TransactionData where OutPoint = @outPoint", new { outPoint });
 
             if (trx == null)
             {
@@ -344,7 +355,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public bool Remove(OutPoint outPoint)
         {
-            var ret = this.sqliteConnection.ExecuteScalar<int>("delete from 'TransactionData' where OutPoint = @outPoint", new { outPoint });
+            var ret = this.sqliteConnection.ExecuteScalar<int>("delete from TransactionData where OutPoint = @outPoint", new { outPoint });
 
             return ret > 0;
         }
@@ -354,7 +365,7 @@ namespace Blockcore.Features.Wallet.Database
             this.sqliteConnection.Execute(
                "CREATE TABLE WalletData( " +
                "Id            VARCHAR(3) NOT NULL PRIMARY KEY," +
-               "EncryptedSeed VARCHAR(500) NOT NULL," +
+               "EncryptedSeed VARCHAR(500) NULL," +
                "WalletName    VARCHAR(100) NOT NULL," +
                "WalletTip     VARCHAR(75) NOT NULL," +
                "BlockLocator  TEXT NULL)");
@@ -371,10 +382,10 @@ namespace Blockcore.Features.Wallet.Database
                 "BlockIndex                                         INTEGER NULL," +
                 "CreationTime                                       INTEGER  NOT NULL," +
                 "ScriptPubKey                                       VARCHAR(100) NOT NULL," +
-                "IsPropagated                                       INTEGER NOT NULL," +
-                "IsCoinBase                                         INTEGER NOT NULL," +
-                "IsCoinStake                                        INTEGER NOT NULL," +
-                "IsColdCoinStake                                    INTEGER NOT NULL," +
+                "IsPropagated                                       INTEGER  NULL," +
+                "IsCoinBase                                         INTEGER  NULL," +
+                "IsCoinStake                                        INTEGER  NULL," +
+                "IsColdCoinStake                                    INTEGER  NULL," +
                 "AccountIndex                                       INTEGER  NOT NULL," +
                 "MerkleProof                                        TEXT NULL," +
                 "Hex                                                TEXT NULL," +
@@ -395,6 +406,7 @@ namespace Blockcore.Features.Wallet.Database
         public void Dispose()
         {
             this.sqliteConnection?.Dispose();
+            this.inmemorySqliteConnection?.Dispose();
         }
 
         private TransactionData Convert(TransactionOutputData source)
@@ -403,18 +415,18 @@ namespace Blockcore.Features.Wallet.Database
             {
                 OutPoint = source.OutPoint,
                 Address = source.Address,
-                Id = source.Id,
-                Amount = source.Amount,
+                Id = source.Id ?? source.OutPoint.Hash,
+                Amount = source.Amount ?? 0,
                 IndexInTransaction = source.Index,
                 BlockHeight = source.BlockHeight,
                 BlockHash = source.BlockHash,
                 BlockIndex = source.BlockIndex,
                 CreationTime = source.CreationTime,
-                ScriptPubKey = source.ScriptPubKey,
+                ScriptPubKey = source.ScriptPubKey ?? Script.Empty,
                 IsPropagated = source.IsPropagated,
-                IsCoinBase = source.IsCoinBase ?? false,
-                IsCoinStake = source.IsCoinStake ?? false,
-                IsColdCoinStake = source.IsColdCoinStake ?? false,
+                IsCoinBase = source.IsCoinBase,
+                IsCoinStake = source.IsCoinStake,
+                IsColdCoinStake = source.IsColdCoinStake,
                 AccountIndex = source.AccountIndex,
                 MerkleProof = source.MerkleProof,
                 Hex = source.Hex,

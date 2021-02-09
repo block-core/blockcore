@@ -184,7 +184,7 @@ namespace Blockcore.Features.Wallet.Database
 
             sql = "select * from TransactionData " +
                   "where AccountIndex == @accountIndex " +
-                   "and SpendingDetailsTransactionId is null " +
+                  //"and SpendingDetailsTransactionId is null " +
                   (excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "") +
                   "order by CreationTime desc " +
                   "limit @take offset @skip";

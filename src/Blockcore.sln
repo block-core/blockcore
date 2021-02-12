@@ -133,7 +133,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.Impleum"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.BCP", "Networks\Blockcore.Networks.BCP\Blockcore.Networks.BCP.csproj", "{120500DF-C04F-43CC-9A1E-523A6429301F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "x42.Features.xServer", "Features\x42.Features.xServer\x42.Features.xServer.csproj", "{9FD10661-D37E-40B1-B3A7-70469FE04780}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "x42.Features.xServer", "Features\x42.Features.xServer\x42.Features.xServer.csproj", "{97875874-26BE-483E-838D-F43E5A3872FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -353,10 +353,10 @@ Global
 		{120500DF-C04F-43CC-9A1E-523A6429301F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{120500DF-C04F-43CC-9A1E-523A6429301F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{120500DF-C04F-43CC-9A1E-523A6429301F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FD10661-D37E-40B1-B3A7-70469FE04780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FD10661-D37E-40B1-B3A7-70469FE04780}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FD10661-D37E-40B1-B3A7-70469FE04780}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FD10661-D37E-40B1-B3A7-70469FE04780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97875874-26BE-483E-838D-F43E5A3872FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97875874-26BE-483E-838D-F43E5A3872FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97875874-26BE-483E-838D-F43E5A3872FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97875874-26BE-483E-838D-F43E5A3872FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -417,7 +417,7 @@ Global
 		{4275AF0C-587B-4C9D-A100-0F2DD1702674} = {64694A14-97E0-4CBC-8032-754F9353B2DD}
 		{64E9C309-867E-45F6-A88E-7BC061305D0B} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{120500DF-C04F-43CC-9A1E-523A6429301F} = {3B56C02B-4468-4268-B797-851562789FCC}
-		{9FD10661-D37E-40B1-B3A7-70469FE04780} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
+		{97875874-26BE-483E-838D-F43E5A3872FF} = {15D29FFD-6142-4DC5-AFFD-10BA0CA55C45}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

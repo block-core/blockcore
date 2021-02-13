@@ -21,19 +21,19 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>Send coins</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <Dropdown TItem="string" OnSelected="@OnSelected" >
+            <Dropdown TItem="string" OnSelected="@OnSelected">
                 <InitialTip>@walletname</InitialTip>
                 <ChildContent>
-                        @foreach (var walletName in this.WalletManager.GetWalletsNames()) 
+                    @foreach (var walletName in this.WalletManager.GetWalletsNames())
+                    {
+                        foreach (var account in this.WalletManager.GetAccounts(walletName))
                         {
-                            foreach (var account in this.WalletManager.GetAccounts(walletName))
-                            {
                             <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                            }
                         }
+                    }
                 </ChildContent>
             </Dropdown>
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }" >
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }">
                 <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
             </button>
             <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
@@ -60,10 +60,10 @@
         </div>
     </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Address</label>
                         <div class="col-sm-10">
@@ -89,7 +89,7 @@
                                 <button class="btn btn-secondary ml-1" @onclick="() => { EstimateFee(FeeType.High); }">High</button>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Password</label>
                         <div class="col-sm-10">
@@ -114,7 +114,7 @@
                     </div>
 
                     @if (Success != null)
-                        {
+                    {
                         <h4>Transaction Broadcast</h4>
                         <div class="row mb-3">
                             <div class="col-xl-12 col-sm-12 ">
@@ -128,7 +128,7 @@
                                 <button class="btn btn-primary mt-3" @onclick="() => { NavigateToWallet(walletname, accountname); }">View Wallet</button>
                             </div>
                         </div>
-                        }
+                    }
                 </div>
             </div>
         </div>
@@ -225,7 +225,7 @@
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
         if (string.IsNullOrEmpty(this.Address)) { this.Alert = "Please enter a valid address"; return; }
         if (this.Amount == 0) { this.Alert = "Please enter the number of coins you want to send"; return; }
-        if (this.Fee < this.ConnectionManager.Network.MinTxFee) { this.Alert = $"The fee is lower than minimum ({this.ConnectionManager.Network.MinTxFee})"; return; }
+        if (this.Fee < Money.Satoshis(this.ConnectionManager.Network.MinTxFee).ToDecimal(MoneyUnit.BTC)) { this.Alert = $"The fee is lower than minimum ({ Money.Satoshis(this.ConnectionManager.Network.MinTxFee).ToDecimal(MoneyUnit.BTC)})"; return; }
 
         this.Alert = string.Empty;
 
@@ -301,6 +301,6 @@
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToWallet(selection,"account 0");
+        NavigateToWallet(selection, "account 0");
     }
 }

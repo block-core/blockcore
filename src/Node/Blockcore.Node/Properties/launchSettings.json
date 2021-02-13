@@ -119,6 +119,10 @@
     "RUTA (MAIN/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=RUTA -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "X1 mainnet": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=X1 addnode=46.101.168.197"
     }
   }
 }

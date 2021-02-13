@@ -186,10 +186,10 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
             try
             {
                 var result = new GetColdStakingAddressResponse();
-                var account = this.ColdStakingManager.GetOrCreateColdStakingAccount(request.WalletName, request.IsColdWalletAccount, request.WalletPassword).Name;
+                var account = this.ColdStakingManager.GetOrCreateColdStakingAccount(Uri.UnescapeDataString(request.WalletName), request.IsColdWalletAccount, Uri.UnescapeDataString(request.WalletPassword)).Name;
                 if (account != null)
                 {
-                    HdAddress address = this.ColdStakingManager.GetFirstColdStakingAddress(request.WalletName, request.IsColdWalletAccount);
+                    HdAddress address = this.ColdStakingManager.GetFirstColdStakingAddress(Uri.UnescapeDataString(request.WalletName), request.IsColdWalletAccount);
                     if (address != null)
                     {
                         result.Address = request.Segwit ? address?.Bech32Address : address?.Address;

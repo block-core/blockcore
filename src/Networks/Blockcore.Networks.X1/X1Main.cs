@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
@@ -44,7 +45,7 @@ namespace Blockcore.Networks.X1
             this.DefaultMaxInboundConnections = 109;
             this.MaxTimeOffsetSeconds = 25 * 60;
             this.DefaultBanTimeSeconds = 8000;
-            this.MaxTipAge = 24 * 60 * 60;
+            this.MaxTipAge = 48 * 60 * 60;
 
             this.MinTxFee = Money.Coins(0.00001m).Satoshi;
             this.MaxTxFee = Money.Coins(1).Satoshi;
@@ -144,12 +145,15 @@ namespace Blockcore.Networks.X1
             this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
             this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 
-            this.Checkpoints = new Dictionary<int, CheckpointInfo>();
-            this.DNSSeeds = new List<DNSSeedData>();
-            this.SeedNodes = new List<NetworkAddress>
+            this.Checkpoints = new Dictionary<int, CheckpointInfo>
             {
-              
+                {
+                    163000, new CheckpointInfo(uint256.Parse("a3583b043f4a478884d9c9f7254d40a62daf540041c3c5c26f46a1e63493fa62"),uint256.Parse("b96a9e0bb60f325b33960c7aa2269c5455bc98c5f9e32a7a3dccacd7d76f04a3"))
+                }
             };
+            this.DNSSeeds = new List<DNSSeedData>() {new DNSSeedData("x1crypto.com", "x1crypto.com")};
+            
+            this.SeedNodes = ConvertToNetworkAddresses(new[] { "134.122.89.152", "161.35.156.96" }, this.DefaultPort).ToList();
 
             RegisterRules(this.Consensus);
         }

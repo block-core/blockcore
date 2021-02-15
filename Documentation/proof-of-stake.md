@@ -1,32 +1,43 @@
 ## Specification of the blockcore Proof Of Stake ##
 
 
-What is POS vs POW
+### What is POS vs POW
 
 
 
 
-- Definitions
+### Definitions
 
-###StakeMinConfirmations (MaxReorg)
+#### StakeMinConfirmations
 
-###coinage
+The minimum confirmations required for a coin to be good enough to participate in staking
+Must be equal or greater then MaxReorg this is to discourage attackers to stake in isolation and then force a reorg.
 
-###proven headers (fake headers)
+#### MaxReorg
+
+Long reorganization protection or the maximal length of reorganization that the node is willing to accept.
+The reaosn to prevent long reorganization is to prevent "hisotry attack" or in other words old spent coins can't be reused to create a longer chain in isolation and cause big reorgs.
+
+Honest nodes will not switch to a chain that forked earler then maxreorg, and because StakeMinConfirmations will not allow to reuse coins before maxreorg then staking in isolation cannot cause long reorganisations.
+
+
+#### Coinage
+
+#### Proven Headers
  
-###kernal hash
+#### Kernal hash
 
-###target spacing
+##### Target Spacing
 
-###mask
+##### Mask
 
-###stake modifiers
+##### Stake Modifiers
 
 
 
-- How it works on blockcore
+### How it works on blockcore
 
-###the parameters that are used for hashing a valid kernal
+#### the parameters that are used for hashing a valid kernal
 
 How is a valid coinstake found? this is the heart of the processes.
 
@@ -48,7 +59,7 @@ This is called the weighted target it means the target of the UTXO is higher the
 
 If the resulting kernal hash of the above calculations is bellow the weighted target then the coinstake is valid and can be used to create a block.
 
-### the importance of syncing time correctly (future drift)
+#### The importance of syncing time correctly (future drift)
 
 Each node has a consensus rule of a fixed interval of X seconds that will enforce how far in the future it will accept blocks,
 blocks with a time stamp that is X seconds further then our nodes current datetime will be rejected.
@@ -63,7 +74,7 @@ To achive that we use the computers local current time, and double check that ag
 If the local time and peers avg time do not match the node will print out a warrnign message and default to peers time [need to double check the default].
 
 
-###block signatures (why sign a block with the private key owning the UTXO)
+#### Block Signatures (why sign a block with the private key owning the UTXO)
 
 The coinstake that found a valid kernal and thus was selected to create a block is used to proof ownership of the UTXO by providing the signature that spends the outputs
 However such an output has no cryptographic strong link to the block itself, meaning an attacker can take the valid coinstake utxo and put it in another block the attacker created 
@@ -72,9 +83,9 @@ and propagate that to the network, the attacker could then censor transactions a
 By signing the block with the same key that ownes the UTXO peers can validate the blocl was created by the owner of the coinstake.
 The block signature is attached as an extention block at the end of the serialid blocks and is not part of the header hash.
 
-###How is the next difficulty target calculated 
+#### How is the next difficulty target calculated 
 
-###changes made in POSv4
+#### Changes made in POSv4
 
 Two changes where made in POSv4.
 
@@ -89,17 +100,17 @@ when checking the kernal validity a few parameters are hashed together to create
 previously the timestamp of the utxo that is being spent was also included in that hash 
 however it provides no additional randomoness because the previous outpoint is used as well and that is already unique
 
-###coldstaking (multisig staking using P2WSH) 
+#### Coldstaking (multisig staking using P2WSH) 
 
-- Weaknesses
+## Weaknesses
 
-###NAS
+#### NAS
 
-###Stake Grinding
+#### Stake Grinding
 
-###IBD
+#### IBD
 
-###bribing
+#### bribing
 
 
 

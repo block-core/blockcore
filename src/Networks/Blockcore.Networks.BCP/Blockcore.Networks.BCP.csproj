@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Authors>Blockcore</Authors>
+    <AssemblyTitle>Blockcore.Networks.BCP</AssemblyTitle>
+    <AssemblyName>Blockcore.Networks.BCP</AssemblyName>
+    <PackageId>Blockcore.Networks.BCP</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+  </ItemGroup>
+
+</Project>

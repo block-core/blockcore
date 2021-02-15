@@ -1,5 +1,13 @@
 {
   "profiles": {
+    "BCP (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=BCP -server -iprangefiltering=0 -maxtipage=2147483647 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata"
+    },
+    "BCP (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=BCP -server -iprangefiltering=0 -maxtipage=2147483647 -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
+    },
     "BTC (MAIN)": {
       "commandName": "Project",
       "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
@@ -66,7 +74,7 @@
     },
     "XDS (MAIN/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser "
     },
     "XDS (TEST/LOCAL)": {
       "commandName": "Project",
@@ -95,6 +103,22 @@
     "IMPLX (TEST/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "EXOS (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=EXOS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "EXOS (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=EXOS -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "RUTA (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=RUTA -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "RUTA (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=RUTA -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
     }
   }
 }

@@ -34,6 +34,7 @@ namespace Blockcore.Node
                 case "X42":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet().UseWatchOnlyWallet();
                     break;
+                case "BCP":
                 case "CITY":
                 case "STRAT":
                 case "STRAX":

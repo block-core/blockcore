@@ -59,7 +59,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             ChainIndexer chainIndexer,
             IAddressIndexer addressIndexer,
             IUtxoIndexer utxoIndexer,
-            IStakeChain stakeChain)
+            IStakeChain stakeChain = null)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));

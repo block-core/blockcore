@@ -24,6 +24,10 @@ namespace Blockcore.Node
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Stratis.Networks.Stratis, args: args);
                     break;
 
+                case "STRAX":
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Strax.Networks.Strax, args: args);
+                    break;
+
                 case "X42":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.x42.Networks.Networks.x42, args: args);
                     break;

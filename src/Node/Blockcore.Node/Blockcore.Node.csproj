@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.OpenExo\Blockcore.Networks.OpenExo.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Rutanio\Blockcore.Networks.Rutanio.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Strax\Blockcore.Networks.Strax.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.x42\Blockcore.Networks.x42.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />

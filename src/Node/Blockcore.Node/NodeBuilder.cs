@@ -36,6 +36,7 @@ namespace Blockcore.Node
                     break;
                 case "CITY":
                 case "STRAT":
+                case "STRAX":
                 case "RUTA":
                 case "EXOS":
                 case "XDS":

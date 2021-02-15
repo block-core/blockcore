@@ -135,6 +135,15 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
             else this.Logger.LogDebug("BIP68, SigOp cost, and block reward validation skipped for block at height {0}.", index.Height);
         }
 
+        /// <summary>
+        /// Any non-signature checks that prevent the spending of a given UTXO.
+        /// </summary>
+        /// <param name="prevOut">The input being checked for validity.</param>
+        /// <param name="spendingTx">The transaction that attempts to spend the given input.</param>
+        protected virtual void AllowSpend(TxOut prevOut, Transaction spendingTx)
+        {
+        }
+
         protected abstract Money GetTransactionFee(UnspentOutputSet view, Transaction tx);
 
         /// <summary>Checks if transaction if final.</summary>

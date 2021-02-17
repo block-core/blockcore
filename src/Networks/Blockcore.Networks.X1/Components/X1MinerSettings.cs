@@ -51,6 +51,16 @@ namespace Blockcore.Networks.X1.Components
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
 
             this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(X1MinerSettings).FullName);
+
+            TextFileConfiguration config = nodeSettings.ConfigReader;
+
+            if (this.Mine)
+            {
+                this.MineThreadCount = config.GetOrDefault("minethreads",1, this.logger);
+                this.UseOpenCL = config.GetOrDefault("useopencl", false, this.logger);
+                this.OpenCLDevice = config.GetOrDefault("opencldevice", string.Empty, this.logger);
+                this.OpenCLWorksizeSplit = config.GetOrDefault("openclworksizesplit", 10, this.logger);
+            }
         }
 
         /// <summary>
@@ -67,7 +77,7 @@ namespace Blockcore.Networks.X1.Components
             builder.AppendLine("-minethreads=1                      Total threads to mine on (default 1).");
             builder.AppendLine("-useopencl=<0 or 1>                 Use OpenCL for POW mining (default 0)");
             builder.AppendLine("-opencldevice=<string>              Name of the OpenCL device to use (default first available).");
-            builder.AppendLine("-openclworksizesplit=<number>       Amount to split the work to send to the OpenCL device. Experiment with this value to find the optimum between a short execution time and big hash rate.");
+            builder.AppendLine("-openclworksizesplit=<number>       Default 10. Amount to split the work to send to the OpenCL device. Experiment with this value to find the optimum between a short execution time and big hash rate.");
 
             builder.AppendLine("-stake=<0 or 1>                     Enable POS.");
             builder.AppendLine("-mineaddress=<string>               The address to use for mining (empty string to select an address from the wallet).");

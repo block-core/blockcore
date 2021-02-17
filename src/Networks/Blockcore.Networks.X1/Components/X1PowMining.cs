@@ -222,9 +222,8 @@ namespace Blockcore.Networks.X1.Components
             block.Header.Nonce = 0;
 
             uint loopLength = 2_000_000;
-            int threads = this.minerSettings.MineThreadCount >= 0 && this.minerSettings.MineThreadCount < Environment.ProcessorCount
-                ? this.minerSettings.MineThreadCount
-                : Environment.ProcessorCount - 1;
+            int threads = Math.Max(1, Math.Min(this.minerSettings.MineThreadCount, Environment.ProcessorCount));
+
             int batch = threads;
             var totalNonce = batch * loopLength;
             uint winnerNonce = 0;

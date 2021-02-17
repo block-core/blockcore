@@ -66,12 +66,12 @@ namespace Blockcore.Networks.X1.Components
         /// <returns>The full node builder, enriched with the new component.</returns>
         static IFullNodeBuilder AddX1PowPosMining(this IFullNodeBuilder fullNodeBuilder)
         {
-            LoggingConfiguration.RegisterFeatureNamespace<MiningFeature>("mining");
+            LoggingConfiguration.RegisterFeatureNamespace<X1MiningFeature>("x1mining");
 
             fullNodeBuilder.ConfigureFeature(features =>
             {
                 features
-                    .AddFeature<MiningFeature>()
+                    .AddFeature<X1MiningFeature>()
                     .DependOn<MempoolFeature>()
                     .DependOn<RPCFeature>()
                     // TODO: Need a better way to check dependencies. This is really just dependent on IWalletManager...

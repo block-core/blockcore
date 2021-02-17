@@ -23,6 +23,8 @@ namespace Blockcore.Features.Wallet.Database
     {
         private readonly SqliteConnection sqliteConnection;
 
+        private const int WalletVersion = 1;
+
         /// <summary>
         /// A connection used only when the data store is in memory only.
         /// SQLite in-memory mode will keep the db as long as there is one connection open.
@@ -68,7 +70,12 @@ namespace Blockcore.Features.Wallet.Database
                 // Attempt to access the user version, this will crash if the loaded database is V5 and we use V4 packages.
                 try
                 {
-                    var userVersion = this.sqliteConnection.Query("select * from WalletData");
+                    var walletVersion = this.sqliteConnection.QueryFirst<int>("select WalletVersion from WalletData");
+
+                    if (walletVersion != WalletVersion)
+                    {
+                        this.UpgradeDatabase(walletVersion);
+                    }
                 }
                 catch (Microsoft.Data.Sqlite.SqliteException sqex)
                 {
@@ -117,7 +124,8 @@ namespace Blockcore.Features.Wallet.Database
                     Key = "Key",
                     EncryptedSeed = wallet.EncryptedSeed,
                     WalletName = wallet.Name,
-                    WalletTip = new HashHeightPair(this.network.GenesisHash, 0)
+                    WalletTip = new HashHeightPair(this.network.GenesisHash, 0),
+                    WalletVersion = WalletVersion
                 });
             }
         }
@@ -135,8 +143,8 @@ namespace Blockcore.Features.Wallet.Database
         public void SetData(WalletData data)
         {
             var sql = "INSERT INTO WalletData " +
-                      "(Id, EncryptedSeed, WalletName, WalletTip, BlockLocator) " +
-                      "VALUES (@Key, @EncryptedSeed, @WalletName, @WalletTip, @BlockLocator) " +
+                      "(Id, EncryptedSeed, WalletName, WalletTip, WalletVersion, BlockLocator) " +
+                      "VALUES (@Key, @EncryptedSeed, @WalletName, @WalletTip, @WalletVersion, @BlockLocator) " +
                       "ON CONFLICT(Id) DO UPDATE SET " +
                       "EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
 
@@ -360,6 +368,11 @@ namespace Blockcore.Features.Wallet.Database
             return ret > 0;
         }
 
+        private void UpgradeDatabase(int oldVersion)
+        {
+            // Here can come code to upgrade the db from old to current version.
+        }
+
         private void CreateDatabase()
         {
             this.sqliteConnection.Execute(
@@ -368,6 +381,7 @@ namespace Blockcore.Features.Wallet.Database
                "EncryptedSeed VARCHAR(500) NULL," +
                "WalletName    VARCHAR(100) NOT NULL," +
                "WalletTip     VARCHAR(75) NOT NULL," +
+               "WalletVersion INTEGER NOT NULL," +
                "BlockLocator  TEXT NULL)");
 
             this.sqliteConnection.Execute(

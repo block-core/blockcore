@@ -25,6 +25,8 @@ namespace Blockcore.Features.Wallet.Database
 
         public HashHeightPair WalletTip { get; set; }
 
+        public int WalletVersion { get; set; }
+
         public ICollection<uint256> BlockLocator { get; set; }
     }
 

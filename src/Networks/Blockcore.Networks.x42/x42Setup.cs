@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
-using x42.Networks;
-using x42.Networks.Setup;
+using Blockcore.Networks.x42.Networks.Setup;
 using NBitcoin;
 
-namespace x42
+namespace Blockcore.Networks.x42
 {
     internal class x42Setup
     {

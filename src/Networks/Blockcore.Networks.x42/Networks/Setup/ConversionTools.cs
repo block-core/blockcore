@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace x42.Networks.Setup
+namespace Blockcore.Networks.x42.Networks.Setup
 {
-   public class ConversionTools
+    public class ConversionTools
    {
       public static uint ConvertToUInt32(string magicText, bool reverse = false)
       {

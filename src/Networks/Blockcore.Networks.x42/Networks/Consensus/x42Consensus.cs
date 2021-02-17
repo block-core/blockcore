@@ -5,7 +5,7 @@ using Blockcore.Consensus;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 
-namespace x42.Networks.Consensus
+namespace Blockcore.Networks.x42.Networks.Consensus
 {
     public class x42Consensus : IConsensus
     {

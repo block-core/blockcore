@@ -2,11 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Networks;
-using NBitcoin;
 using NBitcoin.BitcoinCore;
 
-namespace x42.Networks.Policies
+namespace Blockcore.Networks.x42.Networks.Policies
 {
     /// <summary>
     /// x42 coin-specific standard transaction definitions.

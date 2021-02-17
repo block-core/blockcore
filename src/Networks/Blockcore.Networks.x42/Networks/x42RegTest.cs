@@ -4,17 +4,16 @@ using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
-using Blockcore.Networks;
+using Blockcore.Networks.x42.Networks.Consensus;
+using Blockcore.Networks.x42.Networks.Policies;
+using Blockcore.Networks.x42.Networks.Setup;
 using Blockcore.P2P;
-using x42.Networks.Consensus;
-using x42.Networks.Policies;
-using x42.Networks.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
 
-namespace x42.Networks
+namespace Blockcore.Networks.x42.Networks
 {
     public class x42RegTest : x42Main
     {

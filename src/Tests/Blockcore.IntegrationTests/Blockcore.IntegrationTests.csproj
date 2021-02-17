@@ -74,6 +74,9 @@
     <None Update="Wallet\Data\test.wallet.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Wallet\Data\txdb\wallet-with-funds.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Wallet\Data\wallet-with-funds.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -83,5 +86,9 @@
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Wallet\Data\txdb\" />
   </ItemGroup>
 </Project>

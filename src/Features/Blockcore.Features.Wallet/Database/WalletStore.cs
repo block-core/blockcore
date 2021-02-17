@@ -36,6 +36,9 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletData WalletData { get; private set; }
 
+        /// <summary>
+        /// Constructor that initiates an in-memory sql engine instance and is used only for tests.
+        /// </summary>
         public WalletStore(Network network, Types.Wallet wallet)
         {
             var tmpconn = Guid.NewGuid().ToString();

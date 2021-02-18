@@ -73,7 +73,7 @@ namespace Blockcore.Features.Wallet.Database
                 // Attempt to access the user version, this will crash if the loaded database is V5 and we use V4 packages.
                 try
                 {
-                    var walletVersion = this.sqliteConnection.QueryFirst<int>("select WalletVersion from WalletData");
+                    var walletVersion = this.sqliteConnection.QueryFirst<int>("SELECT WalletVersion FROM WalletData");
 
                     if (walletVersion != WalletVersion)
                     {
@@ -82,9 +82,13 @@ namespace Blockcore.Features.Wallet.Database
                 }
                 catch (Microsoft.Data.Sqlite.SqliteException sqex)
                 {
+                    // Errror that indicates that the file being opened does not appear to be an SQLite database file.
                     if (sqex.SqliteErrorCode != 26)
                         throw;
 
+                    // This will make a backup copy of the old litedbv5 (or v4) databases.
+                    // The reason the code base moved to use sqlite instead of litedb is because litedbv5 is not
+                    // properly maintained anymore and has a critical hard to reproduce errors that happen randomly.
                     var dbBackupPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.error.db");
 
                     // Move the problematic database file, which might be a V5 database.
@@ -137,7 +141,7 @@ namespace Blockcore.Features.Wallet.Database
         {
             if (this.WalletData == null)
             {
-                this.WalletData = this.sqliteConnection.QueryFirstOrDefault<WalletData>("select *, Id as Key from WalletData where Id = 'Key'");
+                this.WalletData = this.sqliteConnection.QueryFirstOrDefault<WalletData>("SELECT *, Id AS Key FROM WalletData WHERE Id = 'Key'");
             }
 
             return this.WalletData;
@@ -145,11 +149,11 @@ namespace Blockcore.Features.Wallet.Database
 
         public void SetData(WalletData data)
         {
-            var sql = "INSERT INTO WalletData " +
-                      "(Id, EncryptedSeed, WalletName, WalletTip, WalletVersion, BlockLocator) " +
-                      "VALUES (@Key, @EncryptedSeed, @WalletName, @WalletTip, @WalletVersion, @BlockLocator) " +
-                      "ON CONFLICT(Id) DO UPDATE SET " +
-                      "EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
+            var sql = @$"INSERT INTO WalletData
+                      (Id, EncryptedSeed, WalletName, WalletTip, WalletVersion, BlockLocator)
+                      VALUES (@Key, @EncryptedSeed, @WalletName, @WalletTip, @WalletVersion, @BlockLocator)
+                      ON CONFLICT(Id) DO UPDATE SET
+                      EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
 
             this.sqliteConnection.Execute(sql, data);
 
@@ -160,19 +164,18 @@ namespace Blockcore.Features.Wallet.Database
         {
             TransactionData insert = this.Convert(item);
 
-            var sql = "INSERT INTO TransactionData " +
-                      "(OutPoint, Address, Id, Amount, IndexInTransaction, BlockHeight, BlockHash, BlockIndex, CreationTime, ScriptPubKey, IsPropagated, IsCoinBase, IsCoinStake, IsColdCoinStake, AccountIndex, MerkleProof, Hex, SpendingDetailsTransactionId, SpendingDetailsBlockHeight, SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake, SpendingDetailsCreationTime, SpendingDetailsPayments, SpendingDetailsHex) " +
-                      "VALUES (@OutPoint, @Address, @Id, @Amount, @IndexInTransaction, @BlockHeight, @BlockHash, @BlockIndex, @CreationTime, @ScriptPubKey, @IsPropagated, @IsCoinBase, @IsCoinStake, @IsColdCoinStake, @AccountIndex, @MerkleProof, @Hex, @SpendingDetailsTransactionId, @SpendingDetailsBlockHeight, @SpendingDetailsBlockIndex, @SpendingDetailsIsCoinStake, @SpendingDetailsCreationTime, @SpendingDetailsPayments, @SpendingDetailsHex) " +
-                      "ON CONFLICT(OutPoint) DO UPDATE SET " +
-                      "IndexInTransaction = @IndexInTransaction, BlockHeight = @BlockHeight, BlockHash = @BlockHash, BlockIndex = @BlockIndex, CreationTime = @CreationTime, IsPropagated = @IsPropagated, IsColdCoinStake = @IsColdCoinStake, AccountIndex = @AccountIndex, MerkleProof = @MerkleProof, Hex = @Hex, SpendingDetailsTransactionId = @SpendingDetailsTransactionId, SpendingDetailsBlockHeight = @SpendingDetailsBlockHeight, SpendingDetailsBlockIndex = @SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake = @SpendingDetailsIsCoinStake, SpendingDetailsCreationTime = @SpendingDetailsCreationTime, SpendingDetailsPayments = @SpendingDetailsPayments, SpendingDetailsHex = @SpendingDetailsHex;";
+            var sql = @$"INSERT INTO TransactionData
+                      (OutPoint, Address, Id, Amount, IndexInTransaction, BlockHeight, BlockHash, BlockIndex, CreationTime, ScriptPubKey, IsPropagated, IsCoinBase, IsCoinStake, IsColdCoinStake, AccountIndex, MerkleProof, Hex, SpendingDetailsTransactionId, SpendingDetailsBlockHeight, SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake, SpendingDetailsCreationTime, SpendingDetailsPayments, SpendingDetailsHex)
+                      VALUES (@OutPoint, @Address, @Id, @Amount, @IndexInTransaction, @BlockHeight, @BlockHash, @BlockIndex, @CreationTime, @ScriptPubKey, @IsPropagated, @IsCoinBase, @IsCoinStake, @IsColdCoinStake, @AccountIndex, @MerkleProof, @Hex, @SpendingDetailsTransactionId, @SpendingDetailsBlockHeight, @SpendingDetailsBlockIndex, @SpendingDetailsIsCoinStake, @SpendingDetailsCreationTime, @SpendingDetailsPayments, @SpendingDetailsHex)
+                      ON CONFLICT(OutPoint) DO UPDATE SET
+                      IndexInTransaction = @IndexInTransaction, BlockHeight = @BlockHeight, BlockHash = @BlockHash, BlockIndex = @BlockIndex, CreationTime = @CreationTime, IsPropagated = @IsPropagated, IsColdCoinStake = @IsColdCoinStake, AccountIndex = @AccountIndex, MerkleProof = @MerkleProof, Hex = @Hex, SpendingDetailsTransactionId = @SpendingDetailsTransactionId, SpendingDetailsBlockHeight = @SpendingDetailsBlockHeight, SpendingDetailsBlockIndex = @SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake = @SpendingDetailsIsCoinStake, SpendingDetailsCreationTime = @SpendingDetailsCreationTime, SpendingDetailsPayments = @SpendingDetailsPayments, SpendingDetailsHex = @SpendingDetailsHex;";
 
             this.sqliteConnection.Execute(sql, insert);
         }
 
         public int CountForAddress(string address)
         {
-            var count = this.sqliteConnection.ExecuteScalar<int>(
-                "select count(*) from TransactionData where Address = @address", new { address });
+            var count = this.sqliteConnection.ExecuteScalar<int>("SELECT COUNT(*) FROM TransactionData WHERE Address = @address", new { address });
 
             return count;
         }
@@ -183,22 +186,21 @@ namespace Blockcore.Features.Wallet.Database
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
 
-            var sql = "select * from TransactionData " +
-                      "where AccountIndex == @accountIndex " +
-                      "and SpendingDetailsTransactionId is not null " +
-                      (excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "") +
-                      "order by SpendingDetailsCreationTime desc " +
-                      "limit @take offset @skip ";
+            var sql = @$"SELECT * FROM TransactionData
+                      WHERE AccountIndex == @accountIndex
+                      AND SpendingDetailsTransactionId IS NOT NULL
+                      {(excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "")}
+                      ORDER BY SpendingDetailsCreationTime DESC
+                      LIMIT @take OFFSET @skip ";
 
             var historySpentResult = this.sqliteConnection.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
             var historySpent = historySpentResult.Select(this.Convert);
 
-            sql = "select * from TransactionData " +
-                  "where AccountIndex == @accountIndex " +
-                  //"and SpendingDetailsTransactionId is null " +
-                  (excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "") +
-                  "order by CreationTime desc " +
-                  "limit @take offset @skip";
+            sql = @$"SELECT * FROM TransactionData
+                  WHERE AccountIndex == @accountIndex
+                  {(excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "")}
+                  ORDER BY CreationTime DESC
+                  LIMIT @take OFFSET @skip";
 
             var historyUnspentResult = this.sqliteConnection.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
             var historyUnspent = historyUnspentResult.Select(this.Convert);
@@ -281,8 +283,8 @@ namespace Blockcore.Features.Wallet.Database
         public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
             var trxs = this.sqliteConnection.Query<TransactionData>(
-                "select * from TransactionData " +
-                "where Address = @address",
+                "SELECT * FROM TransactionData " +
+                "WHERE Address = @address",
                 new { address });
 
             return trxs.Select(this.Convert);
@@ -291,9 +293,9 @@ namespace Blockcore.Features.Wallet.Database
         public IEnumerable<TransactionOutputData> GetUnspentForAddress(string address)
         {
             var trxs = this.sqliteConnection.Query<TransactionData>(
-                "select * from 'TransactionData' " +
-                "where Address = @address " +
-                "and SpendingDetailsTransactionId is null",
+                "SELECT * FROM 'TransactionData' " +
+                "WHERE Address = @address " +
+                "AND SpendingDetailsTransactionId IS NULL",
                 new { address });
 
             return trxs.Select(this.Convert);
@@ -301,17 +303,17 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : string.Empty;
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake IS NULL) " : string.Empty;
 
-            var sql = "SELECT " +
-                      "BlockHeight as Confirmed," +
-                      "SUM(Amount) as Total " +
-                      "FROM TransactionData " +
-                      $"WHERE SpendingDetailsTransactionId is null AND Address = '{address}' " +
-                      $"{excludeColdStakeSql}" +
-                      $"GROUP BY BlockHeight is not null";
+            var sql = @$"SELECT
+                        BlockHeight as Confirmed,
+                        SUM(Amount) as Total
+                        FROM TransactionData
+                        WHERE SpendingDetailsTransactionId IS NULL AND Address = @address
+                        {excludeColdStakeSql}
+                        GROUP BY BlockHeight IS NOT NULL";
 
-            var result = this.sqliteConnection.Query(sql);
+            var result = this.sqliteConnection.Query(sql, new { address });
 
             var walletBalanceResult = new WalletBalanceResult();
 
@@ -326,17 +328,17 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
         {
-            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : string.Empty;
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake IS NULL) " : string.Empty;
 
-            var sql = "SELECT " +
-                      "BlockHeight as Confirmed," +
-                      "SUM(Amount) as Total " +
-                      "FROM TransactionData " +
-                      $"WHERE SpendingDetailsTransactionId is null AND AccountIndex = {accountIndex} " +
-                      $"{excludeColdStakeSql}" +
-                      $"GROUP BY BlockHeight is not null";
+            var sql = @$"SELECT
+                      BlockHeight as Confirmed,
+                      SUM(Amount) as Total
+                      FROM TransactionData
+                      WHERE SpendingDetailsTransactionId IS NULL AND AccountIndex = @accountIndex
+                      {excludeColdStakeSql}
+                      GROUP BY BlockHeight IS NOT NULL";
 
-            var result = this.sqliteConnection.Query(sql);
+            var result = this.sqliteConnection.Query(sql, new { accountIndex });
 
             var walletBalanceResult = new WalletBalanceResult();
 
@@ -352,7 +354,7 @@ namespace Blockcore.Features.Wallet.Database
         public TransactionOutputData GetForOutput(OutPoint outPoint)
         {
             var trx = this.sqliteConnection.QueryFirstOrDefault<TransactionData>(
-                "select * from TransactionData where OutPoint = @outPoint", new { outPoint });
+                "SELECT * FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
 
             if (trx == null)
             {
@@ -366,7 +368,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public bool Remove(OutPoint outPoint)
         {
-            var ret = this.sqliteConnection.ExecuteScalar<int>("delete from TransactionData where OutPoint = @outPoint", new { outPoint });
+            var ret = this.sqliteConnection.ExecuteScalar<int>("DELETE FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
 
             return ret > 0;
         }
@@ -379,40 +381,40 @@ namespace Blockcore.Features.Wallet.Database
         private void CreateDatabase()
         {
             this.sqliteConnection.Execute(
-               "CREATE TABLE WalletData( " +
-               "Id            VARCHAR(3) NOT NULL PRIMARY KEY," +
-               "EncryptedSeed VARCHAR(500) NULL," +
-               "WalletName    VARCHAR(100) NOT NULL," +
-               "WalletTip     VARCHAR(75) NOT NULL," +
-               "WalletVersion INTEGER NOT NULL," +
-               "BlockLocator  TEXT NULL)");
+               @$"CREATE TABLE WalletData(
+               Id            VARCHAR(3) NOT NULL PRIMARY KEY,
+               EncryptedSeed VARCHAR(500) NULL,
+               WalletName    VARCHAR(100) NOT NULL,
+               WalletTip     VARCHAR(75) NOT NULL,
+               WalletVersion INTEGER NOT NULL,
+               BlockLocator  TEXT NULL)");
 
             this.sqliteConnection.Execute(
-                "CREATE TABLE TransactionData(" +
-                "OutPoint                                           VARCHAR(66) NOT NULL PRIMARY KEY," +
-                "Address                                            VARCHAR(34) NOT NULL," +
-                "Id                                                 VARCHAR(64) NOT NULL," +
-                "Amount                                             INTEGER  NOT NULL," +
-                "IndexInTransaction                                 INTEGER  NOT NULL," +
-                "BlockHeight                                        INTEGER  NULL," +
-                "BlockHash                                          VARCHAR(64) NULL," +
-                "BlockIndex                                         INTEGER NULL," +
-                "CreationTime                                       INTEGER  NOT NULL," +
-                "ScriptPubKey                                       VARCHAR(100) NOT NULL," +
-                "IsPropagated                                       INTEGER  NULL," +
-                "IsCoinBase                                         INTEGER  NULL," +
-                "IsCoinStake                                        INTEGER  NULL," +
-                "IsColdCoinStake                                    INTEGER  NULL," +
-                "AccountIndex                                       INTEGER  NOT NULL," +
-                "MerkleProof                                        TEXT NULL," +
-                "Hex                                                TEXT NULL," +
-                "SpendingDetailsTransactionId                       VARCHAR(64) NULL," +
-                "SpendingDetailsBlockHeight                         INTEGER  NULL," +
-                "SpendingDetailsBlockIndex                          INTEGER  NULL," +
-                "SpendingDetailsIsCoinStake                         INTEGER  NULL," +
-                "SpendingDetailsCreationTime                        INTEGER  NULL," +
-                "SpendingDetailsPayments                            TEXT NULL," +
-                "SpendingDetailsHex                                 TEXT NULL)");
+                @$"CREATE TABLE TransactionData(
+                OutPoint                                           VARCHAR(66) NOT NULL PRIMARY KEY,
+                Address                                            VARCHAR(34) NOT NULL,
+                Id                                                 VARCHAR(64) NOT NULL,
+                Amount                                             INTEGER  NOT NULL,
+                IndexInTransaction                                 INTEGER  NOT NULL,
+                BlockHeight                                        INTEGER  NULL,
+                BlockHash                                          VARCHAR(64) NULL,
+                BlockIndex                                         INTEGER NULL,
+                CreationTime                                       INTEGER  NOT NULL,
+                ScriptPubKey                                       VARCHAR(100) NOT NULL,
+                IsPropagated                                       INTEGER  NULL,
+                IsCoinBase                                         INTEGER  NULL,
+                IsCoinStake                                        INTEGER  NULL,
+                IsColdCoinStake                                    INTEGER  NULL,
+                AccountIndex                                       INTEGER  NOT NULL,
+                MerkleProof                                        TEXT NULL,
+                Hex                                                TEXT NULL,
+                SpendingDetailsTransactionId                       VARCHAR(64) NULL,
+                SpendingDetailsBlockHeight                         INTEGER  NULL,
+                SpendingDetailsBlockIndex                          INTEGER  NULL,
+                SpendingDetailsIsCoinStake                         INTEGER  NULL,
+                SpendingDetailsCreationTime                        INTEGER  NULL,
+                SpendingDetailsPayments                            TEXT NULL,
+                SpendingDetailsHex                                 TEXT NULL)");
 
             this.sqliteConnection.Execute("CREATE INDEX 'address_index' ON 'TransactionData' ('Address')");
             this.sqliteConnection.Execute("CREATE INDEX 'blockheight_index' ON 'TransactionData' ('BlockHeight')");

@@ -162,6 +162,12 @@ namespace Blockcore.Features.MemoryPool
         {
             try
             {
+                if (this.initialBlockDownloadState.IsInitialBlockDownload())
+                {
+                    this.logger.LogTrace("(-)[IS_IBD]");
+                    return;
+                }
+
                 await this.ProcessMessageAsync(peer, message).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -287,12 +293,6 @@ namespace Blockcore.Features.MemoryPool
                 this.logger.LogTrace("(-)[MAX_INV_SZ]");
                 //Misbehaving(pfrom->GetId(), 20); // TODO: Misbehaving
                 return; //error("message inv size() = %u", vInv.size());
-            }
-
-            if (this.initialBlockDownloadState.IsInitialBlockDownload())
-            {
-                this.logger.LogTrace("(-)[IS_IBD]");
-                return;
             }
 
             //uint32_t nFetchFlags = GetFetchFlags(pfrom, chainActive.Tip(), chainparams.GetConsensus());

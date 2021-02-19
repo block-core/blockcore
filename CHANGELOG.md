@@ -1,3 +1,16 @@
+##  (2021-02-19)
+
+* Add checkpoints for City Chain network ([ef16368](https://github.com/block-core/blockcore/commit/ef16368))
+* Add X1 (#276) ([6f510a0](https://github.com/block-core/blockcore/commit/6f510a0)), closes [#276](https://github.com/block-core/blockcore/issues/276)
+* dotnet pack generate symbols (snupkg) (#275) ([99a9dd5](https://github.com/block-core/blockcore/commit/99a9dd5)), closes [#275](https://github.com/block-core/blockcore/issues/275)
+* Fix build error: NU1101: Unable to find package (#273) ([0695789](https://github.com/block-core/blockcore/commit/0695789)), closes [#273](https://github.com/block-core/blockcore/issues/273)
+* Fix fee send bug ([55e748f](https://github.com/block-core/blockcore/commit/55e748f))
+* Update changelog and bump versions ([fd87c06](https://github.com/block-core/blockcore/commit/fd87c06))
+* Upgrade package dependencies to 3.1.11 ([b07b8e0](https://github.com/block-core/blockcore/commit/b07b8e0))
+* Wallet db to use sqlite (instead of litedbv4) (#272) ([ad2fca4](https://github.com/block-core/blockcore/commit/ad2fca4)), closes [#272](https://github.com/block-core/blockcore/issues/272)
+
+
+
 ##  (2021-02-01)
 
 * Add EXOS to launch settings ([7c32b4a](https://github.com/block-core/blockcore/commit/7c32b4a))

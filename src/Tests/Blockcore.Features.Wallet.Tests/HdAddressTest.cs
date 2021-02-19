@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
@@ -104,9 +105,9 @@ namespace Blockcore.Features.Wallet.Tests
 
             store.Add(new List<TransactionOutputData> {
                     new TransactionOutputData { Id = new uint256(15), OutPoint = new OutPoint(new uint256(15),1), Address = "Address"},
-                    new TransactionOutputData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
+                    new TransactionOutputData { Id = new uint256(16), SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) }, OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
                     new TransactionOutputData { Id = new uint256(17), OutPoint = new OutPoint(new uint256(17),1), Address = "Address"},
-                    new TransactionOutputData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
+                    new TransactionOutputData { Id = new uint256(18), SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) }, OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
                 });
 
             IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);
@@ -127,8 +128,8 @@ namespace Blockcore.Features.Wallet.Tests
             };
 
             store.Add(new List<TransactionOutputData> {
-                    new TransactionOutputData { Id = new uint256(16), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
-                    new TransactionOutputData { Id = new uint256(18), SpendingDetails = new SpendingDetails(), OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
+                    new TransactionOutputData { Id = new uint256(16), SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) }, OutPoint = new OutPoint(new uint256(16),1), Address = "Address" },
+                    new TransactionOutputData { Id = new uint256(18), SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) }, OutPoint = new OutPoint(new uint256(18),1), Address = "Address" }
                 });
 
             IEnumerable<TransactionOutputData> result = address.UnspentTransactions(store);

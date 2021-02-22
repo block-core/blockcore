@@ -1,6 +1,6 @@
 name: Build
- 
-on: 
+
+on:
   push:
     branches:
       - master
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  
+
   buildAndUnitTest:
 
     strategy:
@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
-    
+
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
       BUILD_CONFIGURATION: 'Release'
@@ -27,7 +27,7 @@ jobs:
 
     - uses: actions/checkout@v1
       name: Checkout
-      
+
     - name: Setup Node.js (12.x)
       uses: actions/setup-node@v1
       with:
@@ -44,7 +44,7 @@ jobs:
         dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
+      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Release
       if: matrix.os == 'ubuntu-latest'

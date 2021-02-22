@@ -1,0 +1,1740 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SpartacryptOpenCLMiner.opencl_device_info.h" xml:space="preserve">
+    <value>/*
+ * Developed by Claudio André &lt;claudioandre.br at gmail.com&gt; in 2012
+ *
+ * Copyright (c) 2012-2015 Claudio André &lt;claudioandre.br at gmail.com&gt;
+ * This program comes with ABSOLUTELY NO WARRANTY; express or implied.
+ *
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; as expressed here
+ * http://www.gnu.org/licenses/gpl-2.0.html
+ */
+
+# ifndef OPENCL_DEVICE_INFO_H
+#define OPENCL_DEVICE_INFO_H
+
+//Copied from opencl_common.h
+#define DEV_UNKNOWN                 0           //0
+#define DEV_CPU                     (1 &lt;&lt; 0)    //1
+#define DEV_GPU                     (1 &lt;&lt; 1)    //2
+#define DEV_ACCELERATOR             (1 &lt;&lt; 2)    //4
+#define DEV_AMD                     (1 &lt;&lt; 3)    //8
+#define DEV_NVIDIA                  (1 &lt;&lt; 4)    //16
+#define DEV_INTEL                   (1 &lt;&lt; 5)    //32
+#define PLATFORM_APPLE              (1 &lt;&lt; 6)    //64
+#define DEV_AMD_GCN_10              (1 &lt;&lt; 7)    //128
+#define DEV_AMD_GCN_11              (1 &lt;&lt; 8)    //256
+#define DEV_AMD_GCN_12              (1 &lt;&lt; 9)    //512
+#define DEV_AMD_VLIW4               (1 &lt;&lt; 12)   //4096
+#define DEV_AMD_VLIW5               (1 &lt;&lt; 13)   //8192
+#define DEV_NV_C2X                  (1 &lt;&lt; 14)   //16384
+#define DEV_NV_C30                  (1 &lt;&lt; 15)   //32768
+#define DEV_NV_C32                  (1 &lt;&lt; 16)   //65536
+#define DEV_NV_C35                  (1 &lt;&lt; 17)   //131072
+#define DEV_NV_MAXWELL              (1 &lt;&lt; 18)   //262144
+#define DEV_NV_PASCAL               (1 &lt;&lt; 19)   //524288
+#define DEV_NV_VOLTA                (1 &lt;&lt; 20)   //1M
+#define DEV_USE_LOCAL               (1 &lt;&lt; 21)   //2M
+#define DEV_NO_BYTE_ADDRESSABLE     (1 &lt;&lt; 22)   //4M
+#define PLATFORM_MESA               (1 &lt;&lt; 23)   //8M
+#define PLATFORM_BEIGNET            (1 &lt;&lt; 24)   //16M
+#define PLATFORM_POCL               (1 &lt;&lt; 25)   //32M
+
+#define cpu(n)                      ((n &amp; DEV_CPU) == (DEV_CPU))
+#define gpu(n)                      ((n &amp; DEV_GPU) == (DEV_GPU))
+#define gpu_amd(n)                  ((n &amp; DEV_AMD) &amp;&amp; gpu(n))
+#define gpu_nvidia(n)               ((n &amp; DEV_NVIDIA) &amp;&amp; gpu(n))
+#define gpu_intel(n)                ((n &amp; DEV_INTEL) &amp;&amp; gpu(n))
+#define cpu_amd(n)                  ((n &amp; DEV_AMD) &amp;&amp; cpu(n))
+#define cpu_intel(n)                ((n &amp; DEV_INTEL) &amp;&amp; cpu(n))
+#define amd_gcn_10(n)               ((n &amp; DEV_AMD_GCN_10) &amp;&amp; gpu_amd(n))
+#define amd_gcn_11(n)               ((n &amp; DEV_AMD_GCN_11) &amp;&amp; gpu_amd(n))
+#define amd_gcn_12(n)               ((n &amp; DEV_AMD_GCN_12) &amp;&amp; gpu_amd(n))
+#define amd_gcn(n)                  (amd_gcn_10(n) || (amd_gcn_11(n)) || amd_gcn_12(n))
+#define amd_vliw4(n)                ((n &amp; DEV_AMD_VLIW4) &amp;&amp; gpu_amd(n))
+#define amd_vliw5(n)                ((n &amp; DEV_AMD_VLIW5) &amp;&amp; gpu_amd(n))
+#define nvidia_sm_2x(n)             ((n &amp; DEV_NV_C2X) &amp;&amp; gpu_nvidia(n))
+#define nvidia_sm_3x(n)             (((n &amp; DEV_NV_C30) || (n &amp; DEV_NV_C32) || (n &amp; DEV_NV_C35)) &amp;&amp; gpu_nvidia(n))
+#define nvidia_sm_5x(n)             ((n &amp; DEV_NV_MAXWELL) &amp;&amp; gpu_nvidia(n))
+#define nvidia_sm_6x(n)             ((n &amp; DEV_NV_PASCAL) &amp;&amp; gpu_nvidia(n))
+#define no_byte_addressable(n)      ((n &amp; DEV_NO_BYTE_ADDRESSABLE))
+#define use_local(n)                ((n &amp; DEV_USE_LOCAL))
+
+/* Only usable in host code */
+#if !_OPENCL_COMPILER
+#define platform_apple(p)           (get_platform_vendor_id(p) == PLATFORM_APPLE)
+#endif
+
+#endif	/* OPENCL_DEVICE_INFO_H */</value>
+  </data>
+  <data name="SpartacryptOpenCLMiner.opencl_misc.h" xml:space="preserve">
+    <value>/*
+ * OpenCL common macros
+ *
+ * Copyright (c) 2014-2015, magnum
+ * This software is hereby released to the general public under
+ * the following terms: Redistribution and use in source and binary
+ * forms, with or without modification, are permitted.
+ *
+ * NOTICE: After changes in headers, with nvidia driver you probably
+ * need to drop cached kernels to ensure the changes take effect:
+ *
+ * rm -fr ~/.nv/ComputeCache
+ *
+ */
+
+#ifndef _OPENCL_MISC_H
+#define _OPENCL_MISC_H
+
+//#include "opencl_device_info.h"
+
+ /* Note: long is *always* 64-bit in OpenCL */
+typedef uchar uint8_t;
+typedef char int8_t;
+typedef ushort uint16_t;
+typedef short int16_t;
+typedef uint uint32_t;
+typedef int int32_t;
+typedef ulong uint64_t;
+typedef long int64_t;
+
+#if __SIZEOF_HOST_SIZE_T__ == 8 /* This is set by opencl_common.c */
+typedef uint64_t host_size_t;
+#else
+typedef uint32_t host_size_t;
+#endif
+
+/*
+ * Some runtimes/drivers breaks on using inline, others breaks on lack of it,
+ * yet others require use of static as well.
+ *
+ * Only usable in device code
+ */
+#if _OPENCL_COMPILER
+
+#if __MESA__
+#define inline	// empty!
+#elif __POCL__
+ // Do nothing (POCL complains if we redefine)
+#elif gpu_amd(DEVICE_INFO) // We really target ROCM here
+#define inline	static inline
+#else
+ // Do nothing
+#endif
+
+#endif /* _OPENCL_COMPILER */
+
+/*
+ * "Copy" of the one in dyna_salt.h (we only need it to be right size,
+ * bitfields are not allowed in OpenCL)
+ */
+typedef struct dyna_salt_t {
+	host_size_t salt_cmp_size;
+	host_size_t bitfield_and_offset;
+} dyna_salt;
+
+#ifndef MIN
+#define MIN(a,b) ((a)&lt;(b)?(a):(b))
+#endif
+#ifndef MAX
+#define MAX(a,b) ((a)&gt;(b)?(a):(b))
+#endif
+
+/*
+ * Host code may pass -DV_WIDTH=2 or some other width.
+ */
+#if V_WIDTH &gt; 1
+#define MAYBE_VECTOR_UINT	VECTOR(uint, V_WIDTH)
+#define MAYBE_VECTOR_ULONG	VECTOR(ulong, V_WIDTH)
+#else
+#define MAYBE_VECTOR_UINT	uint
+#define MAYBE_VECTOR_ULONG	ulong
+#define SCALAR 1
+#endif
+
+#if SCALAR &amp;&amp; 0 /* Used for testing */
+#define HAVE_LUT3	1
+inline uint lut3(uint x, uint y, uint z, uchar m)
+{
+	uint i;
+	uint r = 0;
+	for (i = 0; i &lt; sizeof(uint) * 8; i++)
+		r |= (uint)((m &gt;&gt; ((((x &gt;&gt; i) &amp; 1) &lt;&lt; 2) |
+		(((y &gt;&gt; i) &amp; 1) &lt;&lt; 1) |
+			((z &gt;&gt; i) &amp; 1))) &amp; 1) &lt;&lt; i;
+	return r;
+}
+#endif
+
+/*
+ * Apparently nvidias can optimize stuff better (ending up in *better* LUT
+ * use) with the basic formulas instead of bitselect ones. Most formats
+ * show no difference but pwsafe does.
+ */
+#if !gpu_nvidia(DEVICE_INFO)
+#define USE_BITSELECT 1
+#endif
+
+#if SM_MAJOR == 1
+#define OLD_NVIDIA 1
+#endif
+
+#if cpu(DEVICE_INFO)
+#define HAVE_ANDNOT 1
+#endif
+
+#if SCALAR &amp;&amp; SM_MAJOR &gt;= 5 &amp;&amp; (DEV_VER_MAJOR &gt; 352 || (DEV_VER_MAJOR == 352 &amp;&amp; DEV_VER_MINOR &gt;= 21))
+#define HAVE_LUT3	1
+inline uint lut3(uint a, uint b, uint c, uint imm)
+{
+	uint r;
+	asm("lop3.b32 %0, %1, %2, %3, %4;"
+		: "=r" (r)
+		: "r" (a), "r" (b), "r" (c), "i" (imm));
+	return r;
+}
+
+#if 0 /* This does no good */
+#define HAVE_LUT3_64	1
+inline ulong lut3_64(ulong a, ulong b, ulong c, uint imm)
+{
+	ulong t, r;
+
+	asm("lop3.b32 %0, %1, %2, %3, %4;"
+		: "=r" (t)
+		: "r" ((uint)a), "r" ((uint)b), "r" ((uint)c), "i" (imm));
+	r = t;
+	asm("lop3.b32 %0, %1, %2, %3, %4;"
+		: "=r" (t)
+		: "r" ((uint)(a &gt;&gt; 32)), "r" ((uint)(b &gt;&gt; 32)), "r" ((uint)(c &gt;&gt; 32)), "i" (imm));
+	return r + (t &lt;&lt; 32);
+}
+#endif
+#endif
+
+#if defined cl_amd_media_ops &amp;&amp; !__MESA__ &amp;&amp; gpu_amd(DEVICE_INFO)
+#pragma OPENCL EXTENSION cl_amd_media_ops : enable
+#define BITALIGN(hi, lo, s) amd_bitalign((hi), (lo), (s))
+#elif SCALAR &amp;&amp; SM_MAJOR &gt; 3 || (SM_MAJOR == 3 &amp;&amp; SM_MINOR &gt;= 2)
+inline uint funnel_shift_right(uint hi, uint lo, uint s)
+{
+	uint r;
+	asm("shf.r.wrap.b32 %0, %1, %2, %3;"
+		: "=r" (r)
+		: "r" (lo), "r" (hi), "r" (s));
+	return r;
+}
+
+inline uint funnel_shift_right_imm(uint hi, uint lo, uint s)
+{
+	uint r;
+	asm("shf.r.wrap.b32 %0, %1, %2, %3;"
+		: "=r" (r)
+		: "r" (lo), "r" (hi), "i" (s));
+	return r;
+}
+#define BITALIGN(hi, lo, s) funnel_shift_right(hi, lo, s)
+#define BITALIGN_IMM(hi, lo, s) funnel_shift_right_imm(hi, lo, s)
+#else
+#define BITALIGN(hi, lo, s) (((hi) &lt;&lt; (32 - (s))) | ((lo) &gt;&gt; (s)))
+#endif
+
+#ifndef BITALIGN_IMM
+#define BITALIGN_IMM(hi, lo, s) BITALIGN(hi, lo, s)
+#endif
+
+#define CONCAT(TYPE,WIDTH)	TYPE ## WIDTH
+#define VECTOR(x, y)		CONCAT(x, y)
+
+/* Workaround for problem seen with 9600GT */
+#ifndef MAYBE_CONSTANT
+#if OLD_NVIDIA
+#define MAYBE_CONSTANT	__global const
+#else
+#define MAYBE_CONSTANT	__constant
+#endif
+#endif
+
+inline ushort SWAP16(ushort x)
+{
+	return ((x &lt;&lt; 8) + (x &gt;&gt; 8));
+}
+
+#if USE_BITSELECT
+inline uint SWAP32(uint x)
+{
+	return bitselect(rotate(x, 24U), rotate(x, 8U), 0x00FF00FFU);
+}
+
+#define SWAP64(n)	bitselect( \
+		bitselect(rotate(n, 24UL), \
+		          rotate(n, 8UL), 0x000000FF000000FFUL), \
+		bitselect(rotate(n, 56UL), \
+		          rotate(n, 40UL), 0x00FF000000FF0000UL), \
+		0xFFFF0000FFFF0000UL)
+#else
+inline uint SWAP32(uint x)
+{
+	x = rotate(x, 16U);
+	return ((x &amp; 0x00FF00FF) &lt;&lt; 8) + ((x &gt;&gt; 8) &amp; 0x00FF00FF);
+}
+
+// You would not believe how many driver bugs variants of this macro reveal
+#define SWAP64(n)	  \
+            (((n)             &lt;&lt; 56)   | (((n) &amp; 0xff00)     &lt;&lt; 40) |   \
+            (((n) &amp; 0xff0000) &lt;&lt; 24)   | (((n) &amp; 0xff000000) &lt;&lt; 8)  |   \
+            (((n) &gt;&gt; 8)  &amp; 0xff000000) | (((n) &gt;&gt; 24) &amp; 0xff0000)   |   \
+            (((n) &gt;&gt; 40) &amp; 0xff00)     | ((n)  &gt;&gt; 56))
+#endif
+
+#if SCALAR
+#define VSWAP32 SWAP32
+#else
+/* Vector-capable swap32() */
+inline MAYBE_VECTOR_UINT VSWAP32(MAYBE_VECTOR_UINT x)
+{
+	x = rotate(x, 16U);
+	return ((x &amp; 0x00FF00FF) &lt;&lt; 8) + ((x &gt;&gt; 8) &amp; 0x00FF00FF);
+}
+#endif
+
+/*
+ * These macros must not require alignment of (b).
+ */
+#define GET_UINT32(n, b, i)	  \
+	{ \
+		(n) = ((uint) (b)[(i)]      ) \
+			| ((uint) (b)[(i) + 1] &lt;&lt;  8) \
+			| ((uint) (b)[(i) + 2] &lt;&lt; 16) \
+			| ((uint) (b)[(i) + 3] &lt;&lt; 24); \
+	}
+
+#define PUT_UINT32(n, b, i)	  \
+	{ \
+		(b)[(i)    ] = (uchar) ((n)      ); \
+		(b)[(i) + 1] = (uchar) ((n) &gt;&gt;  8); \
+		(b)[(i) + 2] = (uchar) ((n) &gt;&gt; 16); \
+		(b)[(i) + 3] = (uchar) ((n) &gt;&gt; 24); \
+	}
+
+#define GET_UINT32BE(n, b, i)	  \
+	{ \
+		(n) = ((uint) (b)[(i)] &lt;&lt; 24) \
+			| ((uint) (b)[(i) + 1] &lt;&lt; 16) \
+			| ((uint) (b)[(i) + 2] &lt;&lt;  8) \
+			| ((uint) (b)[(i) + 3]      ); \
+	}
+
+#define PUT_UINT32BE(n, b, i)	  \
+	{ \
+		(b)[(i)    ] = (uchar) ((n) &gt;&gt; 24); \
+		(b)[(i) + 1] = (uchar) ((n) &gt;&gt; 16); \
+		(b)[(i) + 2] = (uchar) ((n) &gt;&gt;  8); \
+		(b)[(i) + 3] = (uchar) ((n)      ); \
+	}
+
+#define PUT_UINT64(n, b, i)	  \
+	{ \
+		(b)[(i)    ] = (uchar) ((n)      ); \
+		(b)[(i) + 1] = (uchar) ((ulong)(n) &gt;&gt;  8); \
+		(b)[(i) + 2] = (uchar) ((ulong)(n) &gt;&gt; 16); \
+		(b)[(i) + 3] = (uchar) ((ulong)(n) &gt;&gt; 24); \
+		(b)[(i) + 4] = (uchar) ((ulong)(n) &gt;&gt; 32); \
+		(b)[(i) + 5] = (uchar) ((ulong)(n) &gt;&gt; 40); \
+		(b)[(i) + 6] = (uchar) ((ulong)(n) &gt;&gt; 48); \
+		(b)[(i) + 7] = (uchar) ((ulong)(n) &gt;&gt; 56); \
+	}
+
+#define GET_UINT64BE(n, b, i)	  \
+	{ \
+		(n) = ((ulong) (b)[(i)] &lt;&lt; 56) \
+			| ((ulong) (b)[(i) + 1] &lt;&lt; 48) \
+			| ((ulong) (b)[(i) + 2] &lt;&lt; 40) \
+			| ((ulong) (b)[(i) + 3] &lt;&lt; 32) \
+			| ((ulong) (b)[(i) + 4] &lt;&lt; 24) \
+			| ((ulong) (b)[(i) + 5] &lt;&lt; 16) \
+			| ((ulong) (b)[(i) + 6] &lt;&lt;  8) \
+			| ((ulong) (b)[(i) + 7]      ); \
+	}
+
+#define PUT_UINT64BE(n, b, i)	  \
+	{ \
+		(b)[(i)    ] = (uchar) ((ulong)(n) &gt;&gt; 56); \
+		(b)[(i) + 1] = (uchar) ((ulong)(n) &gt;&gt; 48); \
+		(b)[(i) + 2] = (uchar) ((ulong)(n) &gt;&gt; 40); \
+		(b)[(i) + 3] = (uchar) ((ulong)(n) &gt;&gt; 32); \
+		(b)[(i) + 4] = (uchar) ((ulong)(n) &gt;&gt; 24); \
+		(b)[(i) + 5] = (uchar) ((ulong)(n) &gt;&gt; 16); \
+		(b)[(i) + 6] = (uchar) ((ulong)(n) &gt;&gt;  8); \
+		(b)[(i) + 7] = (uchar) ((n)      ); \
+	}
+
+ /*
+  * These require (b) to be aligned!
+  */
+#if __ENDIAN_LITTLE__
+#define GET_UINT32_ALIGNED(n, b, i)	(n) = ((uint*)(b))[(i) &gt;&gt; 2]
+#define PUT_UINT32_ALIGNED(n, b, i)	((uint*)(b))[(i) &gt;&gt; 2] = (n)
+#define GET_UINT32BE_ALIGNED(n, b, i)	(n) = SWAP32(((uint*)(b))[(i) &gt;&gt; 2])
+#define PUT_UINT32BE_ALIGNED(n, b, i)	((uint*)(b))[(i) &gt;&gt; 2] = SWAP32(n)
+#define PUT_UINT64_ALIGNED(n, b, i)	((ulong*)(b))[(i) &gt;&gt; 3] = (n)
+#define GET_UINT64BE_ALIGNED(n, b, i)	(n) = SWAP64(((ulong*)(b))[(i) &gt;&gt; 3])
+#define PUT_UINT64BE_ALIGNED(n, b, i)	((ulong*)(b))[(i) &gt;&gt; 3] = SWAP64(n)
+#else
+#define GET_UINT32_ALIGNED(n, b, i)	(n) = SWAP32(((uint*)(b))[(i) &gt;&gt; 2])
+#define PUT_UINT32_ALIGNED(n, b, i)	((uint*)(b))[(i) &gt;&gt; 2] = SWAP32(n)
+#define GET_UINT32BE_ALIGNED(n, b, i)	(n) = ((uint*)(b))[(i) &gt;&gt; 2]
+#define PUT_UINT32BE_ALIGNED(n, b, i)	((uint*)(b))[(i) &gt;&gt; 2] = (n)
+#define PUT_UINT64_ALIGNED(n, b, i)	((ulong*)(b))[(i) &gt;&gt; 3] = SWAP64(n)
+#define GET_UINT64BE_ALIGNED(n, b, i)	(n) = ((ulong*)(b))[(i) &gt;&gt; 3]
+#define PUT_UINT64BE_ALIGNED(n, b, i)	((ulong*)(b))[(i) &gt;&gt; 3] = (n)
+#endif
+
+  /* Any device can do 8-bit reads BUT these macros are scalar only! */
+#define GETCHAR(buf, index) (((uchar*)(buf))[(index)])
+#define GETCHAR_G(buf, index) (((__global uchar*)(buf))[(index)])
+#define GETCHAR_L(buf, index) (((__local uchar*)(buf))[(index)])
+#define GETCHAR_BE(buf, index) (((uchar*)(buf))[(index) ^ 3])
+#define GETCHAR_MC(buf, index) (((MAYBE_CONSTANT uchar*)(buf))[(index)])
+#define LASTCHAR_BE(buf, index, val) (buf)[(index)&gt;&gt;2] = ((buf)[(index)&gt;&gt;2] &amp; (0xffffff00U &lt;&lt; ((((index) &amp; 3) ^ 3) &lt;&lt; 3))) + ((val) &lt;&lt; ((((index) &amp; 3) ^ 3) &lt;&lt; 3))
+
+#if no_byte_addressable(DEVICE_INFO) || !SCALAR || (gpu_amd(DEVICE_INFO) &amp;&amp; defined(AMD_PUTCHAR_NOCAST))
+/* 32-bit stores */
+#define PUTCHAR(buf, index, val) (buf)[(index)&gt;&gt;2] = ((buf)[(index)&gt;&gt;2] &amp; ~(0xffU &lt;&lt; (((index) &amp; 3) &lt;&lt; 3))) + ((val) &lt;&lt; (((index) &amp; 3) &lt;&lt; 3))
+#define PUTCHAR_G	PUTCHAR
+#define PUTCHAR_L	PUTCHAR
+#define PUTCHAR_BE(buf, index, val) (buf)[(index)&gt;&gt;2] = ((buf)[(index)&gt;&gt;2] &amp; ~(0xffU &lt;&lt; ((((index) &amp; 3) ^ 3) &lt;&lt; 3))) + ((val) &lt;&lt; ((((index) &amp; 3) ^ 3) &lt;&lt; 3))
+#define PUTCHAR_BE_G	PUTCHAR_BE
+#define PUTSHORT(buf, index, val) (buf)[(index)&gt;&gt;1] = ((buf)[(index)&gt;&gt;1] &amp; ~(0xffffU &lt;&lt; (((index) &amp; 1) &lt;&lt; 4))) + ((val) &lt;&lt; (((index) &amp; 1) &lt;&lt; 4))
+#define PUTSHORT_BE(buf, index, val) (buf)[(index)&gt;&gt;1] = ((buf)[(index)&gt;&gt;1] &amp; ~(0xffffU &lt;&lt; ((((index) &amp; 1) ^ 3) &lt;&lt; 4))) + ((val) &lt;&lt; ((((index) &amp; 1) ^ 3) &lt;&lt; 4))
+#define XORCHAR(buf, index, val) (buf)[(index)&gt;&gt;2] = ((buf)[(index)&gt;&gt;2]) ^ ((val) &lt;&lt; (((index) &amp; 3) &lt;&lt; 3))
+#define XORCHAR_BE(buf, index, val) (buf)[(index)&gt;&gt;2] = ((buf)[(index)&gt;&gt;2]) ^ ((val) &lt;&lt; ((((index) &amp; 3) ^ 3) &lt;&lt; 3))
+
+#else
+/* 8-bit stores */
+#define PUTCHAR(buf, index, val) ((uchar*)(buf))[index] = (val)
+#define PUTCHAR_G(buf, index, val) ((__global uchar*)(buf))[(index)] = (val)
+#define PUTCHAR_L(buf, index, val) ((__local uchar*)(buf))[(index)] = (val)
+#define PUTCHAR_BE(buf, index, val) ((uchar*)(buf))[(index) ^ 3] = (val)
+#define PUTCHAR_BE_G(buf, index, val) ((__global uchar*)(buf))[(index) ^ 3] = (val)
+#define PUTSHORT(buf, index, val) ((ushort*)(buf))[index] = (val)
+#define PUTSHORT_BE(buf, index, val) ((ushort*)(buf))[(index) ^ 1] = (val)
+#define XORCHAR(buf, index, val) ((uchar*)(buf))[(index)] ^= (val)
+#define XORCHAR_BE(buf, index, val) ((uchar*)(buf))[(index) ^ 3] ^= (val)
+#endif
+
+inline int check_pkcs_pad(const uchar* data, int len, int blocksize)
+{
+	int pad_len, padding, real_len;
+
+	if (len &amp; (blocksize - 1) || len &lt; blocksize)
+		return -1;
+
+	pad_len = data[len - 1];
+
+	if (pad_len &lt; 1 || pad_len &gt; blocksize)
+		return -1;
+
+	real_len = len - pad_len;
+	data += real_len;
+
+	padding = pad_len;
+
+	while (pad_len--)
+		if (*data++ != padding)
+			return -1;
+
+	return real_len;
+}
+
+/*
+ * Use with some caution. Memory type agnostic and if both src and dst are
+ * 8-bit types, this works like a normal memcpy.
+ *
+ * If src and dst are larger but same size, it will still work fine but
+ * 'count' is number of ELEMENTS and not BYTES.
+ *
+ * If src and dst are different size types, you will get what you asked for...
+ */
+#define memcpy_macro(dst, src, count) do {	  \
+		uint c = count; \
+		for (uint _i = 0; _i &lt; c; _i++) \
+			(dst)[_i] = (src)[_i]; \
+	} while (0)
+
+ /*
+  * Optimized functions. You need to pick the one that corresponds to the
+  * source- and destination memory type(s).
+  *
+  * Note that for very small sizes, the overhead may make these functions
+  * slower than naive code. On the other hand, due to inlining we will
+  * hopefully have stuff optimized away more often than not!
+  */
+
+  /* src and dst are private mem */
+inline void memcpy_pp(void* dst, const void* src, uint count)
+{
+	union {
+		const uint* w;
+		const uchar* c;
+	} s;
+	union {
+		uint* w;
+		uchar* c;
+	} d;
+
+	s.c = src;
+	d.c = dst;
+
+	if (((size_t)dst &amp; 0x03) == ((size_t)src &amp; 0x03)) {
+		while (((size_t)s.c) &amp; 0x03 &amp;&amp; count--)
+			*d.c++ = *s.c++;
+
+		while (count &gt;= 4) {
+			*d.w++ = *s.w++;
+			count -= 4;
+		}
+	}
+
+	while (count--) {
+		*d.c++ = *s.c++;
+	}
+}
+
+/* src is private mem, dst is global mem */
+inline void memcpy_pg(__global void* dst, const void* src, uint count)
+{
+	union {
+		const uint* w;
+		const uchar* c;
+	} s;
+	union {
+		__global uint* w;
+		__global uchar* c;
+	} d;
+
+	s.c = src;
+	d.c = dst;
+
+	if (((size_t)dst &amp; 0x03) == ((size_t)src &amp; 0x03)) {
+		while (((size_t)s.c) &amp; 0x03 &amp;&amp; count--)
+			*d.c++ = *s.c++;
+
+		while (count &gt;= 4) {
+			*d.w++ = *s.w++;
+			count -= 4;
+		}
+	}
+
+	while (count--) {
+		*d.c++ = *s.c++;
+	}
+}
+
+/* src is global mem, dst is private mem */
+inline void memcpy_gp(void* dst, __global const void* src, uint count)
+{
+	union {
+		__global const uint* w;
+		__global const uchar* c;
+	} s;
+	union {
+		uint* w;
+		uchar* c;
+	} d;
+
+	s.c = src;
+	d.c = dst;
+
+	if (((size_t)dst &amp; 0x03) == ((size_t)src &amp; 0x03)) {
+		while (((size_t)s.c) &amp; 0x03 &amp;&amp; count--)
+			*d.c++ = *s.c++;
+
+		while (count &gt;= 4) {
+			*d.w++ = *s.w++;
+			count -= 4;
+		}
+	}
+
+	while (count--) {
+		*d.c++ = *s.c++;
+	}
+}
+
+/* src is constant mem, dst is private mem */
+inline void memcpy_cp(void* dst, __constant void* src, uint count)
+{
+	union {
+		__constant uint* w;
+		__constant uchar* c;
+	} s;
+	union {
+		uint* w;
+		uchar* c;
+	} d;
+
+	s.c = src;
+	d.c = dst;
+
+	if (((size_t)dst &amp; 0x03) == ((size_t)src &amp; 0x03)) {
+		while (((size_t)s.c) &amp; 0x03 &amp;&amp; count--)
+			*d.c++ = *s.c++;
+
+		while (count &gt;= 4) {
+			*d.w++ = *s.w++;
+			count -= 4;
+		}
+	}
+
+	while (count--) {
+		*d.c++ = *s.c++;
+	}
+}
+
+/* src is MAYBE_CONSTANT mem, dst is private mem */
+inline void memcpy_mcp(void* dst, MAYBE_CONSTANT void* src, uint count)
+{
+	union {
+		MAYBE_CONSTANT uint* w;
+		MAYBE_CONSTANT uchar* c;
+	} s;
+	union {
+		uint* w;
+		uchar* c;
+	} d;
+
+	s.c = src;
+	d.c = dst;
+
+	if (((size_t)dst &amp; 0x03) == ((size_t)src &amp; 0x03)) {
+		while (((size_t)s.c) &amp; 0x03 &amp;&amp; count--)
+			*d.c++ = *s.c++;
+
+		while (count &gt;= 4) {
+			*d.w++ = *s.w++;
+			count -= 4;
+		}
+	}
+
+	while (count--) {
+		*d.c++ = *s.c++;
+	}
+}
+
+/* dst is private mem */
+inline void memset_p(void* p, uint val, uint count)
+{
+	const uint val4 = val | (val &lt;&lt; 8) | (val &lt;&lt; 16) | (val &lt;&lt; 24);
+	union {
+		uint* w;
+		uchar* c;
+	} d;
+
+	d.c = p;
+
+	while (((size_t)d.c) &amp; 0x03 &amp;&amp; count--)
+		*d.c++ = val;
+
+	while (count &gt;= 4) {
+		*d.w++ = val4;
+		count -= 4;
+	}
+
+	while (count--)
+		*d.c++ = val;
+}
+
+/* dst is global mem */
+inline void memset_g(__global void* p, uint val, uint count)
+{
+	const uint val4 = val | (val &lt;&lt; 8) | (val &lt;&lt; 16) | (val &lt;&lt; 24);
+	union {
+		__global uint* w;
+		__global uchar* c;
+	} d;
+
+	d.c = p;
+
+	while (((size_t)d.c) &amp; 0x03 &amp;&amp; count--)
+		*d.c++ = val;
+
+	while (count &gt;= 4) {
+		*d.w++ = val4;
+		count -= 4;
+	}
+
+	while (count--)
+		*d.c++ = val;
+}
+
+/* s1 and s2 are private mem */
+inline int memcmp_pp(const void* s1, const void* s2, uint size)
+{
+	union {
+		const uint* w;
+		const uchar* c;
+	} a;
+	union {
+		const uint* w;
+		const uchar* c;
+	} b;
+
+	a.c = s1;
+	b.c = s2;
+
+	if (((size_t)s1 &amp; 0x03) == ((size_t)s2 &amp; 0x03)) {
+		while (((size_t)a.c) &amp; 0x03 &amp;&amp; size--)
+			if (*b.c++ != *a.c++)
+				return 1;
+
+		while (size &gt;= 4) {
+			if (*b.w++ != *a.w++)
+				return 1;
+			size -= 4;
+		}
+	}
+
+	while (size--)
+		if (*b.c++ != *a.c++)
+			return 1;
+
+	return 0;
+}
+
+/* s1 is private mem, s2 is constant mem */
+inline int memcmp_pc(const void* s1, __constant const void* s2, uint size)
+{
+	union {
+		const uint* w;
+		const uchar* c;
+	} a;
+	union {
+		__constant const uint* w;
+		__constant const uchar* c;
+	} b;
+
+	a.c = s1;
+	b.c = s2;
+
+	if (((size_t)s1 &amp; 0x03) == ((size_t)s2 &amp; 0x03)) {
+		while (((size_t)a.c) &amp; 0x03 &amp;&amp; size--)
+			if (*b.c++ != *a.c++)
+				return 1;
+
+		while (size &gt;= 4) {
+			if (*b.w++ != *a.w++)
+				return 1;
+			size -= 4;
+		}
+	}
+
+	while (size--)
+		if (*b.c++ != *a.c++)
+			return 1;
+
+	return 0;
+}
+
+/* s1 is private mem, s2 is MAYBE_CONSTANT mem */
+inline int memcmp_pmc(const void* s1, MAYBE_CONSTANT void* s2, uint size)
+{
+	union {
+		const uint* w;
+		const uchar* c;
+	} a;
+	union {
+		MAYBE_CONSTANT uint* w;
+		MAYBE_CONSTANT uchar* c;
+	} b;
+
+	a.c = s1;
+	b.c = s2;
+
+	if (((size_t)s1 &amp; 0x03) == ((size_t)s2 &amp; 0x03)) {
+		while (((size_t)a.c) &amp; 0x03 &amp;&amp; size--)
+			if (*b.c++ != *a.c++)
+				return 1;
+
+		while (size &gt;= 4) {
+			if (*b.w++ != *a.w++)
+				return 1;
+			size -= 4;
+		}
+	}
+
+	while (size--)
+		if (*b.c++ != *a.c++)
+			return 1;
+
+	return 0;
+}
+
+/* haystack is private mem, needle is constant mem */
+inline int memmem_pc(const void* haystack, size_t haystack_len,
+	__constant const void* needle, size_t needle_len)
+{
+	char* haystack_ = (char*)haystack;
+	__constant const char* needle_ = (__constant const char*)needle;
+	int hash = 0;
+	int hay_hash = 0;
+	char* last;
+	size_t i;
+
+	if (haystack_len &lt; needle_len)
+		return 0;
+
+	if (!needle_len)
+		return 1;
+
+	for (i = needle_len; i; --i) {
+		hash += *needle_++;
+		hay_hash += *haystack_++;
+	}
+
+	haystack_ = (char*)haystack;
+	needle_ = (__constant char*)needle;
+	last = haystack_ + (haystack_len - needle_len + 1);
+	for (; haystack_ &lt; last; ++haystack_) {
+		if (hash == hay_hash &amp;&amp;
+			*haystack_ == *needle_ &amp;&amp;
+			!memcmp_pc(haystack_, needle_, needle_len))
+			return 1;
+
+		hay_hash -= *haystack_;
+		hay_hash += *(haystack_ + needle_len);
+	}
+
+	return 0;
+}
+
+#define STRINGIZE2(s) #s
+#define STRINGIZE(s) STRINGIZE2(s)
+
+/*
+ * The reason the functions below are macros is it's the only way we can use
+ * them regardless of memory type (eg. __local or __global). The downside is
+ * we can't cast them so we need eg. dump8_le for a char array, or output will
+ * not be correct.
+ */
+
+ /* Dump an array (or variable) as hex */
+#define dump(x)   dump_stuff_msg(STRINGIZE(x), x, sizeof(x))
+#define dump_stuff(x, size) dump_stuff_msg(STRINGIZE(x), x, size)
+
+/*
+ * This clumsy beast finally hides the problem from user.
+ */
+#define dump_stuff_msg(msg, x, size) do {	  \
+		switch (sizeof((x)[0])) { \
+		case 8: \
+			dump_stuff64_msg(msg, x, size); \
+			break; \
+		case 4: \
+			dump_stuff32_msg(msg, x, size); \
+			break; \
+		case 2: \
+			dump_stuff16_msg(msg, x, size); \
+			break; \
+		case 1: \
+			dump_stuff8_msg(msg, x, size); \
+			break; \
+		} \
+	} while (0)
+
+ /* requires char/uchar */
+#define dump_stuff8_msg(msg, x, size) do {	  \
+		uint ii; \
+		printf("%s : ", msg); \
+		for (ii = 0; ii &lt; (uint)size; ii++) { \
+			printf("%02x", (x)[ii]); \
+			if (ii % 4 == 3) \
+				printf(" "); \
+		} \
+		printf("\n"); \
+	} while (0)
+
+/* requires short/ushort */
+#define dump_stuff16_msg(msg, x, size) do {	  \
+		uint ii; \
+		printf("%s : ", msg); \
+		for (ii = 0; ii &lt; (uint)(size)/2; ii++) { \
+			printf("%04x", (x)[ii]); \
+			if (ii % 2 == 1) \
+				printf(" "); \
+		} \
+		printf("\n"); \
+	} while (0)
+
+/* requires int/uint */
+#define dump_stuff32_msg(msg, x, size) do {	  \
+		uint ii; \
+		printf("%s : ", msg); \
+		for (ii = 0; ii &lt; (uint)(size)/4; ii++) \
+			printf("%08x ", SWAP32((x)[ii])); \
+		printf("\n"); \
+	} while (0)
+
+/* requires long/ulong */
+#define dump_stuff64_msg(msg, x, size) do {	  \
+		uint ii; \
+		printf("%s : ", msg); \
+		for (ii = 0; ii &lt; (uint)(size)/8; ii++) \
+			printf("%016lx ", SWAP64((x)[ii])); \
+		printf("\n"); \
+	} while (0)
+
+#endif</value>
+  </data>
+  <data name="SpartacryptOpenCLMiner.opencl_sha2_common.h" xml:space="preserve">
+    <value>/*
+ * Developed by Claudio André &lt;claudioandre.br at gmail.com&gt; in 2012
+ *
+ * Copyright (c) 2012-2015 Claudio André &lt;claudioandre.br at gmail.com&gt;
+ * This program comes with ABSOLUTELY NO WARRANTY; express or implied.
+ *
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; as expressed here
+ * http://www.gnu.org/licenses/gpl-2.0.html
+ */
+
+#ifndef OPENCL_SHA2_COMMON_H
+#define OPENCL_SHA2_COMMON_H
+
+ // Type names definition.
+ // NOTE: long is always 64-bit in OpenCL, and long long is 128 bit.
+#ifdef _OPENCL_COMPILER
+//#include "opencl_misc.h"
+
+// ** Precomputed index to position/values. **
+//0:        0                   =&gt;  1
+//0: 3      14,28                   =&gt;  2
+//0: 7      6,12,18,24,30,36            =&gt;  6
+//0: 3,7    2,4,8,10,16,20,22,26,32,34,38,40    =&gt; 12
+//1:        21                  =&gt;  1
+//1: 3      7,35                    =&gt;  2
+//1: 7      3,9,15,27,33,39             =&gt;  6
+//1: 3,7    1,5,11,13,17,19,23,25,29,31,37,41   =&gt; 12
+__constant int loop_index[] = {
+    0, /* 0,000 */ 7, /* 1,111 */ 3, /* 2,011 */ 5, /* 3,101 */
+    3, /* 4,011 */ 7, /* 5,111 */ 1, /* 6,001 */ 6, /* 7,110 */
+    3, /* 8,011 */ 5, /* 9,101 */ 3, /*10,011 */ 7, /*11,111 */
+    1, /*12,001 */ 7, /*13,111 */ 2, /*14,010 */ 5, /*15,101 */
+    3, /*16,011 */ 7, /*17,111 */ 1, /*18,001 */ 7, /*19,111 */
+    3, /*20,011 */ 4, /*21,100 */ 3, /*22,011 */ 7, /*23,111 */
+    1, /*24,001 */ 7, /*25,111 */ 3, /*26,011 */ 5, /*27,101 */
+    2, /*28,010 */ 7, /*29,111 */ 1, /*30,001 */ 7, /*31,111 */
+    3, /*32,011 */ 5, /*33,101 */ 3, /*34,011 */ 6, /*35,110 */
+    1, /*36,001 */ 7, /*37,111 */ 3, /*38,011 */ 5, /*39,101 */
+    3, /*40,011 */ 7,           /*41,111 */
+};
+
+__constant int generator_index[] = {
+    0,                          /*  0, 000 */
+    6,                          /*  6, 001 */
+    14,                         /* 14, 010 */
+    2,                          /*  2, 011 */
+    21,                         /* 21, 100 */
+    3,                          /*  3, 101 */
+    7,                          /*  7, 110 */
+    1                           /*  1, 111 */
+};
+#endif
+
+#undef USE_BITSELECT            //What used in opencl_misc cannot handle all situations.
+#if gpu_amd(DEVICE_INFO)        //At least, it will fail for cpu and nvidia
+#define USE_BITSELECT   1
+#endif
+
+//Macros.
+#ifdef USE_BITSELECT
+#define Ch(x, y, z)     bitselect(z, y, x)
+#define Maj(x, y, z)    bitselect(x, y, z ^ x)
+#else
+#if HAVE_LUT3 &amp;&amp; BITS_32
+#define Ch(x, y, z) lut3(x, y, z, 0xca)
+#elif HAVE_ANDNOT
+#define Ch(x, y, z) ((x &amp; y) ^ ((~x) &amp; z))
+#else
+#define Ch(x, y, z) (z ^ (x &amp; (y ^ z)))
+#endif
+
+#if HAVE_LUT3 &amp;&amp; BITS_32
+#define Maj(x, y, z) lut3(x, y, z, 0xe8)
+#else
+#define Maj(x, y, z) ((x &amp; y) | (z &amp; (x | y)))
+#endif
+#endif
+
+// Start documenting NVIDIA OpenCL bugs.
+///#if gpu_nvidia(DEVICE_INFO)
+///#define NVIDIA_STUPID_BUG_1    1
+///#endif
+
+// Start documenting AMD OpenCL bugs.
+///#if amd_vliw5(DEVICE_INFO) || amd_vliw4(DEVICE_INFO)
+///amd_vliw4() is a guess.
+
+///Needed (at least) in 14.9 and 15.7
+///TODO: can't remove the [unroll]. (At least) HD 6770.
+///#ifdef AMD_STUPID_BUG_1
+///  #pragma unroll 2
+///#endif
+///for (uint i = 16U; i &lt; 80U; i++) {
+///#define AMD_STUPID_BUG_1    1
+
+///TODO: can't use a valid command twice on sha256crypt. (At least) HD 6770.
+///Fixed (back in 14.12). Kept for future reference.
+/// ----------------------
+///  #define SWAP32(n)  rotate(n &amp; 0x00FF00FF, 24U) | rotate(n &amp; 0xFF00FF00, 8U)
+///  #ifdef AMD_STUPID_BUG_2
+///    #define SWAP_V(n)    bitselect(rotate(n, 24U), rotate(n, 8U), 0x00FF00FFU)
+/// ----------------------
+///#define AMD_STUPID_BUG_2
+
+///TODO: can't use constant. (At least) HD 6770.
+///Fixed. Kept for future reference.
+/// ----------------------
+///inline void sha512_prepare(__constant   sha512_salt     * salt_data,
+/// ----------------------
+///#define AMD_STUPID_BUG_3
+///#endif
+
+//Functions.
+/* Macros for reading/writing chars from int32's (from rar_kernel.cl) */
+#define ATTRIB(buf, index, val) (buf)[(index)] = val
+
+#if no_byte_addressable(DEVICE_INFO) || (gpu_amd(DEVICE_INFO) &amp;&amp; defined(AMD_PUTCHAR_NOCAST))
+#define USE_32BITS_FOR_CHAR
+#endif
+
+#ifdef USE_32BITS_FOR_CHAR
+#define PUT         PUTCHAR
+#define BUFFER      ctx-&gt;buffer-&gt;mem_32
+#define F_BUFFER    ctx.buffer-&gt;mem_32
+#else
+#define PUT         ATTRIB
+#define BUFFER      ctx-&gt;buffer-&gt;mem_08
+#define F_BUFFER    ctx.buffer-&gt;mem_08
+#endif
+#define TRANSFER_SIZE           (1024 * 64)
+
+#define ROUND_A(A, B, C, D, E, F, G, H, ki, wi)\
+    t = (ki) + (wi) + (H) + Sigma1(E) + Ch((E),(F),(G));\
+    D += (t); H = (t) + Sigma0(A) + Maj((A), (B), (C));
+
+#define ROUND_B(A, B, C, D, E, F, G, H, ki, wi, wj, wk, wl, wm)\
+    wi = (wl) + (wm) + sigma1(wj) + sigma0(wk);\
+    t = (ki) + (wi) + (H) + Sigma1(E) + Ch((E),(F),(G));\
+    D += (t); H = (t) + Sigma0(A) + Maj((A), (B), (C));
+
+#define SHA256_SHORT()\
+    ROUND_A(a, b, c, d, e, f, g, h, k[0],  w[0])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[1],  w[1])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[2],  w[2])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[3],  w[3])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[4],  w[4])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[5],  w[5])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[6],  w[6])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[7],  w[7])\
+    ROUND_A(a, b, c, d, e, f, g, h, k[8],  w[8])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[9],  w[9])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[10], w[10])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[11], w[11])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[12], w[12])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[13], w[13])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[14], w[14])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[15], w[15])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[16], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[17], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[18], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[19], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[20], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[21], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[22], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[23], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[24], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[25], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[26], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[27], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[28], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[29], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[30], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[31], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[32], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[33], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[34], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[35], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[36], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[37], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[38], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[39], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[40], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[41], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[42], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[43], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[44], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[45], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[46], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[47], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[48], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[49], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[50], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[51], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[52], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[53], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[54], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[55], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[56], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[57], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[58], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[59], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[60], w[12], w[10], w[13], w[12], w[5])
+
+#define SHA256()\
+    ROUND_A(a, b, c, d, e, f, g, h, k[0],  w[0])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[1],  w[1])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[2],  w[2])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[3],  w[3])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[4],  w[4])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[5],  w[5])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[6],  w[6])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[7],  w[7])\
+    ROUND_A(a, b, c, d, e, f, g, h, k[8],  w[8])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[9],  w[9])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[10], w[10])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[11], w[11])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[12], w[12])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[13], w[13])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[14], w[14])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[15], w[15])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[16], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[17], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[18], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[19], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[20], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[21], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[22], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[23], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[24], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[25], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[26], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[27], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[28], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[29], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[30], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[31], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[32], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[33], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[34], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[35], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[36], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[37], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[38], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[39], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[40], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[41], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[42], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[43], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[44], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[45], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[46], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[47], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[48], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[49], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[50], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[51], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[52], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[53], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[54], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[55], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[56], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[57], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[58], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[59], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[60], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[61], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[62], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[63], w[15], w[13], w[0],  w[15], w[8])
+
+#define SHA512_SHORT()\
+    ROUND_A(a, b, c, d, e, f, g, h, k[0],  w[0])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[1],  w[1])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[2],  w[2])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[3],  w[3])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[4],  w[4])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[5],  w[5])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[6],  w[6])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[7],  w[7])\
+    ROUND_A(a, b, c, d, e, f, g, h, k[8],  w[8])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[9],  w[9])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[10], w[10])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[11], w[11])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[12], w[12])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[13], w[13])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[14], w[14])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[15], w[15])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[16], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[17], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[18], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[19], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[20], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[21], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[22], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[23], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[24], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[25], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[26], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[27], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[28], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[29], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[30], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[31], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[32], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[33], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[34], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[35], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[36], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[37], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[38], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[39], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[40], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[41], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[42], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[43], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[44], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[45], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[46], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[47], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[48], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[49], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[50], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[51], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[52], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[53], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[54], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[55], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[56], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[57], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[58], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[59], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[60], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[61], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[62], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[63], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[64], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[65], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[66], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[67], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[68], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[69], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[70], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[71], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[72], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[73], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[74], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[75], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[76], w[12], w[10], w[13], w[12], w[5])
+
+#define SHA512()\
+    ROUND_A(a, b, c, d, e, f, g, h, k[0],  w[0])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[1],  w[1])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[2],  w[2])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[3],  w[3])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[4],  w[4])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[5],  w[5])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[6],  w[6])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[7],  w[7])\
+    ROUND_A(a, b, c, d, e, f, g, h, k[8],  w[8])\
+    ROUND_A(h, a, b, c, d, e, f, g, k[9],  w[9])\
+    ROUND_A(g, h, a, b, c, d, e, f, k[10], w[10])\
+    ROUND_A(f, g, h, a, b, c, d, e, k[11], w[11])\
+    ROUND_A(e, f, g, h, a, b, c, d, k[12], w[12])\
+    ROUND_A(d, e, f, g, h, a, b, c, k[13], w[13])\
+    ROUND_A(c, d, e, f, g, h, a, b, k[14], w[14])\
+    ROUND_A(b, c, d, e, f, g, h, a, k[15], w[15])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[16], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[17], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[18], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[19], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[20], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[21], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[22], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[23], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[24], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[25], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[26], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[27], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[28], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[29], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[30], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[31], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[32], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[33], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[34], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[35], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[36], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[37], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[38], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[39], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[40], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[41], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[42], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[43], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[44], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[45], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[46], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[47], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[48], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[49], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[50], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[51], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[52], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[53], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[54], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[55], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[56], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[57], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[58], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[59], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[60], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[61], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[62], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[63], w[15], w[13], w[0],  w[15], w[8])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[64], w[0],  w[14], w[1],  w[0],  w[9])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[65], w[1],  w[15], w[2],  w[1],  w[10])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[66], w[2],  w[0],  w[3],  w[2],  w[11])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[67], w[3],  w[1],  w[4],  w[3],  w[12])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[68], w[4],  w[2],  w[5],  w[4],  w[13])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[69], w[5],  w[3],  w[6],  w[5],  w[14])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[70], w[6],  w[4],  w[7],  w[6],  w[15])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[71], w[7],  w[5],  w[8],  w[7],  w[0])\
+    ROUND_B(a, b, c, d, e, f, g, h, k[72], w[8],  w[6],  w[9],  w[8],  w[1])\
+    ROUND_B(h, a, b, c, d, e, f, g, k[73], w[9],  w[7],  w[10], w[9],  w[2])\
+    ROUND_B(g, h, a, b, c, d, e, f, k[74], w[10], w[8],  w[11], w[10], w[3])\
+    ROUND_B(f, g, h, a, b, c, d, e, k[75], w[11], w[9],  w[12], w[11], w[4])\
+    ROUND_B(e, f, g, h, a, b, c, d, k[76], w[12], w[10], w[13], w[12], w[5])\
+    ROUND_B(d, e, f, g, h, a, b, c, k[77], w[13], w[11], w[14], w[13], w[6])\
+    ROUND_B(c, d, e, f, g, h, a, b, k[78], w[14], w[12], w[15], w[14], w[7])\
+    ROUND_B(b, c, d, e, f, g, h, a, k[79], w[15], w[13], w[0],  w[15], w[8])
+
+#ifndef _OPENCL_COMPILER
+/* --
+ * Public domain hash function by DJ Bernstein
+ * We are hashing almost the entire struct
+-- */
+int common_salt_hash(void* salt, int salt_size, int salt_hash_size);
+#endif
+
+#endif                          /* OPENCL_SHA2_COMMON_H */</value>
+  </data>
+  <data name="SpartacryptOpenCLMiner.opencl_sha512.h" xml:space="preserve">
+    <value>/*
+ * Developed by Claudio André &lt;claudioandre.br at gmail.com&gt; in 2012
+ *
+ * Copyright (c) 2012-2015 Claudio André &lt;claudioandre.br at gmail.com&gt;
+ * This program comes with ABSOLUTELY NO WARRANTY; express or implied.
+ *
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; as expressed here
+ * http://www.gnu.org/licenses/gpl-2.0.html
+ */
+
+#ifndef OPENCL_SHA512_H
+#define OPENCL_SHA512_H
+
+//#include "opencl_sha2_common.h"
+
+#define MIN_KEYS_PER_CRYPT      1
+#define MAX_KEYS_PER_CRYPT      1
+
+ // Macros.
+ // macOS AMD drivers do not support amd_bitalign
+#if defined(USE_BITSELECT) &amp;&amp; defined(cl_amd_media_ops) &amp;&amp; !__MESA__
+#pragma OPENCL EXTENSION cl_amd_media_ops : enable
+#define ror64(x, n)      ((n) &lt; 32 ?                                            \
+        (amd_bitalign((uint)((x) &gt;&gt; 32), (uint)(x), (uint)(n)) |                \
+        ((ulong)amd_bitalign((uint)(x), (uint)((x) &gt;&gt; 32), (uint)(n)) &lt;&lt; 32)) : \
+        (amd_bitalign((uint)(x), (uint)((x) &gt;&gt; 32), (uint)(n) - 32) |           \
+        ((ulong)amd_bitalign((uint)((x) &gt;&gt; 32), (uint)(x), (uint)(n) - 32) &lt;&lt; 32)))
+#elif (cpu(DEVICE_INFO))
+#define ror64(x, n)             ((x &gt;&gt; n) | (x &lt;&lt; (64UL-n)))
+#else
+#define ror64(x, n)             (rotate(x, (64UL-n)))
+#endif
+#define SWAP64_V(n)             SWAP64(n)
+
+#define Sigma0(x)               ((ror64(x,28UL)) ^ (ror64(x,34UL)) ^ (ror64(x,39UL)))
+#define Sigma1(x)               ((ror64(x,14UL)) ^ (ror64(x,18UL)) ^ (ror64(x,41UL)))
+#define sigma0(x)               ((ror64(x,1UL))  ^ (ror64(x,8UL))  ^ (x&gt;&gt;7))
+#define sigma1(x)               ((ror64(x,19UL)) ^ (ror64(x,61UL)) ^ (x&gt;&gt;6))
+
+//SHA512 constants.
+#define H0      0x6a09e667f3bcc908UL
+#define H1      0xbb67ae8584caa73bUL
+#define H2      0x3c6ef372fe94f82bUL
+#define H3      0xa54ff53a5f1d36f1UL
+#define H4      0x510e527fade682d1UL
+#define H5      0x9b05688c2b3e6c1fUL
+#define H6      0x1f83d9abfb41bd6bUL
+#define H7      0x5be0cd19137e2179UL
+
+__constant uint64_t k[] = {
+    0x428a2f98d728ae22UL, 0x7137449123ef65cdUL, 0xb5c0fbcfec4d3b2fUL,
+    0xe9b5dba58189dbbcUL, 0x3956c25bf348b538UL, 0x59f111f1b605d019UL,
+    0x923f82a4af194f9bUL, 0xab1c5ed5da6d8118UL, 0xd807aa98a3030242UL,
+    0x12835b0145706fbeUL, 0x243185be4ee4b28cUL, 0x550c7dc3d5ffb4e2UL,
+    0x72be5d74f27b896fUL, 0x80deb1fe3b1696b1UL, 0x9bdc06a725c71235UL,
+    0xc19bf174cf692694UL, 0xe49b69c19ef14ad2UL, 0xefbe4786384f25e3UL,
+    0x0fc19dc68b8cd5b5UL, 0x240ca1cc77ac9c65UL, 0x2de92c6f592b0275UL,
+    0x4a7484aa6ea6e483UL, 0x5cb0a9dcbd41fbd4UL, 0x76f988da831153b5UL,
+    0x983e5152ee66dfabUL, 0xa831c66d2db43210UL, 0xb00327c898fb213fUL,
+    0xbf597fc7beef0ee4UL, 0xc6e00bf33da88fc2UL, 0xd5a79147930aa725UL,
+    0x06ca6351e003826fUL, 0x142929670a0e6e70UL, 0x27b70a8546d22ffcUL,
+    0x2e1b21385c26c926UL, 0x4d2c6dfc5ac42aedUL, 0x53380d139d95b3dfUL,
+    0x650a73548baf63deUL, 0x766a0abb3c77b2a8UL, 0x81c2c92e47edaee6UL,
+    0x92722c851482353bUL, 0xa2bfe8a14cf10364UL, 0xa81a664bbc423001UL,
+    0xc24b8b70d0f89791UL, 0xc76c51a30654be30UL, 0xd192e819d6ef5218UL,
+    0xd69906245565a910UL, 0xf40e35855771202aUL, 0x106aa07032bbd1b8UL,
+    0x19a4c116b8d2d0c8UL, 0x1e376c085141ab53UL, 0x2748774cdf8eeb99UL,
+    0x34b0bcb5e19b48a8UL, 0x391c0cb3c5c95a63UL, 0x4ed8aa4ae3418acbUL,
+    0x5b9cca4f7763e373UL, 0x682e6ff3d6b2b8a3UL, 0x748f82ee5defb2fcUL,
+    0x78a5636f43172f60UL, 0x84c87814a1f0ab72UL, 0x8cc702081a6439ecUL,
+    0x90befffa23631e28UL, 0xa4506cebde82bde9UL, 0xbef9a3f7b2c67915UL,
+    0xc67178f2e372532bUL, 0xca273eceea26619cUL, 0xd186b8c721c0c207UL,
+    0xeada7dd6cde0eb1eUL, 0xf57d4f7fee6ed178UL, 0x06f067aa72176fbaUL,
+    0x0a637dc5a2c898a6UL, 0x113f9804bef90daeUL, 0x1b710b35131c471bUL,
+    0x28db77f523047d84UL, 0x32caab7b40c72493UL, 0x3c9ebe0a15c9bebcUL,
+    0x431d67c49c100d4cUL, 0x4cc5d4becb3e42b6UL, 0x597f299cfc657e2aUL,
+    0x5fcb6fab3ad6faecUL, 0x6c44198c4a475817UL
+};
+
+#ifdef _OPENCL_COMPILER
+__constant uint64_t clear_mask[] = {
+    0xffffffffffffffffUL, 0x00000000000000ffUL, //0,   8bits
+    0x000000000000ffffUL, 0x0000000000ffffffUL, //16, 24bits
+    0x00000000ffffffffUL, 0x000000ffffffffffUL, //32, 40bits
+    0x0000ffffffffffffUL, 0x00ffffffffffffffUL, //48, 56bits
+    0xffffffffffffffffUL                        //64    bits
+};
+
+#define OFFSET(index, position)                    \
+    (get_global_id(0) +                            \
+        (get_global_size(0) *                      \
+        (index * 9 + position))                    \
+    )
+
+#define CLEAR_BUFFER_64(dest, start) {             \
+    uint32_t tmp, pos;                             \
+    tmp = ((start) &amp; 7U);                          \
+    pos = ((start) &gt;&gt; 3);                          \
+    dest[pos] = dest[pos] &amp; clear_mask[tmp];       \
+    if (tmp)                                       \
+        length = pos + 1;                          \
+    else                                           \
+    length = pos;                                  \
+}
+
+#define CLEAR_BUFFER_64_SINGLE(dest, start) {      \
+    uint32_t tmp, pos;                             \
+    tmp = ((start) &amp; 7U);                          \
+    pos = ((start) &gt;&gt; 3);                          \
+    dest[pos] = dest[pos] &amp; clear_mask[tmp];       \
+}
+
+#define APPEND_BE_SINGLE(dest, src, start) {       \
+    uint32_t tmp, pos;                             \
+    tmp = (((start) &amp; 7U) &lt;&lt; 3);                   \
+    pos = ((start) &gt;&gt; 3);                          \
+    dest[pos] = (dest[pos] | (src &gt;&gt; tmp));        \
+}
+
+#define APPEND_BE_SPECIAL(dest, src, index, start) {      \
+    uint32_t tmp, pos, offset;                            \
+    tmp = (((start) &amp; 7U) &lt;&lt; 3);                          \
+    pos = ((start) &gt;&gt; 3);                                 \
+    offset = OFFSET(index, pos);                          \
+    dest[offset] = (dest[offset] | (src &gt;&gt; tmp));         \
+    if (pos &lt; 7) {                                        \
+    pos++;                                                \
+    offset = OFFSET(index, pos);                          \
+    dest[offset] = (tmp ? (src &lt;&lt; (64U - tmp)) : 0UL);    \
+    }                                                     \
+}
+
+#define APPEND_BE_BUFFER(dest, src)                       \
+    dest[pos] = (dest[pos] | (src &gt;&gt; tmp));               \
+    dest[++pos] = (tmp ? (src &lt;&lt; (64U - tmp)) : 0UL);
+
+#define APPEND_BE_BUFFER_F(dest, src)                     \
+    dest[pos] = (dest[pos] | (src &gt;&gt; tmp));               \
+    if (pos &lt; 15)                                         \
+        dest[++pos] = (tmp ? (src &lt;&lt; (64U - tmp)) : 0UL); \
+
+#define APPEND_SINGLE(dest, src, start) {               \
+    uint32_t tmp, pos;                                  \
+    tmp = (((start) &amp; 7U) &lt;&lt; 3);                        \
+    pos = ((start) &gt;&gt; 3);                               \
+    dest[pos] = (dest[pos] | (src &lt;&lt; tmp));             \
+}
+
+#define APPEND_BUFFER_F(dest, src)                      \
+    dest[pos] = (dest[pos] | (src &lt;&lt; tmp));             \
+    if (pos &lt; 15)                                       \
+        dest[++pos] = (tmp ? (src &gt;&gt; (64U - tmp)) : 0UL);
+#endif
+
+#endif                          /* OPENCL_SHA512_H */</value>
+  </data>
+  <data name="SpartacryptOpenCLMiner.sha512_miner.cl" xml:space="preserve">
+    <value>// Functions and kernel for mining with sha512
+
+int compare_uint256(uint64_t* x, uint64_t* y)
+{
+#pragma unroll
+    for (int i = 3; i &gt;= 0; i--) {
+
+        uint32_t xh = x[i] &gt;&gt; 32;
+        uint32_t xl = x[i];
+
+        uint32_t yh = y[i] &gt;&gt; 32;
+        uint32_t yl = y[i];
+
+        if (xh &lt; yh)
+            return -1;
+        if (xh &gt; yh)
+            return 1;
+        if (xl &lt; yl)
+            return -1;
+        if (xl &gt; yl)
+            return 1;
+    }
+
+    return 0;
+}
+
+void pad_buffer(uint64_t* w, int lengthBytes) {
+
+    int lw = lengthBytes / 8;
+    int lb = lengthBytes * 8;
+    w[lw] = 0x8000000000000000UL;
+
+#pragma unroll
+    for (int i = lw + 1; i &lt; 15; i++)
+        w[i] = 0;
+
+    w[15] = lb;
+}
+
+void sha512_compute_hash(uint64_t* w, int iterations)
+{
+    uint64_t a, b, c, d, e, f, g, h;
+    uint64_t t;
+
+    for (size_t j = 0; j &lt; iterations; j++) {
+
+        a = H0;
+        b = H1;
+        c = H2;
+        d = H3;
+        e = H4;
+        f = H5;
+        g = H6;
+        h = H7;
+
+#pragma unroll
+        for (int i = 0; i &lt; 16; i++) {
+            t = k[i] + w[i] + h + Sigma1(e) + Ch(e, f, g);
+
+            h = g;
+            g = f;
+            f = e;
+            e = d + t;
+            t = t + Maj(a, b, c) + Sigma0(a);
+            d = c;
+            c = b;
+            b = a;
+            a = t;
+        }
+
+#pragma unroll
+        for (int i = 16; i &lt; 80; i++) {
+            w[i &amp; 15] = sigma1(w[(i - 2) &amp; 15]) + sigma0(w[(i - 15) &amp; 15]) + w[(i - 16) &amp; 15] + w[(i - 7) &amp; 15];
+            t = k[i] + w[i &amp; 15] + h + Sigma1(e) + Ch(e, f, g);
+
+            h = g;
+            g = f;
+            f = e;
+            e = d + t;
+            t = t + Maj(a, b, c) + Sigma0(a);
+            d = c;
+            c = b;
+            b = a;
+            a = t;
+        }
+
+        w[0] = a + H0;
+        w[1] = b + H1;
+        w[2] = c + H2;
+        w[3] = d + H3;
+        w[4] = e + H4;
+        w[5] = f + H5;
+        w[6] = g + H6;
+        w[7] = h + H7;
+
+        pad_buffer(w, 64);
+    }
+}
+
+__kernel
+void kernel_find_pow(
+    __global uint64_t* header
+    , __global uint64_t* bits
+    , uint32_t ns
+    , __global int* out)
+ {
+    uint64_t wh[16];
+    uint64_t wht[4];
+    uint64_t wb[4];
+
+#pragma unroll
+    for (int i = 0; i &lt; 10; i++)
+        wh[i] = SWAP64(header[i]);
+
+    uint32_t n = ns + get_global_id(0);
+    wh[9] += ((n &gt;&gt; 24) | ((n &lt;&lt; 8) &amp; 0x00FF0000) | ((n &gt;&gt; 8) &amp; 0x0000FF00) | (n &lt;&lt; 24));
+
+    pad_buffer(wh, 80);
+
+    sha512_compute_hash(wh, 2);
+
+    for (int i = 0; i &lt; 4; i++)
+        wht[i] = SWAP64(wh[i]);
+
+#pragma unroll
+    for (int i = 0; i &lt; 4; i++)
+        wb[i] = bits[i];
+
+    if (compare_uint256(wht, wb) &lt;= 0)
+        out[0] = n;
+}</value>
+  </data>
+</root>

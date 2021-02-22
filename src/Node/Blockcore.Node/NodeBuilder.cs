@@ -3,6 +3,7 @@ using Blockcore.Configuration;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.ColdStaking;
 using Blockcore.Features.Consensus;
+using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Diagnostic;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
@@ -10,9 +11,13 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.Dns;
+using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Persistence;
 using Blockcore.Features.Notifications;
 using Blockcore.Features.WalletWatchOnly;
+using Blockcore.Networks.X1.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Blockcore.Node
 {
@@ -33,6 +38,9 @@ namespace Blockcore.Node
                     break;
                 case "X42":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet().UseWatchOnlyWallet();
+                    break;
+                case "X1":
+                    nodeBuilder.UseX1Consensus().UseColdStakingWallet(); ;
                     break;
                 case "BCP":
                 case "CITY":

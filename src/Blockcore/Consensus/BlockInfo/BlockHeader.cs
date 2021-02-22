@@ -1,6 +1,7 @@
 ﻿using System;
 using Blockcore.Consensus.Chain;
 using Blockcore.Networks;
+using Blockcore.Utilities.Extensions;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.Crypto;

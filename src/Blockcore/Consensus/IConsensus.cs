@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Base.Deployments;
+using Blockcore.Consensus.Chain;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 
@@ -147,5 +148,12 @@ namespace Blockcore.Consensus
 
         /// <summary>Group of mempool validation rules used by the given network.</summary>
         List<Type> MempoolRules { get; set; }
+
+        /// <summary>
+        /// Gets the proof of work target for a given entry in the chain.
+        /// </summary>
+        /// <param name="chainedHeader">The header for which to calculate the required work.</param>
+        /// <returns>The target proof of work.</returns>
+        Target GetWorkRequired(ChainedHeader chainedHeader);
     }
 }

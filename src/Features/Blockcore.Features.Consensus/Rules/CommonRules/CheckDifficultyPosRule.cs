@@ -35,8 +35,6 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                 return;
             }
 
-            // TODO: In the future once we migrated to fully C# network it might be good to consider signaling in the block header the network type.
-
             ChainedHeader chainedHeader = context.ValidationContext.ChainedHeaderToValidate;
 
             // In order to calculate difficulty we need to know the if the block type is POW/POS.

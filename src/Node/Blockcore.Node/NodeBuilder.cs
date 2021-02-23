@@ -51,6 +51,9 @@ namespace Blockcore.Node
                 case "IMPLX":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
                     break;
+                case "XRC":
+                    nodeBuilder.UsePowConsensus().AddMining().UseWallet();
+                    break;
             }
 
             return nodeBuilder;

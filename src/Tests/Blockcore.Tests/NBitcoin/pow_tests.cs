@@ -20,7 +20,7 @@ namespace NBitcoin.Tests
             chain.Load(File.ReadAllBytes("MainChain.dat"));
             foreach (ChainedHeader block in chain.EnumerateAfter(chain.Genesis))
             {
-                Target thisWork = this.GetNextWorkRequired(KnownNetworks.Main.Consensus, block);
+                Target thisWork = block.GetWorkRequired(KnownNetworks.Main.Consensus);
                 Target thisWork2 = this.GetNextWorkRequired(KnownNetworks.Main.Consensus, block.Previous);
                 Assert.Equal(thisWork, thisWork2);
                 Assert.True(this.CheckProofOfWorkAndTarget(KnownNetworks.Main.Consensus, block));

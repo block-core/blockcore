@@ -89,7 +89,7 @@ namespace Blockcore.Networks.XRC
             this.Consensus = new XRCConsensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
-                coinType: 10291,
+                coinType: 1,
                 hashGenesisBlock: genesisBlock.GetHash(),
                 subsidyHalvingInterval: 210000,
                 majorityEnforceBlockUpgrade: 750,
@@ -108,7 +108,7 @@ namespace Blockcore.Networks.XRC
                 proofOfWorkReward: Money.Coins((decimal)2.5),
                 targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
                 targetSpacing: TimeSpan.FromSeconds(10 * 60),
-                powAllowMinDifficultyBlocks: false,
+                powAllowMinDifficultyBlocks: true,
                 posNoRetargeting: true,
                 powNoRetargeting: false,
                 powLimit: new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
@@ -127,7 +127,6 @@ namespace Blockcore.Networks.XRC
             this.Consensus.PosEmptyCoinbase = false;
             this.Consensus.PosUseTimeFieldInKernalHash = true;
 
-            //OK
             this.Base58Prefixes = new byte[12][];
             this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (65) };
             this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (128) };
@@ -140,18 +139,8 @@ namespace Blockcore.Networks.XRC
             this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
 
-            //OK
-            this.Checkpoints = new Dictionary<int, CheckpointInfo>
-            {
-                { 17,new CheckpointInfo(new uint256("2430c4151e10cdc5ccbdea56b909c7c37ab2a852d3e7fb908e0a32493e2ac706")) },
-                { 117, new CheckpointInfo(new uint256("bf3082be3b2da88187ebeb902548b41dbff3bcac6687352e0c47d902acd28e62"))},
-                { 400, new CheckpointInfo(new uint256("20cb04127f12c1ae7a04ee6dc4c7e36f4c85ee2038c92126b3fd537110d96595"))},
-                { 800, new CheckpointInfo(new uint256("df37ca401ecccfc6dedf68ab76a7161496ad93d47c2a474075efb3220e3f3526"))},
-                { 26800, new CheckpointInfo(new uint256("c4efd4b6fa294fd72ab6f614dd6705eea43d0a83cd03d597c3214eaaf857a4b6"))},
-                { 43034, new CheckpointInfo(new uint256("4df06bd483d2c4ccde5cd1efe3b2ea7d969c41e5923a74c2bba1656a41fc6891"))},
-            };
+            this.Checkpoints = new Dictionary<int, CheckpointInfo>();
 
-            //OK
             this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder("th");
             this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;

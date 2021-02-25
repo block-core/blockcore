@@ -79,7 +79,6 @@ namespace Blockcore.Networks.XRC
 
             this.Genesis = genesisBlock;
 
-            //OK
             var consensusOptions = new PosConsensusOptions
             {
                 MaxBlockBaseSize = 4 * 1000 * 1000,

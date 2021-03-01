@@ -51,6 +51,10 @@ namespace Blockcore.Node
                 case "X1":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.X1.Networks.X1, args: args);
                     break;
+
+                case "XRC":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.XRC.Networks.XRC, args: args);
+                    break;
             }
 
             return nodeSettings;

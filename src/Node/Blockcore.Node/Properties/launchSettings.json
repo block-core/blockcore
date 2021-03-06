@@ -131,6 +131,10 @@
     "xRhodium (TEST)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=XRC -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "HomeCoin (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=HOME"
     }
   }
 }

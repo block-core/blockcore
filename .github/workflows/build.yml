@@ -46,6 +46,11 @@ jobs:
     - name: Nuget Pack
       run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Blockcore-${{env.VERSION}}-preview
+        path: "${{github.workspace}}/package/"
+
     - name: Release
       if: matrix.os == 'ubuntu-latest'
       uses: sondreb/action-release@master

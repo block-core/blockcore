@@ -49,6 +49,7 @@ namespace Blockcore.Node
                 case "EXOS":
                 case "XDS":
                 case "IMPLX":
+                case "HOME":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
                     break;
                 case "XRC":

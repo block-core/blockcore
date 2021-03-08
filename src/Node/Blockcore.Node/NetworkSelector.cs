@@ -55,6 +55,10 @@ namespace Blockcore.Node
                 case "XRC":
                     nodeSettings = new NodeSettings(networksSelector: Networks.XRC.Networks.XRC, args: args);
                     break;
+
+                case "HOME":
+                    nodeSettings = new NodeSettings(networksSelector: HomeCoin.Networks.Networks.HomeCoin, args: args);
+                    break;
             }
 
             return nodeSettings;

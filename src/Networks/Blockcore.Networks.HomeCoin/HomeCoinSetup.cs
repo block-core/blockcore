@@ -36,8 +36,8 @@ namespace HomeCoin
             DefaultRPCPort = 33332,
             DefaultAPIPort = 33333,
             DefaultSignalRPort = 33334,
-            PubKeyAddress = 40, // B https://en.bitcoin.it/wiki/List_of_address_prefixes
-            ScriptAddress = 100, // b
+            PubKeyAddress = 40, // H https://en.bitcoin.it/wiki/List_of_address_prefixes
+            ScriptAddress = 100, // h
             SecretAddress = 160,
             GenesisTime = 1614259698,
             GenesisNonce = 60494,

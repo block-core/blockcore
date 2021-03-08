@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - master
-      - feature/upload-artifact-on-workflow
-  repository_dispatch:
-    types: [build]
+#  repository_dispatch:
+#    types: [build]
   workflow_dispatch:
 
 jobs:

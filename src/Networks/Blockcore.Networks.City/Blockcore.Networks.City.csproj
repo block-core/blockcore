@@ -11,6 +11,7 @@
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <PackageProjectUrl>https://www.city-chain.org</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

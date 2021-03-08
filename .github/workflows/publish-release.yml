@@ -19,7 +19,7 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Log Variables
       run: |
@@ -42,4 +42,4 @@ jobs:
       run: ls -R
 
     - name: Nuget Push
-      run: nuget push ${{github.workspace}}/artifacts/*.nupkg -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate
+      run: nuget push "${{github.workspace}}/artifacts/*.nupkg" -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate

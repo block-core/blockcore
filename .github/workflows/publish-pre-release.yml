@@ -9,7 +9,7 @@ jobs:
 
   publishPreReleasePackages:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'

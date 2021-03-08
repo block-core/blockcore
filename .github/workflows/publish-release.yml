@@ -11,7 +11,7 @@ jobs:
 
   publishPackages:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
@@ -21,11 +21,25 @@ jobs:
 
     - uses: actions/checkout@v1
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.5
+    - name: Log Variables
+      run: |
+        echo "action - ${{ github.event.action }}"
+        echo "url - ${{ github.event.release.url }}"
+        echo "assets_url - ${{ github.event.release.assets_url }}"
+        echo "id - ${{ github.event.release.id }}"
+        echo "tag_name - ${{ github.event.release.tag_name }}"
+        echo "assets - ${{ github.event.assets }}"
+        echo "assets[0] - ${{ github.event.assets[0] }}"
 
-    - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}\package\" ${{env.SOLUTION_PATH}}
+    - name: Release Download
+      uses: sondreb/action-release-download@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        url: ${{ github.event.release.assets_url }}
+        folder: "./artifacts/"
+
+    - name: Display structure of downloaded files
+      run: ls -R
 
     - name: Nuget Push
-      run: nuget push ${{github.workspace}}\package\*.nupkg -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate -NoSymbols
+      run: nuget push ${{github.workspace}}/artifacts/*.nupkg -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate

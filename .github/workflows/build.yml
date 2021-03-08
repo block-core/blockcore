@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - feature/upload-artifact-on-workflow
   repository_dispatch:
     types: [build]
   workflow_dispatch:
@@ -44,7 +45,7 @@ jobs:
         dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
 
     - uses: actions/upload-artifact@v2
       with:

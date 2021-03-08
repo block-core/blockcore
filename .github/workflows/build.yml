@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-  repository_dispatch:
-    types: [build]
+#  repository_dispatch:
+#    types: [build]
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       name: Checkout
 
     - name: Setup Node.js (12.x)
@@ -44,7 +44,13 @@ jobs:
         dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
+
+    - uses: actions/upload-artifact@v2
+      if: matrix.os == 'ubuntu-latest'
+      with:
+        name: Blockcore-${{env.VERSION}}-preview
+        path: "${{github.workspace}}/package/"
 
     - uses: actions/upload-artifact@v2
       with:

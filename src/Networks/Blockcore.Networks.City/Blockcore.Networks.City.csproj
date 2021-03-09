@@ -12,6 +12,7 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://www.city-chain.org</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>

@@ -81,8 +81,8 @@ namespace Blockcore.Networks.XRC
 
             consensusFactory.Protocol = new ConsensusProtocol()
             {
-                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
-                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
+                ProtocolVersion = XRC_PROTOCOL_VERSION,
+                MinProtocolVersion = XRC_PROTOCOL_VERSION,
             };
 
             this.Consensus = new XRCConsensus(

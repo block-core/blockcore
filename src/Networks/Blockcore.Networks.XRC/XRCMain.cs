@@ -29,10 +29,13 @@ namespace Blockcore.Networks.XRC
         public const int xRhodiumDefaultMaxTipAgeInSeconds = 604800;
 
         /// <summary> The name of the root folder containing the different xRhodium blockchains (xRhodiumMain, xRhodiumTest, xRhodiumRegTest). </summary>
-        public const string xRhodiumRootFolderName = "xRhodium";
+        public const string xRhodiumRootFolderName = "xrhodium";
 
         /// <summary> The default name used for the xRhodium configuration file. </summary>
-        public const string xRhodiumDefaultConfigFilename = "xRhodium.conf";
+        public const string xRhodiumDefaultConfigFilename = "xrhodium.conf";
+
+        /// <summary> XRC protocol version. </summary>
+        public const int XRC_PROTOCOL_VERSION = 80000;
 
         public XRCMain()
         {
@@ -99,8 +102,8 @@ namespace Blockcore.Networks.XRC
 
             consensusFactory.Protocol = new ConsensusProtocol()
             {
-                ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
-                MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
+                ProtocolVersion = XRC_PROTOCOL_VERSION,
+                MinProtocolVersion = XRC_PROTOCOL_VERSION,
             };
 
             this.Consensus = new XRCConsensus(

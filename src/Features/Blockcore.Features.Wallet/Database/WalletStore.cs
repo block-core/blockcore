@@ -21,8 +21,6 @@ namespace Blockcore.Features.Wallet.Database
 {
     public class WalletStore : IWalletStore, IDisposable
     {
-        private readonly SqliteConnection sqliteConnection;
-
         private const int WalletVersion = 1;
 
         /// <summary>
@@ -34,6 +32,9 @@ namespace Blockcore.Features.Wallet.Database
 
         private readonly Network network;
 
+        private readonly string dbPath;
+        private readonly string dbConnection;
+
         public WalletData WalletData { get; private set; }
 
         /// <summary>
@@ -42,10 +43,10 @@ namespace Blockcore.Features.Wallet.Database
         public WalletStore(Network network, Types.Wallet wallet)
         {
             var tmpconn = Guid.NewGuid().ToString();
-            this.inmemorySqliteConnection = new SqliteConnection($"Data Source={tmpconn};Mode=Memory;Cache=Shared");
-            this.inmemorySqliteConnection.Open();
 
-            this.sqliteConnection = new SqliteConnection($"Data Source={tmpconn};Mode=Memory;Cache=Shared");
+            this.dbConnection = $"Data Source={tmpconn};Mode=Memory;Cache=Shared";
+            this.inmemorySqliteConnection = new SqliteConnection(this.dbConnection);
+            this.inmemorySqliteConnection.Open();
 
             this.CreateDatabase();
 
@@ -55,16 +56,15 @@ namespace Blockcore.Features.Wallet.Database
 
         public WalletStore(Network network, DataFolder dataFolder, Types.Wallet wallet)
         {
-            var dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.db");
+            this.dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.db");
+            this.dbConnection = "Data Source=" + this.dbPath;
 
             if (!Directory.Exists(dataFolder.WalletFolderPath))
             {
                 Directory.CreateDirectory(dataFolder.WalletFolderPath);
             }
 
-            this.sqliteConnection = new SqliteConnection("Data Source=" + dbPath);
-
-            if (!File.Exists(dbPath))
+            if (!File.Exists(this.dbPath))
             {
                 this.CreateDatabase();
             }
@@ -73,7 +73,12 @@ namespace Blockcore.Features.Wallet.Database
                 // Attempt to access the user version, this will crash if the loaded database is V5 and we use V4 packages.
                 try
                 {
-                    var walletVersion = this.sqliteConnection.QueryFirst<int>("SELECT WalletVersion FROM WalletData");
+                    var walletVersion = -1;
+
+                    using (var conn = this.GetDbConnection())
+                    {
+                        walletVersion = conn.QueryFirst<int>("SELECT WalletVersion FROM WalletData");
+                    }
 
                     if (walletVersion != WalletVersion)
                     {
@@ -92,7 +97,7 @@ namespace Blockcore.Features.Wallet.Database
                     var dbBackupPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.error.db");
 
                     // Move the problematic database file, which might be a V5 database.
-                    File.Move(dbPath, dbBackupPath);
+                    File.Move(this.dbPath, dbBackupPath);
 
                     this.CreateDatabase();
                 }
@@ -101,6 +106,11 @@ namespace Blockcore.Features.Wallet.Database
             this.network = network;
 
             this.Init(wallet);
+        }
+
+        protected SqliteConnection GetDbConnection()
+        {
+            return new SqliteConnection(this.dbConnection);
         }
 
         private void Init(Types.Wallet wallet)
@@ -141,7 +151,8 @@ namespace Blockcore.Features.Wallet.Database
         {
             if (this.WalletData == null)
             {
-                this.WalletData = this.sqliteConnection.QueryFirstOrDefault<WalletData>("SELECT *, Id AS Key FROM WalletData WHERE Id = 'Key'");
+                using var conn = this.GetDbConnection();
+                this.WalletData = conn.QueryFirstOrDefault<WalletData>("SELECT *, Id AS Key FROM WalletData WHERE Id = 'Key'");
             }
 
             return this.WalletData;
@@ -155,7 +166,8 @@ namespace Blockcore.Features.Wallet.Database
                       ON CONFLICT(Id) DO UPDATE SET
                       EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
 
-            this.sqliteConnection.Execute(sql, data);
+            using var conn = this.GetDbConnection();
+            conn.Execute(sql, data);
 
             this.WalletData = data;
         }
@@ -170,12 +182,14 @@ namespace Blockcore.Features.Wallet.Database
                       ON CONFLICT(OutPoint) DO UPDATE SET
                       IndexInTransaction = @IndexInTransaction, BlockHeight = @BlockHeight, BlockHash = @BlockHash, BlockIndex = @BlockIndex, CreationTime = @CreationTime, IsPropagated = @IsPropagated, IsColdCoinStake = @IsColdCoinStake, AccountIndex = @AccountIndex, MerkleProof = @MerkleProof, Hex = @Hex, SpendingDetailsTransactionId = @SpendingDetailsTransactionId, SpendingDetailsBlockHeight = @SpendingDetailsBlockHeight, SpendingDetailsBlockIndex = @SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake = @SpendingDetailsIsCoinStake, SpendingDetailsCreationTime = @SpendingDetailsCreationTime, SpendingDetailsPayments = @SpendingDetailsPayments, SpendingDetailsHex = @SpendingDetailsHex;";
 
-            this.sqliteConnection.Execute(sql, insert);
+            using var conn = this.GetDbConnection();
+            conn.Execute(sql, insert);
         }
 
         public int CountForAddress(string address)
         {
-            var count = this.sqliteConnection.ExecuteScalar<int>("SELECT COUNT(*) FROM TransactionData WHERE Address = @address", new { address });
+            using var conn = this.GetDbConnection();
+            var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM TransactionData WHERE Address = @address", new { address });
 
             return count;
         }
@@ -185,6 +199,8 @@ namespace Blockcore.Features.Wallet.Database
             // The result of this method is not guaranteed to be the length
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
+            using var conn = this.GetDbConnection();
+            conn.Open();
 
             var sql = @$"SELECT * FROM TransactionData
                       WHERE AccountIndex == @accountIndex
@@ -193,7 +209,7 @@ namespace Blockcore.Features.Wallet.Database
                       ORDER BY SpendingDetailsCreationTime DESC
                       LIMIT @take OFFSET @skip ";
 
-            var historySpentResult = this.sqliteConnection.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
+            var historySpentResult = conn.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
             var historySpent = historySpentResult.Select(this.Convert);
 
             sql = @$"SELECT * FROM TransactionData
@@ -202,7 +218,10 @@ namespace Blockcore.Features.Wallet.Database
                   ORDER BY CreationTime DESC
                   LIMIT @take OFFSET @skip";
 
-            var historyUnspentResult = this.sqliteConnection.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
+            var historyUnspentResult = conn.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
+
+            conn.Close();
+
             var historyUnspent = historyUnspentResult.Select(this.Convert);
 
             var items = new List<WalletHistoryData>();
@@ -282,7 +301,8 @@ namespace Blockcore.Features.Wallet.Database
 
         public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
-            var trxs = this.sqliteConnection.Query<TransactionData>(
+            using var conn = this.GetDbConnection();
+            var trxs = conn.Query<TransactionData>(
                 "SELECT * FROM TransactionData " +
                 "WHERE Address = @address",
                 new { address });
@@ -292,7 +312,8 @@ namespace Blockcore.Features.Wallet.Database
 
         public IEnumerable<TransactionOutputData> GetUnspentForAddress(string address)
         {
-            var trxs = this.sqliteConnection.Query<TransactionData>(
+            using var conn = this.GetDbConnection();
+            var trxs = conn.Query<TransactionData>(
                 "SELECT * FROM 'TransactionData' " +
                 "WHERE Address = @address " +
                 "AND SpendingDetailsTransactionId IS NULL",
@@ -313,7 +334,8 @@ namespace Blockcore.Features.Wallet.Database
                         {excludeColdStakeSql}
                         GROUP BY BlockHeight IS NOT NULL";
 
-            var result = this.sqliteConnection.Query(sql, new { address });
+            using var conn = this.GetDbConnection();
+            var result = conn.Query(sql, new { address });
 
             var walletBalanceResult = new WalletBalanceResult();
 
@@ -338,7 +360,8 @@ namespace Blockcore.Features.Wallet.Database
                       {excludeColdStakeSql}
                       GROUP BY BlockHeight IS NOT NULL";
 
-            var result = this.sqliteConnection.Query(sql, new { accountIndex });
+            using var conn = this.GetDbConnection();
+            var result = conn.Query(sql, new { accountIndex });
 
             var walletBalanceResult = new WalletBalanceResult();
 
@@ -353,8 +376,10 @@ namespace Blockcore.Features.Wallet.Database
 
         public TransactionOutputData GetForOutput(OutPoint outPoint)
         {
-            var trx = this.sqliteConnection.QueryFirstOrDefault<TransactionData>(
-                "SELECT * FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
+            TransactionData trx = null;
+
+            using var conn = this.GetDbConnection();
+            trx = conn.QueryFirstOrDefault<TransactionData>("SELECT * FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
 
             if (trx == null)
             {
@@ -368,8 +393,8 @@ namespace Blockcore.Features.Wallet.Database
 
         public bool Remove(OutPoint outPoint)
         {
-            var ret = this.sqliteConnection.ExecuteScalar<int>("DELETE FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
-
+            using var conn = this.GetDbConnection();
+            var ret = conn.ExecuteScalar<int>("DELETE FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
             return ret > 0;
         }
 
@@ -380,8 +405,12 @@ namespace Blockcore.Features.Wallet.Database
 
         private void CreateDatabase()
         {
-            this.sqliteConnection.Execute(
-               @$"CREATE TABLE WalletData(
+            using (var conn = GetDbConnection())
+            {
+                conn.Open();
+
+                conn.Execute(
+                   @$"CREATE TABLE WalletData(
                Id            VARCHAR(3) NOT NULL PRIMARY KEY,
                EncryptedSeed VARCHAR(500) NULL,
                WalletName    VARCHAR(100) NOT NULL,
@@ -389,8 +418,8 @@ namespace Blockcore.Features.Wallet.Database
                WalletVersion INTEGER NOT NULL,
                BlockLocator  TEXT NULL)");
 
-            this.sqliteConnection.Execute(
-                @$"CREATE TABLE TransactionData(
+                conn.Execute(
+                    @$"CREATE TABLE TransactionData(
                 OutPoint                                           VARCHAR(66) NOT NULL PRIMARY KEY,
                 Address                                            VARCHAR(34) NOT NULL,
                 Id                                                 VARCHAR(64) NOT NULL,
@@ -416,15 +445,17 @@ namespace Blockcore.Features.Wallet.Database
                 SpendingDetailsPayments                            TEXT NULL,
                 SpendingDetailsHex                                 TEXT NULL)");
 
-            this.sqliteConnection.Execute("CREATE INDEX 'address_index' ON 'TransactionData' ('Address')");
-            this.sqliteConnection.Execute("CREATE INDEX 'blockheight_index' ON 'TransactionData' ('BlockHeight')");
-            this.sqliteConnection.Execute("CREATE UNIQUE INDEX 'outpoint_index' ON 'TransactionData' ('OutPoint')");
-            this.sqliteConnection.Execute("CREATE UNIQUE INDEX 'key_index' ON 'WalletData' ('Id')");
+                conn.Execute("CREATE INDEX 'address_index' ON 'TransactionData' ('Address')");
+                conn.Execute("CREATE INDEX 'blockheight_index' ON 'TransactionData' ('BlockHeight')");
+                conn.Execute("CREATE UNIQUE INDEX 'outpoint_index' ON 'TransactionData' ('OutPoint')");
+                conn.Execute("CREATE UNIQUE INDEX 'key_index' ON 'WalletData' ('Id')");
+
+                conn.Close();
+            }
         }
 
         public void Dispose()
         {
-            this.sqliteConnection?.Dispose();
             this.inmemorySqliteConnection?.Dispose();
         }
 

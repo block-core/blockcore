@@ -33,6 +33,7 @@ namespace Blockcore.Features.Wallet.Database
         private readonly Network network;
 
         private readonly string dbPath;
+        private readonly string dbConnection;
 
         public WalletData WalletData { get; private set; }
 
@@ -42,7 +43,9 @@ namespace Blockcore.Features.Wallet.Database
         public WalletStore(Network network, Types.Wallet wallet)
         {
             var tmpconn = Guid.NewGuid().ToString();
-            this.inmemorySqliteConnection = new SqliteConnection($"Data Source={tmpconn};Mode=Memory;Cache=Shared");
+
+            this.dbConnection = $"Data Source={tmpconn};Mode=Memory;Cache=Shared";
+            this.inmemorySqliteConnection = new SqliteConnection(this.dbConnection);
             this.inmemorySqliteConnection.Open();
 
             this.CreateDatabase();
@@ -54,6 +57,7 @@ namespace Blockcore.Features.Wallet.Database
         public WalletStore(Network network, DataFolder dataFolder, Types.Wallet wallet)
         {
             this.dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.db");
+            this.dbConnection = "Data Source=" + this.dbPath;
 
             if (!Directory.Exists(dataFolder.WalletFolderPath))
             {
@@ -88,7 +92,7 @@ namespace Blockcore.Features.Wallet.Database
                     var dbBackupPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.error.db");
 
                     // Move the problematic database file, which might be a V5 database.
-                    File.Move(dbPath, dbBackupPath);
+                    File.Move(this.dbPath, dbBackupPath);
 
                     this.CreateDatabase();
                 }
@@ -101,7 +105,7 @@ namespace Blockcore.Features.Wallet.Database
 
         protected SqliteConnection GetDbConnection()
         {
-            return new SqliteConnection("Data Source=" + this.dbPath);
+            return new SqliteConnection(this.dbConnection);
         }
 
         private void Init(Types.Wallet wallet)

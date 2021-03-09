@@ -29,10 +29,10 @@ namespace Blockcore.Networks.XRC
         public const int xRhodiumDefaultMaxTipAgeInSeconds = 604800;
 
         /// <summary> The name of the root folder containing the different xRhodium blockchains (xRhodiumMain, xRhodiumTest, xRhodiumRegTest). </summary>
-        public const string xRhodiumRootFolderName = "xRhodium";
+        public const string xRhodiumRootFolderName = "xrhodium";
 
         /// <summary> The default name used for the xRhodium configuration file. </summary>
-        public const string xRhodiumDefaultConfigFilename = "xRhodium.conf";
+        public const string xRhodiumDefaultConfigFilename = "xrhodium.conf";
 
         public XRCMain()
         {

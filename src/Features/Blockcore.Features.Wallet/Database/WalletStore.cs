@@ -152,7 +152,6 @@ namespace Blockcore.Features.Wallet.Database
             if (this.WalletData == null)
             {
                 using var conn = this.GetDbConnection();
-
                 this.WalletData = conn.QueryFirstOrDefault<WalletData>("SELECT *, Id AS Key FROM WalletData WHERE Id = 'Key'");
             }
 
@@ -168,7 +167,6 @@ namespace Blockcore.Features.Wallet.Database
                       EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
 
             using var conn = this.GetDbConnection();
-
             conn.Execute(sql, data);
 
             this.WalletData = data;
@@ -185,14 +183,12 @@ namespace Blockcore.Features.Wallet.Database
                       IndexInTransaction = @IndexInTransaction, BlockHeight = @BlockHeight, BlockHash = @BlockHash, BlockIndex = @BlockIndex, CreationTime = @CreationTime, IsPropagated = @IsPropagated, IsColdCoinStake = @IsColdCoinStake, AccountIndex = @AccountIndex, MerkleProof = @MerkleProof, Hex = @Hex, SpendingDetailsTransactionId = @SpendingDetailsTransactionId, SpendingDetailsBlockHeight = @SpendingDetailsBlockHeight, SpendingDetailsBlockIndex = @SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake = @SpendingDetailsIsCoinStake, SpendingDetailsCreationTime = @SpendingDetailsCreationTime, SpendingDetailsPayments = @SpendingDetailsPayments, SpendingDetailsHex = @SpendingDetailsHex;";
 
             using var conn = this.GetDbConnection();
-
             conn.Execute(sql, insert);
         }
 
         public int CountForAddress(string address)
         {
             using var conn = this.GetDbConnection();
-
             var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM TransactionData WHERE Address = @address", new { address });
 
             return count;
@@ -204,6 +200,7 @@ namespace Blockcore.Features.Wallet.Database
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
             using var conn = this.GetDbConnection();
+            conn.Open();
 
             var sql = @$"SELECT * FROM TransactionData
                       WHERE AccountIndex == @accountIndex
@@ -222,6 +219,9 @@ namespace Blockcore.Features.Wallet.Database
                   LIMIT @take OFFSET @skip";
 
             var historyUnspentResult = conn.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
+
+            conn.Close();
+
             var historyUnspent = historyUnspentResult.Select(this.Convert);
 
             var items = new List<WalletHistoryData>();
@@ -302,7 +302,6 @@ namespace Blockcore.Features.Wallet.Database
         public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
             using var conn = this.GetDbConnection();
-
             var trxs = conn.Query<TransactionData>(
                 "SELECT * FROM TransactionData " +
                 "WHERE Address = @address",
@@ -314,7 +313,6 @@ namespace Blockcore.Features.Wallet.Database
         public IEnumerable<TransactionOutputData> GetUnspentForAddress(string address)
         {
             using var conn = this.GetDbConnection();
-
             var trxs = conn.Query<TransactionData>(
                 "SELECT * FROM 'TransactionData' " +
                 "WHERE Address = @address " +
@@ -381,7 +379,6 @@ namespace Blockcore.Features.Wallet.Database
             TransactionData trx = null;
 
             using var conn = this.GetDbConnection();
-
             trx = conn.QueryFirstOrDefault<TransactionData>("SELECT * FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
 
             if (trx == null)
@@ -410,6 +407,8 @@ namespace Blockcore.Features.Wallet.Database
         {
             using (var conn = GetDbConnection())
             {
+                conn.Open();
+
                 conn.Execute(
                    @$"CREATE TABLE WalletData(
                Id            VARCHAR(3) NOT NULL PRIMARY KEY,
@@ -450,6 +449,8 @@ namespace Blockcore.Features.Wallet.Database
                 conn.Execute("CREATE INDEX 'blockheight_index' ON 'TransactionData' ('BlockHeight')");
                 conn.Execute("CREATE UNIQUE INDEX 'outpoint_index' ON 'TransactionData' ('OutPoint')");
                 conn.Execute("CREATE UNIQUE INDEX 'key_index' ON 'WalletData' ('Id')");
+
+                conn.Close();
             }
         }
 

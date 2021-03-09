@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>1.0.20</Version>
+    <Version>1.0.21</Version>
     <RuntimeFrameworkVersion>3.1.11</RuntimeFrameworkVersion>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>

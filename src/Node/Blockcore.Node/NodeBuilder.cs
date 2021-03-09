@@ -34,26 +34,24 @@ namespace Blockcore.Node
             switch (chain)
             {
                 case "BTC":
+                case "XRC":
                     nodeBuilder.UsePowConsensus().AddMining().UseWallet();
                     break;
-                case "X42":
-                    nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet().UseWatchOnlyWallet();
-                    break;
                 case "X1":
-                    nodeBuilder.UseX1Consensus().UseColdStakingWallet(); ;
+                    nodeBuilder.UseX1Consensus().UseColdStakingWallet();
                     break;
+                case "AMS":
+                case "X42":
                 case "BCP":
                 case "CITY":
                 case "STRAT":
                 case "RUTA":
                 case "EXOS":
                 case "XDS":
+                case "XLR":
                 case "IMPLX":
                 case "HOME":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
-                    break;
-                case "XRC":
-                    nodeBuilder.UsePowConsensus().AddMining().UseWallet();
                     break;
             }
 

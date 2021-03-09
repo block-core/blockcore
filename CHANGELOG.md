@@ -1,3 +1,17 @@
+##  (2021-03-09)
+
+* Add IMPLX MainNet SeedNodes and CheckpointInfo (#283) ([8595042](https://github.com/block-core/blockcore/commit/8595042)), closes [#283](https://github.com/block-core/blockcore/issues/283)
+* Add upload of artifact to the build (#292) ([6710591](https://github.com/block-core/blockcore/commit/6710591)), closes [#292](https://github.com/block-core/blockcore/issues/292) [#291](https://github.com/block-core/blockcore/issues/291)
+* Added support for xRhodium (XRC) (#286) ([6430223](https://github.com/block-core/blockcore/commit/6430223)), closes [#286](https://github.com/block-core/blockcore/issues/286)
+* Adding HomeCoin Network  (#289) ([129c67d](https://github.com/block-core/blockcore/commit/129c67d)), closes [#289](https://github.com/block-core/blockcore/issues/289)
+* bump version ([b8d16e9](https://github.com/block-core/blockcore/commit/b8d16e9))
+* Disable the request logging to avoid logging password and other request data (#287) ([6d8813e](https://github.com/block-core/blockcore/commit/6d8813e)), closes [#287](https://github.com/block-core/blockcore/issues/287)
+* Feature/upload artifact on workflow (#293) ([8aefa13](https://github.com/block-core/blockcore/commit/8aefa13)), closes [#293](https://github.com/block-core/blockcore/issues/293) [#291](https://github.com/block-core/blockcore/issues/291)
+* Launch setting names should use the technical chain name (#294) ([2f1b241](https://github.com/block-core/blockcore/commit/2f1b241)), closes [#294](https://github.com/block-core/blockcore/issues/294)
+* Resolve PR comments from initial PR on HomeCoin (#295) ([69dfb03](https://github.com/block-core/blockcore/commit/69dfb03)), closes [#295](https://github.com/block-core/blockcore/issues/295)
+
+
+
 ##  (2021-02-19)
 
 * Add checkpoints for City Chain network ([ef16368](https://github.com/block-core/blockcore/commit/ef16368))

@@ -61,7 +61,8 @@ namespace Blockcore.Networks.x42
                 { 300000, new CheckpointInfo(new uint256("0xff72e73ee8f87c0de9bf82c3bb758f4905c3e005493f2ed1faede7c120961750"), new uint256("0x2097fc9edfb8dfe287db45bbce820e168c50be32c9840b1cddf56b297011fc69")) },
                 { 500000, new CheckpointInfo(new uint256("0x7f9a88ebb32f47090ec37a110c5a05c1162a604dfbfb69c8d492e771cdb63289"), new uint256("0x19db6890c5c934e883bc99eb197509b0a81f19faeefcf49fd7fa6dab83644bfb")) },
                 { 800000, new CheckpointInfo(new uint256("0x981083b047ecf8157a8b2dc24e17ca8cfad01b4e2dabc314df97f3b64fdf37f5"), new uint256("0xf3f0a821801b32c73a7c4f42416ddad3f74b732bd517c968a9b93a33d3684e0b")) },
-                { 1000000, new CheckpointInfo(new uint256("0x1f5900bc62ddc11a383f8602d744fab1afa1e1969f0bf7f6b1b161476739a35e"), new uint256("0xca5fcf25a5561ebc91c5624b7c5ff697060f8a613e53e7a7e90abac925324e39")) }
+                { 1000000, new CheckpointInfo(new uint256("0x1f5900bc62ddc11a383f8602d744fab1afa1e1969f0bf7f6b1b161476739a35e"), new uint256("0xca5fcf25a5561ebc91c5624b7c5ff697060f8a613e53e7a7e90abac925324e39")) },
+                { 1211700, new CheckpointInfo(new uint256("0x66e4752642fc1d97f38cd6ce88e92c102fcadb0919dd9d29f4296ba5c77a8de4"), new uint256("0x0547efa90b74bbd999aabe39bfd390c2bab2e1cecb8685ae6562d119748bc597")) }
             }
         };
 

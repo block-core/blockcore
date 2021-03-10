@@ -15,6 +15,7 @@
 
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
+    <PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup>

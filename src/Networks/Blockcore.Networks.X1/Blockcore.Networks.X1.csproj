@@ -10,6 +10,10 @@
     <PackageTags>blockchain;cryptocurrency;crypto;C#;.NET;bitcoin;blockcore;x1crypto;x1</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="icon.png" />
   </ItemGroup>

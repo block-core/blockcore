@@ -14,8 +14,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.11" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.11" />
-    <PackageReference Include="RocksDbNative" Version="6.2.2" />
-    <PackageReference Include="RocksDbSharp" Version="6.2.2" />
+    <PackageReference Include="Stratis.RocksDB" Version="0.0.9.4-alpha" />
   </ItemGroup>
 
   <ItemGroup>

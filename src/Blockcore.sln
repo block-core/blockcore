@@ -133,6 +133,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.Impleum"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.BCP", "Networks\Blockcore.Networks.BCP\Blockcore.Networks.BCP.csproj", "{120500DF-C04F-43CC-9A1E-523A6429301F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.X1", "Networks\Blockcore.Networks.X1\Blockcore.Networks.X1.csproj", "{9A2BA15A-C316-42B4-8E4D-E01B4873190C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.XRC", "Networks\Blockcore.Networks.XRC\Blockcore.Networks.XRC.csproj", "{4615D1C6-14CD-47CA-8B78-A462A37057F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.HomeCoin", "Networks\Blockcore.Networks.HomeCoin\Blockcore.Networks.HomeCoin.csproj", "{074057D3-A1BE-409D-B4B4-F01CFA434D58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{72D1E288-F3B7-4B13-9CC3-B5CF2AB758FB}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -351,6 +362,18 @@ Global
 		{120500DF-C04F-43CC-9A1E-523A6429301F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{120500DF-C04F-43CC-9A1E-523A6429301F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{120500DF-C04F-43CC-9A1E-523A6429301F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A2BA15A-C316-42B4-8E4D-E01B4873190C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A2BA15A-C316-42B4-8E4D-E01B4873190C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A2BA15A-C316-42B4-8E4D-E01B4873190C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A2BA15A-C316-42B4-8E4D-E01B4873190C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4615D1C6-14CD-47CA-8B78-A462A37057F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4615D1C6-14CD-47CA-8B78-A462A37057F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4615D1C6-14CD-47CA-8B78-A462A37057F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4615D1C6-14CD-47CA-8B78-A462A37057F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{074057D3-A1BE-409D-B4B4-F01CFA434D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{074057D3-A1BE-409D-B4B4-F01CFA434D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{074057D3-A1BE-409D-B4B4-F01CFA434D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{074057D3-A1BE-409D-B4B4-F01CFA434D58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -411,6 +434,9 @@ Global
 		{4275AF0C-587B-4C9D-A100-0F2DD1702674} = {64694A14-97E0-4CBC-8032-754F9353B2DD}
 		{64E9C309-867E-45F6-A88E-7BC061305D0B} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{120500DF-C04F-43CC-9A1E-523A6429301F} = {3B56C02B-4468-4268-B797-851562789FCC}
+		{9A2BA15A-C316-42B4-8E4D-E01B4873190C} = {3B56C02B-4468-4268-B797-851562789FCC}
+		{4615D1C6-14CD-47CA-8B78-A462A37057F6} = {3B56C02B-4468-4268-B797-851562789FCC}
+		{074057D3-A1BE-409D-B4B4-F01CFA434D58} = {3B56C02B-4468-4268-B797-851562789FCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

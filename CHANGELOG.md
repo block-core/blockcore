@@ -1,3 +1,40 @@
+##  (2021-03-09)
+
+* #280 (#282) ([5119089](https://github.com/block-core/blockcore/commit/5119089)), closes [#280](https://github.com/block-core/blockcore/issues/280) [#282](https://github.com/block-core/blockcore/issues/282)
+* Make sure that each query against database uses a new connection object (#300) ([19596af](https://github.com/block-core/blockcore/commit/19596af)), closes [#300](https://github.com/block-core/blockcore/issues/300) [#299](https://github.com/block-core/blockcore/issues/299)
+* Make the folder name for data lowercase (#302) ([04aa205](https://github.com/block-core/blockcore/commit/04aa205)), closes [#302](https://github.com/block-core/blockcore/issues/302)
+* Minor improvement to the NodeBuilder for test node. (#296) ([3f0b92d](https://github.com/block-core/blockcore/commit/3f0b92d)), closes [#296](https://github.com/block-core/blockcore/issues/296)
+* Update x42 segwit activation (#301) ([6a743e0](https://github.com/block-core/blockcore/commit/6a743e0)), closes [#301](https://github.com/block-core/blockcore/issues/301)
+
+
+
+##  (2021-03-09)
+
+* Add IMPLX MainNet SeedNodes and CheckpointInfo (#283) ([8595042](https://github.com/block-core/blockcore/commit/8595042)), closes [#283](https://github.com/block-core/blockcore/issues/283)
+* Add upload of artifact to the build (#292) ([6710591](https://github.com/block-core/blockcore/commit/6710591)), closes [#292](https://github.com/block-core/blockcore/issues/292) [#291](https://github.com/block-core/blockcore/issues/291)
+* Added support for xRhodium (XRC) (#286) ([6430223](https://github.com/block-core/blockcore/commit/6430223)), closes [#286](https://github.com/block-core/blockcore/issues/286)
+* Adding HomeCoin Network  (#289) ([129c67d](https://github.com/block-core/blockcore/commit/129c67d)), closes [#289](https://github.com/block-core/blockcore/issues/289)
+* bump version ([b8d16e9](https://github.com/block-core/blockcore/commit/b8d16e9))
+* Disable the request logging to avoid logging password and other request data (#287) ([6d8813e](https://github.com/block-core/blockcore/commit/6d8813e)), closes [#287](https://github.com/block-core/blockcore/issues/287)
+* Feature/upload artifact on workflow (#293) ([8aefa13](https://github.com/block-core/blockcore/commit/8aefa13)), closes [#293](https://github.com/block-core/blockcore/issues/293) [#291](https://github.com/block-core/blockcore/issues/291)
+* Launch setting names should use the technical chain name (#294) ([2f1b241](https://github.com/block-core/blockcore/commit/2f1b241)), closes [#294](https://github.com/block-core/blockcore/issues/294)
+* Resolve PR comments from initial PR on HomeCoin (#295) ([69dfb03](https://github.com/block-core/blockcore/commit/69dfb03)), closes [#295](https://github.com/block-core/blockcore/issues/295)
+
+
+
+##  (2021-02-19)
+
+* Add checkpoints for City Chain network ([ef16368](https://github.com/block-core/blockcore/commit/ef16368))
+* Add X1 (#276) ([6f510a0](https://github.com/block-core/blockcore/commit/6f510a0)), closes [#276](https://github.com/block-core/blockcore/issues/276)
+* dotnet pack generate symbols (snupkg) (#275) ([99a9dd5](https://github.com/block-core/blockcore/commit/99a9dd5)), closes [#275](https://github.com/block-core/blockcore/issues/275)
+* Fix build error: NU1101: Unable to find package (#273) ([0695789](https://github.com/block-core/blockcore/commit/0695789)), closes [#273](https://github.com/block-core/blockcore/issues/273)
+* Fix fee send bug ([55e748f](https://github.com/block-core/blockcore/commit/55e748f))
+* Update changelog and bump versions ([fd87c06](https://github.com/block-core/blockcore/commit/fd87c06))
+* Upgrade package dependencies to 3.1.11 ([b07b8e0](https://github.com/block-core/blockcore/commit/b07b8e0))
+* Wallet db to use sqlite (instead of litedbv4) (#272) ([ad2fca4](https://github.com/block-core/blockcore/commit/ad2fca4)), closes [#272](https://github.com/block-core/blockcore/issues/272)
+
+
+
 ##  (2021-02-01)
 
 * Add EXOS to launch settings ([7c32b4a](https://github.com/block-core/blockcore/commit/7c32b4a))

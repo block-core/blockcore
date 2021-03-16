@@ -1,0 +1,45 @@
+name: Publish Release Packages
+
+on:
+  release:
+    types: [published]
+#  repository_dispatch:
+#    types: [publish-packages]
+  workflow_dispatch:
+
+jobs:
+
+  publishPackages:
+
+    runs-on: ubuntu-latest
+    
+    env:
+      SOLUTION_PATH: 'src/Blockcore.sln'
+      BUILD_CONFIGURATION: 'Release'
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Log Variables
+      run: |
+        echo "action - ${{ github.event.action }}"
+        echo "url - ${{ github.event.release.url }}"
+        echo "assets_url - ${{ github.event.release.assets_url }}"
+        echo "id - ${{ github.event.release.id }}"
+        echo "tag_name - ${{ github.event.release.tag_name }}"
+        echo "assets - ${{ github.event.assets }}"
+        echo "assets[0] - ${{ github.event.assets[0] }}"
+
+    - name: Release Download
+      uses: sondreb/action-release-download@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        url: ${{ github.event.release.assets_url }}
+        folder: "./artifacts/"
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Nuget Push
+      run: nuget push "${{github.workspace}}/artifacts/*.nupkg" -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate

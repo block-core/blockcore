@@ -1,76 +1,105 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Blockcore.Configuration;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Networks;
 using Blockcore.Utilities;
+using Blockcore.Utilities.JsonConverters;
+using Dapper;
 using DBreeze.Utils;
-using LiteDB;
+using Microsoft.Data.Sqlite;
 using NBitcoin;
 using NBitcoin.DataEncoders;
+using Newtonsoft.Json;
 
 namespace Blockcore.Features.Wallet.Database
 {
     public class WalletStore : IWalletStore, IDisposable
     {
-        private LiteDatabase db;
-        private LiteRepository repo;
+        private const int WalletVersion = 1;
+
+        /// <summary>
+        /// A connection used only when the data store is in memory only.
+        /// SQLite in-memory mode will keep the db as long as there is one connection open.
+        /// https://github.com/dotnet/docs/blob/master/samples/snippets/standard/data/sqlite/InMemorySample/Program.cs
+        /// /// </summary>
+        private readonly SqliteConnection inmemorySqliteConnection;
+
         private readonly Network network;
-        private LiteCollection<WalletData> dataCol;
-        private LiteCollection<TransactionOutputData> trxCol;
+
+        private readonly string dbPath;
+        private readonly string dbConnection;
 
         public WalletData WalletData { get; private set; }
 
-        public BsonMapper Mapper => this.db.Mapper;
-
+        /// <summary>
+        /// Constructor that initiates an in-memory sql engine instance and is used only for tests.
+        /// </summary>
         public WalletStore(Network network, Types.Wallet wallet)
         {
-            BsonMapper mapper = this.Create();
-            this.db = new LiteDatabase(new MemoryStream(), mapper: mapper);
+            var tmpconn = Guid.NewGuid().ToString();
+
+            this.dbConnection = $"Data Source={tmpconn};Mode=Memory;Cache=Shared";
+            this.inmemorySqliteConnection = new SqliteConnection(this.dbConnection);
+            this.inmemorySqliteConnection.Open();
+
+            this.CreateDatabase();
+
             this.network = network;
             this.Init(wallet);
         }
 
         public WalletStore(Network network, DataFolder dataFolder, Types.Wallet wallet)
         {
-            var dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.db");
+            this.dbPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.db");
+            this.dbConnection = "Data Source=" + this.dbPath;
 
             if (!Directory.Exists(dataFolder.WalletFolderPath))
             {
                 Directory.CreateDirectory(dataFolder.WalletFolderPath);
             }
 
-            BsonMapper mapper = this.Create();
-            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
-
-            if (!File.Exists(dbPath))
+            if (!File.Exists(this.dbPath))
             {
-                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
+                this.CreateDatabase();
             }
             else
             {
-                // Only perform this check if the database file already exists.
-                this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
-
                 // Attempt to access the user version, this will crash if the loaded database is V5 and we use V4 packages.
                 try
                 {
-                    var userVersion = this.db.Engine.UserVersion;
+                    var walletVersion = -1;
+
+                    using (var conn = this.GetDbConnection())
+                    {
+                        walletVersion = conn.QueryFirst<int>("SELECT WalletVersion FROM WalletData");
+                    }
+
+                    if (walletVersion != WalletVersion)
+                    {
+                        this.UpgradeDatabase(walletVersion);
+                    }
                 }
-                catch (LiteDB.LiteException)
+                catch (Microsoft.Data.Sqlite.SqliteException sqex)
                 {
+                    // Errror that indicates that the file being opened does not appear to be an SQLite database file.
+                    if (sqex.SqliteErrorCode != 26)
+                        throw;
+
+                    // This will make a backup copy of the old litedbv5 (or v4) databases.
+                    // The reason the code base moved to use sqlite instead of litedb is because litedbv5 is not
+                    // properly maintained anymore and has a critical hard to reproduce errors that happen randomly.
                     var dbBackupPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.error.db");
 
                     // Move the problematic database file, which might be a V5 database.
-                    File.Move(dbPath, dbBackupPath);
+                    File.Move(this.dbPath, dbBackupPath);
 
-                    // Re-create the database object after we renamed the file.
-                    this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode }, mapper: mapper);
+                    this.CreateDatabase();
                 }
             }
 
@@ -79,18 +108,22 @@ namespace Blockcore.Features.Wallet.Database
             this.Init(wallet);
         }
 
+        protected SqliteConnection GetDbConnection()
+        {
+            return new SqliteConnection(this.dbConnection);
+        }
+
         private void Init(Types.Wallet wallet)
         {
-            this.repo = new LiteRepository(this.db);
-
-            this.trxCol = this.db.GetCollection<TransactionOutputData>("transactions");
-            this.dataCol = this.db.GetCollection<WalletData>("data");
-
-            this.trxCol.EnsureIndex(x => x.OutPoint, true);
-            this.trxCol.EnsureIndex(x => x.Address, false);
-            this.trxCol.EnsureIndex(x => x.BlockHeight, false);
-
-            this.dataCol.EnsureIndex(x => x.Key, true);
+            SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
+            SqlMapper.AddTypeHandler(new HashHeightPairHandler());
+            SqlMapper.AddTypeHandler(new CollectionOfuint256Handler());
+            SqlMapper.AddTypeHandler(new Uint256Handler());
+            SqlMapper.AddTypeHandler(new MoneyHandler());
+            SqlMapper.AddTypeHandler(new OutPointHandler());
+            SqlMapper.AddTypeHandler(new ScriptHandler());
+            SqlMapper.AddTypeHandler(new CollectionOfPaymentDetailsHandler());
+            SqlMapper.AddTypeHandler(new PartialMerkleTreeHandler());
 
             this.WalletData = this.GetData();
 
@@ -108,7 +141,8 @@ namespace Blockcore.Features.Wallet.Database
                     Key = "Key",
                     EncryptedSeed = wallet.EncryptedSeed,
                     WalletName = wallet.Name,
-                    WalletTip = new HashHeightPair(this.network.GenesisHash, 0)
+                    WalletTip = new HashHeightPair(this.network.GenesisHash, 0),
+                    WalletVersion = WalletVersion
                 });
             }
         }
@@ -117,7 +151,8 @@ namespace Blockcore.Features.Wallet.Database
         {
             if (this.WalletData == null)
             {
-                this.WalletData = this.dataCol.FindById("Key");
+                using var conn = this.GetDbConnection();
+                this.WalletData = conn.QueryFirstOrDefault<WalletData>("SELECT *, Id AS Key FROM WalletData WHERE Id = 'Key'");
             }
 
             return this.WalletData;
@@ -125,19 +160,38 @@ namespace Blockcore.Features.Wallet.Database
 
         public void SetData(WalletData data)
         {
-            this.dataCol.Upsert(data);
-            this.WalletData = data;
-        }
+            var sql = @$"INSERT INTO WalletData
+                      (Id, EncryptedSeed, WalletName, WalletTip, WalletVersion, BlockLocator)
+                      VALUES (@Key, @EncryptedSeed, @WalletName, @WalletTip, @WalletVersion, @BlockLocator)
+                      ON CONFLICT(Id) DO UPDATE SET
+                      EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
 
-        public int CountForAddress(string address)
-        {
-            var count = this.trxCol.Count(Query.EQ("Address", new BsonValue(address)));
-            return count;
+            using var conn = this.GetDbConnection();
+            conn.Execute(sql, data);
+
+            this.WalletData = data;
         }
 
         public void InsertOrUpdate(TransactionOutputData item)
         {
-            this.trxCol.Upsert(item);
+            TransactionData insert = this.Convert(item);
+
+            var sql = @$"INSERT INTO TransactionData
+                      (OutPoint, Address, Id, Amount, IndexInTransaction, BlockHeight, BlockHash, BlockIndex, CreationTime, ScriptPubKey, IsPropagated, IsCoinBase, IsCoinStake, IsColdCoinStake, AccountIndex, MerkleProof, Hex, SpendingDetailsTransactionId, SpendingDetailsBlockHeight, SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake, SpendingDetailsCreationTime, SpendingDetailsPayments, SpendingDetailsHex)
+                      VALUES (@OutPoint, @Address, @Id, @Amount, @IndexInTransaction, @BlockHeight, @BlockHash, @BlockIndex, @CreationTime, @ScriptPubKey, @IsPropagated, @IsCoinBase, @IsCoinStake, @IsColdCoinStake, @AccountIndex, @MerkleProof, @Hex, @SpendingDetailsTransactionId, @SpendingDetailsBlockHeight, @SpendingDetailsBlockIndex, @SpendingDetailsIsCoinStake, @SpendingDetailsCreationTime, @SpendingDetailsPayments, @SpendingDetailsHex)
+                      ON CONFLICT(OutPoint) DO UPDATE SET
+                      IndexInTransaction = @IndexInTransaction, BlockHeight = @BlockHeight, BlockHash = @BlockHash, BlockIndex = @BlockIndex, CreationTime = @CreationTime, IsPropagated = @IsPropagated, IsColdCoinStake = @IsColdCoinStake, AccountIndex = @AccountIndex, MerkleProof = @MerkleProof, Hex = @Hex, SpendingDetailsTransactionId = @SpendingDetailsTransactionId, SpendingDetailsBlockHeight = @SpendingDetailsBlockHeight, SpendingDetailsBlockIndex = @SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake = @SpendingDetailsIsCoinStake, SpendingDetailsCreationTime = @SpendingDetailsCreationTime, SpendingDetailsPayments = @SpendingDetailsPayments, SpendingDetailsHex = @SpendingDetailsHex;";
+
+            using var conn = this.GetDbConnection();
+            conn.Execute(sql, insert);
+        }
+
+        public int CountForAddress(string address)
+        {
+            using var conn = this.GetDbConnection();
+            var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM TransactionData WHERE Address = @address", new { address });
+
+            return count;
         }
 
         public IEnumerable<WalletHistoryData> GetAccountHistory(int accountIndex, bool excludeColdStake, int skip = 0, int take = 100)
@@ -145,50 +199,30 @@ namespace Blockcore.Features.Wallet.Database
             // The result of this method is not guaranteed to be the length
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
+            using var conn = this.GetDbConnection();
+            conn.Open();
 
-            Query historySpentQuery =
-                Query.And(
-                    Query.EQ("AccountIndex", new BsonValue(accountIndex)),
-                    Query.Not("SpendingDetails", BsonValue.Null)
-                );
-            if (excludeColdStake)
-            {
-                historySpentQuery =
-                    Query.And(
-                        Query.EQ("AccountIndex", new BsonValue(accountIndex)),
-                        Query.Not("IsColdCoinStake", new BsonValue(true)),
-                        Query.Not("SpendingDetails", BsonValue.Null)
-                    );
-            }
+            var sql = @$"SELECT * FROM TransactionData
+                      WHERE AccountIndex == @accountIndex
+                      AND SpendingDetailsTransactionId IS NOT NULL
+                      {(excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "")}
+                      ORDER BY SpendingDetailsCreationTime DESC
+                      LIMIT @take OFFSET @skip ";
 
-            var historySpent = this.trxCol
-              .Find(historySpentQuery)
-          //      skip: skip,
-          //      limit: take)
-              .OrderByDescending(x => x.SpendingDetails.CreationTime)
-              .Skip(skip)
-              .Take(take)
-              .ToList();
+            var historySpentResult = conn.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
+            var historySpent = historySpentResult.Select(this.Convert);
 
-            Query historyUnSpentQuery = Query.EQ("AccountIndex", new BsonValue(accountIndex));
-            if (excludeColdStake)
-            {
-                historyUnSpentQuery =
-                    Query.And(
-                        Query.EQ("AccountIndex", new BsonValue(accountIndex)),
-                        Query.Not("IsColdCoinStake", new BsonValue(true))
-                    );
-            }
+            sql = @$"SELECT * FROM TransactionData
+                  WHERE AccountIndex == @accountIndex
+                  {(excludeColdStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake is null) " : "")}
+                  ORDER BY CreationTime DESC
+                  LIMIT @take OFFSET @skip";
 
-            var historyUnspent = this.trxCol
-                .Find(
-                    historyUnSpentQuery)
-             //       skip: skip,
-             //       limit: take)
-                .OrderByDescending(x => x.CreationTime)
-                .Skip(skip)
-                .Take(take)
-                .ToList();
+            var historyUnspentResult = conn.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
+
+            conn.Close();
+
+            var historyUnspent = historyUnspentResult.Select(this.Convert);
 
             var items = new List<WalletHistoryData>();
 
@@ -267,129 +301,407 @@ namespace Blockcore.Features.Wallet.Database
 
         public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
-            var trxs = this.trxCol.Find(Query.EQ("Address", new BsonValue(address)));
-            return trxs;
+            using var conn = this.GetDbConnection();
+            var trxs = conn.Query<TransactionData>(
+                "SELECT * FROM TransactionData " +
+                "WHERE Address = @address",
+                new { address });
+
+            return trxs.Select(this.Convert);
         }
 
         public IEnumerable<TransactionOutputData> GetUnspentForAddress(string address)
         {
-            var trxs = this.trxCol.Find(Query.And(Query.EQ("Address", new BsonValue(address)), Query.EQ("SpendingDetails", BsonValue.Null)));
-            return trxs;
+            using var conn = this.GetDbConnection();
+            var trxs = conn.Query<TransactionData>(
+                "SELECT * FROM 'TransactionData' " +
+                "WHERE Address = @address " +
+                "AND SpendingDetailsTransactionId IS NULL",
+                new { address });
+
+            return trxs.Select(this.Convert);
         }
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
         {
-            var transactions = this.trxCol
-              .Find(Query.And(Query.EQ("Address", new BsonValue(address)), Query.EQ("SpendingDetails", BsonValue.Null)))
-              .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
-              .GroupBy(x => x.BlockHeight != null)
-              .Select(o =>
-                new
-                {
-                    Confirmed = o.Key,
-                    Amount = o.Sum(x => x.Amount)
-                }).ToList();
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake IS NULL) " : string.Empty;
+
+            var sql = @$"SELECT
+                        BlockHeight as Confirmed,
+                        SUM(Amount) as Total
+                        FROM TransactionData
+                        WHERE SpendingDetailsTransactionId IS NULL AND Address = @address
+                        {excludeColdStakeSql}
+                        GROUP BY BlockHeight IS NOT NULL";
+
+            using var conn = this.GetDbConnection();
+            var result = conn.Query(sql, new { address });
 
             var walletBalanceResult = new WalletBalanceResult();
 
-            foreach (var transaction in transactions)
+            foreach (dynamic item in result)
             {
-                if (transaction.Confirmed == false)
-                    walletBalanceResult.AmountUnconfirmed = transaction.Amount;
-                else
-                    walletBalanceResult.AmountConfirmed = transaction.Amount;
+                if (item.Confirmed == null) walletBalanceResult.AmountUnconfirmed = (long)item.Total;
+                else walletBalanceResult.AmountConfirmed = (long)item.Total;
             }
+
             return walletBalanceResult;
         }
 
         public WalletBalanceResult GetBalanceForAccount(int accountIndex, bool excludeColdStake)
         {
-            var transactions = this.trxCol
-              .Find(Query.And(Query.EQ("AccountIndex", new BsonValue(accountIndex)), Query.EQ("SpendingDetails", BsonValue.Null)))
-              .Where(x => excludeColdStake && this.network.Consensus.IsProofOfStake ? (x.IsColdCoinStake != true) : true)
-              .GroupBy(x => x.BlockHeight != null)
-              .Select(o =>
-                new
-                {
-                    Confirmed = o.Key,
-                    Amount = o.Sum(x => x.Amount)
-                }).ToList();
+            string excludeColdStakeSql = excludeColdStake && this.network.Consensus.IsProofOfStake ? "AND (IsColdCoinStake = false OR IsColdCoinStake IS NULL) " : string.Empty;
+
+            var sql = @$"SELECT
+                      BlockHeight as Confirmed,
+                      SUM(Amount) as Total
+                      FROM TransactionData
+                      WHERE SpendingDetailsTransactionId IS NULL AND AccountIndex = @accountIndex
+                      {excludeColdStakeSql}
+                      GROUP BY BlockHeight IS NOT NULL";
+
+            using var conn = this.GetDbConnection();
+            var result = conn.Query(sql, new { accountIndex });
 
             var walletBalanceResult = new WalletBalanceResult();
 
-            foreach (var transaction in transactions)
+            foreach (dynamic item in result)
             {
-                if (transaction.Confirmed == false)
-                    walletBalanceResult.AmountUnconfirmed = transaction.Amount;
-                else
-                    walletBalanceResult.AmountConfirmed = transaction.Amount;
+                if (item.Confirmed == null) walletBalanceResult.AmountUnconfirmed = (long)item.Total;
+                else walletBalanceResult.AmountConfirmed = (long)item.Total;
             }
+
             return walletBalanceResult;
         }
 
         public TransactionOutputData GetForOutput(OutPoint outPoint)
         {
-            var trx = this.trxCol.FindById(outPoint.ToString());
-            return trx;
+            TransactionData trx = null;
+
+            using var conn = this.GetDbConnection();
+            trx = conn.QueryFirstOrDefault<TransactionData>("SELECT * FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
+
+            if (trx == null)
+            {
+                return null;
+            }
+
+            TransactionOutputData ret = this.Convert(trx);
+
+            return ret;
         }
 
         public bool Remove(OutPoint outPoint)
         {
-            return this.trxCol.Delete(outPoint.ToString());
+            using var conn = this.GetDbConnection();
+            var ret = conn.ExecuteScalar<int>("DELETE FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
+            return ret > 0;
         }
 
-        private BsonMapper Create()
+        private void UpgradeDatabase(int oldVersion)
         {
-            var mapper = new BsonMapper();
+            // Here can come code to upgrade the db from old to current version.
+        }
 
-            mapper.RegisterType<HashHeightPair>
-            (
-                serialize: (hash) => hash.ToString(),
-                deserialize: (bson) => HashHeightPair.Parse(bson.AsString)
-            );
+        private void CreateDatabase()
+        {
+            using (var conn = GetDbConnection())
+            {
+                conn.Open();
 
-            mapper.RegisterType<OutPoint>
-            (
-                serialize: (outPoint) => outPoint.ToString(),
-                deserialize: (bson) => OutPoint.Parse(bson.AsString)
-            );
+                conn.Execute(
+                   @$"CREATE TABLE WalletData(
+               Id            VARCHAR(3) NOT NULL PRIMARY KEY,
+               EncryptedSeed VARCHAR(500) NULL,
+               WalletName    VARCHAR(100) NOT NULL,
+               WalletTip     VARCHAR(75) NOT NULL,
+               WalletVersion INTEGER NOT NULL,
+               BlockLocator  TEXT NULL)");
 
-            mapper.RegisterType<uint256>
-            (
-                serialize: (hash) => hash.ToString(),
-                deserialize: (bson) => uint256.Parse(bson.AsString)
-            );
+                conn.Execute(
+                    @$"CREATE TABLE TransactionData(
+                OutPoint                                           VARCHAR(66) NOT NULL PRIMARY KEY,
+                Address                                            VARCHAR(34) NOT NULL,
+                Id                                                 VARCHAR(64) NOT NULL,
+                Amount                                             INTEGER  NOT NULL,
+                IndexInTransaction                                 INTEGER  NOT NULL,
+                BlockHeight                                        INTEGER  NULL,
+                BlockHash                                          VARCHAR(64) NULL,
+                BlockIndex                                         INTEGER NULL,
+                CreationTime                                       INTEGER  NOT NULL,
+                ScriptPubKey                                       VARCHAR(100) NOT NULL,
+                IsPropagated                                       INTEGER  NULL,
+                IsCoinBase                                         INTEGER  NULL,
+                IsCoinStake                                        INTEGER  NULL,
+                IsColdCoinStake                                    INTEGER  NULL,
+                AccountIndex                                       INTEGER  NOT NULL,
+                MerkleProof                                        TEXT NULL,
+                Hex                                                TEXT NULL,
+                SpendingDetailsTransactionId                       VARCHAR(64) NULL,
+                SpendingDetailsBlockHeight                         INTEGER  NULL,
+                SpendingDetailsBlockIndex                          INTEGER  NULL,
+                SpendingDetailsIsCoinStake                         INTEGER  NULL,
+                SpendingDetailsCreationTime                        INTEGER  NULL,
+                SpendingDetailsPayments                            TEXT NULL,
+                SpendingDetailsHex                                 TEXT NULL)");
 
-            mapper.RegisterType<Money>
-            (
-                serialize: (money) => money.Satoshi,
-                deserialize: (bson) => Money.Satoshis(bson.AsInt64)
-            );
+                conn.Execute("CREATE INDEX 'address_index' ON 'TransactionData' ('Address')");
+                conn.Execute("CREATE INDEX 'blockheight_index' ON 'TransactionData' ('BlockHeight')");
+                conn.Execute("CREATE UNIQUE INDEX 'outpoint_index' ON 'TransactionData' ('OutPoint')");
+                conn.Execute("CREATE UNIQUE INDEX 'key_index' ON 'WalletData' ('Id')");
 
-            mapper.RegisterType<Script>
-            (
-                serialize: (script) => Encoders.Hex.EncodeData(script.ToBytes(false)),
-                deserialize: (bson) => Script.FromBytesUnsafe(Encoders.Hex.DecodeData(bson.AsString))
-            );
-
-            mapper.RegisterType<PartialMerkleTree>
-            (
-                serialize: (pmt) => Encoders.Hex.EncodeData(pmt.ToBytes()),
-                deserialize: (bson) =>
-                {
-                    var ret = new PartialMerkleTree();
-                    var bytes = Encoders.Hex.DecodeData(bson.AsString);
-                    ret.ReadWrite(bytes);
-                    return ret;
-                }
-            );
-
-            return mapper;
+                conn.Close();
+            }
         }
 
         public void Dispose()
         {
-            this.db?.Dispose();
+            this.inmemorySqliteConnection?.Dispose();
+        }
+
+        private TransactionData Convert(TransactionOutputData source)
+        {
+            var target = new TransactionData
+            {
+                OutPoint = source.OutPoint,
+                Address = source.Address,
+                Id = source.Id ?? source.OutPoint.Hash,
+                Amount = source.Amount ?? 0,
+                IndexInTransaction = source.Index,
+                BlockHeight = source.BlockHeight,
+                BlockHash = source.BlockHash,
+                BlockIndex = source.BlockIndex,
+                CreationTime = source.CreationTime,
+                ScriptPubKey = source.ScriptPubKey ?? Script.Empty,
+                IsPropagated = source.IsPropagated,
+                IsCoinBase = source.IsCoinBase,
+                IsCoinStake = source.IsCoinStake,
+                IsColdCoinStake = source.IsColdCoinStake,
+                AccountIndex = source.AccountIndex,
+                MerkleProof = source.MerkleProof,
+                Hex = source.Hex,
+                SpendingDetailsTransactionId = source.SpendingDetails?.TransactionId,
+                SpendingDetailsBlockHeight = source.SpendingDetails?.BlockHeight,
+                SpendingDetailsBlockIndex = source.SpendingDetails?.BlockIndex,
+                SpendingDetailsIsCoinStake = source.SpendingDetails?.IsCoinStake,
+                SpendingDetailsCreationTime = source.SpendingDetails?.CreationTime,
+                SpendingDetailsPayments = source.SpendingDetails?.Payments,
+                SpendingDetailsHex = source.SpendingDetails?.Hex
+            };
+
+            return target;
+        }
+
+        private TransactionOutputData Convert(TransactionData source)
+        {
+            var target = new TransactionOutputData
+            {
+                OutPoint = source.OutPoint,
+                Address = source.Address,
+                Id = source.Id,
+                Amount = source.Amount,
+                Index = source.IndexInTransaction,
+                BlockHeight = source.BlockHeight,
+                BlockIndex = source.BlockIndex,
+                BlockHash = source.BlockHash,
+                CreationTime = source.CreationTime,
+                ScriptPubKey = source.ScriptPubKey,
+                IsPropagated = source.IsPropagated,
+                IsCoinBase = source.IsCoinBase,
+                IsCoinStake = source.IsCoinStake,
+                IsColdCoinStake = source.IsColdCoinStake,
+                AccountIndex = source.AccountIndex,
+                MerkleProof = source.MerkleProof,
+                Hex = source.Hex
+            };
+
+            if (source.SpendingDetailsTransactionId != null)
+            {
+                target.SpendingDetails = new SpendingDetails
+                {
+                    TransactionId = source.SpendingDetailsTransactionId,
+                    BlockHeight = source.SpendingDetailsBlockHeight,
+                    BlockIndex = source.SpendingDetailsBlockIndex,
+                    IsCoinStake = source.SpendingDetailsIsCoinStake,
+                    CreationTime = source.SpendingDetailsCreationTime.Value,
+                    Payments = source.SpendingDetailsPayments,
+                    Hex = source.SpendingDetailsHex
+                };
+            }
+
+            return target;
+        }
+    }
+
+    internal abstract class SqliteTypeHandler<T> : SqlMapper.TypeHandler<T>
+    {
+        // Parameters are converted by Microsoft.Data.Sqlite
+        public override void SetValue(IDbDataParameter parameter, T value)
+            => parameter.Value = value;
+    }
+
+    internal class DateTimeOffsetHandler : SqliteTypeHandler<DateTimeOffset>
+    {
+        public override DateTimeOffset Parse(object value)
+            => DateTimeOffset.Parse((string)value);
+    }
+
+    internal class ScriptHandler : SqliteTypeHandler<Script>
+    {
+        public override Script Parse(object value)
+        {
+            return Script.FromBytesUnsafe(Encoders.Hex.DecodeData((string)value));
+        }
+
+        public override void SetValue(IDbDataParameter parameter, Script value)
+        {
+            parameter.Value = Encoders.Hex.EncodeData(value.ToBytes(false));
+        }
+    }
+
+    internal class MoneyHandler : SqliteTypeHandler<Money>
+    {
+        public override Money Parse(object value)
+        {
+            return Money.Satoshis((long)value);
+        }
+
+        public override void SetValue(IDbDataParameter parameter, Money value)
+        {
+            parameter.DbType = DbType.Int64;
+            parameter.Value = value.Satoshi;
+        }
+    }
+
+    internal class Uint256Handler : SqliteTypeHandler<uint256>
+    {
+        public override uint256 Parse(object value)
+        {
+            return uint256.Parse((string)value);
+        }
+
+        public override void SetValue(IDbDataParameter parameter, uint256 value)
+        {
+            parameter.Value = value.ToString();
+        }
+    }
+
+    internal class OutPointHandler : SqliteTypeHandler<OutPoint>
+    {
+        public override OutPoint Parse(object value)
+        {
+            return OutPoint.Parse((string)value);
+        }
+
+        public override void SetValue(IDbDataParameter parameter, OutPoint value)
+        {
+            parameter.Value = value.ToString();
+        }
+    }
+
+    internal class HashHeightPairHandler : SqliteTypeHandler<HashHeightPair>
+    {
+        public override HashHeightPair Parse(object value)
+        {
+            return HashHeightPair.Parse((string)value);
+        }
+
+        public override void SetValue(IDbDataParameter parameter, HashHeightPair value)
+        {
+            parameter.Value = value.ToString();
+        }
+    }
+
+    internal class PartialMerkleTreeHandler : SqliteTypeHandler<PartialMerkleTree>
+    {
+        public override PartialMerkleTree Parse(object value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var ret = new PartialMerkleTree();
+            var bytes = Encoders.Hex.DecodeData((string)value);
+            ret.ReadWrite(bytes);
+
+            return ret;
+        }
+
+        public override void SetValue(IDbDataParameter parameter, PartialMerkleTree value)
+        {
+            string values = string.Empty;
+
+            if (value != null)
+            {
+                values = Encoders.Hex.EncodeData(value.ToBytes());
+            }
+
+            parameter.Value = values;
+        }
+    }
+
+    internal class CollectionOfuint256Handler : SqliteTypeHandler<ICollection<uint256>>
+    {
+        private static readonly JsonSerializerSettings Converters = new JsonSerializerSettings
+        {
+            Converters = new List<JsonConverter> { new UInt256JsonConverter() }
+        };
+
+        public override ICollection<uint256> Parse(object value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var res = JsonConvert.DeserializeObject<ICollection<uint256>>((string)value, Converters);
+
+            return res;
+        }
+
+        public override void SetValue(IDbDataParameter parameter, ICollection<uint256> value)
+        {
+            string values = string.Empty;
+
+            if (value != null)
+            {
+                values = JsonConvert.SerializeObject(value, Converters);
+            }
+
+            parameter.Value = values;
+        }
+    }
+
+    internal class CollectionOfPaymentDetailsHandler : SqliteTypeHandler<ICollection<PaymentDetails>>
+    {
+        private static readonly JsonSerializerSettings Converters = new JsonSerializerSettings
+        {
+            Converters = new List<JsonConverter> { new MoneyJsonConverter(), new ScriptJsonConverter() }
+        };
+
+        public override ICollection<PaymentDetails> Parse(object value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var res = JsonConvert.DeserializeObject<ICollection<PaymentDetails>>((string)value, Converters);
+
+            return res;
+        }
+
+        public override void SetValue(IDbDataParameter parameter, ICollection<PaymentDetails> value)
+        {
+            string values = string.Empty;
+
+            if (value != null)
+            {
+                values = JsonConvert.SerializeObject(value, Converters);
+            }
+
+            parameter.Value = values;
         }
     }
 }

@@ -9,7 +9,7 @@ jobs:
 
   publishPreReleasePackages:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
@@ -18,7 +18,7 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     # TEMPORARY DISABLED - Do we want to continue with this?
 

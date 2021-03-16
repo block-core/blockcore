@@ -34,7 +34,9 @@ namespace Blockcore.Features.NodeHost
                 body = string.Join(Environment.NewLine, arguments.Values);
             }
 
-            this.logger.LogDebug($"Received {request.Method} {request.GetDisplayUrl()}. Body: '{body}'");
+            // Disable this logging until we can configure out how to configure it.
+            // this.logger.LogDebug($"Received {request.Method} {request.GetDisplayUrl()}. Body: '{body}'");
+
             await next();
         }
     }

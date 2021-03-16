@@ -3,14 +3,14 @@
 
 ### What is POS vs POW
 
-[TBD]
+Proof Of Stake is an alternative way to achieve consensus to Proof Of Work, the difference with POS is that block producers use ownership of coins as the right to produce blocks and validating nodes can verify such claims by validating cryptographic signatures and the chain history.
+A good comparison is that POW uses CPU cycles to proof sufficent work was produced while POS uses unit of account to proof enough stake was allocated.
 
-
-### Definitions
+### Definitions and explanations:
 
 #### StakeMinConfirmations
 
-The minimum confirmations required for a coin to be good enough to participate in staking
+The minimum confirmations required for a coin to be good enough to participate in staking.  
 Must be equal or greater then MaxReorg this is to discourage attackers to stake in isolation and then force a reorg.
 
 #### MaxReorg
@@ -27,7 +27,7 @@ The number of confirmations a newly found coinstake needs to be buried under bef
 
 #### Proven Headers
  
-Those are headers that curry all the information that is needed to validate a coinstake.
+Those are headers that carry all the information that is needed to validate a coinstake.
 Proven headers are used as a headers first approach where the node will first download the headers of blocks and only if the header is valid will the node fetch the entire block for full validation.
 
 The full Proven Headers specification can be found here
@@ -49,11 +49,11 @@ The expected block time in seconds, or how often do we expect the network to pro
 #### Future Drift
 
 Future drift is maximal allowed block's timestamp difference over adjusted time.
-We set the future drift to a fixed value of 15 seconds (the time it takes a block to propagate around the world is roughly 12 seconds)
+We set the future drift to be a fixed value of 15 seconds (the time it takes a block to propagate around the world is roughly 12 seconds)
 
 #### Mask
 
-A mask for coinstake header's timestamp. Used to decrease granularity of timestamp
+A mask for the coinstake header's timestamp. Used to decrease granularity of timestamp
 This corresponds to the number of blocks that can be produced in a given time span.
 
 For example if the Mask = 16 and the TargetSpacing = 64 then a valid coinstake timestamp can be found only 4 times within the target spacing.
@@ -66,7 +66,7 @@ It's used to introduce an element of randomness to the Kernal calculations, in o
 
 ### How it works on blockcore
 
-#### the parameters that are used for hashing a valid kernel
+#### Hashing a valid kernel
 
 How is a valid coinstake found? This is the heart of the processes.
 
@@ -77,37 +77,35 @@ Then each output will be hashed with the following parameters:
 - Previous StakeModifier - the stake modifier is a chain of coinstake hashes 
 - Output hash - the hash of the output of the coins that are being spent to find the kernel 
 - Old Output N - the position of the output of the coins that are being spent to find the kernel 
-- New coinstake current time - (the timestamp of the new output that will be created, this must fits the MASK rule)
+- New coinstake current time - (the timestamp of the new output that will be created, this must fit the MASK rule)
 
-This is called the Kernel.
+The output hash of the above is called the Kernel.
 
 The Target:
-The target is the number that a kernel hash needs to be bellow in order to be considered valid.
-In order to give a better chance to bigger outputs (a UTXO with more coins) The target is pushed up by a factor of haw many coins a UTXO has,
-This is called the weighted target it means the target of the UTXO is higher the more coins it has, as a result statistically it will find a solution faster.
+The target is the number of which a kernel hash needs to be bellow in order to be considered valid.
+In order to give a better chance to bigger outputs (a UTXO with more coins) The target is pushed up by a factor to the number of coins a UTXO has,
+This is called the weighted target, it means the target of the UTXO is higher the more coins it has, as a result statistically it will find a solution faster.
 
 If the resulting kernel hash of the above calculations is below the weighted target then the coinstake is valid and can be used to create a block.
 
 #### The importance of syncing time correctly (future drift)
 
 Each node has a consensus rule of a fixed interval of 15 seconds that will enforce how far in the future it will accept blocks,
-blocks with a time stamp that is 15 seconds further then our nodes current datetime will be rejected.
+blocks with a time stamp that is 15 seconds further then local nodes current datetime will be rejected.
 
-But such rejected blocks will not be considered invalid, in case our node was just had the wrong time in comparison to the network, 
-and the network accepts such a block our node would fork away form the network consensus.
+But such rejected blocks will not be considered invalid, in case our local node just had the wrong time in comparison to the network, 
+and the network accepts such a block our local node would fork away form the network consensus.
 
 This means it is crucial that nodes on the network that participate in full consensus rules validation will be on the same UTC datetime.
 To achieve that we use the computers local current time, and double check that against all connected peers datetime 
-(when a peer first connects it will advertise its current UTC datetime) giving the datetime samples for outbound nodes 3x [check that is actually 3x] more weight in the measurements 
-(this is in order to prevent a certain attack on a node where an attacker can initiate many inbound connections and effect our nodes avg time).
-If the local time and peers avg time do not match the node will print out a warning message and default to peers time [need to double check the default].
-
+(when a peer first connects it will advertise its current UTC datetime) giving the datetime samples for outbound nodes 3x more weight in the measurements 
+(this is in order to prevent a certain attack on a node where an attacker can initiate many inbound connections and effect our local nodes avg time).
+If the local time and peers avg time do not match the node will print out a warning message and default to peers time.
 
 #### Block Signatures (why sign a block with the private key owning the UTXO)
 
 The coinstake that found a valid kernel and thus was selected to create a block is used to proof ownership of the UTXO by providing the signature that spends the outputs
-However such an output has no cryptographic strong link to the block itself, meaning an attacker can take the valid coinstake utxo and put it in another block the attacker created 
-and propagate that to the network, the attacker could then censor transactions at will.
+However such an output has no cryptographic strong link to the block itself, meaning an attacker can take the valid coinstake utxo and put it in another block which the attacker created and propagate that to the network, the attacker could then censor transactions at will.
 
 By signing the block with the same key that owns the UTXO peers can validate the block was created by the owner of the coinstake.
 The block signature is attached at the end of the serialized block and is not part of the header hash.
@@ -133,7 +131,7 @@ when checking the kernel validity a few parameters are hashed together to create
 previously the timestamp of the utxo that is being spent was also included in that hash 
 however it provides no additional randomness because the previous outpoint is used as well and that is already unique
 
-#### Coldstaking (multisig staking using P2WSH) 
+#### Coldstaking (multisig staking) 
 
 Coldstaking is a mechanism that eliminates the need to keep the coins in a hot wallet.
 When setting up coldstaking a user generates two wallets (two different private keys) one key can only be used for staking (creating other coinstakes) and the other key is used for spending the coins. 

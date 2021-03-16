@@ -143,14 +143,43 @@ https://github.com/block-core/blockcore/blob/master/Documentation/Features/ColdS
 
 ## Weaknesses
 
-#### NAS
+#### NAS (nothing at stake)
+
+Nothing-at-stake is a theoretical security issue in proof-of-stake consensus systems in which validators have a financial incentive to mine on every fork of the blockchain that takes place, which is disruptive to consensus and potentially makes the system more vulnerable to attacks
+
+https://golden.com/wiki/Nothing-at-stake_problem
+https://medium.com/coinmonks/understanding-proof-of-stake-the-nothing-at-stake-theory-1f0d71bc027
 
 #### Stake Grinding
+ 
+Stake grinding is a class of attack where a validator performs some computation or takes some other step to try to bias the randomness in their own favor
 
+In a stake grinding attack, the attacker has a small amount of stake and goes through the history of the blockchain and finds places where their stake wins a block. In order to consecutively win, they modify the next block header until some stake they own wins once again.
+ 
+https://dyor-crypto.fandom.com/wiki/Grinding_Attack
+ 
 #### IBD
 
-#### bribing
+Proof of stake networks are more vulnerable during Initial Block Download (IBD), during initial sync a local node will try to find peers to sync the consensus history, however if a fake chain is presented (a fake chain is any chain that is not the longest chain with the most stake) a local node cannot rewind away from the fake chain if it's fork is beyond the maxreorg parameter and will result in our local node being stuck on a shorter chain.  
+
+To address that the local node uses chackpoints, and to mitigate that attack during IBD a node will only accept outgoing connections
+
+#### How decentralized is POS
 
 
+### References
 
-- How decentralized is POS
+#### Older whitepapers  
+POS whitepaper - /pos-whitepapers/pos.pdf  
+POSv2 whitepaper - /pos-whitepapers/posv2.pdf  
+POSv3 whitepaper - /pos-whitepapers/posv3.pdf  
+
+#### Additional references  
+https://en.bitcoin.it/wiki/Proof_of_Stake  
+Bitcointalk discussion on the issues of POS https://bitcointalk.org/index.php?topic=1382241.0  
+https://github.com/libbitcoin/libbitcoin-system/wiki/Proof-of-Stake-Fallacy  
+http://earlz.net/view/2017/07/27/1904/the-missing-explanation-of-proof-of-stake-version
+https://www.reddit.com/r/Bitcoin/comments/1oi7su/criticisms_of_proofofstake/
+https://blog.ethereum.org/2014/07/05/stake/
+https://eprint.iacr.org/2018/248.pdf
+

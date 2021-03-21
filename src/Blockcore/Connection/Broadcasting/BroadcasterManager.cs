@@ -60,17 +60,19 @@ namespace Blockcore.Connection.Broadcasting
                 this.Broadcasts.Add(trxHash, broadcastEntry);
                 changed = true;
             }
-
-            if (broadcastEntry.TransactionBroadcastState != transactionBroadcastState)
+            else
             {
-                broadcastEntry.TransactionBroadcastState = transactionBroadcastState;
-                changed = true;
-            }
+                if (broadcastEntry.TransactionBroadcastState != transactionBroadcastState)
+                {
+                    broadcastEntry.TransactionBroadcastState = transactionBroadcastState;
+                    changed = true;
+                }
 
-            if (broadcastEntry.ErrorMessage != errorMessage)
-            {
-                broadcastEntry.ErrorMessage = errorMessage;
-                changed = true;
+                if (broadcastEntry.ErrorMessage != errorMessage)
+                {
+                    broadcastEntry.ErrorMessage = errorMessage;
+                    changed = true;
+                }
             }
 
             if (changed)

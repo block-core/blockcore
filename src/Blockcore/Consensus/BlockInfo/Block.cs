@@ -93,33 +93,31 @@ namespace Blockcore.Consensus.BlockInfo
             if (this.Transactions.Count == 0)
                 return this;
 
-            // If the peer does not support witness, then strip it off.
-            if (options == TransactionOptions.None && this.Transactions[0].HasWitness)
-            {
-                Block instance = consensusFactory.CreateBlock();
-                using (var ms = new MemoryStream())
-                {
-                    var bms = new BitcoinStream(ms, true, consensusFactory)
-                    {
-                        TransactionOptions = options,
-                    };
-
-                    this.ReadWrite(bms);
-                    ms.Position = 0;
-                    bms = new BitcoinStream(ms, false, consensusFactory)
-                    {
-                        TransactionOptions = options,
-                    };
-
-                    instance.ReadWrite(bms);
-                }
-
-                return instance;
-            }
-            else
-            {
+            if ((options == TransactionOptions.Witness))
                 return this;
+
+            if ((options == TransactionOptions.None) && !this.Transactions[0].HasWitness)
+                return this;
+
+            Block instance = consensusFactory.CreateBlock();
+            using (var ms = new MemoryStream())
+            {
+                var bms = new BitcoinStream(ms, true, consensusFactory)
+                {
+                    TransactionOptions = options,
+                };
+
+                this.ReadWrite(bms);
+                ms.Position = 0;
+                bms = new BitcoinStream(ms, false, consensusFactory)
+                {
+                    TransactionOptions = options,
+                };
+
+                instance.ReadWrite(bms);
             }
+
+            return instance;
         }
 
         public void UpdateMerkleRoot()

@@ -19,6 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Cloo.clSharp" Version="1.0.1" />
   </ItemGroup>
 

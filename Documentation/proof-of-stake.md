@@ -17,17 +17,17 @@ Must be equal or greater then MaxReorg this is to discourage attackers to stake 
 Long reorganization protection or the maximal length of reorganization that the node is willing to accept.
 The reason to prevent long reorganization is to prevent "history attack" or in other words old spent coins can't be reused to create a longer chain in isolation and cause big reorgs.
 
-Honest nodes will not switch to a chain that forked earlier then maxreorg, and because StakeMinConfirmations will not allow to reuse coins before maxreorg then staking in isolation cannot cause long reorganisations.
+Honest nodes will not switch to a chain that forked earlier then maxreorg, and because StakeMinConfirmations will not allow to reuse coins before MaxReorg then staking in isolation cannot cause long reorganisations.
 
 #### Coin maturity
 
 The number of confirmations a newly found coinstake needs to be buried under before it can be spent.
-(Not to be confused with StakeMinConfirmations whic is for staking)
+(Not to be confused with StakeMinConfirmations which is for staking)
 
 #### Proven Headers
  
-Those are headers that carry all the information that is needed to validate a coinstake.
-Proven headers are used as a headers first approach where the node will first download the headers of blocks and only if the header is valid will the node fetch the entire block for full validation.
+Those are headers that contain all the information that is needed to validate a coinstake.
+Proven headers are used as a `headers first` approach where the node will first download the headers of blocks and only if the header is valid will the node fetch the entire block for full validation.
 
 The full Proven Headers specification can be found here
 https://github.com/block-core/blockcore/blob/master/Documentation/Features/ProvenHeaders.md
@@ -52,7 +52,7 @@ We set the future drift to be a fixed value of 15 seconds (the time it takes a b
 
 #### Mask
 
-A mask for the coinstake header's timestamp. Used to decrease granularity of timestamp
+A mask for the coinstake header's timestamp. Used to decrease granularity of timestamp.  
 This corresponds to the number of blocks that can be produced in a given time span.
 
 For example if the Mask = 16 and the TargetSpacing = 64 then a valid coinstake timestamp can be found only 4 times within the target spacing.
@@ -75,7 +75,7 @@ Then each output will be hashed with the following parameters:
 
 - Previous StakeModifier - the stake modifier is a chain of coinstake hashes 
 - Output hash - the hash of the output of the coins that are being spent to find the kernel 
-- Old Output N - the position of the output of the coins that are being spent to find the kernel 
+- Output N - the position of the output of the coins that are being spent to find the kernel 
 - New coinstake current time - (the timestamp of the new output that will be created, this must fit the MASK rule)
 
 The output hash of the above is called the Kernel.
@@ -103,7 +103,7 @@ If the local time and peers avg time do not match the node will print out a warn
 
 #### Block Signatures (why sign a block with the private key owning the UTXO)
 
-The coinstake that found a valid kernel and thus was selected to create a block is used to proof ownership of the UTXO by providing the signature that spends the outputs
+The coinstake that found a valid kernel and thus was selected to create a block is used to proof ownership of the UTXO by providing the signature that spends the outputs.  
 However such an output has no cryptographic strong link to the block itself, meaning an attacker can take the valid coinstake utxo and put it in another block which the attacker created and propagate that to the network, the attacker could then censor transactions at will.
 
 By signing the block with the same key that owns the UTXO peers can validate the block was created by the owner of the coinstake.
@@ -121,7 +121,7 @@ Two changes where made in POSv4.
 
 - The removal of the time stamp from the transaction serialization:
 this makes POS transactions serialize the same as Bitcoin transactions, 
-the benefit of that is easier to use various blockchain tools that made for Bitcoin.
+the benefit of that is easier to use various blockchain tools that are made for Bitcoin.
 That time stamp was used in the kernel hash however the kernel hash was anyway defaulting to the header timestamp 
 so there was no need to serialize the time stamp also in each transaction.
 

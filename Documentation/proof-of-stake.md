@@ -1,5 +1,4 @@
-## Specification of the blockcore Proof Of Stake ##
-
+## Specification of the Blockcore Proof Of Stake ##
 
 ### What is POS vs POW
 
@@ -64,7 +63,7 @@ Staking nodes will try to find a valid coinstake kernal every time the Mask is e
 The stake modifier is a chain of coinstake hashes all the way from the first POS block.
 It's used to introduce an element of randomness to the Kernal calculations, in order to scramble computation to make it very difficult to precompute future proof-of-stake
 
-### How it works on blockcore
+### How it works on Blockcore
 
 #### Hashing a valid kernel
 
@@ -147,6 +146,10 @@ https://github.com/block-core/blockcore/blob/master/Documentation/Features/ColdS
 
 Nothing-at-stake is a theoretical security issue in proof-of-stake consensus systems in which validators have a financial incentive to mine on every fork of the blockchain that takes place, which is disruptive to consensus and potentially makes the system more vulnerable to attacks
 
+Assuming the majority of stakers are honest an attacker which exercises NAS can make it very hard for honest nodes to know what is the chain with the total honest staking power (even if the attacker stakes on forks with less total stake this can confuse nodes in IBD) 
+
+However this attack is not obvious to execute as an attacker would have to be economically invested in the chain in order to execute the attack and will be risking the value of their own coins.
+
 https://golden.com/wiki/Nothing-at-stake_problem
 https://medium.com/coinmonks/understanding-proof-of-stake-the-nothing-at-stake-theory-1f0d71bc027
 
@@ -158,28 +161,37 @@ In a stake grinding attack, the attacker has a small amount of stake and goes th
  
 https://dyor-crypto.fandom.com/wiki/Grinding_Attack
  
-#### IBD
+Blockcore is not known to be vulnerable to stake grinding
+ 
+#### The IBD problem
 
 Proof of stake networks are more vulnerable during Initial Block Download (IBD), during initial sync a local node will try to find peers to sync the consensus history, however if a fake chain is presented (a fake chain is any chain that is not the longest chain with the most stake) a local node cannot rewind away from the fake chain if it's fork is beyond the maxreorg parameter and will result in our local node being stuck on a shorter chain.  
 
-To address that the local node uses chackpoints, and to mitigate that attack during IBD a node will only accept outgoing connections
+To address that the local node uses checkpoints (regularly hard coding in to the software the correct chain), and to mitigate that attack during IBD a node will only accept outgoing connections.  
 
 #### How decentralized is POS
 
+POS is considered less decentralized then POW because: 
+- Complexity: the POS protocol is more complex, more unknown attacks may be found 
+- The IBD problem: means in some cases users needs to use some external trust in order to find the best chain.
+- In case of a 51% attack: user intervention is needed like checkpoints in order to recover.
+- IBD: the reliance on checkpoints for IBD.
+- Time sync: the requirement that all the nodes have the correct global time.
 
 ### References
 
 #### Older whitepapers  
-POS whitepaper - /pos-whitepapers/pos.pdf  
-POSv2 whitepaper - /pos-whitepapers/posv2.pdf  
-POSv3 whitepaper - /pos-whitepapers/posv3.pdf  
+POS whitepaper - [pos.pdf](/Documentation/pos-whitepapers/pos.pdf)  
+POSv2 whitepaper - [posv2.pdf](/Documentation/pos-whitepapers/posv2.pdf)  
+POSv3 whitepaper - [posv3.pdf](/Documentation/pos-whitepapers/posv3.pdf)  
 
 #### Additional references  
 https://en.bitcoin.it/wiki/Proof_of_Stake  
 Bitcointalk discussion on the issues of POS https://bitcointalk.org/index.php?topic=1382241.0  
 https://github.com/libbitcoin/libbitcoin-system/wiki/Proof-of-Stake-Fallacy  
-http://earlz.net/view/2017/07/27/1904/the-missing-explanation-of-proof-of-stake-version
-https://www.reddit.com/r/Bitcoin/comments/1oi7su/criticisms_of_proofofstake/
-https://blog.ethereum.org/2014/07/05/stake/
-https://eprint.iacr.org/2018/248.pdf
+http://earlz.net/view/2017/07/27/1904/the-missing-explanation-of-proof-of-stake-version  
+https://www.reddit.com/r/Bitcoin/comments/1oi7su/criticisms_of_proofofstake/  
+https://blog.ethereum.org/2014/07/05/stake/  
+https://eprint.iacr.org/2018/248.pdf  
+http://tselab.stanford.edu/downloads/PoS_LC_SBC2020.pdf  
 

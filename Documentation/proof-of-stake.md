@@ -146,7 +146,7 @@ https://github.com/block-core/blockcore/blob/master/Documentation/Features/ColdS
 
 Nothing-at-stake is a theoretical security issue in proof-of-stake consensus systems in which validators have a financial incentive to mine on every fork of the blockchain that takes place, which is disruptive to consensus and potentially makes the system more vulnerable to attacks
 
-Assuming the majority of stakers are honest an attacker which exercises NAS can make it very hard for honest nodes to know what is the chain with the total honest staking power (even if the attacker stakes on forks with less total stake this can confuse nodes in IBD) 
+Assuming the majority of staking power (coins at stake) are honest an attacker which exercises NAS can make it very hard for honest nodes to know what is the chain with the total honest staking power (even if the attacker stakes on forks with less total stake this can confuse nodes in IBD) 
 
 However this attack is not obvious to execute as an attacker would have to be economically invested in the chain in order to execute the attack and will be risking the value of their own coins.
 
@@ -169,14 +169,14 @@ Proof of stake networks are more vulnerable during Initial Block Download (IBD),
 
 To address that the local node uses checkpoints (regularly hard coding in to the software the correct chain), and to mitigate that attack during IBD a node will only accept outgoing connections.  
 
-#### How decentralized is POS
+#### Knowen issues of POS
 
 POS is considered less decentralized then POW because: 
 - Complexity: the POS protocol is more complex, more unknown attacks may be found 
 - The IBD problem: means in some cases users needs to use some external trust in order to find the best chain.
 - In case of a 51% attack: user intervention is needed like checkpoints in order to recover.
 - IBD: the reliance on checkpoints for IBD.
-- Time sync: the requirement that all the nodes have the correct global time.
+- Time sync: the requirement that a majority of nodes have the correct global time.
 
 ### References
 

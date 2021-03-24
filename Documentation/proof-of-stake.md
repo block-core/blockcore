@@ -167,7 +167,7 @@ Proof of stake networks are more vulnerable during Initial Block Download (IBD),
 
 To address that the local node uses checkpoints (regularly hard coding in to the software the correct chain), and to mitigate that attack during IBD a node will only accept outgoing connections.  
 
-#### Knowen issues of POS
+#### Known issues of POS
 
 POS is considered less decentralized than POW because: 
 - Complexity: the POS protocol is more complex, more unknown attacks may be found 

@@ -1424,14 +1424,18 @@ namespace Blockcore.Features.RPC
             var parameters = new List<object>();
             parameters.Add(address.ToString());
             parameters.Add(amount.ToString());
-            parameters.Add(fee.ToString());
-            parameters.Add(isSegwit.ToString());
-
+            
             if (commentTx != null)
                 parameters.Add(commentTx);
 
             if (commentDest != null)
                 parameters.Add(commentDest);
+
+            if (fee > 0)
+                parameters.Add(fee.ToString());
+
+            if (isSegwit)
+                parameters.Add(isSegwit.ToString());
 
             RPCResponse resp = await SendCommandAsync(RPCOperations.sendtoaddress, parameters.ToArray()).ConfigureAwait(false);
             return uint256.Parse(resp.Result.ToString());

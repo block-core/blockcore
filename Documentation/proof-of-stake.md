@@ -10,14 +10,14 @@ A good comparison is that POW uses CPU cycles to proof sufficent work was produc
 #### StakeMinConfirmations
 
 The minimum confirmations required for a coin to be good enough to participate in staking.  
-Must be equal or greater then MaxReorg this is to discourage attackers to stake in isolation and then force a reorg.
+Must be equal or greater than MaxReorg this is to discourage attackers to stake in isolation and then force a reorg.
 
 #### MaxReorg
 
 Long reorganization protection or the maximal length of reorganization that the node is willing to accept.
 The reason to prevent long reorganization is to prevent "history attack" or in other words old spent coins can't be reused to create a longer chain in isolation and cause big reorgs.
 
-Honest nodes will not switch to a chain that forked earlier then maxreorg, and because StakeMinConfirmations will not allow to reuse coins before MaxReorg then staking in isolation cannot cause long reorganisations.
+Honest nodes will not switch to a chain that forked earlier than MaxReorg, and because StakeMinConfirmations will not allow to reuse coins before MaxReorg then staking in isolation cannot cause long reorganisations.
 
 #### Coin maturity
 
@@ -34,9 +34,9 @@ https://github.com/block-core/blockcore/blob/master/Documentation/Features/Prove
 
 #### Target Difficulty
 
-The difficulty target for the next block, or how hard will it be to find the next valid Kernal to satisfy the target difficulty.
+The difficulty target for the next block, or how hard will it be to find the next valid Kernel to satisfy the target difficulty.
 
-#### Kernal hash
+#### Kernel hash
 
 A random sha256 hash created from a number of parameters corresponding to the coinstake.
 A valid stake kernel hash satisfies the target difficulty.
@@ -56,12 +56,12 @@ A mask for the coinstake header's timestamp. Used to decrease granularity of tim
 This corresponds to the number of blocks that can be produced in a given time span.
 
 For example if the Mask = 16 and the TargetSpacing = 64 then a valid coinstake timestamp can be found only 4 times within the target spacing.
-Staking nodes will try to find a valid coinstake kernal every time the Mask is elapsed (in the example above every 16 seconds but no more then future drift seconds forward)
+Staking nodes will try to find a valid coinstake kernel every time the Mask is elapsed (in the example above every 16 seconds but no more than future drift seconds forward)
 
 #### Stake Modifiers
 
 The stake modifier is a chain of coinstake hashes all the way from the first POS block.
-It's used to introduce an element of randomness to the Kernal calculations, in order to scramble computation to make it very difficult to precompute future proof-of-stake
+It's used to introduce an element of randomness to the Kernel calculations, in order to scramble computation to make it very difficult to precompute future proof-of-stake
 
 ### How it works on Blockcore
 
@@ -69,7 +69,7 @@ It's used to introduce an element of randomness to the Kernal calculations, in o
 
 How is a valid coinstake found? This is the heart of the processes.
 
-The processes of staking will go as following, every time a MASK time elapses the node will iterate over all its stakeable outputs (the outputs that reached maturity and are beyond maxreorg)
+The processes of staking will go as following, every time a MASK time elapses the node will iterate over all its stakeable outputs (the outputs that reached maturity and are beyond MaxReorg)
 
 Then each output will be hashed with the following parameters:
 
@@ -85,12 +85,12 @@ The target is the number of which a kernel hash needs to be bellow in order to b
 In order to give a better chance to bigger outputs (a UTXO with more coins) The target is pushed up by a factor to the number of coins a UTXO has,
 This is called the weighted target, it means the target of the UTXO is higher the more coins it has, as a result statistically it will find a solution faster.
 
-If the resulting kernel hash of the above calculations is below the weighted target then the coinstake is valid and can be used to create a block.
+If the resulting kernel hash of the above calculations is below the weighted target it means the coinstake is valid and can be used to create a block.
 
 #### The importance of syncing time correctly (future drift)
 
 Each node has a consensus rule of a fixed interval of 15 seconds that will enforce how far in the future it will accept blocks,
-blocks with a time stamp that is 15 seconds further then local nodes current datetime will be rejected.
+blocks with a time stamp that is 15 seconds further than local nodes current datetime will be rejected.
 
 But such rejected blocks will not be considered invalid, in case our local node just had the wrong time in comparison to the network, 
 and the network accepts such a block our local node would fork away form the network consensus.
@@ -160,9 +160,7 @@ Stake grinding is a class of attack where a validator performs some computation 
 In a stake grinding attack, the attacker has a small amount of stake and goes through the history of the blockchain and finds places where their stake wins a block. In order to consecutively win, they modify the next block header until some stake they own wins once again.
  
 https://dyor-crypto.fandom.com/wiki/Grinding_Attack
- 
-Blockcore is not known to be vulnerable to stake grinding
- 
+  
 #### The IBD problem
 
 Proof of stake networks are more vulnerable during Initial Block Download (IBD), during initial sync a local node will try to find peers to sync the consensus history, however if a fake chain is presented (a fake chain is any chain that is not the longest chain with the most stake) a local node cannot rewind away from the fake chain if it's fork is beyond the maxreorg parameter and will result in our local node being stuck on a shorter chain.  
@@ -171,7 +169,7 @@ To address that the local node uses checkpoints (regularly hard coding in to the
 
 #### Knowen issues of POS
 
-POS is considered less decentralized then POW because: 
+POS is considered less decentralized than POW because: 
 - Complexity: the POS protocol is more complex, more unknown attacks may be found 
 - The IBD problem: means in some cases users needs to use some external trust in order to find the best chain.
 - In case of a 51% attack: user intervention is needed like checkpoints in order to recover.

@@ -120,19 +120,16 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
         [ActionName("sendtoaddress")]
         [ActionDescription("Sends money to an address. Requires wallet to be unlocked using walletpassphrase.")]
-        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, decimal amount, string commentTx, string commentDest, decimal fee = 0, bool isSegwit = false)
+        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, decimal amount, string commentTx, string commentDest, decimal? fee = null, bool isSegwit = false)
         {
-            if (fee <= 0)
-            {
-                fee = this.FullNode.Network.MinTxFee;
-            }
+            decimal transactionFee = fee ?? this.FullNode.Network.MinTxFee;
 
             TransactionBuildContext context = new TransactionBuildContext(this.FullNode.Network)
             {
                 AccountReference = this.GetWalletAccountReference(),
                 Recipients = new[] { new Recipient { Amount = Money.Coins(amount), ScriptPubKey = address.ScriptPubKey } }.ToList(),
                 CacheSecret = false,
-                TransactionFee = Money.Coins(fee),
+                TransactionFee = Money.Coins(transactionFee),
                 UseSegwitChangeAddress = isSegwit
             };
 

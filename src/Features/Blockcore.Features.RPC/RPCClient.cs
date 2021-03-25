@@ -1403,7 +1403,7 @@ namespace Blockcore.Features.RPC
         /// <param name="commentTx">A locally-stored (not broadcast) comment assigned to this transaction. Default is no comment</param>
         /// <param name="commentDest">A locally-stored (not broadcast) comment assigned to this transaction. Meant to be used for describing who the payment was sent to. Default is no comment</param>
         /// <returns>The TXID of the sent transaction</returns>
-        public uint256 SendToAddress(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null, decimal fee = 0, bool isSegwit = false)
+        public uint256 SendToAddress(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null, decimal? fee = null, bool isSegwit = false)
         {
             uint256 txid = null;
 
@@ -1419,19 +1419,19 @@ namespace Blockcore.Features.RPC
         /// <param name="commentTx">A locally-stored (not broadcast) comment assigned to this transaction. Default is no comment</param>
         /// <param name="commentDest">A locally-stored (not broadcast) comment assigned to this transaction. Meant to be used for describing who the payment was sent to. Default is no comment</param>
         /// <returns>The TXID of the sent transaction</returns>
-        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null, decimal fee = 0, bool isSegwit = false)
+        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null, decimal? fee = null, bool isSegwit = false)
         {
             var parameters = new List<object>();
             parameters.Add(address.ToString());
             parameters.Add(amount.ToString());
-            
+
             if (commentTx != null)
                 parameters.Add(commentTx);
 
             if (commentDest != null)
                 parameters.Add(commentDest);
 
-            if (fee > 0)
+            if (fee != null)
                 parameters.Add(fee.ToString());
 
             if (isSegwit)

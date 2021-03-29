@@ -66,11 +66,11 @@ We set the future drift to be a fixed value of 15 seconds which is close to the 
 A bit mask for the coinstake header's timestamp. Used to decrease granularity of timestamp.  
 This corresponds to the number of blocks that can be produced in a given time span.
 
-**For example** if the bit mask = 16 sec (0x0000000F) then a valid coinstake can only be found when masking the timestamp of a new block is equal to zero which is every 16 seconds (but no more than future drift seconds ahead).
+For example if the bit mask is 15 (0x0000000F) then a valid coinstake's timestamp must be divisible by 16.
 
 #### Stake Modifiers
 
-The stake modifier is a chain of coinstake hashes all the way from the first POS block.
+The stake modifier forms a chain of hashes made from the previous stake modifier and the kernel all the way bacl to the first POS block.
 It's used to introduce an additional input parameter to the Kernel calculations, in order to scramble computation to make it very difficult to precompute future proof-of-stake
 
 ### How it works on Blockcore

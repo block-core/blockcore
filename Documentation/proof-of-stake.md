@@ -1,11 +1,21 @@
-## Specification of the Blockcore Proof Of Stake ##
+## Overview of the Blockcore Proof Of Stake protocol ##
 
 ### What is POS vs POW
 
-Proof Of Stake is an alternative way to achieve consensus to Proof Of Work, the difference with POS is that block producers use ownership of coins as the right to produce blocks and validating nodes can verify such claims by validating cryptographic signatures and the chain history.
-A good comparison is that POW uses CPU cycles to proof sufficent work was produced while POS uses unit of account to proof enough stake was allocated.
+Proof Of Stake is an alternative way to achieve consensus to Proof Of Work, the difference with POS is that block producers use ownership of coins as the right to produce blocks and participating nodes can verify such claims by validating cryptographic signatures and the chain history.
+A good comparison is that POW uses CPU cycles as measurement while POS uses units of coins.
 
 ### Definitions and explanations:
+
+#### Coinbase
+
+A special transaction that is produced by the miners (the producers of POW blocks) and contains information about the block.
+
+#### Coinstake
+
+A special transaction that is produced by the stakers (the producers of POS blocks) and contains the tx input and outputs of coins used to create a block.  
+A coinstake input can be split in to several outputs, this is done in order to reduce the size of a staking output.  
+Splitting a big output to many smaller outputs increases the chance of producing new blocks.  
 
 #### StakeMinConfirmations
 
@@ -38,30 +48,30 @@ The difficulty target for the next block, or how hard will it be to find the nex
 
 #### Kernel hash
 
-A random sha256 hash created from a number of parameters corresponding to the coinstake.
+A sha256 hash created from a number of parameters corresponding to the coinstake.
 A valid stake kernel hash satisfies the target difficulty.
 
 #### Target Spacing
 
-The expected block time in seconds, or how often do we expect the network to produce a block.
+The expected block time in seconds, or how often do we expect the network to produce a block.  
+The target spacing should be multiples of the Mask.  
 
 #### Future Drift
 
 Future drift is maximal allowed block's timestamp difference over adjusted time.
-We set the future drift to be a fixed value of 15 seconds (the time it takes a block to propagate around the world is roughly 12 seconds)
+We set the future drift to be a fixed value of 15 seconds which is close to the Mask value.
 
 #### Mask
 
-A mask for the coinstake header's timestamp. Used to decrease granularity of timestamp.  
+A bit mask for the coinstake header's timestamp. Used to decrease granularity of timestamp.  
 This corresponds to the number of blocks that can be produced in a given time span.
 
-For example if the Mask = 16 and the TargetSpacing = 64 then a valid coinstake timestamp can be found only 4 times within the target spacing.
-Staking nodes will try to find a valid coinstake kernel every time the Mask is elapsed (in the example above every 16 seconds but no more than future drift seconds forward)
+**For example** if the bit mask = 16 sec (0x0000000F) then a valid coinstake can only be found when masking the timestamp of a new block is equal to zero which is every 16 seconds (but no more than future drift seconds ahead).
 
 #### Stake Modifiers
 
 The stake modifier is a chain of coinstake hashes all the way from the first POS block.
-It's used to introduce an element of randomness to the Kernel calculations, in order to scramble computation to make it very difficult to precompute future proof-of-stake
+It's used to introduce an additional input parameter to the Kernel calculations, in order to scramble computation to make it very difficult to precompute future proof-of-stake
 
 ### How it works on Blockcore
 
@@ -69,7 +79,7 @@ It's used to introduce an element of randomness to the Kernel calculations, in o
 
 How is a valid coinstake found? This is the heart of the processes.
 
-The processes of staking will go as following, every time a MASK time elapses the node will iterate over all its stakeable outputs (the outputs that reached maturity and are beyond MaxReorg)
+The processes of staking will go as following, every time the masking of the timestamp is valid the node will iterate over all its stakeable outputs (the outputs that reached maturity and are beyond MaxReorg)
 
 Then each output will be hashed with the following parameters:
 
@@ -81,7 +91,7 @@ Then each output will be hashed with the following parameters:
 The output hash of the above is called the Kernel.
 
 The Target:
-The target is the number of which a kernel hash needs to be bellow in order to be considered valid.
+The target is the number of which a kernel hash needs to be below in order to be considered valid.
 In order to give a better chance to bigger outputs (a UTXO with more coins) The target is pushed up by a factor to the number of coins a UTXO has,
 This is called the weighted target, it means the target of the UTXO is higher the more coins it has, as a result statistically it will find a solution faster.
 
@@ -99,7 +109,7 @@ This means it is crucial that nodes on the network that participate in full cons
 To achieve that we use the computers local current time, and double check that against all connected peers datetime 
 (when a peer first connects it will advertise its current UTC datetime) giving the datetime samples for outbound nodes 3x more weight in the measurements 
 (this is in order to prevent a certain attack on a node where an attacker can initiate many inbound connections and effect our local nodes avg time).
-If the local time and peers avg time do not match the node will print out a warning message and default to peers time.
+If the local time and peers avg time do not match the node will print out a warning message and default to the peers time.
 
 #### Block Signatures (why sign a block with the private key owning the UTXO)
 
@@ -117,7 +127,7 @@ And it is adjusted up if it took longer than the target block time. The adjustme
 
 #### Changes made in POSv4
 
-Two changes where made in POSv4.
+Two changes were made in POSv4.
 
 - The removal of the time stamp from the transaction serialization:
 this makes POS transactions serialize the same as Bitcoin transactions, 
@@ -126,9 +136,9 @@ That time stamp was used in the kernel hash however the kernel hash was anyway d
 so there was no need to serialize the time stamp also in each transaction.
 
 - The removal of the coinstake time from the kernel hash calculations:
-when checking the kernel validity a few parameters are hashed together to create randomness,
+when checking the kernel validity a few parameters are hashed together to find a valid kernel,
 previously the timestamp of the utxo that is being spent was also included in that hash 
-however it provides no additional randomness because the previous outpoint is used as well and that is already unique
+however it provides no additional value because the previous outpoint is used as well and that is already unique
 
 #### Coldstaking (multisig staking) 
 
@@ -155,7 +165,7 @@ https://medium.com/coinmonks/understanding-proof-of-stake-the-nothing-at-stake-t
 
 #### Stake Grinding
  
-Stake grinding is a class of attack where a validator performs some computation or takes some other step to try to bias the randomness in their own favor
+Stake grinding is a class of attack where a validator performs some computation or takes some other step to try to bias the randomness in their own favour.  
 
 In a stake grinding attack, the attacker has a small amount of stake and goes through the history of the blockchain and finds places where their stake wins a block. In order to consecutively win, they modify the next block header until some stake they own wins once again.
  
@@ -163,7 +173,7 @@ https://dyor-crypto.fandom.com/wiki/Grinding_Attack
   
 #### The IBD problem
 
-Proof of stake networks are more vulnerable during Initial Block Download (IBD), during initial sync a local node will try to find peers to sync the consensus history, however if a fake chain is presented (a fake chain is any chain that is not the longest chain with the most stake) a local node cannot rewind away from the fake chain if it's fork is beyond the maxreorg parameter and will result in our local node being stuck on a shorter chain.  
+Proof of stake networks are more vulnerable during Initial Block Download (IBD), during initial sync a local node will try to find peers to sync the consensus history, however if a fake chain is presented (a fake chain is any chain that is not the chain accepted by the majority of stakers) a local node cannot rewind away from the fake chain if it's fork is beyond the maxreorg parameter and will result in our local node being stuck on the "wrong" chain.  
 
 To address that the local node uses checkpoints (regularly hard coding in to the software the correct chain), and to mitigate that attack during IBD a node will only accept outgoing connections.  
 

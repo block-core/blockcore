@@ -147,6 +147,14 @@
     "HOME (MAIN/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=HOME -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "SERF (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=SERF -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "SERF (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=SERF -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
     }
   }
 }

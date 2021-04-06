@@ -11,6 +11,7 @@ using Blockcore.Networks.SERF.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
+using Blockcore.Networks.SERF.Deployments;
 
 namespace Blockcore.Networks.SERF
 {
@@ -67,6 +68,12 @@ namespace Blockcore.Networks.SERF
             [BuriedDeployments.BIP66] = 0
          };
 
+        var bip9Deployments = new SERFBIP9Deployments()
+        {
+            [SERFBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+            [SERFBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+            [SERFBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+        };
             this.Consensus = new Blockcore.Consensus.Consensus(
              consensusFactory: consensusFactory,
              consensusOptions: consensusOptions,
@@ -77,7 +84,7 @@ namespace Blockcore.Networks.SERF
              majorityRejectBlockOutdated: 950,
              majorityWindow: 1000,
              buriedDeployments: buriedDeployments,
-             bip9Deployments: new NoBIP9Deployments(),
+             bip9Deployments: bip9Deployments,
              bip34Hash: null,
              minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
              maxReorgLength: 500,

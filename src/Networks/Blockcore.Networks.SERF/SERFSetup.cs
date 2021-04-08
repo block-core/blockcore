@@ -20,7 +20,7 @@ namespace Blockcore.Networks.SERF
          PremineReward = 1000000,
          PoWBlockReward = 10,
          PoSBlockReward = 8,
-         LastPowBlock = 100,
+         LastPowBlock = 200,
          GenesisText = "15-06-1215 - JOHN, by the grace of God King of England", // The New York Times, 2020-04-16
          TargetSpacing = TimeSpan.FromSeconds(120),
          ProofOfStakeTimestampMask = 0x0000000F, // 0x0000003F // 64 sec

@@ -49,7 +49,10 @@ namespace Blockcore.Networks.SERF
          Nodes = new[] { "45.76.123.202", "45.32.246.83", "78.141.230.15" },
          Checkpoints = new Dictionary<int, CheckpointInfo>
          {
-            // TODO: Add checkpoints as the network progresses.
+            { 0, new CheckpointInfo(new uint256("0x000000aa4f0a6d11fe3fa3486ce79440fc3884292a33352571bbd56c691805fa"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) },
+            { 2, new CheckpointInfo(new uint256("0x74535a5b45531321c34a0fd88e6eb824f1a2bbc99b14c742de173ea934ab5eeb"), new uint256("89d946daf1138a0e309f9ecdc2b642dccba94f8d164dcba563cd7ba4339ad487")) },
+            { 50, new CheckpointInfo(new uint256("0x21315c0358823e1886c2d29fb4159679deea028b553b8c88cc998b25eb1ba69c"), new uint256("81e9b9020dd6a7d4215a82047368554008bb39a0b78bb311a0b39092163d54cb")) },
+            { 100, new CheckpointInfo(new uint256("0x8e95d680c5acfe869fab695f570435bdf98ca7cf637e214b79da9385d776ec38"), new uint256("009101413058edc4363dcfadc556470d53d3060df68fb4f4f59e2266237e6ae1")) },
          }
       };
 

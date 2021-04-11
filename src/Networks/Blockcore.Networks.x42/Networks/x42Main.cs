@@ -171,8 +171,16 @@ namespace Blockcore.Networks.x42.Networks
 
             this.XServerSeedNodes = new List<NetworkXServer>
             {
-                new NetworkXServer("52.57.67.15", 4242),
-                new NetworkXServer("23.21.158.91", 4242)
+                new NetworkXServer("149.248.39.61", 4242),
+                new NetworkXServer("aliens.asuscomm.com", 4242),
+                new NetworkXServer("161.97.174.242", 4242),
+                new NetworkXServer("100.20.125.209", 4242),
+                new NetworkXServer("54.79.155.69", 4242),
+                new NetworkXServer("3.36.142.13", 4242),
+                new NetworkXServer("3.65.159.17", 4242),
+                new NetworkXServer("3.210.168.170", 4242),
+                new NetworkXServer("52.209.245.102", 4242),
+                new NetworkXServer("35.81.38.211", 4242),
             };
 
             this.StandardScriptsRegistry = new x42StandardScriptsRegistry();

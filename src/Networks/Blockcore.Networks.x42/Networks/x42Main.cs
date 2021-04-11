@@ -181,6 +181,7 @@ namespace Blockcore.Networks.x42.Networks
                 new NetworkXServer("3.210.168.170", 4242),
                 new NetworkXServer("52.209.245.102", 4242),
                 new NetworkXServer("35.81.38.211", 4242),
+                new NetworkXServer("209.145.54.46", 4242),
             };
 
             this.StandardScriptsRegistry = new x42StandardScriptsRegistry();

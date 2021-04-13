@@ -458,7 +458,7 @@ namespace Blockcore.IntegrationTests.API
             commands.Should().Contain(x => x.Command == "walletpassphrase <passphrase> <timeout>");
             commands.Should().Contain(x => x.Command == "walletlock");
             commands.Should().Contain(x => x.Command == "getwalletinfo");
-            commands.Should().Contain(x => x.Command == "sendtoaddress <address> <amount> <commenttx> <commentdest>");
+            commands.Should().Contain(x => x.Command == "sendtoaddress <address> <amount> <commenttx> <commentdest> [<fee>] [<issegwit>]");
             commands.Should().Contain(x => x.Command == "sendrawtransaction <hex>");
             commands.Should().Contain(x => x.Command == "getnewaddress [<account>] [<addresstype>]");
             commands.Should().Contain(x => x.Command == "getunusedaddress <account> <addresstype>");

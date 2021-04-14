@@ -102,6 +102,9 @@ namespace Blockcore.Features.Wallet.Api.Models
         [JsonProperty(PropertyName = "amount")]
         [JsonConverter(typeof(MoneyJsonConverter))]
         public Money Amount { get; set; }
+
+        [JsonProperty(PropertyName = "payToSelf")]
+        public bool? PayToSelf { get; set; }
     }
 
     public enum TransactionItemType

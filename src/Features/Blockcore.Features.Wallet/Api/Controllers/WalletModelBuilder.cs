@@ -259,7 +259,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                                 sentItem.Payments.Add(new PaymentDetailModel
                                 {
                                     DestinationAddress = payment.DestinationAddress,
-                                    Amount = payment.Amount
+                                    Amount = payment.Amount,
+                                    PayToSelf = payment.PayToSelf
                                 });
 
                                 sentItem.Amount += payment.Amount;

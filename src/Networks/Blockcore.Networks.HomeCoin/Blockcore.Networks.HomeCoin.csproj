@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Authors>Blockcore</Authors>
+    <AssemblyTitle>Blockcore.Networks.HomeCoin</AssemblyTitle>
+    <AssemblyName>Blockcore.Networks.HomeCoin</AssemblyName>
+    <PackageId>Blockcore.Networks.HomeCoin</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Description>Home Crypto Coin</Description>
+    <PackageProjectUrl>https://homecoin.ru</PackageProjectUrl>
+    <RepositoryUrl>git://github.com/homecoin-ru/blockcore</RepositoryUrl>
+    <PackageTags>blockchain;cryptocurrency;crypto;C#;.NET;bitcoin;blockcore,homecoin</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

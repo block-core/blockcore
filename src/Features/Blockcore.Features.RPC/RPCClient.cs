@@ -161,7 +161,7 @@ namespace Blockcore.Features.RPC
         wallet             move
         wallet             sendfrom
         wallet             sendmany
-        wallet             sendtoaddress
+        wallet             sendtoaddress                Yes
         wallet             setaccount
         wallet             settxfee
         wallet             signmessage
@@ -382,7 +382,7 @@ namespace Blockcore.Features.RPC
             catch (NotImplementedException)
             {
             }
-  
+
             if (address == null)
             {
                 setResult(false);
@@ -1403,11 +1403,11 @@ namespace Blockcore.Features.RPC
         /// <param name="commentTx">A locally-stored (not broadcast) comment assigned to this transaction. Default is no comment</param>
         /// <param name="commentDest">A locally-stored (not broadcast) comment assigned to this transaction. Meant to be used for describing who the payment was sent to. Default is no comment</param>
         /// <returns>The TXID of the sent transaction</returns>
-        public uint256 SendToAddress(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null)
+        public uint256 SendToAddress(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null, decimal? fee = null, bool isSegwit = false)
         {
             uint256 txid = null;
 
-            txid = SendToAddressAsync(address, amount, commentTx, commentDest).GetAwaiter().GetResult();
+            txid = SendToAddressAsync(address, amount, commentTx, commentDest, fee, isSegwit).GetAwaiter().GetResult();
             return txid;
         }
 
@@ -1419,7 +1419,7 @@ namespace Blockcore.Features.RPC
         /// <param name="commentTx">A locally-stored (not broadcast) comment assigned to this transaction. Default is no comment</param>
         /// <param name="commentDest">A locally-stored (not broadcast) comment assigned to this transaction. Meant to be used for describing who the payment was sent to. Default is no comment</param>
         /// <returns>The TXID of the sent transaction</returns>
-        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null)
+        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, Money amount, string commentTx = null, string commentDest = null, decimal? fee = null, bool isSegwit = false)
         {
             var parameters = new List<object>();
             parameters.Add(address.ToString());
@@ -1430,6 +1430,12 @@ namespace Blockcore.Features.RPC
 
             if (commentDest != null)
                 parameters.Add(commentDest);
+
+            if (fee != null)
+                parameters.Add(fee.ToString());
+
+            if (isSegwit)
+                parameters.Add(isSegwit.ToString());
 
             RPCResponse resp = await SendCommandAsync(RPCOperations.sendtoaddress, parameters.ToArray()).ConfigureAwait(false);
             return uint256.Parse(resp.Result.ToString());

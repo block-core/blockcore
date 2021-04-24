@@ -134,7 +134,7 @@ namespace Blockcore.IntegrationTests.RPC
                 var alice = new Key().GetBitcoinSecret(network);
                 var aliceAddress = alice.GetAddress();
                 rpcClient.WalletPassphrase("password", 60);
-                var txid = rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m));
+                var txid = rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m), "CommentTX", "CommentDest", 0.01m, false);
                 rpcClient.SendCommand(RPCOperations.walletlock);
 
                 // Check the hash calculated correctly.
@@ -159,19 +159,19 @@ namespace Blockcore.IntegrationTests.RPC
                 RPCClient rpcClient = node.CreateRPCClient();
 
                 // Not unlocked case.
-                Action action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m));
+                Action action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m), "CommentTX", "CommentDest", 0.01m, false);
                 action.Should().Throw<RPCException>().Which.RPCCode.Should().Be(RPCErrorCode.RPC_WALLET_UNLOCK_NEEDED);
 
                 // Unlock and lock case.
                 rpcClient.WalletPassphrase("password", 60);
                 rpcClient.SendCommand(RPCOperations.walletlock);
-                action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m));
+                action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m), "CommentTX", "CommentDest", 0.01m, false);
                 action.Should().Throw<RPCException>().Which.RPCCode.Should().Be(RPCErrorCode.RPC_WALLET_UNLOCK_NEEDED);
 
                 // Unlock timesout case.
                 rpcClient.WalletPassphrase("password", 5);
                 Thread.Sleep(10 * 1000); // 10 seconds.
-                action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m));
+                action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m), "CommentTX", "CommentDest", 0.01m, false);
                 action.Should().Throw<RPCException>().Which.RPCCode.Should().Be(RPCErrorCode.RPC_WALLET_UNLOCK_NEEDED);
             }
         }
@@ -294,17 +294,17 @@ namespace Blockcore.IntegrationTests.RPC
                 rpcClient.WalletPassphrase("password", 20);
 
                 // Send a transaction.
-                rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m)).Should().NotBeNull();
+                rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m), "CommentTX", "CommentDest", 0.01m, false).Should().NotBeNull();
 
                 // Wait 10 seconds and then send another transaction, should still be unlocked.
                 Thread.Sleep(10 * 1000);
 
                 var bobAddress = new Key().GetBitcoinSecret(network).GetAddress();
-                rpcClient.SendToAddress(bobAddress, Money.Coins(1.0m)).Should().NotBeNull();
+                rpcClient.SendToAddress(bobAddress, Money.Coins(1.0m), "CommentTX", "CommentDest", 0.01m, false).Should().NotBeNull();
 
                 // Now wait 10 seconds so the wallet should be back locked and a transaction should fail.
                 Thread.Sleep(10 * 1000);
-                Action action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m));
+                Action action = () => rpcClient.SendToAddress(aliceAddress, Money.Coins(1.0m), "CommentTX", "CommentDest", 0.01m, false);
                 action.Should().Throw<RPCException>().Which.RPCCode.Should().Be(RPCErrorCode.RPC_WALLET_UNLOCK_NEEDED);
             }
         }

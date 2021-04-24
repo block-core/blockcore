@@ -15,7 +15,15 @@
 
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
+    <PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
+
+  <ItemGroup>
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />

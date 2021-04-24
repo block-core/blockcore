@@ -1,15 +1,15 @@
 name: Build
- 
-on: 
+
+on:
   push:
     branches:
       - master
-  repository_dispatch:
-    types: [build]
+#  repository_dispatch:
+#    types: [build]
   workflow_dispatch:
 
 jobs:
-  
+
   buildAndUnitTest:
 
     strategy:
@@ -18,16 +18,16 @@ jobs:
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
-    
+
     env:
       SOLUTION_PATH: 'src/Blockcore.sln'
       BUILD_CONFIGURATION: 'Release'
 
     steps:
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       name: Checkout
-      
+
     - name: Setup Node.js (12.x)
       uses: actions/setup-node@v1
       with:
@@ -39,10 +39,23 @@ jobs:
       shell: bash
 
     - name: Unit Test
-      run: dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      run: |
+        dotnet nuget locals all --clear
+        dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Nuget Pack
       run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
+
+    - uses: actions/upload-artifact@v2
+      if: matrix.os == 'ubuntu-latest'
+      with:
+        name: Blockcore-${{env.VERSION}}-preview
+        path: "${{github.workspace}}/package/"
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Blockcore-${{env.VERSION}}-preview
+        path: "${{github.workspace}}/package/"
 
     - name: Release
       if: matrix.os == 'ubuntu-latest'

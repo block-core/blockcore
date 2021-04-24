@@ -1,3 +1,71 @@
+##  (2021-03-09)
+
+* #280 (#282) ([5119089](https://github.com/block-core/blockcore/commit/5119089)), closes [#280](https://github.com/block-core/blockcore/issues/280) [#282](https://github.com/block-core/blockcore/issues/282)
+* Make sure that each query against database uses a new connection object (#300) ([19596af](https://github.com/block-core/blockcore/commit/19596af)), closes [#300](https://github.com/block-core/blockcore/issues/300) [#299](https://github.com/block-core/blockcore/issues/299)
+* Make the folder name for data lowercase (#302) ([04aa205](https://github.com/block-core/blockcore/commit/04aa205)), closes [#302](https://github.com/block-core/blockcore/issues/302)
+* Minor improvement to the NodeBuilder for test node. (#296) ([3f0b92d](https://github.com/block-core/blockcore/commit/3f0b92d)), closes [#296](https://github.com/block-core/blockcore/issues/296)
+* Update x42 segwit activation (#301) ([6a743e0](https://github.com/block-core/blockcore/commit/6a743e0)), closes [#301](https://github.com/block-core/blockcore/issues/301)
+
+
+
+##  (2021-03-09)
+
+* Add IMPLX MainNet SeedNodes and CheckpointInfo (#283) ([8595042](https://github.com/block-core/blockcore/commit/8595042)), closes [#283](https://github.com/block-core/blockcore/issues/283)
+* Add upload of artifact to the build (#292) ([6710591](https://github.com/block-core/blockcore/commit/6710591)), closes [#292](https://github.com/block-core/blockcore/issues/292) [#291](https://github.com/block-core/blockcore/issues/291)
+* Added support for xRhodium (XRC) (#286) ([6430223](https://github.com/block-core/blockcore/commit/6430223)), closes [#286](https://github.com/block-core/blockcore/issues/286)
+* Adding HomeCoin Network  (#289) ([129c67d](https://github.com/block-core/blockcore/commit/129c67d)), closes [#289](https://github.com/block-core/blockcore/issues/289)
+* bump version ([b8d16e9](https://github.com/block-core/blockcore/commit/b8d16e9))
+* Disable the request logging to avoid logging password and other request data (#287) ([6d8813e](https://github.com/block-core/blockcore/commit/6d8813e)), closes [#287](https://github.com/block-core/blockcore/issues/287)
+* Feature/upload artifact on workflow (#293) ([8aefa13](https://github.com/block-core/blockcore/commit/8aefa13)), closes [#293](https://github.com/block-core/blockcore/issues/293) [#291](https://github.com/block-core/blockcore/issues/291)
+* Launch setting names should use the technical chain name (#294) ([2f1b241](https://github.com/block-core/blockcore/commit/2f1b241)), closes [#294](https://github.com/block-core/blockcore/issues/294)
+* Resolve PR comments from initial PR on HomeCoin (#295) ([69dfb03](https://github.com/block-core/blockcore/commit/69dfb03)), closes [#295](https://github.com/block-core/blockcore/issues/295)
+
+
+
+##  (2021-02-19)
+
+* Add checkpoints for City Chain network ([ef16368](https://github.com/block-core/blockcore/commit/ef16368))
+* Add X1 (#276) ([6f510a0](https://github.com/block-core/blockcore/commit/6f510a0)), closes [#276](https://github.com/block-core/blockcore/issues/276)
+* dotnet pack generate symbols (snupkg) (#275) ([99a9dd5](https://github.com/block-core/blockcore/commit/99a9dd5)), closes [#275](https://github.com/block-core/blockcore/issues/275)
+* Fix build error: NU1101: Unable to find package (#273) ([0695789](https://github.com/block-core/blockcore/commit/0695789)), closes [#273](https://github.com/block-core/blockcore/issues/273)
+* Fix fee send bug ([55e748f](https://github.com/block-core/blockcore/commit/55e748f))
+* Update changelog and bump versions ([fd87c06](https://github.com/block-core/blockcore/commit/fd87c06))
+* Upgrade package dependencies to 3.1.11 ([b07b8e0](https://github.com/block-core/blockcore/commit/b07b8e0))
+* Wallet db to use sqlite (instead of litedbv4) (#272) ([ad2fca4](https://github.com/block-core/blockcore/commit/ad2fca4)), closes [#272](https://github.com/block-core/blockcore/issues/272)
+
+
+
+##  (2021-02-01)
+
+* Add EXOS to launch settings ([7c32b4a](https://github.com/block-core/blockcore/commit/7c32b4a))
+* Add Mode to tests for Mac (#270) ([0bcc3a6](https://github.com/block-core/blockcore/commit/0bcc3a6)), closes [#270](https://github.com/block-core/blockcore/issues/270)
+* Adding ImpleumX network (#258) ([6d229a8](https://github.com/block-core/blockcore/commit/6d229a8)), closes [#258](https://github.com/block-core/blockcore/issues/258)
+* Bump version  to17 ([ae83bc7](https://github.com/block-core/blockcore/commit/ae83bc7))
+* Change from .NET 5 to .NET Core 3.1 ([e57dfde](https://github.com/block-core/blockcore/commit/e57dfde))
+* Changed LiteDB to v4 for stability. (#242) ([d4dcd41](https://github.com/block-core/blockcore/commit/d4dcd41)), closes [#242](https://github.com/block-core/blockcore/issues/242)
+* Configure package to be packaged for IMPLX ([db41c33](https://github.com/block-core/blockcore/commit/db41c33))
+* Creating a method to auto generate the test wallet db (#264) ([731e74b](https://github.com/block-core/blockcore/commit/731e74b)), closes [#264](https://github.com/block-core/blockcore/issues/264)
+* Feature/bcp chain (#266) ([7eefa5e](https://github.com/block-core/blockcore/commit/7eefa5e)), closes [#266](https://github.com/block-core/blockcore/issues/266)
+* Fix sweep dependency (#253) ([2c5afb7](https://github.com/block-core/blockcore/commit/2c5afb7)), closes [#253](https://github.com/block-core/blockcore/issues/253)
+* Fix the guard clause for sweep that incorrectly required minimum 500 outputs ([ff47e3a](https://github.com/block-core/blockcore/commit/ff47e3a))
+* Fix the tests ([7b25fb9](https://github.com/block-core/blockcore/commit/7b25fb9))
+* Fix wallet history sorting ([5bdcee0](https://github.com/block-core/blockcore/commit/5bdcee0))
+* Fixes serialization issue with events ([1beb281](https://github.com/block-core/blockcore/commit/1beb281)), closes [#269](https://github.com/block-core/blockcore/issues/269)
+* Improve performance by avoiding methods ([9d523b3](https://github.com/block-core/blockcore/commit/9d523b3)), closes [#269](https://github.com/block-core/blockcore/issues/269)
+* Increase the FallbackFee for City Chain ([4bd78c9](https://github.com/block-core/blockcore/commit/4bd78c9))
+* Make the Tests.Common into NuGet package again as before ([6ce157b](https://github.com/block-core/blockcore/commit/6ce157b))
+* Optimize the reading of Transaction ID upon serialization ([f3a9030](https://github.com/block-core/blockcore/commit/f3a9030)), closes [#269](https://github.com/block-core/blockcore/issues/269)
+* peer connection failure moved to debug instead of information (#250) ([0c1ff83](https://github.com/block-core/blockcore/commit/0c1ff83)), closes [#250](https://github.com/block-core/blockcore/issues/250)
+* Refactor City network definition into Blockcore namespace ([6cb50b5](https://github.com/block-core/blockcore/commit/6cb50b5))
+* Refactor x42 network definition to have correct namespace ([f2f5efc](https://github.com/block-core/blockcore/commit/f2f5efc))
+* Rename ico.png to icon.png for City package ([5d6bbd4](https://github.com/block-core/blockcore/commit/5d6bbd4))
+* Return the PosModifierv2, PosFlags and PosHashProof in REST API ([e137515](https://github.com/block-core/blockcore/commit/e137515))
+* Subscribe to blocks and peers events on the ui (#267) ([5114f10](https://github.com/block-core/blockcore/commit/5114f10)), closes [#267](https://github.com/block-core/blockcore/issues/267)
+* Update sweep to build aggregated transactions ([f6bcf76](https://github.com/block-core/blockcore/commit/f6bcf76))
+* Upgrade to .NET 5 (#252) ([e56ab61](https://github.com/block-core/blockcore/commit/e56ab61)), closes [#252](https://github.com/block-core/blockcore/issues/252)
+
+
+
 ##  (2020-12-22)
 
 * Add manual dispatch capability to workflows ([bd568d1](https://github.com/block-core/blockcore/commit/bd568d1))

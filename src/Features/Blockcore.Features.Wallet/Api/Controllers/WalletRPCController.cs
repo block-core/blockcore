@@ -120,15 +120,17 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
         [ActionName("sendtoaddress")]
         [ActionDescription("Sends money to an address. Requires wallet to be unlocked using walletpassphrase.")]
-        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, decimal amount, string commentTx, string commentDest)
+        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, decimal amount, string commentTx, string commentDest, decimal? fee = null, bool isSegwit = false)
         {
-            WalletAccountReference account = this.GetWalletAccountReference();
+            decimal transactionFee = fee ?? Money.Satoshis(this.FullNode.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
 
             TransactionBuildContext context = new TransactionBuildContext(this.FullNode.Network)
             {
                 AccountReference = this.GetWalletAccountReference(),
                 Recipients = new[] { new Recipient { Amount = Money.Coins(amount), ScriptPubKey = address.ScriptPubKey } }.ToList(),
-                CacheSecret = false
+                CacheSecret = false,
+                TransactionFee = Money.Coins(transactionFee),
+                UseSegwitChangeAddress = isSegwit
             };
 
             try
@@ -213,7 +215,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_METHOD_DEPRECATED, "Use of 'account' parameter has been deprecated");
 
             if (!string.IsNullOrEmpty(addressType))
-            {   
+            {
                 // Currently segwit addresses are not supported.
                 if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase) && !addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
                     throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' and 'bech32' are currently supported.");
@@ -222,7 +224,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             string address = hdAddress.Address; // legacy address
             if (addressType != null && addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
-                address = hdAddress.Bech32Address;            
+                address = hdAddress.Bech32Address;
 
             return new NewAddressModel(address);
         }

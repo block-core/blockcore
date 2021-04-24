@@ -47,14 +47,8 @@ jobs:
       run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
 
     - uses: actions/upload-artifact@v2
-      if: matrix.os == 'ubuntu-latest'
       with:
-        name: Blockcore-${{env.VERSION}}-preview
-        path: "${{github.workspace}}/package/"
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Blockcore-${{env.VERSION}}-preview
+        name: Blockcore-${{env.VERSION}}-${{matrix.os}}-preview
         path: "${{github.workspace}}/package/"
 
     - name: Release

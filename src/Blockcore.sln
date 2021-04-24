@@ -144,6 +144,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.SERF", "Networks\Blockcore.Networks.SERF\Blockcore.Networks.SERF.csproj", "{921791B7-DE6B-4E27-BCA1-5C112E3B532C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -374,6 +376,10 @@ Global
 		{074057D3-A1BE-409D-B4B4-F01CFA434D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{074057D3-A1BE-409D-B4B4-F01CFA434D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{074057D3-A1BE-409D-B4B4-F01CFA434D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{921791B7-DE6B-4E27-BCA1-5C112E3B532C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{921791B7-DE6B-4E27-BCA1-5C112E3B532C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{921791B7-DE6B-4E27-BCA1-5C112E3B532C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{921791B7-DE6B-4E27-BCA1-5C112E3B532C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -437,6 +443,7 @@ Global
 		{9A2BA15A-C316-42B4-8E4D-E01B4873190C} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{4615D1C6-14CD-47CA-8B78-A462A37057F6} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{074057D3-A1BE-409D-B4B4-F01CFA434D58} = {3B56C02B-4468-4268-B797-851562789FCC}
+		{921791B7-DE6B-4E27-BCA1-5C112E3B532C} = {3B56C02B-4468-4268-B797-851562789FCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

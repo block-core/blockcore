@@ -59,6 +59,10 @@ namespace Blockcore.Node
                 case "HOME":
                     nodeSettings = new NodeSettings(networksSelector: HomeCoin.Networks.Networks.HomeCoin, args: args);
                     break;
+
+                case "SERF":
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.SERF.Networks.SERF, args: args);
+                    break;
             }
 
             return nodeSettings;

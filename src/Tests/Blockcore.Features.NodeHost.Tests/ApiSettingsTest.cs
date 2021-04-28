@@ -66,7 +66,7 @@ namespace Blockcore.Features.NodeHost.Tests
         {
             // Arrange.
             int customPort = 55555;
-            var nodeSettings = new NodeSettings(this.Network, args:new[] { $"-apiport={customPort}" });
+            var nodeSettings = new NodeSettings(this.Network, args: new[] { $"-apiport={customPort}" });
 
             // Act.
             NodeHostSettings settings = FullNodeSetup(nodeSettings);
@@ -85,11 +85,10 @@ namespace Blockcore.Features.NodeHost.Tests
             // Arrange.
             string customApiUri = "http://0.0.0.0";
             Network network = KnownNetworks.Main;
-            var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}" });
+            var nodeSettings = new NodeSettings(network, args: new[] { $"-apiuri={customApiUri}" });
 
             // Act.
             NodeHostSettings settings = FullNodeSetup(nodeSettings);
-
 
             // Assert.
             Assert.Equal(network.DefaultAPIPort, settings.ApiPort);
@@ -105,7 +104,7 @@ namespace Blockcore.Features.NodeHost.Tests
             // Arrange.
             string customApiUri = "http://0.0.0.0";
             Network network = KnownNetworks.StratisMain;
-            var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}" });
+            var nodeSettings = new NodeSettings(network, args: new[] { $"-apiuri={customApiUri}" });
 
             // Act.
             NodeHostSettings settings = FullNodeSetup(nodeSettings);
@@ -125,7 +124,7 @@ namespace Blockcore.Features.NodeHost.Tests
             string customApiUri = "http://0.0.0.0";
             int customPort = 55555;
             Network network = KnownNetworks.Main;
-            var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}", $"-apiport={customPort}" });
+            var nodeSettings = new NodeSettings(network, args: new[] { $"-apiuri={customApiUri}", $"-apiport={customPort}" });
 
             // Act.
             NodeHostSettings settings = FullNodeSetup(nodeSettings);
@@ -145,7 +144,7 @@ namespace Blockcore.Features.NodeHost.Tests
             int customPort = 5522;
             string customApiUri = $"http://0.0.0.0:{customPort}";
             Network network = KnownNetworks.Main;
-            var nodeSettings = new NodeSettings(network, args:new[] { $"-apiuri={customApiUri}" });
+            var nodeSettings = new NodeSettings(network, args: new[] { $"-apiuri={customApiUri}" });
 
             // Act.
             NodeHostSettings settings = FullNodeSetup(nodeSettings);
@@ -228,7 +227,7 @@ namespace Blockcore.Features.NodeHost.Tests
             var nodeSettings = new NodeSettings(KnownNetworks.TestNet, args: new[] { $"-usehttps={useHttps}", "-certificatefilepath=nonNullValue" });
 
             // Act.
-            var settings = FullNodeSetup(nodeSettings);
+            NodeHostSettings settings = FullNodeSetup(nodeSettings);
 
             // Assert.
             settings.UseHttps.Should().Be(useHttps);
@@ -267,12 +266,22 @@ namespace Blockcore.Features.NodeHost.Tests
 
         private static NodeHostSettings FullNodeSetup(NodeSettings nodeSettings)
         {
-            return new FullNodeBuilder()
+            IFullNodeBuilder node = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(new TestPersistenceProviderManager(nodeSettings))
                 .UseNodeSettings(nodeSettings)
-                .UseNodeHost()
-                .UsePowConsensus()
-                .Build()
-                .NodeService<NodeHostSettings>();
+                .UseNodeHost();
+
+            if (nodeSettings.Network.Consensus.IsProofOfStake)
+            {
+                node.UsePosConsensus();
+            }
+            else
+            {
+                node.UsePowConsensus();
+            }
+
+            return node.Build()
+            .NodeService<NodeHostSettings>();
         }
     }
 }

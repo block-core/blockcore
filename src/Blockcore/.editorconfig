@@ -1,0 +1,37 @@
+# Editor configuration, see http://editorconfig.org
+
+# todo: fix styling on the classes bellow
+
+[ScriptEvaluationContext.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[Script.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[Transaction.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[TransactionBuilder.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[TransactionSignature.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[StandardScriptTemplate.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[IpExtensions.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[ValidatedAddress.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[Network.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[ScriptReader.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+[NBitcoin/**.cs]
+dotnet_analyzer_diagnostic.severity = none
+

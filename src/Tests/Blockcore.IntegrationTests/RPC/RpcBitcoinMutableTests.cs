@@ -37,6 +37,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test CanGetRawMemPool</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetRawMemPoolWithValidTxThenReturnsSameTx()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -59,6 +60,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// <seealso cref="https://github.com/MetacoSA/NBitcoin/blob/master/NBitcoin.Tests/RPCClientTests.cs">NBitcoin test CanAddNodes</seealso>
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanAddRemoveNode()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -99,6 +101,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanSendCommand()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -113,6 +116,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanGetGenesisFromRPC()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -129,6 +133,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanSignRawTransaction()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -147,6 +152,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanGenerateToAddress()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -165,6 +171,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanGetBlockFromRPC()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -182,6 +189,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void TryValidateAddress()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -197,6 +205,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void TryEstimateFeeRate()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -210,6 +219,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanGetTxOutNoneFromRPC()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -225,6 +235,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanGetTransactionBlockFromRPC()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -240,6 +251,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void RawTransactionIsConformsToRPC()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -254,7 +266,9 @@ namespace Blockcore.IntegrationTests.RPC
                 Assert.True(JToken.DeepEquals(tx.ToString(this.testNet, RawFormat.Satoshi), tx2.ToString(this.testNet, RawFormat.Satoshi)));
             }
         }
+
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanUseBatchedRequests()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -310,6 +324,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanBackupWallet()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
@@ -334,6 +349,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanGetPrivateKeysFromAccount()
         {
             string accountName = "account";
@@ -355,6 +371,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public async Task CanGetPrivateKeysFromLockedAccountAsync()
         {
             string accountName = "account";
@@ -385,6 +402,7 @@ namespace Blockcore.IntegrationTests.RPC
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void CanAuthWithCookieFile()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

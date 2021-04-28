@@ -181,7 +181,8 @@ namespace Blockcore.Features.BlockStore.Tests
             var dataFolder = new DataFolder(TestBase.CreateTestDir(this));
             string dbPath = Path.Combine(dataFolder.RootPath, CollectionName);
 
-            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
+            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
+            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true, Mode = fileMode });
             var cache = new AddressIndexerOutpointsRepository(database, new ExtendedLoggerFactory());
 
             var outPoint = new OutPoint(uint256.Parse("0000af9ab2c8660481328d0444cf167dfd31f24ca2dbba8e5e963a2434cffa93"), 0);
@@ -203,7 +204,8 @@ namespace Blockcore.Features.BlockStore.Tests
             var dataFolder = new DataFolder(TestBase.CreateTestDir(this));
             string dbPath = Path.Combine(dataFolder.RootPath, CollectionName);
 
-            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
+            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
+            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true, Mode = fileMode });
             var cache = new AddressIndexerOutpointsRepository(database, new ExtendedLoggerFactory());
 
             Assert.False(cache.TryGetOutPointData(new OutPoint(uint256.Parse("0000af9ab2c8660481328d0444cf167dfd31f24ca2dbba8e5e963a2434cffa93"), 1), out OutPointData retrieved));
@@ -217,7 +219,8 @@ namespace Blockcore.Features.BlockStore.Tests
             var dataFolder = new DataFolder(TestBase.CreateTestDir(this));
             string dbPath = Path.Combine(dataFolder.RootPath, CollectionName);
 
-            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
+            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
+            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true, Mode = fileMode });
             var cache = new AddressIndexerOutpointsRepository(database, new ExtendedLoggerFactory(), 2);
 
             Assert.Equal(0, cache.Count);
@@ -267,7 +270,8 @@ namespace Blockcore.Features.BlockStore.Tests
             var dataFolder = new DataFolder(TestBase.CreateTestDir(this));
             string dbPath = Path.Combine(dataFolder.RootPath, CollectionName);
 
-            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
+            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
+            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true, Mode = fileMode });
             var cache = new AddressIndexRepository(database, new ExtendedLoggerFactory());
 
             string address = "xyz";
@@ -295,7 +299,8 @@ namespace Blockcore.Features.BlockStore.Tests
             var dataFolder = new DataFolder(TestBase.CreateTestDir(this));
             string dbPath = Path.Combine(dataFolder.RootPath, CollectionName);
 
-            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
+            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
+            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true, Mode = fileMode });
             var cache = new AddressIndexRepository(database, new ExtendedLoggerFactory());
 
             AddressIndexerData retrieved = cache.GetOrCreateAddress("xyz");
@@ -313,7 +318,8 @@ namespace Blockcore.Features.BlockStore.Tests
             var dataFolder = new DataFolder(TestBase.CreateTestDir(this));
             string dbPath = Path.Combine(dataFolder.RootPath, CollectionName);
 
-            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true });
+            LiteDB.FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? LiteDB.FileMode.Exclusive : LiteDB.FileMode.Shared;
+            var database = new LiteDatabase(new ConnectionString() { Filename = dbPath, Upgrade = true, Mode = fileMode });
             var cache = new AddressIndexRepository(database, new ExtendedLoggerFactory(), 4);
 
             // Recall, each index entry counts as 1 and each balance change associated with it is an additional 1.

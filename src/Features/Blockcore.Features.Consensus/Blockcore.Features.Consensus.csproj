@@ -17,10 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LevelDB.Standard" Version="2.1.6.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.11" />
     <PackageReference Include="Microsoft.FASTER" Version="2020.2.1.1" />
-    <PackageReference Include="RocksDbNative" Version="6.2.2" />
-    <PackageReference Include="RocksDbSharp" Version="6.2.2" />
   </ItemGroup>
 
   <ItemGroup>

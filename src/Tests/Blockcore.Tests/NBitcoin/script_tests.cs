@@ -27,6 +27,7 @@ namespace NBitcoin.Tests
         }
 
         private static Dictionary<string, OpcodeType> mapOpNames = new Dictionary<string, OpcodeType>();
+
         public static Script ParseScript(string s)
         {
             var result = new MemoryStream();
@@ -52,7 +53,6 @@ namespace NBitcoin.Tests
                 if (w.All(l => l.IsDigit()) ||
                     (w.StartsWith("-") && w.Substring(1).All(l => l.IsDigit())))
                 {
-
                     // Number
                     long n = long.Parse(w);
                     Op.GetPushOp(n).WriteTo(result);
@@ -86,14 +86,12 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseNOPs()
         {
             new Script("OP_NOP1 OP_NOP2 OP_NOP3 OP_NOP4 OP_NOP5 OP_NOP6 OP_NOP7 OP_NOP8 OP_NOP9");
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void BIP65_tests()
         {
             BIP65_testsCore(
@@ -167,7 +165,6 @@ namespace NBitcoin.Tests
         /// If POW transaction then handle the new opcode as a OP_NOP10.
         /// </summary>
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ColdstakingOpcodeIsHandledAsNOP10ForPOWTransactions()
         {
             Coldstaking_testsCore(isPos: false, isActivated: false, isCoinStake: false, expectedFlagSet: false, expectedError: ScriptError.DiscourageUpgradableNops);
@@ -177,7 +174,6 @@ namespace NBitcoin.Tests
         /// If POS transaction and before activation then handle the new opcode as a OP_NOP10.
         /// </summary>
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ColdstakingOpcodeIsHandledAsNOP10BeforeActivation()
         {
             Coldstaking_testsCore(isPos: true, isActivated: false, isCoinStake: true, expectedFlagSet: false, expectedError: ScriptError.DiscourageUpgradableNops);
@@ -187,7 +183,6 @@ namespace NBitcoin.Tests
         /// If POS transaction and after activation then the new opcode produces an "CheckColdStakeVerify" script error if it is not a coinstake transaction.
         /// </summary>
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ColdstakingOpcodeRaisesErrorForNonCoinstakeTransactionsAfterActivation()
         {
             Coldstaking_testsCore(isPos: true, isActivated: true, isCoinStake: false, expectedFlagSet: false, expectedError: ScriptError.CheckColdStakeVerify);
@@ -197,14 +192,13 @@ namespace NBitcoin.Tests
         /// If POS transaction and after activation then the new opcode sets "IsColdCoinStake" true if it is a coinstake transaction.
         /// </summary>
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ColdstakingOpcodeSetsIsColdCoinStakeForCoinstakeTransactionsAfterActivation()
         {
             Coldstaking_testsCore(isPos: true, isActivated: true, isCoinStake: true, expectedFlagSet: true, expectedError: ScriptError.OK);
         }
 
         /// <summary>
-        /// Tests how <see cref="IndexedTxIn.VerifyScript(Network, Script, ScriptVerify, out ScriptError)"/> responds to a script composed of 
+        /// Tests how <see cref="IndexedTxIn.VerifyScript(Network, Script, ScriptVerify, out ScriptError)"/> responds to a script composed of
         /// <see cref="OpcodeType.OP_CHECKCOLDSTAKEVERIFY"/> and <see cref="OpcodeType.OP_TRUE"/> under various circumstances as controlled via the inputs.
         /// </summary>
         /// <param name="isPos">If set uses the <see cref="KnownNetworks.StratisMain"/> network (versus the <see cref="KnownNetworks.Main"/> network).</param>
@@ -224,7 +218,7 @@ namespace NBitcoin.Tests
             });
 
             Transaction coldCoinStake = network.CreateTransaction();
-            if(coldCoinStake is IPosTransactionWithTime posTrx)
+            if (coldCoinStake is IPosTransactionWithTime posTrx)
                 posTrx.Time = (uint)18276127;
             coldCoinStake.Inputs.Add(new TxIn(tx.Outputs.AsCoins().First().Outpoint, new Script()));
 
@@ -247,11 +241,10 @@ namespace NBitcoin.Tests
             coldCoinStake.Inputs.AsIndexedInputs().First().VerifyScript(network, tx.Outputs[0].ScriptPubKey, scriptVerify, out error);
 
             Assert.Equal(expectedError, error);
-            Assert.Equal(expectedFlagSet, (coldCoinStake as PosTransaction)?.IsColdCoinStake ?? false);            
+            Assert.Equal(expectedFlagSet, (coldCoinStake as PosTransaction)?.IsColdCoinStake ?? false);
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanUseCompactVarInt()
         {
             var tests = new[]{
@@ -296,7 +289,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanExtractScriptCode()
         {
             var script = new Script("022b1300040df7414c0251433b7a2516e81689b02e33299c87ae870b5c9407b761 OP_DEPTH 3 OP_EQUAL OP_IF OP_SWAP 020524b8de0a1b57478f2d0e07aa9ea375b736f072281b3749fea044392bccfc52 OP_CHECKSIGVERIFY OP_CODESEPARATOR OP_CHECKSIG OP_ELSE 0 OP_CLTV OP_DROP OP_CHECKSIG OP_ENDIF");
@@ -310,7 +302,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCompressScript2()
         {
             var key = new Key(true);
@@ -322,7 +313,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void PayToMultiSigTemplateShouldAcceptNonKeyParameters()
         {
             Transaction tx = this.network.CreateTransaction("0100000002f9cbafc519425637ba4227f8d0a0b7160b4e65168193d5af39747891de98b5b5000000006b4830450221008dd619c563e527c47d9bd53534a770b102e40faa87f61433580e04e271ef2f960220029886434e18122b53d5decd25f1f4acb2480659fea20aabd856987ba3c3907e0121022b78b756e2258af13779c1a1f37ea6800259716ca4b7f0b87610e0bf3ab52a01ffffffff42e7988254800876b69f24676b3e0205b77be476512ca4d970707dd5c60598ab00000000fd260100483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a53034930460221008431bdfa72bc67f9d41fe72e94c88fb8f359ffa30b33c72c121c5a877d922e1002210089ef5fc22dd8bfc6bf9ffdb01a9862d27687d424d1fefbab9e9c7176844a187a014c9052483045022015bd0139bcccf990a6af6ec5c1c52ed8222e03a0d51c334df139968525d2fcd20221009f9efe325476eb64c3958e4713e9eefe49bf1d820ed58d2112721b134e2a1a5303210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c71210378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c7153aeffffffff01a08601000000000017a914d8dacdadb7462ae15cd906f1878706d0da8660e68700000000");
@@ -334,7 +324,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void PayToPubkeyHashTemplateDoNotCrashOnInvalidSig()
         {
             byte[] data = Encoders.Hex.DecodeData("035c030441ef8fa580553f149a5422ba4b0038d160b07a28e6fe2e1041b940fe95b1553c040000000000000050db680300000000000002b0466f722050696572636520616e64205061756c");
@@ -343,7 +332,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCompressScript()
         {
             //Testing some strange key
@@ -369,7 +357,6 @@ namespace NBitcoin.Tests
             script = AssertCompressed(script, 33);
             readenKey = PayToPubkeyTemplate.Instance.ExtractScriptPubKeyParameters(script);
             AssertEx.CollectionEquals(readenKey.ToBytes(), key.PubKey.Decompress().ToBytes());
-
 
             //Other scripts up to 121 bytes require 1 byte + script length.
             script = new Script(Enumerable.Range(0, 60).Select(_ => (Op)OpcodeType.OP_RETURN).ToArray());
@@ -398,7 +385,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void sig_validinvalid()
         {
             Assert.False(TransactionSignature.IsValid(this.network, new byte[0]));
@@ -419,7 +405,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void script_json_tests()
         {
             EnsureHasLibConsensus();
@@ -473,7 +458,6 @@ namespace NBitcoin.Tests
                 Assert.True(ok == (expectedError == ScriptError.OK), "[ConsensusLib] Test : " + testIndex + " " + comment);
             }
         }
-
 
         private void EnsureHasLibConsensus()
         {
@@ -697,7 +681,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void script_standard_push()
         {
             for (int i = -1; i < 1000; i++)
@@ -715,7 +698,6 @@ namespace NBitcoin.Tests
                 Assert.True(script.HasCanonicalPushes, "Length " + i + " push is not canonical.");
             }
         }
-
 
         private Script sign_multisig(Script scriptPubKey, Key[] keys, Transaction transaction)
         {
@@ -749,7 +731,6 @@ namespace NBitcoin.Tests
         private ScriptVerify flags = ScriptVerify.P2SH | ScriptVerify.StrictEnc;
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Script_CHECKMULTISIG12()
         {
             EnsureHasLibConsensus();
@@ -768,7 +749,6 @@ namespace NBitcoin.Tests
             Transaction txFrom12 = this.network.CreateTransaction();
             txFrom12.Outputs.Add(new TxOut());
             txFrom12.Outputs[0].ScriptPubKey = scriptPubKey12;
-
 
             Transaction txTo12 = this.network.CreateTransaction();
             txTo12.Inputs.Add(new TxIn());
@@ -790,7 +770,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Script_CHECKMULTISIG23()
         {
             EnsureHasLibConsensus();
@@ -807,7 +786,6 @@ namespace NBitcoin.Tests
                     OpcodeType.OP_3,
                     OpcodeType.OP_CHECKMULTISIG
                 );
-
 
             Transaction txFrom23 = this.network.CreateTransaction();
             txFrom23.Outputs.Add(new TxOut());
@@ -878,7 +856,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void script_single_hashtype()
         {
             Transaction tx = this.network.CreateTransaction("010000000390d31c6107013d754529d8818eff285fe40a3e7635f6930fec5d12eb02107a43010000006b483045022100f40815ae3c81a0dd851cc8d376d6fd226c88416671346a9033468cca2cdcc6c202204f764623903e6c4bed1b734b75d82c40f1725e4471a55ad4f51218f86130ac038321033d710ab45bb54ac99618ad23b3c1da661631aa25f23bfe9d22b41876f1d46e4effffffff3ff04a68e22bdd52e7c8cb848156d2d158bd5515b3c50adabc87d0ca2cd3482d010000006a4730440220598d263c107004008e9e26baa1e770be30fd31ee55ded1898f7c00da05a75977022045536bead322ca246779698b9c3df3003377090f41afeca7fb2ce9e328ec4af2832102b738b531def73020bd637f32935924cc88549c8206976226d968edd3a42fc2d7ffffffff46a8dc8970eb96622f27a516adcf40e0fcec5731e7556e174f2a271aef6861c7010000006b483045022100c5b90a777a9fdc90c208dbef7290d1fc1be651f47151ee4ccff646872a454cf90220640cfbc4550446968fbbe9d12528f3adf7d87b31541569c59e790db8a220482583210391332546e22bbe8fe3af54addfad6f8b83d05fa4f5e047593d4c07ae938795beffffffff028036be26000000001976a914ddfb29efad43a667465ac59ff14dc6442a1adfca88ac3d5cba01000000001976a914b64dde7a505a13ca986c40e86e984a8dc81368b688ac00000000");
@@ -887,7 +864,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void script_combineSigs()
         {
             Key[] keys = new[] { new Key(), new Key(), new Key() };
@@ -915,7 +891,6 @@ namespace NBitcoin.Tests
 
             combined = Script.CombineSignatures(this.network, scriptPubKey, txTo, 0, scriptSigCopy, scriptSig);
             Assert.True(combined == scriptSigCopy || combined == scriptSig);
-
 
             // P2SH, single-signature case:
             Script pkSingle = PayToPubkeyTemplate.Instance.GenerateScriptPubKey(keys[0].PubKey);
@@ -1009,7 +984,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Script_PushData()
         {
             // Check that PUSHDATA1, PUSHDATA2, and PUSHDATA4 create the same value on
@@ -1031,7 +1005,6 @@ namespace NBitcoin.Tests
             Assert.True(pushdata1Stack.EvalScript(pushdata1, new Transaction(), 0));
             AssertEx.StackEquals(pushdata1Stack.Stack, directStack.Stack);
 
-
             ScriptEvaluationContext pushdata2Stack = context.Clone();
             Assert.True(pushdata2Stack.EvalScript(pushdata2, new Transaction(), 0));
             AssertEx.StackEquals(pushdata2Stack.Stack, directStack.Stack);
@@ -1042,7 +1015,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseAndGeneratePayToPubKeyScript()
         {
             var scriptPubKey = new Script("OP_DUP OP_HASH160 b72a6481ec2c2e65aa6bd9b42e213dce16fc6217 OP_EQUALVERIFY OP_CHECKSIG");
@@ -1067,7 +1039,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseAndGeneratePayToPubkey()
         {
             string scriptPubKey = "0364bd4b02a752798342ed91c681a48793bb1c0853cbcd0b978c55e53485b8e27c OP_CHECKSIG";
@@ -1099,7 +1070,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseAndGenerateSegwitScripts()
         {
             var pubkey = new PubKey("03a65786c1a48d4167aca08cf6eb8eed081e13f45c02dc6000fd8f3bb16242579a");
@@ -1129,7 +1099,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseAndGeneratePayToMultiSig()
         {
             string scriptPubKey = "1 0364bd4b02a752798342ed91c681a48793bb1c0853cbcd0b978c55e53485b8e27c 0364bd4b02a752798342ed91c681a48793bb1c0853cbcd0b978c55e53485b8e27d 2 OP_CHECKMULTISIG";
@@ -1155,7 +1124,6 @@ namespace NBitcoin.Tests
             Script scriptSig2 = PayToMultiSigTemplate.Instance.GenerateScriptSig(result);
             Assert.Equal(scriptSig, scriptSig2.ToString());
 
-
             var sig = new TransactionSignature(Encoders.Hex.DecodeData("3044022064f45a382a15d3eb5e7fe72076eec4ef0f56fde1adfd710866e729b9e5f3383d02202720a895914c69ab49359087364f06d337a2138305fbc19e20d18da78415ea9301"));
             Script actual = PayToScriptHashTemplate.Instance.GenerateScriptSig(this.network, new[] { sig, sig }, new Script(scriptPubKey));
             var expected = new Script("0 3044022064f45a382a15d3eb5e7fe72076eec4ef0f56fde1adfd710866e729b9e5f3383d02202720a895914c69ab49359087364f06d337a2138305fbc19e20d18da78415ea9301 3044022064f45a382a15d3eb5e7fe72076eec4ef0f56fde1adfd710866e729b9e5f3383d02202720a895914c69ab49359087364f06d337a2138305fbc19e20d18da78415ea9301 " + new Script(scriptPubKey).ToHex());
@@ -1163,7 +1131,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanExtractAddressesFromScript()
         {
             var payToMultiSig = new Script("1 0364bd4b02a752798342ed91c681a48793bb1c0853cbcd0b978c55e53485b8e27c 0364bd4b02a752798342ed91c681a48793bb1c0853cbcd0b978c55e53485b8e27d 2 OP_CHECKMULTISIG");
@@ -1199,9 +1166,7 @@ namespace NBitcoin.Tests
             Assert.Equal("352183abbcc80a0cd7c051a28df0abbf1e80ac3e", p2phScriptSig.GetSigner(this.network).ToString());
         }
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void P2PKHScriptSigShouldNotBeMistakenForP2SHScriptSig()
         {
             var p2pkhScriptSig = new Script("304402206e3f2f829644ffe78b56ec8d0ea3715aee66e533a8195220bdea1526dc6ed3b202205eabcae791abfea55d54f8ec4e6de1bad1f7aa90e91687e81150b411e457025701 029f4485fddb359aeed82d71dc8df2fb0e83e31601c749d468ea92c99c13c5558b");
@@ -1212,7 +1177,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseAndGeneratePayToScript()
         {
             string redeem = "1 0364bd4b02a752798342ed91c681a48793bb1c0853cbcd0b978c55e53485b8e27c 0364bd4b02a752798342ed91c681a48793bb1c0853cbcd0b978c55e53485b8e27d 2 OP_CHECKMULTISIG";
@@ -1248,7 +1212,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanIdentifyP2PKHScript()
         {
             var script = Script.FromHex("76a914c398efa9c392ba6013c5e04ee729755ef7f58b3288ac");
@@ -1263,7 +1226,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanIdentifyP2SHScript()
         {
             var script = Script.FromHex("a914e9c3dd0c07aac76179ebc76a6c78d4d67c6c160a87");
@@ -1278,7 +1240,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanIdentifyP2PKScript()
         {
             var script = Script.FromHex("410496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858eeac");
@@ -1293,7 +1254,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanIdentifyMultiSigScript()
         {
             var script = Script.FromHex("514104cc71eb30d653c0c3163990c47b976f3fb3f37cccdcbedb169a1dfef58bbfbfaff7d8a473e7e2e6d317b87bafe8bde97e3cf8f065dec022b51d11fcdd0d348ac4410461cbdcc5409fb4b4d42b51d33381354d80e550078cb532a34bfa2fcfdeb7d76519aecc62770f5b0e4ef8551946d8a540911abe3e7854a26f39f58b25c15342af52ae");
@@ -1308,7 +1268,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanIdentifyP2WPKHScript()
         {
             var script = Script.FromHex("0014c4e2db37553d3e55c23da2ef5f2f41eb79935849");
@@ -1323,7 +1282,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanIdentifyP2WSHScript()
         {
             var script = Script.FromHex("00201965d4c2e7e7b1973b00931ed042d0bacd03c12b7dc5e06b550c31d15fec7cc1");

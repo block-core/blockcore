@@ -370,6 +370,7 @@ else
         this.MiningFeature.StartStaking(this.WalletName, this.Password);
 
         this.LoadStats();
+        await Task.CompletedTask;
     }
     private bool IsStarting { get; set; }
     private async Task callStartStaking()

@@ -87,21 +87,18 @@ namespace NBitcoin.Tests
              0);
 
         [Fact]
-        [Trait("Core", "Core")]
         public void bip32_test1()
         {
             RunTest(this.test1);
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void bip32_test2()
         {
             RunTest(this.test2);
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CheckBIP32Constructors()
         {
             var key = new ExtKey();
@@ -114,7 +111,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRecoverExtKeyFromExtPubKeyAndOneChildExtKey()
         {
             ExtKey key = ExtKey.Parse("xprv9s21ZrQH143K3Z9EwCXrA5VbypnvWGiE9z22S1cLLPi7r8DVUkTabBvMjeirS8KCyppw24KoD4sFmja8UDU4VL32SBdip78LY6sz3X2GPju", this.networkMain)
@@ -133,7 +129,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRecoverExtKeyFromExtPubKeyAndOneChildExtKey2()
         {
             for (int i = 0; i < 255; i++)
@@ -147,7 +142,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRecoverExtKeyFromExtPubKeyAndSecret()
         {
             ExtKey key = new ExtKey().Derive(1);
@@ -158,7 +152,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanUseKeyPath()
         {
             KeyPath keyPath = KeyPath.Parse("0/1/2/3");
@@ -214,7 +207,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRoundTripExtKeyBase58Data()
         {
             var key = new ExtKey();
@@ -222,8 +214,8 @@ namespace NBitcoin.Tests
             Assert.True(ExtKey.Parse(key.ToString(this.networkMain)).ToString(this.networkMain) == key.ToString(this.networkMain));
             Assert.True(ExtPubKey.Parse(pubkey.ToString(this.networkMain)).ToString(this.networkMain) == pubkey.ToString(this.networkMain));
         }
+
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCheckChildKey()
         {
             var parent = new ExtKey();
@@ -244,6 +236,7 @@ namespace NBitcoin.Tests
             var keyB = new ExtPubKey(keyA.ToBytes());
             AssertEx.CollectionEquals(keyA.ToBytes(), keyB.ToBytes());
         }
+
         private void RunTest(TestVector test)
         {
             byte[] seed = TestUtils.ParseHex(test.strHexMaster);

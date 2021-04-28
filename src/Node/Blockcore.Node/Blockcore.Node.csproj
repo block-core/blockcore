@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Authors>Blockcore</Authors>
     <AssemblyTitle>Blockcore.Node</AssemblyTitle>
     <AssemblyName>Blockcore.Node</AssemblyName>
     <PackageId>Blockcore.Node</PackageId>
@@ -11,14 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Networks\Bitcoin\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
-    <ProjectReference Include="..\..\Networks\City\City\Blockcore.Networks.City.csproj" />
-    <ProjectReference Include="..\..\Networks\OpenExo\OpenExo\OpenExo.csproj" />
-    <ProjectReference Include="..\..\Networks\Rutanio\Rutanio\Rutanio.csproj" />
-    <ProjectReference Include="..\..\Networks\Stratis\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
-    <ProjectReference Include="..\..\Networks\x42\x42\x42.Networks.csproj" />
-    <ProjectReference Include="..\..\Networks\Xds\Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj" />
-    <ProjectReference Include="..\..\Features\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />    
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.WalletWatchOnly\Blockcore.Features.WalletWatchOnly.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Persistence.Rocksdb.CorePackage\Blockcore.Features.Persistence.Rocksdb.CorePackage.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.BCP\Blockcore.Networks.BCP.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Bitcoin\Blockcore.Networks.Bitcoin.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.City\Blockcore.Networks.City.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.HomeCoin\Blockcore.Networks.HomeCoin.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Impleum\Blockcore.Networks.Impleum.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.OpenExo\Blockcore.Networks.OpenExo.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Rutanio\Blockcore.Networks.Rutanio.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.X1\Blockcore.Networks.X1.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.x42\Blockcore.Networks.x42.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.ColdStaking\Blockcore.Features.ColdStaking.csproj" />
@@ -26,6 +31,8 @@
     <ProjectReference Include="..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+    <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Persistence.LevelDb.CorePackage\Blockcore.Features.Persistence.LevelDb.CorePackage.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.XRC\Blockcore.Networks.XRC.csproj" />
   </ItemGroup>
 
 </Project>

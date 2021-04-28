@@ -13,7 +13,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
     {
         private const string DbAddressDataKey = "AddrData";
 
-        private readonly ILiteCollection<AddressIndexerData> addressIndexerDataCollection;
+        private readonly LiteCollection<AddressIndexerData> addressIndexerDataCollection;
 
         private readonly ILogger logger;
 
@@ -58,7 +58,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             this.SaveAllItems();
 
             // Need to specify index name explicitly so that it gets used for the query.
-            IEnumerable<AddressIndexerData> affectedAddresses = this.addressIndexerDataCollection.Find(a => a.BalanceChanges.Select(ab => ab.BalanceChangedHeight).Any(ab => ab > height));
+            IEnumerable<AddressIndexerData> affectedAddresses = this.addressIndexerDataCollection.Find(Query.GT("BalanceChangedHeightIndex", height));
 
             // Per LiteDb documentation:
             // "Returning an IEnumerable your code still connected to datafile.

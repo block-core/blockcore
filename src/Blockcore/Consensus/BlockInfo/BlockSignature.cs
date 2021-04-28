@@ -18,8 +18,8 @@ namespace Blockcore.Consensus.BlockInfo
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((BlockSignature) obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return this.Equals((BlockSignature)obj);
         }
 
         public override int GetHashCode()
@@ -40,6 +40,7 @@ namespace Blockcore.Consensus.BlockInfo
             {
                 return this.signature;
             }
+
             set
             {
                 this.signature = value;
@@ -79,7 +80,7 @@ namespace Blockcore.Consensus.BlockInfo
             stream.ReadWriteAsVarString(ref this.signature);
         }
 
-        #endregion
+        #endregion IBitcoinSerializable Members
 
         public override string ToString()
         {

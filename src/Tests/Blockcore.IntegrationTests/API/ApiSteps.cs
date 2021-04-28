@@ -503,8 +503,8 @@ namespace Blockcore.IntegrationTests.API
         private void general_information_about_the_wallet_and_node_is_returned()
         {
             var generalInfoResponse = JsonDataSerializer.Instance.Deserialize<WalletGeneralInfoModel>(this.responseText);
-            generalInfoResponse.WalletFilePath.Should().ContainAll(StratisRegTest, $"{WalletName}.wallet.json");
-            generalInfoResponse.Network.Name.Should().Be(StratisRegTest);
+            generalInfoResponse.WalletFilePath.Should().ContainAll(this.posNetwork.Name, $"{WalletName}.wallet.json");
+            generalInfoResponse.Network.Name.Should().Be(this.posNetwork.Name);
             generalInfoResponse.ChainTip.Should().Be(0);
             generalInfoResponse.IsChainSynced.Should().BeFalse();
             generalInfoResponse.ConnectedNodes.Should().Be(0);

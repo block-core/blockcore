@@ -40,7 +40,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Util_ParseHex()
         {
             // Basic test vector
@@ -55,7 +54,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanAddEntropyToRandom()
         {
             RandomUtils.AddEntropy(new byte[] { 1, 2, 3 });
@@ -66,7 +64,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Util_HexStr()
         {
             AssertEx.Equal(
@@ -98,7 +95,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanUseSegwitAddress()
         {
             var address = (BitcoinWitPubKeyAddress)BitcoinAddress.Create("bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4");
@@ -147,7 +143,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ScryptTest()
         {
             string message = "Hello world message";
@@ -158,7 +153,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //https://en.bitcoin.it/wiki/Difficulty
         public void CanReadConvertTargetToDifficulty()
         {
@@ -200,7 +195,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void Target_Should_Roundtrip_Implicit_Uint()
         {
             var orig = 0U;
@@ -211,7 +205,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Util_FormatMoney()
         {
             AssertEx.Equal(new Money(0).ToString(false), "0.00");
@@ -240,7 +233,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void MoneyCoverage()
         {
             Money a = Money.Coins(2.0m);
@@ -264,7 +256,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanConvertMoney()
         {
             var tests = new[]
@@ -295,7 +286,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void Util_ParseMoney()
         {
             Money ret;
@@ -349,7 +339,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSplitMoney()
         {
             CanSplitMoneyCore(Money.Satoshis(1234), 3);
@@ -376,7 +365,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSplitMoneyBag()
         {
             var gold = new AssetId(new Key());
@@ -390,7 +378,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanSplitAssetMoney()
         {
             var gold = new AssetId(new Key());
@@ -420,7 +407,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCompareKey()
         {
             var privateKey = new Key();
@@ -439,7 +425,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void MoneyUnitSanityCheck()
         {
             Money.FromUnit(10m, MoneyUnit.BTC);
@@ -457,7 +442,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void Overflow()
         {
             Assert.Throws<OverflowException>(() => Money.Satoshis(decimal.MaxValue));
@@ -481,7 +465,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void FeeRateComparison()
         {
             var a = new FeeRate(Money.Coins(2.0m));
@@ -520,7 +503,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void util_IsHex()
         {
             Assert.True(HexEncoder.IsWellFormed("00"));
@@ -537,7 +519,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRoundTripBigIntegerToBytes()
         {
             foreach (int expected in Enumerable.Range(-100, 100))
@@ -549,7 +530,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanDivideMoney()
         {
             Money bobInput = Money.Coins(1.1M);
@@ -560,7 +540,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanConvertBigIntegerToBytes()
         {
             CanConvertBigIntegerToBytesCore(BigInteger.Zero, new byte[0]);
@@ -581,7 +560,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void NetworksAreValid()
         {
             foreach (Network network in NetworkRegistration.GetNetworks())
@@ -592,7 +570,6 @@ namespace NBitcoin.Tests
 
         // Pubkey: 04a5cf05bfe42daffaff4f1732f5868ed7c7919cba279fa7d940e6b02a8b059bde56be218077bcab1ad6b5f5dcb04c42534477fb8d21b6312b0063e08a8ae52b3e, Private: 7bd0db101160c888e9643f10594185a36a8db91b5308aaa7aad4c03245c6bdc1, Secret: a461392f592ff4292bfce732d808a07f1bc3f49c9a66a40d50761ffb8b2325f6
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanECDH()
         {
             var tests = new[]
@@ -626,7 +603,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanGenerateScriptFromAddress()
         {
             var address = new BitcoinPubKeyAddress(new KeyId("47376c6f537d62177a2c41c4ca9b45829ab99083"), this.networkMain);
@@ -644,7 +620,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //https://en.bitcoin.it/wiki/List_of_address_prefixes
         public void CanDeduceNetworkInBase58Constructor()
         {
@@ -653,7 +629,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanDetectBase58WithoutAmbiguity()
         {
             var address = new
@@ -672,7 +647,7 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //https://en.bitcoin.it/wiki/List_of_address_prefixes
         public void CanDetectBase58NetworkAndType()
         {
@@ -826,7 +801,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseBlockJSON()
         {
             JObject jobj = JObject.Parse(File.ReadAllText(TestDataLocations.GetFileFromDataBlockFolder("Block1.json")));
@@ -838,7 +812,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanConvertToUnixTime()
         {
             DateTimeOffset date = Utils.UnixTimeToDateTime(1368576000);
@@ -853,7 +826,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void MoneyBagOperations()
         {
             var msft = new AssetId("8f316d9a09");
@@ -904,7 +876,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseIpEndpoint()
         {
             IPEndPoint endpoint = Utils.ParseIpEndpoint("google.com:94", 90);
@@ -932,7 +903,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void FeeRateOverflowPrevented()
         {
             Money feeToPay = Money.Coins(98_000_000);

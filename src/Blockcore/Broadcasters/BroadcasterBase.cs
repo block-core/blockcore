@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.EventBus;
 using Blockcore.Utilities;
@@ -38,7 +39,7 @@ namespace Blockcore.Broadcasters
 
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop(
                 $"Broadcast {this.GetType().Name}",
-                async token =>
+                token =>
                 {
                     if (this.eventsHub.HasConsumers)
                     {
@@ -47,6 +48,8 @@ namespace Blockcore.Broadcasters
                             this.eventsHub.OnEvent(clientEvent);
                         }
                     }
+
+                    return Task.CompletedTask;
                 },
                 this.nodeLifetime.ApplicationStopping,
                 repeatEvery: TimeSpan.FromSeconds(Math.Max(broadcasterSettings.BroadcastFrequencySeconds, 5)),

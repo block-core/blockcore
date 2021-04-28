@@ -1,5 +1,4 @@
 ﻿using Blockcore.Configuration;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Node
 {
@@ -13,12 +12,16 @@ namespace Blockcore.Node
 
             switch (chain)
             {
+                case "BCP":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.BCP.Networks.Networks.BCP, args: args);
+                    break;
+
                 case "BTC":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Bitcoin.Networks.Bitcoin, args: args);
                     break;
 
                 case "CITY":
-                    nodeSettings = new NodeSettings(networksSelector: City.Networks.Networks.City, args: args);
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.City.Networks.Networks.City, args: args);
                     break;
 
                 case "STRAT":
@@ -26,7 +29,7 @@ namespace Blockcore.Node
                     break;
 
                 case "X42":
-                    nodeSettings = new NodeSettings(networksSelector: x42.Networks.Networks.x42, args: args);
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.x42.Networks.Networks.x42, args: args);
                     break;
 
                 case "XDS":
@@ -39,6 +42,22 @@ namespace Blockcore.Node
 
                 case "EXOS":
                     nodeSettings = new NodeSettings(networksSelector: OpenExo.Networks.Networks.OpenExo, args: args);
+                    break;
+
+                case "IMPLX":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.Impleum.Networks.Impleum, args: args);
+                    break;
+
+                case "X1":
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.X1.Networks.X1, args: args);
+                    break;
+
+                case "XRC":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.XRC.Networks.XRC, args: args);
+                    break;
+
+                case "HOME":
+                    nodeSettings = new NodeSettings(networksSelector: HomeCoin.Networks.Networks.HomeCoin, args: args);
                     break;
             }
 

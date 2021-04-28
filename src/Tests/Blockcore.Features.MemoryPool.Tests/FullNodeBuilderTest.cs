@@ -9,6 +9,7 @@ using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 
@@ -27,7 +28,9 @@ namespace Blockcore.Features.MemoryPool.Tests
             var nodeSettings = new NodeSettings(KnownNetworks.TestNet, args: new string[] {
                 $"-datadir=Blockcore.Features.MemoryPool.Tests/TestData/FullNodeBuilderTest/CanHaveAllServicesTest" });
 
-            var fullNodeBuilder = new FullNodeBuilder(nodeSettings);
+            var persistenceManager = new TestPersistenceProviderManager(nodeSettings);
+
+            var fullNodeBuilder = new FullNodeBuilder(nodeSettings, persistenceManager);
             IFullNode fullNode = fullNodeBuilder
                 .UseBlockStore()
                 .UsePowConsensus()

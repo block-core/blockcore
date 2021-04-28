@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using Blockcore.Configuration;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Consensus.ValidationResults;
 using Blockcore.Features.Wallet.Database;
-using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
+using Blockcore.Utilities.JsonConverters;
 using FluentAssertions;
 using NBitcoin;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests
@@ -36,10 +36,8 @@ namespace Blockcore.Features.Wallet.Tests
             // insert the document then fetch it and compare with source
             store.InsertOrUpdate(trx);
             var trxRes = store.GetForOutput(utxo);
-            var docTrx = store.Mapper.ToDocument(trx);
-            var jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx);
-            var docTrxRes = store.Mapper.ToDocument(trxRes);
-            var jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes);
+            var jsonStringTrx = JsonConvert.SerializeObject(trx, new JsonSerializerSettings { Converters = new List<JsonConverter> { new MoneyJsonConverter(), new ScriptJsonConverter() } });
+            var jsonStringTrxRes = JsonConvert.SerializeObject(trxRes, new JsonSerializerSettings { Converters = new List<JsonConverter> { new MoneyJsonConverter(), new ScriptJsonConverter() } });
             jsonStringTrx.Should().Be(jsonStringTrxRes);
 
             trx.BlockHash = null;
@@ -49,10 +47,8 @@ namespace Blockcore.Features.Wallet.Tests
             // update the changed document then fetch it and compare with source
             store.InsertOrUpdate(trx);
             trxRes = store.GetForOutput(utxo);
-            docTrx = store.Mapper.ToDocument(trx);
-            jsonStringTrx = LiteDB.JsonSerializer.Serialize(docTrx);
-            docTrxRes = store.Mapper.ToDocument(trxRes);
-            jsonStringTrxRes = LiteDB.JsonSerializer.Serialize(docTrxRes);
+            jsonStringTrx = JsonConvert.SerializeObject(trx, new JsonSerializerSettings { Converters = new List<JsonConverter> { new MoneyJsonConverter(), new ScriptJsonConverter() } });
+            jsonStringTrxRes = JsonConvert.SerializeObject(trxRes, new JsonSerializerSettings { Converters = new List<JsonConverter> { new MoneyJsonConverter(), new ScriptJsonConverter() } });
             jsonStringTrx.Should().Be(jsonStringTrxRes);
 
             store.Remove(trx.OutPoint);
@@ -95,6 +91,10 @@ namespace Blockcore.Features.Wallet.Tests
             {
                 item.Address.Should().Be(findforAddress);
             }
+
+            var count = store.CountForAddress(findforAddress);
+
+            count.Should().Be(5);
         }
 
         [Fact]
@@ -209,7 +209,6 @@ namespace Blockcore.Features.Wallet.Tests
             store1.GetData().EncryptedSeed.Should().Be("EncryptedSeed1");
 
             var data = store1.GetData();
-            data.WalletName = "wallet2";
             data.BlockLocator = new List<uint256>() { new uint256(1), new uint256(2) };
             data.WalletTip = new Utilities.HashHeightPair(new uint256(2), 2);
             store1.SetData(data);
@@ -220,7 +219,6 @@ namespace Blockcore.Features.Wallet.Tests
 
             store2.GetData().WalletTip.Height.Should().Be(2);
             store2.GetData().WalletTip.Hash.Should().Be(new uint256(2));
-            store2.GetData().WalletName.Should().Be("wallet2");
             store2.GetData().BlockLocator.Should().HaveCount(2);
 
             store2.Dispose();
@@ -309,14 +307,14 @@ namespace Blockcore.Features.Wallet.Tests
                 IsCoinBase = true,
                 IsCoinStake = true,
                 IsColdCoinStake = false,
-                CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00"),
+                CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00", new CultureInfo("nl-BE")),
                 IsPropagated = false,
                 SpendingDetails = new SpendingDetails
                 {
                     BlockIndex = 10,
                     BlockHeight = 20,
                     Hex = "SpentTrxHex",
-                    CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00"),
+                    CreationTime = DateTimeOffset.Parse("14/06/2020 01:28:21 +01:00", new CultureInfo("nl-BE")),
                     IsCoinStake = true,
                     TransactionId = new uint256(100),
                     Payments = new List<PaymentDetails>

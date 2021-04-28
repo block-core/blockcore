@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.Features.Consensus.Persistence.LevelDb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
@@ -122,7 +123,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             // Query the repository for the item that was inserted in the above code.
-            using (ProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (LevelDbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
             {
                 var headerOut = await repo.GetAsync(blockHeight).ConfigureAwait(false);
 
@@ -142,7 +143,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
                 engine.Put(DBH.Key(BlockHashHeightTable, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(new uint256(), 1)));
             }
 
-            using (ProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (LevelDbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
             {
                 // Select a different block height.
                 ProvenBlockHeader outHeader = await repo.GetAsync(2).ConfigureAwait(false);
@@ -180,9 +181,9 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
         }
 
-        private ProvenBlockHeaderRepository SetupRepository(Network network, string folder)
+        private LevelDbProvenBlockHeaderRepository SetupRepository(Network network, string folder)
         {
-            var repo = new ProvenBlockHeaderRepository(network, folder, this.LoggerFactory.Object, this.dataStoreSerializer);
+            var repo = new LevelDbProvenBlockHeaderRepository(network, folder, this.LoggerFactory.Object, this.dataStoreSerializer);
 
             Task task = repo.InitializeAsync();
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

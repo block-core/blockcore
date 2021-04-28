@@ -17,7 +17,6 @@ namespace Blockcore.Features.Dns.Tests
     public class GivenADnsSeedMasterFile
     {
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -29,7 +28,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsIPAddressResourceRecord_AndIsIPv4_ThenEntryIsPopulated()
         {
             // Arrange
@@ -52,7 +50,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsIPAddressResourceRecord_AndIsIPv6_ThenEntryIsPopulated()
         {
             // Arrange
@@ -75,7 +72,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsCanonicalNameResourceRecord_ThenEntryIsPopulated()
         {
             // Arrange
@@ -99,7 +95,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsMailExchangeResourceRecord_ThenEntryIsPopulated()
         {
             // Arrange
@@ -126,7 +121,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsNameServerResourceRecord_ThenEntryIsPopulated()
         {
             // Arrange
@@ -151,7 +145,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsPointerResourceRecord_ThenEntryIsPopulated()
         {
             // Arrange
@@ -176,7 +169,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsStartOfAuthorityResourceRecord_ThenEntryIsPopulated()
         {
             // Arrange
@@ -222,7 +214,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenLoad_AndStreamContainsEntries_ThenEntriesArePopulated()
         {
             // Arrange.
@@ -273,7 +264,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsIPAddressResourceRecord_AndIsIPv4_ThenEntryIsSaved()
         {
             // Arrange
@@ -287,7 +277,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
 
@@ -302,7 +292,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsIPAddressResourceRecord_AndIsIPv6_ThenEntryIsSaved()
         {
             // Arrange
@@ -316,7 +305,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
 
@@ -331,7 +320,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsCanonicalNameResourceRecord_ThenEntryIsSaved()
         {
             // Arrange
@@ -346,7 +334,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
 
@@ -361,7 +349,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsMailExchangeResourceRecord_ThenEntryIsSaved()
         {
             // Arrange
@@ -377,7 +364,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
 
@@ -393,7 +380,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsNameServerResourceRecord_ThenEntryIsSaved()
         {
             // Arrange
@@ -408,7 +394,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
 
@@ -423,7 +409,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsPointerResourceRecord_ThenEntryIsSaved()
         {
             // Arrange
@@ -438,7 +423,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
 
@@ -453,7 +438,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsStartOfAuthorityResourceRecord_ThenEntryIsSaved()
         {
             // Arrange
@@ -484,7 +468,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
                 resourceRecords.Should().NotBeNull();
@@ -504,7 +488,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndMasterListContainsEntries_ThenEntriesAreSaved()
         {
             // Arrange.
@@ -525,7 +508,7 @@ namespace Blockcore.Features.Dns.Tests
                 // Act.
                 masterFile.Save(stream);
 
-                // Assert.                
+                // Assert.
                 stream.Should().NotBeNull();
                 IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
                 resourceRecords.Should().NotBeNullOrEmpty();
@@ -541,7 +524,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenSave_AndStreamIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.

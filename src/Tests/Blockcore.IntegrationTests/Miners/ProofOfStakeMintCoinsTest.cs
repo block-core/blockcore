@@ -30,7 +30,7 @@ namespace Blockcore.IntegrationTests.Miners
             using (var builder = NodeBuilder.Create(this))
             {
                 var configParameters = new NodeConfigParameters { { "savetrxhex", "true" } };
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 var minerA = builder.CreateStratisPosNode(network, "stake-1-minerA", configParameters: configParameters).OverrideDateTimeProvider().WithWallet().Start();
 

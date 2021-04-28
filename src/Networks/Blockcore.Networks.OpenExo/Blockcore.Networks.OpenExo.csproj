@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Authors>Blockcore</Authors>
+		<AssemblyTitle>Blockcore.Networks.OpenExo</AssemblyTitle>
+		<AssemblyName>Blockcore.Networks.OpenExo</AssemblyName>
+		<PackageId>Blockcore.Networks.OpenExo</PackageId>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="icon.png" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+		<ProjectReference Include="..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,4 +1,5 @@
 ﻿@page "/wallets"
+@implements IDisposable
 
 @using Blockcore.Features.Wallet.Interfaces
 @using Blockcore.Interfaces
@@ -6,6 +7,11 @@
 @using Blockcore.UI.BlazorModal
 @using NBitcoin;
 @using Blockcore.Consensus.Chain
+@using Blockcore.EventBus
+@using Blockcore.EventBus.CoreEvents
+@using Blockcore.EventBus.CoreEvents.Peer
+@using Blockcore.Features.Wallet.Events
+@using Blockcore.Signals
 
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
@@ -16,6 +22,7 @@
 @inject IPooledTransaction PooledTransaction
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
 @inject ModalService ModalService
+@inject ISignals Signals
 
 @{
     @if (!this.WalletManager.ContainsWallets)
@@ -81,10 +88,10 @@
                 <button class="btn btn-sm btn-primary mr-1" @onclick="ShowWalletRecover">
                     <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet
                 </button>
-                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { Rebroadcast(); }">
+                <button class="btn btn-sm btn-primary mr-1" @onclick="Rebroadcast">
                     <span class="oi oi-globe" aria-hidden="true"></span> Re-broadcast
                 </button>
-                <button class="btn btn-sm btn-danger" @onclick="() => { Resync(); }">
+                <button class="btn btn-sm btn-danger" @onclick="Resync">
                     <span class="oi oi-flash" aria-hidden="true"></span> Resync wallets
                 </button>
             </div>
@@ -271,4 +278,42 @@
     {
         ModalService.Show("Create your Wallet", typeof(Modal.ModalWalletCreate));
     }
+
+    List<SubscriptionToken> subscriptionTokens;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && this.Signals != null)
+        {
+            this.subscriptionTokens = new List<SubscriptionToken>()
+{
+                this.Signals.Subscribe<TransactionFound>(this.ReloadEvent),
+                this.Signals.Subscribe<TransactionSpent>(this.ReloadEvent),
+            };
+        }
+    }
+
+    DateTime lastRefresh = DateTime.UtcNow;
+
+    private void ReloadEvent(object _)
+    {
+        if ((DateTime.UtcNow - lastRefresh).Seconds > 1)
+        {
+            lastRefresh = DateTime.UtcNow;
+
+            InvokeAsync(this.StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (subscriptionTokens != null)
+        {
+            foreach (var subscriptionToken in subscriptionTokens)
+            {
+                subscriptionToken.Dispose();
+            }
+        }
+    }
+
 }

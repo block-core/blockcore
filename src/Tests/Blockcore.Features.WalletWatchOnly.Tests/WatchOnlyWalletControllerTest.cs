@@ -15,7 +15,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        [Trait("Module", "WatchOnlyWalletController")]
         public void Given_AddressIsNullOrEmpty_When_WatchIsCalled_Then_BadRequestIsReturned(string address)
         {
             var mockWalletManager = new Mock<IWatchOnlyWalletManager>();
@@ -30,7 +29,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletController")]
         public void Given_ExceptionIsThrown_When_WatchIsCalled_Then_HttpConflictIsReturned()
         {
             string address = "non-null-or-empty-address";
@@ -48,7 +46,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletController")]
         public void Given_NoExceptionIsThrown_When_WatchIsCalled_Then_HttpOkIsReturned()
         {
             string address = "non-null-or-empty-address";
@@ -63,7 +60,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletController")]
         public void Given_ExceptionIsThrown_When_GetWatchOnlyWalletIsCalled_Then_HttpBadRequestIsReturned()
         {
             var mockWalletManager = new Mock<IWatchOnlyWalletManager>();
@@ -80,7 +76,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletController")]
         public void Given_NoExceptionIsThrown_When_GetWatchOnlyWalletIsCalled_Then_WatchOnlyWalletModelIsReturned()
         {
             var mockWalletManager = new Mock<IWatchOnlyWalletManager>();

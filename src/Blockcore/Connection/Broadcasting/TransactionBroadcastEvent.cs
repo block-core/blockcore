@@ -1,5 +1,6 @@
 ﻿using Blockcore.EventBus;
 using Blockcore.Interfaces;
+using Newtonsoft.Json;
 
 namespace Blockcore.Connection.Broadcasting
 {
@@ -10,6 +11,7 @@ namespace Blockcore.Connection.Broadcasting
     {
         public BroadcastTransactionStateChanedEntry BroadcastEntry { get; }
 
+        [JsonIgnore]
         public IBroadcasterManager BroadcasterManager { get; }
 
         public TransactionBroadcastEvent(IBroadcasterManager broadcasterManager, BroadcastTransactionStateChanedEntry broadcastEntry)

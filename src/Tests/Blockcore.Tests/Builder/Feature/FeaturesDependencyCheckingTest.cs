@@ -5,6 +5,7 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Features.Consensus;
 using Blockcore.Tests.Common;
+using Blockcore.Utilities.Store;
 using Xunit;
 
 namespace Blockcore.Tests.Builder.Feature
@@ -74,7 +75,11 @@ namespace Blockcore.Tests.Builder.Feature
         [Fact]
         public void DependencyCheckWithValidDependencies()
         {
-            IFullNodeBuilder builder = new FullNodeBuilder().UseNodeSettings(NodeSettings.Default(KnownNetworks.StratisRegTest));
+            var settings = NodeSettings.Default(KnownNetworks.StratisRegTest);
+
+            IFullNodeBuilder builder = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(new TestPersistenceProviderManager(settings))
+                .UseNodeSettings(settings);
 
             builder.ConfigureFeature(features =>
             {
@@ -98,7 +103,12 @@ namespace Blockcore.Tests.Builder.Feature
         [Fact]
         public void DependencyCheckWithInvalidDependenciesThrowsException()
         {
-            IFullNodeBuilder builder = new FullNodeBuilder().UseNodeSettings(NodeSettings.Default(KnownNetworks.StratisRegTest));
+            var nodeSettings = NodeSettings.Default(KnownNetworks.StratisRegTest);
+
+            IFullNodeBuilder builder = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(new TestPersistenceProviderManager(nodeSettings))
+                .UseNodeSettings(nodeSettings);
+
             builder.ConfigureFeature(features =>
             {
                 features

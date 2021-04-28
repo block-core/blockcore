@@ -1,5 +1,13 @@
 {
   "profiles": {
+    "BCP (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=BCP -server -iprangefiltering=0 -maxtipage=2147483647 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata"
+    },
+    "BCP (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=BCP -server -iprangefiltering=0 -maxtipage=2147483647 -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
+    },
     "BTC (MAIN)": {
       "commandName": "Project",
       "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
@@ -30,11 +38,11 @@
     },
     "CITY (MAIN)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=1"
+      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=0"
     },
     "CITY (MAIN/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=CITY -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=1"
+      "commandLineArgs": "--chain=CITY -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=0"
     },
     "CITY (TEST/LOCAL)": {
       "commandName": "Project",
@@ -52,9 +60,13 @@
       "commandName": "Project",
       "commandLineArgs": "--chain=STRAT -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
     },
+    "X42 (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=X42 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
     "X42 (MAIN/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=X42-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+      "commandLineArgs": "--chain=X42 -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
     },
     "X42 (TEST/LOCAL)": {
       "commandName": "Project",
@@ -62,7 +74,7 @@
     },
     "XDS (MAIN/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser  -datadir=nodedata"
     },
     "XDS (TEST/LOCAL)": {
       "commandName": "Project",
@@ -71,6 +83,70 @@
     "XDS (MAIN/LOCAL/UI/API/WS)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableUI=true -enableAPI=true -enableWS=true"
+    },
+    "XDS (MAIN/LOCAL/ROCKSDB)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XDS -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=rocksdbdata -dbtype=rocksdb"
+    },
+    "XDS (MAIN/LOCAL/LEVELDB)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XDS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=leveldbdata -dbtype=leveldb"
+    },
+    "IMPLX (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "IMPLX (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "IMPLX (TEST/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=IMPLX -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "EXOS (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=EXOS -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "EXOS (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=EXOS -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "RUTA (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=RUTA -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "RUTA (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=RUTA -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "X1 (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=X1 -addnode=134.122.89.152 -addnode=161.35.156.96 -addnode=80.211.88.91 -addnode=46.101.168.197 -iprangefiltering=0"
+    },
+    "X1 (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=X1 -addnode=134.122.89.152 -addnode=161.35.156.96 -addnode=80.211.88.91 -addnode=46.101.168.197 -iprangefiltering=0 -datadir=nodedata"
+    },
+    "XRC (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XRC -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "XRC (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XRC -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "XRC (TEST/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=XRC -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+    },
+    "HOME (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=HOME -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+    },
+    "HOME (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=HOME -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
     }
   }
 }

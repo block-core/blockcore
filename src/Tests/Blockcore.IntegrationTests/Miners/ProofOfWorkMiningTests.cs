@@ -25,6 +25,7 @@ namespace Blockcore.IntegrationTests.Miners
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void MiningAndPropagatingPOW_MineBlockCheckPeerHasNewBlock()
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))

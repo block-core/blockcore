@@ -52,7 +52,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
-        private async Task ProcessFeeFilterAsync(INetworkPeer peer, FeeFilterPayload feeFilter)
+        private Task ProcessFeeFilterAsync(INetworkPeer peer, FeeFilterPayload feeFilter)
         {
             if (peer.PeerVersion.Relay)
             {
@@ -66,6 +66,8 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
                     this.logger.LogDebug("Received feefilter of `{0}` from peer id: {1}", feeFilter.NewFeeFilter, peer.Connection.Id);
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         private void StartFeeFilterBroadcast(INetworkPeer sender)
@@ -168,7 +170,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
             this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
         }
 
-        private async Task OnStateChangedAsync(INetworkPeer sender, NetworkPeerState arg)
+        private Task OnStateChangedAsync(INetworkPeer sender, NetworkPeerState arg)
         {
             if (arg == NetworkPeerState.HandShaked)
             {
@@ -183,6 +185,8 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
                     this.asyncLoop = null;
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         protected override void DetachCore()

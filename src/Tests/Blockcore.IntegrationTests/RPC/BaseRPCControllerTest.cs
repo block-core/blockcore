@@ -27,7 +27,9 @@ namespace Blockcore.IntegrationTests.RPC
         public IFullNode BuildServicedNode(string dir)
         {
             var nodeSettings = new NodeSettings(this.Network, args: new string[] { $"-datadir={dir}" });
-            var fullNodeBuilder = new FullNodeBuilder(nodeSettings);
+            var persistenceProviderManager = new TestPersistenceProviderManager(nodeSettings);
+
+            var fullNodeBuilder = new FullNodeBuilder(nodeSettings, persistenceProviderManager);
             IFullNode fullNode = fullNodeBuilder
                 .UseBlockStore()
                 .UsePowConsensus()

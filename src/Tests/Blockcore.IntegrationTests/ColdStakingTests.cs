@@ -21,9 +21,9 @@ namespace Blockcore.IntegrationTests
     /// </summary>
     public class StratisOverrideRegTest : StratisRegTest
     {
-        public StratisOverrideRegTest() : base()
+        public StratisOverrideRegTest(string name = null) : base()
         {
-            this.Name = Guid.NewGuid().ToString();
+            this.Name = name ?? Guid.NewGuid().ToString();
         }
     }
 

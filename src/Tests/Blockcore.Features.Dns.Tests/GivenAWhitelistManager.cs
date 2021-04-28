@@ -37,7 +37,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndDatetimeProviderIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -48,7 +47,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndLoggerFactoryIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -61,7 +59,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndPeerAddressManagerIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -75,7 +72,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndDnsServerIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -90,7 +86,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndConnectionSettingsAreNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -108,7 +103,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndConnectionSettingsConnectionManagerIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -126,7 +120,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndPeerBanningComponentIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -146,7 +139,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenRefreshWhitelist_AndActivePeersAvailable_ThenWhitelistContainsActivePeers()
         {
             // Arrange.
@@ -242,7 +234,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenRefreshWhitelist_AndOwnIPInPeers_AndNotRunningFullNode_ThenWhitelistDoesNotContainOwnIP()
         {
             // Arrange.
@@ -333,7 +324,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenRefreshWhitelist_AndOwnIPInPeers_AndAreRunningFullNode_ThenWhitelistDoesContainOwnIP()
         {
             // Arrange.
@@ -417,7 +407,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenRefreshWhitelist_AndInactivePeersInWhitelist_ThenWhitelistDoesNotContainInactivePeers()
         {
             // Arrange.
@@ -515,7 +504,6 @@ namespace Blockcore.Features.Dns.Tests
         [Theory]
         [InlineData("::ffff:192.168.0.2", "::ffff:192.168.0.3")]
         [InlineData("2607:f8b0:4009:80e::200e", "2607:f8b0:4009:80e::200f")]
-        [Trait("DNS", "UnitTest")]
         public void WhenRefreshWhitelist_AndWhitelisted_IpV4_PeerIsBanned_ThenWhitelistDoesNotContainPeer(string bannedIp, string nonBannedIp)
         {
             // Arrange.

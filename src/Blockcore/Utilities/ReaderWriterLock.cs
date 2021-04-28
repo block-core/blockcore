@@ -42,6 +42,7 @@ namespace Blockcore.Utilities
         internal bool TryLockWrite(out IDisposable locked)
         {
             locked = null;
+
             if (this.rwLock.TryEnterWriteLock(0))
             {
                 locked = new ActionDisposable(() =>
@@ -49,6 +50,7 @@ namespace Blockcore.Utilities
                 }, () => this.rwLock.ExitWriteLock());
                 return true;
             }
+
             return false;
         }
     }

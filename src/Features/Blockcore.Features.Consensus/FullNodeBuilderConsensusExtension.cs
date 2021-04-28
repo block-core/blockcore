@@ -8,8 +8,8 @@ using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Interfaces;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus
 {
@@ -18,7 +18,7 @@ namespace Blockcore.Features.Consensus
     /// </summary>
     public static class FullNodeBuilderConsensusExtension
     {
-        public static IFullNodeBuilder UsePowConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Rocksdb)
+        public static IFullNodeBuilder UsePowConsensus(this IFullNodeBuilder fullNodeBuilder)
         {
             LoggingConfiguration.RegisterFeatureNamespace<PowConsensusFeature>("powconsensus");
 
@@ -28,7 +28,8 @@ namespace Blockcore.Features.Consensus
                     .AddFeature<PowConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        AddCoindbImplementation(services, coindbType);
+                        fullNodeBuilder.PersistenceProviderManager.RequirePersistence<PowConsensusFeature>(services);
+
                         services.AddSingleton<ConsensusOptions, ConsensusOptions>();
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<IConsensusRuleEngine, PowConsensusRuleEngine>();
@@ -42,7 +43,7 @@ namespace Blockcore.Features.Consensus
             return fullNodeBuilder;
         }
 
-        public static IFullNodeBuilder UsePosConsensus(this IFullNodeBuilder fullNodeBuilder, DbType coindbType = DbType.Rocksdb)
+        public static IFullNodeBuilder UsePosConsensus(this IFullNodeBuilder fullNodeBuilder)
         {
             LoggingConfiguration.RegisterFeatureNamespace<PosConsensusFeature>("posconsensus");
 
@@ -52,7 +53,8 @@ namespace Blockcore.Features.Consensus
                     .AddFeature<PosConsensusFeature>()
                     .FeatureServices(services =>
                     {
-                        AddCoindbImplementation(services, coindbType);
+                        fullNodeBuilder.PersistenceProviderManager.RequirePersistence<PosConsensusFeature>(services);
+
                         services.AddSingleton<IStakdb>(provider => (IStakdb)provider.GetService<ICoindb>());
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<StakeChainStore>().AddSingleton<IStakeChain, StakeChainStore>(provider => provider.GetService<StakeChainStore>());
@@ -64,34 +66,10 @@ namespace Blockcore.Features.Consensus
                             .AddSingleton<INetworkDifficulty, ConsensusQuery>(provider => provider.GetService<ConsensusQuery>())
                             .AddSingleton<IGetUnspentTransaction, ConsensusQuery>(provider => provider.GetService<ConsensusQuery>());
                         services.AddSingleton<IProvenBlockHeaderStore, ProvenBlockHeaderStore>();
-                        services.AddSingleton<IProvenBlockHeaderRepository, ProvenBlockHeaderRepository>();
                     });
             });
 
             return fullNodeBuilder;
         }
-
-        private static void AddCoindbImplementation(IServiceCollection services, DbType coindbType)
-        {
-            if (coindbType == DbType.Dbreeze)
-                services.AddSingleton<ICoindb, DBreezeCoindb>();
-
-            if (coindbType == DbType.Leveldb)
-                services.AddSingleton<ICoindb, LeveldbCoindb>();
-
-            if (coindbType == DbType.Faster)
-                services.AddSingleton<ICoindb, FasterCoindb>();
-
-            if (coindbType == DbType.Rocksdb)
-                services.AddSingleton<ICoindb, RocksdbCoindb>();
-        }
-    }
-
-    public enum DbType
-    {
-        Leveldb,
-        Dbreeze,
-        Faster,
-        Rocksdb
     }
 }

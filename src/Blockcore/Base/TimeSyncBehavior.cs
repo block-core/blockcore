@@ -441,8 +441,8 @@ namespace Blockcore.Base
                     VersionPayload version = peer.PeerVersion;
                     if (version != null)
                     {
-                        TimeSpan timeOffset = version.Timestamp - this.dateTimeProvider.GetTimeOffset();
-                        if (timeOffset != null) this.state.AddTimeData(address, timeOffset, peer.Inbound);
+                        TimeSpan? timeOffset = version.Timestamp - this.dateTimeProvider.GetTimeOffset();
+                        if (timeOffset != null) this.state.AddTimeData(address, timeOffset.Value, peer.Inbound);
                     }
                     else this.logger.LogDebug("Node '{0}' does not have an initialized time offset.", peer.RemoteSocketEndpoint);
                 }

@@ -5,7 +5,6 @@ using Xunit;
 
 namespace NBitcoin.Tests
 {
-    [Trait("UnitTest", "UnitTest")]
     public class Bech32Test
     {
         private static string[] VALID_CHECKSUM =
@@ -56,7 +55,7 @@ namespace NBitcoin.Tests
         [Fact]
         public void ValidateValidChecksum()
         {
-            foreach(string test in VALID_CHECKSUM)
+            foreach (string test in VALID_CHECKSUM)
             {
                 Bech32Encoder bech = Bech32Encoder.ExtractEncoderFromString(test);
                 int pos = test.LastIndexOf('1');
@@ -67,10 +66,11 @@ namespace NBitcoin.Tests
 
         private Bech32Encoder bech32 = Encoders.Bech32("bc");
         private Bech32Encoder tbech32 = Encoders.Bech32("tb");
+
         [Fact]
         public void ValidAddress()
         {
-            foreach(string[] address in VALID_ADDRESS)
+            foreach (string[] address in VALID_ADDRESS)
             {
                 byte witVer;
                 byte[] witProg;
@@ -98,19 +98,19 @@ namespace NBitcoin.Tests
         [Fact]
         public void InvalidAddress()
         {
-            foreach(string test in INVALID_ADDRESS)
+            foreach (string test in INVALID_ADDRESS)
             {
                 byte witver;
                 try
                 {
                     this.bech32.Decode(test, out witver);
                 }
-                catch(FormatException) { }
+                catch (FormatException) { }
                 try
                 {
                     this.tbech32.Decode(test, out witver);
                 }
-                catch(FormatException) { }
+                catch (FormatException) { }
             }
         }
 

@@ -63,7 +63,7 @@ namespace Blockcore.IntegrationTests.Wallet
             this.WalletWithFundsFilePath = Path.Combine(walletsFolderPath, filename);
             File.Copy(Path.Combine("Wallet", "Data", filename), this.WalletWithFundsFilePath, true);
             Directory.CreateDirectory(dbWalletsFolderPath);
-            File.Copy(Path.Combine("Wallet", "Data", dbfilename), Path.Combine(dbWalletsFolderPath, dbfilename), true);
+            File.Copy(Path.Combine("Wallet", "Data", "txdb", dbfilename), Path.Combine(dbWalletsFolderPath, dbfilename), true);
 
             var result = $"http://localhost:{stratisNode.ApiPort}/api".AppendPathSegment("wallet/load").PostJsonAsync(new WalletLoadRequest
             {

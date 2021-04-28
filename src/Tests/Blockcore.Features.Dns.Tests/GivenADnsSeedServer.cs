@@ -29,7 +29,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndUdpClientIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -47,7 +46,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndMasterFileIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -65,7 +63,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndAsyncProviderIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -83,7 +80,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndNodeLifetimeIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -101,7 +97,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndLoggerFactoryIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -119,7 +114,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndDateTimeProviderIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -137,7 +131,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndDnsSettingsIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -155,7 +148,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndDataFoldersIsNull_ThenArgumentNullExceptionIsThrown()
         {
             // Arrange.
@@ -173,7 +165,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenConstructorCalled_AndAllParametersValid_ThenTypeCreated()
         {
             // Arrange.
@@ -194,7 +185,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenDnsServerListening_AndSocketExceptionRaised_ThenDnsServerFailsToStart()
         {
             // Arrange.
@@ -230,7 +220,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public async Task WhenDnsServerReceiving_AndSocketExceptionRaised_ThenDnsServerFails_Async()
         {
             // Arrange.
@@ -293,7 +282,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public async Task WhenDnsServerListening_AndDnsBadRequestReceived_ThenDnsServerFailsToProcessesRequest_Async()
         {
             // Arrange.
@@ -366,7 +354,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public async Task WhenDnsServerListening_AndDnsRequestReceived_ThenDnsServerSuccessfullyProcessesRequest_Async()
         {
             // Arrange.
@@ -434,7 +421,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenDnsServerInitialized_AndNoMasterFileOnDisk_ThenDnsServerSuccessfullyInitializes()
         {
             // Arrange.
@@ -480,7 +466,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenDnsServerInitialized_AndMasterFileOnDisk_ThenDnsServerSuccessfullyInitializes()
         {
             // Arrange.
@@ -538,7 +523,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenDnsServerInitialized_ThenMetricsLoopStarted()
         {
             // Arrange.
@@ -586,7 +570,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public void WhenDnsServerInitialized_ThenSaveMasterfileLoopStarted()
         {
             // Arrange.
@@ -624,7 +607,6 @@ namespace Blockcore.Features.Dns.Tests
         }
 
         [Fact]
-        [Trait("DNS", "UnitTest")]
         public async Task WhenDnsServerListening_AndDnsRequestReceivedRepeatedly_ThenResponsesReturnedInRoundRobinOrder_Async()
         {
             // Arrange.

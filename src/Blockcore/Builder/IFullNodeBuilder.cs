@@ -2,8 +2,8 @@
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Networks;
+using Blockcore.Persistence;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 
 namespace Blockcore.Builder
 {
@@ -14,6 +14,9 @@ namespace Blockcore.Builder
     {
         /// <summary>User defined node settings.</summary>
         NodeSettings NodeSettings { get; }
+
+        /// <summary>Allows to require implementation of the persistence layer they need.</summary>
+        IPersistenceProviderManager PersistenceProviderManager { get; }
 
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         Network Network { get; }

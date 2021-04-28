@@ -18,7 +18,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void EncryptedSecretNoECmultiply()
         {
             var tests = new[]
@@ -63,9 +62,8 @@ namespace NBitcoin.Tests
             });
         }
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
+
         //Encrypted keys base58 string do not have network information
         public void DoNotThrowFormatExceptionIfNetworkInformationNotPresentInBase58()
         {
@@ -75,7 +73,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void KeyParseWorksOnBothTypeOfEncryptedKey()
         {
             BitcoinEncryptedSecretNoEC encryptedkey = new Key().GetEncryptedBitcoinSecret("abc", this.networkMain);
@@ -87,7 +84,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void EncryptedSecretECmultiplyNoLot()
         {
             var tests = new[]
@@ -109,7 +105,7 @@ namespace NBitcoin.Tests
                 Compressed = false
                 }
             };
-            foreach(var test in tests)
+            foreach (var test in tests)
             {
                 //Can generate unencrypted key with password and encrypted key
                 var encryptedKey = new BitcoinEncryptedSecretEC(test.Encrypted, this.networkMain);
@@ -118,7 +114,6 @@ namespace NBitcoin.Tests
                 Assert.Equal(test.Unencrypted, actualKey.GetBitcoinSecret(this.networkMain).ToString());
                 Assert.Equal(test.Address, actualKey.PubKey.GetAddress(this.networkMain).ToString());
                 Assert.Equal(test.Compressed, actualKey.IsCompressed);
-
 
                 //Can generate same BitcoinPassphraseCode with by using same ownerentropy
                 var passCode = new BitcoinPassphraseCode(test.PassphraseCode, this.networkMain);
@@ -134,7 +129,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void EncryptedSecretECmultiplyLotSequence()
         {
             var tests = new[]
@@ -161,7 +155,7 @@ namespace NBitcoin.Tests
                 }
             };
 
-            foreach(var test in tests)
+            foreach (var test in tests)
             {
                 //Can generate unencrypted key with password and encrypted key
                 var encryptedKey = new BitcoinEncryptedSecretEC(test.Encrypted, this.networkMain);
@@ -170,7 +164,6 @@ namespace NBitcoin.Tests
                 Assert.Equal(test.Unencrypted, actualKey.GetBitcoinSecret(this.networkMain).ToString());
                 Assert.Equal(test.Address, actualKey.PubKey.GetAddress(this.networkMain).ToString());
                 Assert.Equal(test.Compressed, actualKey.IsCompressed);
-
 
                 //Can generate same BitcoinPassphraseCode with by using same ownerentropy
                 var passCode = new BitcoinPassphraseCode(test.PassphraseCode, this.networkMain);
@@ -196,9 +189,7 @@ namespace NBitcoin.Tests
             Assert.True(expected == actual, "sequence different than expected");
         }
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanParseLotSequence()
         {
             var sequence = new LotSequence(1048575, 1024);
@@ -208,11 +199,10 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void EncryptedSecretECmultiplyNoLotSimple()
         {
             var compressedValues = new[] { false, true };
-            foreach(bool compressed in compressedValues)
+            foreach (bool compressed in compressedValues)
             {
                 var code = new BitcoinPassphraseCode("test", this.networkMain, null);
                 Assert.Null(code.LotSequence);
@@ -234,7 +224,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRoundTripSeedEncryption()
         {
             //Test easily debuggable
@@ -245,14 +234,14 @@ namespace NBitcoin.Tests
             Assert.Equal(seed, actualSeed);
 
             //The real deal
-            for(int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 seed = RandomUtils.GetBytes(24);
                 derived = RandomUtils.GetBytes(64);
                 encrypted = BitcoinEncryptedSecret.EncryptSeed(seed, derived);
 
                 byte[] encryptedBefore = encrypted.ToArray();
-                for(int u = 8; u < 16; u++)
+                for (int u = 8; u < 16; u++)
                 {
                     encrypted[u] = 0;
                 }
@@ -262,8 +251,8 @@ namespace NBitcoin.Tests
                 Assert.Equal(seed, actualSeed);
             }
         }
+
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanRoundTripKeyEncryption()
         {
             //Test easily debuggable
@@ -274,7 +263,7 @@ namespace NBitcoin.Tests
             Assert.Equal(key, actualSeed);
 
             //The real deal
-            for(int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 key = RandomUtils.GetBytes(32);
                 derived = RandomUtils.GetBytes(64);

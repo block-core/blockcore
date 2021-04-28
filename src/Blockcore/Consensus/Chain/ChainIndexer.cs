@@ -30,6 +30,7 @@ namespace Blockcore.Consensus.Chain
         /// The tip height of the best known validated chain.
         /// </summary>
         public int Height => this.Tip.Height;
+
         public ChainedHeader Genesis => this.GetHeader(0);
 
         public ChainIndexer()
@@ -39,7 +40,7 @@ namespace Blockcore.Consensus.Chain
         }
 
         public ChainIndexer(Network network) : this()
-        {   
+        {
             this.Network = network;
 
             this.Initialize(new ChainedHeader(network.GetGenesis().Header, network.GetGenesis().GetHash(), 0));
@@ -78,7 +79,7 @@ namespace Blockcore.Consensus.Chain
                 this.Tip = chainedHeader;
             }
         }
-        
+
         /// <summary>
         /// Returns the first chained block header that exists in the chain from the list of block hashes.
         /// </summary>
@@ -187,7 +188,7 @@ namespace Blockcore.Consensus.Chain
         {
             lock (this.lockObject)
             {
-                if(this.Tip.HashBlock != addTip.Previous.HashBlock)
+                if (this.Tip.HashBlock != addTip.Previous.HashBlock)
                     throw new InvalidOperationException("New tip must be consecutive");
 
                 this.blocksById.Add(addTip.HashBlock, addTip);
@@ -221,6 +222,12 @@ namespace Blockcore.Consensus.Chain
         {
             lock (this.lockObject)
             {
+                // If node is looking for zero, we'll return the genesis block.
+                if (id == uint256.Zero)
+                {
+                    return this.blocksByHeight[0];
+                }
+
                 ChainedHeader result;
                 this.blocksById.TryGetValue(id, out result);
                 return result;

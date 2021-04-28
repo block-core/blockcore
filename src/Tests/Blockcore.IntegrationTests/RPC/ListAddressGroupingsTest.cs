@@ -28,6 +28,7 @@ namespace Blockcore.IntegrationTests.RPC
         private CoreNode receiver;
 
         [Fact]
+        [Trait("Unstable", "True")]
         public async Task ListAddressGroupingsAsync()
         {
             using (var builder = NodeBuilder.Create(this))

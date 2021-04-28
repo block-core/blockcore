@@ -27,6 +27,7 @@ using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -384,6 +385,8 @@ namespace Blockcore.Base
                 .AddFeature<BaseFeature>()
                 .FeatureServices(services =>
                 {
+                    fullNodeBuilder.PersistenceProviderManager.RequirePersistence<BaseFeature>(services);
+
                     services.AddSingleton(fullNodeBuilder.Network.Consensus.ConsensusFactory);
                     services.AddSingleton<DataStoreSerializer>();
                     services.AddSingleton(fullNodeBuilder.NodeSettings.LoggerFactory);
@@ -399,13 +402,10 @@ namespace Blockcore.Base
                     services.AddSingleton<IInvalidBlockHashStore, InvalidBlockHashStore>();
                     services.AddSingleton<IChainState, ChainState>();
                     services.AddSingleton<IChainRepository, ChainRepository>();
-                    // services.AddSingleton<IChainStore, LeveldbChainStore>();
-                    services.AddSingleton<IChainStore, RocksdbChainStore>();
                     services.AddSingleton<IFinalizedBlockInfoRepository, FinalizedBlockInfoRepository>();
                     services.AddSingleton<ITimeSyncBehaviorState, TimeSyncBehaviorState>();
                     services.AddSingleton<NodeDeployments>();
                     services.AddSingleton<IInitialBlockDownloadState, InitialBlockDownloadState>();
-                    services.AddSingleton<IKeyValueRepository, KeyValueRepository>();
                     services.AddSingleton<ITipsManager, TipsManager>();
                     services.AddSingleton<IAsyncProvider, AsyncProvider>();
                     services.AddSingleton<IBroadcasterManager, BroadcasterManager>();

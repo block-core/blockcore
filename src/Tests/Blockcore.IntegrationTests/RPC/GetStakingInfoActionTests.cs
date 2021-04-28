@@ -22,6 +22,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// Tests that the RPC controller of a staking node correctly replies to "getstakinginfo" command.
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetStakingInfo_StakingEnabled()
         {
             IFullNode fullNode = StratisBitcoinPosRunner.BuildStakingNode(TestBase.CreateTestDir(this));
@@ -50,6 +51,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// Tests that the RPC controller of a staking node correctly replies to "startstaking" command.
         /// </summary>
         [Fact]
+        [Trait("Unstable", "True")]
         public void GetStakingInfo_StartStaking()
         {
             IFullNode fullNode = StratisBitcoinPosRunner.BuildStakingNode(TestBase.CreateTestDir(this), false);

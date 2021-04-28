@@ -11,79 +11,81 @@
 
 @if (ShowForm)
 {
-<div class="row ">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">
-                        <span class="text">Mnemonic</span>
-                    </label>
-                    <div class="col-sm-8">
-                        <textarea @bind="Mnemonic" class="form-control bg-secondary text-light" rows="3" placeholder="Please enter your mnemonic seed words. The mnemonic is your wallet, and must be kept safe and secure.">@Mnemonic</textarea>
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">
+                            <span class="text">Mnemonic</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <textarea @bind="Mnemonic" class="form-control bg-secondary text-light" rows="3" placeholder="Please enter your mnemonic seed words. The mnemonic is your wallet, and must be kept safe and secure.">@Mnemonic</textarea>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-primary" @onclick="GenerateMnemonic">Generate mnemonic</button>
+                        </div>
                     </div>
-                    <div class="col-sm-2">
-                       <button class="btn btn-primary" @onclick="GenerateMnemonic">Generate mnemonic</button>
-                    </div>
-                </div>
 
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">
-                        <span class="text">Passphrase</span>
-                    </label>
-                    <div class="col-sm-10">
-                        <input @bind="Passphrase" type="password" class="form-control bg-secondary text-light" placeholder="When creating the wallet, a passphrase is optional. Important - a passphrase if used, is permanently linked to the wallet and must be kept safe and secure." />
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">
+                            <span class="text">Passphrase</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <input @bind="Passphrase" type="password" class="form-control bg-secondary text-light" placeholder="When creating the wallet, a passphrase is optional. Important - a passphrase if used, is permanently linked to the wallet and must be kept safe and secure." />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">
-                        <span class="text">Name</span>
-                     </label>
-                    <div class="col-sm-10">
-                        <input @bind="WalletName" type="text" class="form-control bg-secondary text-light" placeholder="Please enter your wallet name" />
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">
+                            <span class="text">Name</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <input @bind="WalletName" type="text" class="form-control bg-secondary text-light" placeholder="Please enter your wallet name" />
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">
-                        <span class="text">Password</span>
-                    </label>
-                    <div class="col-sm-10">
-                        <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">
+                            <span class="text">Password</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
+                        </div>
                     </div>
-                </div>
-                @if (IsSubmitting)
-                {
-                    <button class="btn btn-danger" disabled>
-                        <span class="spinner-border spinner-border-sm"></span> Working ......
-                    </button>
-                }
-                else
-                {
-                    <button class="btn btn-primary" @onclick="callCreateWallet">Create wallet</button>
-                }
-                <div class="input-group mt-1">
-                    <div class="text-danger">@Alert</div>
+                    @if (IsSubmitting)
+                    {
+                        <button class="btn btn-danger" disabled>
+                            <span class="spinner-border spinner-border-sm"></span> Working ......
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="callCreateWallet">Create wallet</button>
+                    }
+                    <div class="input-group mt-1">
+                        <div class="text-danger">@Alert</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-} else {
-<div class="row ">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="text-success">@Alert</h5>
-                <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+}
+else
+{
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-success">@Alert</h5>
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @code {
-	bool ShowForm { get; set; } = true;
+    bool ShowForm { get; set; } = true;
     public string WalletName { get; set; }
     public string Mnemonic { get; set; }
     private string Password { get; set; }
@@ -100,7 +102,7 @@
         StateHasChanged();
         await Task.Delay(1);
     }
-    private  async Task CreateWallet()
+    private async Task CreateWallet()
     {
         if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "Ensure that you have generated a new Mnemonic"; return; }
         if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
@@ -114,6 +116,7 @@
         this.WalletSyncManager.SyncFromDate(this.DateTimeProvider.GetUtcNow());
         this.Alert = "Your wallet has now been created.";
         ShowForm = false;
+        await Task.CompletedTask;
     }
     private void GenerateMnemonic()
     {

@@ -34,19 +34,16 @@ namespace NBitcoin.Tests
             curves.Add("K-283", SecObjectIdentifiers.SecT283k1);
             curves.Add("K-233", SecObjectIdentifiers.SecT233k1);
             curves.Add("K-163", SecObjectIdentifiers.SecT163k1);
-
         }
 
         private static Dictionary<string, DerObjectIdentifier> curves;
+
         public DeterministicSignatureTests()
         {
-
-
         }
 
         private class DeterministicSigTest
         {
-
             public BigInteger K
             {
                 get;
@@ -85,7 +82,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void IETFDetailedExample()
         {
             ECPrivateKeyParameters key = ParseKey(
@@ -119,19 +115,19 @@ namespace NBitcoin.Tests
 
         private Func<BouncyCastle.Crypto.IDigest> GetHash(string hash)
         {
-            if(hash.Equals("SHA-256", StringComparison.OrdinalIgnoreCase))
+            if (hash.Equals("SHA-256", StringComparison.OrdinalIgnoreCase))
                 return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha256Digest();
 
-            if(hash.Equals("SHA-1", StringComparison.OrdinalIgnoreCase))
+            if (hash.Equals("SHA-1", StringComparison.OrdinalIgnoreCase))
                 return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha1Digest();
 
-            if(hash.Equals("SHA-224", StringComparison.OrdinalIgnoreCase))
+            if (hash.Equals("SHA-224", StringComparison.OrdinalIgnoreCase))
                 return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha224Digest();
 
-            if(hash.Equals("SHA-384", StringComparison.OrdinalIgnoreCase))
+            if (hash.Equals("SHA-384", StringComparison.OrdinalIgnoreCase))
                 return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha384Digest();
 
-            if(hash.Equals("SHA-512", StringComparison.OrdinalIgnoreCase))
+            if (hash.Equals("SHA-512", StringComparison.OrdinalIgnoreCase))
                 return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha512Digest();
 
             throw new NotImplementedException();
@@ -142,12 +138,10 @@ namespace NBitcoin.Tests
             TestSig(test.Key, test);
         }
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void DeterministicSignatureTestVectors()
         {
-            foreach(DeterministicSigTest test in ParseTestsDump(File.ReadAllText(TestDataLocations.GetFileFromDataFolder("determiniticECDSA.txt"))))
+            foreach (DeterministicSigTest test in ParseTestsDump(File.ReadAllText(TestDataLocations.GetFileFromDataFolder("determiniticECDSA.txt"))))
             {
                 TestSig(test);
             }
@@ -155,31 +149,30 @@ namespace NBitcoin.Tests
 
         private IEnumerable<DeterministicSigTest> ParseTestsDump(string testDump)
         {
-            foreach(string curveTest in testDump.Split(new string[] { "Key pair:" }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string curveTest in testDump.Split(new string[] { "Key pair:" }, StringSplitOptions.RemoveEmptyEntries))
             {
                 string[] tests = curveTest.Split(new string[] { "Signatures:" }, StringSplitOptions.RemoveEmptyEntries);
-                if(tests.Length == 1)
+                if (tests.Length == 1)
                     continue;
-                if(tests.Length != 2)
+                if (tests.Length != 2)
                     throw new Exception("Test bug");
                 string key = tests[0];
                 string signatures = tests[1];
                 ECPrivateKeyParameters privateKey = ParseKey(key);
-                foreach(DeterministicSigTest test in ParseTests(signatures))
+                foreach (DeterministicSigTest test in ParseTests(signatures))
                 {
                     test.Key = privateKey;
                     yield return test;
                 }
-
             }
         }
 
         private IEnumerable<DeterministicSigTest> ParseTests(string tests)
         {
-            foreach(string test in tests.Split(new string[] { "With " }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string test in tests.Split(new string[] { "With " }, StringSplitOptions.RemoveEmptyEntries))
             {
                 DeterministicSigTest result = ParseTest("With " + test);
-                if(result != null)
+                if (result != null)
                     yield return result;
             }
         }
@@ -187,7 +180,7 @@ namespace NBitcoin.Tests
         private DeterministicSigTest ParseTest(string data)
         {
             Match match = Regex.Match(data, "With (.*?), message = \"?(.*?)\"?:");
-            if(!match.Success)
+            if (!match.Success)
                 return null;
             data = data.Replace(match.Value, "");
 
@@ -210,14 +203,14 @@ namespace NBitcoin.Tests
             // The state of the line separators may be affected by copy operations - so do an environment independent line split...
             string[] lines = data.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             string previous = null;
-            foreach(string line in lines)
+            foreach (string line in lines)
             {
                 string[] kv = line.Replace("\t", "")
                               .Replace(" ", "")
                               .Split(new string[] { ":", "=" }, StringSplitOptions.RemoveEmptyEntries);
-                if(kv.Length != 2)
+                if (kv.Length != 2)
                 {
-                    if(kv.Length == 1 && previous != null)
+                    if (kv.Length == 1 && previous != null)
                     {
                         values[previous] = values[previous] + kv[0];
                     }
@@ -247,6 +240,5 @@ namespace NBitcoin.Tests
 
             return key;
         }
-
     }
 }

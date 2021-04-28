@@ -6,6 +6,7 @@ using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
 using Blockcore.P2P;
+using Blockcore.Tests.Common;
 using NBitcoin;
 using NBitcoin.Protocol;
 
@@ -41,7 +42,11 @@ namespace Blockcore.IntegrationTests.Common.Runners
             else
                 settings = new NodeSettings(this.Network, agent: this.Agent, args: argsAsStringArray) { MinProtocolVersion = this.minProtocolVersion };
 
-            IFullNodeBuilder builder = new FullNodeBuilder().UseNodeSettings(settings);
+            var persistenceProviderManager = new TestPersistenceProviderManager(settings);
+
+            IFullNodeBuilder builder = new FullNodeBuilder()
+                .UsePersistenceProviderMananger(persistenceProviderManager)
+                .UseNodeSettings(settings);
 
             this.callback(builder);
 

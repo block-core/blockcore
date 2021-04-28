@@ -1,16 +1,21 @@
 ﻿@page "/walletview/{walletname}/{accountname}"
+@implements IDisposable
 
 @using Blockcore.Features.Wallet.Interfaces
 @using NBitcoin;
 @using Blockcore.Features.Wallet.Api.Controllers
 @using Blockcore.Features.Wallet.Api.Models
+@using Blockcore.Features.Wallet.Events
 @using Blockcore.Networks
+@using Blockcore.Signals
 @using Blockcore.UI.BlazorModal
+@using Blockcore.EventBus
 
 @inject NavigationManager NavigationManager
 @inject IWalletManager WalletManager
 @inject Network Network
 @inject ModalService ModalService
+@inject ISignals Signals
 
 @{
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
@@ -126,5 +131,42 @@
     {
         Console.WriteLine(selection);
         NavigateToWallet(selection, "account 0");
+    }
+
+    List<SubscriptionToken> subscriptionTokens;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && this.Signals != null)
+        {
+            this.subscriptionTokens = new List<SubscriptionToken>()
+        {
+                this.Signals.Subscribe<TransactionFound>(this.ReloadEvent),
+                this.Signals.Subscribe<TransactionSpent>(this.ReloadEvent),
+            };
+        }
+    }
+
+    DateTime lastRefresh = DateTime.UtcNow;
+
+    private void ReloadEvent(object _)
+    {
+        if ((DateTime.UtcNow - lastRefresh).Seconds > 1)
+        {
+            lastRefresh = DateTime.UtcNow;
+
+            InvokeAsync(this.StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (subscriptionTokens != null)
+        {
+            foreach (var subscriptionToken in subscriptionTokens)
+            {
+                subscriptionToken.Dispose();
+            }
+        }
     }
 }

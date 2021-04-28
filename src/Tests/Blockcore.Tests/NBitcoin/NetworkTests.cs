@@ -33,7 +33,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanGetNetworkFromName()
         {
             Network bitcoinMain = KnownNetworks.Main;
@@ -56,7 +55,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void RegisterNetworkTwiceReturnsSameNetwork()
         {
             Network main = KnownNetworks.Main;
@@ -65,7 +63,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ReadMagicByteWithFirstByteDuplicated()
         {
             List<byte> bytes = this.networkMain.MagicBytes.ToList();
@@ -79,7 +76,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void BitcoinMainnetIsInitializedCorrectly()
         {
             Assert.Equal(17, this.networkMain.Checkpoints.Count);
@@ -159,7 +155,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void BitcoinTestnetIsInitializedCorrectly()
         {
             Network network = KnownNetworks.TestNet;
@@ -238,7 +233,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void BitcoinRegTestIsInitializedCorrectly()
         {
             Network network = KnownNetworks.RegTest;
@@ -389,7 +383,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void StratisTestnetIsInitializedCorrectly()
         {
             Network network = this.stratisTest;
@@ -462,7 +455,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void StratisRegTestIsInitializedCorrectly()
         {
             Network network = this.stratisRegTest;
@@ -535,7 +527,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void MineGenesisBlockWithMissingParametersThrowsException()
         {
             Assert.Throws<ArgumentException>(() => Network.MineGenesisBlock(null, "some string", new Target(new uint256()), Money.Zero));
@@ -545,7 +536,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void MineGenesisBlockWithLongCoinbaseTextThrowsException()
         {
             string coinbaseText100Long = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";

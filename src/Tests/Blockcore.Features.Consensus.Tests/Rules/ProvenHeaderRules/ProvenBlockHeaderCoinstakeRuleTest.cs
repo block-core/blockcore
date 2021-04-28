@@ -395,6 +395,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void RunRule_ProvenHeadersActive_And_InvalidMerkleProof_BadMerkleProofErrorIsThrown()
         {
             // Setup previous chained header.

@@ -8,6 +8,7 @@ using Blockcore.Features.Consensus;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 
@@ -39,7 +40,7 @@ namespace Blockcore.Tests.Builder
             this.featureCollectionDelegates = new List<Action<IFeatureCollection>>();
             this.featureCollection = new FeatureCollection();
 
-            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection);
+            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection, new TestPersistenceProviderManager(null));
 
             this.fullNodeBuilder.Network = KnownNetworks.RegTest;
         }
@@ -47,7 +48,7 @@ namespace Blockcore.Tests.Builder
         [Fact]
         public void ConstructorWithoutNodeSettingsDoesNotSetupBaseServices()
         {
-            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection);
+            this.fullNodeBuilder = new FullNodeBuilder(this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection, new TestPersistenceProviderManager(null));
 
             Assert.Empty(this.featureCollection.FeatureRegistrations);
             Assert.Empty(this.featureCollectionDelegates);
@@ -62,7 +63,7 @@ namespace Blockcore.Tests.Builder
         {
             var settings = new NodeSettings(KnownNetworks.RegTest);
 
-            this.fullNodeBuilder = new FullNodeBuilder(settings, this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection);
+            this.fullNodeBuilder = new FullNodeBuilder(settings, this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection, new TestPersistenceProviderManager(settings));
 
             Assert.Empty(this.featureCollection.FeatureRegistrations);
             Assert.Single(this.featureCollectionDelegates);
@@ -114,7 +115,7 @@ namespace Blockcore.Tests.Builder
             string dataDir = "TestData/FullNodeBuilder/BuildWithInitialServicesSetup";
             var nodeSettings = new NodeSettings(KnownNetworks.StratisRegTest, args: new string[] { $"-datadir={dataDir}" });
 
-            this.fullNodeBuilder = new FullNodeBuilder(nodeSettings, this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection);
+            this.fullNodeBuilder = new FullNodeBuilder(nodeSettings, this.serviceCollectionDelegates, this.serviceProviderDelegates, this.featureCollectionDelegates, this.featureCollection, new TestPersistenceProviderManager(nodeSettings));
 
             this.fullNodeBuilder.ConfigureServices(e =>
             {

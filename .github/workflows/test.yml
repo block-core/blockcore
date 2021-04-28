@@ -5,6 +5,7 @@ on:
     - cron:  '0 3 * * *'
   repository_dispatch:
     types: [test]
+  workflow_dispatch:
 
 jobs:
   
@@ -23,13 +24,8 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.202' 
-
     - name: Restore
       run: dotnet restore ${{env.SOLUTION_PATH}}
       
@@ -37,4 +33,4 @@ jobs:
       run: dotnet build --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
 
     - name: Integration Test
-      run: dotnet test -v=normal --no-build --filter FullyQualifiedName~IntegrationTests --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
+      run: dotnet test -v=normal --no-build --filter 'FullyQualifiedName~IntegrationTests&Unstable!=True' --configuration ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

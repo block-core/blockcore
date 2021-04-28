@@ -10,6 +10,7 @@ namespace Blockcore.Base.Deployments
     public class BIP9DeploymentFlags
     {
         public ScriptVerify ScriptFlags { get; set; }
+
         public Transaction.LockTimeFlags LockTimeFlags { get; set; }
 
         public BIP9DeploymentFlags()

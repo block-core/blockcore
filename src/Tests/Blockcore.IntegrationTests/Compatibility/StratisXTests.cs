@@ -42,7 +42,7 @@ namespace Blockcore.IntegrationTests.Compatibility
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 CoreNode stratisXNode = builder.CreateStratisXNode(version: "2.0.0.5").Start();
                 CoreNode sbfnNode = builder.CreateStratisPosNode(network).WithWallet().Start();
@@ -78,7 +78,7 @@ namespace Blockcore.IntegrationTests.Compatibility
 
             using (NodeBuilder builder = NodeBuilder.Create(this).WithLogsEnabled())
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 CoreNode stratisXNode = builder.CreateStratisXNode(version: "2.0.0.5").Start();
 
@@ -133,7 +133,7 @@ namespace Blockcore.IntegrationTests.Compatibility
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 CoreNode stratisXNode = builder.CreateStratisXNode(version: "2.0.0.5").Start();
 
@@ -203,7 +203,7 @@ namespace Blockcore.IntegrationTests.Compatibility
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 CoreNode stratisXNode = builder.CreateStratisXNode(version: "2.0.0.5").Start();
 
@@ -273,7 +273,7 @@ namespace Blockcore.IntegrationTests.Compatibility
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 CoreNode stratisXNode = builder.CreateStratisXNode(version: "2.0.0.5").Start();
 
@@ -349,7 +349,7 @@ namespace Blockcore.IntegrationTests.Compatibility
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 CoreNode xNode1 = builder.CreateStratisXNode(version: "2.0.0.5").Start();
 
@@ -400,6 +400,7 @@ namespace Blockcore.IntegrationTests.Compatibility
         }
 
         [Fact]
+        [Trait("Unstable", "True")]
         public void GatewayNodeCanSyncBeforeAndAfterLastCheckpointPowAndPoS()
         {
             Network network = new StratisMain10KCheckpoint();
@@ -446,7 +447,6 @@ namespace Blockcore.IntegrationTests.Compatibility
         /// All mempools should be empty at the end.
         /// </summary>
         [Fact]
-        [Trait("Unstable", "True")]
         public void Transaction_TraversesNodes_AndIsMined_AndNodesSync()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -457,7 +457,7 @@ namespace Blockcore.IntegrationTests.Compatibility
 
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                var network = new StratisRegTest();
+                var network = new StratisOverrideRegTest();
 
                 CoreNode xNode1 = builder.CreateStratisXNode(version: "2.0.0.5").Start();
 

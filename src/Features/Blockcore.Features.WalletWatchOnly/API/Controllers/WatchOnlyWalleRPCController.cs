@@ -55,7 +55,9 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
         /// <summary>
         /// The wallet name set by selectwallet method. This is static since the controller is a stateless type. This value should probably be cached by an injected service in the future.
         /// </summary>
+#pragma warning disable 649
         private static readonly string CurrentWalletName;
+#pragma warning restore 649
 
         /// <inheritdoc />
         public WatchOnlyWalleRPCController(

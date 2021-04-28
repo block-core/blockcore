@@ -411,7 +411,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                WalletHistoryModel model = WalletModelBuilder.GetHistory(this.walletManager, this.network, request);
+                WalletHistoryModel model = WalletModelBuilder.GetHistorySlim(this.walletManager, this.network, request);
 
                 return this.Json(model);
             }
@@ -1569,6 +1569,27 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 return this.Json(model);
             }
             catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Sweeps one or more private keys to another address.
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns>List of transactions</returns>
+        [HttpPost]
+        [Route("sweep")]
+        public IActionResult Sweep([FromBody] SweepRequest request)
+        {
+            try
+            {
+                var responseModel = this.walletManager.Sweep(request.PrivateKeys, request.DestinationAddress, request.Broadcast);
+                return this.Json(responseModel);
+            }
+            catch(Exception e)
             {
                 this.logger.LogError("Exception occurred: {0}", e.ToString());
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());

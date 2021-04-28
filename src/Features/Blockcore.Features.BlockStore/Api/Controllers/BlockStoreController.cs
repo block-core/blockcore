@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using Blockcore.Base;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Features.BlockStore.Api.Models;
 using Blockcore.Features.BlockStore.Models;
+using Blockcore.Features.Consensus;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
@@ -17,9 +20,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Blockcore.Features.BlockStore.Api.Contollers
+namespace Blockcore.Features.BlockStore.Api.Controllers
 {
-
     /// <summary>Controller providing operations on a blockstore.</summary>
     [Authorize]
     [ApiController]
@@ -44,24 +46,34 @@ namespace Blockcore.Features.BlockStore.Api.Contollers
         /// <summary>Current network for the active controller instance.</summary>
         private readonly Network network;
 
+        /// <summary>UTXO indexer.</summary>
+        private readonly IUtxoIndexer utxoIndexer;
+
+        private readonly IStakeChain stakeChain;
+
         public BlockStoreController(
             Network network,
             ILoggerFactory loggerFactory,
             IBlockStore blockStore,
             IChainState chainState,
             ChainIndexer chainIndexer,
-            IAddressIndexer addressIndexer)
+            IAddressIndexer addressIndexer,
+            IUtxoIndexer utxoIndexer,
+            IStakeChain stakeChain = null)
         {
             Guard.NotNull(network, nameof(network));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(chainState, nameof(chainState));
             Guard.NotNull(addressIndexer, nameof(addressIndexer));
+            Guard.NotNull(utxoIndexer, nameof(utxoIndexer));
 
             this.addressIndexer = addressIndexer;
             this.network = network;
             this.blockStore = blockStore;
             this.chainState = chainState;
             this.chainIndexer = chainIndexer;
+            this.utxoIndexer = utxoIndexer;
+            this.stakeChain = stakeChain;
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
@@ -129,6 +141,15 @@ namespace Blockcore.Features.BlockStore.Api.Contollers
                     blockModel.PosBlockSignature = posBlock.BlockSignature.ToHex(this.network.Consensus.ConsensusFactory);
                     blockModel.PosBlockTrust = new Target(chainedHeader.GetBlockTarget()).ToUInt256().ToString();
                     blockModel.PosChainTrust = chainedHeader.ChainWork.ToString(); // this should be similar to ChainWork
+
+                    if (this.stakeChain != null)
+                    {
+                        BlockStake blockStake = this.stakeChain.Get(blockId);
+
+                        blockModel.PosModifierv2 = blockStake?.StakeModifierV2.ToString();
+                        blockModel.PosFlags = blockStake?.Flags == BlockFlag.BLOCK_PROOF_OF_STAKE ? "proof-of-stake" : "proof-of-work";
+                        blockModel.PosHashProof = blockStake?.HashProof.ToString();
+                    }
                 }
 
                 return this.Json(blockModel);
@@ -203,6 +224,40 @@ namespace Blockcore.Features.BlockStore.Api.Contollers
                 VerboseAddressBalancesResult result = this.addressIndexer.GetAddressIndexerState(addressesArray);
 
                 return this.Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>Returns every UTXO as of a given block height. This may take some time for large chains.</summary>
+        /// <param name="atBlockHeight">Only process blocks up to this height for the purposes of constructing the UTXO set.</param>
+        /// <returns>A result object containing the UTXOs.</returns>
+        /// <response code="200">Returns the UTXO set.</response>
+        /// <response code="400">Unexpected exception occurred</response>
+        [Route(BlockStoreRouteEndPoint.GetUtxoSet)]
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public IActionResult GetUtxoSet(int atBlockHeight)
+        {
+            try
+            {
+                ReconstructedCoinviewContext coinView = this.utxoIndexer.GetCoinviewAtHeight(atBlockHeight);
+
+                var outputs = new List<UtxoModel>();
+
+                foreach (OutPoint outPoint in coinView.UnspentOutputs)
+                {
+                    TxOut txOut = coinView.Transactions[outPoint.Hash].Outputs[outPoint.N];
+                    var utxo = new UtxoModel() { TxId = outPoint.Hash, Index = outPoint.N, ScriptPubKey = txOut.ScriptPubKey, Value = txOut.Value };
+
+                    outputs.Add(utxo);
+                }
+
+                return this.Json(outputs);
             }
             catch (Exception e)
             {

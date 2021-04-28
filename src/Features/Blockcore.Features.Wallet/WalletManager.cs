@@ -13,6 +13,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.EventBus;
+using Blockcore.Features.BlockStore;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
@@ -98,6 +99,12 @@ namespace Blockcore.Features.Wallet
         /// <summary>Provider of time functions.</summary>
         private readonly IDateTimeProvider dateTimeProvider;
 
+        /// <summary>Utxo Indexer.</summary>
+        private readonly IUtxoIndexer utxoIndexer;
+
+        /// <summary>Policy for wallet fees</summary>
+        private readonly IWalletFeePolicy walletFeePolicy;
+
         /// <summary>The settings for the wallet feature.</summary>
         private readonly WalletSettings walletSettings;
 
@@ -131,7 +138,8 @@ namespace Blockcore.Features.Wallet
             IDateTimeProvider dateTimeProvider,
             IScriptAddressReader scriptAddressReader,
             ISignals signals = null,
-            IBroadcasterManager broadcasterManager = null) // no need to know about transactions the node will broadcast to.
+            IBroadcasterManager broadcasterManager = null, // no need to know about transactions the node will broadcast to.
+            IUtxoIndexer utxoIndexer = null)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(network, nameof(network));
@@ -160,6 +168,8 @@ namespace Blockcore.Features.Wallet
             this.broadcasterManager = broadcasterManager;
             this.scriptAddressReader = scriptAddressReader;
             this.dateTimeProvider = dateTimeProvider;
+            this.utxoIndexer = utxoIndexer;
+            this.walletFeePolicy = walletFeePolicy;
 
             // register events
             if (this.signals != null)
@@ -1195,10 +1205,7 @@ namespace Blockcore.Features.Wallet
                             foundReceivingTrx = true;
                             this.logger.LogDebug("Transaction '{0}' contained funds received by the user's wallet(s).", hash);
 
-                            if (this.signals != null)
-                            {
-                                this.signals.Publish(new Events.TransactionFound(transaction));
-                            }
+                            this.signals?.Publish(new Events.TransactionFound(transaction));
                         }
                     }
                 }
@@ -1216,6 +1223,8 @@ namespace Blockcore.Features.Wallet
                         this.AddSpendingTransactionToWallet(walletIndexItem.Value.Wallet, transaction, input.PrevOut, walletIndexItem.Value.Wallet, blockHeight, block);
                         foundSendingTrx = true;
                         this.logger.LogDebug("Transaction '{0}' contained funds sent by the user's wallet(s).", hash);
+
+                        this.signals?.Publish(new Events.TransactionSpent(transaction, input.PrevOut));
                     }
                 }
             }
@@ -2086,6 +2095,123 @@ namespace Blockcore.Features.Wallet
             }
 
             return new ExtKey(privateKey, wallet.ChainCode);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<string> Sweep(IEnumerable<string> privateKeys, string destAddress, bool broadcast)
+        {
+            // Build the set of scriptPubKeys to look for.
+            var scriptList = new HashSet<Script>();
+
+            var keyMap = new Dictionary<Script, Key>();
+
+            // Currently this is only designed to support P2PK and P2PKH, although segwit scripts are probably easily added.
+            foreach (string wif in privateKeys)
+            {
+                var privateKey = Key.Parse(wif, this.network);
+
+                Script p2pk = PayToPubkeyTemplate.Instance.GenerateScriptPubKey(privateKey.PubKey);
+                Script p2pkh = PayToPubkeyHashTemplate.Instance.GenerateScriptPubKey(privateKey.PubKey);
+
+                keyMap.Add(p2pk, privateKey);
+                keyMap.Add(p2pkh, privateKey);
+
+                scriptList.Add(p2pk);
+                scriptList.Add(p2pkh);
+            }
+
+            var coinView = this.utxoIndexer.GetCoinviewAtHeight(this.ChainIndexer.Height);
+
+            var builder = new TransactionBuilder(this.network);
+
+            var sweepTransactions = new List<string>();
+
+            Money total = 0;
+            int currentOutputCount = 0;
+
+            foreach (OutPoint outPoint in coinView.UnspentOutputs)
+            {
+                // Obtain the transaction output in question.
+                TxOut txOut = coinView.Transactions[outPoint.Hash].Outputs[outPoint.N];
+
+                // Check if the scriptPubKey matches one of those for the supplied private keys.
+                if (!scriptList.Contains(txOut.ScriptPubKey))
+                {
+                    continue;
+                }
+
+                // Add the UTXO as an input to the sweeping transaction.
+                builder.AddCoins(new Coin(outPoint, txOut));
+                builder.AddKeys(new[] { keyMap[txOut.ScriptPubKey] });
+
+                currentOutputCount++;
+                total += txOut.Value;
+
+                if (total == 0)
+                {
+                    continue;
+                }
+
+                // If we reach a high total output count, we'll finalize the transaction and start building another one.
+                if (currentOutputCount > 500)
+                {
+                    PrepareTransaction(destAddress, ref builder, total, sweepTransactions);
+
+                    currentOutputCount = 0;
+                    total = 0;
+                }
+            }
+
+            // If there was a total of less than 500 inputs, or leftovers, we'll prepare the transaction.
+            if (currentOutputCount > 0)
+            {
+                PrepareTransaction(destAddress, ref builder, total, sweepTransactions);
+            }
+
+            if (broadcast)
+            {
+                foreach (string sweepTransaction in sweepTransactions)
+                {
+                    Transaction toBroadcast = this.network.CreateTransaction(sweepTransaction);
+
+                    this.broadcasterManager.BroadcastTransactionAsync(toBroadcast).GetAwaiter().GetResult();
+                }
+            }
+
+            return sweepTransactions;
+        }
+
+        public void PrepareTransaction(string destAddress, ref TransactionBuilder builder, Money total, List<string> sweepTransactions)
+        {
+            BitcoinAddress destination = BitcoinAddress.Create(destAddress, this.network);
+
+            builder.Send(destination, total);
+
+            // Cause the last destination to pay the fee, as we have no other funds to pay fees with.
+            builder.SubtractFees();
+
+            FeeRate feeRate = this.walletFeePolicy.GetFeeRate(FeeType.High.ToConfirmations());
+            builder.SendEstimatedFees(feeRate);
+
+            Transaction sweepTransaction = builder.BuildTransaction(true);
+
+            TransactionPolicyError[] errors = builder.Check(sweepTransaction);
+
+            if (errors.Length == 0)
+            {
+                sweepTransactions.Add(sweepTransaction.ToHex());
+            }
+            else
+            {
+                // If there are errors, simply append them to the list of return values.
+                foreach (var error in errors)
+                {
+                    sweepTransactions.Add(error.ToString());
+                }
+            }
+
+            // Reset the builder and related state, as we are now creating a fresh transaction.
+            builder = new TransactionBuilder(this.network);
         }
     }
 }

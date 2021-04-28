@@ -43,7 +43,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanVerifySignature()
         {
             var tests = new[]
@@ -85,10 +84,9 @@ namespace NBitcoin.Tests
                 },
             };
 
-
-            foreach(var test in tests)
+            foreach (var test in tests)
             {
-                if(test.PrivateKey != null)
+                if (test.PrivateKey != null)
                 {
                     BitcoinSecret secret = this.networkMain.CreateBitcoinSecret(test.PrivateKey);
                     string signature = secret.PrivateKey.SignMessage(test.Message);
@@ -102,7 +100,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanVerifyTrezorSignature()
         {
             string visual_challenge = "2015-03-23 17:39:22";
@@ -118,7 +115,6 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanGeneratePubKeysAndAddress()
         {
             //Took from http://brainwallet.org/ and http://procbits.com/2013/08/27/generating-a-bitcoin-address-with-javascript
@@ -148,7 +144,7 @@ namespace NBitcoin.Tests
                 }
             };
 
-            foreach(var test in tests)
+            foreach (var test in tests)
             {
                 BitcoinSecret secret = this.networkMain.CreateBitcoinSecret(test.PrivateKeyWIF);
                 Assert.Equal(test.PubKey, secret.PrivateKey.PubKey.ToHex());
@@ -170,13 +166,10 @@ namespace NBitcoin.Tests
                 var compressedAddr = (BitcoinPubKeyAddress)this.networkMain.CreateBitcoinAddress(test.CompressedAddress);
                 Assert.Equal(new KeyId(test.CompressedHash160), compressedAddr.Hash);
                 Assert.Equal(new KeyId(test.CompressedHash160), compressedSec.PrivateKey.PubKey.Hash);
-
-
             }
         }
 
         [Fact]
-        [Trait("Core", "Core")]
         public void key_test1()
         {
             BitcoinSecret bsecret1 = this.networkMain.CreateBitcoinSecret(strSecret1);
@@ -207,12 +200,10 @@ namespace NBitcoin.Tests
             Assert.True(this.addr1C.Hash == pubkey1C.Hash);
             Assert.True(this.addr2C.Hash == pubkey2C.Hash);
 
-
-
-            for(int n = 0; n < 16; n++)
+            for (int n = 0; n < 16; n++)
             {
                 string strMsg = String.Format("Very secret message {0}: 11", n);
-                if(n == 10)
+                if (n == 10)
                 {
                     //Test one long message
                     strMsg = String.Join(",", Enumerable.Range(0, 2000).Select(i => i.ToString()).ToArray());
@@ -286,9 +277,7 @@ namespace NBitcoin.Tests
             }
         }
 
-
         [Fact]
-        [Trait("Core", "Core")]
         public void key_test_from_bytes()
         {
             //Example private key taken from https://en.bitcoin.it/wiki/Private_key

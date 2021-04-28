@@ -925,4 +925,15 @@ namespace Blockcore.Features.Wallet.Api.Models
         [Required(ErrorMessage = "A message is required.")]
         public string Message { get; set; }
     }
+
+    public class SweepRequest : RequestModel
+    {
+        [Required(ErrorMessage = "One or more private keys is required.")]
+        public List<string> PrivateKeys { get; set; }
+
+        [Required(ErrorMessage = "A destination address is required.")]
+        public string DestinationAddress { get; set; }
+
+        public bool Broadcast { get; set; }
+    }
 }

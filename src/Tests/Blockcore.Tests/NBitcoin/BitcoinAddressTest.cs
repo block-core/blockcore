@@ -7,7 +7,6 @@ namespace NBitcoin.Tests
     public class BitcoinAddressTest
     {
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void ShouldThrowBase58Exception()
         {
             string key = "";

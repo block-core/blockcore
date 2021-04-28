@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>LevelDb persistence for Blockcore Consensus feature</Description>
+    <AssemblyTitle>Blockcore.Features.Consensus.Persistence.LevelDb</AssemblyTitle>
+    <AssemblyName>Blockcore.Features.Consensus.Persistence.LevelDb</AssemblyName>
+    <PackageId>Blockcore.Features.Consensus.Persistence.LevelDb</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Authors>Blockcore</Authors>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Blockcore\Blockcore.csproj" />
+    <ProjectReference Include="..\..\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
+    <ProjectReference Include="..\Blockcore.Persistence.LevelDb\Blockcore.Persistence.LevelDb.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+</Project>

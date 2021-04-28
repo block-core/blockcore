@@ -30,7 +30,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletManager")]
         public void Given_AWalletIsPresent_When_GetWatchOnlyWalletIsCalled_ThenthewalletIsreturned()
         {
             DataFolder dataFolder = CreateDataFolder(this);
@@ -47,7 +46,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletManager")]
         public void Given_AnAddressIsPassed_When_WatchAddressIsCalled_ThenAnAddressIsAddedToTheWatchList()
         {
             DataFolder dataFolder = CreateDataFolder(this);
@@ -67,7 +65,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletManager")]
         public void Given_AWatchedAddress_When_ATransactionIsReceived_ThenTransactionDataIsAddedToTheAddress()
         {
             // Arrange.
@@ -106,7 +103,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletManager")]
         public void Given_AWatchedAddress_When_ATransactionIsReceivedInABlock_ThenTransactionDataIsAddedToTheAddress()
         {
             // Arrange.
@@ -148,7 +144,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletManager")]
         public void Given_AWatchedAddress_When_ATransactionIsReceivedInABlock_ThenCanCalculateRelativeBalance()
         {
             // Arrange.
@@ -180,7 +175,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletManager")]
         public void Given_AWatchedAddress_ThenCanCalculateComplexRelativeBalance()
         {
             DataFolder dataFolder = CreateDataFolder(this);
@@ -223,7 +217,6 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         }
 
         [Fact]
-        [Trait("Module", "WatchOnlyWalletManager")]
         public void Given_AWatchedAddress_And_A_WatchedTransaction_CanPopulateLookup()
         {
             DataFolder dataFolder = CreateDataFolder(this);

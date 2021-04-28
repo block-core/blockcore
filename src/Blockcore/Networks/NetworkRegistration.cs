@@ -11,12 +11,12 @@ namespace Blockcore.Networks
     /// </summary>
     public static class NetworkRegistration
     {
-        private static readonly ConcurrentDictionary<string, Network> registeredNetworks = new ConcurrentDictionary<string, Network>();
+        private static readonly ConcurrentDictionary<string, Network> RegisteredNetworks = new ConcurrentDictionary<string, Network>();
 
         /// <summary>
         /// Register an immutable <see cref="Network"/> instance so it is queryable through <see cref="GetNetwork"/> and <see cref="GetNetworks"/>.
         /// <para>
-        /// If the network already exists, the already registered instance will be returned from the <see cref="registeredNetworks"/> collection.
+        /// If the network already exists, the already registered instance will be returned from the <see cref="RegisteredNetworks"/> collection.
         /// </para>
         /// </summary>
         public static Network Register(Network network)
@@ -38,18 +38,18 @@ namespace Blockcore.Networks
                 if (network.Consensus == null)
                     throw new InvalidOperationException("A consensus needs to be provided.");
 
-                registeredNetworks.TryAdd(networkName.ToLowerInvariant(), network);
+                RegisteredNetworks.TryAdd(networkName.ToLowerInvariant(), network);
             }
 
             return network;
         }
 
         /// <summary>
-        /// Clears the <see cref="registeredNetworks"/> collection.
+        /// Clears the <see cref="RegisteredNetworks"/> collection.
         /// </summary>
         public static void Clear()
         {
-            registeredNetworks.Clear();
+            RegisteredNetworks.Clear();
         }
 
         /// <summary>
@@ -59,17 +59,17 @@ namespace Blockcore.Networks
         /// <returns>The network or null of the name does not match any network.</returns>
         public static Network GetNetwork(string name)
         {
-            if (!registeredNetworks.Any())
+            if (!RegisteredNetworks.Any())
                 return null;
 
-            return registeredNetworks.TryGet(name.ToLowerInvariant());
+            return RegisteredNetworks.TryGet(name.ToLowerInvariant());
         }
 
         public static IEnumerable<Network> GetNetworks()
         {
-            if (registeredNetworks.Any())
+            if (RegisteredNetworks.Any())
             {
-                List<Network> others = registeredNetworks.Values.Distinct().ToList();
+                List<Network> others = RegisteredNetworks.Values.Distinct().ToList();
 
                 foreach (Network network in others)
                     yield return network;
@@ -89,6 +89,7 @@ namespace Blockcore.Networks
                     return network;
                 }
             }
+
             return null;
         }
     }

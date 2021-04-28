@@ -10,13 +10,12 @@ namespace NBitcoin.Tests
     public class pow_tests
     {
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanCalculatePowCorrectly()
         {
             var chain = new ChainIndexer(KnownNetworks.Main);
             EnsureDownloaded("MainChain.dat", "https://aois.blob.core.windows.net/public/MainChain.dat");
             chain.Load(File.ReadAllBytes("MainChain.dat"));
-            foreach(ChainedHeader block in chain.EnumerateAfter(chain.Genesis))
+            foreach (ChainedHeader block in chain.EnumerateAfter(chain.Genesis))
             {
                 Target thisWork = block.GetWorkRequired(KnownNetworks.Main);
                 Target thisWork2 = block.Previous.GetNextWorkRequired(KnownNetworks.Main);
@@ -27,7 +26,7 @@ namespace NBitcoin.Tests
 
         private static void EnsureDownloaded(string file, string url)
         {
-            if(File.Exists(file))
+            if (File.Exists(file))
                 return;
             var client = new HttpClient();
             client.Timeout = TimeSpan.FromMinutes(5);

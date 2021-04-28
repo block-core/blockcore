@@ -22,8 +22,6 @@ namespace Blockcore.Features.NodeHost
     /// </summary>
     public sealed class NodeHostFeature : FullNodeFeature
     {
-        internal static Dictionary<Type, ClientEventBroadcasterSettings> eventBroadcasterSettings;
-
         /// <summary>How long we are willing to wait for the NodeHost to stop.</summary>
         private const int NodeHostStopTimeoutSeconds = 10;
 

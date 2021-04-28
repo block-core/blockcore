@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
-using DBreeze;
-using DBreeze.DataTypes;
 using LevelDB;
 using Microsoft.Extensions.Logging;
-using Moq;
 using NBitcoin;
 using Xunit;
 
@@ -33,7 +30,7 @@ namespace Blockcore.Tests.Base
             var chain = new ChainIndexer(KnownNetworks.StratisRegTest);
             this.AppendBlock(chain);
 
-            using (var repo = new ChainRepository(new LoggerFactory(), new LeveldbChainStore(chain.Network, new DataFolder(dir), chain), chain.Network))
+            using (var repo = new ChainRepository(new LoggerFactory(), new LevelDbChainStore(chain.Network, new DataFolder(dir), chain), chain.Network))
             {
                 repo.SaveAsync(chain).GetAwaiter().GetResult();
             }
@@ -88,7 +85,7 @@ namespace Blockcore.Tests.Base
                     engine.Write(batch);
                 }
             }
-            using (var repo = new ChainRepository(new LoggerFactory(), new LeveldbChainStore(chain.Network, new DataFolder(dir), chain), chain.Network))
+            using (var repo = new ChainRepository(new LoggerFactory(), new LevelDbChainStore(chain.Network, new DataFolder(dir), chain), chain.Network))
             {
                 var testChain = new ChainIndexer(KnownNetworks.StratisRegTest);
                 testChain.SetTip(repo.LoadAsync(testChain.Genesis).GetAwaiter().GetResult());

@@ -14,17 +14,15 @@ namespace NBitcoin.Tests
     public class bip39_tests
     {
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanGenerateMnemonicOfSpecificLength()
         {
-            foreach(WordCount count in new[] { WordCount.Twelve, WordCount.TwentyFour, WordCount.TwentyOne, WordCount.Fifteen, WordCount.Eighteen })
+            foreach (WordCount count in new[] { WordCount.Twelve, WordCount.TwentyFour, WordCount.TwentyOne, WordCount.Fifteen, WordCount.Eighteen })
             {
                 Assert.Equal((int)count, new Mnemonic(Wordlist.English, count).Words.Length);
             }
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void CanDetectBadChecksum()
         {
             var mnemonic = new Mnemonic("turtle front uncle idea crush write shrug there lottery flower risk shell", Wordlist.English);
@@ -34,15 +32,14 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void EngTest()
         {
             JObject test = JObject.Parse(File.ReadAllText(TestDataLocations.GetFileFromDataFolder("bip39_vectors.json")));
 
-            foreach(JProperty language in test.Properties())
+            foreach (JProperty language in test.Properties())
             {
                 Wordlist lang = GetList(language.Name);
-                foreach(JArray langTest in ((JArray)language.Value).OfType<JArray>().Take(2))
+                foreach (JArray langTest in ((JArray)language.Value).OfType<JArray>().Take(2))
                 {
                     byte[] entropy = Encoders.Hex.DecodeData(langTest[0].ToString());
                     string mnemonicStr = langTest[1].ToString();
@@ -58,9 +55,7 @@ namespace NBitcoin.Tests
             }
         }
 
-
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void KDTableCanNormalize()
         {
             string input = "あおぞら";
@@ -70,12 +65,11 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void JapTest()
         {
             JArray test = JArray.Parse(File.ReadAllText(TestDataLocations.GetFileFromDataFolder("bip39_JP.json"), Encoding.UTF32));
 
-            foreach(JObject unitTest in test.OfType<JObject>())
+            foreach (JObject unitTest in test.OfType<JObject>())
             {
                 byte[] entropy = Encoders.Hex.DecodeData(unitTest["entropy"].ToString());
                 string mnemonicStr = unitTest["mnemonic"].ToString();
@@ -95,58 +89,50 @@ namespace NBitcoin.Tests
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestKnownEnglish()
         {
             Assert.Equal(Language.English, Wordlist.AutoDetectLanguage(new string[] { "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "about" }));
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestKnownJapenese()
         {
             Assert.Equal(Language.Japanese, Wordlist.AutoDetectLanguage(new string[] { "あいこくしん", "あいさつ", "あいだ", "あおぞら", "あかちゃん", "あきる", "あけがた", "あける", "あこがれる", "あさい", "あさひ", "あしあと", "あじわう", "あずかる", "あずき", "あそぶ", "あたえる", "あたためる", "あたりまえ", "あたる", "あつい", "あつかう", "あっしゅく", "あつまり", "あつめる", "あてな", "あてはまる", "あひる", "あぶら", "あぶる", "あふれる", "あまい", "あまど", "あまやかす", "あまり", "あみもの", "あめりか" }));
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestKnownSpanish()
         {
             Assert.Equal(Language.Spanish, Wordlist.AutoDetectLanguage(new string[] { "yoga", "yogur", "zafiro", "zanja", "zapato", "zarza", "zona", "zorro", "zumo", "zurdo" }));
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestKnownFrench()
         {
             Assert.Equal(Language.French, Wordlist.AutoDetectLanguage(new string[] { "abusif", "antidote" }));
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestKnownChineseSimplified()
         {
             Assert.Equal(Language.ChineseSimplified, Wordlist.AutoDetectLanguage(new string[] { "的", "一", "是", "在", "不", "了", "有", "和", "人", "这" }));
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestKnownChineseTraditional()
         {
             Assert.Equal(Language.ChineseTraditional, Wordlist.AutoDetectLanguage(new string[] { "的", "一", "是", "在", "不", "了", "有", "和", "載" }));
         }
 
         [Fact]
-        [Trait("UnitTest", "UnitTest")]
         public void TestKnownUnknown()
         {
             Assert.Equal(Language.Unknown, Wordlist.AutoDetectLanguage(new string[] { "gffgfg", "khjkjk", "kjkkj" }));
         }
 
-
         private Wordlist GetList(string lang)
         {
-            if(lang == "english")
+            if (lang == "english")
                 return Wordlist.English;
             throw new NotSupportedException(lang);
         }
@@ -158,7 +144,7 @@ namespace NBitcoin.Tests
         private void GenerateHardcodedBIP39Dictionary()
         {
             var builder = new StringBuilder();
-            foreach(Language lang in new[] { Language.ChineseSimplified, Language.ChineseTraditional, Language.English, Language.Japanese, Language.Spanish, Language.French })
+            foreach (Language lang in new[] { Language.ChineseSimplified, Language.ChineseTraditional, Language.English, Language.Japanese, Language.Spanish, Language.French })
             {
                 string name = Wordlist.GetLanguageFileName(lang);
                 builder.AppendLine("dico.Add(\"" + name + "\",\"" + GetLanguage(lang) + "\");");
@@ -194,18 +180,18 @@ namespace NBitcoin.Tests
             ranges.Add(CharRange(0x2000, 0x206F));
             ranges.Add(CharRange(0x20A0, 0x20CF));
 
-            foreach(char letter in ranges.SelectMany(c => c).OrderBy(c => c))
+            foreach (char letter in ranges.SelectMany(c => c).OrderBy(c => c))
             {
                 string nonNormal = new String(new[] { letter });
                 try
                 {
                     string normal = nonNormal.Normalize(NormalizationForm.FormKD);
-                    if(nonNormal != normal && chars.Add(letter))
+                    if (nonNormal != normal && chars.Add(letter))
                     {
                         builder.Append(nonNormal + normal + "\\n");
                     }
                 }
-                catch(ArgumentException)
+                catch (ArgumentException)
                 {
                 }
             }
@@ -215,7 +201,7 @@ namespace NBitcoin.Tests
 
             builder = new StringBuilder();
             builder.AppendLine("{");
-            foreach(CharRangeT range in ranges)
+            foreach (CharRangeT range in ranges)
             {
                 builder.AppendLine("new[]{" + range.From + "," + range.To + "},");
             }
@@ -230,12 +216,10 @@ namespace NBitcoin.Tests
 
             public IEnumerable<char> Chars;
 
-
             public IEnumerator<char> GetEnumerator()
             {
                 return this.Chars.GetEnumerator();
             }
-
 
             IEnumerator IEnumerable.GetEnumerator()
             {

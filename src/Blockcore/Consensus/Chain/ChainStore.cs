@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using NBitcoin;
 
@@ -11,6 +12,8 @@ namespace Blockcore.Consensus.Chain
         BlockHeader GetHeader(ChainedHeader chainedHeader, uint256 hash);
 
         bool PutHeader(BlockHeader blockHeader);
+
+        IEnumerable<ChainData> GetChainData();
 
         ChainData GetChainData(int height);
 
@@ -76,6 +79,12 @@ namespace Blockcore.Consensus.Chain
         public bool PutHeader(BlockHeader blockHeader)
         {
             return this.headers.TryAdd(blockHeader.GetHash(), blockHeader);
+        }
+
+        public IEnumerable<ChainData> GetChainData()
+        {
+            // Order by height and return new array with ChainData.
+            return this.chainData.OrderBy(c => c.Key).Select(c => c.Value);
         }
 
         public ChainData GetChainData(int height)

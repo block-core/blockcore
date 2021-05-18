@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
@@ -103,6 +104,34 @@ namespace Blockcore.Features.Base.Persistence.RocksDb
             }
 
             return true;
+        }
+
+        public IEnumerable<ChainData> GetChainData()
+        {
+            Dictionary<int, ChainData> list = new Dictionary<int, ChainData>();
+
+            lock (this.locker)
+            {
+                using (var iterator = this.rocksdb.NewIterator())
+                {
+                    iterator.SeekToFirst();
+
+                    while (iterator.Valid() && iterator.Key()[0] == ChainTableName)
+                    {
+                        var height = BitConverter.ToInt32(iterator.Key().AsSpan(1));
+                        byte[] bytes = iterator.Value();
+
+                        var data = new ChainData();
+                        data.FromBytes(bytes, this.network.Consensus.ConsensusFactory);
+                        list.Add(height, data);
+
+                        iterator.Next();
+                    }
+                }
+            }
+
+            // Order by height and return new array with ChainData.
+            return list.OrderBy(c => c.Key).Select(c => c.Value);
         }
 
         public ChainData GetChainData(int height)

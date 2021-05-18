@@ -9,6 +9,11 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
     {
         private readonly IKeyValueRepository keyValueRepository;
 
+        public SetActivationDeploymentsPartialValidationRule()
+        {
+
+        }
+
         public SetActivationDeploymentsPartialValidationRule(IKeyValueRepository keyValueRepository)
         {
             this.keyValueRepository = keyValueRepository;

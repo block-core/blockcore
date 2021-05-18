@@ -26,8 +26,11 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
             // Calculate the consensus flags and check they are valid.
             context.Flags = this.Parent.NodeDeployments.GetFlags(context.ValidationContext.ChainedHeaderToValidate);
 
-            // Update the cache of Flags when we retrieve it.
-            this.keyValueRepository.SaveValueJson("deploymentflags", context.Flags);
+            if (this.keyValueRepository != null)
+            {
+                // Update the cache of Flags when we retrieve it.
+                this.keyValueRepository.SaveValueJson("deploymentflags", context.Flags);
+            }
 
             return Task.CompletedTask;
         }

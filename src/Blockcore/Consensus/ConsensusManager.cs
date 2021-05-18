@@ -1459,8 +1459,6 @@ namespace Blockcore.Consensus
                 log.AppendLine($"Tip Age: { TimeSpan.FromSeconds(tipAge).ToString(@"dd\.hh\:mm\:ss") } (maximum is { TimeSpan.FromSeconds(maxTipAge).ToString(@"dd\.hh\:mm\:ss") })");
                 log.AppendLine($"In IBD Stage: { (this.isIbd ? "Yes" : "No") }");
 
-                log.AppendLine($"Chained header tree size: {this.chainedHeaderTree.ChainedBlocksDataBytes.BytesToMegaBytes()} MB");
-
                 string unconsumedBlocks = this.FormatBigNumber(this.chainedHeaderTree.UnconsumedBlocksCount);
 
                 double filledPercentage = Math.Round((this.chainedHeaderTree.UnconsumedBlocksDataBytes / (double)this.maxUnconsumedBlocksDataBytes) * 100, 2);

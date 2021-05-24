@@ -24,6 +24,10 @@
       "commandName": "Project",
       "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
     },
+    "BTC (MAIN/LOCAL/ROCKSDB)": {
+      "commandName": "Project",
+      "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -dbtype=rocksdb -datadir=data"
+    },
     "BTC (TEST/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
@@ -111,6 +115,10 @@
     "EXOS (MAIN/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=EXOS -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "EXOS (MAIN/LOCAL/ROCKSDB)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=EXOS -server -whitelist=192.168.1.180 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -dbtype=rocksdb -datadir=data"
     },
     "RUTA (MAIN)": {
       "commandName": "Project",

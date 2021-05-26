@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
 
@@ -41,6 +42,16 @@ namespace Blockcore.Utilities.Extensions
             data.ReadWrite(bms);
 
             return (int)bms.Counter.WrittenBytes;
+        }
+
+        /// <summary>
+        /// Gets the proof of work target for this entry in the chain.
+        /// </summary>
+        /// <param name="consensus">Consensus rules to use for this computation.</param>
+        /// <returns>The target proof of work.</returns>
+        public static Target GetWorkRequired(this ChainedHeader chainedHeader, IConsensus consensus)
+        {
+            return consensus.GetWorkRequired(chainedHeader);
         }
     }
 }

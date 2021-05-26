@@ -8,6 +8,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
+using Blockcore.Utilities.Extensions;
 using Xunit;
 
 namespace NBitcoin.Tests
@@ -158,18 +159,8 @@ namespace NBitcoin.Tests
                 BlockHeader block = main.GetHeader(height).Header;
 
                 Assert.Equal(expectedTarget, block.Bits);
-                Target target = main.GetHeader(height).GetWorkRequired(network);
+                Target target = main.GetHeader(height).GetWorkRequired(this.network.Consensus);
                 Assert.Equal(expectedTarget, target);
-            }
-        }
-
-        [Fact]
-        public void CanValidateChain()
-        {
-            var main = new ChainIndexer(this.network).Load(this.LoadMainChain());
-            foreach (ChainedHeader h in main.EnumerateToTip(main.Genesis))
-            {
-                Assert.True(h.Validate(this.network));
             }
         }
 

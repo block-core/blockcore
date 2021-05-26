@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
+using Blockcore.Consensus.Chain;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 
@@ -235,6 +236,78 @@ namespace Blockcore.Networks.x42.Networks.Consensus
             this.MempoolRules = new List<Type>();
             this.PosEmptyCoinbase = posEmptyCoinbase;
             this.ProofOfStakeTimestampMask = proofOfStakeTimestampMask;
+        }
+
+        /// <summary>
+        /// Gets the proof of work target for a given entry in the chain.
+        /// </summary>
+        /// <param name="chainedHeader">The header for which to calculate the required work.</param>
+        /// <returns>The target proof of work.</returns>
+        public Target GetWorkRequired(ChainedHeader chainedHeader)
+        {
+            // Genesis block.
+            if (chainedHeader.Height == 0)
+                return this.PowLimit;
+
+            Target proofOfWorkLimit = this.PowLimit;
+            ChainedHeader lastBlock = chainedHeader.Previous;
+            int height = chainedHeader.Height;
+
+            if (lastBlock == null)
+                return proofOfWorkLimit;
+
+            // Calculate the difficulty adjustment interval in blocks
+            long difficultyAdjustmentInterval = (long)this.TargetTimespan.TotalSeconds / (long)this.TargetSpacing.TotalSeconds;
+
+            // Only change once per interval.
+            if ((height) % difficultyAdjustmentInterval != 0)
+            {
+                if (this.PowAllowMinDifficultyBlocks)
+                {
+                    // Special difficulty rule for testnet:
+                    // If the new block's timestamp is more than 2* 10 minutes
+                    // then allow mining of a min-difficulty block.
+                    if (chainedHeader.Header.BlockTime > (lastBlock.Header.BlockTime + TimeSpan.FromTicks(this.TargetSpacing.Ticks * 2)))
+                        return proofOfWorkLimit;
+
+                    // Return the last non-special-min-difficulty-rules-block.
+                    ChainedHeader lastChainedHeader = lastBlock;
+                    while ((lastChainedHeader.Previous != null) && ((lastChainedHeader.Height % difficultyAdjustmentInterval) != 0) && (lastChainedHeader.Header.Bits == proofOfWorkLimit))
+                        lastChainedHeader = lastChainedHeader.Previous;
+
+                    return lastChainedHeader.Header.Bits;
+                }
+
+                return lastBlock.Header.Bits;
+            }
+
+            // Go back by what we want to be 14 days worth of blocks.
+            long pastHeight = lastBlock.Height - (difficultyAdjustmentInterval - 1);
+
+            ChainedHeader firstChainedHeader = chainedHeader.GetAncestor((int)pastHeight);
+            if (firstChainedHeader == null)
+                throw new NotSupportedException("Can only calculate work of a full chain");
+
+            if (this.PowNoRetargeting)
+                return lastBlock.Header.Bits;
+
+            // Limit adjustment step.
+            TimeSpan actualTimespan = lastBlock.Header.BlockTime - firstChainedHeader.Header.BlockTime;
+            if (actualTimespan < TimeSpan.FromTicks(this.TargetTimespan.Ticks / 4))
+                actualTimespan = TimeSpan.FromTicks(this.TargetTimespan.Ticks / 4);
+            if (actualTimespan > TimeSpan.FromTicks(this.TargetTimespan.Ticks * 4))
+                actualTimespan = TimeSpan.FromTicks(this.TargetTimespan.Ticks * 4);
+
+            // Retarget.
+            BigInteger newTarget = lastBlock.Header.Bits.ToBigInteger();
+            newTarget = newTarget.Multiply(BigInteger.ValueOf((long)actualTimespan.TotalSeconds));
+            newTarget = newTarget.Divide(BigInteger.ValueOf((long)this.TargetTimespan.TotalSeconds));
+
+            var finalTarget = new Target(newTarget);
+            if (finalTarget > proofOfWorkLimit)
+                finalTarget = proofOfWorkLimit;
+
+            return finalTarget;
         }
     }
 }

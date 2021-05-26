@@ -31,6 +31,7 @@ using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -617,7 +618,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
             foreach (ChainedHeader header in headers)
             {
-                if (!header.Validate(peer.Network))
+                if (!this.Validate(peer.Network, header))
                 {
                     throw new ProtocolException("A header which does not pass proof of work verification has been received");
                 }
@@ -626,6 +627,54 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
             chain.SetTip(newTip);
 
             return headers;
+        }
+
+        /// <summary>
+        /// Check that the header is a valid block header including the work done for PoW blocks.
+        /// </summary>
+        /// <param name="network">The network to verify against.</param>
+        /// <returns><c>true</c> if the header is a valid block header, <c>false</c> otherwise.</returns>
+        public bool Validate(Network network, ChainedHeader header)
+        {
+            if (network == null)
+                throw new ArgumentNullException("network");
+
+            if (network.Consensus.IsProofOfStake)
+                return BlockStake.Validate(network, header);
+
+            bool genesisCorrect = (header.Height != 0) || header.HashBlock == network.GetGenesis().GetHash();
+            return genesisCorrect && this.Validate(network.Consensus, header);
+        }
+
+        /// <summary>
+        /// Check PoW against consensus and that the blocks connect correctly.
+        /// </summary>
+        /// <param name="consensus">The consensus rules being used.</param>
+        /// <returns><c>true</c> if the header is a valid block header, <c>false</c> otherwise.</returns>
+        public bool Validate(IConsensus consensus, ChainedHeader header)
+        {
+            if (consensus == null)
+                throw new ArgumentNullException("consensus");
+
+            if ((header.Height != 0) && (header.Previous == null))
+                return false;
+
+            bool heightCorrect = (header.Height == 0) || (header.Height == header.Previous.Height + 1);
+            bool hashPrevCorrect = (header.Height == 0) || (header.Header.HashPrevBlock == header.Previous.HashBlock);
+            bool hashCorrect = header.HashBlock == header.Header.GetHash();
+            bool workCorrect = this.CheckProofOfWorkAndTarget(consensus, header);
+
+            return heightCorrect && hashPrevCorrect && hashCorrect && workCorrect;
+        }
+
+        /// <summary>
+        /// Verify proof of work of the header of this chain using consensus.
+        /// </summary>
+        /// <param name="consensus">Consensus rules to use for this validation.</param>
+        /// <returns>Whether proof of work is valid.</returns>
+        public bool CheckProofOfWorkAndTarget(IConsensus consensus, ChainedHeader header)
+        {
+            return (header.Height == 0) || (header.Header.CheckProofOfWork() && (header.Header.Bits == header.GetWorkRequired(consensus)));
         }
 
         private async Task AssertStateAsync(INetworkPeer peer, NetworkPeerState peerState, CancellationToken cancellationToken = default(CancellationToken))

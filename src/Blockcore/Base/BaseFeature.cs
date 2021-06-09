@@ -129,6 +129,10 @@ namespace Blockcore.Base
         /// <inheritdoc cref="IPartialValidator"/>
         private readonly IPartialValidator partialValidator;
 
+        private readonly NodeDeployments nodeDeployments;
+
+        private DeploymentFlags deploymentFlags;
+
         public BaseFeature(NodeSettings nodeSettings,
             DataFolder dataFolder,
             INodeLifetime nodeLifetime,
@@ -151,6 +155,7 @@ namespace Blockcore.Base
             IBlockStore blockStore,
             Network network,
             ITipsManager tipsManager,
+            NodeDeployments nodeDeployments,
             IKeyValueRepository keyValueRepo,
             INodeStats nodeStats,
             IBroadcasterManager broadcasterManager,
@@ -176,6 +181,7 @@ namespace Blockcore.Base
             this.peerBanning = Guard.NotNull(peerBanning, nameof(peerBanning));
             this.tipsManager = Guard.NotNull(tipsManager, nameof(tipsManager));
             this.keyValueRepo = Guard.NotNull(keyValueRepo, nameof(keyValueRepo));
+            this.nodeDeployments = nodeDeployments;
 
             this.peerAddressManager = Guard.NotNull(peerAddressManager, nameof(peerAddressManager));
             this.peerAddressManager.PeerFilePath = this.dataFolder;
@@ -278,7 +284,21 @@ namespace Blockcore.Base
                 await this.chainRepository.SaveAsync(this.chainIndexer).ConfigureAwait(false);
 
                 if (this.provenBlockHeaderStore != null)
+                {
                     await this.provenBlockHeaderStore.SaveAsync().ConfigureAwait(false);
+                }
+
+                // Get latest flags (often cached) and persist.
+                var flags = this.nodeDeployments.GetFlags(this.consensusManager.Tip);
+
+                if (this.deploymentFlags == null || flags.ScriptFlags != this.deploymentFlags.ScriptFlags)
+                {
+                    // Update the persistent disk cache of Flags when we retrieve it.
+                    this.keyValueRepo.SaveValueJson("deploymentflags", flags);
+
+                    // Update the local cached copy used to validate against. We don't want to persist to disk unless the flags actually has changed.
+                    this.deploymentFlags = flags;
+                }
             },
             this.nodeLifetime.ApplicationStopping,
             repeatEvery: TimeSpan.FromMinutes(1.0),

@@ -14,7 +14,7 @@ namespace Blockcore.Networks.City.Networks.Policies
    public class CityStandardScriptsRegistry : StandardScriptsRegistry
    {
       // See MAX_OP_RETURN_RELAY in stratisX, <script.h>
-      public const int MaxOpReturnRelay = 40;
+      public const int MaxOpReturnRelay = 83;
 
       // Need a network-specific version of the template list
       private readonly List<ScriptTemplate> standardTemplates = new List<ScriptTemplate>

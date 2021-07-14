@@ -42,7 +42,7 @@ namespace Blockcore.Persistence
                 return null;
             }
 
-            return this.persistenceProviders.ContainsKey("leveldb") ? "leveldb" : this.persistenceProviders.Keys.First();
+            return this.persistenceProviders.ContainsKey("rocksdb") ? "rocksdb" : this.persistenceProviders.Keys.First();
         }
 
         /// <inheritdoc/>

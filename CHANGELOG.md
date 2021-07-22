@@ -1,3 +1,14 @@
+##  (2021-07-05)
+
+* Cache the deployment flags to improve startup (#340) ([7c06cc1](https://github.com/block-core/blockcore/commit/7c06cc1)), closes [#340](https://github.com/block-core/blockcore/issues/340) [#337](https://github.com/block-core/blockcore/issues/337)
+* Documentation and Explanation of blockcores POS  (#279) ([ee7a4ff](https://github.com/block-core/blockcore/commit/ee7a4ff)), closes [#279](https://github.com/block-core/blockcore/issues/279)
+* Extend OP_RETURN from 40 to 83 for City Chain (#345) ([9e87635](https://github.com/block-core/blockcore/commit/9e87635)), closes [#345](https://github.com/block-core/blockcore/issues/345)
+* Migrate to Blockcore.RocksDB (#342) ([aff064d](https://github.com/block-core/blockcore/commit/aff064d)), closes [#342](https://github.com/block-core/blockcore/issues/342)
+* Remove the ChainedBlocksDataBytes (#338) ([d95c898](https://github.com/block-core/blockcore/commit/d95c898)), closes [#338](https://github.com/block-core/blockcore/issues/338) [#337](https://github.com/block-core/blockcore/issues/337)
+* Update to latest RocksDB package (#344) ([162062d](https://github.com/block-core/blockcore/commit/162062d)), closes [#344](https://github.com/block-core/blockcore/issues/344)
+
+
+
 ##  (2021-03-09)
 
 * #280 (#282) ([5119089](https://github.com/block-core/blockcore/commit/5119089)), closes [#280](https://github.com/block-core/blockcore/issues/280) [#282](https://github.com/block-core/blockcore/issues/282)

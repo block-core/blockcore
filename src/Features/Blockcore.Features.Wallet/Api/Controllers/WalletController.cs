@@ -411,7 +411,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                WalletHistoryModel model = WalletModelBuilder.GetHistory(this.walletManager, this.network, request);
+                WalletHistoryModel model = WalletModelBuilder.GetHistorySlim(this.walletManager, this.network, request);
 
                 return this.Json(model);
             }

@@ -630,6 +630,10 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     });
                 }
 
+                var (opReturnRawData, isValid) = request.OpReturnDataIsHex ? TryGetHexValue(request.OpReturnData) : (null, true);
+                if (!isValid)
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Hex OpReturn error.", "The OpReturnData is set as a hex value and could not be decoded");
+
                 var context = new TransactionBuildContext(this.network)
                 {
                     AccountReference = new WalletAccountReference(request.WalletName, request.AccountName),
@@ -637,6 +641,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     MinConfirmations = request.AllowUnconfirmed ? 0 : 1,
                     Recipients = recipients,
                     OpReturnData = request.OpReturnData,
+                    OpReturnRawData = opReturnRawData,
                     OpReturnAmount = string.IsNullOrEmpty(request.OpReturnAmount) ? null : Money.Parse(request.OpReturnAmount),
                     Sign = false
                 };

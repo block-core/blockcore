@@ -329,11 +329,6 @@ namespace Blockcore.Features.Wallet.Api.Models
         public string OpReturnData { get; set; }
 
         /// <summary>
-        /// Sets if the OpReturnData is a hex value and must be decoded
-        /// </summary>
-        public bool OpReturnDataIsHex { get; set; }
-
-        /// <summary>
         /// The funds in STRAT (or a sidechain coin) to include with the OP_RETURN output. Currently, specifying
         /// some funds helps OP_RETURN outputs be relayed around the network.
         /// </summary>   

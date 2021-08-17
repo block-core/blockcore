@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.DataEncoders;
 
 namespace Blockcore.Features.Wallet.Api.Controllers
 {
@@ -1602,6 +1601,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 this.walletSyncManager.SyncFromHeight(blockHeightToSyncFrom);
             }
-        }      
+        }
     }
 }

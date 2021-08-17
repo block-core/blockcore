@@ -46,7 +46,7 @@
     },
     "CITY (MAIN/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=CITY -server -addressindex -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=0"
+      "commandLineArgs": "--chain=CITY -server -addressindex -txindex=1 -reindex=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=0"
     },
     "CITY (TEST/LOCAL)": {
       "commandName": "Project",

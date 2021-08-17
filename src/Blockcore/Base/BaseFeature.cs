@@ -289,15 +289,18 @@ namespace Blockcore.Base
                 }
 
                 // Get latest flags (often cached) and persist.
-                var flags = this.nodeDeployments.GetFlags(this.consensusManager.Tip);
-
-                if (this.deploymentFlags == null || flags.ScriptFlags != this.deploymentFlags.ScriptFlags)
+                if (this.consensusManager.Tip != null)
                 {
-                    // Update the persistent disk cache of Flags when we retrieve it.
-                    this.keyValueRepo.SaveValueJson("deploymentflags", flags);
+                    var flags = this.nodeDeployments.GetFlags(this.consensusManager.Tip);
 
-                    // Update the local cached copy used to validate against. We don't want to persist to disk unless the flags actually has changed.
-                    this.deploymentFlags = flags;
+                    if (this.deploymentFlags == null || flags.ScriptFlags != this.deploymentFlags.ScriptFlags)
+                    {
+                        // Update the persistent disk cache of Flags when we retrieve it.
+                        this.keyValueRepo.SaveValueJson("deploymentflags", flags);
+
+                        // Update the local cached copy used to validate against. We don't want to persist to disk unless the flags actually has changed.
+                        this.deploymentFlags = flags;
+                    }
                 }
             },
             this.nodeLifetime.ApplicationStopping,

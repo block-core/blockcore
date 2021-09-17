@@ -9,6 +9,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers;
+using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
@@ -23,7 +24,9 @@ using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using NBitcoin.Policy;
 using Newtonsoft.Json;
+using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.Wallet.Api.Controllers
 {
@@ -150,7 +153,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_WALLET_ERROR, exception.Message);
             }
         }
-
+        
         /// <summary>
         /// Broadcasts a raw transaction from hex to local node and network.
         /// </summary>
@@ -340,7 +343,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             WalletAccountReference accountReference = this.GetWalletAccountReference();
             Types.Wallet wallet = this.walletManager.GetWalletByName(accountReference.WalletName);
-            HdAccount account = this.walletManager.GetAccounts(accountReference.WalletName).Single(a => a.Name == accountReference.AccountName);
+            IHdAccount account = this.walletManager.GetAccounts(accountReference.WalletName).Single(a => a.Name == accountReference.AccountName);
 
             // Get the transaction from the wallet by looking into received and send transactions.
             List<HdAddress> addresses = account.GetCombinedAddresses().ToList();
@@ -901,7 +904,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_REQUEST, "No wallet found");
             }
 
-            HdAccount account = this.walletManager.GetAccounts(walletName).First();
+            IHdAccount account = this.walletManager.GetAccounts(walletName).First();
             return new WalletAccountReference(walletName, account.Name);
         }
     }

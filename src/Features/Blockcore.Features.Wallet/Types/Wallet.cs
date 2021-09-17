@@ -7,6 +7,7 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Helpers;
+using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonConverters;
@@ -27,17 +28,17 @@ namespace Blockcore.Features.Wallet.Types
         public const int SpecialPurposeAccountIndexesStart = 100_000_000;
 
         /// <summary>Filter for identifying normal wallet accounts.</summary>
-        public static Func<HdAccount, bool> NormalAccounts = a => a.Index < SpecialPurposeAccountIndexesStart;
+        public static Func<IHdAccount, bool> NormalAccounts = a => a.Index < SpecialPurposeAccountIndexesStart;
 
         /// <summary>Filter for all wallet accounts.</summary>
-        public static Func<HdAccount, bool> AllAccounts = a => true;
+        public static Func<IHdAccount, bool> AllAccounts = a => true;
 
         /// <summary>
         /// Initializes a new instance of the wallet.
         /// </summary>
         public Wallet()
         {
-            this.AccountsRoot = new List<AccountRoot>();
+            this.AccountsRoot = new List<IAccountRoot>();
         }
 
         [JsonIgnore]
@@ -92,15 +93,19 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The root of the accounts tree.
         /// </summary>
+        [JsonConverter(typeof(AccountRootConverter))]
         [JsonProperty(PropertyName = "accountsRoot")]
-        public ICollection<AccountRoot> AccountsRoot { get; set; }
+        public virtual ICollection<IAccountRoot> AccountsRoot { get; set; }
+
+        [JsonProperty(PropertyName = "isMultisig")]
+        public bool IsMultisig { get; set; }
 
         /// <summary>
         /// Gets the accounts in the wallet.
         /// </summary>
         /// <param name="accountFilter">An optional filter for filtering the accounts being returned.</param>
         /// <returns>The accounts in the wallet.</returns>
-        public IEnumerable<HdAccount> GetAccounts(Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<IHdAccount> GetAccounts(Func<IHdAccount, bool> accountFilter = null)
         {
             return this.AccountsRoot.SelectMany(a => a.Accounts).Where(accountFilter ?? NormalAccounts);
         }
@@ -110,7 +115,7 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         /// <param name="accountName">The name of the account to retrieve.</param>
         /// <returns>The requested account or <c>null</c> if the account does not exist.</returns>
-        public HdAccount GetAccount(string accountName)
+        public IHdAccount GetAccount(string accountName)
         {
             return this.AccountsRoot.SingleOrDefault()?.GetAccountByName(accountName);
         }
@@ -121,7 +126,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="block">The block whose details are used to update the wallet.</param>
         public void SetLastBlockDetails(ChainedHeader block)
         {
-            AccountRoot accountRoot = this.AccountsRoot.SingleOrDefault();
+            IAccountRoot accountRoot = this.AccountsRoot.SingleOrDefault();
 
             if (accountRoot == null)
             {
@@ -136,9 +141,9 @@ namespace Blockcore.Features.Wallet.Types
         /// Gets all the transactions in the wallet.
         /// </summary>
         /// <returns>A list of all the transactions in the wallet.</returns>
-        public IEnumerable<TransactionOutputData> GetAllTransactions(Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<TransactionOutputData> GetAllTransactions(Func<IHdAccount, bool> accountFilter = null)
         {
-            List<HdAccount> accounts = this.GetAccounts(accountFilter).ToList();
+            List<IHdAccount> accounts = this.GetAccounts(accountFilter).ToList();
 
             // First we iterate normal accounts
             foreach (TransactionOutputData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
@@ -181,7 +186,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>A list of all the public keys contained in the wallet.</returns>
         public IEnumerable<Script> GetAllPubKeys()
         {
-            List<HdAccount> accounts = this.GetAccounts().ToList();
+            List<IHdAccount> accounts = this.GetAccounts().ToList();
 
             foreach (Script script in accounts.SelectMany(x => x.ExternalAddresses).Select(x => x.ScriptPubKey))
             {
@@ -199,9 +204,9 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         /// <param name="accountFilter">An optional filter for filtering the accounts being returned.</param>
         /// <returns>A list of all the addresses contained in this wallet.</returns>
-        public IEnumerable<HdAddress> GetAllAddresses(Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<HdAddress> GetAllAddresses(Func<IHdAccount, bool> accountFilter = null)
         {
-            IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
+            IEnumerable<IHdAccount> accounts = this.GetAccounts(accountFilter);
 
             var allAddresses = new List<HdAddress>();
             foreach (HdAccount account in accounts)
@@ -224,11 +229,11 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="accountIndex">The index at which an account will be created. If left null, a new account will be created after the last used one.</param>
         /// <param name="accountName">The name of the account to be created. If left null, an account will be created according to the <see cref="Wallet.AccountNamePattern"/>.</param>
         /// <returns>A new HD account.</returns>
-        public HdAccount AddNewAccount(string password, DateTimeOffset accountCreationTime, int? accountIndex = null, string accountName = null)
+        public IHdAccount AddNewAccount(string password, DateTimeOffset accountCreationTime, int? accountIndex = null, string accountName = null)
         {
             Guard.NotEmpty(password, nameof(password));
 
-            AccountRoot accountRoot = this.AccountsRoot.Single();
+            IAccountRoot accountRoot = this.AccountsRoot.Single();
             return accountRoot.AddNewAccount(password, this.EncryptedSeed, this.ChainCode, this.Network, accountCreationTime, accountIndex, accountName);
         }
 
@@ -244,9 +249,9 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="accountIndex">Zero-based index of the account to add.</param>
         /// <param name="accountCreationTime">Creation time of the account to be created.</param>
         /// <returns>A new HD account.</returns>
-        public HdAccount AddNewAccount(ExtPubKey extPubKey, int accountIndex, DateTimeOffset accountCreationTime)
+        public IHdAccount AddNewAccount(ExtPubKey extPubKey, int accountIndex, DateTimeOffset accountCreationTime)
         {
-            AccountRoot accountRoot = this.AccountsRoot.Single();
+            IAccountRoot accountRoot = this.AccountsRoot.Single();
             return accountRoot.AddNewAccount(extPubKey, accountIndex, this.Network, accountCreationTime);
         }
 
@@ -254,15 +259,15 @@ namespace Blockcore.Features.Wallet.Types
         /// Gets the first account that contains no transaction.
         /// </summary>
         /// <returns>An unused account.</returns>
-        public HdAccount GetFirstUnusedAccount(IWalletStore walletStore)
+        public IHdAccount GetFirstUnusedAccount(IWalletStore walletStore)
         {
             // Get the accounts root for this type of coin.
-            AccountRoot accountsRoot = this.AccountsRoot.Single();
+            IAccountRoot accountsRoot = this.AccountsRoot.Single();
 
             if (accountsRoot.Accounts.Any())
             {
                 // Get an unused account.
-                HdAccount firstUnusedAccount = accountsRoot.GetFirstUnusedAccount(walletStore);
+                IHdAccount firstUnusedAccount = accountsRoot.GetFirstUnusedAccount(walletStore);
                 if (firstUnusedAccount != null)
                 {
                     return firstUnusedAccount;
@@ -318,9 +323,9 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="confirmations">The number of confirmations required to consider a transaction spendable.</param>
         /// <param name="accountFilter">An optional filter for filtering the accounts being returned.</param>
         /// <returns>A collection of spendable outputs.</returns>
-        public IEnumerable<UnspentOutputReference> GetAllSpendableTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<UnspentOutputReference> GetAllSpendableTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<IHdAccount, bool> accountFilter = null)
         {
-            IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
+            IEnumerable<IHdAccount> accounts = this.GetAccounts(accountFilter);
 
             return accounts.SelectMany(x => x.GetSpendableTransactions(walletStore, currentChainHeight, this.Network.Consensus.CoinbaseMaturity, confirmations));
         }
@@ -333,9 +338,9 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="confirmations">The number of confirmations required to consider a transaction spendable.</param>
         /// <param name="accountFilter">An optional filter for filtering the accounts being returned.</param>
         /// <returns>A collection of spendable outputs.</returns>
-        public IEnumerable<UnspentOutputReference> GetAllUnspentTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
+        public IEnumerable<UnspentOutputReference> GetAllUnspentTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<IHdAccount, bool> accountFilter = null)
         {
-            IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
+            IEnumerable<IHdAccount> accounts = this.GetAccounts(accountFilter);
 
             // The logic for retrieving unspent transactions is almost identical to determining spendable transactions, we just don't take coinbase/stake maturity into consideration.
             return accounts.SelectMany(x => x.GetSpendableTransactions(walletStore, currentChainHeight, 0, confirmations));
@@ -380,31 +385,55 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="address">An address.</param>
         /// <param name="accountFilter">An optional filter for filtering the accounts being returned.</param>
         /// <returns>HD Address</returns>
-        public HdAddress GetAddress(string address, Func<HdAccount, bool> accountFilter = null)
+        public HdAddress GetAddress(string address, Func<IHdAccount, bool> accountFilter = null)
         {
             Guard.NotNull(address, nameof(address));
             return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address || a.Bech32Address == address);
         }
     }
 
+    public class AccountRootConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        { 
+            return true;
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            List<IAccountRoot> accounts = new List<IAccountRoot>();
+            var list = serializer.Deserialize<List<AccountRoot>>(reader);
+            foreach (var item in list)
+            {
+                accounts.Add(item);
+            }
+            return accounts;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, value);
+        }
+    }
+
     /// <summary>
     /// The root for the accounts for any type of coins.
     /// </summary>
-    public class AccountRoot
+    public class AccountRoot : IAccountRoot
     {
         /// <summary>
         /// Initializes a new instance of the object.
         /// </summary>
         public AccountRoot()
         {
-            this.Accounts = new List<HdAccount>();
+            this.Accounts = new List<IHdAccount>();
         }
 
         /// <summary>
         /// The type of coin, Bitcoin or Stratis.
         /// </summary>
         [JsonProperty(PropertyName = "coinType")]
-        public int CoinType { get; set; }
+        public int? CoinType { get; set; }
 
         /// <summary>
         /// The height of the last block that was synced.
@@ -424,19 +453,20 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The accounts used in the wallet.
         /// </summary>
+        [JsonConverter(typeof(HdAccountConverter))]
         [JsonProperty(PropertyName = "accounts")]
-        public ICollection<HdAccount> Accounts { get; set; }
+        public virtual ICollection<IHdAccount> Accounts { get; set; }
 
         /// <summary>
         /// Gets the first account that contains no transaction.
         /// </summary>
         /// <returns>An unused account</returns>
-        public HdAccount GetFirstUnusedAccount(IWalletStore walletStore)
+        public IHdAccount GetFirstUnusedAccount(IWalletStore walletStore)
         {
             if (this.Accounts == null)
                 return null;
 
-            List<HdAccount> unusedAccounts = this.Accounts
+            List<IHdAccount> unusedAccounts = this.Accounts
                 .Where(Wallet.NormalAccounts)
                 .Where(acc =>
                 !acc.ExternalAddresses.SelectMany(add => walletStore.GetForAddress(add.Address)).Any()
@@ -456,7 +486,7 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         /// <param name="accountName">The name of the account to get.</param>
         /// <returns>The HD account specified by the parameter or <c>null</c> if the account does not exist.</returns>
-        public HdAccount GetAccountByName(string accountName)
+        public IHdAccount GetAccountByName(string accountName)
         {
             return this.Accounts?.SingleOrDefault(a => a.Name == accountName);
         }
@@ -475,13 +505,13 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="accountIndex">The index at which an account will be created. If left null, a new account will be created after the last used one.</param>
         /// <param name="accountName">The name of the account to be created. If left null, an account will be created according to the <see cref="AccountNamePattern"/>.</param>
         /// <returns>A new HD account.</returns>
-        public HdAccount AddNewAccount(string password, string encryptedSeed, byte[] chainCode, Network network, DateTimeOffset accountCreationTime, int? accountIndex = null, string accountName = null)
+        public IHdAccount AddNewAccount(string password, string encryptedSeed, byte[] chainCode, Network network, DateTimeOffset accountCreationTime, int? accountIndex = null, string accountName = null)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(encryptedSeed, nameof(encryptedSeed));
             Guard.NotNull(chainCode, nameof(chainCode));
 
-            ICollection<HdAccount> hdAccounts = this.Accounts;
+            ICollection<IHdAccount> hdAccounts = this.Accounts;
 
             // If an account needs to be created at a specific index or with a specific name, make sure it doesn't already exist.
             if (hdAccounts.Any(a => a.Index == accountIndex || a.Name == accountName))
@@ -502,7 +532,7 @@ namespace Blockcore.Features.Wallet.Types
                 }
             }
 
-            HdAccount newAccount = this.CreateAccount(password, encryptedSeed, chainCode, network, accountCreationTime, accountIndex.Value, accountName);
+            IHdAccount newAccount = this.CreateAccount(password, encryptedSeed, chainCode, network, accountCreationTime, accountIndex.Value, accountName);
 
             hdAccounts.Add(newAccount);
             this.Accounts = hdAccounts;
@@ -521,7 +551,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="newAccountIndex">The optional account index to use.</param>
         /// <param name="newAccountName">The optional account name to use.</param>
         /// <returns>A new HD account.</returns>
-        public HdAccount CreateAccount(string password, string encryptedSeed, byte[] chainCode,
+        public IHdAccount CreateAccount(string password, string encryptedSeed, byte[] chainCode,
             Network network, DateTimeOffset accountCreationTime,
             int newAccountIndex, string newAccountName = null)
         {
@@ -553,9 +583,9 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         /// <param name="accountExtPubKey">The extended public key for the account.</param>
         /// <param name="accountIndex">The zero-based account index.</param>
-        public HdAccount AddNewAccount(ExtPubKey accountExtPubKey, int accountIndex, Network network, DateTimeOffset accountCreationTime)
+        public IHdAccount AddNewAccount(ExtPubKey accountExtPubKey, int accountIndex, Network network, DateTimeOffset accountCreationTime)
         {
-            ICollection<HdAccount> hdAccounts = this.Accounts.ToList();
+            ICollection<IHdAccount> hdAccounts = this.Accounts.ToList();
 
             if (hdAccounts.Any(a => a.Index == accountIndex))
             {
@@ -587,11 +617,35 @@ namespace Blockcore.Features.Wallet.Types
             return newAccount;
         }
     }
+    public class HdAccountConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            //assume we can convert to anything for now
+            return true;
+        }
 
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            List<IHdAccount> accounts = new List<IHdAccount>();
+            var list = serializer.Deserialize<List<HdAccount>>(reader);
+            foreach (var item in list)
+            {
+                accounts.Add(item);
+            }
+            return accounts;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            //use the default serialization - it works fine
+            serializer.Serialize(writer, value);
+        }
+    }
     /// <summary>
     /// An HD account's details.
     /// </summary>
-    public class HdAccount
+    public class HdAccount : IHdAccount
     {
         public HdAccount()
         {
@@ -766,7 +820,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="addressesQuantity">The number of addresses to create.</param>
         /// <param name="isChange">Whether the addresses added are change (internal) addresses or receiving (external) addresses.</param>
         /// <returns>The created addresses.</returns>
-        public IEnumerable<HdAddress> CreateAddresses(Network network, int addressesQuantity, bool isChange = false)
+        public virtual IEnumerable<HdAddress> CreateAddresses(Network network, int addressesQuantity, bool isChange = false)
         {
             ICollection<HdAddress> addresses = isChange ? this.InternalAddresses : this.ExternalAddresses;
 

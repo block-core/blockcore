@@ -393,46 +393,53 @@ namespace x42.Features.xServer
         public ProfileResult GetProfile(string name, string keyAddress)
         {
             var result = new ProfileResult();
-            var t2Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two).OrderBy(n => n.ResponseTime).FirstOrDefault();
-            if (t2Node != null)
-            {
-                string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
-                var client = new RestClient(xServerURL);
-                client.UseNewtonsoftJson();
-                var getPriceLockRequest = new RestRequest("/getprofile", Method.GET);
-                getPriceLockRequest.AddParameter("name", name);
-                getPriceLockRequest.AddParameter("keyAddress", keyAddress);
+            var t2Nodes = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two).OrderBy(n => n.ResponseTime).Take(3).ToList();
 
-                var createPLResult = client.Execute<ProfileResult>(getPriceLockRequest);
-                if (createPLResult.StatusCode == HttpStatusCode.OK)
+            foreach (var t2Node in t2Nodes)
+            {
+                if (t2Node != null)
                 {
-                    if (createPLResult.Data == null)
+                    string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
+                    var client = new RestClient(xServerURL);
+                    client.UseNewtonsoftJson();
+                    var getPriceLockRequest = new RestRequest("/getprofile", Method.GET);
+                    getPriceLockRequest.AddParameter("name", name);
+                    getPriceLockRequest.AddParameter("keyAddress", keyAddress);
+
+                    var createPLResult = client.Execute<ProfileResult>(getPriceLockRequest);
+                    if (createPLResult.StatusCode == HttpStatusCode.OK)
                     {
-                        result.Success = false;
+                        if (createPLResult.Data == null)
+                        {
+                            result.Success = false;
+                        }
+                        else
+                        {
+                            result = createPLResult.Data;
+                            result.Success = true;
+                            return result;
+
+                        }
                     }
                     else
                     {
-                        result = createPLResult.Data;
-                        result.Success = true;
+                        var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(createPLResult.Content);
+                        if (errorResponse != null)
+                        {
+                            result.ResultMessage = errorResponse.errors[0].message;
+                        }
+                        else
+                        {
+                            result.ResultMessage = "Failed to access xServer";
+                        }
+                        result.Success = false;
                     }
                 }
                 else
                 {
-                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(createPLResult.Content);
-                    if (errorResponse != null)
-                    {
-                        result.ResultMessage = errorResponse.errors[0].message;
-                    }
-                    else
-                    {
-                        result.ResultMessage = "Failed to access xServer";
-                    }
-                    result.Success = false;
+                    result.ResultMessage = "Not connected to any tier 2 servers";
                 }
-            }
-            else
-            {
-                result.ResultMessage = "Not connected to any tier 2 servers";
+        
             }
             return result;
         }

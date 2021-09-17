@@ -106,7 +106,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             if (walletName == null)
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_REQUEST, "No wallet found");
 
-            HdAccount account = this.walletManager.GetAccounts(walletName).FirstOrDefault();
+            IHdAccount account = this.walletManager.GetAccounts(walletName).FirstOrDefault();
             if (account == null)
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_REQUEST, "No account found on wallet");
 

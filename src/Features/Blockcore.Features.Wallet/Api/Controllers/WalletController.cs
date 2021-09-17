@@ -719,7 +719,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 if (!string.IsNullOrWhiteSpace(request.ChangeAddress))
                 {
                     Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
-                    HdAccount account = wallet.GetAccount(request.AccountName);
+                    IHdAccount account = wallet.GetAccount(request.AccountName);
                     if (account == null)
                     {
                         return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Account not found.", $"No account with the name '{request.AccountName}' could be found in wallet {wallet.Name}.");
@@ -952,7 +952,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                HdAccount result = this.walletManager.GetUnusedAccount(request.WalletName, request.Password);
+                IHdAccount result = this.walletManager.GetUnusedAccount(request.WalletName, request.Password);
                 return this.Json(result.Name);
             }
             catch (CannotAddAccountToXpubKeyWalletException e)
@@ -986,7 +986,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                IEnumerable<HdAccount> result = this.walletManager.GetAccounts(request.WalletName);
+                IEnumerable<IHdAccount> result = this.walletManager.GetAccounts(request.WalletName);
                 return this.Json(result.Select(a => a.Name));
             }
             catch (Exception e)
@@ -1081,7 +1081,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
-                HdAccount account = wallet.GetAccount(request.AccountName);
+                IHdAccount account = wallet.GetAccount(request.AccountName);
                 if (account == null)
                     throw new WalletException($"No account with the name '{request.AccountName}' could be found.");
 
@@ -1436,7 +1436,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 var walletReference = new WalletAccountReference(request.WalletName, request.AccountName);
 
                 Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
-                HdAccount account = wallet.GetAccount(request.AccountName);
+                IHdAccount account = wallet.GetAccount(request.AccountName);
 
                 var addresses = new List<HdAddress>();
 

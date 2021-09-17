@@ -9,6 +9,7 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Models;
+using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
@@ -103,7 +104,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetMnemonicWithDefaultParameters()
+        public async Task GetMnemonicWithDefaultParametersAsync()
         {
             // Act.
             var mnemonic = await $"http://localhost:{this.fixture.Node.ApiPort}/api".AppendPathSegment("wallet/mnemonic").GetStringAsync();
@@ -114,7 +115,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetMnemonicWith24FrenchWords()
+        public async Task GetMnemonicWith24FrenchWordsAsync()
         {
             // Act.
             var mnemonic = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -128,7 +129,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetMnemonicWithUnknownLanguageFails()
+        public async Task GetMnemonicWithUnknownLanguageFailsAsync()
         {
             // Act.
             Func<Task> act = async () => await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -149,7 +150,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CreateWalletWithoutMnemonic()
+        public async Task CreateWalletWithoutMnemonicAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -185,7 +186,7 @@ namespace Blockcore.IntegrationTests.Wallet
             wallet.GetAccounts().Should().ContainSingle();
 
             // Check the created account.
-            HdAccount account = wallet.GetAccounts().Single();
+            IHdAccount account = wallet.GetAccounts().Single();
             account.Name.Should().Be("account 0");
             account.ExternalAddresses.Count().Should().Be(20);
             account.InternalAddresses.Count().Should().Be(20);
@@ -196,7 +197,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CreateWalletWith12WordsMnemonic()
+        public async Task CreateWalletWith12WordsMnemonicAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -236,7 +237,7 @@ namespace Blockcore.IntegrationTests.Wallet
             wallet.GetAccounts().Should().ContainSingle();
 
             // Check the created account.
-            HdAccount account = wallet.GetAccounts().Single();
+            IHdAccount account = wallet.GetAccounts().Single();
             account.Name.Should().Be("account 0");
             account.ExternalAddresses.Count().Should().Be(20);
             account.InternalAddresses.Count().Should().Be(20);
@@ -291,7 +292,7 @@ namespace Blockcore.IntegrationTests.Wallet
             wallet.GetAccounts().Should().ContainSingle();
 
             // Check the created account.
-            HdAccount account = wallet.GetAccounts().Single();
+            IHdAccount account = wallet.GetAccounts().Single();
             account.Name.Should().Be("account 0");
             account.ExternalAddresses.Count().Should().Be(20);
             account.InternalAddresses.Count().Should().Be(20);
@@ -302,7 +303,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CreateWalletWith24WordsMnemonic()
+        public async Task CreateWalletWith24WordsMnemonicAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -342,7 +343,7 @@ namespace Blockcore.IntegrationTests.Wallet
             wallet.GetAccounts().Should().ContainSingle();
 
             // Check the created account.
-            HdAccount account = wallet.GetAccounts().Single();
+            IHdAccount account = wallet.GetAccounts().Single();
             account.Name.Should().Be("account 0");
             account.ExternalAddresses.Count().Should().Be(20);
             account.InternalAddresses.Count().Should().Be(20);
@@ -353,7 +354,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CreateWalletWithPassphrase()
+        public async Task CreateWalletWithPassphraseAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -390,7 +391,7 @@ namespace Blockcore.IntegrationTests.Wallet
             wallet.GetAccounts().Should().ContainSingle();
 
             // Check the created account.
-            HdAccount account = wallet.GetAccounts().Single();
+            IHdAccount account = wallet.GetAccounts().Single();
             account.Name.Should().Be("account 0");
             account.ExternalAddresses.Count().Should().Be(20);
             account.InternalAddresses.Count().Should().Be(20);
@@ -401,7 +402,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CreateWalletWithoutPassword()
+        public async Task CreateWalletWithoutPasswordAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -427,7 +428,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CompareWalletsCreatedWithAndWithoutPassphrase()
+        public async Task CompareWalletsCreatedWithAndWithoutPassphraseAsync()
         {
             // Arrange.
             string walletWithPassphraseName = "wallet-with-passphrase";
@@ -484,7 +485,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CreateWalletsWithSameMnemonicPassphraseCombinationFails()
+        public async Task CreateWalletsWithSameMnemonicPassphraseCombinationFailsAsync()
         {
             // Arrange.
             string firstWalletName = this.fixture.GetUniqueWalletName();
@@ -529,7 +530,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CreateWalletsWithSameNameFails()
+        public async Task CreateWalletsWithSameNameFailsAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -569,7 +570,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task LoadNonExistingWallet()
+        public async Task LoadNonExistingWalletAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -594,7 +595,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task LoadWallet()
+        public async Task LoadWalletAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -626,7 +627,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task LoadWalletWithWrongPassword()
+        public async Task LoadWalletWithWrongPasswordAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -674,7 +675,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task RecoverWalletWithWrongNumberOfWordsInMnemonic()
+        public async Task RecoverWalletWithWrongNumberOfWordsInMnemonicAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -701,7 +702,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task RecoverWalletWithoutMnemonic()
+        public async Task RecoverWalletWithoutMnemonicAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -727,7 +728,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task RecoverWalletWithoutPassword()
+        public async Task RecoverWalletWithoutPasswordAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -753,7 +754,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task RecoverWalletWithPassphrase()
+        public async Task RecoverWalletWithPassphraseAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -787,7 +788,7 @@ namespace Blockcore.IntegrationTests.Wallet
             wallet.GetAccounts().Should().ContainSingle();
 
             // Check the created account.
-            HdAccount account = wallet.GetAccounts().Single();
+            IHdAccount account = wallet.GetAccounts().Single();
             account.Name.Should().Be("account 0");
             account.ExternalAddresses.Count().Should().Be(20);
             account.InternalAddresses.Count().Should().Be(20);
@@ -798,7 +799,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task RecoverWalletWithoutPassphrase()
+        public async Task RecoverWalletWithoutPassphraseAsync()
         {
             // Arrange.
             string walletName = this.fixture.GetUniqueWalletName();
@@ -832,7 +833,7 @@ namespace Blockcore.IntegrationTests.Wallet
             wallet.GetAccounts().Should().ContainSingle();
 
             // Check the created account.
-            HdAccount account = wallet.GetAccounts().Single();
+            IHdAccount account = wallet.GetAccounts().Single();
             account.Name.Should().Be("account 0");
             account.ExternalAddresses.Count().Should().Be(20);
             account.InternalAddresses.Count().Should().Be(20);
@@ -843,7 +844,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task RecoverWalletWithSameMnemonicPassphraseAsExistingWalletFails()
+        public async Task RecoverWalletWithSameMnemonicPassphraseAsExistingWalletFailsAsync()
         {
             // Arrange.
             string firstWalletName = this.fixture.GetUniqueWalletName();
@@ -891,7 +892,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CheckBalancesInWallet()
+        public async Task CheckBalancesInWalletAsync()
         {
             // Act.
             var response = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -911,7 +912,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CheckBalancesWhenNoWalletWithThisNameExists()
+        public async Task CheckBalancesWhenNoWalletWithThisNameExistsAsync()
         {
             // Arrange.
             string walletName = "no-such-wallet";
@@ -935,7 +936,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CheckBalancesWhenNoAccountWithThisNameExists()
+        public async Task CheckBalancesWhenNoAccountWithThisNameExistsAsync()
         {
             // Act.
             Func<Task> act = async () => await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -956,7 +957,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task FundsReceivedByAddress()
+        public async Task FundsReceivedByAddressAsync()
         {
             // Arrange.
             string address = "TRCT9QP3ipb6zCvW15yKoEtaU418UaKVE2";
@@ -977,7 +978,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task FundsReceivedByAddressWhenNoSuchAddressExists()
+        public async Task FundsReceivedByAddressWhenNoSuchAddressExistsAsync()
         {
             // Arrange.
             string address = "TX725W9ngnnoNuXX6mxvx5iHwS9VEuTa4s";
@@ -1001,7 +1002,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CheckMaxBalancesInWallet()
+        public async Task CheckMaxBalancesInWalletAsync()
         {
             // Act.
             var balanceResponse = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1022,7 +1023,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task CheckMaxBalancesInWalletWhenNoWalletWithThisNameExists()
+        public async Task CheckMaxBalancesInWalletWhenNoWalletWithThisNameExistsAsync()
         {
             // Arrange.
             string walletName = "no-such-wallet";
@@ -1046,7 +1047,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetExtPubKeyWhenNoAccountWithThisNameExists()
+        public async Task GetExtPubKeyWhenNoAccountWithThisNameExistsAsync()
         {
             // Arrange.
             string accountName = "account 1222";
@@ -1070,7 +1071,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetExtPubKeyForAccount()
+        public async Task GetExtPubKeyForAccountAsync()
         {
             // Arrange.
             string accountName = "account 0";
@@ -1086,7 +1087,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetAccountsInWallet()
+        public async Task GetAccountsInWalletAsync()
         {
             // Act.
             IEnumerable<string> accountsNames = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1102,7 +1103,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetAccountsInWalletWhenNoWalletWithThisNameExists()
+        public async Task GetAccountsInWalletWhenNoWalletWithThisNameExistsAsync()
         {
             // Arrange.
             string walletName = "no-such-wallet";
@@ -1126,7 +1127,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetAddressesInAccount()
+        public async Task GetAddressesInAccountAsync()
         {
             // Act.
             AddressesModel addressesModel = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1141,7 +1142,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetAddressesInAccountWhenNoWalletWithThisNameExists()
+        public async Task GetAddressesInAccountWhenNoWalletWithThisNameExistsAsync()
         {
             // Arrange.
             string walletName = "no-such-wallet";
@@ -1165,7 +1166,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetAddressesInAccountWhenNoAccountWithThisNameExists()
+        public async Task GetAddressesInAccountWhenNoAccountWithThisNameExistsAsync()
         {
             // Arrange.
             string accountName = "account 122";
@@ -1188,7 +1189,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetSingleUnusedAddressesInAccount()
+        public async Task GetSingleUnusedAddressesInAccountAsync()
         {
             // Act.
             IEnumerable<string> unusedaddresses = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1204,7 +1205,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetWalletGeneralInfo()
+        public async Task GetWalletGeneralInfoAsync()
         {
             // Act.
             WalletGeneralInfoModel generalInfoModel = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1222,7 +1223,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task BuildTransactionFromWallet()
+        public async Task BuildTransactionFromWalletAsync()
         {
             // Arrange.
             var address = new Key().PubKey.GetAddress(this.fixture.Node.FullNode.Network).ToString();
@@ -1250,7 +1251,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task BuildTransactionWithSelectedInputs()
+        public async Task BuildTransactionWithSelectedInputsAsync()
         {
             // Arrange.
             var address = new Key().PubKey.GetAddress(this.fixture.Node.FullNode.Network).ToString();
@@ -1290,7 +1291,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task BuildTransactionWithMultipleRecipients()
+        public async Task BuildTransactionWithMultipleRecipientsAsync()
         {
             // Arrange.
             var address1 = new Key().PubKey.GetAddress(this.fixture.Node.FullNode.Network).ToString();
@@ -1323,7 +1324,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task BuildTransactionFailsWhenUsingFeeAmountAndFeeType()
+        public async Task BuildTransactionFailsWhenUsingFeeAmountAndFeeTypeAsync()
         {
             // Arrange.
             var address = new Key().PubKey.GetAddress(this.fixture.Node.FullNode.Network).ToString();
@@ -1358,7 +1359,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task BuildTransactionFailsWhenNoFeeMethodSpecified()
+        public async Task BuildTransactionFailsWhenNoFeeMethodSpecifiedAsync()
         {
             // Arrange.
             var address = new Key().PubKey.GetAddress(this.fixture.Node.FullNode.Network).ToString();
@@ -1455,7 +1456,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetWalletGeneralInfoWhenNoWalletWithThisNameExists()
+        public async Task GetWalletGeneralInfoWhenNoWalletWithThisNameExistsAsync()
         {
             // Arrange.
             string walletName = "no-such-wallet";
@@ -1479,7 +1480,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task GetWalletFiles()
+        public async Task GetWalletFilesAsync()
         {
             // Act.
             WalletFileModel walletFileModel = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1493,7 +1494,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task SignMessage()
+        public async Task SignMessageAsync()
         {
             // Act.
             SignMessageResult signatureResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1515,7 +1516,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task VerifyValidSignature()
+        public async Task VerifyValidSignatureAsync()
         {
             // Act.
             bool verifyMessageResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1533,7 +1534,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task VerifyInvalidSignature()
+        public async Task VerifyInvalidSignatureAsync()
         {
             // Act.
             bool verifyMessageResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1551,7 +1552,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task VerifyMessageWithInvalidAddress()
+        public async Task VerifyMessageWithInvalidAddressAsync()
         {
             // Act.
             bool verifyMessageResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1569,7 +1570,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task VerifyMessageWithInvalidMessage()
+        public async Task VerifyMessageWithInvalidMessageAsync()
         {
             // Act.
             bool verifyMessageResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"
@@ -1587,7 +1588,7 @@ namespace Blockcore.IntegrationTests.Wallet
         }
 
         [Fact]
-        public async Task VerifyMessageWithAllInvalid()
+        public async Task VerifyMessageWithAllInvalidAsync()
         {
             // Act.
             bool verifyMessageResult = await $"http://localhost:{this.fixture.Node.ApiPort}/api"

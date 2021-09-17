@@ -102,7 +102,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             }
 
             Wallet.Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
-            Func<HdAccount, bool> accountFilter = null;
+            Func<IHdAccount, bool> accountFilter = null;
             if (account == "*" || account == null)
             {
                 accountFilter = Wallet.Types.Wallet.AllAccounts;
@@ -191,7 +191,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_REQUEST, "No wallet found");
             }
 
-            HdAccount account = this.walletManager.GetAccounts(walletName).First();
+            IHdAccount account = this.walletManager.GetAccounts(walletName).First();
             return new WalletAccountReference(walletName, account.Name);
         }
     }

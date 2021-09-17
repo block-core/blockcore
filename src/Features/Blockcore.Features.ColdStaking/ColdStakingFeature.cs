@@ -164,7 +164,7 @@ namespace Blockcore.Features.ColdStaking
                 {
                     // Get all the accounts, including the ones used for cold staking.
                     // TODO: change GetAccounts to accept a filter.
-                    foreach (HdAccount account in this.coldStakingManager.GetAccounts(walletName))
+                    foreach (IHdAccount account in this.coldStakingManager.GetAccounts(walletName))
                     {
                         AccountBalance accountBalance = this.coldStakingManager.GetBalances(walletName, account.Name).Single();
                         benchLog.AppendLine(($"{walletName}/{account.Name}" + ",").PadRight(LoggingConfiguration.ColumnLength + 20)
@@ -172,7 +172,7 @@ namespace Blockcore.Features.ColdStaking
                                        + " Unconfirmed balance: " + accountBalance.AmountUnconfirmed.ToString());
                     }
 
-                    HdAccount coldStakingAccount = this.coldStakingManager.GetColdStakingAccount(this.coldStakingManager.GetWallet(walletName), true);
+                    IHdAccount coldStakingAccount = this.coldStakingManager.GetColdStakingAccount(this.coldStakingManager.GetWallet(walletName), true);
                     if (coldStakingAccount != null)
                     {
                         AccountBalance accountBalance = this.coldStakingManager.GetBalances(walletName, coldStakingAccount.Name).Single();
@@ -181,7 +181,7 @@ namespace Blockcore.Features.ColdStaking
                                             + " Unconfirmed balance: " + accountBalance.AmountUnconfirmed.ToString());
                     }
 
-                    HdAccount hotStakingAccount = this.coldStakingManager.GetColdStakingAccount(this.coldStakingManager.GetWallet(walletName), false);
+                    IHdAccount hotStakingAccount = this.coldStakingManager.GetColdStakingAccount(this.coldStakingManager.GetWallet(walletName), false);
                     if (hotStakingAccount != null)
                     {
                         AccountBalance accountBalance = this.coldStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();

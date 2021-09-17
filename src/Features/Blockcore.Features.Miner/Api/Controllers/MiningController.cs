@@ -145,7 +145,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 throw new Exception(noWalletMessage);
             }
 
-            HdAccount account = this.walletManager.GetAccounts(walletName).FirstOrDefault();
+            IHdAccount account = this.walletManager.GetAccounts(walletName).FirstOrDefault();
             if (account == null)
             {
                 this.logger.LogError(ExceptionOccurredMessage, noAccountMessage);

@@ -3,6 +3,7 @@ using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Database;
+using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Tests.Common;
 using NBitcoin;
@@ -17,7 +18,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             var wallet = new Types.Wallet();
 
-            IEnumerable<HdAccount> result = wallet.GetAccounts();
+            IEnumerable<IHdAccount> result = wallet.GetAccounts();
 
             Assert.Empty(result);
         }

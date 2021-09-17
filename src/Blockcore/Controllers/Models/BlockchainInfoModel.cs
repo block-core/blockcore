@@ -124,7 +124,6 @@ namespace Blockcore.Controllers.Models
 
         [JsonProperty(PropertyName = "statistics")]
         public SoftForksBip9Statistics Statistics { get; set; }
-
     }
 
     public class SoftForksBip9Statistics

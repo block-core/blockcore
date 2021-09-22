@@ -42,6 +42,7 @@ namespace Blockcore.Features.Wallet
     {
         /// <summary>Used to get the first account.</summary>
         public const string DefaultAccount = "account 0";
+        public const string ColdStakingAccount = "coldStakingColdAddresses";
 
         // <summary>As per RPC method definition this should be the max allowable expiry duration.</summary>
         private const int MaxWalletUnlockDurationInSeconds = 1073741824;

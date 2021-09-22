@@ -72,7 +72,17 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 var transactionHistory = model.AccountsHistoryModel.FirstOrDefault().TransactionsHistory;
 
+                var coldStakingRequest = request;
+                coldStakingRequest.AccountName = WalletManager.ColdStakingAccount;
+                WalletHistoryModel stakingAccountModel = WalletModelBuilder.GetHistory(this.walletManager, this.network, coldStakingRequest);
+
+                var coldStakingTransactionHistory = stakingAccountModel.AccountsHistoryModel.FirstOrDefault().TransactionsHistory;
+
+
                 var transactionData = transactionHistory.ToList();
+                transactionData.AddRange(coldStakingTransactionHistory.ToList());
+
+
                 var count = 0;
 
                 if (request.TransactionType != null)

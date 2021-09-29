@@ -429,5 +429,18 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="broadcast">Broadcast the transaction to the network.</param>
         /// <returns>List of sweep transactions.</returns>
         IEnumerable<string> Sweep(IEnumerable<string> privateKeys, string destAddress, bool broadcast);
+
+        /// <summary>
+        /// Creates mutisig wallet with 1 private key and list of xPub keys
+        /// </summary>
+        /// <param name="walletName">Wallet name</param>
+        /// <param name="threashold">Number of signatures required for transaction to be valid.</param>
+        /// <param name="cosignerXPubs">Extended pubkeys for other cosigners.</param>
+        /// <param name="coinType">Coin type as per https://github.com/satoshilabs/slips/blob/master/slip-0044.md</param>
+        /// <param name="mnemonic">Mnemonic wallet recovery seed.</param>
+        /// <param name="password">A wallet encryption password.</param>
+        /// <param name="passphrase">Passphrase as seed extension word.</param>
+        /// <returns></returns>
+        WalletMultisig CreateMutisigWallet(string walletName, int threashold, List<string> cosignerXPubs, int coinType, string mnemonic, string password, string passphrase);
     }
 }

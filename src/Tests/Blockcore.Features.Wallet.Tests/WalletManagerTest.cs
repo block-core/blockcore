@@ -49,7 +49,7 @@ namespace Blockcore.Features.Wallet.Tests
         /// This is more of an integration test to verify fields are filled correctly. This is what I could confirm.
         /// </summary>
         [Fact]
-        public void CreateMultisigXRCWallet()
+        public void CreateMultisigXRCWalletWithSeed()
         {
             DataFolder dataFolder = CreateDataFolder(this);
             this.Network = new XRCMain();
@@ -66,33 +66,37 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chain, new WalletSettings(NodeSettings.Default(this.Network)),
                 dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
 
-            var xPubs = new string[]
+            var xPubs = new List<string>()
             {
-                "xpub661MyMwAqRbcFK4g9bHwLNYLmy4JxSFkKNRURL3hJqVYLoZ318eHmEKjMbFxbgDiaMycDk4oixtRkHKgbopRzukzimmyzAb2aEVfAEeJPxt",
-                "xpub661MyMwAqRbcFVViGz3WGiaYgzsKWKXYduJZ8oR4tnnaRLp2QXMUf5P9Yq6CpJ8zuddutUFyrTkMECqqa1UyjnegVpoiYbcqpJfSCP9GcmG",
-                "xpub661MyMwAqRbcFYCYnw23jLqPAHMvCfmLeKkmDSLGy6nGpVtJvN9EDoR2qdz8fmvkV8sSa1ZT7j8oyfBgjHKX2nGnESLqSndrM2gJ6TGcXrU",
+                "xpub6BjqcxqZxmEMszvyvzhwDZbEcLpLsQCyWrCQjmnLJ3BvXHwwiPNH1W3jmF882W9jsJM5vGspDTzetnXwSy4P4qDgvYR46Adn11PUBvQAW1T", 
+                "xpub6Cnh2EhE9yAggVwQA7mAy2Reh7hP9VsqVMa7FTBckKUYKwHvi1HPJcqwkuunA5V3LRhCvx8EeKdKoxSRFD2GJQeAd7wawJC1jqJvD2HeP8W"
             };
 
             var recieveRedeemScripts = new string[]
             {
-                "522102134708a8b6df4908a73041d97feb75d0b2706710e8dacad9107d26e13c1fcc5521027a4fdc628e20e430e525b098b4fa3ef888765d03651b4d78ff795438ac458dcb210305615df6ea6f4370f2ca4b09f0139523cfca72f0df7588d85eced64b51e25e0053ae",
-                "522102e8bf4c7f1a483ff6e42fda3a4b99acf35f53d1dc2e19b41428d693d86cc7457b21037a5ba1a77965d5c3212a3c596ff05843c098b7f1fd0a302a505fb26d0b7cbe1a2103f3a2ed18c90dffad6535950de5d22677d9c7f88d6b61e221544fd8d26184693153ae",
-                "52210225a49e0cc70ee1a2aa63ae98f12fe644069d0b591c77967394a53709dd0730782102ab2bb7280689df3167c2fe80cd0abd3c3cf1ba769b235ed5155b18a0b2fa9e192103c01f3c9b8bdff0329f9e05a61cf4b5d50ceddafc39300d74411c8f2a46b91cbb53ae",
-                "522102db7982444aa7218263e8e075b50f7fa59b14f1288b358ad677ff7bf1b2aaa8d121039e67696312bb838d755efd221734349fa5db59a4385d8241460a1ba3c2e62bfe2103c71608f27b41be9d6822fd50f31bfff0ce691a16ba760ed821801a07512d965653ae",
-                "5221026135f28080e9e91f693e7458a52a6727b8130d8f689d3d58fb25eee70f099f2021035c604fe5ec14740bd2fbca5913054730c5fc2245f45392f3fcbfdd30f939b8b32103e33eb2a622d8dbb420b88b836841eb7d6b39d5637f718610df566fa3c50d297d53ae",
+                "522102af76842fc756db497b984f14ccfa6f0d16c86cf5f3f8a4d2711ffb1d4a1eb4fe210300037e7d78e4f52d4431a586335c16eae6ce0f1afebe841231d913b6fe45a2af21034ec89eb5faa3638ec6b93c24ab75e9f02d11289ee519809cb187bb71cee4e02d53ae",
+                "522102613dc4f647b8feb0907fa6ba9f8dcb0a9319c93d80653a7858f156a6dc3501b221031384c54a42164e0c70a40f9b97b1a4922ca778fd6d43fac669c9b84d7edc4c152103c7d4e479dcb45a26f7f6911e2f66fc3d11ef6170d4f763fab6c4520921f700e853ae",
+                "5221024a7088f372ca162025f3ddbad6c99ed4d828d9c819c368caa3bc42450f44fb092102784c59f90d06fef61d4fb04a9275ca29219821938240f104bddd6dca2ec48de5210280d767323327d01aa05458ea166c0d74431c778505a2ea7d870b07167c8a4dfc53ae",
+                "52210278f2fcb9987d3f8d6a1ab5fe5696379b7cff8c0f1e5184bc4861a7f89e22241b2102f7d134704d07d2cc6f9d50afbba71e44ea71999f705656908b0e4e16615cd6f221036e26d114735ac210e698fe525ddfd47df3fd4ba005c6174395f4e5ea5e98249353ae",
+                "5221020c82ebeaf0420684d377899968715dc10308b011748d8c160c242d485cd90f36210375095b989a1d0100962d38b8f6ebbefff726350e1a0dc7602fb7afb119df45fd2103ca9111db12a21bf89106339a99a69b68047e421f3a42b943f9b19bf52520fe4b53ae",
             };
 
             var changeRedeemScripts = new string[]
             {
-                "52210230b1265c672328e722e06bf5395edb3dc77f27064de1dde9ee55771d59091b0521036feaf4e275bf6be6c7d4ec11969ea7f1c2e51a1b8e364b5450ab6055caf4ed462103b6bdb98fce45ae9cc0ac84359edc870ee9c37ab40961bfe3397e98ce6cf1e75c53ae",
-                "522102923652c9b6220b61a06b1907c700679d07a6895c35cfd612e7cb32f7b485fe622102f32b590744b70c0054b36736bc4fb7711b6126d33784537a50075aa5d7e0aaa5210314bc014000fd5f4469deaaeedc32da2e8aafc4d0519c16c581f184be78211a7c53ae",
-                "5221028de4dafd843231bc1b314192af8dcac9e974fe7c57171fbc3dcdeafa23be68312102c3d99d45c9ce81afc3f7cf1affe0f46e4675fd4feb822347f063b40391c0e74b2103861b41d6d67c19c0676f0906f0e6f74eb36a16fb72b209279fdea2962d7bc36753ae",
-                "52210215adb25ce0663b62afa80d3f9e4c212916181538b3cbb27b8d506577a77730d521032f1598232775df6008a3a36fcd20b630345fd087d648c7b37f85d470386227872103e940b74d39ee703bf87035ae21d76b4e560e3525a1fc1120d49507abe0f131ed53ae",
-                "52210238e487536141e85e96d5fce77227951c53704b6288e8a85bc2de8d61bae3f830210296fcf49b9ee68c52e977ece9e8f3a245675d5fe8bdd766ddd73f55b3f9d534ae2103bb37235320477cefa081bb01c8952538607b6ef146b60750610520e66c35e30453ae",
+                "5221023bc1b977890204ab69eced05b5c6259db7555ab95116b838f950e350806c15d92102910c7e86a0cc485dc992caef88a78f919b8c74b281c5f5a4431bbc541361c51f21029fe588173670c6c28d49a7cc6c1a0222a8dcc0609a0cdd98b0ab5492cc5ba78f53ae",
+                "5221024026c42573ae2cfda5f22aa76bb774696707d3f5d58368578b5ee06e6c97bba9210265f1f62947b908156e9b5b8ee64dd9ce92ee1e53467dac154d819ca82f2407a921027d59cfb9b1f7d61eeeb1442003d110a0ec6de021099a494b235b20ad746301c753ae",
+                "5221024c573939f84a4f25c38931be3b549ddcb8aeab5a8c3495c8b3ffc26974c752a8210308c910a1363afdd5b26f2584512cd1c7eb368caecb403ec64e97726e4aafac0b2103471d2ca002d7c3d677f5df243f37cecb0590c75cec09a6e6f60c5981a894f75a53ae",
+                "522102b5473119cc06852b76ae0b7df36b1c1d862254b6ddde2b9d3b200925aa895c1b2102e113754108029c015c8b9cb5c24a78904ca050c54f2a08d8f80c85d593b7cb662103db1afa7afac4020291b726fc7435e1bdd1e0084050e896c948a17672872a883153ae",
+                "522102148f8f6cd405defd54c7d397a98bb6a064c76daec9ef6e0eeac8b2137782b30b21034d797d8bfdb35d5634d6a7251a829835d155e822b3e2bed9932afd3f2e981012210361277992e5ba401846d53a02f9d4ca8cb94f01bd7f4ddf4a0ce0378af09c6e3b53ae",
             };
 
+            string password = "bdemq1XLhLYbiGHD";
+            string passphrase = "bdemq1XLhLYbiGHD";
+
+            string seed = "chalk call anger chase endless level slow sleep coast left sand enter save bind curious puzzle stadium volume mixture shuffle hurry gas borrow believe";
+
             // create the wallet
-            WalletMultisig expectedWallet = walletManager.CreateMutisigWallet("mywallet", 2, xPubs, 10291);
+            WalletMultisig expectedWallet = walletManager.CreateMutisigWallet("mywallet", 2, xPubs, 10291, seed, password, passphrase);
 
             // assert it has saved it to disk and has been created correctly.
             var actualWallet = walletManager.MultisigFileStorage.LoadByFileName("mywallet.multisigwallet.json");
@@ -103,7 +107,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(expectedWallet.Name, actualWallet.Name);
             Assert.Equal(expectedWallet.Network, actualWallet.Network);
             Assert.True(actualWallet.IsMultisig);
-            Assert.Equal(actualWallet.EncryptedSeed, string.Empty);
+            Assert.Equal(expectedWallet.EncryptedSeed, actualWallet.EncryptedSeed);
             Assert.Equal(expectedWallet.ChainCode, actualWallet.ChainCode);
 
             Assert.Equal(1, expectedWallet.AccountsRoot.Count);
@@ -116,7 +120,7 @@ namespace Blockcore.Features.Wallet.Tests
                 Assert.Equal(block.GetHash(), expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
 
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).CoinType, actualWallet.AccountsRoot.ElementAt(i).CoinType);
-                
+
                 // blockcore wallet does not serialize these, because this has explicit json ignore messages.
                 Assert.Null(actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
                 Assert.Null(actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
@@ -129,7 +133,7 @@ namespace Blockcore.Features.Wallet.Tests
                     var actualAccount = accountRoot.Accounts.ElementAt(j);
                     Assert.Equal($"account {j}", actualAccount.Name);
                     Assert.Equal(j, actualAccount.Index);
-                    Assert.Equal($"m/45'/10291'/{j}'", actualAccount.HdPath);
+                    Assert.Equal($"m/44'/10291'/{j}'", actualAccount.HdPath);
 
 
                     Assert.Equal("N/A", actualAccount.ExtendedPubKey);
@@ -145,7 +149,7 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ScriptPubKey, actualAddress.ScriptPubKey);
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey, actualAddress.Pubkey);
-                        Assert.Equal($"m/45'/10291'/{j}'/1/{k}", actualAddress.HdPath);
+                        Assert.Equal($"m/44'/10291'/{j}'/1/{k}", actualAddress.HdPath);
                         //Assert.Equal(0, actualAddress.Transactions.Count);
                     }
 
@@ -159,7 +163,7 @@ namespace Blockcore.Features.Wallet.Tests
                         Assert.Equal(expectedAddress.ScriptPubKey, actualAddress.ScriptPubKey);
                         Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
                         Assert.Equal(expectedAddressPubKey, actualAddress.Pubkey);
-                        Assert.Equal($"m/45'/10291'/{j}'/0/{l}", actualAddress.HdPath);
+                        Assert.Equal($"m/44'/10291'/{j}'/0/{l}", actualAddress.HdPath);
                         //Assert.Equal(0, actualAddress.Transactions.Count);
                     }
                 }
@@ -169,7 +173,6 @@ namespace Blockcore.Features.Wallet.Tests
             //blockore wallets have explicit jsonignore directives at time of writing this
             Assert.Null(actualWallet.BlockLocator);
         }
-
         /// <summary>
         /// This is more of an integration test to verify fields are filled correctly. This is what I could confirm.
         /// </summary>

@@ -295,16 +295,33 @@ namespace Blockcore.Features.Wallet
                 disposable?.Dispose();
         }
 
-        public WalletMultisig CreateMutisigWallet(string walletName, int threashold, string[] xPubs, int coinType)
+        public WalletMultisig CreateMutisigWallet(string walletName, int threashold, List<string> cosignerXPubs, int coinType, string mnemonic, string password, string passphrase)
         {
+            Guard.NotEmpty(password, nameof(password));
+            Guard.NotEmpty(walletName, nameof(walletName));
+            Guard.NotEmpty(mnemonic, nameof(mnemonic));
+            Guard.NotNull(passphrase, nameof(passphrase));
+
+            ExtKey extendedKey = HdOperations.GetExtendedKey(mnemonic, passphrase);
+
+            string encryptedSeed = extendedKey.PrivateKey.GetEncryptedBitcoinSecret(password, this.network).ToWif();
+
+            string accountHdPath = HdOperations.GetAccountHdPath((int)coinType, 0);
+            Key privateKey = HdOperations.DecryptSeed(encryptedSeed, password, this.network);
+
+            ExtPubKey accountExtPubKey = HdOperations.GetExtendedPublicKey(privateKey, extendedKey.ChainCode, accountHdPath);
+  
+
+            cosignerXPubs.Add(accountExtPubKey.ToString(this.network));
+
             var multisigScheme = new MultisigScheme()
             {
                 Threashold = threashold,
-                XPubs = xPubs
+                XPubs = cosignerXPubs.ToArray()
             };
 
-            WalletMultisig wallet = new WalletMultisig(this.network);
-            wallet.Name = walletName;
+            WalletMultisig wallet = new WalletMultisig(walletName, encryptedSeed, extendedKey.ChainCode, this.network);
+
             var root = new AccountRootMultisig
             {
                 CoinType = coinType
@@ -1597,29 +1614,10 @@ namespace Blockcore.Features.Wallet
                 wallet.walletStore.SetData(walletData);
                 if (!wallet.IsMultisig)
                 {
-                    //var knownTypes = new KnownTypesBinder
-                    //{
-                    //    KnownTypes = new List<Type>
-                    //    {
-                    //        typeof(Types.Wallet),
-                    //        typeof(Types.AccountRoot),
-                    //        typeof(Types.HdAccount),
-                    //    }
-                    //};
                     this.fileStorage.SaveToFile(wallet, $"{wallet.Name}.{WalletFileExtension}", new FileStorageOption { SerializeNullValues = false });
                 }
                 else
                 {
-                    //var knownTypes = new KnownTypesBinder
-                    //{
-                    //    KnownTypes = new List<Type>
-                    //    {
-                    //        typeof(Types.WalletMultisig),
-                    //        typeof(Types.AccountRootMultisig),
-                    //        typeof(Types.HdAccountMultisig),
-                    //    }
-                    //};
-
                     this.multisigFileStorage.SaveToFile((WalletMultisig)wallet, $"{wallet.Name}.{WalletMultisigFileExtension}", new FileStorageOption { SerializeNullValues = false });
                 }
                 

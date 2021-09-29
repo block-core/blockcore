@@ -5,7 +5,6 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Networks;
-using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;
 

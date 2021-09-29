@@ -13,22 +13,9 @@ namespace Blockcore.Features.Wallet.Types
 {
     public class WalletMultisig : Wallet
     {
-        public WalletMultisig(List<AccountRootMultisig> accountsRoot, ICollection<uint256> blockLocator, byte[] chaincode, DateTimeOffset creationTime, string name, Network network)
-        {
-            this.AccountsRoot = (ICollection<IAccountRoot>)accountsRoot;
-            this.BlockLocator = blockLocator;
-            this.ChainCode = chaincode;
-            this.CreationTime = creationTime;
-            this.EncryptedSeed = string.Empty;
-            this.IsMultisig = true;
-            this.IsExtPubKeyWallet = true;
-            this.Name = name;
-            this.Network = network;
-        }
         public WalletMultisig()
         {
             this.IsMultisig = true;
-            this.EncryptedSeed = string.Empty;
             this.AccountsRoot = new List<IAccountRoot>();
         }
 
@@ -36,6 +23,15 @@ namespace Blockcore.Features.Wallet.Types
         {
             this.Network = network;            
         }
+
+        public WalletMultisig(string walletName, string encryptedSeed, byte[] chainCode, Network network):this()
+        {
+            this.Name = walletName;
+            this.EncryptedSeed = encryptedSeed;
+            this.ChainCode = chainCode;
+            this.Network = network;
+        }
+
         /// <summary>
         /// The root of the accounts tree.
         /// </summary>
@@ -76,8 +72,8 @@ namespace Blockcore.Features.Wallet.Types
             {
                 newAccountIndex = accounts.Max(a => a.Index) + 1;
             }
-
-            string accountHdPath = $"m/45'/{(int)coinType}'/{newAccountIndex}'";
+            
+            string accountHdPath = $"m/44'/{(int)coinType}'/{newAccountIndex}'";
 
             var newAccount = new HdAccountMultisig(multisigScheme)
             {
@@ -123,7 +119,6 @@ namespace Blockcore.Features.Wallet.Types
     {
         public override bool CanConvert(Type objectType)
         {
-            //assume we can convert to anything for now
             return true;
         }
 
@@ -146,7 +141,6 @@ namespace Blockcore.Features.Wallet.Types
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            //use the default serialization - it works fine
             serializer.Serialize(writer, value);
         }
     }
@@ -155,7 +149,6 @@ namespace Blockcore.Features.Wallet.Types
     {
         public override bool CanConvert(Type objectType)
         {
-            //assume we can convert to anything for now
             return true;
         }
 
@@ -199,12 +192,12 @@ namespace Blockcore.Features.Wallet.Types
         /// An HD public key derived from an extended public key.
         /// </returns>
 
-        public Script GeneratePublicKey(int hdPathIndex, bool isChange = false)
+        public Script GeneratePublicKey(int hdPathIndex, Network network, bool isChange = false)
         {
             List<PubKey> derivedPubKeys = new List<PubKey>();
             foreach (var xpub in this.MultisigScheme.XPubs)
             {
-                derivedPubKeys.Add(HdOperations.GeneratePublicKey(xpub, hdPathIndex, isChange));
+                derivedPubKeys.Add(HdOperations.GeneratePublicKey(xpub, hdPathIndex, isChange, network));
             }
             var sortedkeys = LexographicalSort(derivedPubKeys);
 
@@ -240,7 +233,7 @@ namespace Blockcore.Features.Wallet.Types
             for (int i = firstNewAddressIndex; i < firstNewAddressIndex + addressesQuantity; i++)
             {
                 // Generate a new address.                
-                var pubkey = GeneratePublicKey(i, isChange);
+                var pubkey = GeneratePublicKey(i, network, isChange);
                 BitcoinAddress address = pubkey.Hash.GetAddress(network);
                 // Add the new address details to the list of addresses.
                 HdAddress newAddress = new HdAddress
@@ -251,7 +244,6 @@ namespace Blockcore.Features.Wallet.Types
                     Pubkey = pubkey,
                     Address = address.ToString(),
                     RedeemScript = pubkey
-                    //Transactions = new List<TransactionData>()
                 };
 
                 addresses.Add(newAddress);
@@ -273,7 +265,7 @@ namespace Blockcore.Features.Wallet.Types
         public static string CreateHdPath(int coinType, int accountIndex, int addressIndex, bool isChange = false)
         {
             int change = isChange ? 1 : 0;
-            return $"m/45'/{coinType}'/{accountIndex}'/{change}/{addressIndex}";
+            return $"m/44'/{coinType}'/{accountIndex}'/{change}/{addressIndex}";
         }
 
         private static IEnumerable<PubKey> LexographicalSort(IEnumerable<PubKey> pubKeys)

@@ -1,3 +1,15 @@
+##  (2021-10-05)
+
+* Add OpReturnDataIsHex in build-tx-request to store hex bytes (#348) ([193e8fd](https://github.com/block-core/blockcore/commit/193e8fd)), closes [#348](https://github.com/block-core/blockcore/issues/348)
+* Adding support for Strax (#355) ([c298c3e](https://github.com/block-core/blockcore/commit/c298c3e)), closes [#355](https://github.com/block-core/blockcore/issues/355)
+* Bump version and update change notes for previous release (#347) ([37e9e49](https://github.com/block-core/blockcore/commit/37e9e49)), closes [#347](https://github.com/block-core/blockcore/issues/347)
+* Fixes an issue when reindex takes more than one minute (#351) ([150e89b](https://github.com/block-core/blockcore/commit/150e89b)), closes [#351](https://github.com/block-core/blockcore/issues/351)
+* Make rocksdb the default db (#346) ([d869c04](https://github.com/block-core/blockcore/commit/d869c04)), closes [#346](https://github.com/block-core/blockcore/issues/346)
+* Update Check points Rutanio (#349) ([55fd969](https://github.com/block-core/blockcore/commit/55fd969)), closes [#349](https://github.com/block-core/blockcore/issues/349) [#348](https://github.com/block-core/blockcore/issues/348) [#348](https://github.com/block-core/blockcore/issues/348)
+* Update the Discord links (#353) ([7447b31](https://github.com/block-core/blockcore/commit/7447b31)), closes [#353](https://github.com/block-core/blockcore/issues/353)
+
+
+
 ##  (2021-07-05)
 
 * Cache the deployment flags to improve startup (#340) ([7c06cc1](https://github.com/block-core/blockcore/commit/7c06cc1)), closes [#340](https://github.com/block-core/blockcore/issues/340) [#337](https://github.com/block-core/blockcore/issues/337)

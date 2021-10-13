@@ -461,7 +461,7 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
-        public virtual Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null)
+        public virtual Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null, bool? isColdStakingWallet = false)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(name, nameof(name));

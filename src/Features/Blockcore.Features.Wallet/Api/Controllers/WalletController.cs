@@ -264,7 +264,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, request.CoinType);
+                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, request.CoinType, request.IsColdStakingWallet);
 
                 this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 

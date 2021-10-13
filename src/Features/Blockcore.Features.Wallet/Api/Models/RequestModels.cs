@@ -124,6 +124,11 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// Optional CoinType to overwrite the default <see cref="Blockcore.Consensus.IConsensus.CoinType"/>.
         /// </summary>
         public int? CoinType { get; set; }
+
+        /// <summary>
+        /// Optional flag that indicates if the "coldStakingColdAddresses" and "coldStakingHotAddresses" accounts should be restored.
+        /// </summary>
+        public bool? IsColdStakingWallet { get; set; }
     }
 
     /// <summary>

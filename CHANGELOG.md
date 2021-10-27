@@ -1,3 +1,26 @@
+##  (2021-10-05)
+
+* Add OpReturnDataIsHex in build-tx-request to store hex bytes (#348) ([193e8fd](https://github.com/block-core/blockcore/commit/193e8fd)), closes [#348](https://github.com/block-core/blockcore/issues/348)
+* Adding support for Strax (#355) ([c298c3e](https://github.com/block-core/blockcore/commit/c298c3e)), closes [#355](https://github.com/block-core/blockcore/issues/355)
+* Bump version and update change notes for previous release (#347) ([37e9e49](https://github.com/block-core/blockcore/commit/37e9e49)), closes [#347](https://github.com/block-core/blockcore/issues/347)
+* Fixes an issue when reindex takes more than one minute (#351) ([150e89b](https://github.com/block-core/blockcore/commit/150e89b)), closes [#351](https://github.com/block-core/blockcore/issues/351)
+* Make rocksdb the default db (#346) ([d869c04](https://github.com/block-core/blockcore/commit/d869c04)), closes [#346](https://github.com/block-core/blockcore/issues/346)
+* Update Check points Rutanio (#349) ([55fd969](https://github.com/block-core/blockcore/commit/55fd969)), closes [#349](https://github.com/block-core/blockcore/issues/349) [#348](https://github.com/block-core/blockcore/issues/348) [#348](https://github.com/block-core/blockcore/issues/348)
+* Update the Discord links (#353) ([7447b31](https://github.com/block-core/blockcore/commit/7447b31)), closes [#353](https://github.com/block-core/blockcore/issues/353)
+
+
+
+##  (2021-07-05)
+
+* Cache the deployment flags to improve startup (#340) ([7c06cc1](https://github.com/block-core/blockcore/commit/7c06cc1)), closes [#340](https://github.com/block-core/blockcore/issues/340) [#337](https://github.com/block-core/blockcore/issues/337)
+* Documentation and Explanation of blockcores POS  (#279) ([ee7a4ff](https://github.com/block-core/blockcore/commit/ee7a4ff)), closes [#279](https://github.com/block-core/blockcore/issues/279)
+* Extend OP_RETURN from 40 to 83 for City Chain (#345) ([9e87635](https://github.com/block-core/blockcore/commit/9e87635)), closes [#345](https://github.com/block-core/blockcore/issues/345)
+* Migrate to Blockcore.RocksDB (#342) ([aff064d](https://github.com/block-core/blockcore/commit/aff064d)), closes [#342](https://github.com/block-core/blockcore/issues/342)
+* Remove the ChainedBlocksDataBytes (#338) ([d95c898](https://github.com/block-core/blockcore/commit/d95c898)), closes [#338](https://github.com/block-core/blockcore/issues/338) [#337](https://github.com/block-core/blockcore/issues/337)
+* Update to latest RocksDB package (#344) ([162062d](https://github.com/block-core/blockcore/commit/162062d)), closes [#344](https://github.com/block-core/blockcore/issues/344)
+
+
+
 ##  (2021-03-09)
 
 * #280 (#282) ([5119089](https://github.com/block-core/blockcore/commit/5119089)), closes [#280](https://github.com/block-core/blockcore/issues/280) [#282](https://github.com/block-core/blockcore/issues/282)

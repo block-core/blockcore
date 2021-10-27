@@ -258,12 +258,15 @@ namespace Blockcore.Features.ColdStaking
         /// track addresses under the <see cref="ColdWalletAccountIndex"/> HD account.
         /// </summary>
         /// <inheritdoc />
-        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null)
+        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null, bool? isColdStakingWallet = false)
         {
             Wallet.Types.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, coinType);
 
-            this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
-            this.GetOrCreateColdStakingAccount(wallet.Name, true, password);
+            if (isColdStakingWallet.HasValue && isColdStakingWallet == true)
+            {
+                this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
+                this.GetOrCreateColdStakingAccount(wallet.Name, true, password);
+            }
 
             return wallet;
         }

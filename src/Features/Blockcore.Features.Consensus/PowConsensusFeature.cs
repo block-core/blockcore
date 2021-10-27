@@ -9,6 +9,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Signals;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
@@ -38,7 +39,8 @@ namespace Blockcore.Features.Consensus
             IInitialBlockDownloadState initialBlockDownloadState,
             IPeerBanning peerBanning,
             ISignals signals,
-            ILoggerFactory loggerFactory) : base(network, chainState, connectionManager, signals, consensusManager, nodeDeployments)
+            ILoggerFactory loggerFactory,
+            IKeyValueRepository keyValueRepository) : base(network, chainState, connectionManager, signals, consensusManager, nodeDeployments, keyValueRepository)
         {
             this.chainState = chainState;
             this.connectionManager = connectionManager;

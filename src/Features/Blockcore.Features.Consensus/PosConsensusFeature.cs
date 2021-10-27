@@ -15,6 +15,7 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Signals;
+using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
@@ -51,7 +52,9 @@ namespace Blockcore.Features.Consensus
             ILoggerFactory loggerFactory,
             ICheckpoints checkpoints,
             IProvenBlockHeaderStore provenBlockHeaderStore,
-            ConnectionManagerSettings connectionManagerSettings) : base(network, chainState, connectionManager, signals, consensusManager, nodeDeployments)
+            ConnectionManagerSettings connectionManagerSettings,
+            IKeyValueRepository keyValueRepository
+            ) : base(network, chainState, connectionManager, signals, consensusManager, nodeDeployments, keyValueRepository)
         {
             this.network = network;
             this.chainState = chainState;

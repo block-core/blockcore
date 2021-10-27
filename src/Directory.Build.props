@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>1.0.21</Version>
+    <Version>1.0.24</Version>
     <RuntimeFrameworkVersion>3.1.11</RuntimeFrameworkVersion>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="AddInternalsVisibleTo" BeforeTargets="CoreCompile">

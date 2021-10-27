@@ -330,7 +330,7 @@ namespace Blockcore.Features.Wallet.Tests
             };
 
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null)).Returns(wallet);
+            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null, true)).Returns(wallet);
 
             Mock<IWalletSyncManager> walletSyncManager = new Mock<IWalletSyncManager>();
             walletSyncManager.Setup(w => w.WalletTip).Returns(new ChainedHeader(this.Network.GetGenesis().Header, this.Network.GetGenesis().Header.GetHash(), 3));
@@ -368,7 +368,7 @@ namespace Blockcore.Features.Wallet.Tests
             DateTime lastBlockDateTime = chainIndexer.Tip.Header.BlockTime.DateTime;
 
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null)).Returns(wallet);
+            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null, true)).Returns(wallet);
 
             Mock<IWalletSyncManager> walletSyncManager = new Mock<IWalletSyncManager>();
             walletSyncManager.Setup(w => w.WalletTip).Returns(new ChainedHeader(this.Network.GetGenesis().Header, this.Network.GetGenesis().Header.GetHash(), 3));
@@ -419,7 +419,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             string errorMessage = "An error occurred.";
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null))
+            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null, true))
                 .Throws(new WalletException(errorMessage));
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
@@ -445,7 +445,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void RecoverWalletWithFileNotFoundExceptionReturnsNotFound()
         {
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null))
+            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null, true))
                 .Throws(new FileNotFoundException("File not found."));
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
@@ -472,7 +472,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void RecoverWalletWithExceptionReturnsBadRequest()
         {
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null))
+            mockWalletManager.Setup(w => w.RecoverWallet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), null, null, true))
                 .Throws(new FormatException("Formatting failed."));
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
@@ -826,11 +826,11 @@ namespace Blockcore.Features.Wallet.Tests
         {
             string walletName = "myWallet";
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.GetHistorySlim(walletName, WalletManager.DefaultAccount, 0, int.MaxValue)).Returns(new List<AccountHistorySlim>
+            mockWalletManager.Setup(w => w.GetHistory(walletName, WalletManager.DefaultAccount)).Returns(new List<AccountHistory>
             {
-                new AccountHistorySlim()
+                new AccountHistory
                 {
-                    History = new List<FlatHistorySlim>(),
+                    History = new List<FlatHistory>(),
                     Account = new HdAccount()
                 }
             });
@@ -852,7 +852,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Empty(model.AccountsHistoryModel.First().TransactionsHistory);
         }
 
-        [Fact(Skip = "history method has changed")]
+        [Fact]
         public void GetHistoryWithValidModelWithoutTransactionSpendingDetailsReturnsWalletHistoryModel()
         {
             string walletName = "myWallet";
@@ -900,7 +900,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(1, resultingTransactionModel.ConfirmedInBlock);
         }
 
-        [Fact(Skip = "history method has changed")]
+        [Fact]
         public void GetHistoryWithValidModelWithTransactionSpendingDetailsReturnsWalletHistoryModel()
         {
             string walletName = "myWallet";
@@ -974,7 +974,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(0, resultingTransactionModel.Payments.Count);
         }
 
-        [Fact(Skip = "history method has changed")]
+        [Fact]
         public void GetHistoryWithValidModelWithFeeBelowZeroSetsFeeToZero()
         {
             string walletName = "myWallet";
@@ -1032,7 +1032,7 @@ namespace Blockcore.Features.Wallet.Tests
         /// Tests that when a transaction has been sent that has multiple inputs to form the transaction these duplicate spending details do not show up multiple times in the history.
         /// </summary>
 
-        [Fact(Skip = "history method has changed")]
+        [Fact]
         public void GetHistoryWithDuplicateSpentTransactionsSelectsDistinctsSpentTransactionsForDuplicates()
         {
             string walletName = "myWallet";
@@ -1143,7 +1143,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             string walletName = "myWallet";
             var mockWalletManager = new Mock<IWalletManager>();
-            mockWalletManager.Setup(w => w.GetHistorySlim("myWallet", WalletManager.DefaultAccount, 0, int.MaxValue)).Throws(new InvalidOperationException("Issue retrieving wallets."));
+            mockWalletManager.Setup(w => w.GetHistory("myWallet", WalletManager.DefaultAccount)).Throws(new InvalidOperationException("Issue retrieving wallets."));
             mockWalletManager.Setup(w => w.GetWalletByName(walletName)).Returns(new Types.Wallet());
 
             var controller = new WalletController(this.LoggerFactory.Object, mockWalletManager.Object, new Mock<IWalletTransactionHandler>().Object, new Mock<IWalletSyncManager>().Object, It.IsAny<ConnectionManager>(), this.Network, this.chainIndexer, new Mock<IBroadcasterManager>().Object, DateTimeProvider.Default);
@@ -1162,7 +1162,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal("Issue retrieving wallets.", error.Message);
         }
 
-        [Fact(Skip = "history method has changed")]
+        [Fact]
         public void GetHistoryWithChangeAddressesShouldIncludeSpentChangeAddesses()
         {
             string walletName = "myWallet";

@@ -124,6 +124,11 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// Optional CoinType to overwrite the default <see cref="Blockcore.Consensus.IConsensus.CoinType"/>.
         /// </summary>
         public int? CoinType { get; set; }
+
+        /// <summary>
+        /// Optional flag that indicates if the "coldStakingColdAddresses" and "coldStakingHotAddresses" accounts should be restored.
+        /// </summary>
+        public bool? IsColdStakingWallet { get; set; }
     }
 
     /// <summary>
@@ -327,6 +332,11 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// A string containing any OP_RETURN output data to store as part of the transaction.
         /// </summary>       
         public string OpReturnData { get; set; }
+
+        /// <summary>
+        /// Sets if the OpReturnData is a hex value and must be decoded
+        /// </summary>
+        public bool OpReturnDataIsHex { get; set; }
 
         /// <summary>
         /// The funds in STRAT (or a sidechain coin) to include with the OP_RETURN output. Currently, specifying

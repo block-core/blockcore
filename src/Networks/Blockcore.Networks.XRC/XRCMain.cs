@@ -9,6 +9,7 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.XRC.Rules;
 using Blockcore.Networks.XRC.Consensus;
 using Blockcore.Networks.XRC.Deployments;
 using Blockcore.Networks.XRC.Policies;
@@ -16,7 +17,6 @@ using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
-using Blockcore.Networks.XRC.Rules;
 
 namespace Blockcore.Networks.XRC
 {
@@ -189,8 +189,9 @@ namespace Blockcore.Networks.XRC
         protected void RegisterRules(IConsensus consensus)
         {
             consensus.ConsensusRules
-                .Register<HeaderTimeChecksRule>() 
-                .Register<XRCCheckDifficultyPowRule>(); 
+                .Register<HeaderTimeChecksRule>()
+                .Register<XRCCheckDifficultyPowRule>()
+                .Register<XRCHeaderVersionRule>();
 
             consensus.ConsensusRules
                 .Register<BlockMerkleRootRule>(); 

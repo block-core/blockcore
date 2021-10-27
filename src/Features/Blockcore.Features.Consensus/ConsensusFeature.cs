@@ -11,6 +11,7 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
+using Blockcore.Utilities.Store;
 using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
@@ -30,19 +31,23 @@ namespace Blockcore.Features.Consensus
 
         private readonly NodeDeployments nodeDeployments;
 
+        private readonly IKeyValueRepository keyValueRepository;
+
         public ConsensusFeature(
             Network network,
             IChainState chainState,
             IConnectionManager connectionManager,
             ISignals signals,
             IConsensusManager consensusManager,
-            NodeDeployments nodeDeployments)
+            NodeDeployments nodeDeployments,
+            IKeyValueRepository keyValueRepository)
         {
             this.chainState = chainState;
             this.connectionManager = connectionManager;
             this.signals = signals;
             this.consensusManager = consensusManager;
             this.nodeDeployments = nodeDeployments;
+            this.keyValueRepository = keyValueRepository;
 
             this.chainState.MaxReorgLength = network.Consensus.MaxReorgLength;
         }
@@ -50,7 +55,15 @@ namespace Blockcore.Features.Consensus
         /// <inheritdoc />
         public override Task InitializeAsync()
         {
-            DeploymentFlags flags = this.nodeDeployments.GetFlags(this.consensusManager.Tip);
+            DeploymentFlags flags = this.keyValueRepository.LoadValueJson<DeploymentFlags>("deploymentflags");
+
+            if (flags == null)
+            {
+                flags = this.nodeDeployments.GetFlags(this.consensusManager.Tip);
+
+                // Update the cache of Flags when we retrieve it.
+                this.keyValueRepository.SaveValueJson("deploymentflags", flags);
+            }
 
             if (flags.ScriptFlags.HasFlag(ScriptVerify.Witness))
             {

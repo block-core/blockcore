@@ -80,8 +80,14 @@ namespace OpenExo
                 { 400000, new CheckpointInfo(new uint256("0x78da79e80c94c2a175276eb4b903a15395d4213e8814d1f1fabc225e05c56e69"), new uint256("0xc7179fa14c296ebc661f2f1db32d4492cc176d86fe64ad14fb2058ac0f132294")) },
                 { 450000, new CheckpointInfo(new uint256("0xfaa749cba84d1111affe61cb8c14ba43a452a265a136066554a22cfa14cabfcd"), new uint256("0x651884ceb30069212c90b5fb3a11d2e6263c0a5c76d6b9b92274ffd6cb3b8fea")) },
                 { 600000, new CheckpointInfo(new uint256("0xa4bf14b94da99b72abafb66624e0f238bef68f9141f79f811f618d67bd8149d1"), new uint256("0x99199a7ac240838d58e362e834e43fc52b74e146f84ce3d879d4c213a4799745")) },
-                { 790000, new CheckpointInfo(new uint256("0x11610eefff99c06e8fe4667adb07f8598c339ed04e6eed5414b115fb7d4cfd49"), new uint256("0x46cb091b43846e21b547ebf3787deab210628919421180d4cc8275d276fe1cda")) }
-
+                { 790000, new CheckpointInfo(new uint256("0x11610eefff99c06e8fe4667adb07f8598c339ed04e6eed5414b115fb7d4cfd49"), new uint256("0x46cb091b43846e21b547ebf3787deab210628919421180d4cc8275d276fe1cda")) },
+                { 900000, new CheckpointInfo(new uint256("0x960369823996b14b7f08b876e8f95378119831ce81a72886434c9fd41d04c580"), new uint256("0x019aec9d3716f63d5c645b860b752e1699f176eaa4830e2daeb4fa1831b119d1")) },
+                { 1000000, new CheckpointInfo(new uint256("0x1a1fc554ec11796d1c98a674ebd419db9abeba14419b97964f3ce357986d0350"), new uint256("0x8f9b2589afadc9e1f56e6cc216f3feb267339a825b9fcbb36f25c90edac8f0bd")) },
+                { 1300000, new CheckpointInfo(new uint256("0x260b7433a7c72694f57f2e0ea6821f5ab33afea3c567f9845c8a989eb443f9d4"), new uint256("0x79f20f2a22bb3c8a0808e6d5e0daa7d8ce0ecbefcd1d842fa2e5a23e14b22d45")) },
+                { 1355000, new CheckpointInfo(new uint256("0x890101f0f9b4c16c39eafeca5aa744772b7612eb003583200a5836cbb0acb332"), new uint256("0x5c34eb0ef4759118e720bdc57a72ffe4d8d4048e2706d053f420e2a2c399fe6c")) },
+                { 1401000, new CheckpointInfo(new uint256("0x9eb2e4d7650f401e5d27af3fd66848c3318e7a2a660d44b3c8196ab0c956e074"), new uint256("0xff4fd825959265782056f501e68406dcc50e2fe9bc9f82d773f26a6318cf1529")) },
+                { 1464600, new CheckpointInfo(new uint256("0xb2fbdc8e6d87a8a3a5322e32939fb9c1c06527f5edfc818a500122985360763e"), new uint256("0x364d3e3cfe66fced6b101d8240106af46b951c500b20223b0ea23c47d51127ea")) },
+                { 1567000, new CheckpointInfo(new uint256("0xd2bd6c7a2dec44a739d25cc669245107a97474abcfc8f94367fcbd19b829d28f"), new uint256("0x60c7ae802655cc063061e9d15a05444db0aa742f54dde3f4bdbca70670792737")) }
             }
         };
 

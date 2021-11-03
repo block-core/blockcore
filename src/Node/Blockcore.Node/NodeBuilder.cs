@@ -53,6 +53,7 @@ namespace Blockcore.Node
                 case "IMPLX":
                 case "HOME":
                 case "SERF":
+                case "CYBITS":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
                     break;
             }

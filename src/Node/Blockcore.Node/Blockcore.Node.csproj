@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BlockCore.Networks.Cybits\Blockcore.Networks.Cybits.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.WalletWatchOnly\Blockcore.Features.WalletWatchOnly.csproj" />
     <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Persistence.Rocksdb.CorePackage\Blockcore.Features.Persistence.Rocksdb.CorePackage.csproj" />

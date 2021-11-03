@@ -147,7 +147,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="creationTime">The date and time this wallet was created.</param>
         /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>The recovered wallet.</returns>
-        Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null, int? coinType = null);
+        Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase = null, int? coinType = null, bool? isColdStakingWallet = false);
 
         /// <summary>
         /// Recovers a wallet using extended public key and account index.

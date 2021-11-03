@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.SERF\Blockcore.Networks.SERF.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.X1\Blockcore.Networks.X1.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.Strax\Blockcore.Networks.Strax.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.x42\Blockcore.Networks.x42.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Xds\Blockcore.Networks.Xds.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.Dns\Blockcore.Features.Dns.csproj" />
@@ -36,5 +37,4 @@
     <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Persistence.LevelDb.CorePackage\Blockcore.Features.Persistence.LevelDb.CorePackage.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.XRC\Blockcore.Networks.XRC.csproj" />
   </ItemGroup>
-
 </Project>

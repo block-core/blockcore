@@ -171,6 +171,14 @@
     "STRAX (MAIN/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=STRAX -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+    },
+    "CYBITS (MAIN)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=CYBITS -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -dbtype=leveldb"
+    },
+    "CYBITS (MAIN/LOCAL)": {
+      "commandName": "Project",
+      "commandLineArgs": "--chain=CYBITS -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
     }
   }
 }

@@ -11,6 +11,7 @@ using Blockcore.Networks.Cybits.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
+using Blockcore.Networks.Cybits.Deployments;
 
 namespace Blockcore.Networks.Cybits
 {
@@ -52,12 +53,13 @@ namespace Blockcore.Networks.Cybits
 
          var consensusOptions = new PosConsensusOptions
          {
-            MaxBlockBaseSize = 1_000_000,
+            MaxBlockBaseSize = 4_000_000,
             MaxStandardVersion = 2,
             MaxStandardTxWeight = 100_000,
             MaxBlockSigopsCost = 20_000,
             MaxStandardTxSigopsCost = 20_000 / 5,
-            WitnessScaleFactor = 4
+            WitnessScaleFactor = 4,
+            MinBlockFeeRate = Money.Zero
          };
 
          var buriedDeployments = new BuriedDeploymentsArray
@@ -67,12 +69,19 @@ namespace Blockcore.Networks.Cybits
             [BuriedDeployments.BIP66] = 0
          };
 
+            var bip9Deployments = new CybitsBIP9Deployments()
+            {
+                [CybitsBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [CybitsBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [CybitsBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.DefaultMainnetThreshold)
+            };
+
             this.Consensus = new Blockcore.Consensus.Consensus(
              consensusFactory: consensusFactory,
              consensusOptions: consensusOptions,
              coinType: setup.CoinType,
              hashGenesisBlock: genesisBlock.GetHash(),
-             subsidyHalvingInterval: 210000,
+             subsidyHalvingInterval: 500000000,
              majorityEnforceBlockUpgrade: 750,
              majorityRejectBlockOutdated: 950,
              majorityWindow: 1000,

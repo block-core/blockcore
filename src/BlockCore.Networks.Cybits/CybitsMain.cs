@@ -71,7 +71,7 @@ namespace Blockcore.Networks.Cybits
 
          var consensusOptions = new PosConsensusOptions
          {
-            MaxBlockBaseSize = 1_000_000,
+            MaxBlockBaseSize = 4_000_000,
             MaxStandardVersion = 2,
             MaxStandardTxWeight = 100_000,
             MaxBlockSigopsCost = 20_000,

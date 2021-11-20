@@ -94,9 +94,9 @@ namespace Rutanio.Networks
 
             var bip9Deployments = new RutanioBIP9Deployments
             {
-                [RutanioBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, new DateTime(2020, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 6, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold),
-                [RutanioBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, new DateTime(2020, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 6, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold),
-                [RutanioBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2020, 6, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 6, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold)
+                [RutanioBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 27, new DateTime(2021, 8, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 12, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [RutanioBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, new DateTime(2021, 8, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 12, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [RutanioBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2021, 8, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 12, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold)
             };
 
             consensusFactory.Protocol = new ConsensusProtocol()

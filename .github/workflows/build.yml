@@ -1,64 +1,102 @@
 name: Build
 
-on:
+on: 
   push:
     branches:
       - master
-#  repository_dispatch:
-#    types: [build]
-  workflow_dispatch:
 
 jobs:
-
-  buildAndUnitTest:
+  
+  buildTestRelease:
 
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
+        include:
+          - os: windows-latest
+            extension: ".zip"
+            runtime: "win-x64"
+            package_runtime: "win-x64"
+          - os: ubuntu-latest
+            extension: ".tar.gz"
+            runtime: "linux-x64"
+            package_runtime: "linux-x64"
+          - os: macos-latest
+            runtime: "osx-x64"
+            package_runtime: "mac-x64"
+            extension: ".zip"
+        node_version: [14.x]
+        dotnet_version: ['3.1.412']
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
-
+    
     env:
+      PROJECT_NAME: 'Cybits.Node'
       SOLUTION_PATH: 'src/Blockcore.sln'
+      PROJECT_PATH: 'src/Node/Blockcore.Node/Blockcore.Node.csproj'
       BUILD_CONFIGURATION: 'Release'
 
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
       name: Checkout
 
-    - name: Setup Node.js (12.x)
+    - name: Setup Node.js (${{ matrix.node_version }})
       uses: actions/setup-node@v1
       with:
-        node-version: 12.x
+        node-version: ${{ matrix.node_version }}
 
     - name: Variables
       run: |
         echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
+        echo RELEASE_CONFIGURATION=${{ matrix.runtime }} >> $GITHUB_ENV
       shell: bash
 
-    #- name: Unit Test
-    #  run: |
-    #    dotnet nuget locals all --clear
-    #    dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
-
-    - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
-
-    - uses: actions/upload-artifact@v2
+    - name: Setup .NET Core (${{ matrix.dotnet_version }})
+      uses: actions/setup-dotnet@v1
       with:
-        name: Blockcore-${{env.VERSION}}-${{matrix.os}}-preview
-        path: "${{github.workspace}}/package/"
+        dotnet-version: ${{ matrix.dotnet_version }}
+
+    - name: Restore
+      run: |
+        dotnet nuget locals all --clear
+        dotnet restore ${{env.SOLUTION_PATH}}
+
+    - name: Build
+      run: dotnet build -c ${{env.BUILD_CONFIGURATION}} -r ${{env.RELEASE_CONFIGURATION}} -v m ${{env.SOLUTION_PATH}} -p:ImportByWildcardBeforeSolution=false
+
+    - name: Publish
+      run: dotnet publish -c ${{env.BUILD_CONFIGURATION}} -r ${{env.RELEASE_CONFIGURATION}} -v m -o ./bin/publish ${{env.PROJECT_PATH}} -p:ImportByWildcardBeforeSolution=false
+
+    - name: Package Name
+      run: |
+        echo RELEASE_NAME=${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }} >> $GITHUB_ENV
+        echo RELEASE_PATH=${{ env.PROJECT_NAME }}-${{ env.VERSION }}-${{ matrix.package_runtime }}${{ matrix.extension }} >> $GITHUB_ENV
+      shell: bash
+
+    - name: Package (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        echo RELEASE_PATH=./bin/publish/${{env.RELEASE_NAME}} >> $GITHUB_ENV
+        cd ./bin/publish/
+        tar cvzf ${{env.RELEASE_NAME}} *
+
+    - name: Package (Windows)
+      if: matrix.os == 'windows-latest'
+      run: Compress-Archive -Path .\bin\publish\* -DestinationPath .\${{env.RELEASE_NAME}}
+
+    - name: Package (Mac)
+      if: matrix.os == 'macos-latest'
+      run: zip -j -r ${{env.RELEASE_NAME}} ./bin/publish/
 
     - name: Release
-      if: matrix.os == 'ubuntu-latest'
-      uses: sondreb/action-release@master
+      uses: psavva/action-release@master
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        folder: "${{github.workspace}}/package/"
+        files: "${{env.RELEASE_PATH}}"
         draft: true
-        prerelease: false
+        prerelease: true
         body: ''
-        name: "Blockcore ${{env.VERSION}}"
-        tag: ${{env.VERSION}}
+        name: "Cybits-BlockCore (Release ${{env.VERSION}})"
+        tag: v${{env.VERSION}}

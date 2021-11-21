@@ -71,6 +71,10 @@ namespace Blockcore.Node
                 case "CYBITS":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Cybits.Networks.Cybits, args: args);
                     break;
+
+                case "MOL":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.Molie.Networks.Molie, args: args);
+                    break;
             }
 
             return nodeSettings;

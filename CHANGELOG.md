@@ -1,3 +1,15 @@
+##  (2021-11-21)
+
+* Add max tx fee to strax network ([7d13219](https://github.com/block-core/blockcore/commit/7d13219))
+* Add project properties for NuGet package of Cybits (#366) ([fd3e172](https://github.com/block-core/blockcore/commit/fd3e172)), closes [#366](https://github.com/block-core/blockcore/issues/366)
+* Add the ability to not auto-create hot account when activate cold sta… (#360) ([e0932eb](https://github.com/block-core/blockcore/commit/e0932eb)), closes [#360](https://github.com/block-core/blockcore/issues/360)
+* Allow restore to not create the cold staking accounts (#359) ([f1f12fb](https://github.com/block-core/blockcore/commit/f1f12fb)), closes [#359](https://github.com/block-core/blockcore/issues/359) [#358](https://github.com/block-core/blockcore/issues/358)
+* Cybits Network Implementation (#362) ([92f796d](https://github.com/block-core/blockcore/commit/92f796d)), closes [#362](https://github.com/block-core/blockcore/issues/362)
+* Rutanio BIP9 activation window update, and checkpoints updated too (#363) ([308955c](https://github.com/block-core/blockcore/commit/308955c)), closes [#363](https://github.com/block-core/blockcore/issues/363)
+* Update the RocksDB package (#365) ([514bc3b](https://github.com/block-core/blockcore/commit/514bc3b)), closes [#365](https://github.com/block-core/blockcore/issues/365)
+
+
+
 ##  (2021-10-05)
 
 * Add OpReturnDataIsHex in build-tx-request to store hex bytes (#348) ([193e8fd](https://github.com/block-core/blockcore/commit/193e8fd)), closes [#348](https://github.com/block-core/blockcore/issues/348)

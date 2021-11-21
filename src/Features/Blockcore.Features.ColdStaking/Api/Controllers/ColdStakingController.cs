@@ -177,8 +177,28 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
         [HttpPost]
         public IActionResult SetupColdStaking([FromBody]SetupColdStakingRequest request)
         {
+            return this.SetupColdStakingInternal(request, true);
+        }
+
+        /// <summary>
+        /// Spends funds from a normal wallet addresses to the cold staking script. It is expected that this
+        /// spend will be detected by both the hot wallet and cold wallet and allow cold staking to occur using this
+        /// transaction's output as input.
+        /// </summary>
+        /// <param name="request">A <see cref="SetupColdStakingRequest"/> object containing the cold staking setup parameters.</param>
+        /// <returns>A <see cref="SetupColdStakingResponse"/> object containing the hex representation of the transaction.</returns>
+        /// <seealso cref="ColdStakingManager.GetColdStakingScript(ScriptId, ScriptId)"/>
+        [Route("setup-offline-staking")]
+        [HttpPost]
+        public IActionResult SetupOfflineStaking([FromBody] SetupColdStakingRequest request)
+        {
+            return this.SetupColdStakingInternal(request, false);
+        }
+
+        private IActionResult SetupColdStakingInternal(SetupColdStakingRequest request, bool createHotAccount)
+        {
             Guard.NotNull(request, nameof(request));
-            
+
             // Checks the request is valid.
             if (!this.ModelState.IsValid)
             {
@@ -193,7 +213,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
 
                 Transaction transaction = this.ColdStakingManager.GetColdStakingSetupTransaction(
                     this.walletTransactionHandler, request.ColdWalletAddress, request.HotWalletAddress,
-                    request.WalletName, request.WalletAccount, request.WalletPassword, amount, feeAmount, request.SegwitChangeAddress, request.PayToScript);
+                    request.WalletName, request.WalletAccount, request.WalletPassword, amount, feeAmount, request.SegwitChangeAddress, request.PayToScript, createHotAccount);
 
                 var model = new SetupColdStakingResponse
                 {

@@ -182,7 +182,7 @@
     },
     "MOL (MAIN)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=MOL: -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+      "commandLineArgs": "--chain=MOL -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
     },
     "MOL (MAIN/LOCAL)": {
       "commandName": "Project",

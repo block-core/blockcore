@@ -69,9 +69,10 @@ namespace Blockcore.Networks.Molie
 
             public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
             {
-           
-                //{ 0, new CheckpointInfo(new uint256("0x000002e1a5c2361c43f5d76b7d77cd52c2866b391c59867ad79de49795ed7361"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) },
-                 
+                { 0, new CheckpointInfo(new uint256("0x000002a1ad0e9fa339c1074f97f7f7de25dac50865966c6d8d8a075026373a5c"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) },
+                { 10, new CheckpointInfo(new uint256("0x4d1c528735266dbf999d070b5a18f54e535f87084bbe92e8febaa5bb2db6c74b"), new uint256("0xd50af11c4d301bfec5a4b5d1f46e0a751aac640da1bbbc31ac0db1af5b585f44")) },
+                { 100, new CheckpointInfo(new uint256("0xd2fe88d6e4f56a4b55a27e3fc8e0257adc4497e5ec5ccaa64075b9ff007d3eff"), new uint256("0x2c783e2d5c82e4f42c7def4451e8236cf44ef7594fa37da3f7ca65ebb66911e2")) },
+                { 1000, new CheckpointInfo(new uint256("0x994bda728098cfa6b815d8cf5bd29aa3d0b1d6a4e421b9d7460b56c5e7ecb9a2"), new uint256("0x54676536898e94ec1fada28d45eb0b5ec4dfc9f7e6d8a4b999d3593ad53f5ab1")) },
             };
         }
 

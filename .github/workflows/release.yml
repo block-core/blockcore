@@ -21,6 +21,12 @@ jobs:
 
     - uses: actions/checkout@v2
 
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: | 
+          6.0.x
+
     - name: Log Variables
       run: |
         echo "action - ${{ github.event.action }}"

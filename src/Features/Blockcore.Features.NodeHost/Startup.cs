@@ -22,6 +22,7 @@ using Blockcore.Features.NodeHost.Authentication;
 using Blockcore.Features.NodeHost.Authorization;
 using Blockcore.Features.NodeHost.Settings;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Text.Json.Serialization;
 
 namespace Blockcore.Features.NodeHost
 {
@@ -143,7 +144,9 @@ namespace Blockcore.Features.NodeHost
                     Serializer.RegisterFrontConverters(options.SerializerSettings);
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 })
-                .AddControllers(this.fullNode.Services.Features, services);
+                .AddControllers(this.fullNode.Services.Features, services).AddJsonOptions(x => {
+                    x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
                 services.AddSwaggerGen(
                 options =>
@@ -198,9 +201,9 @@ namespace Blockcore.Features.NodeHost
 
                     SwaggerApiDocumentationScaffolder.Scaffold(options);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-                    options.DescribeAllEnumsAsStrings();
-#pragma warning restore CS0618 // Type or member is obsolete
+//#pragma warning disable CS0618 // Type or member is obsolete
+//                    options.DescribeAllEnumsAsStrings();
+//#pragma warning restore CS0618 // Type or member is obsolete
 
                     // options.DescribeStringEnumsInCamelCase();
                 });

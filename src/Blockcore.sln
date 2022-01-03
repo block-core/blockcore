@@ -148,7 +148,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.SERF", "Networks\Blockcore.Networks.SERF\Blockcore.Networks.SERF.csproj", "{921791B7-DE6B-4E27-BCA1-5C112E3B532C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Networks.Cybits", "BlockCore.Networks.Cybits\Blockcore.Networks.Cybits.csproj", "{2834DEF2-0CF7-4012-A73D-07F06256CC75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Networks.Cybits", "Networks\BlockCore.Networks.Cybits\Blockcore.Networks.Cybits.csproj", "{2834DEF2-0CF7-4012-A73D-07F06256CC75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

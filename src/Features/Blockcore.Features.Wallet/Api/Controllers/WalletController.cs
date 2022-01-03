@@ -34,7 +34,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class WalletController : Controller
+    public class WalletController : Microsoft.AspNetCore.Mvc.Controller
     {
         public const int MaxHistoryItemsPerAccount = 1000;
 

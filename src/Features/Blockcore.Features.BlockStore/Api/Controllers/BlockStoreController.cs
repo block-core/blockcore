@@ -27,7 +27,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class BlockStoreController : Controller
+    public class BlockStoreController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly IAddressIndexer addressIndexer;
 

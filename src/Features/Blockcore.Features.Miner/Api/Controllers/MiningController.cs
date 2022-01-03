@@ -26,7 +26,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class MiningController : Controller
+    public class MiningController : Microsoft.AspNetCore.Mvc.Controller
     {
         private const string ExceptionOccurredMessage = "Exception occurred: {0}";
         public const string LastPowBlockExceededMessage = "This is a POS node and mining is not allowed past block {0}";

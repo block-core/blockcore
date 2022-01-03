@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <Version>1.0.25</Version>
-    <RuntimeFrameworkVersion>3.1.11</RuntimeFrameworkVersion>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeFrameworkVersion>6.0.101</RuntimeFrameworkVersion>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

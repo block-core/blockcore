@@ -11,10 +11,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Blockcore.RocksDB" Version="6.27.3.12" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.11" />
   </ItemGroup>
 
   <ItemGroup>

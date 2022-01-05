@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-
   <PropertyGroup>
     <AssemblyName>Blockcore.Features.ColdStaking</AssemblyName>
     <PackageId>Blockcore.Features.ColdStaking</PackageId>
@@ -7,13 +6,19 @@
     <Authors>Blockcore</Authors>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Api\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.261602">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
   </ItemGroup>
 </Project>

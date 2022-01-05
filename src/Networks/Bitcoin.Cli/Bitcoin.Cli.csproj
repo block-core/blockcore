@@ -15,4 +15,8 @@
     <ProjectReference Include="..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
 </Project>

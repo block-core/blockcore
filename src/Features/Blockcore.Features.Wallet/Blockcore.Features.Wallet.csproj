@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-
   <PropertyGroup>
     <Description>Blockcore Features Wallet</Description>
     <AssemblyTitle>Blockcore.Features.Wallet</AssemblyTitle>
@@ -8,40 +7,36 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
-
   <!--<ItemGroup>
     <Compile Remove="Blockcore.Features.Wallet\**" />
     <EmbeddedResource Remove="Blockcore.Features.Wallet\**" />
     <None Remove="Blockcore.Features.Wallet\**" />
   </ItemGroup>
 -->
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.11" />
-    <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.2" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.11" />
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.11" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.1" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.261602">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Blockcore.Features.BlockStore\Blockcore.Features.BlockStore.csproj" />
     <ProjectReference Include="..\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
     <ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Api\" />
     <Folder Include="Exceptions\" />
     <Folder Include="AddressBook\" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
 </Project>

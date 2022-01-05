@@ -269,3 +269,4 @@ src/.idea/.idea.Stratis.Bitcoin.FullNode/.idea/
 .vscode/launch.json
 .vscode/tasks.json
 .gitignore
+src.backup

@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Description>RocksDb persistence package for core features</Description>
     <AssemblyTitle>Blockcore.Features.Persistence.Rocksdb.CorePackage</AssemblyTitle>
@@ -10,19 +9,21 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.11" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Blockcore.Features.Base.Persistence.RocksDb\Blockcore.Features.Base.Persistence.RocksDb.csproj" />
     <ProjectReference Include="..\Blockcore.Features.BlockStore.Persistence.RocksDb\Blockcore.Features.BlockStore.Persistence.RocksDb.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Consensus.Persistence.RocksDb\Blockcore.Features.Consensus.Persistence.RocksDb.csproj" />
   </ItemGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;IDE0008;</NoWarn>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.261602">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
 </Project>

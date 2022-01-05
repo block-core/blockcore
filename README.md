@@ -7,7 +7,7 @@
     About Blockcore
   </h3>
   <p align="center">
-    Open source .NET Core Bitcoin based blockchain node in C# 
+    Open source .NET Bitcoin based blockchain node in C# 
   </p>
   <p align="center">
       <a href="https://github.com/block-core/blockcore/actions"><img src="https://github.com/block-core/blockcore/workflows/Build/badge.svg" /></a>
@@ -20,7 +20,7 @@
 Introduction
 ----------------------------
 
-### Bitcoin Implementation in C#
+### Bitcoin Implementation in C# and .NET 6
 
 **What is Blockcore?**
 

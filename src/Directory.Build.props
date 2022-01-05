@@ -1,8 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Version>1.0.25</Version>
-    <RuntimeFrameworkVersion>3.1.11</RuntimeFrameworkVersion>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>2.0.25</Version>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -51,6 +50,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1591;1572;1573;1574</NoWarn>
     <DocumentationFile></DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>

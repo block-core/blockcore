@@ -23,7 +23,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class StakingController : Controller
+    public class StakingController : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;

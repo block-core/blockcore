@@ -148,7 +148,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.SERF", "Networks\Blockcore.Networks.SERF\Blockcore.Networks.SERF.csproj", "{921791B7-DE6B-4E27-BCA1-5C112E3B532C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Networks.Cybits", "Networks\BlockCore.Networks.Cybits\Blockcore.Networks.Cybits.csproj", "{2834DEF2-0CF7-4012-A73D-07F06256CC75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.Cybits", "Networks\BlockCore.Networks.Cybits\Blockcore.Networks.Cybits.csproj", "{2834DEF2-0CF7-4012-A73D-07F06256CC75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.SeniorBlockCoin", "Networks\Blockcore.Networks.SeniorBlockCoin\Blockcore.Networks.SeniorBlockCoin.csproj", "{9C962CB5-A11B-47F1-A5D3-2AD2215CF100}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.RoyalSportsCity", "Networks\Blockcore.Networks.RoyalSportsCity\Blockcore.Networks.RoyalSportsCity.csproj", "{D176C98F-E2EF-49C6-B073-32F08889BD27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -392,6 +396,14 @@ Global
 		{2834DEF2-0CF7-4012-A73D-07F06256CC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2834DEF2-0CF7-4012-A73D-07F06256CC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2834DEF2-0CF7-4012-A73D-07F06256CC75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C962CB5-A11B-47F1-A5D3-2AD2215CF100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C962CB5-A11B-47F1-A5D3-2AD2215CF100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C962CB5-A11B-47F1-A5D3-2AD2215CF100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C962CB5-A11B-47F1-A5D3-2AD2215CF100}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -458,6 +470,8 @@ Global
 		{074057D3-A1BE-409D-B4B4-F01CFA434D58} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{921791B7-DE6B-4E27-BCA1-5C112E3B532C} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{2834DEF2-0CF7-4012-A73D-07F06256CC75} = {3B56C02B-4468-4268-B797-851562789FCC}
+		{9C962CB5-A11B-47F1-A5D3-2AD2215CF100} = {3B56C02B-4468-4268-B797-851562789FCC}
+		{D176C98F-E2EF-49C6-B073-32F08889BD27} = {3B56C02B-4468-4268-B797-851562789FCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

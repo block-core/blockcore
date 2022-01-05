@@ -17,7 +17,9 @@
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.HomeCoin\Blockcore.Networks.HomeCoin.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Impleum\Blockcore.Networks.Impleum.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.OpenExo\Blockcore.Networks.OpenExo.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.RoyalSportsCity\Blockcore.Networks.RoyalSportsCity.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Rutanio\Blockcore.Networks.Rutanio.csproj" />
+    <ProjectReference Include="..\..\Networks\Blockcore.Networks.SeniorBlockCoin\Blockcore.Networks.SeniorBlockCoin.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.SERF\Blockcore.Networks.SERF.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.Stratis\Blockcore.Networks.Stratis.csproj" />
     <ProjectReference Include="..\..\Networks\Blockcore.Networks.X1\Blockcore.Networks.X1.csproj" />

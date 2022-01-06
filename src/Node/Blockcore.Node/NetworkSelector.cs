@@ -71,6 +71,14 @@ namespace Blockcore.Node
                 case "CYBITS":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Cybits.Networks.Cybits, args: args);
                     break;
+               
+                case "SBC":
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.SeniorBlockCoin.Networks.Networks.SeniorBlockCoin, args: args);
+                    break;
+               
+                case "RSC":
+                    nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.RoyalSportsCity.Networks.Networks.RoyalSportsCity, args: args);
+                    break;
             }
 
             return nodeSettings;

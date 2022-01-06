@@ -14,7 +14,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
         {
             FileNamePrefix = "seniorblockcoin",
             ConfigFileName = "seniorblockcoin.conf",
-            Magic = "01-53-59-43",
+            Magic = "01-53-42-43",
             CoinType = 5006,  
             PremineReward = 256000000,
             PoWBlockReward = 100,

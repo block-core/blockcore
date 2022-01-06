@@ -24,7 +24,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             GenesisText = "The world becomes decentralized", 
             TargetSpacing = TimeSpan.FromSeconds(64),
             ProofOfStakeTimestampMask = 0x0000000F, // 0x0000003F // 64 sec
-            PoSVersion = 3
+            PoSVersion = 4
         };
 
         internal NetworkSetup Main = new NetworkSetup
@@ -45,7 +45,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             GenesisReward = Money.Zero,
             HashGenesisBlock = "00000766bf653d2d1916a934ea96b4b99082551a90dccf7658e5b7d7206eef28",
             HashMerkleRoot = "a0745296c43b4fdcc4a11f00e70fd961f8c52a70f9e8a87460f251c6400cf977",
-            DNS = new[] { "seed1.seniorblockchain.io", "seed2.seniorblockchain.io" },
+            DNS = new[] { "seed.seniorblockchain.io", "seed.seniorblockchain.net" },
             Nodes = new[] { "130.185.120.45", "185.235.43.17" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
@@ -71,7 +71,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             GenesisReward = Money.Zero,
             HashGenesisBlock = "0000f6d99aebfa75bf6fa83d6585506d2d51ba1a7751b2883581260005310124",
             HashMerkleRoot = "a7719b19e90f6d0856f6a9dde26501c9d70c9a3c1d958c601cd13d2fc3d57a03",
-            DNS = new[] { "seedregtest1.seniorblockchain.io", "seedregtest2.seniorblockchain.io" },
+            DNS = new[] { "seedregtest.seniorblockchain.io", "seedregtest.seniorblockchain.net" },
             Nodes = new[] { "130.185.120.45", "185.235.43.17" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
@@ -97,7 +97,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             GenesisReward = Money.Zero,
             HashGenesisBlock = "0004a118ebb009cbb2530f6e4a1166909252c45f0f1f28a517201dcbed24c317",
             HashMerkleRoot = "08b098c826e241820adc2de28a30412cdb70b500260f6c248cc426a4706e3d80",
-            DNS = new[] { "seedtest1.seniorblockchain.io", "seedtest2.seniorblockchain.io" },
+            DNS = new[] { "seedtest.seniorblockchain.io", "seedtest.seniorblockchain.net" },
             Nodes = new[] { "130.185.120.45", "185.235.43.17" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {

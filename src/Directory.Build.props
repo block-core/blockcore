@@ -1,8 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Version>1.1.31</Version>
-    <RuntimeFrameworkVersion>3.1.18</RuntimeFrameworkVersion>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>2.0.25</Version>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -13,7 +12,16 @@
     <PackageIconUrl>https://www.blockcore.net/assets/blockcore-256x256.png</PackageIconUrl>
     <PackageTags>blockchain;cryptocurrency;crypto;C#;.NET;bitcoin;blockcore</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
   <Target Name="AddInternalsVisibleTo" BeforeTargets="CoreCompile">
     <ItemGroup>
@@ -42,6 +50,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1591;1572;1573;1574</NoWarn>
     <DocumentationFile></DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>

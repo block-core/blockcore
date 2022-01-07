@@ -19,7 +19,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class WatchOnlyWalletController : Controller
+    public class WatchOnlyWalletController : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary> The watch-only wallet manager. </summary>
         private readonly IWatchOnlyWalletManager watchOnlyWalletManager;

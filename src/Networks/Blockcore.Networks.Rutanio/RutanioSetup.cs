@@ -72,7 +72,12 @@ namespace Rutanio
                  { 150000, new CheckpointInfo(new uint256("0xcab87f808e59ff30e8c741df899f993bb9b30cc78f0438a6c1ffac04abf9f124"), new uint256("0x201fd57cd71bbcf604ecb73a9770ded4210b046d857d5ce7865f2fa0e5e5c98e")) },
                  { 200000, new CheckpointInfo(new uint256("0xf1c63ee81dbdd9a419d75d74c1bfcef1a1d135745bf83d3c263ee77f0533d0bf"), new uint256("0x44c40d7991b88d56eea10154e32cd5c10087094f4f831b79be2c5dcfb085ee71")) },
                  { 309000, new CheckpointInfo(new uint256("0x7e24a192fdfc29290a831cdc10a6adcfb55dfb457de1b5ed00d0a13ffa2ead17"), new uint256("0x01c332d8310b5d165aa64cd0a70849143c23b04b2689a5523d1f7dd52f670bc6")) },
-                 { 475000, new CheckpointInfo(new uint256("0x502700a3ab205f8e7120dcfad7d982dc30b3067f529e712032c724d8a21d7482"), new uint256("0x6bff1fd82fd6c13799c614f44b8f785e7ba976d1ff082a165309bac6e72dfd43")) }
+                 { 475000, new CheckpointInfo(new uint256("0x502700a3ab205f8e7120dcfad7d982dc30b3067f529e712032c724d8a21d7482"), new uint256("0x6bff1fd82fd6c13799c614f44b8f785e7ba976d1ff082a165309bac6e72dfd43")) },
+                 { 500000, new CheckpointInfo(new uint256("0xc128acd15b2a6d2d17a30ef251677fd7580bb78e5954f589ff438c607995d44b"), new uint256("0x7513e311fe01cf69da8d77ffd5f31b38ec899cb2c49ae320bf5e2ac1e3b88f71")) },
+                 { 700000, new CheckpointInfo(new uint256("0x30b6030252cb34146a1e9f86bde5724200442b249f7f2460364c9864f9a7fc06"), new uint256("0xa6f63b8a4de53fe866f279caa0657a99d51f59fcf6f20525892550347e638e03")) },
+                 { 951000, new CheckpointInfo(new uint256("0x4a67de08b5e15d170832a0bc37e880d32adca39844be41a5d2767d019a98894e"), new uint256("0x79eaf1dae3e97a9c3a4e8e830918c95dfbf742f5c29f2552b219465b7ce0dd42")) },
+                 { 1030300, new CheckpointInfo(new uint256("0x439a78be0c10f121ce2751827e472f6b52da99ad64c33065c54e3fb3595ea669"), new uint256("0x604b739272eea4a97c81467acb1e0d4a99831c0e7123bfc66937f0e3056f20bd")) },
+                 { 1089000, new CheckpointInfo(new uint256("0xa0cdd6c7a639d58d83a4e0d86aabd293ad13a5c90a98f7f077028755876d4b1d"), new uint256("0x9241a6b2faea0b626a899e71549996e828bb6266f7cae8ffde800ee47f980656")) }
             }
         };
 

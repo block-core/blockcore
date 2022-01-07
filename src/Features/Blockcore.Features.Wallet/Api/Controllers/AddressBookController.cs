@@ -21,7 +21,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class AddressBookController : Controller
+    public class AddressBookController : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>An instance of the address book manager.</summary>
         private readonly IAddressBookManager addressBookManager;

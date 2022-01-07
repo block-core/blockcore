@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using NBitcoin.DataEncoders;
 
 namespace Blockcore.Features.Wallet.Api.Controllers
 {
@@ -33,7 +34,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class WalletController : Controller
+    public class WalletController : Microsoft.AspNetCore.Mvc.Controller
     {
         public const int MaxHistoryItemsPerAccount = 1000;
 
@@ -263,7 +264,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, request.CoinType);
+                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, request.CoinType, request.IsColdStakingWallet);
 
                 this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 
@@ -474,6 +475,35 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 WalletHistoryModel model = WalletModelBuilder.GetHistory(this.walletManager, this.network, request);
+
+                return this.Json(model);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets the history of a wallet with reduced metadata. Note: This method will filter out transactions sent to self wallet.
+        /// </summary>
+        /// <param name="request">An object containing the parameters used to retrieve a wallet's history.</param>
+        /// <returns>A JSON object containing the wallet history.</returns>
+        [Route("history/slim")]
+        [HttpGet]
+        public IActionResult GetHistorySlim([FromQuery] WalletHistoryRequest request)
+        {
+            Guard.NotNull(request, nameof(request));
+
+            if (!this.ModelState.IsValid)
+            {
+                return ModelStateErrors.BuildErrorResponse(this.ModelState);
+            }
+
+            try
+            {
+                WalletHistoryModel model = WalletModelBuilder.GetHistorySlim(this.walletManager, this.network, request);
 
                 return this.Json(model);
             }
@@ -722,6 +752,10 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     });
                 }
 
+                var (opReturnRawData, isValid) = request.OpReturnDataIsHex ? TryGetHexValue(request.OpReturnData) : (null, true);
+                if (!isValid)
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Hex OpReturn error.", "The OpReturnData is set as a hex value and could not be decoded");
+
                 var context = new TransactionBuildContext(this.network)
                 {
                     AccountReference = new WalletAccountReference(request.WalletName, request.AccountName),
@@ -729,6 +763,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     MinConfirmations = request.AllowUnconfirmed ? 0 : 1,
                     Recipients = recipients,
                     OpReturnData = request.OpReturnData,
+                    OpReturnRawData = opReturnRawData,
                     OpReturnAmount = string.IsNullOrEmpty(request.OpReturnAmount) ? null : Money.Parse(request.OpReturnAmount),
                     Sign = false
                 };
@@ -791,6 +826,10 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     }
                 }
 
+                var (opReturnRawData, isValid) = request.OpReturnDataIsHex ? TryGetHexValue(request.OpReturnData) : (null, true);
+                if (!isValid)
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, "Hex OpReturn error.", "The OpReturnData is set as a hex value and could not be decoded");
+
                 var context = new TransactionBuildContext(this.network)
                 {
                     AccountReference = new WalletAccountReference(request.WalletName, request.AccountName),
@@ -798,6 +837,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     MinConfirmations = request.AllowUnconfirmed ? 0 : 1,
                     Shuffle = request.ShuffleOutputs ?? true, // We shuffle transaction outputs by default as it's better for anonymity.
                     OpReturnData = request.OpReturnData,
+                    OpReturnRawData = opReturnRawData,
                     OpReturnAmount = string.IsNullOrEmpty(request.OpReturnAmount) ? null : Money.Parse(request.OpReturnAmount),
                     WalletPassword = request.Password,
                     SelectedInputs = request.Outpoints?.Select(u => new OutPoint(uint256.Parse(u.TransactionId), u.Index)).ToList(),
@@ -1696,5 +1736,17 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 this.walletSyncManager.SyncFromHeight(blockHeightToSyncFrom);
             }
         }
+
+        private (byte[], bool) TryGetHexValue(string hexString)
+        {
+            try
+            {
+                return (Encoders.Hex.DecodeData(hexString), true);
+            }
+            catch
+            {
+                return (null, false);
+            }
+        }        
     }
 }

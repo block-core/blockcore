@@ -26,7 +26,7 @@ namespace Blockcore.Connection.Broadcasting
         [JsonConverter(typeof(StringEnumConverter))]
         public TransactionBroadcastState TransactionBroadcastState { get; set; }
 
-        public string ErrorMessage { get; private set; }
+        public string ErrorMessage { get; set; }
 
         public bool CanRespondToGetData { get; set; }
 

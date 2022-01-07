@@ -177,7 +177,7 @@ namespace Blockcore.Tests.Wallet.Common
                 AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = KnownNetworks.Main.Consensus.CoinType, LastBlockSyncedHash = KnownNetworks.Main.GenesisHash, LastBlockSyncedHeight = 0 } },
             };
 
-            var data = walletFile.walletStore.GetData();
+            WalletData data = walletFile.walletStore.GetData();
             data.BlockLocator = walletFile.BlockLocator;
             data.WalletName = walletFile.Name;
             data.WalletTip = new Utilities.HashHeightPair(KnownNetworks.Main.GenesisHash, 0);
@@ -284,7 +284,7 @@ namespace Blockcore.Tests.Wallet.Common
             var addresses = new List<HdAddress>();
             for (int i = 0; i < count; i++)
             {
-                var key = new Key().ScriptPubKey;
+                Script key = new Key().ScriptPubKey;
 
                 var address = new HdAddress
                 {
@@ -449,7 +449,7 @@ namespace Blockcore.Tests.Wallet.Common
                             OutPoint = new OutPoint(new uint256(Hashes.Hash256(key.PubKey.ToBytes())), height),
                             BlockHeight = height,
                             Amount = new Money(new Random().Next(500000, 1000000)),
-                            SpendingDetails = new SpendingDetails(),
+                            SpendingDetails =  new SpendingDetails { TransactionId = new uint256(1) },
                             Id = new uint256(),
                         } });
 
@@ -610,12 +610,12 @@ namespace Blockcore.Tests.Wallet.Common
             if (this.walletsGenerated.TryGetValue((name, password), out Features.Wallet.Types.Wallet existingWallet))
             {
                 string serializedExistingWallet = JsonConvert.SerializeObject(existingWallet, Formatting.None);
-                var wal1 = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
+                Features.Wallet.Types.Wallet wal1 = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedExistingWallet);
                 wal1.BlockLocator = existingWallet.BlockLocator;
                 wal1.AccountsRoot.Single().LastBlockSyncedHash = existingWallet.AccountsRoot.Single().LastBlockSyncedHash;
                 wal1.AccountsRoot.Single().LastBlockSyncedHeight = existingWallet.AccountsRoot.Single().LastBlockSyncedHeight;
                 wal1.walletStore = new WalletMemoryStore();
-                var data1 = wal1.walletStore.GetData();
+                WalletData data1 = wal1.walletStore.GetData();
                 data1.BlockLocator = existingWallet.BlockLocator;
                 data1.WalletName = existingWallet.Name;
                 data1.WalletTip = new Utilities.HashHeightPair(existingWallet.AccountsRoot.Single().LastBlockSyncedHash, existingWallet.AccountsRoot.Single().LastBlockSyncedHeight.Value);
@@ -628,13 +628,13 @@ namespace Blockcore.Tests.Wallet.Common
             this.walletsGenerated.Add((name, password), newWallet);
 
             string serializedNewWallet = JsonConvert.SerializeObject(newWallet, Formatting.None);
-            var wal = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedNewWallet);
+            Features.Wallet.Types.Wallet wal = JsonConvert.DeserializeObject<Features.Wallet.Types.Wallet>(serializedNewWallet);
             wal.walletStore = new WalletMemoryStore();
             wal.BlockLocator = newWallet.BlockLocator;
             wal.AccountsRoot.Single().LastBlockSyncedHash = newWallet.AccountsRoot.Single().LastBlockSyncedHash;
             wal.AccountsRoot.Single().LastBlockSyncedHeight = newWallet.AccountsRoot.Single().LastBlockSyncedHeight;
 
-            var data = wal.walletStore.GetData();
+            WalletData data = wal.walletStore.GetData();
             data.BlockLocator = wal.BlockLocator;
             data.WalletName = wal.Name;
             data.WalletTip = new Utilities.HashHeightPair(wal.AccountsRoot.Single().LastBlockSyncedHash, wal.AccountsRoot.Single().LastBlockSyncedHeight.Value);

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Bitcoin FullNode</Description>
+    <Description>Bitcoin Network</Description>
     <AssemblyTitle>Blockcore.Networks.Bitcoin</AssemblyTitle>
     <AssemblyName>Blockcore.Networks.Bitcoin</AssemblyName>
     <PackageId>Blockcore.Networks.Bitcoin</PackageId>
@@ -9,12 +9,28 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="icon.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
   </ItemGroup>
 </Project>

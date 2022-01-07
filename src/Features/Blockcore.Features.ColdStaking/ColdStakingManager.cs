@@ -258,12 +258,15 @@ namespace Blockcore.Features.ColdStaking
         /// track addresses under the <see cref="ColdWalletAccountIndex"/> HD account.
         /// </summary>
         /// <inheritdoc />
-        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null)
+        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null, bool? isColdStakingWallet = false)
         {
             Wallet.Types.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, coinType);
 
-            this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
-            this.GetOrCreateColdStakingAccount(wallet.Name, true, password);
+            if (isColdStakingWallet.HasValue && isColdStakingWallet == true)
+            {
+                this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
+                this.GetOrCreateColdStakingAccount(wallet.Name, true, password);
+            }
 
             return wallet;
         }
@@ -356,9 +359,11 @@ namespace Blockcore.Features.ColdStaking
         /// <param name="payToScript">Indicate script staking (P2SH or P2WSH outputs).</param>
         /// <returns>The <see cref="Transaction"/> for setting up cold staking.</returns>
         /// <exception cref="WalletException">Thrown if any of the rules listed in the remarks section of this method are broken.</exception>
+        /// 
+
         internal Transaction GetColdStakingSetupTransaction(IWalletTransactionHandler walletTransactionHandler,
             string coldWalletAddress, string hotWalletAddress, string walletName, string walletAccount,
-            string walletPassword, Money amount, Money feeAmount, bool useSegwitChangeAddress = false, bool payToScript = false)
+            string walletPassword, Money amount, Money feeAmount, bool useSegwitChangeAddress = false, bool payToScript = false, bool createHotAccount = true)
         {
             Guard.NotNull(walletTransactionHandler, nameof(walletTransactionHandler));
             Guard.NotEmpty(coldWalletAddress, nameof(coldWalletAddress));
@@ -372,7 +377,16 @@ namespace Blockcore.Features.ColdStaking
 
             // Get/create the cold staking accounts.
             HdAccount coldAccount = this.GetOrCreateColdStakingAccount(walletName, true, walletPassword);
-            HdAccount hotAccount = this.GetOrCreateColdStakingAccount(walletName, false, walletPassword);
+            HdAccount hotAccount;
+
+            if (createHotAccount)
+            {
+                hotAccount = this.GetOrCreateColdStakingAccount(walletName, false, walletPassword);
+            }
+            else
+            {
+                hotAccount = this.GetColdStakingAccount(this.GetWalletByName(walletName), false);
+            }
 
             HdAddress coldAddress = coldAccount?.ExternalAddresses.FirstOrDefault(s => s.Address == coldWalletAddress || s.Bech32Address == coldWalletAddress);
             HdAddress hotAddress = hotAccount?.ExternalAddresses.FirstOrDefault(s => s.Address == hotWalletAddress || s.Bech32Address == hotWalletAddress);

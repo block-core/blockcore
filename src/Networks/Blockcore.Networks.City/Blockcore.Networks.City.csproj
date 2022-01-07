@@ -11,6 +11,8 @@
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <PackageProjectUrl>https://www.city-chain.org</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +20,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
   </ItemGroup>
 </Project>

@@ -1,3 +1,75 @@
+##  (2021-11-21)
+
+* Add max tx fee to strax network ([7d13219](https://github.com/block-core/blockcore/commit/7d13219))
+* Add project properties for NuGet package of Cybits (#366) ([fd3e172](https://github.com/block-core/blockcore/commit/fd3e172)), closes [#366](https://github.com/block-core/blockcore/issues/366)
+* Add the ability to not auto-create hot account when activate cold sta… (#360) ([e0932eb](https://github.com/block-core/blockcore/commit/e0932eb)), closes [#360](https://github.com/block-core/blockcore/issues/360)
+* Allow restore to not create the cold staking accounts (#359) ([f1f12fb](https://github.com/block-core/blockcore/commit/f1f12fb)), closes [#359](https://github.com/block-core/blockcore/issues/359) [#358](https://github.com/block-core/blockcore/issues/358)
+* Cybits Network Implementation (#362) ([92f796d](https://github.com/block-core/blockcore/commit/92f796d)), closes [#362](https://github.com/block-core/blockcore/issues/362)
+* Rutanio BIP9 activation window update, and checkpoints updated too (#363) ([308955c](https://github.com/block-core/blockcore/commit/308955c)), closes [#363](https://github.com/block-core/blockcore/issues/363)
+* Update the RocksDB package (#365) ([514bc3b](https://github.com/block-core/blockcore/commit/514bc3b)), closes [#365](https://github.com/block-core/blockcore/issues/365)
+
+
+
+##  (2021-10-05)
+
+* Add OpReturnDataIsHex in build-tx-request to store hex bytes (#348) ([193e8fd](https://github.com/block-core/blockcore/commit/193e8fd)), closes [#348](https://github.com/block-core/blockcore/issues/348)
+* Adding support for Strax (#355) ([c298c3e](https://github.com/block-core/blockcore/commit/c298c3e)), closes [#355](https://github.com/block-core/blockcore/issues/355)
+* Bump version and update change notes for previous release (#347) ([37e9e49](https://github.com/block-core/blockcore/commit/37e9e49)), closes [#347](https://github.com/block-core/blockcore/issues/347)
+* Fixes an issue when reindex takes more than one minute (#351) ([150e89b](https://github.com/block-core/blockcore/commit/150e89b)), closes [#351](https://github.com/block-core/blockcore/issues/351)
+* Make rocksdb the default db (#346) ([d869c04](https://github.com/block-core/blockcore/commit/d869c04)), closes [#346](https://github.com/block-core/blockcore/issues/346)
+* Update Check points Rutanio (#349) ([55fd969](https://github.com/block-core/blockcore/commit/55fd969)), closes [#349](https://github.com/block-core/blockcore/issues/349) [#348](https://github.com/block-core/blockcore/issues/348) [#348](https://github.com/block-core/blockcore/issues/348)
+* Update the Discord links (#353) ([7447b31](https://github.com/block-core/blockcore/commit/7447b31)), closes [#353](https://github.com/block-core/blockcore/issues/353)
+
+
+
+##  (2021-07-05)
+
+* Cache the deployment flags to improve startup (#340) ([7c06cc1](https://github.com/block-core/blockcore/commit/7c06cc1)), closes [#340](https://github.com/block-core/blockcore/issues/340) [#337](https://github.com/block-core/blockcore/issues/337)
+* Documentation and Explanation of blockcores POS  (#279) ([ee7a4ff](https://github.com/block-core/blockcore/commit/ee7a4ff)), closes [#279](https://github.com/block-core/blockcore/issues/279)
+* Extend OP_RETURN from 40 to 83 for City Chain (#345) ([9e87635](https://github.com/block-core/blockcore/commit/9e87635)), closes [#345](https://github.com/block-core/blockcore/issues/345)
+* Migrate to Blockcore.RocksDB (#342) ([aff064d](https://github.com/block-core/blockcore/commit/aff064d)), closes [#342](https://github.com/block-core/blockcore/issues/342)
+* Remove the ChainedBlocksDataBytes (#338) ([d95c898](https://github.com/block-core/blockcore/commit/d95c898)), closes [#338](https://github.com/block-core/blockcore/issues/338) [#337](https://github.com/block-core/blockcore/issues/337)
+* Update to latest RocksDB package (#344) ([162062d](https://github.com/block-core/blockcore/commit/162062d)), closes [#344](https://github.com/block-core/blockcore/issues/344)
+
+
+
+##  (2021-03-09)
+
+* #280 (#282) ([5119089](https://github.com/block-core/blockcore/commit/5119089)), closes [#280](https://github.com/block-core/blockcore/issues/280) [#282](https://github.com/block-core/blockcore/issues/282)
+* Make sure that each query against database uses a new connection object (#300) ([19596af](https://github.com/block-core/blockcore/commit/19596af)), closes [#300](https://github.com/block-core/blockcore/issues/300) [#299](https://github.com/block-core/blockcore/issues/299)
+* Make the folder name for data lowercase (#302) ([04aa205](https://github.com/block-core/blockcore/commit/04aa205)), closes [#302](https://github.com/block-core/blockcore/issues/302)
+* Minor improvement to the NodeBuilder for test node. (#296) ([3f0b92d](https://github.com/block-core/blockcore/commit/3f0b92d)), closes [#296](https://github.com/block-core/blockcore/issues/296)
+* Update x42 segwit activation (#301) ([6a743e0](https://github.com/block-core/blockcore/commit/6a743e0)), closes [#301](https://github.com/block-core/blockcore/issues/301)
+
+
+
+##  (2021-03-09)
+
+* Add IMPLX MainNet SeedNodes and CheckpointInfo (#283) ([8595042](https://github.com/block-core/blockcore/commit/8595042)), closes [#283](https://github.com/block-core/blockcore/issues/283)
+* Add upload of artifact to the build (#292) ([6710591](https://github.com/block-core/blockcore/commit/6710591)), closes [#292](https://github.com/block-core/blockcore/issues/292) [#291](https://github.com/block-core/blockcore/issues/291)
+* Added support for xRhodium (XRC) (#286) ([6430223](https://github.com/block-core/blockcore/commit/6430223)), closes [#286](https://github.com/block-core/blockcore/issues/286)
+* Adding HomeCoin Network  (#289) ([129c67d](https://github.com/block-core/blockcore/commit/129c67d)), closes [#289](https://github.com/block-core/blockcore/issues/289)
+* bump version ([b8d16e9](https://github.com/block-core/blockcore/commit/b8d16e9))
+* Disable the request logging to avoid logging password and other request data (#287) ([6d8813e](https://github.com/block-core/blockcore/commit/6d8813e)), closes [#287](https://github.com/block-core/blockcore/issues/287)
+* Feature/upload artifact on workflow (#293) ([8aefa13](https://github.com/block-core/blockcore/commit/8aefa13)), closes [#293](https://github.com/block-core/blockcore/issues/293) [#291](https://github.com/block-core/blockcore/issues/291)
+* Launch setting names should use the technical chain name (#294) ([2f1b241](https://github.com/block-core/blockcore/commit/2f1b241)), closes [#294](https://github.com/block-core/blockcore/issues/294)
+* Resolve PR comments from initial PR on HomeCoin (#295) ([69dfb03](https://github.com/block-core/blockcore/commit/69dfb03)), closes [#295](https://github.com/block-core/blockcore/issues/295)
+
+
+
+##  (2021-02-19)
+
+* Add checkpoints for City Chain network ([ef16368](https://github.com/block-core/blockcore/commit/ef16368))
+* Add X1 (#276) ([6f510a0](https://github.com/block-core/blockcore/commit/6f510a0)), closes [#276](https://github.com/block-core/blockcore/issues/276)
+* dotnet pack generate symbols (snupkg) (#275) ([99a9dd5](https://github.com/block-core/blockcore/commit/99a9dd5)), closes [#275](https://github.com/block-core/blockcore/issues/275)
+* Fix build error: NU1101: Unable to find package (#273) ([0695789](https://github.com/block-core/blockcore/commit/0695789)), closes [#273](https://github.com/block-core/blockcore/issues/273)
+* Fix fee send bug ([55e748f](https://github.com/block-core/blockcore/commit/55e748f))
+* Update changelog and bump versions ([fd87c06](https://github.com/block-core/blockcore/commit/fd87c06))
+* Upgrade package dependencies to 3.1.11 ([b07b8e0](https://github.com/block-core/blockcore/commit/b07b8e0))
+* Wallet db to use sqlite (instead of litedbv4) (#272) ([ad2fca4](https://github.com/block-core/blockcore/commit/ad2fca4)), closes [#272](https://github.com/block-core/blockcore/issues/272)
+
+
+
 ##  (2021-02-01)
 
 * Add EXOS to launch settings ([7c32b4a](https://github.com/block-core/blockcore/commit/7c32b4a))

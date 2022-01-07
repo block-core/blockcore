@@ -92,10 +92,9 @@ namespace Blockcore.Networks.City.Networks
 
             var bip9Deployments = new CityBIP9Deployments()
             {
-                [CityBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2,
-                   new DateTime(2018, 12, 1, 0, 0, 0, DateTimeKind.Utc),
-                   new DateTime(2019, 12, 1, 0, 0, 0, DateTimeKind.Utc),
-                   BIP9DeploymentsParameters.DefaultMainnetThreshold)
+                [CityBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, new DateTime(2018, 12, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2019, 12, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultMainnetThreshold),
+                [CityBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, new DateTime(2021, 5, 18, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 8, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultTestnetThreshold),
+                [CityBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, new DateTime(2021, 5, 18, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 8, 1, 0, 0, 0, DateTimeKind.Utc), BIP9DeploymentsParameters.DefaultTestnetThreshold),
             };
 
             consensusFactory.Protocol = new ConsensusProtocol()

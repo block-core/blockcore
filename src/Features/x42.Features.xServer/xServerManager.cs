@@ -169,11 +169,11 @@ namespace x42.Features.xServer
                 string xServerURL = Utils.GetServerUrl(xserver.NetworkProtocol, xserver.NetworkAddress, xserver.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
-                var searchForXServerRequest = new RestRequest("/searchforxserver", Method.GET);
+                var searchForXServerRequest = new RestRequest("/searchforxserver", Method.Get);
                 searchForXServerRequest.AddParameter("profileName", profileName);
                 searchForXServerRequest.AddParameter("signAddress", signAddress);
 
-                var registerResult = client.Execute<ServerRegisterResult>(searchForXServerRequest);
+                var registerResult = client.ExecuteAsync<ServerRegisterResult>(searchForXServerRequest).Result;
                 if (registerResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = registerResult.Data;
@@ -214,12 +214,12 @@ namespace x42.Features.xServer
             var result = new RegisterResult();
             string xServerURL = Utils.GetServerUrl(registerRequest.NetworkProtocol, registerRequest.NetworkAddress, registerRequest.NetworkPort);
             var client = new RestClient(xServerURL);
-            var registerRestRequest = new RestRequest("/registerserver", Method.POST);
+            var registerRestRequest = new RestRequest("/registerserver", Method.Post);
             var request = JsonConvert.SerializeObject(registerRequest);
             registerRestRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
             registerRestRequest.RequestFormat = DataFormat.Json;
 
-            var registerResult = client.Execute<RegisterResult>(registerRestRequest);
+            var registerResult = client.ExecuteAsync<RegisterResult>(registerRestRequest).Result;
             if (registerResult.StatusCode == HttpStatusCode.OK)
             {
                 result = registerResult.Data;
@@ -249,12 +249,12 @@ namespace x42.Features.xServer
             {
                 string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
-                var getPairsRestRequest = new RestRequest("/getavailablepairs", Method.GET)
+                var getPairsRestRequest = new RestRequest("/getavailablepairs", Method.Get)
                 {
                     RequestFormat = DataFormat.Json
                 };
 
-                var getPairResult = client.Execute<List<PairResult>>(getPairsRestRequest);
+                var getPairResult = client.ExecuteAsync<List<PairResult>>(getPairsRestRequest).Result;
                 if (getPairResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = getPairResult.Data;
@@ -273,12 +273,12 @@ namespace x42.Features.xServer
                 string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
-                var createPriceLockRequest = new RestRequest("/createpricelock", Method.POST);
+                var createPriceLockRequest = new RestRequest("/createpricelock", Method.Post);
                 var request = JsonConvert.SerializeObject(priceLockRequest);
                 createPriceLockRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
                 createPriceLockRequest.RequestFormat = DataFormat.Json;
 
-                var createPLResult = client.Execute<PriceLockResult>(createPriceLockRequest);
+                var createPLResult = client.ExecuteAsync<PriceLockResult>(createPriceLockRequest).Result;
                 if (createPLResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = createPLResult.Data;
@@ -318,10 +318,10 @@ namespace x42.Features.xServer
                 string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
-                var getPriceLockRequest = new RestRequest("/getpricelock", Method.GET);
+                var getPriceLockRequest = new RestRequest("/getpricelock", Method.Get);
                 getPriceLockRequest.AddParameter("priceLockId", priceLockId);
 
-                var createPLResult = client.Execute<PriceLockResult>(getPriceLockRequest);
+                var createPLResult = client.ExecuteAsync<PriceLockResult>(getPriceLockRequest).Result;
                 if (createPLResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = createPLResult.Data;
@@ -358,12 +358,12 @@ namespace x42.Features.xServer
                 string xServerURL = Utils.GetServerUrl(t3Node.NetworkProtocol, t3Node.NetworkAddress, t3Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
-                var paymentRequest = new RestRequest("/submitpayment", Method.POST);
+                var paymentRequest = new RestRequest("/submitpayment", Method.Post);
                 var request = JsonConvert.SerializeObject(submitPaymentRequest);
                 paymentRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
                 paymentRequest.RequestFormat = DataFormat.Json;
 
-                var submitPaymentResult = client.Execute<SubmitPaymentResult>(paymentRequest);
+                var submitPaymentResult = client.ExecuteAsync<SubmitPaymentResult>(paymentRequest).Result;
                 if (submitPaymentResult.StatusCode == HttpStatusCode.OK)
                 {
                     result = submitPaymentResult.Data;
@@ -402,11 +402,11 @@ namespace x42.Features.xServer
                     string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
                     var client = new RestClient(xServerURL);
                     client.UseNewtonsoftJson();
-                    var getPriceLockRequest = new RestRequest("/getprofile", Method.GET);
+                    var getPriceLockRequest = new RestRequest("/getprofile", Method.Get);
                     getPriceLockRequest.AddParameter("name", name);
                     getPriceLockRequest.AddParameter("keyAddress", keyAddress);
 
-                    var createPLResult = client.Execute<ProfileResult>(getPriceLockRequest);
+                    var createPLResult = client.ExecuteAsync<ProfileResult>(getPriceLockRequest).Result;
                     if (createPLResult.StatusCode == HttpStatusCode.OK)
                     {
                         if (createPLResult.Data == null)
@@ -454,12 +454,12 @@ namespace x42.Features.xServer
                 string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
-                var reserveProfileRequest = new RestRequest("/reserveprofile", Method.POST);
+                var reserveProfileRequest = new RestRequest("/reserveprofile", Method.Post);
                 var request = JsonConvert.SerializeObject(reserveRequest);
                 reserveProfileRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
                 reserveProfileRequest.RequestFormat = DataFormat.Json;
 
-                var reserveProfileResult = client.Execute<ReserveProfileResult>(reserveProfileRequest);
+                var reserveProfileResult = client.ExecuteAsync<ReserveProfileResult>(reserveProfileRequest).Result;
                 if (reserveProfileResult.StatusCode == HttpStatusCode.OK)
                 {
                     if (reserveProfileResult.Data == null)
@@ -539,8 +539,8 @@ namespace x42.Features.xServer
                 this.logger.LogDebug($"Attempting validate connection to {xServerURL}.");
 
                 var client = new RestClient(xServerURL);
-                var xServersPingRequest = new RestRequest("/ping", Method.GET);
-                var xServerPingResult = client.Execute<PingResult>(xServersPingRequest);
+                var xServersPingRequest = new RestRequest("/ping", Method.Get);
+                var xServerPingResult = client.ExecuteAsync<PingResult>(xServersPingRequest).Result;
                 if (xServerPingResult.StatusCode == HttpStatusCode.OK)
                 {
                     long minimumBlockHeight = Convert.ToInt64(xServerPingResult.Data.BestBlockHeight) + 6; // TODO: This 6 is an xServer consensus.
@@ -619,7 +619,7 @@ namespace x42.Features.xServer
             {
                 string xServerURL = Utils.GetServerUrl(peer.NetworkProtocol, peer.NetworkAddress, peer.NetworkPort);
                 var client = new RestClient(xServerURL);
-                var pingRequest = new RestRequest("/ping/", Method.GET);
+                var pingRequest = new RestRequest("/ping/", Method.Get);
                 var pingResponseTime = Stopwatch.StartNew();
                 var pingResult = await client.ExecuteAsync<PingResult>(pingRequest).ConfigureAwait(false);
                 pingResponseTime.Stop();
@@ -652,7 +652,7 @@ namespace x42.Features.xServer
                 this.logger.LogDebug($"Attempting connection to {xServerURL}.");
 
                 var client = new RestClient(xServerURL);
-                var topXServersRequest = new RestRequest("/gettop/", Method.GET);
+                var topXServersRequest = new RestRequest("/gettop/", Method.Get);
                 topXServersRequest.AddParameter("top", topResult);
                 var topXServerResult = await client.ExecuteAsync<TopResult>(topXServersRequest, cancellation).ConfigureAwait(false);
                 if (topXServerResult.StatusCode == HttpStatusCode.OK)
@@ -665,7 +665,7 @@ namespace x42.Features.xServer
                         {
                             xServerURL = Utils.GetServerUrl(xServer.NetworkProtocol, xServer.NetworkAddress, xServer.NetworkPort);
                             client = new RestClient(xServerURL);
-                            var pingRequest = new RestRequest("/ping/", Method.GET);
+                            var pingRequest = new RestRequest("/ping/", Method.Get);
                             var pingResponseTime = Stopwatch.StartNew();
                             var pingResult = await client.ExecuteAsync<PingResult>(pingRequest, cancellation).ConfigureAwait(false);
                             pingResponseTime.Stop();

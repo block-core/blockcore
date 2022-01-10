@@ -61,6 +61,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       uses: sondreb/action-release@master
       with:
+        commit: 'master'
         token: ${{ secrets.GITHUB_TOKEN }}
         folder: "${{github.workspace}}/package/"
         draft: true

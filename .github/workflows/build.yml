@@ -59,7 +59,7 @@ jobs:
 
     - name: Release
       if: matrix.os == 'ubuntu-latest'
-      uses: sondreb/action-release@master
+      uses: sondreb/action-release@main
       with:
         commit: 'master'
         token: ${{ secrets.GITHUB_TOKEN }}

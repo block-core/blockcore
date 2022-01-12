@@ -18,9 +18,9 @@ namespace Blockcore.Networks.RoyalSportsCity
             Magic = "01-52-53-43",
             CoinType = 6599,
             PremineReward = 3000000000,
-            PoWBlockReward = 3000,
-            PoSBlockReward = 1000,
-            LastPowBlock = 25000,
+            PoWBlockReward = 210,
+            PoSBlockReward = 21,
+            LastPowBlock = 2100,
             MaxSupply = 21000000000,
             GenesisText = "Decentralized Royal  Sports City",
             TargetSpacing = TimeSpan.FromSeconds(64),
@@ -34,7 +34,7 @@ namespace Blockcore.Networks.RoyalSportsCity
             RootFolderName = "royalsportscity",
             CoinTicker = "RSC",
             DefaultPort = 14001,
-            DefaultRPCPort = 15002,
+            DefaultRPCPort = 14002,
             DefaultAPIPort = 14003,
             PubKeyAddress = 60, // R 
             ScriptAddress = 122, // r
@@ -47,7 +47,7 @@ namespace Blockcore.Networks.RoyalSportsCity
             HashGenesisBlock = "000009b276ed4815cf1fde9078f2d21facd5ece23e6ccfb31c7f90f87563010f",
             HashMerkleRoot = "d8575410f6b019171ff0b4548814e7ae6fc3dd837d5ecc71d77bb21866ddb210",
             DNS = new[] { "seed.royalsportscity.com", "seed.royalsportscity.net" },
-            Nodes = new[] { "130.185.120.45", "185.235.43.17" },
+            Nodes = new[] { "188.121.108.106", "194.5.207.190", "185.226.117.108", "194.5.207.244", "185.235.43.17", "185.235.41.141", "130.185.120.45", "185.226.116.170" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.

@@ -91,10 +91,9 @@ namespace Blockcore.Networks.SeniorBlockCoin.Networks
 
          var bip9Deployments = new SeniorBlockCoinBIP9Deployments()
          {
-            [SeniorBlockCoinBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2,
-             new DateTime(2018, 12, 1, 0, 0, 0, DateTimeKind.Utc),
-             new DateTime(2019, 12, 1, 0, 0, 0, DateTimeKind.Utc),
-             BIP9DeploymentsParameters.DefaultMainnetThreshold)
+             [SeniorBlockCoinBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+             [SeniorBlockCoinBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+             [SeniorBlockCoinBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
          };
 
          Consensus = new Blockcore.Consensus.Consensus(

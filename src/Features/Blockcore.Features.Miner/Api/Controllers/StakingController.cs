@@ -95,7 +95,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 double networkWeight = this.posMinting.GetNetworkWeight();
                 double posDifficulty = this.posMinting.GetDifficulty(null);
 
-                return this.Json(new GetNetworkStakingInfoModel { Difficulty =posDifficulty, NetStakeWeight = (long)networkWeight });
+                return this.Json(new GetNetworkStakingInfoModel { Difficulty = posDifficulty, NetStakeWeight = (long)networkWeight });
             }
             catch (Exception e)
             {

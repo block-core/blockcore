@@ -11,6 +11,7 @@ namespace Blockcore.Features.RPC.Models
     // * "headers": xxxxxx,            (numeric) the current number of headers we have validated
     //  "bestblockhash": "...",       (string) the hash of the currently best block
     //  "difficulty": xxxxxx,         (numeric) the current difficulty
+    //  "networkWeight: xxxxx,         (numeric) the total network weight
     // * "mediantime": xxxxxx,         (numeric) median time for the current best block
     // * "verificationprogress": xxxx, (numeric) estimate of verification progress[0..1]
     // * "initialblockdownload": xxxx, (bool) (debug information) estimate of whether this node is in Initial Block Download mode.
@@ -64,6 +65,9 @@ namespace Blockcore.Features.RPC.Models
 
         [JsonProperty(PropertyName = "difficulty")]
         public double Difficulty { get; set; }
+        
+        [JsonProperty(PropertyName = "networkWeight")]
+        public long NetworkWeight { get; set; }
 
         [JsonProperty(PropertyName = "mediantime")]
         public long MedianTime { get; set; }

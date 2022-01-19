@@ -71,7 +71,7 @@ namespace Blockcore.Features.Miner.Staking
     /// and the new value depends on the kernel, it is hard to predict its value in the future.
     /// </para>
     /// </remarks>
-    public class PosMinting : IPosMinting
+    public class PosMinting : IPosMinting, INetworkWeight
     {
         /// <summary>
         /// Indicates the current state: idle, staking requested, staking in progress and stop staking requested.
@@ -1187,6 +1187,11 @@ namespace Blockcore.Features.Miner.Staking
             res *= this.network.Consensus.ProofOfStakeTimestampMask + 1;
 
             return res;
+        }
+
+        public double GetPosNetworkWeight()
+        {
+            return GetNetworkWeight();
         }
 
         /// <inheritdoc/>

@@ -80,6 +80,31 @@ namespace Blockcore.Features.Miner.Api.Controllers
         }
 
         /// <summary>
+        /// Get staking info from the miner.
+        /// </summary>
+        /// <returns>All staking info details as per the GetStakingInfoModel.</returns>
+        [Route("getnetworkstakinginfo")]
+        [HttpGet]
+        public IActionResult GetNetworkStakingInfo()
+        {
+            try
+            {
+                if (!this.fullNode.Network.Consensus.IsProofOfStake)
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
+
+                double networkWeight = this.posMinting.GetNetworkWeight();
+                double posDifficulty = this.posMinting.GetDifficulty(null);
+
+                return this.Json(new GetNetworkStakingInfoModel { Difficulty =posDifficulty, NetStakeWeight = (long)networkWeight });
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
         /// Start staking.
         /// </summary>
         /// <param name="request">The name and password of the wallet to stake.</param>

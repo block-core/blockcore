@@ -50,6 +50,9 @@ namespace Blockcore.Features.RPC.Controllers
         /// <summary>An interface implementation used to retrieve the network difficulty target.</summary>
         private readonly INetworkDifficulty networkDifficulty;
 
+        /// <summary>An interface implementation used to retrieve the total network weight.</summary>
+        private readonly INetworkWeight networkWeight;
+
         /// <summary>An interface implementation for the blockstore.</summary>
         private readonly IBlockStore blockStore;
 
@@ -73,7 +76,8 @@ namespace Blockcore.Features.RPC.Controllers
             IConsensusManager consensusManager = null,
             IBlockStore blockStore = null,
             IInitialBlockDownloadState ibdState = null,
-            IStakeChain stakeChain = null)
+            IStakeChain stakeChain = null,
+            INetworkWeight networkWeight = null)
             : base(
                   fullNode: fullNode,
                   network: network,
@@ -91,6 +95,7 @@ namespace Blockcore.Features.RPC.Controllers
             this.blockStore = blockStore;
             this.ibdState = ibdState;
             this.stakeChain = stakeChain;
+            this.networkWeight = networkWeight;
         }
 
         /// <summary>
@@ -462,6 +467,7 @@ namespace Blockcore.Features.RPC.Controllers
                 Headers = (uint)(this.ChainIndexer?.Height ?? 0),
                 BestBlockHash = this.ChainState?.ConsensusTip?.HashBlock,
                 Difficulty = this.GetNetworkDifficulty()?.Difficulty ?? 0.0,
+                NetworkWeight = (long)this.GetPosNetworkWeight(),
                 MedianTime = this.ChainState?.ConsensusTip?.GetMedianTimePast().ToUnixTimeSeconds() ?? 0,
                 VerificationProgress = 0.0,
                 IsInitialBlockDownload = this.ibdState?.IsInitialBlockDownload() ?? true,
@@ -549,6 +555,11 @@ namespace Blockcore.Features.RPC.Controllers
         private Target GetNetworkDifficulty()
         {
             return this.networkDifficulty?.GetNetworkDifficulty();
+        }
+
+        private double GetPosNetworkWeight()
+        {
+            return this.networkWeight?.GetPosNetworkWeight() ?? 0;
         }
     }
 }

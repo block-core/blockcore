@@ -66,7 +66,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 if (!this.fullNode.Network.Consensus.IsProofOfStake)
-                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method only available for Proof of Stake");
 
                 GetStakingInfoModel model = this.posMinting != null ? this.posMinting.GetGetStakingInfoModel() : new GetStakingInfoModel();
 
@@ -90,7 +90,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 if (!this.fullNode.Network.Consensus.IsProofOfStake)
-                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method only available for Proof of Stake");
 
                 double networkWeight = this.posMinting.GetNetworkWeight();
                 double posDifficulty = this.posMinting.GetDifficulty(null);
@@ -118,7 +118,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 if (!this.fullNode.Network.Consensus.IsProofOfStake)
-                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method only available for Proof of Stake");
 
                 if (!this.ModelState.IsValid)
                 {
@@ -164,7 +164,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 if (!this.fullNode.Network.Consensus.IsProofOfStake)
-                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method only available for Proof of Stake");
 
                 this.fullNode.NodeFeature<MiningFeature>(true).StopStaking();
                 return this.Ok();
@@ -187,7 +187,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 if (!this.fullNode.Network.Consensus.IsProofOfStake)
-                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method only available for Proof of Stake");
 
                 if (!this.minerSettings.EnforceStakingFlag)
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.Forbidden, "Operation not allowed", "This operation is only allowed if EnforceStakingFlag is true");
@@ -221,7 +221,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 if (!this.fullNode.Network.Consensus.IsProofOfStake)
-                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method not available for Proof of Stake");
+                    return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method only available for Proof of Stake");
 
                 if (!this.minerSettings.EnforceStakingFlag)
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.Forbidden, "Operation not allowed", "This operation is only allowed if EnforceStakingFlag is true");

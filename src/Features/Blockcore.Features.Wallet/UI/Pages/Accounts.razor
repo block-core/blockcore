@@ -61,20 +61,13 @@
     }
     else
     {
-
-
-
-
         var _wallets = ReadAllWallets();
         var currentwallets = ReadCurrentWallets();
-
-  
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"><strong>Wallet : @walletname </strong></h1>
            
         </div>
-
 
         <div class="row mb-3">
             <div class="col-xl-6 col-sm-6">
@@ -136,14 +129,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
-
-
          <div class="row ">
             <div class="col-12 grid-margin">
                 <div class="card">
@@ -165,12 +150,12 @@
                                         {
                                           var accountBalance = this.WalletManager.GetBalances(walletname, _account.Name).Single();
 
-                                            <tr @onclick="() => { NavigateToWallet(walletname, _account.Name); }">
+                                            <tr>
                                                 <td class="align-middle">@_account.Name</td>
                                                 <td class="align-middle">@accountBalance.AmountConfirmed</td>
                                                 <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
                                                 <td class="text-center align-middle">
-                                                    <button class="btn btn-sm btn-secondary"> <span class="oi oi-arrow-right" aria-hidden="true"></span></button>
+                                                    <button class="btn btn-sm btn-secondary" @onclick="() => { NavigateToWallet(walletname, _account.Name); }"> <span class="oi oi-arrow-right" aria-hidden="true"></span></button>
                                                 </td>
                                             </tr>
                                         }
@@ -183,19 +168,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
- 
     }
 }
 @code

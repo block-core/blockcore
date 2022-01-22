@@ -113,10 +113,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-
-
-
                                 @foreach (var _address in   @accountmodel.Addresses)
                                 {
                                      
@@ -128,7 +124,6 @@
                                             <td class="text-center">@_address.AmountConfirmed</td>
                                             <td class="text-center">@_address.AmountUnconfirmed</td>
                                         </tr>
-                                     
                                 }
                             </tbody>
                         </table>
@@ -142,7 +137,7 @@
 
     // For now just show last 100 trx of history.
     var model = WalletModelBuilder.GetHistorySlim(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
-    <div class="row ">
+    <div class="row mb-3">
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="mx-3 mt-3">

@@ -1,4 +1,4 @@
-﻿@page "/wallets"
+﻿@page "/Accounts/{walletname}"
 @implements IDisposable
 
 @using Blockcore.Features.Wallet.Interfaces
@@ -61,50 +61,31 @@
     }
     else
     {
-        var wallets = ReadWallets();
+
+
+
+
+        var _wallets = ReadAllWallets();
+        var currentwallets = ReadCurrentWallets();
+
+  
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2"><strong>Wallets</strong></h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-                @if (wallets.Count() > 1)
-                {
-                    <Dropdown TItem="string" OnSelected="@OnSelected">
-                        <InitialTip>Select Wallet</InitialTip>
-                        <ChildContent>
-                            @foreach (var walletItem in wallets)
-                            {
-                                var walletName = walletItem.Key;
-                                foreach (var account in this.WalletManager.GetAccounts(walletItem.Key))
-                                {
-                                    <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                                }
-                            }
-                        </ChildContent>
-                    </Dropdown>
-                }
-                <button class="btn btn-sm btn-primary mr-1" @onclick="ShowWalletCreate">
-                    <span class="oi oi-file" aria-hidden="true"></span> Create Wallet
-                </button>
-                <button class="btn btn-sm btn-primary mr-1" @onclick="ShowWalletRecover">
-                    <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet
-                </button>
-                <button class="btn btn-sm btn-primary mr-1" @onclick="Rebroadcast">
-                    <span class="oi oi-globe" aria-hidden="true"></span> Re-broadcast
-                </button>
-                <button class="btn btn-sm btn-danger" @onclick="Resync">
-                    <span class="oi oi-flash" aria-hidden="true"></span> Resync wallets
-                </button>
-            </div>
+            <h1 class="h2"><strong>Wallet : @walletname </strong></h1>
+           
         </div>
+
+
         <div class="row mb-3">
             <div class="col-xl-6 col-sm-6">
                 <div class="card">
                     <div class="card-body">
                         @{
-                            var totalConfirmed = wallets.Sum(w => w.Value.AccountBalance.AmountConfirmed);
-                            var totalUnconfirmed = wallets.Sum(w => w.Value.AccountBalance.AmountUnconfirmed);
+                           var totalConfirmed = currentwallets.Sum(w => w.Value.AccountBalance.AmountConfirmed);
+                            var totalUnconfirmed = currentwallets.Sum(w => w.Value.AccountBalance.AmountUnconfirmed);
 
-                            <h5>Main Balance</h5>
+
+                            <h5>@walletname Balance</h5>
                             <div class="row">
                                 <div class="col-12">
 
@@ -154,16 +135,25 @@
                 </div>
             </div>
         </div>
-        <div class="row ">
+
+
+
+
+
+
+
+
+
+         <div class="row ">
             <div class="col-12 grid-margin">
                 <div class="card">
                     <div class="mx-3 mt-3">
-                        <h4 class="card-title">Balances</h4>
+                        <h4 class="card-title">Accounts</h4>
                         <div class="table-responsive small">
                             <table class="table table-border-bottom table-striped table-sm table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th class="text-primary"><strong>WALLET</strong></th>
+                                        <th class="text-primary"><strong>Account Name</strong></th>
                                         <th class="text-primary"><strong>CONFIRMED BALANCE</strong></th>
                                         <th class="text-primary"><strong>UNCONFIRMED BALANCE</strong></th>
                                         <th class="text-primary text-center"><strong>DETAILS</strong></th>
@@ -171,14 +161,14 @@
                                 </thead>
                                 <tbody>
                                     @{
-                                        foreach (var walletItem in wallets)
+                                        foreach (var _account in this.WalletManager.GetAccounts(walletname))
                                         {
-                                            var walletName = walletItem.Key;
-                                            var account = walletItem.Value;
-                                            <tr @onclick="() => { NavigateToWallet(walletName ); }">
-                                                <td class="align-middle">@walletName</td>
-                                                <td class="align-middle">@account.AccountBalance.AmountConfirmed</td>
-                                                <td class="align-middle">@account.AccountBalance.AmountUnconfirmed</td>
+                                          var accountBalance = this.WalletManager.GetBalances(walletname, _account.Name).Single();
+
+                                            <tr @onclick="() => { NavigateToWallet(walletname, _account.Name); }">
+                                                <td class="align-middle">@_account.Name</td>
+                                                <td class="align-middle">@accountBalance.AmountConfirmed</td>
+                                                <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
                                                 <td class="text-center align-middle">
                                                     <button class="btn btn-sm btn-secondary"> <span class="oi oi-arrow-right" aria-hidden="true"></span></button>
                                                 </td>
@@ -192,14 +182,31 @@
                 </div>
             </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
     }
 }
 @code
 {
+    [Parameter]
+    public string walletname { get; set; }
 
-    private void NavigateToWallet(string walletName)
+
+    private void NavigateToWallet(string walletName, string accountname)
     {
-        NavigationManager.NavigateTo("Accounts/" + walletName );
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
     }
 
     private void NavigateToWalletCreate()
@@ -241,16 +248,40 @@
             }
         }
     }
-    private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadWallets()
+
+
+      private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadAllWallets()
     {
         var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
 
-        foreach (var walletName in this.WalletManager.GetWalletsNames())
+        foreach (var walletName in this.WalletManager.GetWalletsNames() )
         {
-            foreach (var account in this.WalletManager.GetAccounts(walletName))
+             
+
+                foreach (var account in this.WalletManager.GetAccounts(walletName))
+                {
+                    var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                    walletBalances.Add(walletName, (accountBalance, account.Name));
+                }
+             
+        }
+
+        return walletBalances;
+    }
+    private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadCurrentWallets()
+    {
+        var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
+
+        foreach (var walletName in this.WalletManager.GetWalletsNames() )
+        {
+            if (walletName == walletname)
             {
-                var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-                walletBalances.Add(walletName, (accountBalance, account.Name));
+
+                foreach (var account in this.WalletManager.GetAccounts(walletName))
+                {
+                    var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                    walletBalances.Add(walletName, (accountBalance, account.Name));
+                }
             }
         }
 
@@ -268,7 +299,7 @@
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToWallet(selection );
+        NavigateToWallet(selection, "account 0");
     }
     private void ShowWalletRecover()
     {

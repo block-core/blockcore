@@ -20,29 +20,30 @@
 
 @{
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
-    
+
 
 
     Types.Wallet wallet = this.WalletManager.GetWallet(walletname);
     HdAccount account = wallet.GetAccount(accountname);
-    
-    var accountmodel = new AddressesModel
-                {
-                    Addresses = account.GetCombinedAddresses().Select(address =>
-                    {
-                        (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(wallet.walletStore, account.IsNormalAccount());
 
-                        return new AddressModel
-                        {
-                            Address =  address.Address,
-                            IsUsed = anyTrx,
-                            IsChange = address.IsChangeAddress(),
-                            AmountConfirmed = confirmedAmount,
-                            AmountUnconfirmed = unConfirmedAmount
-                        };
-                    })
-                };
-    
+    var accountmodel = new AddressesModel
+            {
+                Addresses = account.GetCombinedAddresses().Select(address =>
+                {
+                    (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(wallet.walletStore, account.IsNormalAccount());
+
+                    return new AddressModel
+                    {
+                            // Address =  request.Segwit ? address.Bech32Address : address.Address,
+                            Address = address.Address,
+                        IsUsed = anyTrx,
+                        IsChange = address.IsChangeAddress(),
+                        AmountConfirmed = confirmedAmount,
+                        AmountUnconfirmed = unConfirmedAmount
+                    };
+                })
+            };
+
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>@walletname : @accountname </strong></h1>

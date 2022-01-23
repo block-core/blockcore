@@ -77,13 +77,14 @@ else
     }
     private async Task CreateAccount()
     {
+
         
         if (string.IsNullOrEmpty(this.AccountName)) { this.Alert = "Please enter a Account name"; return; }
   
         this.Alert = string.Empty;
         
         
-        this.Alert = "Your Account has now been created.";
+        this.Alert = "Your Account has now been created. ";
         ShowForm = false;
         await Task.CompletedTask;
     }

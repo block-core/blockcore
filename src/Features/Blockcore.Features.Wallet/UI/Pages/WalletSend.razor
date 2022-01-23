@@ -21,18 +21,9 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>Send coins</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <Dropdown TItem="string" OnSelected="@OnSelected">
-                <InitialTip>@walletname</InitialTip>
-                <ChildContent>
-                    @foreach (var walletName in this.WalletManager.GetWalletsNames())
-                    {
-                        foreach (var account in this.WalletManager.GetAccounts(walletName))
-                        {
-                            <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                        }
-                    }
-                </ChildContent>
-            </Dropdown>
+             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname ,accountname); }">
+                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
+          </button>
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }">
                 <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
             </button>

@@ -29,44 +29,26 @@
     {
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"><strong>No wallets available</strong></h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-xl-6 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5>Create new wallet</h5>
-                        <div class="d-flex align-items-center align-self-start">
-                            <button class="btn btn-primary" @onclick="ShowWalletCreate">
-                                <span class="oi oi-file" aria-hidden="true"></span> Create Wallet
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-6 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5>Recover existing wallet</h5>
-                        <div class="d-flex align-items-center align-self-start">
-                            <button class="btn btn-primary" @onclick="ShowWalletRecover">
-                                <span class="oi oi-document" aria-hidden="true"></span> Recover Wallet
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+          
+        </div>       
     }
     else
     {
+
         var _wallets = ReadAllWallets();
         var currentwallets = ReadCurrentWallets();
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"><strong>Wallet : @walletname </strong></h1>
-           
+            <div class="btn-toolbar mb-2 mb-md-0">
+                
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(); }" >
+                    <span class="oi oi-grid-three-up" aria-hidden="true"></span> Wallets
+                </button>
+                <button class="btn btn-sm btn-primary mr-1" @onclick="ShowCreateAccount" >
+                    <span class="oi oi-file" aria-hidden="true"></span> Create Account
+                </button>             
+            </div>
         </div>
 
         <div class="row mb-3">
@@ -176,6 +158,13 @@
     public string walletname { get; set; }
 
 
+
+    private void NavigateToWallet()
+    {
+        NavigationManager.NavigateTo("Wallets/");
+    }
+
+
     private void NavigateToWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
@@ -268,19 +257,9 @@
         syncPercent = (int)(((decimal)wt / (decimal)ct) * 100);
         return syncPercent;
     }
-    private void OnSelected(string selection)
-    {
-        Console.WriteLine(selection);
-        NavigateToWallet(selection, "account 0");
-    }
-    private void ShowWalletRecover()
-    {
-        ModalService.Show("Recover your Wallet", typeof(Modal.ModalWalletRecover));
-    }
-    private void ShowWalletCreate()
-    {
-        ModalService.Show("Create your Wallet", typeof(Modal.ModalWalletCreate));
-    }
+ 
+
+ 
 
     List<SubscriptionToken> subscriptionTokens;
 
@@ -294,6 +273,12 @@
                 this.Signals.Subscribe<TransactionSpent>(this.ReloadEvent),
             };
         }
+    }
+
+
+     private void ShowCreateAccount()
+    {
+        ModalService.Show("Create New Account", typeof(Modal.ModalAccountCreate));
     }
 
     DateTime lastRefresh = DateTime.UtcNow;

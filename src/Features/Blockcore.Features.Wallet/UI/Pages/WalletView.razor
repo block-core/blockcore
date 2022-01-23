@@ -26,44 +26,14 @@
 
 
 
-    Types.Wallet wallet = this.WalletManager.GetWallet(walletname);
-    HdAccount account = wallet.GetAccount(accountname);
-
-    var accountmodel = new AddressesModel
-            {
-                Addresses = account.GetCombinedAddresses().Select(address =>
-                {
-                    (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(wallet.walletStore, account.IsNormalAccount());
-
-                    return new AddressModel
-                    {
-                         Address =  (bool)(NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) ? address.Bech32Address : address.Address,
-                            // Address =  request.Segwit ? address.Bech32Address : address.Address,
-                          //  Address = address.Address,
-                        IsUsed = anyTrx,
-                        IsChange = address.IsChangeAddress(),
-                        AmountConfirmed = confirmedAmount,
-                        AmountUnconfirmed = unConfirmedAmount
-                    };
-                })
-            };
-
+ 
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>@walletname : @accountname </strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <Dropdown TItem="string" OnSelected="@OnSelected">
-                <InitialTip>@walletname</InitialTip>
-                <ChildContent>
-                    @foreach (var walletName in this.WalletManager.GetWalletsNames())
-                    {
-                        foreach (var account in this.WalletManager.GetAccounts(walletName))
-                        {
-                            <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                        }
-                    }
-                </ChildContent>
-            </Dropdown>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname); }">
+                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
+            </button>
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }">
                 <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
             </button>
@@ -93,51 +63,10 @@
     </div>
 
 
-    // for show all account address
-
-
-     <div class="row mb-3">
-        <div class="col-12 grid-margin">
-            <div class="card">
-                <div class="mx-3 mt-3">
-                    <h4 class="card-title">Account Address</h4>
-                    <div class="table-responsive small">
-                        <table class="table table-border-bottom table-striped table-sm table-hover">
-                            <thead class="thead">
-                                <tr>
-                                    <th class="text-primary"><strong>Address</strong></th>
-                                    <th class="text-primary text-center"><strong>isUsed</strong></th>
-                                    <th class="text-primary text-center"><strong>isChange</strong></th>
-                                    <th class="text-primary text-center"><strong>confirmed amount</strong></th>
-                                    <th class="text-primary text-center"><strong>unconfirmed amount</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody>
 
 
 
 
-                                @foreach (var _address in   @accountmodel.Addresses)
-                                {
-                                     
-                                        <tr>
-                                            @* @onclick="ViewTransaction" > *@
-                                            <td>@_address.Address </td>
-                                            <td class="text-center">@_address.IsUsed.ToString()</td>
-                                            <td class="text-center">@_address.IsChange.ToString()</td>
-                                            <td class="text-center">@_address.AmountConfirmed</td>
-                                            <td class="text-center">@_address.AmountUnconfirmed</td>
-                                        </tr>
-                                     
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
 
 
     // For now just show last 100 trx of history.
@@ -170,7 +99,7 @@
                                             <td class="text-right">@transaction.Amount</td>
                                             <td class="text-right">@transaction.ConfirmedInBlock</td>
                                             <td class="text-center align-middle">
-                                                <button class="btn btn-sm btn-secondary" @onclick="ViewTransaction" > <span class="oi oi-list" aria-hidden="true"></span></button>
+                                                <button class="btn btn-sm btn-secondary" @onclick="ViewTransaction"> <span class="oi oi-list" aria-hidden="true"></span></button>
                                             </td>
                                         </tr>
                                     }
@@ -184,13 +113,16 @@
     </div>
 }
 @code {
+    
+
+
     [Parameter]
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-    private void NavigateToWallet(string walletName, string accountname)
+    private void NavigateToWallet(string walletName)
     {
-        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+        NavigationManager.NavigateTo("Accounts/" + walletName);
     }
     private void NavigateToReceiveWallet(string walletName, string accountname)
     {
@@ -200,6 +132,8 @@
     {
         NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
     }
+
+
     private void ViewTransaction()
     {
         ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction));
@@ -207,7 +141,7 @@
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToWallet(selection, "account 0");
+        
     }
 
     List<SubscriptionToken> subscriptionTokens;

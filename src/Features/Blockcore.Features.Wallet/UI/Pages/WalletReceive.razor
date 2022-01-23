@@ -93,8 +93,6 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
                             <thead class="thead">
                                 <tr>
                                     <th class="text-primary"><strong>Address</strong></th>
-                                    <th class="text-primary text-center"><strong>isUsed</strong></th>
-                                    <th class="text-primary text-center"><strong>isChange</strong></th>
                                     <th class="text-primary text-center"><strong>confirmed amount</strong></th>
                                     <th class="text-primary text-center"><strong>unconfirmed amount</strong></th>
                                 </tr>
@@ -111,8 +109,6 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
                                         <tr>
                                             @* @onclick="ViewTransaction" > *@
                                             <td>@_address.Address </td>
-                                            <td class="text-center">@_address.IsUsed.ToString()</td>
-                                            <td class="text-center">@_address.IsChange.ToString()</td>
                                             <td class="text-center">@_address.AmountConfirmed</td>
                                             <td class="text-center">@_address.AmountUnconfirmed</td>
                                         </tr>
@@ -133,8 +129,6 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
                                         <tr>
                                             @* @onclick="ViewTransaction" > *@
                                             <td>@_address.Address </td>
-                                            <td class="text-center">@_address.IsUsed.ToString()</td>
-                                            <td class="text-center">@_address.IsChange.ToString()</td>
                                             <td class="text-center">@_address.AmountConfirmed</td>
                                             <td class="text-center">@_address.AmountUnconfirmed</td>
                                         </tr>
@@ -153,8 +147,6 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
                                         <tr>
                                             @* @onclick="ViewTransaction" > *@
                                             <td>@_address.Address </td>
-                                            <td class="text-center">@_address.IsUsed.ToString()</td>
-                                            <td class="text-center">@_address.IsChange.ToString()</td>
                                             <td class="text-center">@_address.AmountConfirmed</td>
                                             <td class="text-center">@_address.AmountUnconfirmed</td>
                                         </tr>

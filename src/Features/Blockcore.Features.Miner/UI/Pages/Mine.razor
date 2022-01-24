@@ -10,15 +10,21 @@
 @using Blockcore.Features.Wallet.Types
 @using Blockcore.Networks
 @using NBitcoin
+@using System.Text
+
+@using static System.Net.WebRequestMethods
 
 @inject IWalletSyncManager WalletSyncManager
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
 @inject MiningFeature MiningFeature
-@inject IPosMinting PosMinting
+
 @inject IPowMining PowMining
 @inject Network Network
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+
+
+
 
 @if (!this.WalletManager.ContainsWallets)
 {
@@ -68,7 +74,11 @@ else
                             <div class="d-flex align-items-center align-self-start">
                                 @if (IsStarting)
                                 {
+<<<<<<< HEAD
                                      <h3 class="text-left text-success">@StatusMining</h3>
+=======
+                                    <h3 class="text-left text-success">@StatusMining</h3>
+>>>>>>> 43ec4361f51e251cffccac81a6dc40294c475c3f
                                 }
                                 else
                                 {
@@ -97,12 +107,12 @@ else
                     <div class="input-group">
                         @if (IsStarting)
                         {
-                            <button class="btn btn-danger"  @onclick="StopMining" >
-                                 <span class="spinner-border spinner-border-sm" ></span> 
-                                 Stop Mining                                 
+                            <button class="btn btn-danger" @onclick="StopMining">
+                                <span class="spinner-border spinner-border-sm"></span>
+                                Stop Mining
                             </button>
-                               
-                            
+
+
                         }
                         else
                         {
@@ -233,12 +243,20 @@ else
 
     private void StopMining()
     {
+
+        this.PowMining?.StopMining();
+
+
+
+
+
         MiningNotification.MiningChanged(this, false);
         StatusMining = "The mine stopped";
         Alert = "";
         IsStarting = false;
 
-        StateHasChanged();
+
+
     }
 
 
@@ -264,34 +282,60 @@ else
         MiningNotification.MiningChanged(this, true);
         StatusMining = "Mining...";
         IsStarting = true;
-        StateHasChanged();
+
 
         try
         {
-            WalletAccountReference accountReference = this.GetAccount();
-            HdAddress address = this.WalletManager.GetUnusedAddress(accountReference);
+
+            await Task.Run(() => GenerateBlock());
 
 
-            var generateBlocksModel = new GenerateBlocksModel
-                {
-                    Blocks = this.PowMining.GenerateBlocks(new ReserveScript(address.Pubkey), (ulong)blockCount, int.MaxValue)
-                };
-
+<<<<<<< HEAD
             IsStarting = false;
             StatusMining = "The mine was completed";
+=======
+            StateHasChanged();
+>>>>>>> 43ec4361f51e251cffccac81a6dc40294c475c3f
         }
         catch
         {
             MiningNotification.MiningChanged(this, false);
             IsStarting = false;
             StatusMining = "Stop Mining";
-            Alert = "Stop Mining";
+
             return;
         }
 
 
 
         await Task.CompletedTask;
+    }
+
+
+    private void GenerateBlock()
+    {
+        try
+        {
+
+            WalletAccountReference accountReference = this.GetAccount();
+            HdAddress address = this.WalletManager.GetUnusedAddress(accountReference);
+
+           
+            
+            var generateBlocksModel = new GenerateBlocksModel
+                {
+                    Blocks = this.PowMining?.GenerateBlocks(new ReserveScript(address.Pubkey), (ulong)blockCount, int.MaxValue)
+                };
+
+
+            IsStarting = false;
+            StatusMining = "The mine was completed";
+        }
+        catch (Exception _Ex)
+        {
+            
+        }
+
     }
 
     private bool IsStarting { get; set; }

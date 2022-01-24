@@ -179,7 +179,7 @@ else
     public MinerSettings minerSettings;
     private async void LoadStats()
     {
-        
+
         if (MiningNotification.OnChangedStatus == true)
         {
             StatusMining = "Mining...";
@@ -280,6 +280,8 @@ else
 
         try
         { 
+            /// test
+            
             StateHasChanged();
 
             await Task.Run(() => GenerateBlock());

@@ -68,13 +68,13 @@ else
                                 }
                                 else
                                 {
-                                    <h3 class="text-left">@StatusMining</h3>
+                                    <h3 class="text-left text-warning">@StatusMining</h3>
                                 }
                             </div>
                         </div>
 
                     </div>
-                    <h6 class="text-left text-muted font-weight-normal">  </h6>
+                    <h6 class="text-left text-muted font-weight-normal">Current Network : @this.Network.CoinTicker.ToUpper()</h6>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@ else
                                 <div class="input-group-prepend">
                                     <span style="min-width: 10em" class="input-group-text" id="basic-addon1">blockCount:</span>
                                 </div>
-                                <input @bind="blockCount" type="text" class="form-control bg-secondary text-light" placeholder="Please enter number of blocks will be mined " />
+                                <input @bind="blockCount" type="text" class="form-control bg-secondary text-light" placeholder="Please enter number of blocks will be mined." />
                             </div>
 
                             <button class="btn btn-primary" @onclick="callStartMining">Start Mining</button>
@@ -121,7 +121,7 @@ else
     int blockCount { get; set; }
     protected override void OnInitialized()
     {
-        StatusMining = "Ready For Mine";
+        StatusMining = "Ready to Mine";
         Alert = "";
         MiningNotification.MiningChanged += MiningChanged;
         this.LoadStats();
@@ -200,16 +200,15 @@ else
         }
         return true;
     }
-    private void StopMining()
+    private async void StopMining()
     {
-
-        this.PowMining?.StopMining();
-        MiningNotification.MiningChanged(this, false);
-        StatusMining = "stop";
+        await Task.Delay(1000);
+        StatusMining = "Stop";
         Alert = "";
         IsStarting = false;
+        this.PowMining?.StopMining();
+        MiningNotification.MiningChanged(this, false);
     }
-
 
     internal WalletAccountReference GetAccount()
     {
@@ -258,6 +257,11 @@ else
                 {
                     Blocks = this.PowMining?.GenerateBlocks(new ReserveScript(address.Pubkey), (ulong)blockCount, int.MaxValue)
                 };
+            if (StatusMining.ToLower() == "stop".ToLower())
+            {
+                return;
+            }
+
             IsStarting = false;
             StatusMining = "The mine was completed";
         }

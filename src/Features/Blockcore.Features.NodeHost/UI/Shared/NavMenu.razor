@@ -24,11 +24,24 @@
             </NavLink>
         </li>
 
+
+
         @{
             var items = fullnode.NodeService<IEnumerable<INavigationItem>>();
             foreach (var item in items.OrderBy(i => i.NavOrder))
             {
-                if (item.IsVisible) {
+                if (item.IsVisible)
+                {
+                    if (item.Name == "Staking")
+                    {
+                        <li class="nav-item px-3">
+                            <NavLink class="nav-link" href="mine" Match="NavLinkMatch.All">
+                                <span class="oi oi-terminal" aria-hidden="true"></span> Mining
+                            </NavLink>
+                        </li>
+
+                    }
+
                     <li class="nav-item px-3">
                         <NavLink class="nav-link" href="@item.Navigation">
                             <span class="oi @item.Icon" aria-hidden="true"></span> @item.Name

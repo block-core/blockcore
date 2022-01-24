@@ -68,7 +68,6 @@ else
                             <div class="d-flex align-items-center align-self-start">
                                 @if (IsStarting)
                                 {
-                                     <span class="spinner-border spinner-border-sm" ></span> 
                                      <h3 class="text-left text-success">@StatusMining</h3>
                                 }
                                 else
@@ -142,7 +141,7 @@ else
     int blockCount { get; set; }
     protected override void OnInitialized()
     {
-        StatusMining = "ready!";
+        StatusMining = "Ready For Mines";
         Alert = "";
         MiningNotification.MiningChanged += MiningChanged;
         this.LoadStats();
@@ -180,7 +179,7 @@ else
 
         if (MiningNotification.OnChangedStatus == true)
         {
-            StatusMining = "Mining....";
+            StatusMining = "Mining...";
             IsStarting = true;
 
             StateHasChanged();
@@ -213,7 +212,7 @@ else
 
         if (this.InitialBlockDownloadState.IsInitialBlockDownload())
         {
-            Alert = "Chain Syncing .Wait For Synced ";
+            Alert = "Chain Syncing. Please wait until Sync is complete ...";
             return false;
         }
 
@@ -235,7 +234,7 @@ else
     private void StopMining()
     {
         MiningNotification.MiningChanged(this, false);
-        StatusMining = "Stop Mining";
+        StatusMining = "The mine stopped";
         Alert = "";
         IsStarting = false;
 
@@ -263,7 +262,7 @@ else
         }
 
         MiningNotification.MiningChanged(this, true);
-        StatusMining = "Mining....";
+        StatusMining = "Mining...";
         IsStarting = true;
         StateHasChanged();
 
@@ -279,7 +278,7 @@ else
                 };
 
             IsStarting = false;
-            StatusMining = "Mining Is Finish";
+            StatusMining = "The mine was completed";
         }
         catch
         {

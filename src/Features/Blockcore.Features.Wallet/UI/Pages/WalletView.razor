@@ -23,6 +23,7 @@
 
 @{
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>@walletname : @accountname </strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
@@ -62,7 +63,7 @@
 
  
     // For now just show last 100 trx of history.
-    var model = WalletModelBuilder.GetHistorySlim(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+    var model = WalletModelBuilder.GetHistorySlim(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 1000 });
     <div class="row mb-3">
         <div class="col-12 grid-margin">
             <div class="card">
@@ -91,7 +92,7 @@
                                             <td class="text-right">@transaction.Amount</td>
                                             <td class="text-right">@transaction.ConfirmedInBlock</td>
                                             <td class="text-center align-middle">
-                                                <button class="btn btn-sm btn-secondary" @onclick="ViewTransaction"> <span class="oi oi-list" aria-hidden="true"></span></button>
+                                                <button class="btn btn-sm btn-secondary" @onclick="() => { ViewTransaction(transaction); }"  > <span class="oi oi-list" aria-hidden="true"></span></button>
                                             </td>
                                         </tr>
                                     }
@@ -123,9 +124,9 @@
     }
 
 
-    private void ViewTransaction()
+    private void ViewTransaction(TransactionItemModel _TM)
     {
-        ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction));
+        ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction), _TM);
     }
     private void OnSelected(string selection)
     {

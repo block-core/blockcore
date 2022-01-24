@@ -2213,5 +2213,7 @@ namespace Blockcore.Features.Wallet
             // Reset the builder and related state, as we are now creating a fresh transaction.
             builder = new TransactionBuilder(this.network);
         }
+
+        
     }
 }

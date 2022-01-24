@@ -203,6 +203,11 @@ namespace Blockcore.Features.Miner
         /// </summary>
         private bool ConsensusIsAtTip(MineBlockContext context)
         {
+            if(this.miningCancellationTokenSource == null)
+            {
+                this.miningCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(new[] { this.nodeLifetime.ApplicationStopping });
+            }
+
             this.miningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             context.ChainTip = this.consensusManager.Tip;

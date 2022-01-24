@@ -161,6 +161,10 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc/>
         public void StopMining()
         {
+            if (this.miningCancellationTokenSource == null)
+            {
+                return;
+            }
             this.miningCancellationTokenSource.Cancel();
             this.miningLoop?.Dispose();
             this.miningLoop = null;

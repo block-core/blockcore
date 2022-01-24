@@ -176,7 +176,9 @@
                                             var walletName = walletItem.Key;
                                             var account = walletItem.Value;
                                             <tr>
-                                                <td class="align-middle">@walletName</td>
+                                                <td class="align-middle">
+                                                  <button class="btn btn-sm btn-secondary" @onclick="() => { NavigateToWallet(walletName ); }">@walletName</button>
+                                                </td>
                                                 <td class="align-middle">@account.AccountBalance.AmountConfirmed</td>
                                                 <td class="align-middle">@account.AccountBalance.AmountUnconfirmed</td>
                                                 <td class="text-center align-middle">

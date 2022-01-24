@@ -29,8 +29,8 @@
     {
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"><strong>No wallets available</strong></h1>
-          
-        </div>       
+
+        </div>
     }
     else
     {
@@ -41,11 +41,11 @@
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"><strong>Wallet : @walletname </strong></h1>
             <div class="btn-toolbar mb-2 mb-md-0">
-                
-                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(); }" >
+
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(); }">
                     <span class="oi oi-grid-three-up" aria-hidden="true"></span> Wallets
                 </button>
-                      
+
             </div>
         </div>
 
@@ -54,7 +54,7 @@
                 <div class="card">
                     <div class="card-body">
                         @{
-                           var totalConfirmed = currentwallets.Sum(w => w.Value.AccountBalance.AmountConfirmed);
+                            var totalConfirmed = currentwallets.Sum(w => w.Value.AccountBalance.AmountConfirmed);
                             var totalUnconfirmed = currentwallets.Sum(w => w.Value.AccountBalance.AmountUnconfirmed);
 
 
@@ -109,7 +109,7 @@
             </div>
         </div>
 
-         <div class="row ">
+        <div class="row ">
             <div class="col-12 grid-margin">
                 <div class="card">
                     <div class="mx-3 mt-3">
@@ -128,10 +128,11 @@
                                     @{
                                         foreach (var _account in this.WalletManager.GetAccounts(walletname))
                                         {
-                                          var accountBalance = this.WalletManager.GetBalances(walletname, _account.Name).Single();
-
+                                            var accountBalance = this.WalletManager.GetBalances(walletname, _account.Name).Single();
                                             <tr>
-                                                <td class="align-middle">@_account.Name</td>
+                                                <td class="align-middle">
+                                                    <button class="btn btn-sm btn-secondary" @onclick="() => { NavigateToWallet(walletname, _account.Name); }">@_account.Name</button>
+                                                </td>
                                                 <td class="align-middle">@accountBalance.AmountConfirmed</td>
                                                 <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
                                                 <td class="text-center align-middle">
@@ -213,7 +214,7 @@
     {
         var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
 
-        foreach (var walletName in this.WalletManager.GetWalletsNames() )
+        foreach (var walletName in this.WalletManager.GetWalletsNames())
         {
 
 
@@ -231,7 +232,7 @@
     {
         var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
 
-        foreach (var walletName in this.WalletManager.GetWalletsNames() )
+        foreach (var walletName in this.WalletManager.GetWalletsNames())
         {
             if (walletName == walletname)
             {
@@ -274,7 +275,7 @@
     }
 
 
- 
+
 
     DateTime lastRefresh = DateTime.UtcNow;
 

@@ -45,9 +45,7 @@
                 <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(); }" >
                     <span class="oi oi-grid-three-up" aria-hidden="true"></span> Wallets
                 </button>
-                <button class="btn btn-sm btn-primary mr-1" @onclick="ShowCreateAccount" >
-                    <span class="oi oi-file" aria-hidden="true"></span> Create Account
-                </button>             
+                      
             </div>
         </div>
 
@@ -211,20 +209,20 @@
     }
 
 
-      private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadAllWallets()
+    private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadAllWallets()
     {
         var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
 
         foreach (var walletName in this.WalletManager.GetWalletsNames() )
         {
-             
 
-                foreach (var account in this.WalletManager.GetAccounts(walletName))
-                {
-                    var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-                    walletBalances.Add(walletName, (accountBalance, account.Name));
-                }
-             
+
+            foreach (var account in this.WalletManager.GetAccounts(walletName))
+            {
+                var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                walletBalances.Add(walletName, (accountBalance, account.Name));
+            }
+
         }
 
         return walletBalances;
@@ -257,9 +255,9 @@
         syncPercent = (int)(((decimal)wt / (decimal)ct) * 100);
         return syncPercent;
     }
- 
 
- 
+
+
 
     List<SubscriptionToken> subscriptionTokens;
 
@@ -276,10 +274,7 @@
     }
 
 
-     private void ShowCreateAccount()
-    {
-        ModalService.Show("Create New Account", typeof(Modal.ModalAccountCreate));
-    }
+ 
 
     DateTime lastRefresh = DateTime.UtcNow;
 

@@ -84,6 +84,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="coinType">Allow to override the default BIP44 cointype.</param>
         /// <returns>A mnemonic defining the wallet's seed used to generate addresses.</returns>
         Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null, int? coinType = null);
+ 
 
         /// <summary>
         /// Gets the private key associated with an address in the wallet.

@@ -1,37 +1,85 @@
 @using Blockcore.UI.BlazorModal
 @inject ModalService ModalService
 
+
+
+
 @if (ShowForm)
 {
+    var _TModel = ((Blockcore.Features.Wallet.Api.Models.TransactionItemModel)ModalService.Parameter);
 
-<button class="btn btn-primary" @onclick="Submit">Submit</button>
 
-} else {
-<div class="row ">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="text-success">@Alert</h5>
-                <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+
+    <h5 class="text-success">
+        Type =  @_TModel.Type.ToString()
+    </h5>
+
+
+    @if (_TModel.Type != Blockcore.Features.Wallet.Api.Models.TransactionItemType.Staked  )
+    {
+        <h5 class="text-success">
+            To Address =  @_TModel.ToAddress.ToString()
+        </h5>
+
+    }
+
+    <h5 class="text-success">
+        Time = @String.Format("{0:f}", _TModel.Timestamp)
+    </h5>
+
+
+    <h5 class="text-success">
+        Amount = @_TModel.Amount.ToString()
+    </h5>
+    <h5 class="text-success">
+        ConfirmedInBlock =  @_TModel.ConfirmedInBlock.ToString()
+    </h5>
+
+ 
+
+
+
+    <h5 class="text-success">
+        Transaction ID =  @_TModel.Id.ToString()
+    </h5>
+
+
+
+
+    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+
+}
+else
+{
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-success">@Alert</h5>
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @code
 {
-	bool ShowForm { get; set; } = true;
+    bool ShowForm { get; set; } = true;
     string Alert { get; set; }
+
+
+
 
     private void CloseModal()
     {
         ModalService.Close();
         //NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
     }
-	private void Submit()
-	{
-		ShowForm = false;
-		this.Alert = "Update this message";
-	}
+    private void Submit()
+    {
+        ModalService.Close();
+        //      ShowForm = false;
+        //this.Alert = "Update this message";
+    }
 }

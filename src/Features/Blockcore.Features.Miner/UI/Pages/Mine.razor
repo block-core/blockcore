@@ -179,19 +179,17 @@ else
     public MinerSettings minerSettings;
     private async void LoadStats()
     {
-        minerSettings = new MinerSettings(NodeSettings.Default(this.Network));
-
-        MiningEnabled = minerSettings.Mine;
-
+        
         if (MiningNotification.OnChangedStatus == true)
         {
             StatusMining = "Mining...";
             IsStarting = true;
-
             StateHasChanged();
             return;
-
         }
+
+        minerSettings = new MinerSettings(NodeSettings.Default(this.Network));
+        MiningEnabled = minerSettings.Mine;
 
         if (MiningEnabled)
         {
@@ -247,7 +245,7 @@ else
 
 
         MiningNotification.MiningChanged(this, false);
-        StatusMining = "The mine stopped";
+        StatusMining = "stopped";
         Alert = "";
         IsStarting = false;
 
@@ -281,7 +279,8 @@ else
 
 
         try
-        {
+        { 
+            StateHasChanged();
 
             await Task.Run(() => GenerateBlock());
 

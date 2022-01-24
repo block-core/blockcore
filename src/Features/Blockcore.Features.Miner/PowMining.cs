@@ -113,6 +113,8 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc/>
         public void Mine(Script reserveScript)
         {
+             
+          
             if (this.miningLoop != null)
                 return;
 

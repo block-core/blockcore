@@ -19,7 +19,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             PremineReward = 256000000,
             PoWBlockReward = 100,
             PoSBlockReward = 100,
-            LastPowBlock = 25000,
+            LastPowBlock = 35000,
             MaxSupply = 1024000000,
             GenesisText = "The world becomes decentralized", 
             TargetSpacing = TimeSpan.FromSeconds(64),

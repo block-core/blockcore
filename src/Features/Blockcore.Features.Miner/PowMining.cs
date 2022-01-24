@@ -113,8 +113,8 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc/>
         public void Mine(Script reserveScript)
         {
-             
-          
+
+
             if (this.miningLoop != null)
                 return;
 
@@ -205,7 +205,7 @@ namespace Blockcore.Features.Miner
         {
             // check null
 
-            if(this.miningCancellationTokenSource == null)
+            if (this.miningCancellationTokenSource == null)
             {
                 this.miningCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(new[] { this.nodeLifetime.ApplicationStopping });
             }
@@ -254,6 +254,7 @@ namespace Blockcore.Features.Miner
         private bool MineBlock(MineBlockContext context)
         {
             context.ExtraNonce = this.IncrementExtraNonce(context.BlockTemplate.Block, context.ChainTip, context.ExtraNonce);
+
             Block block = context.BlockTemplate.Block;
             while ((context.MaxTries > 0) && (block.Header.Nonce < InnerLoopCount) && !block.CheckProofOfWork())
             {

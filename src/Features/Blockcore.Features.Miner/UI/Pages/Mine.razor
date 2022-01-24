@@ -11,15 +11,19 @@
 @using Blockcore.Networks
 @using NBitcoin
 @using System.Text
+
 @using static System.Net.WebRequestMethods
 
 @inject IWalletSyncManager WalletSyncManager
 @inject IWalletManager WalletManager
 @inject NavigationManager NavigationManager
 @inject MiningFeature MiningFeature
+
 @inject IPowMining PowMining
 @inject Network Network
 @inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+
+
 
 
 @if (!this.WalletManager.ContainsWallets)
@@ -37,7 +41,10 @@ else
         <div class="btn-toolbar mb-2 mb-md-0">
         </div>
     </div>
+
+
     var wallets = ReadWallets();
+
     var totalConfirmed = wallets.Sum(w => w.Value.AmountConfirmed);
     var totalUnconfirmed = wallets.Sum(w => w.Value.AmountUnconfirmed);
 
@@ -82,11 +89,17 @@ else
             </div>
         </div>
     </div>
+
+
+
     <div class="row mb-3">
         <div class="col-xl-12 col-sm-12 ">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Generate Mining</h4>
+
+
+
                     <div class="input-group">
                         @if (IsStarting)
                         {
@@ -94,6 +107,8 @@ else
                                 <span class="spinner-border spinner-border-sm"></span>
                                 Stop Mining
                             </button>
+
+
                         }
                         else
                         {
@@ -105,25 +120,34 @@ else
                             </div>
 
                             <button class="btn btn-primary" @onclick="callStartMining">Start Mining</button>
+
                         }
-                    </div>
-                    <div class="row mt-3">
-                        <lable class="text-left text-danger">@Alert</lable>
+
+                        <div class="row mt-3">
+                            <lable class="text-left text-danger">@Alert</lable>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 }
+
+
 @code
 {
+
+
     Boolean MiningEnabled { get; set; }
     string StatusMining { get; set; }
     string Alert { get; set; }
     int blockCount { get; set; }
     protected override void OnInitialized()
     {
-        StatusMining = "Ready For Mine";
+        StatusMining = "Ready For Mines";
         Alert = "";
         MiningNotification.MiningChanged += MiningChanged;
         this.LoadStats();
@@ -181,7 +205,11 @@ else
             catch { }
         }
 
+
+
+
     }
+
 
     private Boolean CheckBeforMine()
     {
@@ -206,17 +234,25 @@ else
         return true;
     }
 
+
     private void StopMining()
     {
 
         this.PowMining?.StopMining();
+
+
+
+
 
         MiningNotification.MiningChanged(this, false);
         StatusMining = "stopped";
         Alert = "";
         IsStarting = false;
 
+
+
     }
+
 
     internal WalletAccountReference GetAccount()
     {
@@ -228,6 +264,8 @@ else
 
     private async Task StartMining()
     {
+
+
         if (blockCount < 1) { this.Alert = " The number of blocks to mine must be higher than zero "; return; }
 
         if (!CheckBeforMine())
@@ -239,6 +277,7 @@ else
         StatusMining = "Mining...";
         IsStarting = true;
 
+
         try
         { 
             /// test
@@ -246,8 +285,7 @@ else
             StateHasChanged();
 
             await Task.Run(() => GenerateBlock());
-            IsStarting = false;
-            StatusMining = "The mine was completed";
+
 
             StateHasChanged();
         }
@@ -259,20 +297,37 @@ else
 
             return;
         }
+
+
+
         await Task.CompletedTask;
     }
+
+
     private void GenerateBlock()
     {
-        WalletAccountReference accountReference = this.GetAccount();
-        HdAddress address = this.WalletManager.GetUnusedAddress(accountReference);
+        try
+        {
 
-        var generateBlocksModel = new GenerateBlocksModel
-            {
-                Blocks = this.PowMining?.GenerateBlocks(new ReserveScript(address.Pubkey), (ulong)blockCount, int.MaxValue)
-            };
+            WalletAccountReference accountReference = this.GetAccount();
+            HdAddress address = this.WalletManager.GetUnusedAddress(accountReference);
 
-        IsStarting = false;
-        StatusMining = "The mine was completed";
+           
+            
+            var generateBlocksModel = new GenerateBlocksModel
+                {
+                    Blocks = this.PowMining?.GenerateBlocks(new ReserveScript(address.Pubkey), (ulong)blockCount, int.MaxValue)
+                };
+
+
+            IsStarting = false;
+            StatusMining = "The mine was completed";
+        }
+        catch (Exception _Ex)
+        {
+            
+        }
+
     }
 
     private bool IsStarting { get; set; }

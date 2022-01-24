@@ -252,7 +252,6 @@ namespace Blockcore.Features.Miner
         private bool MineBlock(MineBlockContext context)
         {
             context.ExtraNonce = this.IncrementExtraNonce(context.BlockTemplate.Block, context.ChainTip, context.ExtraNonce);
-
             Block block = context.BlockTemplate.Block;
             while ((context.MaxTries > 0) && (block.Header.Nonce < InnerLoopCount) && !block.CheckProofOfWork())
             {

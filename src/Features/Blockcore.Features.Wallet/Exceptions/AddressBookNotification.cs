@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Blockcore.Features.Wallet.Exceptions
+{
+    public static class AddressBookNotification
+    {
+        public static EventHandler<bool> AddressBookChanged;
+
+        public static int _Currentpage { get; set; }
+
+        private static bool _addressbookchanged;
+        public static bool OnChangedAddressBook
+        {
+            get => _addressbookchanged;
+            set
+            {
+                if (_addressbookchanged != value)
+                {
+                    _addressbookchanged = value;
+                    AddressBookChanged?.Invoke(typeof(AddressBookNotification), _addressbookchanged);
+                }
+            }
+        }
+
+
+        
+
+    }
+}

@@ -15,34 +15,36 @@
 @inject Network Network
 
 @{
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Receive</strong></h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname ,accountname); }">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>Receive</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname ,accountname); }">
                 <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
-          </button>
-        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >
-          <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
-        </button>
+            </button>
+            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }">
+                <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+            </button>
+        </div>
     </div>
-</div>
 
-var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
+    var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
 
-<div class="card mb-3">
-  <div class="m-3">
-      <div class="row">
-          @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) 
-          {
-             <div class="col-sm-2"><strong>Address:</strong></div>
-              <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
-          } else {
-               <div class="col-sm-2"><strong>Address:</strong></div>
-              <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
-          }
+    <div class="card mb-3">
+        <div class="m-3">
+            <div class="row">
+                @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness))
+                {
+                    <div class="col-sm-2"><strong>Address:</strong></div>
+                    <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
+                }
+                else
+                {
+                    <div class="col-sm-2"><strong>Address:</strong></div>
+                    <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
+                }
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 
 
@@ -88,77 +90,79 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
                             <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowIsChangedAddress">Changed</button>
                         </div>
                     </h4>
-                    <div class="table-responsive small">
-                        <table class="table table-border-bottom table-striped table-sm table-hover">
-                            <thead class="thead">
-                                <tr>
-                                    <th class="text-primary"><strong>Address</strong></th>
-                                    <th class="text-primary text-center"><strong>confirmed amount</strong></th>
-                                    <th class="text-primary text-center"><strong>unconfirmed amount</strong></th>
-                                </tr>
-                            </thead>
+                    <div class="card-body">
+                        <div class="table-responsive small">
+                            <table class="table table-border-bottom table-striped table-sm table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th class="text-primary"><strong>Address</strong></th>
+                                        <th class="text-primary text-center"><strong>confirmed amount</strong></th>
+                                        <th class="text-primary text-center"><strong>unconfirmed amount</strong></th>
+                                    </tr>
+                                </thead>
 
 
 
-                            @if (_ShowTab_UsedAddress)
-                            {
-                                <tbody>
-                                    @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == true))
-                                    {
+                                @if (_ShowTab_UsedAddress)
+                                {
+                                    <tbody>
+                                        @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == true))
+                                        {
 
-                                        <tr>
-                                            @* @onclick="ViewTransaction" > *@
-                                            <td>@_address.Address </td>
-                                            <td class="text-center">@_address.AmountConfirmed</td>
-                                            <td class="text-center">@_address.AmountUnconfirmed</td>
-                                        </tr>
+                                            <tr>
+                                                @* @onclick="ViewTransaction" > *@
+                                                <td>@_address.Address </td>
+                                                <td class="text-center">@_address.AmountConfirmed</td>
+                                                <td class="text-center">@_address.AmountUnconfirmed</td>
+                                            </tr>
 
-                                    }
-                                </tbody>
+                                        }
+                                    </tbody>
 
-                            }
-
-
-
-                            @if (_ShowTab_UnUsedAddress)
-                            {
-                                <tbody>
-                                    @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == false))
-                                    {
-
-                                        <tr>
-                                            @* @onclick="ViewTransaction" > *@
-                                            <td>@_address.Address </td>
-                                            <td class="text-center">@_address.AmountConfirmed</td>
-                                            <td class="text-center">@_address.AmountUnconfirmed</td>
-                                        </tr>
-
-                                    }
-                                </tbody>
-
-                            }
-
-                            @if (_ShowTab_IsChanged)
-                            {
-                                <tbody>
-                                    @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsChange == true))
-                                    {
-
-                                        <tr>
-                                            @* @onclick="ViewTransaction" > *@
-                                            <td>@_address.Address </td>
-                                            <td class="text-center">@_address.AmountConfirmed</td>
-                                            <td class="text-center">@_address.AmountUnconfirmed</td>
-                                        </tr>
-
-                                    }
-                                </tbody>
-
-                            }
+                                }
 
 
 
-                        </table>
+                                @if (_ShowTab_UnUsedAddress)
+                                {
+                                    <tbody>
+                                        @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == false))
+                                        {
+
+                                            <tr>
+                                                @* @onclick="ViewTransaction" > *@
+                                                <td>@_address.Address </td>
+                                                <td class="text-center">@_address.AmountConfirmed</td>
+                                                <td class="text-center">@_address.AmountUnconfirmed</td>
+                                            </tr>
+
+                                        }
+                                    </tbody>
+
+                                }
+
+                                @if (_ShowTab_IsChanged)
+                                {
+                                    <tbody>
+                                        @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsChange == true))
+                                        {
+
+                                            <tr>
+                                                @* @onclick="ViewTransaction" > *@
+                                                <td>@_address.Address </td>
+                                                <td class="text-center">@_address.AmountConfirmed</td>
+                                                <td class="text-center">@_address.AmountUnconfirmed</td>
+                                            </tr>
+
+                                        }
+                                    </tbody>
+
+                                }
+
+
+
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,7 +186,7 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
     public string accountname { get; set; }
 
 
-     public Boolean _ShowTab_UsedAddress = true;
+    public Boolean _ShowTab_UsedAddress = true;
     public Boolean _ShowTab_UnUsedAddress = false;
     public Boolean _ShowTab_IsChanged = false;
 
@@ -228,6 +232,6 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-      
+
     }
 }

@@ -72,7 +72,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             HashGenesisBlock = "0000f6d99aebfa75bf6fa83d6585506d2d51ba1a7751b2883581260005310124",
             HashMerkleRoot = "a7719b19e90f6d0856f6a9dde26501c9d70c9a3c1d958c601cd13d2fc3d57a03",
             DNS = new[] { "seedregtest.seniorblockchain.io", "seedregtest.seniorblockchain.net" },
-            Nodes = new[] { "130.185.120.45", "185.235.43.17" },
+            Nodes = new[] { "185.235.42.42", "185.235.41.212", "185.235.41.47", "185.235.41.174", "194.5.206.90", "194.5.193.64", "130.185.121.208", "130.185.121.143", "185.235.40.129", "185.235.42.167", "194.5.193.77", "130.185.120.199", "130.185.121.109", "194.5.207.244", "194.5.207.190", "185.235.41.141", "130.185.120.45", "185.235.43.17" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.
@@ -98,7 +98,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             HashGenesisBlock = "0004a118ebb009cbb2530f6e4a1166909252c45f0f1f28a517201dcbed24c317",
             HashMerkleRoot = "08b098c826e241820adc2de28a30412cdb70b500260f6c248cc426a4706e3d80",
             DNS = new[] { "seedtest.seniorblockchain.io", "seedtest.seniorblockchain.net" },
-            Nodes = new[] { "130.185.120.45", "185.235.43.17" },
+            Nodes = new[] { "185.235.42.42", "185.235.41.212", "185.235.41.47", "185.235.41.174", "194.5.206.90", "194.5.193.64", "130.185.121.208", "130.185.121.143", "185.235.40.129", "185.235.42.167", "194.5.193.77", "130.185.120.199", "130.185.121.109", "194.5.207.244", "194.5.207.190", "185.235.41.141", "130.185.120.45", "185.235.43.17" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.

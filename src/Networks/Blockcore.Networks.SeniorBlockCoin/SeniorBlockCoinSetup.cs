@@ -46,7 +46,7 @@ namespace Blockcore.Networks.SeniorBlockCoin
             HashGenesisBlock = "00000766bf653d2d1916a934ea96b4b99082551a90dccf7658e5b7d7206eef28",
             HashMerkleRoot = "a0745296c43b4fdcc4a11f00e70fd961f8c52a70f9e8a87460f251c6400cf977",
             DNS = new[] { "seed.seniorblockchain.io", "seed.seniorblockchain.net" },
-            Nodes = new[] { "130.185.120.45", "185.235.43.17" },
+            Nodes = new[] { "185.235.42.42", "185.235.41.212", "185.235.41.47", "185.235.41.174", "194.5.206.90", "194.5.193.64", "130.185.121.208", "130.185.121.143", "185.235.40.129", "185.235.42.167", "194.5.193.77", "130.185.120.199", "130.185.121.109", "194.5.207.244", "194.5.207.190", "185.235.41.141", "130.185.120.45", "185.235.43.17" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.

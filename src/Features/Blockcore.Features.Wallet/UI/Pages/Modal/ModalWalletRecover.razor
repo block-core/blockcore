@@ -49,6 +49,12 @@
                             <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                         </div>
                     </div>
+
+                    <div class="input-group mt-1">
+                        <div class="text-danger">@Alert</div>
+                    </div>
+                </div>
+                <div class="card-footer">
                     @if (IsSubmitting)
                     {
                         <button class="btn btn-danger" disabled>
@@ -59,9 +65,6 @@
                     {
                         <button class="btn btn-primary" @onclick="callRecoverWallet">Recover wallet</button>
                     }
-                    <div class="input-group mt-1">
-                        <div class="text-danger">@Alert</div>
-                    </div>
                 </div>
             </div>
         </div>

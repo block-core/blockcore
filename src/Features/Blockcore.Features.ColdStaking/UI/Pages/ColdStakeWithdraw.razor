@@ -19,124 +19,134 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2"><strong>Cold Staking Withdrawal</strong></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-       @if (this.ColdStakingManager.GetWalletsNames().Count() > 1) {
-            <Dropdown TItem="string" OnSelected="@OnSelected" >
+        @if (this.ColdStakingManager.GetWalletsNames().Count() > 1)
+        {
+            <Dropdown TItem="string" OnSelected="@OnSelected">
                 <InitialTip>@walletname</InitialTip>
                 <ChildContent>
-                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames()) {
-                            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
-                                if (coldStakingWalletEnabled != null) {
-                                    foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
-                                    {
-                                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                                    }
-                                }
+                    @foreach (var walletName in this.ColdStakingManager.GetWalletsNames())
+                    {
+                        var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                        if (coldStakingWalletEnabled != null)
+                        {
+                            foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
+                            {
+                                <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
                             }
+                        }
+                    }
                 </ChildContent>
             </Dropdown>
         }
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
-            <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake</button>
+            <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake
+        </button>
         <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
-            <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate</button>
+            <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate
+        </button>
     </div>
 </div>
 
 @{
-var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingColdAddresses").Single();
-var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+    var accountBalance = this.WalletManager.GetBalances(walletname, "coldStakingColdAddresses").Single();
+    var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
-<div class="row mb-3">
-    <div class="col-xl-6 col-sm-6 ">
-        <div class="card">
-            <div class="card-body">
-                <h5>Main Balance</h5>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center align-self-start">
-                            <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
-                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
-                        </div>
-                    </div>
-                </div>
-                <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
-            </div>
-        </div>
-    </div>
+    <div class="row mb-3">
         <div class="col-xl-6 col-sm-6 ">
-        <div class="card">
-            <div class="card-body">
-                <h5>Cold Balance</h5>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center align-self-start">
-                            <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
-                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Main Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
                         </div>
                     </div>
+                    <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
                 </div>
-                <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
             </div>
         </div>
-    </div>
-</div>
-<div class="row ">
-    <div class="col-12 grid-margin">
-        <div class="card">
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text m-1" id="basic-addon1">Address:</span>
-                    </div>
-                    <input @bind="Address" type="text" class="form-control bg-secondary text-light m-1" placeholder="Please enter your address" />
-                    <button class="btn btn-secondary m-1" @onclick="GenerateAddress">@walletname</button>
+        <div class="col-xl-6 col-sm-6 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Cold Balance</h5>
                 </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text m-1">Amount(@this.Network.CoinTicker.ToUpper()):</span>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
                     </div>
-                    <input @bind="Amount" type="text" class="form-control bg-secondary text-light m-1" placeholder="amount" />
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary m-1" @onclick="MaxAmount">Max</button>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text m-1">Fee:</span>
-                    </div>
-                    <input @bind="Fee" type="text" class="form-control bg-secondary text-light m-1" placeholder="fee" />
-                    <div class="input-group-append">
-                        <span style="min-width: 6em" class="input-group-text m-1"><abbr title="The low fee may not be enough for every transaction">Default to low</abbr></span>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span style="min-width: 10em" class="input-group-text m-1">Password:</span>
-                    </div>
-                    <input @bind="Password" type="password" class="form-control bg-secondary text-light m-1" placeholder="Please enter your password" />
-                </div>
-
-                @if (IsWithdrawing)
-                {
-                    <button class="btn btn-danger ml-1" disabled>
-                        <span class="spinner-border spinner-border-sm"></span> Working ...
-                    </button>
-                }
-                else
-                {
-                    <button class="btn btn-primary ml-1" @onclick="callWithdraw">Withdraw Now</button>
-                }
-
-                <div class="input-group">
-                    <div class="text-danger">@Alert</div>
+                    <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="row ">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 10em" class="input-group-text m-1" id="basic-addon1">Address:</span>
+                        </div>
+                        <input @bind="Address" type="text" class="form-control bg-secondary text-light m-1" placeholder="Please enter your address" />
+                        <button class="btn btn-secondary m-1" @onclick="GenerateAddress">@walletname</button>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 10em" class="input-group-text m-1">Amount(@this.Network.CoinTicker.ToUpper()):</span>
+                        </div>
+                        <input @bind="Amount" type="text" class="form-control bg-secondary text-light m-1" placeholder="amount" />
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary m-1" @onclick="MaxAmount">Max</button>
+                        </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 10em" class="input-group-text m-1">Fee:</span>
+                        </div>
+                        <input @bind="Fee" type="text" class="form-control bg-secondary text-light m-1" placeholder="fee" />
+                        <div class="input-group-append">
+                            <span style="min-width: 6em" class="input-group-text m-1"><abbr title="The low fee may not be enough for every transaction">Default to low</abbr></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span style="min-width: 10em" class="input-group-text m-1">Password:</span>
+                        </div>
+                        <input @bind="Password" type="password" class="form-control bg-secondary text-light m-1" placeholder="Please enter your password" />
+                    </div>
+                    <div class="input-group">
+                        <div class="text-danger">@Alert</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    @if (IsWithdrawing)
+                    {
+                        <button class="btn btn-danger" disabled>
+                            <span class="spinner-border spinner-border-sm"></span> Working ...
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="callWithdraw">Withdraw Now</button>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
 }
 @code
 {
@@ -226,7 +236,7 @@ var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0")
         //TODO: Add confirmation screen
         NavigationManager.NavigateTo("coldstakeview/" + walletname + "/coldStakingColdAddresses");
     }
-        private void NavigateToWithdraw(string walletName)
+    private void NavigateToWithdraw(string walletName)
     {
         NavigationManager.NavigateTo("coldstaking-withdraw/" + walletName);
     }

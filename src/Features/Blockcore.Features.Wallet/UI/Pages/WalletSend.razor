@@ -23,10 +23,6 @@
 @inject ModalService ModalService
 
 @{
-
-
-
-
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>Send coins</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
@@ -39,13 +35,16 @@
             <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
         </div>
     </div>
-
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
     <div class="row mb-3">
         <div class="col-xl-12 col-sm-12 ">
             <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        Main Balance
+                    </h5>
+                </div>
                 <div class="card-body">
-                    <h5>Main Balance</h5>
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex align-items-center align-self-start">
@@ -59,14 +58,14 @@
             </div>
         </div>
     </div>
-
-
-
-
-
     <div class="row mb-3">
         <div class="col-12">
             <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        Send
+                    </h5>
+                </div>
                 <div class="card-body">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Address</label>
@@ -100,23 +99,9 @@
                             <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                         </div>
                     </div>
-                    <div class="input-group mb-3">
-                        @if (IsSending)
-                        {
-                            <button class="btn btn-danger mr-1" disabled>
-                                <span class="spinner-border spinner-border-sm"></span> Working...
-                            </button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button>
-                        }
-                    </div>
-
                     <div class="input-group">
                         <div class="text-danger">@Alert</div>
                     </div>
-
                     @if (Success != null)
                     {
                         <h4>Transaction Broadcast</h4>
@@ -134,107 +119,75 @@
                         </div>
                     }
                 </div>
+                <div class="card-footer">
+                    @if (IsSending)
+                    {
+                        <button class="btn btn-danger mr-1" disabled>
+                            <span class="spinner-border spinner-border-sm"></span> Working...
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button>
+                    }
+                </div>
             </div>
         </div>
     </div>
-
-
-
-    // for show all account address
-
-
     var ListaddressBook = GetAddressBooks();
-
     <div class="row mb-3">
         <div class="col-12 grid-margin">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">
                         Address Book
-
-                        <button type="button" class="btn btn-sm btn-primary " @onclick="() => { addAddress(walletname,accountname); }">Add New Address</button>
-
                     </h5>
+                    <button type="button" class="btn btn-sm btn-primary " @onclick="() => { addAddress(walletname,accountname); }">Add New Address</button>
                 </div>
                 <div class="card-body">
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary text-left"><strong>Lable</strong></th>
+                                    <th class="text-primary text-center"><strong>Address</strong></th>
+                                    <th class="text-primary text-center"><strong></strong></th>
+                                </tr>
+                            </thead>
 
-                    <div class="mx-3 mt-3">
-
-                        <div class="table-responsive small">
-                            <table class="table table-border-bottom table-striped table-sm table-hover">
-                                <thead class="thead">
-                                    <tr>
-                                        <th class="text-primary text-left"><strong>Lable</strong></th>
-                                        <th class="text-primary text-center"><strong>Address</strong></th>
-                                        <th class="text-primary text-center"><strong></strong></th>
-                                    </tr>
-                                </thead>
-
+                            <tbody>
 
 
+                                @if (ListaddressBook.Count > 0)
+                                {
+                                    IEnumerable<AddressBookEntry> filteredAddressBook = ListaddressBook;
 
-                                <tbody>
-
-
-                                    @if (ListaddressBook.Count > 0)
-                                    {
-                                        IEnumerable<AddressBookEntry> filteredAddressBook = ListaddressBook.Skip(AddressBookNotification._Currentpage * 10).Take(10);
-
-                                        AddressBookModel model = new AddressBookModel
+                                    AddressBookModel model = new AddressBookModel
                 {
                     Addresses = filteredAddressBook.Select(res => new AddressBookEntryModel { Label = res.Label, Address = res.Address })
                 };
 
+                                    @foreach (var _address in model.Addresses)
+                                    {
 
-
-                                        @foreach (var _address in model.Addresses)
-                                        {
-
-                                            <tr>
-                                                @* @onclick="ViewTransaction" > *@
-                                                <td class="text-left">@_address.Label </td>
-
-                                                <td class="text-center"> <CopyToClipboard Text="@_address.Address" />   </td>
-                                                <td class="text-center">
-                                                    <button class="btn btn-sm btn-secondary" @onclick="() => { RemoveAddress(_address.Label,walletname,accountname); }"> <span class="oi oi-trash" aria-hidden="true"></span></button>
-                                                </td>
-                                            </tr>
-
-                                        }
+                                        <tr>
+                                            @* @onclick="ViewTransaction" > *@
+                                            <td class="text-left align-middle">@_address.Label </td>
+                                            <td class="text-center"> <CopyToClipboard Text="@_address.Address" /></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-secondary" @onclick="() => { RemoveAddress(_address.Label,walletname,accountname); }"> <span class="oi oi-trash" aria-hidden="true"></span></button>
+                                            </td>
+                                        </tr>
 
                                     }
-                                </tbody>
 
-                            </table>
-                        </div>
+                                }
+                            </tbody>
+
+                        </table>
                     </div>
                 </div>
-                <div class="card-footer text-center">
-
-                    @if (ListaddressBook.Count > 0)
-                    {
-                        addressbookcount = ListaddressBook.Count / 10;
-                        currentbookcount = 0;
-
-                        @while (currentbookcount <= addressbookcount)
-                        {
-                            int _CounterText = currentbookcount + 1;
-                            int _PageIndex = currentbookcount;
-                            if (currentbookcount == AddressBookNotification._Currentpage)
-                            {
-                                <button class="btn btn-sm btn-primary ml-1 mr-1" @onclick="() => { ChangePage(_PageIndex); }"> @_CounterText </button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-sm btn-secondary ml-1 mr-1" @onclick="() => { ChangePage(_PageIndex); }"> @_CounterText </button>
-                            }
-                            currentbookcount++;
-                        }
-
-                    }
-
-
-                </div>
+              
             </div>
         </div>
     </div>
@@ -245,11 +198,7 @@
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-
-
-
-    private int addressbookcount { get; set; }
-    private int currentbookcount { get; set; }
+ 
     private string Address { get; set; }
     private decimal Amount { get; set; }
     private decimal Fee { get; set; }
@@ -259,25 +208,11 @@
     string Alert { get; set; }
     string Success { get; set; }
 
-
-    private void ChangePage(int _PageIndex)
-    {
-        AddressBookNotification._Currentpage = _PageIndex;
-        try
-        {
-            StateHasChanged();
-        }
-        catch { }
-    }
-
+ 
     private List<AddressBookEntry> GetAddressBooks()
     {
         try
         {
-
-            addressbookcount = 0;
-            currentbookcount = 0;
-
             AddressBook addressBook = this.addressBookManager.GetAddressBook();
 
             if (addressBook != null)

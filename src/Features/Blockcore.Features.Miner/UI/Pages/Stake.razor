@@ -38,8 +38,10 @@ else
         <div class="row mb-3">
             <div class="col-xl-6 col-sm-6 ">
                 <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Main Balance</h5>
+                    </div>
                     <div class="card-body">
-                        <h5>Main Balance</h5>
                         <div class="row">
                             <div class="col-6">
                                 <div class="d-flex align-items-center align-self-start">
@@ -54,8 +56,10 @@ else
             </div>
             <div class="col-xl-6 col-sm-6 ">
                 <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Staking Status</h5>
+                    </div>
                     <div class="card-body">
-                        <h5>Staking Status</h5>
                         <div class="row">
                             <div class="col-9">
                                 <div class="d-flex align-items-center align-self-start">
@@ -85,8 +89,10 @@ else
             <div class="row mb-3">
                 <div class="col-12 ">
                     <div class="card">
-                        <div class="mx-3 mt-3">
-                            <h4 class="card-title">Staking Wallets</h4>
+                        <div class="card-header">
+                            <h5 class="card-title">Staking Wallets</h5>
+                        </div>
+                        <div class="card-body">
                             <div class="table-responsive small">
                                 <table class="table table-border-bottom table-striped table-sm table-hover">
                                     <thead class="thead">
@@ -124,8 +130,10 @@ else
             <div class="row mb-3">
                 <div class="col-xl-12 col-sm-12 ">
                     <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Unlock wallet</h5>
+                        </div>
                         <div class="card-body">
-                            <h4 class="card-title">Unlock wallet</h4>
                             <div class="input-group mb-1">
                                 <div class="input-group-prepend">
                                     <span style="min-width: 10em" class="input-group-text" id="basic-addon1">Wallet Name:</span>
@@ -138,18 +146,18 @@ else
                                 </div>
                                 <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                             </div>
-                            <div class="input-group">
-                                @if (IsStarting)
-                                {
-                                    <button class="btn btn-danger" disabled>
-                                        <span class="spinner-border spinner-border-sm"></span> Starting...
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-primary" @onclick="callStartStaking">Start Staking</button>
-                                }
-                            </div>
+                        </div>
+                        <div class="card-footer">
+                            @if (IsStarting)
+                            {
+                                <button class="btn btn-danger" disabled>
+                                    <span class="spinner-border spinner-border-sm"></span> Starting...
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary" @onclick="callStartStaking">Start Staking</button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -166,8 +174,10 @@ else
         <div class="row mb-3">
             <div class="col-xl-6 col-sm-6 ">
                 <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Main Balance</h5>
+                    </div>
                     <div class="card-body">
-                        <h5>Main Balance</h5>
                         <div class="row">
                             <div class="col-6">
                                 <div class="d-flex align-items-center align-self-start">
@@ -182,8 +192,10 @@ else
             </div>
             <div class="col-xl-6 col-sm-6 ">
                 <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Staking Status</h5>
+                    </div>
                     <div class="card-body">
-                        <h5>Staking Status</h5>
                         <div class="row">
                             <div class="col-9">
                                 <div class="d-flex align-items-center align-self-start">

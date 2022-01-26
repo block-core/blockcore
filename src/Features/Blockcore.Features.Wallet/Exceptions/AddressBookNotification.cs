@@ -10,7 +10,7 @@ namespace Blockcore.Features.Wallet.Exceptions
     {
         public static EventHandler<bool> AddressBookChanged;
 
-        public static int _Currentpage { get; set; }
+ 
 
         private static bool _addressbookchanged;
         public static bool OnChangedAddressBook

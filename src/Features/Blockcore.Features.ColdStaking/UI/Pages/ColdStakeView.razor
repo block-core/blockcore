@@ -13,114 +13,127 @@
 @inject ModalService ModalService
 
 @{
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 style="max-width: 18em" class="h2"><strong>Cold Staking</strong></h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        @if (this.ColdStakingManager.GetWalletsNames().Count() > 1) {
-            <Dropdown TItem="string" OnSelected="@OnSelected" >
-                <InitialTip>@walletname</InitialTip>
-                <ChildContent>
-                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames()) {
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 style="max-width: 18em" class="h2"><strong>Cold Staking</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            @if (this.ColdStakingManager.GetWalletsNames().Count() > 1)
+            {
+                <Dropdown TItem="string" OnSelected="@OnSelected">
+                    <InitialTip>@walletname</InitialTip>
+                    <ChildContent>
+                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames())
+                        {
                             var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
-                                if (coldStakingWalletEnabled != null) {
-                                    foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
+                            if (coldStakingWalletEnabled != null)
+                            {
+                                foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
+                                {
+                                    <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                                }
+                            }
+                        }
+                    </ChildContent>
+                </Dropdown>
+            }
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
+                <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake
+            </button>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
+                <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate
+            </button>
+            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">
+                <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw
+            </button>
+        </div>
+    </div>
+
+    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+    var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
+
+    <div class="row mb-3">
+        <div class="col-xl-6 col-sm-6 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Main Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-sm-6 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Cold Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    // For now just show last 100 trx of history.
+    var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
+
+    <div class="row ">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Balances</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary"><strong>TYPE</strong></th>
+                                    <th class="text-primary text-center"><strong>DATE/TIME</strong></th>
+                                    <th class="text-primary text-right"><strong>AMOUNT</strong></th>
+                                    <th class="text-primary text-right"><strong>BLOCK</strong></th>
+                                    <th class="text-primary text-center"><strong>DETAILS</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var history in model.AccountsHistoryModel)
+                                {
+                                    foreach (var transaction in history.TransactionsHistory)
                                     {
-                                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
+                                        <tr>
+                                            @* @onclick="ViewTransaction"> *@
+                                            <td>@transaction.Type</td>
+                                            <td class="text-center">@String.Format("{0:f}", transaction.Timestamp)</td>
+                                            <td class="text-right">@transaction.Amount</td>
+                                            <td class="text-right">@transaction.ConfirmedInBlock</td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-secondary"><span class="oi oi-list" aria-hidden="true"></span></button>
+                                            </td>
+                                        </tr>
                                     }
                                 }
-                            }
-                </ChildContent>
-            </Dropdown>
-        }
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
-            <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake</button>
-        <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
-            <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate</button>
-        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">
-            <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw</button>
-    </div>
-</div>
-
-var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
-var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
-
-<div class="row mb-3">
-    <div class="col-xl-6 col-sm-6 ">
-        <div class="card">
-            <div class="card-body">
-                <h5>Main Balance</h5>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center align-self-start">
-                            <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
-                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
             </div>
         </div>
     </div>
-        <div class="col-xl-6 col-sm-6 ">
-        <div class="card">
-            <div class="card-body">
-                <h5>Cold Balance</h5>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center align-self-start">
-                            <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
-                            <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
-                        </div>
-                    </div>
-                </div>
-                <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
-            </div>
-        </div>
-    </div>
-</div>
-
-// For now just show last 100 trx of history.
-var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
-
-<div class="row ">
-    <div class="col-12 grid-margin">
-        <div class="card">
-            <div class="mx-3 mt-3">
-                <h4 class="card-title">Balances</h4>
-                <div class="table-responsive small">
-                    <table class="table table-border-bottom table-striped table-sm table-hover">
-                        <thead class="thead">
-                            <tr>
-                                <th class="text-primary"><strong>TYPE</strong></th>
-                                <th class="text-primary text-center"><strong>DATE/TIME</strong></th>
-                                <th class="text-primary text-right"><strong>AMOUNT</strong></th>
-                                <th class="text-primary text-right"><strong>BLOCK</strong></th>
-                                <th class="text-primary text-center"><strong>DETAILS</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var history in model.AccountsHistoryModel)
-                            {
-                                foreach (var transaction in history.TransactionsHistory)
-                                {
-                                    <tr> @* @onclick="ViewTransaction"> *@
-                                        <td>@transaction.Type</td>
-                                        <td class="text-center">@String.Format("{0:f}", transaction.Timestamp)</td>
-                                        <td class="text-right">@transaction.Amount</td>
-                                        <td class="text-right">@transaction.ConfirmedInBlock</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-secondary"><span class="oi oi-list" aria-hidden="true"></span></button>
-                                        </td>                                     
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 }
 
 @code {
@@ -160,7 +173,7 @@ var model = WalletModelBuilder.GetHistory(this.WalletManager, Network, new Walle
     private void NavigateToColdStakeView(string walletName)
     {
         NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
-    }    
+    }
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);

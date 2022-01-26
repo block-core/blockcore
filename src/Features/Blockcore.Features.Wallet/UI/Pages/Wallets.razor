@@ -166,8 +166,7 @@
                     <div class="card-header">
                         <h5 class="card-title">Balances</h5>
                     </div>
-                    <div class="mx-3 mt-3">
-
+                    <div class="card-body">
                         <div class="table-responsive small">
                             <table class="table table-border-bottom table-striped table-sm table-hover">
                                 <thead class="thead">
@@ -207,12 +206,10 @@
 }
 @code
 {
-
     private void NavigateToWallet(string walletName)
     {
         NavigationManager.NavigateTo("Accounts/" + walletName);
     }
-
     private void NavigateToWalletCreate()
     {
         NavigationManager.NavigateTo("walletcreate");

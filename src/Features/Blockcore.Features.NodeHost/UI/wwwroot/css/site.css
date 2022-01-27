@@ -242,3 +242,8 @@ app {
 .card-title {
     margin-bottom: 0 !important;
 }
+
+.maxheight600 {
+    max-height: 600px !important;
+    overflow: scroll;
+}

@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.MemoryPool\Blockcore.Features.MemoryPool.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
   </ItemGroup>
 
   <ItemGroup>

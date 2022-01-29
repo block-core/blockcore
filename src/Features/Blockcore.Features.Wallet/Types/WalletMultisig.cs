@@ -65,6 +65,8 @@ namespace Blockcore.Features.Wallet.Types
         {
             // Get the current collection of accounts.
             var accounts = this.AccountsRoot.FirstOrDefault().Accounts;
+            this.AccountsRoot.FirstOrDefault().LastBlockSyncedHash = network.GenesisHash;
+            this.AccountsRoot.FirstOrDefault().LastBlockSyncedHeight = 0;
 
             int newAccountIndex = 0;
             if (accounts.Any())

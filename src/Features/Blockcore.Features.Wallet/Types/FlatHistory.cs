@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Features.Wallet.Database;
+using Blockcore.Features.Wallet.Interfaces;
 
 namespace Blockcore.Features.Wallet.Types
 {
@@ -8,7 +9,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The account for which the history is retrieved.
         /// </summary>
-        public HdAccount Account { get; set; }
+        public IHdAccount Account { get; set; }
 
         /// <summary>
         /// The collection of history items.
@@ -37,7 +38,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// The account for which the history is retrieved.
         /// </summary>
-        public HdAccount Account { get; set; }
+        public IHdAccount Account { get; set; }
 
         /// <summary>
         /// The collection of history items.

@@ -10,6 +10,7 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Networks;
@@ -149,7 +150,7 @@ namespace Blockcore.Tests.Wallet.Common
             return new Features.Wallet.Types.Wallet
             {
                 Name = name,
-                AccountsRoot = new List<AccountRoot>(),
+                AccountsRoot = new List<IAccountRoot>(),
                 walletStore = new WalletMemoryStore(),
                 BlockLocator = null
             };
@@ -174,7 +175,7 @@ namespace Blockcore.Tests.Wallet.Common
                 Network = KnownNetworks.Main,
                 walletStore = new WalletMemoryStore(),
                 BlockLocator = new List<uint256>() { KnownNetworks.Main.GenesisHash },
-                AccountsRoot = new List<AccountRoot> { new AccountRoot() { Accounts = new List<HdAccount>(), CoinType = KnownNetworks.Main.Consensus.CoinType, LastBlockSyncedHash = KnownNetworks.Main.GenesisHash, LastBlockSyncedHeight = 0 } },
+                AccountsRoot = new List<IAccountRoot> { new AccountRoot() { Accounts = new List<IHdAccount>(), CoinType = KnownNetworks.Main.Consensus.CoinType, LastBlockSyncedHash = KnownNetworks.Main.GenesisHash, LastBlockSyncedHeight = 0 } },
             };
 
             WalletData data = walletFile.walletStore.GetData();
@@ -241,7 +242,7 @@ namespace Blockcore.Tests.Wallet.Common
                     LastBlockSyncedHash = new uint256(0),
                     LastBlockSyncedHeight = 0,
                     CoinType = KnownCoinTypes.Bitcoin,
-                    Accounts = new List<HdAccount>
+                    Accounts = new List<IHdAccount>
                     {
                         new HdAccount
                         {

@@ -429,7 +429,7 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             wallet.AccountsRoot.Add(new AccountRoot()
             {
-                Accounts = new List<HdAccount> { WalletTestsHelpers.CreateAccount("account 1") }
+                Accounts = new List<IHdAccount> { WalletTestsHelpers.CreateAccount("account 1") }
             });
             walletManager.Wallets.Add(wallet);
 
@@ -466,7 +466,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             wallet.AccountsRoot.Add(new AccountRoot()
             {
-                Accounts = new List<HdAccount> { account }
+                Accounts = new List<IHdAccount> { account }
             });
 
             walletManager.Wallets.Add(wallet);
@@ -502,7 +502,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             wallet.AccountsRoot.Add(new AccountRoot()
             {
-                Accounts = new List<HdAccount> { account }
+                Accounts = new List<IHdAccount> { account }
             });
 
             walletManager.Wallets.Add(wallet);
@@ -541,7 +541,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             wallet.AccountsRoot.Add(new AccountRoot()
             {
-                Accounts = new List<HdAccount> { account }
+                Accounts = new List<IHdAccount> { account }
             });
 
             walletManager.Wallets.Add(wallet);
@@ -568,7 +568,7 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("wallet1");
             wallet.AccountsRoot.Add(new AccountRoot()
             {
-                Accounts = new List<HdAccount> { account }
+                Accounts = new List<IHdAccount> { account }
             });
 
             walletManager.Wallets.Add(wallet);

@@ -54,7 +54,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// This is distinct from the list of spendable transactions. A transaction can be unspent but not yet spendable due to coinbase/stake maturity, for example.
         /// </summary>
         /// <returns>A collection of unspent outputs</returns>
-        IEnumerable<UnspentOutputReference> GetUnspentTransactionsInWallet(string walletName, int confirmations, Func<HdAccount, bool> accountFilter);
+        IEnumerable<UnspentOutputReference> GetUnspentTransactionsInWallet(string walletName, int confirmations, Func<IHdAccount, bool> accountFilter);
 
         /// <summary>
         /// Helps identify UTXO's that can participate in staking.
@@ -174,7 +174,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// at index (i - 1) contains transactions.
         /// </remarks>
         /// <returns>An unused account.</returns>
-        HdAccount GetUnusedAccount(string walletName, string password);
+        IHdAccount GetUnusedAccount(string walletName, string password);
 
         /// <summary>
         /// Gets an account that contains no transactions.
@@ -186,7 +186,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// at index (i - 1) contains transactions.
         /// </remarks>
         /// <returns>An unused account.</returns>
-        HdAccount GetUnusedAccount(Types.Wallet wallet, string password);
+        IHdAccount GetUnusedAccount(Types.Wallet wallet, string password);
 
         /// <summary>
         /// Gets an address that contains no transaction.
@@ -227,7 +227,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="wallet">The wallet instance.</param>
         /// <param name="account">The account for which to get history.</param>
         /// <returns>The history for this account.</returns>
-        AccountHistory GetHistory(Types.Wallet wallet, HdAccount account);
+        AccountHistory GetHistory(Types.Wallet wallet, IHdAccount account);
 
         /// <summary>
         /// Gets the history of transactions contained in an account.
@@ -248,7 +248,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="skip">Items to skip.</param>
         /// <param name="take">Items to take.</param>
         /// <returns>The history for this account.</returns>
-        AccountHistorySlim GetHistorySlim(Types.Wallet wallet, HdAccount account, int skip = 0, int take = 100);
+        AccountHistorySlim GetHistorySlim(Types.Wallet wallet, IHdAccount account, int skip = 0, int take = 100);
 
         /// <summary>
         /// Gets the balance of transactions contained in an account.
@@ -279,7 +279,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// </summary>
         /// <param name="walletName">The name of the wallet to look into.</param>
         /// <returns></returns>
-        IEnumerable<HdAccount> GetAccounts(string walletName);
+        IEnumerable<IHdAccount> GetAccounts(string walletName);
 
         /// <summary>
         /// Gets the last block height.
@@ -429,5 +429,18 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="broadcast">Broadcast the transaction to the network.</param>
         /// <returns>List of sweep transactions.</returns>
         IEnumerable<string> Sweep(IEnumerable<string> privateKeys, string destAddress, bool broadcast);
+
+        /// <summary>
+        /// Creates mutisig wallet with 1 private key and list of xPub keys
+        /// </summary>
+        /// <param name="walletName">Wallet name</param>
+        /// <param name="threashold">Number of signatures required for transaction to be valid.</param>
+        /// <param name="cosignerXPubs">Extended pubkeys for other cosigners.</param>
+        /// <param name="coinType">Coin type as per https://github.com/satoshilabs/slips/blob/master/slip-0044.md</param>
+        /// <param name="mnemonic">Mnemonic wallet recovery seed.</param>
+        /// <param name="password">A wallet encryption password.</param>
+        /// <param name="passphrase">Passphrase as seed extension word.</param>
+        /// <returns></returns>
+        WalletMultisig CreateMutisigWallet(string walletName, int threashold, List<string> cosignerXPubs, int coinType, string mnemonic, string password, string passphrase);
     }
 }

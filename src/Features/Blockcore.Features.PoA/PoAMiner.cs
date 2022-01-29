@@ -310,7 +310,7 @@ namespace Blockcore.Features.PoA
             if (walletName == null)
                 return null;
 
-            HdAccount account = this.walletManager.GetAccounts(walletName).FirstOrDefault();
+            IHdAccount account = this.walletManager.GetAccounts(walletName).FirstOrDefault();
 
             if (account == null)
                 return null;

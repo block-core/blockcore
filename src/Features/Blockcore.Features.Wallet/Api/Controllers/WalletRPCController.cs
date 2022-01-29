@@ -15,6 +15,7 @@ using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
@@ -24,6 +25,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.Wallet.Api.Controllers
 {
@@ -150,6 +153,239 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_WALLET_ERROR, exception.Message);
             }
         }
+
+        /// <summary>
+        /// Create a transaction spending the given inputs and creating new outputs. Outputs can be addresses or data. Returns hex - encoded raw transaction. Note that the transaction's inputs are not signed, and it is not stored in the wallet or transmitted to the network.
+        /// </summary>
+        /// <param name="inputs">A json array of json objects.</param>
+        /// <param name="outputs">A json object with outputs.</param>
+        /// <returns>(string) Hex string of the transaction</returns>
+        [ActionName("createrawtransaction")]
+        [ActionDescription("Create a transaction spending the given inputs and creating new outputs. Outputs can be addresses or data. Returns hex - encoded raw transaction. Note that the transaction's inputs are not signed, and it is not stored in the wallet or transmitted to the network.")]
+        public IActionResult CreateRawTransaction(string inputs, string outputs)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(inputs))
+                {
+                    throw new ArgumentNullException("inputs");
+                }
+                if (string.IsNullOrEmpty(outputs))
+                {
+                    throw new ArgumentNullException("outputs");
+                }
+                Transaction transaction = new Transaction();
+
+                dynamic txIns = JsonConvert.DeserializeObject(inputs);
+                foreach (var input in txIns)
+                {
+                    var txIn = new TxIn(new OutPoint(uint256.Parse((string)input.txid), (uint)input.vout));
+                    if (input.sequence != null)
+                    {
+                        txIn.Sequence = (uint)input.sequence;
+                    }
+                    transaction.AddInput(txIn);
+                }
+
+                Dictionary<string, decimal> parsedOutputs = JsonConvert.DeserializeObject<Dictionary<string, decimal>>(outputs);
+                foreach (KeyValuePair<string, decimal> entry in parsedOutputs)
+                {
+                    var isValid = false;
+                    try
+                    {
+                        // P2PKH
+                        if (BitcoinPubKeyAddress.IsValid(entry.Key, this.Network))
+                        {
+                            isValid = true;
+                        }
+                        else if (BitcoinScriptAddress.IsValid(entry.Key, this.Network))
+                        {
+                            isValid = true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        isValid = false;
+                    }
+
+                    if (!isValid) throw new Exception(string.Format("Output address {0} is invalid.", entry.Key));
+
+                    var destination = BitcoinAddress.Create(entry.Key, this.Network).ScriptPubKey;
+                    transaction.AddOutput(new TxOut(new Money(entry.Value, MoneyUnit.BTC), destination));
+                }
+
+                var response = new TransactionHexModel()
+                {
+                    TransactionHex = transaction.ToHex()
+                };
+
+                return this.Json(response);
+                
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                throw new RPCServerException(RPCErrorCode.RPC_WALLET_ERROR, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates mutisig wallet with 1 private key and list of xPub keys
+        /// </summary>
+        /// <param name="walletName">Wallet name</param>
+        /// <param name="threashold">Number of signatures required for transaction to be valid.</param>
+        /// <param name="cosignerXPubs">Extended pubkeys for other cosigners.</param>
+        /// <param name="coinType">Coin type as per https://github.com/satoshilabs/slips/blob/master/slip-0044.md</param>
+        /// <param name="mnemonic">Mnemonic wallet recovery seed.</param>
+        /// <param name="password">A wallet encryption password.</param>
+        /// <param name="passphrase">Passphrase as seed extension word.</param>
+        /// <returns></returns>
+        [ActionName("createmutisigwallet")]
+        [ActionDescription("Creates a multisig wallet.")]
+        public IActionResult CreateMutisigWallet(string walletName, int threashold, string cosignerXPubs, string mnemonicSeed, string password, string passphrase)
+        {
+            List<string> cosigners = new List<string>();
+
+            foreach (var item in JsonConvert.DeserializeObject(cosignerXPubs) as JArray)
+            {
+                cosigners.Add(item.ToString());
+            }
+            var wallet = this.walletManager.CreateMutisigWallet(walletName, threashold, cosigners, this.Network.Consensus.CoinType, mnemonicSeed, password, passphrase);
+            return this.Json(wallet);
+        }
+
+        [ActionName("combinemultisigsignatures")]
+        [ActionDescription("Combines multiple signed (same) transctions into 1 properly signed transaction")]
+        public IActionResult CombineMultisigSignatures(string transactions)
+        {
+            try
+            {
+                List<Transaction> transactionsParsed = new List<Transaction>();
+                List<ScriptCoin> coins = new List<ScriptCoin>();
+
+                foreach (var item in JsonConvert.DeserializeObject(transactions) as JArray)
+                {
+                    transactionsParsed.Add(this.FullNode.Network.CreateTransaction(item.ToString()));
+                }
+
+                WalletAccountReference accountReference = this.GetWalletAccountReference();
+                var wallet = this.walletManager.GetWallet(accountReference.WalletName);
+                if (wallet.IsMultisig)
+                {
+                    // Add keys for signing inputs. This takes time so only add keys for distinct addresses.
+                    foreach (UnspentOutputReference unspentOutput in this.walletManager.GetSpendableTransactionsInWallet(accountReference.WalletName, 1))
+                    {
+                        Script prevscript = unspentOutput.Transaction.ScriptPubKey;
+
+                        if (prevscript.IsScriptType(ScriptType.P2SH) || prevscript.IsScriptType(ScriptType.P2WSH))
+                        {
+                            if (unspentOutput.Address.RedeemScript == null)
+                                throw new WalletException("Missing redeem script");
+
+                            // Provide the redeem script to the builder
+                            var scriptCoin = ScriptCoin.Create(this.Network, unspentOutput.ToOutPoint(), new TxOut(unspentOutput.Transaction.Amount, prevscript), unspentOutput.Address.RedeemScript);
+                            coins.Add(scriptCoin);
+                        }
+                    }
+                }
+
+                Transaction fullySigned = new TransactionBuilder(this.FullNode.Network)
+                    .AddCoins(coins)
+                    .CombineSignatures(transactionsParsed.ToArray());
+
+                var isOk = new TransactionBuilder(this.FullNode.Network)
+                    .AddCoins(coins)
+                    .Verify(fullySigned);
+
+                var response = new TransactionHexModel()
+                {
+                    TransactionHex = fullySigned.ToHex()
+                };
+                return this.Json(response);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                throw new RPCServerException(RPCErrorCode.RPC_WALLET_ERROR, e.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Add inputs to a transaction until it has enough in value to meet its out value. This will not accept inputs specified in raw tranaction.It will add at most one change output to the outputs. No existing outputs will be modified unless "subtractFeeFromOutputs" is specified. Note that inputs which were signed may need to be resigned after completion since in/ outputs have been added. The inputs added will not be signed, use signrawtransaction for that. Note that all existing inputs must have their previous output transaction be in the wallet."
+        /// </summary>
+        /// <param name="hdAccountName">HD Account Name - Example: "WalletName/WalletAccount"</param>
+        /// <param name="hex">The hex string of the raw transaction.</param>
+        /// <param name="password">Transaction password.</param>
+        /// <returns>hex of funded transaction</returns>
+        [ActionName("fundandsignmultisigtransaction")]
+        [ActionDescription("Add inputs to a transaction until it has enough in value to meet its out value.")]
+        public IActionResult CreateMultisigTransaction(string account, string hex, string password)
+        {
+            try
+            {
+                List<ScriptCoin> coins = new List<ScriptCoin>();
+                List<ISecret> secrets = new List<ISecret>();
+                
+                var decodedTx = this.FullNode.Network.CreateTransaction(hex);
+
+                if (!string.IsNullOrEmpty(account))
+                    throw new RPCServerException(RPCErrorCode.RPC_METHOD_DEPRECATED, "Use of 'account' parameter has been deprecated");
+
+                WalletAccountReference accountReference = this.GetWalletAccountReference();
+                var wallet = this.walletManager.GetWallet(accountReference.WalletName);
+                if (wallet.IsMultisig)
+                {
+
+                    var msAccount = (HdAccountMultisig)wallet.GetAccounts().First();
+                    // get extended private key
+                    Key privateKey = HdOperations.DecryptSeed(wallet.EncryptedSeed, password, this.Network);
+
+                    // Add keys for signing inputs. This takes time so only add keys for distinct addresses.
+                    foreach (UnspentOutputReference unspentOutput in this.walletManager.GetSpendableTransactionsInWallet(accountReference.WalletName, 1))
+                    {
+                        Script prevscript = unspentOutput.Transaction.ScriptPubKey;
+
+                        if (prevscript.IsScriptType(ScriptType.P2SH) || prevscript.IsScriptType(ScriptType.P2WSH))
+                        {
+                            if (unspentOutput.Address.RedeemScript == null)
+                                throw new WalletException("Missing redeem script");
+
+                            // Provide the redeem script to the builder
+                            var scriptCoin = ScriptCoin.Create(this.Network, unspentOutput.ToOutPoint(), new TxOut(unspentOutput.Transaction.Amount, prevscript), unspentOutput.Address.RedeemScript);
+                            coins.Add(scriptCoin);
+                        }
+
+                        secrets.Add(HdOperations.GetExtendedPrivateKey(privateKey, wallet.ChainCode, unspentOutput.Address.HdPath, this.Network));
+                        //this is much slower as wallet seed is decrypted multiple times for each unspent output.
+                        //secrets.Add(wallet.GetExtendedPrivateKeyForAddress(password, unspentOutput.Address));
+                    }
+                }
+
+
+                //.ContinueToBuild(decodedTx)?
+                var built = new TransactionBuilder(this.FullNode.Network)
+                .SetChange(this.walletManager.GetUnusedChangeAddress(accountReference).ScriptPubKey)
+                .AddCoins(coins)
+                .AddKeys(secrets.ToArray())
+                .SendFees(new Money(10000))
+                .Send(decodedTx.Outputs.First().ScriptPubKey, decodedTx.Outputs.First().Value)
+                .BuildTransaction(true);
+
+                var response = new TransactionHexModel()
+                {
+                    TransactionHex = built.ToHex()
+                };
+                return this.Json(response);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                throw new RPCServerException(RPCErrorCode.RPC_WALLET_ERROR, e.Message);
+            }
+        }
+
+
 
         /// <summary>
         /// Broadcasts a raw transaction from hex to local node and network.
@@ -340,7 +576,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             WalletAccountReference accountReference = this.GetWalletAccountReference();
             Types.Wallet wallet = this.walletManager.GetWalletByName(accountReference.WalletName);
-            HdAccount account = this.walletManager.GetAccounts(accountReference.WalletName).Single(a => a.Name == accountReference.AccountName);
+            IHdAccount account = this.walletManager.GetAccounts(accountReference.WalletName).Single(a => a.Name == accountReference.AccountName);
 
             // Get the transaction from the wallet by looking into received and send transactions.
             List<HdAddress> addresses = account.GetCombinedAddresses().ToList();
@@ -901,7 +1137,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_REQUEST, "No wallet found");
             }
 
-            HdAccount account = this.walletManager.GetAccounts(walletName).First();
+            IHdAccount account = this.walletManager.GetAccounts(walletName).First();
             return new WalletAccountReference(walletName, account.Name);
         }
     }

@@ -17,6 +17,7 @@ using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
+using Blockcore.Networks.XRC;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Tests.Wallet.Common;
@@ -26,7 +27,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using NBitcoin.Protocol;
+using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 using NLog.Time;
 using Xunit;
@@ -44,6 +45,134 @@ namespace Blockcore.Features.Wallet.Tests
             this.walletFixture = walletFixture;
         }
 
+        /// <summary>
+        /// This is more of an integration test to verify fields are filled correctly. This is what I could confirm.
+        /// </summary>
+        [Fact]
+        public void CreateMultisigXRCWalletWithSeed()
+        {
+            DataFolder dataFolder = CreateDataFolder(this);
+            this.Network = new XRCMain();
+            var chain = new ChainIndexer(this.Network);
+            uint nonce = RandomUtils.GetUInt32();
+            var block = this.Network.CreateBlock();
+            block.AddTransaction(new Transaction());
+            block.UpdateMerkleRoot();
+            block.Header.HashPrevBlock = chain.Genesis.HashBlock;
+            block.Header.Nonce = nonce;
+            block.Header.BlockTime = DateTimeOffset.Now;
+            chain.SetTip(block.Header);
+
+            var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, chain, new WalletSettings(NodeSettings.Default(this.Network)),
+                dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
+
+            var xPubs = new List<string>()
+            {
+                "xpub6BjqcxqZxmEMszvyvzhwDZbEcLpLsQCyWrCQjmnLJ3BvXHwwiPNH1W3jmF882W9jsJM5vGspDTzetnXwSy4P4qDgvYR46Adn11PUBvQAW1T", 
+                "xpub6Cnh2EhE9yAggVwQA7mAy2Reh7hP9VsqVMa7FTBckKUYKwHvi1HPJcqwkuunA5V3LRhCvx8EeKdKoxSRFD2GJQeAd7wawJC1jqJvD2HeP8W"
+            };
+
+            var recieveRedeemScripts = new string[]
+            {
+                "522102af76842fc756db497b984f14ccfa6f0d16c86cf5f3f8a4d2711ffb1d4a1eb4fe210300037e7d78e4f52d4431a586335c16eae6ce0f1afebe841231d913b6fe45a2af21034ec89eb5faa3638ec6b93c24ab75e9f02d11289ee519809cb187bb71cee4e02d53ae",
+                "522102613dc4f647b8feb0907fa6ba9f8dcb0a9319c93d80653a7858f156a6dc3501b221031384c54a42164e0c70a40f9b97b1a4922ca778fd6d43fac669c9b84d7edc4c152103c7d4e479dcb45a26f7f6911e2f66fc3d11ef6170d4f763fab6c4520921f700e853ae",
+                "5221024a7088f372ca162025f3ddbad6c99ed4d828d9c819c368caa3bc42450f44fb092102784c59f90d06fef61d4fb04a9275ca29219821938240f104bddd6dca2ec48de5210280d767323327d01aa05458ea166c0d74431c778505a2ea7d870b07167c8a4dfc53ae",
+                "52210278f2fcb9987d3f8d6a1ab5fe5696379b7cff8c0f1e5184bc4861a7f89e22241b2102f7d134704d07d2cc6f9d50afbba71e44ea71999f705656908b0e4e16615cd6f221036e26d114735ac210e698fe525ddfd47df3fd4ba005c6174395f4e5ea5e98249353ae",
+                "5221020c82ebeaf0420684d377899968715dc10308b011748d8c160c242d485cd90f36210375095b989a1d0100962d38b8f6ebbefff726350e1a0dc7602fb7afb119df45fd2103ca9111db12a21bf89106339a99a69b68047e421f3a42b943f9b19bf52520fe4b53ae",
+            };
+
+            var changeRedeemScripts = new string[]
+            {
+                "5221023bc1b977890204ab69eced05b5c6259db7555ab95116b838f950e350806c15d92102910c7e86a0cc485dc992caef88a78f919b8c74b281c5f5a4431bbc541361c51f21029fe588173670c6c28d49a7cc6c1a0222a8dcc0609a0cdd98b0ab5492cc5ba78f53ae",
+                "5221024026c42573ae2cfda5f22aa76bb774696707d3f5d58368578b5ee06e6c97bba9210265f1f62947b908156e9b5b8ee64dd9ce92ee1e53467dac154d819ca82f2407a921027d59cfb9b1f7d61eeeb1442003d110a0ec6de021099a494b235b20ad746301c753ae",
+                "5221024c573939f84a4f25c38931be3b549ddcb8aeab5a8c3495c8b3ffc26974c752a8210308c910a1363afdd5b26f2584512cd1c7eb368caecb403ec64e97726e4aafac0b2103471d2ca002d7c3d677f5df243f37cecb0590c75cec09a6e6f60c5981a894f75a53ae",
+                "522102b5473119cc06852b76ae0b7df36b1c1d862254b6ddde2b9d3b200925aa895c1b2102e113754108029c015c8b9cb5c24a78904ca050c54f2a08d8f80c85d593b7cb662103db1afa7afac4020291b726fc7435e1bdd1e0084050e896c948a17672872a883153ae",
+                "522102148f8f6cd405defd54c7d397a98bb6a064c76daec9ef6e0eeac8b2137782b30b21034d797d8bfdb35d5634d6a7251a829835d155e822b3e2bed9932afd3f2e981012210361277992e5ba401846d53a02f9d4ca8cb94f01bd7f4ddf4a0ce0378af09c6e3b53ae",
+            };
+
+            string password = "bdemq1XLhLYbiGHD";
+            string passphrase = "bdemq1XLhLYbiGHD";
+
+            string seed = "chalk call anger chase endless level slow sleep coast left sand enter save bind curious puzzle stadium volume mixture shuffle hurry gas borrow believe";
+
+            // create the wallet
+            WalletMultisig expectedWallet = walletManager.CreateMutisigWallet("mywallet", 2, xPubs, 10291, seed, password, passphrase);
+
+            // assert it has saved it to disk and has been created correctly.
+            var actualWallet = walletManager.MultisigFileStorage.LoadByFileName("mywallet.multisigwallet.json");
+
+            Assert.Equal("mywallet", expectedWallet.Name);
+            Assert.Equal(this.Network, expectedWallet.Network);
+
+            Assert.Equal(expectedWallet.Name, actualWallet.Name);
+            Assert.Equal(expectedWallet.Network, actualWallet.Network);
+            Assert.True(actualWallet.IsMultisig);
+            Assert.Equal(expectedWallet.EncryptedSeed, actualWallet.EncryptedSeed);
+            Assert.Equal(expectedWallet.ChainCode, actualWallet.ChainCode);
+
+            Assert.Equal(1, expectedWallet.AccountsRoot.Count);
+            Assert.Equal(1, actualWallet.AccountsRoot.Count);
+
+            for (var i = 0; i < expectedWallet.AccountsRoot.Count; i++)
+            {
+                Assert.Equal(10291, expectedWallet.AccountsRoot.FirstOrDefault().CoinType);
+                Assert.Equal(1, expectedWallet.AccountsRoot.FirstOrDefault().LastBlockSyncedHeight);
+                Assert.Equal(block.GetHash(), expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
+
+                Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).CoinType, actualWallet.AccountsRoot.ElementAt(i).CoinType);
+
+                // blockcore wallet does not serialize these, because this has explicit json ignore messages.
+                Assert.Null(actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
+                Assert.Null(actualWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
+
+                var accountRoot = actualWallet.AccountsRoot.ElementAt(i);
+                Assert.Equal(1, accountRoot.Accounts.Count);
+
+                for (var j = 0; j < accountRoot.Accounts.Count; j++)
+                {
+                    var actualAccount = accountRoot.Accounts.ElementAt(j);
+                    Assert.Equal($"account {j}", actualAccount.Name);
+                    Assert.Equal(j, actualAccount.Index);
+                    Assert.Equal($"m/44'/10291'/{j}'", actualAccount.HdPath);
+
+
+                    Assert.Equal("N/A", actualAccount.ExtendedPubKey);
+
+                    Assert.Equal(20, actualAccount.InternalAddresses.Count);
+
+                    for (var k = 0; k < 5; k++)
+                    {
+                        var actualAddress = actualAccount.InternalAddresses.ElementAt(k);
+                        Script expectedAddressPubKey = Script.FromBytesUnsafe(Encoders.Hex.DecodeData(changeRedeemScripts[k]));
+                        var expectedAddress = expectedAddressPubKey.Hash.GetAddress(expectedWallet.Network);
+                        Assert.Equal(k, actualAddress.Index);
+                        Assert.Equal(expectedAddress.ScriptPubKey, actualAddress.ScriptPubKey);
+                        Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
+                        Assert.Equal(expectedAddressPubKey, actualAddress.Pubkey);
+                        Assert.Equal($"m/44'/10291'/{j}'/1/{k}", actualAddress.HdPath);
+                        //Assert.Equal(0, actualAddress.Transactions.Count);
+                    }
+
+                    Assert.Equal(20, actualAccount.ExternalAddresses.Count);
+                    for (var l = 0; l < 5; l++)
+                    {
+                        var actualAddress = actualAccount.ExternalAddresses.ElementAt(l);
+                        Script expectedAddressPubKey = Script.FromBytesUnsafe(Encoders.Hex.DecodeData(recieveRedeemScripts[l]));
+                        var expectedAddress = expectedAddressPubKey.Hash.GetAddress(expectedWallet.Network);
+                        Assert.Equal(l, actualAddress.Index);
+                        Assert.Equal(expectedAddress.ScriptPubKey, actualAddress.ScriptPubKey);
+                        Assert.Equal(expectedAddress.ToString(), actualAddress.Address);
+                        Assert.Equal(expectedAddressPubKey, actualAddress.Pubkey);
+                        Assert.Equal($"m/44'/10291'/{j}'/0/{l}", actualAddress.HdPath);
+                        //Assert.Equal(0, actualAddress.Transactions.Count);
+                    }
+                }
+            }
+
+            Assert.Equal(2, expectedWallet.BlockLocator.Count);
+            //blockore wallets have explicit jsonignore directives at time of writing this
+            Assert.Null(actualWallet.BlockLocator);
+        }
         /// <summary>
         /// This is more of an integration test to verify fields are filled correctly. This is what I could confirm.
         /// </summary>
@@ -93,12 +222,12 @@ namespace Blockcore.Features.Wallet.Tests
 
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).CoinType, actualWallet.AccountsRoot.ElementAt(i).CoinType);
 
-                AccountRoot accountRoot = actualWallet.AccountsRoot.ElementAt(i);
+                IAccountRoot accountRoot = actualWallet.AccountsRoot.ElementAt(i);
                 Assert.Equal(1, accountRoot.Accounts.Count);
 
                 for (int j = 0; j < accountRoot.Accounts.Count; j++)
                 {
-                    HdAccount actualAccount = accountRoot.Accounts.ElementAt(j);
+                    IHdAccount actualAccount = accountRoot.Accounts.ElementAt(j);
                     Assert.Equal($"account {j}", actualAccount.Name);
                     Assert.Equal(j, actualAccount.Index);
                     Assert.Equal($"m/44'/105'/{j}'", actualAccount.HdPath);
@@ -188,12 +317,12 @@ namespace Blockcore.Features.Wallet.Tests
 
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).CoinType, actualWallet.AccountsRoot.ElementAt(i).CoinType);
 
-                AccountRoot accountRoot = actualWallet.AccountsRoot.ElementAt(i);
+                IAccountRoot accountRoot = actualWallet.AccountsRoot.ElementAt(i);
                 Assert.Equal(1, accountRoot.Accounts.Count);
 
                 for (int j = 0; j < accountRoot.Accounts.Count; j++)
                 {
-                    HdAccount actualAccount = accountRoot.Accounts.ElementAt(j);
+                    IHdAccount actualAccount = accountRoot.Accounts.ElementAt(j);
                     Assert.Equal($"account {j}", actualAccount.Name);
                     Assert.Equal(j, actualAccount.Index);
                     Assert.Equal($"m/44'/105'/{j}'", actualAccount.HdPath);
@@ -271,7 +400,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletManager.CreateWallet("test", "mywallet", "this is my magic passphrase", new Mnemonic(Wordlist.English, WordCount.Eighteen));
 
-            HdAccount hdAccount = walletManager.Wallets.Single().AccountsRoot.Single().Accounts.Single();
+            IHdAccount hdAccount = walletManager.Wallets.Single().AccountsRoot.Single().Accounts.Single();
 
             Assert.Equal(100, hdAccount.ExternalAddresses.Count);
             Assert.Equal(100, hdAccount.InternalAddresses.Count);
@@ -380,16 +509,16 @@ namespace Blockcore.Features.Wallet.Tests
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight, recoveredWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash, recoveredWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
 
-                AccountRoot recoveredAccountRoot = recoveredWallet.AccountsRoot.ElementAt(i);
-                AccountRoot expectedAccountRoot = expectedWallet.AccountsRoot.ElementAt(i);
+                IAccountRoot recoveredAccountRoot = recoveredWallet.AccountsRoot.ElementAt(i);
+                IAccountRoot expectedAccountRoot = expectedWallet.AccountsRoot.ElementAt(i);
 
                 Assert.Equal(1, recoveredAccountRoot.Accounts.Count);
                 Assert.Equal(1, expectedAccountRoot.Accounts.Count);
 
                 for (int j = 0; j < expectedAccountRoot.Accounts.Count; j++)
                 {
-                    HdAccount expectedAccount = expectedAccountRoot.Accounts.ElementAt(j);
-                    HdAccount recoveredAccount = recoveredAccountRoot.Accounts.ElementAt(j);
+                    IHdAccount expectedAccount = expectedAccountRoot.Accounts.ElementAt(j);
+                    IHdAccount recoveredAccount = recoveredAccountRoot.Accounts.ElementAt(j);
                     Assert.Equal(expectedAccount.Name, recoveredAccount.Name);
                     Assert.Equal(expectedAccount.Index, recoveredAccount.Index);
                     Assert.Equal(expectedAccount.HdPath, recoveredAccount.HdPath);
@@ -463,16 +592,16 @@ namespace Blockcore.Features.Wallet.Tests
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight, recoveredWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHeight);
                 Assert.Equal(expectedWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash, recoveredWallet.AccountsRoot.ElementAt(i).LastBlockSyncedHash);
 
-                AccountRoot recoveredAccountRoot = recoveredWallet.AccountsRoot.ElementAt(i);
-                AccountRoot expectedAccountRoot = expectedWallet.AccountsRoot.ElementAt(i);
+                IAccountRoot recoveredAccountRoot = recoveredWallet.AccountsRoot.ElementAt(i);
+                IAccountRoot expectedAccountRoot = expectedWallet.AccountsRoot.ElementAt(i);
 
                 Assert.Equal(1, recoveredAccountRoot.Accounts.Count);
                 Assert.Equal(1, expectedAccountRoot.Accounts.Count);
 
                 for (int j = 0; j < expectedAccountRoot.Accounts.Count; j++)
                 {
-                    HdAccount expectedAccount = expectedAccountRoot.Accounts.ElementAt(j);
-                    HdAccount recoveredAccount = recoveredAccountRoot.Accounts.ElementAt(j);
+                    IHdAccount expectedAccount = expectedAccountRoot.Accounts.ElementAt(j);
+                    IHdAccount recoveredAccount = recoveredAccountRoot.Accounts.ElementAt(j);
                     Assert.Equal(expectedAccount.Name, recoveredAccount.Name);
                     Assert.Equal(expectedAccount.Index, recoveredAccount.Index);
                     Assert.Equal(expectedAccount.HdPath, recoveredAccount.HdPath);
@@ -556,7 +685,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "unused" });
             walletManager.Wallets.Add(wallet);
 
-            HdAccount result = walletManager.GetUnusedAccount("testWallet", "password");
+            IHdAccount result = walletManager.GetUnusedAccount("testWallet", "password");
 
             Assert.Equal("unused", result.Name);
             Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet.json")));
@@ -573,7 +702,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
             walletManager.Wallets.Add(wallet);
 
-            HdAccount result = walletManager.GetUnusedAccount("testWallet", "password");
+            IHdAccount result = walletManager.GetUnusedAccount("testWallet", "password");
 
             Assert.Equal("account 0", result.Name);
 
@@ -594,7 +723,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "unused" });
             walletManager.Wallets.Add(wallet);
 
-            HdAccount result = walletManager.GetUnusedAccount(wallet, "password");
+            IHdAccount result = walletManager.GetUnusedAccount(wallet, "password");
 
             Assert.Equal("unused", result.Name);
             Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet.json")));
@@ -611,7 +740,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
             walletManager.Wallets.Add(wallet);
 
-            HdAccount result = walletManager.GetUnusedAccount(wallet, "password");
+            IHdAccount result = walletManager.GetUnusedAccount(wallet, "password");
 
             Assert.Equal("account 0", result.Name);
             Assert.True(File.Exists(Path.Combine(dataFolder.WalletPath + $"/testWallet.wallet.json")));
@@ -627,7 +756,7 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
 
-            HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
+            IHdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
 
             Assert.Equal(1, wallet.AccountsRoot.ElementAt(0).Accounts.Count);
             var extKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, "password", wallet.Network), wallet.ChainCode);
@@ -651,7 +780,7 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "unused" });
 
-            HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
+            IHdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
 
             Assert.Equal(2, wallet.AccountsRoot.ElementAt(0).Accounts.Count);
             var extKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, "password", wallet.Network), wallet.ChainCode);
@@ -1047,7 +1176,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletManager.Wallets.Add(wallet);
 
-            IEnumerable<HdAccount> result = walletManager.GetAccounts("myWallet");
+            IEnumerable<IHdAccount> result = walletManager.GetAccounts("myWallet");
 
             Assert.Equal(2, result.Count());
             Assert.Equal("Account 0", result.ElementAt(0).Name);
@@ -1063,7 +1192,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.Clear();
             walletManager.Wallets.Add(wallet);
 
-            IEnumerable<HdAccount> result = walletManager.GetAccounts("myWallet");
+            IEnumerable<IHdAccount> result = walletManager.GetAccounts("myWallet");
 
             Assert.Empty(result);
         }
@@ -1174,7 +1303,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.Add(new AccountRoot()
             {
                 CoinType = KnownCoinTypes.Stratis,
-                Accounts = new List<HdAccount>
+                Accounts = new List<IHdAccount>
                 {
                     new HdAccount {
                         ExternalAddresses = WalletTestsHelpers.CreateUnspentTransactionsOfBlockHeights(wallet.walletStore as WalletMemoryStore, KnownNetworks.StratisMain, 8,9,10),
@@ -2257,7 +2386,7 @@ namespace Blockcore.Features.Wallet.Tests
                 InternalAddresses = WalletTestsHelpers.CreateSpentTransactionsOfBlockHeights((WalletMemoryStore)wallet.walletStore, this.Network, 1, 2, 3, 4, 5).ToList()
             });
 
-            HdAccount account = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0);
+            IHdAccount account = wallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0);
 
             // reorg at block 3
             TransactionOutputData data = null;
@@ -2466,7 +2595,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(WalletTestsHelpers.CreateWallet("wallet1"));
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
 
-            HdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
             WalletMemoryStore store = new WalletMemoryStore();
 
             // add two unconfirmed transactions
@@ -2526,7 +2655,7 @@ namespace Blockcore.Features.Wallet.Tests
             account2.ExternalAddresses.Add(account2Address1);
             account2.InternalAddresses.Add(account2Address2);
 
-            var accounts = new List<HdAccount> { account, account2 };
+            var accounts = new List<IHdAccount> { account, account2 };
 
             Types.Wallet wallet = WalletTestsHelpers.CreateWallet("myWallet");
             wallet.walletStore = store;
@@ -2566,7 +2695,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
 
-            HdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
 
             // add two confirmed transactions
             for (int i = 1; i < 3; i++)
@@ -2593,7 +2722,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
 
-            HdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
 
             // add two spent transactions
             for (int i = 1; i < 3; i++)
@@ -2620,7 +2749,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
 
-            HdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
 
             // add two spent transactions
             for (int i = 1; i < 3; i++)
@@ -2653,7 +2782,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Wallets.Add(wallet);
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
 
-            HdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = walletManager.Wallets.First().AccountsRoot.Single().Accounts.First();
 
             // add two spent transactions
             for (int i = 1; i < 3; i++)
@@ -2941,7 +3070,7 @@ namespace Blockcore.Features.Wallet.Tests
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
 
-            HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
             // Add two unconfirmed transactions.
             uint256 trxId = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
@@ -2988,7 +3117,7 @@ namespace Blockcore.Features.Wallet.Tests
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
 
-            HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
             int transactionCount = firstAccount.GetCombinedAddresses().SelectMany(a => wallet.walletStore.GetForAddress(a.Address)).Count();
             Assert.Equal(0, transactionCount);
@@ -3017,7 +3146,7 @@ namespace Blockcore.Features.Wallet.Tests
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
 
-            HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
             // Add two unconfirmed transactions.
             uint256 trxId = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
@@ -3161,7 +3290,7 @@ namespace Blockcore.Features.Wallet.Tests
             WalletTestsHelpers.AddAddressesToWallet(walletManager, 20);
             walletManager.LoadKeysLookup();
 
-            HdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
+            IHdAccount firstAccount = wallet.AccountsRoot.Single().Accounts.First();
 
             // Add two unconfirmed transactions.
             uint256 trxId = uint256.Parse("d6043add63ec364fcb591cf209285d8e60f1cc06186d4dcbce496cdbb4303400");
@@ -3215,7 +3344,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.CreateWallet("test", "mywallet", passphrase: new Mnemonic(Wordlist.English, WordCount.Eighteen).ToString());
 
             // Default of 20 addresses becuause walletaddressbuffer not set
-            HdAccount hdAccount = walletManager.Wallets.Single().AccountsRoot.Single().Accounts.Single();
+            IHdAccount hdAccount = walletManager.Wallets.Single().AccountsRoot.Single().Accounts.Single();
             Assert.Equal(20, hdAccount.ExternalAddresses.Count);
             Assert.Equal(20, hdAccount.InternalAddresses.Count);
 
@@ -3338,7 +3467,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             var wallet = walletManager.GetWalletByName("default");
 
-            HdAccount account = walletManager.GetAccounts("default").Single();
+            IHdAccount account = walletManager.GetAccounts("default").Single();
             var reference = new WalletAccountReference("default", account.Name);
 
             var extKey1 = walletManager.GetExtKey(reference);

@@ -1,3 +1,12 @@
+##  (2022-01-30)
+
+* add checkpoints to strax ([cc038cf](https://github.com/block-core/blockcore/commit/cc038cf))
+* Add endpoint to return the network weight for POS chains (#377) ([d4e38ee](https://github.com/block-core/blockcore/commit/d4e38ee)), closes [#377](https://github.com/block-core/blockcore/issues/377)
+* Enable staking on strax (#379) ([36f93cb](https://github.com/block-core/blockcore/commit/36f93cb)), closes [#379](https://github.com/block-core/blockcore/issues/379)
+* Upgrade for release 1.1.29 ([b21ac78](https://github.com/block-core/blockcore/commit/b21ac78))
+
+
+
 ##  (2021-11-21)
 
 * Add max tx fee to strax network ([7d13219](https://github.com/block-core/blockcore/commit/7d13219))

@@ -2,7 +2,7 @@
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Networks;
 
-namespace Blockcore.Features.Wallet.UI
+namespace Blockcore.Features.Miner.UI
 {
     public class MineNavigationItem : INavigationItem
     {

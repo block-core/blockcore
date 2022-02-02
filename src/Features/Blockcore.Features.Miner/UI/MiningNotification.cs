@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Blockcore.Features.Wallet.Exceptions
+namespace BlockBlockcore.Features.Miner.UI
 {
     public static class MiningNotification
     {
@@ -23,6 +19,5 @@ namespace Blockcore.Features.Wallet.Exceptions
                 }
             }
         }
-
     }
 }

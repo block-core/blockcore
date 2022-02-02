@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Blockcore.Features.Wallet.Exceptions
+namespace Blockcore.Features.Wallet.UI
 {
     public static class AddressBookNotification
     {
         public static EventHandler<bool> AddressBookChanged;
-
- 
 
         private static bool _addressbookchanged;
         public static bool OnChangedAddressBook
@@ -25,9 +23,5 @@ namespace Blockcore.Features.Wallet.Exceptions
                 }
             }
         }
-
-
-        
-
     }
 }

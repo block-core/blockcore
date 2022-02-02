@@ -19,7 +19,7 @@
                             @_TModel.Type.ToString()
                         </label>
                     </div>
-                   
+
                     @if (_TModel.Type == Blockcore.Features.Wallet.Api.Models.TransactionItemType.Received)
                     {
                         <div class="form-group row">
@@ -29,7 +29,7 @@
                             </label>
                         </div>
                     }
-                   
+
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Time</label>
                         <label class="col-sm-10 col-form-label text-info">
@@ -58,17 +58,19 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    @*<div class="form-group row">
                         <label class="col-sm-2 col-form-label">Explorer</label>
                         <div class="col-sm-10">
-                            <CopyToClipboard Text="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" />
+                        <CopyToClipboard Text="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" />
                         </div>
-                    </div>
+                        </div>*@
 
                 </div>
 
                 <div class="card-footer">
-                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>  <a href="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" target="_blank" class="btn btn-primary" @onclick="CloseModal">Go to Explorer</a>
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                    @*<a href="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" target="_blank" class="btn btn-primary" @onclick="CloseModal">Go to Explorer</a>*@
+                   
                 </div>
             </div>
         </div>

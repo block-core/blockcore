@@ -1,4 +1,4 @@
-﻿@page "/walletview/{walletname}/{accountname}"
+﻿@page "/UTXO/{walletname}/{accountname}"
 @implements IDisposable
 
 @using Blockcore.Base.Deployments
@@ -29,8 +29,8 @@
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname); }">
                 <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
             </button>
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToUTXOList(walletname, accountname); }">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> UTXO List
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletHistory(walletname, accountname); }">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Wallet History
             </button>
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }">
                 <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
@@ -62,42 +62,38 @@
         </div>
     </div>
 
-    // For now just show last 100 trx of history.
-    var model = WalletModelBuilder.GetHistorySlim(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 1000 });
+    var st_model = GetSpendableTransactions(_walletname: walletname, _accountname: accountname);
+
     <div class="row mb-3">
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title">History</h5>
+                    <h5 class="card-title">Spendable Transactions ( UTXO List )</h5>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive small">
+                    <div class="table-responsive small maxheight600">
                         <table class="table table-border-bottom table-striped table-sm table-hover">
                             <thead class="thead">
                                 <tr>
-                                    <th class="text-primary"><strong>TYPE</strong></th>
-                                    <th class="text-primary text-center"><strong>DATE/TIME</strong></th>
-                                    <th class="text-primary text-right"><strong>AMOUNT</strong></th>
-                                    <th class="text-primary text-right"><strong>BLOCK</strong></th>
-                                    <th class="text-primary text-center"><strong>DETAILS</strong></th>
+                                    <th class="text-primary"><strong>ID</strong></th>
+                                    <th class="text-primary"><strong>AMOUNT</strong></th>
+                                    <th class="text-primary"><strong>ADDRESS</strong></th>
+                                    <th class="text-primary"><strong>DETAILS</strong></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var history in model.AccountsHistoryModel)
+
+                                @foreach (var Stransaction in st_model.SpendableTransactions)
                                 {
-                                    foreach (var transaction in history.TransactionsHistory)
-                                    {
-                                        <tr>
-                                            @* @onclick="ViewTransaction" > *@
-                                            <td>@transaction.Type</td>
-                                            <td class="text-center">@String.Format("{0:f}", transaction.Timestamp)</td>
-                                            <td class="text-right">@transaction.Amount</td>
-                                            <td class="text-right">@transaction.ConfirmedInBlock</td>
-                                            <td class="text-center align-middle">
-                                                <button class="btn btn-sm btn-secondary" @onclick="() => { ViewTransaction(transaction); }"> <span class="oi oi-list" aria-hidden="true"></span></button>
-                                            </td>
-                                        </tr>
-                                    }
+                                    <tr>
+                                        @* @onclick="ViewTransaction" > *@
+                                        <td>@Stransaction.Id</td>
+                                        <td>@Stransaction.Amount</td>
+                                        <td>@Stransaction.Address</td>
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-sm btn-secondary" @onclick="() => { ViewSpendableTransactions(Stransaction); }"> <span class="oi oi-list" aria-hidden="true"></span></button>
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -106,7 +102,6 @@
             </div>
         </div>
     </div>
-
 }
 @code {
     [Parameter]
@@ -115,11 +110,11 @@
     public string accountname { get; set; }
     private void NavigateToWallet(string walletName)
     {
-        NavigationManager.NavigateTo("accounts/" + walletName);
+        NavigationManager.NavigateTo("Accounts/" + walletName);
     }
-    private void NavigateToUTXOList(string walletName, string accountname)
+    private void NavigateToWalletHistory(string walletName, string accountname)
     {
-        NavigationManager.NavigateTo("UTXO/" + walletName + "/" + accountname);
+        NavigationManager.NavigateTo("WalletView/" + walletName + "/" + accountname);
     }
     private void NavigateToReceiveWallet(string walletName, string accountname)
     {
@@ -129,12 +124,35 @@
     {
         NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
     }
+    private SpendableTransactionsModel GetSpendableTransactions(string _walletname, string _accountname, int confirmations = 0)
+    {
+        IEnumerable<UnspentOutputReference> spendableTransactions = this.WalletManager.GetSpendableTransactionsInAccount(new WalletAccountReference(walletname = _walletname, accountname = _accountname), confirmations);
+        var model = new SpendableTransactionsModel()
+            {
+                SpendableTransactions = spendableTransactions.Select(st => new SpendableTransactionModel
+                {
+                    Id = st.Transaction.Id,
+                    Amount = st.Transaction.Amount,
+                    Address = st.Address.Address,
+                    Index = st.Transaction.Index,
+                    IsChange = st.Address.IsChangeAddress(),
+                    CreationTime = st.Transaction.CreationTime,
+                    Confirmations = st.Confirmations
+                }).ToList()
+            };
+        return model;
+    }
 
     private void ViewTransaction(TransactionItemModel _TM)
     {
         ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction), _TM);
     }
 
+
+    private void ViewSpendableTransactions(SpendableTransactionModel _TM)
+    {
+        ModalService.Show("Spendable Transactions Details", typeof(Modal.ModalViewSpendableTransactions), _TM);
+    }
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);

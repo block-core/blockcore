@@ -1,5 +1,8 @@
 ﻿@page "/walletsend/{walletname}/{accountname}"
 
+@using Blockcore.Features.Wallet.AddressBook
+@using Blockcore.Features.Wallet.Api.Models
+@using Blockcore.Features.Wallet.Exceptions
 @using Blockcore.Features.Wallet.Interfaces
 @using Blockcore.Features.Wallet;
 @using NBitcoin;
@@ -16,36 +19,32 @@
 @inject Blockcore.Connection.IConnectionManager ConnectionManager
 @inject IWalletTransactionHandler WalletTransactionHandler
 @inject IBroadcasterManager BroadcasterManager
+@inject IAddressBookManager addressBookManager
+@inject ModalService ModalService
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2"><strong>Send coins</strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <Dropdown TItem="string" OnSelected="@OnSelected">
-                <InitialTip>@walletname</InitialTip>
-                <ChildContent>
-                    @foreach (var walletName in this.WalletManager.GetWalletsNames())
-                    {
-                        foreach (var account in this.WalletManager.GetAccounts(walletName))
-                        {
-                            <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                        }
-                    }
-                </ChildContent>
-            </Dropdown>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname ,accountname); }">
+                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
+            </button>
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }">
                 <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
             </button>
             <button class="btn btn-sm btn-danger" @onclick="() => { NavigateToBroadcastTx(walletname, accountname); }">Broadcast Tx</button>
         </div>
     </div>
-
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
     <div class="row mb-3">
         <div class="col-xl-12 col-sm-12 ">
             <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        Main Balance
+                    </h5>
+                </div>
                 <div class="card-body">
-                    <h5>Main Balance</h5>
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex align-items-center align-self-start">
@@ -59,10 +58,14 @@
             </div>
         </div>
     </div>
-
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-12">
             <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        Send
+                    </h5>
+                </div>
                 <div class="card-body">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Address</label>
@@ -96,23 +99,9 @@
                             <input @bind="Password" type="password" class="form-control bg-secondary text-light" placeholder="Please enter your password" />
                         </div>
                     </div>
-                    <div class="input-group mb-3">
-                        @if (IsSending)
-                        {
-                            <button class="btn btn-danger mr-1" disabled>
-                                <span class="spinner-border spinner-border-sm"></span> Working...
-                            </button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button>
-                        }
-                    </div>
-
                     <div class="input-group">
                         <div class="text-danger">@Alert</div>
                     </div>
-
                     @if (Success != null)
                     {
                         <h4>Transaction Broadcast</h4>
@@ -130,6 +119,75 @@
                         </div>
                     }
                 </div>
+                <div class="card-footer">
+                    @if (IsSending)
+                    {
+                        <button class="btn btn-danger mr-1" disabled>
+                            <span class="spinner-border spinner-border-sm"></span> Working...
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary mr-1" @onclick="callSendCoins">Send Coins</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    var ListaddressBook = GetAddressBooks();
+    <div class="row mb-3">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">
+                        Address Book
+                    </h5>
+                    <button type="button" class="btn btn-sm btn-primary " @onclick="() => { addAddress(walletname,accountname); }">Add New Address</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary text-left"><strong>Lable</strong></th>
+                                    <th class="text-primary text-center"><strong>Address</strong></th>
+                                    <th class="text-primary text-center"><strong></strong></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+
+                                @if (ListaddressBook.Count > 0)
+                                {
+                                    IEnumerable<AddressBookEntry> filteredAddressBook = ListaddressBook;
+
+                                    AddressBookModel model = new AddressBookModel
+                {
+                    Addresses = filteredAddressBook.Select(res => new AddressBookEntryModel { Label = res.Label, Address = res.Address })
+                };
+
+                                    @foreach (var _address in model.Addresses)
+                                    {
+
+                                        <tr>
+                                            @* @onclick="ViewTransaction" > *@
+                                            <td class="text-left align-middle">@_address.Label </td>
+                                            <td class="text-center"> <CopyToClipboard Text="@_address.Address" /></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-secondary" @onclick="() => { RemoveAddress(_address.Label,walletname,accountname); }"> <span class="oi oi-trash" aria-hidden="true"></span></button>
+                                            </td>
+                                        </tr>
+
+                                    }
+
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+              
             </div>
         </div>
     </div>
@@ -140,6 +198,7 @@
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
+ 
     private string Address { get; set; }
     private decimal Amount { get; set; }
     private decimal Fee { get; set; }
@@ -148,9 +207,37 @@
     string TransactionHex { get; set; }
     string Alert { get; set; }
     string Success { get; set; }
+
+ 
+    private List<AddressBookEntry> GetAddressBooks()
+    {
+        try
+        {
+            AddressBook addressBook = this.addressBookManager.GetAddressBook();
+
+            if (addressBook != null)
+            {
+                return addressBookManager.GetAddressBook().Addresses.ToList();
+            }
+        }
+        catch { }
+        return new List<AddressBookEntry>();
+    }
+
     protected override void OnInitialized()
     {
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
+
+        AddressBookNotification.AddressBookChanged += AddressBookChanged;
+    }
+    private async void AddressBookChanged(object sender, bool e)
+    {
+        await Task.Delay(10);
+        try
+        {
+            StateHasChanged();
+        }
+        catch { }
     }
     public void EstimateFee(FeeType feeType = FeeType.Low)
     {
@@ -160,18 +247,18 @@
 
         var recipients = new List<Recipient>();
         recipients.Add(new Recipient
-        {
-            ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
-            Amount = new Money(Amount, MoneyUnit.BTC)
-        });
+            {
+                ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
+                Amount = new Money(Amount, MoneyUnit.BTC)
+            });
 
         var context = new TransactionBuildContext(this.Network)
-        {
-            AccountReference = new WalletAccountReference(walletname, accountname),
-            FeeType = feeType,
-            Recipients = recipients,
-            Sign = false
-        };
+            {
+                AccountReference = new WalletAccountReference(walletname, accountname),
+                FeeType = feeType,
+                Recipients = recipients,
+                Sign = false
+            };
 
         try
         {
@@ -239,20 +326,20 @@
         {
             var recipients = new List<Recipient>();
             recipients.Add(new Recipient
-            {
-                ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
-                Amount = new Money(Amount, MoneyUnit.BTC)
-            });
+                {
+                    ScriptPubKey = BitcoinAddress.Create(Address, this.Network).ScriptPubKey,
+                    Amount = new Money(Amount, MoneyUnit.BTC)
+                });
 
             var context = new TransactionBuildContext(this.Network)
-            {
-                AccountReference = new WalletAccountReference(walletname, accountname),
-                Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
-                WalletPassword = Password,
-                Recipients = recipients,
-                UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
-                TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
-            };
+                {
+                    AccountReference = new WalletAccountReference(walletname, accountname),
+                    Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
+                    WalletPassword = Password,
+                    Recipients = recipients,
+                    UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
+                    TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
+                };
 
             Transaction transactionResult = this.WalletTransactionHandler.BuildTransaction(context);
 
@@ -282,6 +369,19 @@
         this.Fee = 0;
         this.Success = "Coins sent. TransactionID: " + this.SentTransactionHash;
     }
+
+    private void RemoveAddress(string label, string walletName, string accountname)
+    {
+        ModalService.Show("Remove AddressBook", typeof(Modal.ModalAddressBookDelete), walletName + "|" + accountname + "|" + label);
+
+    }
+
+    private void addAddress(string walletName, string accountname)
+    {
+        ModalService.Show("Create New AddressBook", typeof(Modal.ModalAddressBookCreate), walletName + "|" + accountname);
+
+    }
+
     private void NavigateToBroadcastTx(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletbroadcasttx/" + walletName + "/" + accountname);

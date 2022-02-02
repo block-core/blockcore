@@ -14,9 +14,9 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner.Broadcasters;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
+using Blockcore.Features.Miner.UI;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
-using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces;
 using Blockcore.Interfaces.UI;
 using Blockcore.Mining;
@@ -265,6 +265,7 @@ namespace Blockcore.Features.Miner
                         services.AddSingleton<BlockDefinition, PosPowBlockDefinition>();
                         services.AddSingleton<MinerSettings>();
                         services.AddSingleton<INavigationItem, StakeNavigationItem>();
+                        services.AddSingleton<INavigationItem, MineNavigationItem>();
                         services.AddSingleton<IClientEventBroadcaster, StakingBroadcaster>();
                     });
             });

@@ -1,37 +1,87 @@
 @using Blockcore.UI.BlazorModal
+@using Blockcore.Networks
 @inject ModalService ModalService
+@inject Network Network
+
+
 
 @if (ShowForm)
 {
+    var _TModel = ((Blockcore.Features.Wallet.Api.Models.TransactionItemModel)ModalService.Parameter);
 
-<button class="btn btn-primary" @onclick="Submit">Submit</button>
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Type</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.Type.ToString()
+                        </label>
+                    </div>
 
-} else {
-<div class="row ">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="text-success">@Alert</h5>
-                <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                    @if (_TModel.Type == Blockcore.Features.Wallet.Api.Models.TransactionItemType.Received)
+                    {
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">To Address</label>
+                            <label class="col-sm-10 col-form-label text-info">
+                                @_TModel.ToAddress
+                            </label>
+                        </div>
+                    }
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Time</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @String.Format("{0:f}", _TModel.Timestamp)
+                        </label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Amount</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.Amount.ToString()
+                        </label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Block</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.ConfirmedInBlock.ToString()
+                        </label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">TXID</label>
+                        <div class="col-sm-10">
+                            <CopyToClipboard Text="@_TModel.Id.ToString()" />
+                        </div>
+                    </div>
+
+                    @*<div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Explorer</label>
+                        <div class="col-sm-10">
+                        <CopyToClipboard Text="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" />
+                        </div>
+                        </div>*@
+
+                </div>
+
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                    @*<a href="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" target="_blank" class="btn btn-primary" @onclick="CloseModal">Go to Explorer</a>*@
+                   
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
-
 @code
 {
-	bool ShowForm { get; set; } = true;
-    string Alert { get; set; }
+    bool ShowForm { get; set; } = true;
 
     private void CloseModal()
     {
         ModalService.Close();
-        //NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
     }
-	private void Submit()
-	{
-		ShowForm = false;
-		this.Alert = "Update this message";
-	}
-}
+    }

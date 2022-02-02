@@ -1,0 +1,212 @@
+﻿@page "/Accounts/{walletname}"
+@implements IDisposable
+
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Interfaces
+@using Blockcore.Networks
+@using Blockcore.UI.BlazorModal
+@using NBitcoin;
+@using Blockcore.Consensus.Chain
+@using Blockcore.EventBus
+@using Blockcore.EventBus.CoreEvents
+@using Blockcore.EventBus.CoreEvents.Peer
+@using Blockcore.Features.Wallet.Events
+@using Blockcore.Signals
+
+@inject IWalletManager WalletManager
+@inject NavigationManager NavigationManager
+@inject ChainIndexer ChainIndexer
+@inject IWalletSyncManager WalletSyncManager
+@inject IBroadcasterManager BroadcasterManager
+@inject Network Network
+@inject IPooledTransaction PooledTransaction
+@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+@inject ModalService ModalService
+@inject ISignals Signals
+
+@{
+    @if (!this.WalletManager.ContainsWallets)
+    {
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2"><strong>No wallets available</strong></h1>
+        </div>
+    }
+    else
+    {
+         var currentwallets = ReadCurrentWallets();
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2"><strong>Wallet : @walletname </strong></h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(); }">
+                    <span class="oi oi-grid-three-up" aria-hidden="true"></span> Wallets
+                </button>
+
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-xl-6 col-sm-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">@walletname Balance</h5>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var totalConfirmed = currentwallets.Sum(w => w.Value.AccountBalance.AmountConfirmed);
+                            var totalUnconfirmed = currentwallets.Sum(w => w.Value.AccountBalance.AmountUnconfirmed);
+                            <div class="row">
+                                <div class="col-12">
+
+                                    <div class="d-flex align-items-center align-self-start">
+                                        <h3 class="text-left">@Money.Satoshis(totalConfirmed)</h3>
+                                        <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <h6 class="text-left text-muted font-weight-normal">@Money.Satoshis(totalUnconfirmed) (unconfirmed)</h6>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-sm-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Wallet Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="d-flex align-items-center align-self-start">
+                                    <h3 class="text-left">@this.WalletSyncManager.WalletTip.Height / @ChainIndexer.Height</h3>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="icon icon-box-success">
+                                    @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+                                    {
+                                        <h3 class="oi oi-circle-x text-danger" aria-hidden="true"></h3>
+                                    }
+                                    else
+                                    {
+                                        <h3 class="oi oi-circle-check text-success" aria-hidden="true"></h3>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+                        {
+                            <h6 class="text-left text-danger font-weight-normal">Chain Syncing</h6>
+                        }
+                        else
+                        {
+                            <h6 class="text-left text-success font-weight-normal">Chain Synced</h6>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Accounts</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive small">
+                            <table class="table table-border-bottom table-striped table-sm table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th class="text-primary"><strong>Account Name</strong></th>
+                                        <th class="text-primary"><strong>CONFIRMED BALANCE</strong></th>
+                                        <th class="text-primary"><strong>UNCONFIRMED BALANCE</strong></th>
+                                        <th class="text-primary text-center"><strong>DETAILS</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var _account in this.WalletManager.GetAccounts(walletname))
+                                        {
+                                            var accountBalance = this.WalletManager.GetBalances(walletname, _account.Name).Single();
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <button class="btn btn-sm btn-secondary" @onclick="() => { NavigateToWallet(walletname, _account.Name); }">@_account.Name</button>
+                                                </td>
+                                                <td class="align-middle">@accountBalance.AmountConfirmed</td>
+                                                <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
+                                                <td class="text-center align-middle">
+                                                    <button class="btn btn-sm btn-secondary" @onclick="() => { NavigateToWallet(walletname, _account.Name); }"> <span class="oi oi-arrow-right" aria-hidden="true"></span></button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+}
+@code
+{
+    [Parameter]
+    public string walletname { get; set; }
+
+    private void NavigateToWallet()
+    {
+        NavigationManager.NavigateTo("Wallets/");
+    }
+
+    private void NavigateToWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+    }
+
+    private void NavigateToWalletCreate()
+    {
+        NavigationManager.NavigateTo("walletcreate");
+    }
+    private void NavigateToWalletRecover()
+    {
+        NavigationManager.NavigateTo("walletrecover");
+    }
+
+    private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadCurrentWallets()
+    {
+        var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
+
+        foreach (var walletName in this.WalletManager.GetWalletsNames())
+        {
+            if (walletName == walletname)
+            {
+
+                foreach (var account in this.WalletManager.GetAccounts(walletName))
+                {
+                    var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
+                    walletBalances.Add(walletName, (accountBalance, account.Name));
+                }
+            }
+        }
+
+        return walletBalances;
+    }
+
+    List<SubscriptionToken> subscriptionTokens;
+
+    public void Dispose()
+    {
+        if (subscriptionTokens != null)
+        {
+            foreach (var subscriptionToken in subscriptionTokens)
+            {
+                subscriptionToken.Dispose();
+            }
+        }
+    }
+
+}

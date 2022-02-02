@@ -1,5 +1,6 @@
 ﻿@page "/walletreceive/{walletname}/{accountname}"
 
+@using Blockcore.Features.Wallet.Api.Models
 @using Blockcore.Features.Wallet.Interfaces
 @using Blockcore.Features.Wallet;
 @using Blockcore.Features.Wallet.Types
@@ -14,52 +15,177 @@
 @inject Network Network
 
 @{
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2"><strong>Receive</strong></h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <Dropdown TItem="string" OnSelected="@OnSelected" >
-            <InitialTip>@walletname</InitialTip>
-            <ChildContent>
-                @{
-                    foreach (var walletName in this.WalletManager.GetWalletsNames()) {
-                        foreach (var account in this.WalletManager.GetAccounts(walletName))
-                        {
-                        <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                        }
-                    }
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>Receive</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname ,accountname); }">
+                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
+            </button>
+            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }">
+                <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+            </button>
+        </div>
+    </div>
+
+    var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="card-title">Address</div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness))
+                {
+                    <div class="col-sm-2"><strong>Address:</strong></div>
+                    <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
                 }
-            </ChildContent>
-        </Dropdown>
-        <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }" >
-          <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
-        </button>
+                else
+                {
+                    <div class="col-sm-2"><strong>Address:</strong></div>
+                    <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
+                }
+            </div>
+        </div>
     </div>
-</div>
 
-var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(walletname, accountname));
+    Types.Wallet wallet = this.WalletManager.GetWallet(walletname);
+    HdAccount account = wallet.GetAccount(accountname);
 
-<div class="card">
-  <div class="m-3">
-      <div class="row">
-          @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) 
-          {
-             <div class="col-sm-2"><strong>Address:</strong></div>
-              <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
-          } else {
-               <div class="col-sm-2"><strong>Address:</strong></div>
-              <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
-          }
+    var accountmodel = new AddressesModel
+            {
+                Addresses = account.GetCombinedAddresses().Select(address =>
+                {
+                    (Money confirmedAmount, Money unConfirmedAmount, bool anyTrx) = address.GetBalances(wallet.walletStore, account.IsNormalAccount());
+
+                    return new AddressModel
+                    {
+                        Address = (bool)(NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) ? address.Bech32Address : address.Address,
+                        // Address =  request.Segwit ? address.Bech32Address : address.Address,
+                        //  Address = address.Address,
+                        IsUsed = anyTrx,
+                        IsChange = address.IsChangeAddress(),
+                        AmountConfirmed = confirmedAmount,
+                        AmountUnconfirmed = unConfirmedAmount
+                    };
+                })
+            };
+
+    <div class="row mb-3">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">
+                        Account Address
+                    </h5>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowUsedAddress">Used</button>
+                        <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowUnUsedAddress">UnUsed</button>
+                        <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowIsChangedAddress">Changed</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary"><strong>Address</strong></th>
+                                    <th class="text-primary text-center"><strong>confirmed amount</strong></th>
+                                    <th class="text-primary text-center"><strong>unconfirmed amount</strong></th>
+                                </tr>
+                            </thead>
+
+                            @if (_ShowTab_UsedAddress)
+                            {
+                                <tbody>
+                                    @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == true))
+                                    {
+
+                                        <tr>
+                                            @* @onclick="ViewTransaction" > *@
+                                            <td><CopyToClipboard Text="@_address.Address" /> </td>
+                                            <td class="text-center">@_address.AmountConfirmed</td>
+                                            <td class="text-center">@_address.AmountUnconfirmed</td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+
+                            }
+
+                            @if (_ShowTab_UnUsedAddress)
+                            {
+                                <tbody>
+                                    @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == false))
+                                    {
+
+                                        <tr>
+                                            @* @onclick="ViewTransaction" > *@
+                                            <td><CopyToClipboard Text="@_address.Address" /> </td>
+                                            <td class="text-center">@_address.AmountConfirmed</td>
+                                            <td class="text-center">@_address.AmountUnconfirmed</td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+
+                            }
+
+                            @if (_ShowTab_IsChanged)
+                            {
+                                <tbody>
+                                    @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsChange == true))
+                                    {
+                                        <tr>
+                                            @* @onclick="ViewTransaction" > *@
+                                            <td><CopyToClipboard Text="@_address.Address" /> </td>
+                                            <td class="text-center">@_address.AmountConfirmed</td>
+                                            <td class="text-center">@_address.AmountUnconfirmed</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+
 }
 
 @code {
-
     [Parameter]
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
+
+
+    public Boolean _ShowTab_UsedAddress = true;
+    public Boolean _ShowTab_UnUsedAddress = false;
+    public Boolean _ShowTab_IsChanged = false;
+
+    private void tabShowUsedAddress()
+    {
+        _ShowTab_UsedAddress = true;
+        _ShowTab_UnUsedAddress = false;
+        _ShowTab_IsChanged = false;
+    }
+
+    private void tabShowUnUsedAddress()
+    {
+        _ShowTab_UsedAddress = false;
+        _ShowTab_UnUsedAddress = true;
+        _ShowTab_IsChanged = false;
+    }
+
+    private void tabShowIsChangedAddress()
+    {
+        _ShowTab_UsedAddress = false;
+        _ShowTab_UnUsedAddress = false;
+        _ShowTab_IsChanged = true;
+    }
+
     private void NavigateToWallet(string walletName, string accountname)
     {
         NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
@@ -75,6 +201,6 @@ var result = this.WalletManager.GetUnusedAddress(new WalletAccountReference(wall
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToWallet(selection,"account 0");
+
     }
 }

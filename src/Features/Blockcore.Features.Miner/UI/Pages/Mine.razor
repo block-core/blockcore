@@ -1,0 +1,290 @@
+﻿@page "/mine"
+
+@using BlockBlockcore.Features.Miner.UI
+@using Blockcore.Configuration
+@using Blockcore.Consensus
+@using Blockcore.Features.Miner.Api.Models
+@using Blockcore.Features.Wallet.Exceptions
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Features.Miner
+@using Blockcore.Features.Miner.Interfaces
+@using Blockcore.Features.Wallet.Types
+@using Blockcore.Networks
+@using NBitcoin
+@using System.Text
+@using static System.Net.WebRequestMethods
+@inject IWalletSyncManager WalletSyncManager
+@inject IWalletManager WalletManager
+@inject NavigationManager NavigationManager
+@inject MiningFeature MiningFeature
+@inject IPowMining PowMining
+@inject Network Network
+@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+
+@if (!this.WalletManager.ContainsWallets)
+{
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>No wallets available</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>Mining</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
+    </div>
+    var wallets = ReadWallets();
+    var totalConfirmed = wallets.Sum(w => w.Value.AmountConfirmed);
+    var totalUnconfirmed = wallets.Sum(w => w.Value.AmountUnconfirmed);
+    <div class="row mb-3">
+        <div class="col-xl-6 col-sm-6 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Main Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@Money.Satoshis(totalConfirmed) </h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@Money.Satoshis(totalUnconfirmed) (unconfirmed)</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-sm-6 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Mining Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="d-flex align-items-center align-self-start">
+                                @if (IsStarting)
+                                {
+                                    <h3 class="text-left text-success">@StatusMining</h3>
+                                }
+                                else
+                                {
+                                    <h3 class="text-left text-warning">@StatusMining</h3>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">Current Network : @this.Network.CoinTicker.ToUpper()</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-xl-12 col-sm-12 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Generate Mining</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="input-group">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span style="min-width: 10em" class="input-group-text" id="basic-addon1">blockCount:</span>
+                            </div>
+                            <input @bind="blockCount" type="text" class="form-control bg-secondary text-light" placeholder="Please enter number of blocks will be mined." />
+                        </div>
+                    </div>
+                    <h6 class="text-left text-danger">@Alert</h6>
+                </div>
+                <div class="card-footer">
+                    @if (IsStarting)
+                    {
+                        <button class="btn btn-danger" @onclick="StopMining">
+                            <span class="spinner-border spinner-border-sm"></span>
+                            Stop Mining
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="callStartMining">Start Mining</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code
+{
+    Boolean MiningEnabled { get; set; }
+    string StatusMining { get; set; }
+    string Alert { get; set; }
+    int blockCount { get; set; }
+    protected override void OnInitialized()
+    {
+        StatusMining = "Ready to Mine";
+        Alert = "";
+        MiningNotification.MiningChanged += MiningChanged;
+        this.LoadStats();
+    }
+    private void MiningChanged(object sender, bool e)
+    {
+        MiningNotification.OnChangedStatus = e;
+    }
+
+    private Dictionary<string, (Money AmountConfirmed, Money AmountUnconfirmed)> ReadWallets()
+    {
+        var walletBalances = new Dictionary<string, (Money AmountConfirmed, Money AmountUnconfirmed)>();
+
+        foreach (var walletName in this.WalletManager.GetWalletsNames())
+        {
+            var items = this.WalletManager.GetSpendableTransactionsInWalletForStaking(walletName, 1);
+
+            var amountConfirmed = items.Where(s => s.Confirmations > 0).Sum(s => s.Transaction.Amount);
+            var amountUnconfirmed = items.Where(s => s.Confirmations <= 0).Sum(s => s.Transaction.Amount);
+
+            walletBalances.Add(walletName, (Money.Satoshis(amountConfirmed), Money.Satoshis(amountUnconfirmed)));
+        }
+
+        return walletBalances;
+    }
+    private readonly IConsensusManager consensusManager;
+    public const string LastPowBlockExceededMessage = "This is a POS node and mining is not allowed past block {0}";
+    public MinerSettings minerSettings;
+    private async void LoadStats()
+    {
+
+        if (MiningNotification.OnChangedStatus == true)
+        {
+            StatusMining = "Mining...";
+            IsStarting = true;
+            StateHasChanged();
+            return;
+        }
+
+        minerSettings = new MinerSettings(NodeSettings.Default(this.Network));
+        MiningEnabled = minerSettings.Mine;
+
+        if (MiningEnabled)
+        {
+            try
+            {
+                if (!CheckBeforMine())
+                {
+                    return;
+                }
+
+                await callStartMining();
+            }
+            catch { }
+        }
+    }
+    private Boolean CheckBeforMine()
+    {
+
+        if (this.InitialBlockDownloadState.IsInitialBlockDownload())
+        {
+            Alert = "Chain Syncing. Please wait until Sync is complete ...";
+            return false;
+        }
+
+        if (this.Network.Consensus.IsProofOfStake && (this.WalletSyncManager.WalletTip.Height > this.Network.Consensus.LastPOWBlock))
+        {
+            Alert = string.Format(LastPowBlockExceededMessage, this.Network.Consensus.LastPOWBlock);
+            return false;
+        }
+
+        if (minerSettings.BlockDefinitionOptions.BlockMaxSize < 1)
+        {
+            Alert = "Invalid request \n " + "The number of blocks to mine must be higher than zero.";
+            return false;
+        }
+        return true;
+    }
+    private async void StopMining()
+    {
+        await Task.Delay(1000);
+        StatusMining = "Stop";
+        Alert = "";
+        IsStarting = false;
+        this.PowMining?.StopMining();
+        MiningNotification.MiningChanged(this, false);
+    }
+
+    internal WalletAccountReference GetAccount()
+    {
+        string walletName = this.WalletManager.GetWalletsNames().FirstOrDefault();
+        HdAccount account = this.WalletManager.GetAccounts(walletName).FirstOrDefault();
+        var walletAccountReference = new WalletAccountReference(walletName, account.Name);
+        return walletAccountReference;
+    }
+
+    private async Task StartMining()
+    {
+        if (blockCount < 1) { this.Alert = " The number of blocks to mine must be higher than zero "; return; }
+
+        if (!CheckBeforMine())
+        {
+            return;
+        }
+
+        MiningNotification.MiningChanged(this, true);
+        StatusMining = "Mining...";
+        IsStarting = true;
+        try
+        {
+
+            StateHasChanged();
+            await Task.Run(() => GenerateBlock());
+            StateHasChanged();
+        }
+        catch
+        {
+            MiningNotification.MiningChanged(this, false);
+            IsStarting = false;
+            StatusMining = "Stop";
+
+            return;
+        }
+        await Task.CompletedTask;
+    }
+    private void GenerateBlock()
+    {
+        try
+        {
+            WalletAccountReference accountReference = this.GetAccount();
+            HdAddress address = this.WalletManager.GetUnusedAddress(accountReference);
+            var generateBlocksModel = new GenerateBlocksModel
+                {
+                    Blocks = this.PowMining?.GenerateBlocks(new ReserveScript(address.Pubkey), (ulong)blockCount, int.MaxValue)
+                };
+            if (StatusMining.ToLower() == "stop".ToLower())
+            {
+                return;
+            }
+
+            IsStarting = false;
+            StatusMining = "The mine was completed";
+        }
+        catch
+        {
+
+        }
+
+    }
+    private bool IsStarting { get; set; }
+    private async Task callStartMining()
+    {
+        IsStarting = true;
+        StateHasChanged();
+        await Task.Delay(1);  // flush changes
+        await StartMining();
+        IsStarting = false;
+        StateHasChanged();
+        await Task.Delay(1);
+    }
+}

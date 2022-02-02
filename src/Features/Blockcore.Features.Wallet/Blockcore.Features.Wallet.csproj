@@ -28,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Api\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="AddressBook\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,128 @@
+﻿@using Blockcore.Features.Wallet.AddressBook
+@using Blockcore.Features.Wallet.Exceptions
+@using Blockcore.Features.Wallet.Interfaces
+@using NBitcoin;
+@using Blockcore.Features.Wallet.Api.Controllers
+@using Blockcore.UI.BlazorModal
+
+
+@inject IAddressBookManager addressBookManager
+@inject NavigationManager NavigationManager
+@inject IWalletManager WalletManager
+@inject Blockcore.Utilities.IDateTimeProvider DateTimeProvider
+@inject IWalletSyncManager WalletSyncManager
+@inject ModalService ModalService
+
+
+
+@if (ShowForm)
+{
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-success"> Are you sure to delete @ModalService.Parameter.ToString().Split(Convert.ToChar("|"))[2] ? </h5>
+                    <h5 class="text-success">@Alert</h5>
+                </div>
+            </div>
+            <div class="card-footer">
+                @if (IsSubmitting)
+                {
+                    <div class="row">
+                        <button class="btn btn-danger" disabled>
+                            <span class="spinner-border spinner-border-sm"></span> Working ......
+                        </button>
+                    </div>
+
+
+                }
+                else
+                {
+
+                    <button class="btn btn-danger" @onclick="callRemoveddressBook">Yes</button>
+                    <button class="btn btn-warning" @onclick="CloseModalCanselRemove">No</button>
+                }
+            </div>
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-success">@Alert</h5>
+
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    bool ShowForm { get; set; } = true;
+    string Label { get; set; }
+    string Address { get; set; }
+    string Alert { get; set; }
+    private bool IsSubmitting { get; set; }
+    private async Task callRemoveddressBook()
+    {
+        IsSubmitting = true;
+        StateHasChanged();
+        await Task.Delay(1);  // flush changes
+        await RemoveddressBook();
+        IsSubmitting = false;
+        StateHasChanged();
+        await Task.Delay(10);
+    }
+
+
+
+    private async Task RemoveddressBook()
+    {
+
+        try
+        {
+            string _Label = ModalService.Parameter.ToString().Split(Convert.ToChar("|"))[2];
+
+            AddressBookEntry removedEntry = this.addressBookManager.RemoveAddress(_Label);
+
+            if (removedEntry == null)
+            {
+                this.Alert = $"No item with label '{_Label}' was found in the address book.";
+                return;
+            }
+
+
+            this.Alert = "Your AddressBook has now been Deleted.";
+            ShowForm = false;
+
+        }
+        catch
+        {
+            this.Alert = "There was a problem removing an address from the address book.";
+        }
+        await Task.CompletedTask;
+    }
+
+    private void CloseModal()
+    {
+
+        ModalService.Close();
+        NavigationManager.NavigateTo("walletsend/" + ModalService.Parameter.ToString().Split(Convert.ToChar("|"))[0] + "/" + ModalService.Parameter.ToString().Split(Convert.ToChar("|"))[1]);
+        AddressBookNotification.AddressBookChanged(this, true);
+
+    }
+     private void CloseModalCanselRemove()
+    {
+
+        ModalService.Close();
+
+    }
+    
+}

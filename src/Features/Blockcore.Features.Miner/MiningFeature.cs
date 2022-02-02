@@ -265,6 +265,7 @@ namespace Blockcore.Features.Miner
                         services.AddSingleton<BlockDefinition, PosPowBlockDefinition>();
                         services.AddSingleton<MinerSettings>();
                         services.AddSingleton<INavigationItem, StakeNavigationItem>();
+                        services.AddSingleton<INavigationItem, MineNavigationItem>();
                         services.AddSingleton<IClientEventBroadcaster, StakingBroadcaster>();
                     });
             });

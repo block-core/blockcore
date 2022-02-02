@@ -1,5 +1,6 @@
 ﻿using Blockcore.Interfaces.UI;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Networks;
 
 namespace Blockcore.Features.Wallet.UI
 {

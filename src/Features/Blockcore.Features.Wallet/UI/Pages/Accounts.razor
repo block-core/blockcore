@@ -29,14 +29,11 @@
     {
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"><strong>No wallets available</strong></h1>
-
         </div>
     }
     else
     {
-
-        var _wallets = ReadAllWallets();
-        var currentwallets = ReadCurrentWallets();
+         var currentwallets = ReadCurrentWallets();
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2"><strong>Wallet : @walletname </strong></h1>
@@ -160,13 +157,10 @@
     [Parameter]
     public string walletname { get; set; }
 
-
-
     private void NavigateToWallet()
     {
         NavigationManager.NavigateTo("Wallets/");
     }
-
 
     private void NavigateToWallet(string walletName, string accountname)
     {
@@ -181,52 +175,7 @@
     {
         NavigationManager.NavigateTo("walletrecover");
     }
-    private void Resync()
-    {
-        this.WalletSyncManager.SyncFromHeight(1);
-    }
-    private async Task Rebroadcast()
-    {
-        foreach (string walletName in this.WalletManager.GetWalletsNames())
-        {
-            foreach (var unspentOutput in this.WalletManager.GetSpendableTransactionsInWallet(walletName, confirmations: 0))
-            {
-                if (unspentOutput.Confirmations == 0)
-                {
-                    var sent = await this.BroadcasterManager.BroadcastTransactionAsync(unspentOutput.Transaction.Id);
 
-                    if (!sent)
-                    {
-                        if (!string.IsNullOrEmpty(unspentOutput.Transaction.Hex))
-                        {
-                            var trx = this.Network.Consensus.ConsensusFactory.CreateTransaction(unspentOutput.Transaction.Hex);
-                            this.BroadcasterManager.BroadcastTransactionAsync(trx).GetAwaiter().GetResult();
-                        }
-                    }
-                    else
-                    {
-                        var transaction = await this.PooledTransaction.GetTransaction(unspentOutput.Transaction.Id);
-                        this.BroadcasterManager.BroadcastTransactionAsync(transaction).GetAwaiter().GetResult();
-                    }
-                }
-            }
-        }
-    }
-    private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadAllWallets()
-    {
-        var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
-
-        foreach (var walletName in this.WalletManager.GetWalletsNames())
-        {
-            foreach (var account in this.WalletManager.GetAccounts(walletName))
-            {
-                var accountBalance = this.WalletManager.GetBalances(walletName, account.Name).Single();
-                walletBalances.Add(walletName, (accountBalance, account.Name));
-            }
-        }
-
-        return walletBalances;
-    }
     private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadCurrentWallets()
     {
         var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();
@@ -246,47 +195,8 @@
 
         return walletBalances;
     }
-    private dynamic InSync()
-    {
-        decimal wt = (decimal)this.WalletSyncManager.WalletTip.Height;
-        decimal ct = (decimal)this.ChainIndexer.Height;
-
-        dynamic syncPercent = 0;
-        syncPercent = (int)(((decimal)wt / (decimal)ct) * 100);
-        return syncPercent;
-    }
-
-
-
 
     List<SubscriptionToken> subscriptionTokens;
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender && this.Signals != null)
-        {
-            this.subscriptionTokens = new List<SubscriptionToken>()
-{
-                this.Signals.Subscribe<TransactionFound>(this.ReloadEvent),
-                this.Signals.Subscribe<TransactionSpent>(this.ReloadEvent),
-            };
-        }
-    }
-
-
-
-
-    DateTime lastRefresh = DateTime.UtcNow;
-
-    private void ReloadEvent(object _)
-    {
-        if ((DateTime.UtcNow - lastRefresh).Seconds > 1)
-        {
-            lastRefresh = DateTime.UtcNow;
-
-            InvokeAsync(this.StateHasChanged);
-        }
-    }
 
     public void Dispose()
     {

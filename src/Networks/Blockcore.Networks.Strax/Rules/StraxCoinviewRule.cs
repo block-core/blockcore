@@ -139,5 +139,60 @@ namespace Blockcore.Networks.Strax.Rules
 
             // Otherwise allow the spend (do nothing).
         }
+
+        protected override uint GetP2SHSignatureOperationsCount(Transaction transaction, UnspentOutputSet inputs)
+        {
+            if (transaction.IsCoinBase)
+                return 0;
+
+            uint sigOps = 0;
+            for (int i = 0; i < transaction.Inputs.Count; i++)
+            {
+                TxOut prevout = inputs.GetOutputFor(transaction.Inputs[i]);
+                if (prevout.ScriptPubKey.IsScriptType(ScriptType.P2SH))
+                    sigOps += this.GetSigOpCount(prevout.ScriptPubKey, this.Parent.Network, transaction.Inputs[i].ScriptSig);
+            }
+
+            return sigOps;
+        }
+
+        private uint GetSigOpCount(Script script, Network network, Script scriptSig)
+        {
+            if (!script.IsScriptType(ScriptType.P2SH))
+                return script.GetSigOpCount(true);
+            // This is a pay-to-script-hash scriptPubKey;
+            // get the last item that the scriptSig
+            // pushes onto the stack:
+            bool validSig = new PayToScriptHashTemplate().CheckScriptSig(network, scriptSig, script);
+            return !validSig ? 0 : this.GetSigOpCount(new Script(scriptSig.ToOps().Last().PushData), true, network);
+            // ... and return its opcount:
+        }
+
+        private uint GetSigOpCount(Script script, bool fAccurate, Network network = null)
+        {
+            if (network is not StraxBaseNetwork straxNetwork)
+            {
+                throw new System.InvalidCastException($"Expected type {nameof(StraxBaseNetwork)}");
+            }
+
+            uint n = 0;
+            Op lastOpcode = null;
+            foreach (Op op in script.ToOps())
+            {
+                if (op.Code == OpcodeType.OP_CHECKSIG || op.Code == OpcodeType.OP_CHECKSIGVERIFY)
+                    n++;
+                else if (op.Code == OpcodeType.OP_CHECKMULTISIG || op.Code == OpcodeType.OP_CHECKMULTISIGVERIFY)
+                {
+                    if (fAccurate && straxNetwork?.Federations != null && lastOpcode.Code == OpcodeType.OP_NOP9) // OpcodeType.OP_FEDERATION)
+                        n += (uint)straxNetwork.Federations.GetOnlyFederation().GetFederationDetails().transactionSigningKeys.Length;
+                    else if (fAccurate && lastOpcode != null && lastOpcode.Code >= OpcodeType.OP_1 && lastOpcode.Code <= OpcodeType.OP_16)
+                        n += (lastOpcode.PushData == null || lastOpcode.PushData.Length == 0) ? 0U : (uint)lastOpcode.PushData[0];
+                    else
+                        n += 20;
+                }
+                lastOpcode = op;
+            }
+            return n;
+        }
     }
 }

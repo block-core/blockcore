@@ -567,9 +567,6 @@ namespace Blockcore.Features.ColdStaking
 
                 if (prevscript.IsScriptType(ScriptType.P2SH) || prevscript.IsScriptType(ScriptType.P2WSH))
                 {
-                    if (item.Address.RedeemScript == null)
-                        throw new WalletException("Missing redeem script");
-
                     if (item.Address.RedeemScripts == null)
                         throw new WalletException("Wallet has no redeem scripts");
 
@@ -684,7 +681,6 @@ namespace Blockcore.Features.ColdStaking
                                 || walletIndexItem.Value.ScriptToAddressLookup.TryGetValue(coldPubKey.ScriptPubKey, out address))
                                 {
                                     Script destination = ColdStakingScriptTemplate.Instance.GenerateScriptPubKey(hotPubKey, coldPubKey);
-                                    address.RedeemScript = destination;
 
                                     if (address.RedeemScripts == null)
                                         address.RedeemScripts = new List<Script>();
@@ -727,16 +723,14 @@ namespace Blockcore.Features.ColdStaking
         {
             base.AddAddressToIndex(wallet, address);
 
-            if (address.RedeemScript != null)
+            if (address.RedeemScriptObsolete != null)
             {
-                // The redeem script has no indication on the script type (P2SH or P2WSH),
-                // so we track both, add both to the indexer then.
+                // this is to support legacy wallet that still have the RedeemScript set
+                // we just push it to the RedeemScripts collection and go on as usual.
+                if (address.RedeemScripts == null)
+                    address.RedeemScripts = new List<Script>();
 
-                if (!this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(address.RedeemScript.Hash.ScriptPubKey, out HdAddress _))
-                    this.walletIndex[wallet.Name].ScriptToAddressLookup[address.RedeemScript.Hash.ScriptPubKey] = address;
-
-                if (!this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(address.RedeemScript.WitHash.ScriptPubKey, out HdAddress _))
-                    this.walletIndex[wallet.Name].ScriptToAddressLookup[address.RedeemScript.WitHash.ScriptPubKey] = address;
+                address.RedeemScripts.Add(address.RedeemScriptObsolete);
             }
 
             if (address.RedeemScripts != null)

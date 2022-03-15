@@ -947,9 +947,6 @@ namespace Blockcore.Features.Miner.Staking
                 if (PayToScriptHashTemplate.Instance.CheckScriptPubKey(input.TxOut.ScriptPubKey) ||
                     PayToWitScriptHashTemplate.Instance.CheckScriptPubKey(input.TxOut.ScriptPubKey))
                 {
-                    if (input.Address.RedeemScript == null)
-                        throw new MinerException("Redeem script does not match output");
-
                     if (input.Address.RedeemScripts == null)
                         throw new MinerException("Wallet has no redeem scripts");
 

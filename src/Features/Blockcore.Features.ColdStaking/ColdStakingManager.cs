@@ -392,6 +392,8 @@ namespace Blockcore.Features.ColdStaking
                 if (payToScript)
                 {
                     HdAddress address = coldAddress ?? hotAddress;
+                    if (address.RedeemScripts == null) 
+                        address.RedeemScripts = new List<Script>();
                     address.RedeemScripts.Add(destination);
                     destination = destination.WitHash.ScriptPubKey;
                 }
@@ -405,6 +407,8 @@ namespace Blockcore.Features.ColdStaking
                 if (payToScript)
                 {
                     HdAddress address = coldAddress ?? hotAddress;
+                    if (address.RedeemScripts == null)
+                        address.RedeemScripts = new List<Script>();
                     address.RedeemScripts.Add(destination);
                     destination = destination.Hash.ScriptPubKey;
                 }

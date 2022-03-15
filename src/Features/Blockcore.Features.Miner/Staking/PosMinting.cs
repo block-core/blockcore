@@ -958,9 +958,7 @@ namespace Blockcore.Features.Miner.Staking
                     if (redeemScript == null)
                         throw new MinerException($"RedeemScript was not found for address {input.Address.Address} with output {input.TxOut.ScriptPubKey}");
 
-                    // var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, redeemScript);
-
-                    var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, input.Address.RedeemScript);
+                     var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, redeemScript);
 
                     transactionBuilder.AddCoins(scriptCoin);
                 }

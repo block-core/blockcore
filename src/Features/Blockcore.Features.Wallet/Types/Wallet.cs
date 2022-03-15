@@ -943,8 +943,8 @@ namespace Blockcore.Features.Wallet.Types
         /// This solves issue https://github.com/block-core/blockcore/issues/395
         /// </summary>
         [JsonProperty(PropertyName = "redeemScripts")]
-        [JsonConverter(typeof(ScriptJsonConverter))]
-        public List<Script> RedeemScripts { get; set; }
+        [JsonConverter(typeof(ScriptCollectionJsonConverter))]
+        public ICollection<Script> RedeemScripts { get; set; }
 
         /// <summary>
         /// A path to the address as defined in BIP44.

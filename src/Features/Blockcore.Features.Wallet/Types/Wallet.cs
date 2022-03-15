@@ -940,7 +940,7 @@ namespace Blockcore.Features.Wallet.Types
 
         /// <summary>
         /// A collection of scripts that is used for P2SH and P2WSH scenarios (mostly used for cold staking).
-        /// This solves issue https://github.com/block-core/blockcore-indexer/issues/123
+        /// This solves issue https://github.com/block-core/blockcore/issues/395
         /// </summary>
         [JsonProperty(PropertyName = "redeemScripts")]
         [JsonConverter(typeof(ScriptJsonConverter))]

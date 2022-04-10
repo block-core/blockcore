@@ -21,7 +21,7 @@ app {
 }
 
 .top-row {
-    height: 3.5rem;
+    /* height: 3.5rem; */
     display: flex;
     align-items: center;
 }
@@ -49,7 +49,7 @@ app {
 .sidebar {
     /* background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #375d7d 70%); */
     min-width: 250px;
-    max-width: 250px;
+    /* max-width: 250px; */
 }
 
     .sidebar .top-row {

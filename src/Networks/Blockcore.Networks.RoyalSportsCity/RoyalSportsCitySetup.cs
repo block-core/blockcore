@@ -47,7 +47,7 @@ namespace Blockcore.Networks.RoyalSportsCity
             HashGenesisBlock = "000009b276ed4815cf1fde9078f2d21facd5ece23e6ccfb31c7f90f87563010f",
             HashMerkleRoot = "d8575410f6b019171ff0b4548814e7ae6fc3dd837d5ecc71d77bb21866ddb210",
             DNS = new[] { "seed.royalsportscity.com", "seed.royalsportscity.net" },
-            Nodes = new[] { "185.235.42.42", "185.235.41.212", "185.235.41.47", "185.235.41.174", "194.5.206.90", "194.5.193.64", "130.185.121.208", "130.185.121.143","185.235.40.129","185.235.42.167","194.5.193.77","130.185.120.199","130.185.121.109", "194.5.207.244", "194.5.207.190", "185.235.41.141", "130.185.120.45", "185.235.43.17" },
+            Nodes = new[] { "188.40.181.18","66.70.246.43","135.181.188.105","141.94.32.115","173.45.117.245","46.105.172.12","51.89.132.133","152.228.148.188" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.
@@ -73,7 +73,7 @@ namespace Blockcore.Networks.RoyalSportsCity
             HashGenesisBlock = "00007a766fd57aef404cc1ae16d74f616074c924d41aeed23e727f9a00b83c01",
             HashMerkleRoot = "f547b27d5390b11f578ff3b0855b9b21547bbca3b54f39820c2de371001ea71f",
             DNS = new[] { "seedregtest.royalsportscity.com", "seedregtest.royalsportscity.net" },
-            Nodes = new[] { "185.235.42.42", "185.235.41.212", "185.235.41.47", "185.235.41.174", "194.5.206.90", "194.5.193.64", "130.185.121.208", "130.185.121.143", "185.235.40.129", "185.235.42.167", "194.5.193.77", "130.185.120.199", "130.185.121.109", "194.5.207.244", "194.5.207.190", "185.235.41.141", "130.185.120.45", "185.235.43.17" },
+            Nodes = new[] { "188.40.181.18","66.70.246.43","135.181.188.105","141.94.32.115","173.45.117.245","46.105.172.12","51.89.132.133","152.228.148.188" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.
@@ -99,7 +99,7 @@ namespace Blockcore.Networks.RoyalSportsCity
             HashGenesisBlock = "0004e385d4eb63c3a8f2a190117330a3dbef67782b33a5a29e1b554ed357d5df",
             HashMerkleRoot = "92711a71fa912dd3419c5e52bee7edc64ce1d60260ba76664f49c39367734d83",
             DNS = new[] { "seedtest.royalsportscity.com", "seedtest.royalsportscity.net" },
-            Nodes = new[] { "185.235.42.42", "185.235.41.212", "185.235.41.47", "185.235.41.174", "194.5.206.90", "194.5.193.64", "130.185.121.208", "130.185.121.143", "185.235.40.129", "185.235.42.167", "194.5.193.77", "130.185.120.199", "130.185.121.109", "194.5.207.244", "194.5.207.190", "185.235.41.141", "130.185.120.45", "185.235.43.17" },
+            Nodes = new[] { "188.40.181.18","66.70.246.43","135.181.188.105","141.94.32.115","173.45.117.245","46.105.172.12","51.89.132.133","152.228.148.188" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.

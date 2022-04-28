@@ -930,9 +930,21 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// A script that is used for P2SH and P2WSH scenarios (mostly used for staking).
         /// </summary>
+        /// <remarks>
+        /// Obsolete: This is kept for legacy reasons, use the the <see cref="RedeemScripts"/> property instead.
+        /// </remarks>
         [JsonProperty(PropertyName = "redeemScript")]
         [JsonConverter(typeof(ScriptJsonConverter))]
-        public Script RedeemScript { get; set; }
+        [ObsoleteAttribute("This is kept for legacy reasons, use the the RedeemScripts property instead.")]
+        public Script RedeemScriptObsolete { get; set; }
+
+        /// <summary>
+        /// A collection of scripts that is used for P2SH and P2WSH scenarios (mostly used for cold staking).
+        /// This solves issue https://github.com/block-core/blockcore/issues/395
+        /// </summary>
+        [JsonProperty(PropertyName = "redeemScripts")]
+        [JsonConverter(typeof(ScriptCollectionJsonConverter))]
+        public ICollection<Script> RedeemScripts { get; set; }
 
         /// <summary>
         /// A path to the address as defined in BIP44.

@@ -947,10 +947,15 @@ namespace Blockcore.Features.Miner.Staking
                 if (PayToScriptHashTemplate.Instance.CheckScriptPubKey(input.TxOut.ScriptPubKey) ||
                     PayToWitScriptHashTemplate.Instance.CheckScriptPubKey(input.TxOut.ScriptPubKey))
                 {
-                    if (input.Address.RedeemScript == null)
-                        throw new MinerException("Redeem script does not match output");
+                    if (input.Address.RedeemScripts == null)
+                        throw new MinerException("Wallet has no redeem scripts");
 
-                    var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, input.Address.RedeemScript);
+                    Script redeemScript = input.Address.RedeemScripts.FirstOrDefault(r => r.Hash.ScriptPubKey == input.TxOut.ScriptPubKey || r.WitHash.ScriptPubKey == input.TxOut.ScriptPubKey);
+
+                    if (redeemScript == null)
+                        throw new MinerException($"RedeemScript was not found for address {input.Address.Address} with output {input.TxOut.ScriptPubKey}");
+
+                     var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, redeemScript);
 
                     transactionBuilder.AddCoins(scriptCoin);
                 }
@@ -968,7 +973,7 @@ namespace Blockcore.Features.Miner.Staking
             }
             catch (Exception e)
             {
-                this.logger.LogDebug("Exception occurred: {0}", e.ToString());
+                this.logger.LogWarning("Exception occurred: {0}", e.ToString());
             }
 
             return res;

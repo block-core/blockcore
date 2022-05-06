@@ -92,7 +92,7 @@ namespace Blockcore.Networks.XRC
             this.Consensus = new XRCConsensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
-                coinType: 1,
+                coinType: (int)XRCCoinType.CoinTypes.XRCReg,
                 hashGenesisBlock: genesisBlock.GetHash(),
                 subsidyHalvingInterval: 210000,
                 majorityEnforceBlockUpgrade: 750,
@@ -101,15 +101,15 @@ namespace Blockcore.Networks.XRC
                 buriedDeployments: buriedDeployments,
                 bip9Deployments: new XRCBIP9Deployments(),
                 bip34Hash: new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"),
-                minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing  
+                minerConfirmationWindow: 2016,
                 maxReorgLength: 0,
-                defaultAssumeValid: null, // 1600000 
+                defaultAssumeValid: null,
                 maxMoney: 2100000 * Money.COIN,
                 coinbaseMaturity: 6,
                 premineHeight: 1,
                 premineReward: new Money(1050000 * Money.COIN),
                 proofOfWorkReward: Money.Coins((decimal)2.5),
-                targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
+                targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60),
                 targetSpacing: TimeSpan.FromSeconds(10 * 60),
                 powAllowMinDifficultyBlocks: true,
                 posNoRetargeting: true,

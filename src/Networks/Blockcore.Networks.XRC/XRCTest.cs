@@ -45,11 +45,10 @@ namespace Blockcore.Networks.XRC
             this.DefaultConfigFilename = "xrhodium.conf";
             this.MaxTimeOffsetSeconds = 25 * 60;
             this.CoinTicker = "XRC";
-            this.DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
+            this.DefaultBanTimeSeconds = 16000; 
 
             var consensusFactory = new XRCConsensusFactory();
 
-            // Create the genesis block.
             this.GenesisTime = 1527811200;
             this.GenesisNonce = 0;
             this.GenesisBits = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")).ToCompact();
@@ -82,7 +81,7 @@ namespace Blockcore.Networks.XRC
                 PowLimit2Time = 0,
                 PowLimit2Height = 0,
                 PowDigiShieldX11Height = 16290,
-                PowDigiShieldX11Time = 1648674952
+                PowDigiShieldX11Time = 1651753185
             };
 
             Block genesisBlock = CreateXRCGenesisBlock(consensusFactory, this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, pubKeyTest);
@@ -91,7 +90,7 @@ namespace Blockcore.Networks.XRC
             this.Consensus = new XRCConsensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
-                coinType: 1,
+                coinType: (int)XRCCoinType.CoinTypes.XRCTest,
                 hashGenesisBlock: genesisBlock.GetHash(),
                 subsidyHalvingInterval: 210000,
                 majorityEnforceBlockUpgrade: 750,

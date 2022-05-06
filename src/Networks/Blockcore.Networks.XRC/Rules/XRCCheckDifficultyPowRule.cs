@@ -146,7 +146,9 @@ namespace Blockcore.Networks.XRC.Rules
             ChainedHeader firstBlock = chainedHeaderToValidate.GetAncestor(height - nAveragingInterval);
 
             var XRCConsensusProtocol = (XRCConsensusProtocol)consensus.ConsensusFactory.Protocol;
-            if ((height - XRCConsensusProtocol.PowDigiShieldX11Height) <= (nAveragingInterval + this.MedianTimeSpan))
+
+            if (((height - XRCConsensusProtocol.PowDigiShieldX11Height) <= (nAveragingInterval + this.MedianTimeSpan))
+                && (consensus.CoinType == (int)XRCCoinType.CoinTypes.XRCMain))
             {
                 return new Target(new uint256("000000000001a61a000000000000000000000000000000000000000000000000"));
             }

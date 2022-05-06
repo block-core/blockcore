@@ -14,7 +14,7 @@ using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.XRC
 {
-    public class XRCRegTest : XRCMain
+    public class XRCRegTest : XRCNetwork
     {
         public XRCRegTest()
         {
@@ -36,14 +36,14 @@ namespace Blockcore.Networks.XRC
             this.DefaultMaxInboundConnections = 109;
             this.DefaultRPCPort = 16661;
             this.DefaultAPIPort = 16669;
-            this.MaxTipAge = xRhodiumDefaultMaxTipAgeInSeconds;
+            this.MaxTipAge = 604800;
             this.MinTxFee = 1000;
             this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = 20000;
             this.MinRelayTxFee = 1000;
-            this.RootFolderName = xRhodiumRootFolderName;
-            this.DefaultConfigFilename = xRhodiumDefaultConfigFilename;
-            this.MaxTimeOffsetSeconds = xRhodiumMaxTimeOffsetSeconds;
+            this.RootFolderName = "xrhodium";
+            this.DefaultConfigFilename = "xrhodium.conf";
+            this.MaxTimeOffsetSeconds = 25 * 60;
             this.CoinTicker = "XRC";
             this.DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
@@ -57,9 +57,6 @@ namespace Blockcore.Networks.XRC
             this.GenesisReward = Money.Zero;
 
             var pubKeyMain = "2103d1b6cd5f956ccedf5877c89843a438bfb800468133fb2e73946e1452461a9b1aac";
-            Block genesisBlock = CreateXRCGenesisBlock(consensusFactory, this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, pubKeyMain);
-
-            this.Genesis = genesisBlock;
 
             var consensusOptions = new PosConsensusOptions
             {
@@ -79,11 +76,18 @@ namespace Blockcore.Networks.XRC
                 [BuriedDeployments.BIP66] = 0
             };
 
-            consensusFactory.Protocol = new ConsensusProtocol()
+            consensusFactory.Protocol = new XRCConsensusProtocol()
             {
                 ProtocolVersion = ProtocolVersion.FEEFILTER_VERSION,
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
+                PowLimit2Time = 0,
+                PowLimit2Height = 0,
+                PowDigiShieldX11Height = 0,
+                PowDigiShieldX11Time = 0
             };
+
+            Block genesisBlock = CreateXRCGenesisBlock(consensusFactory, this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, pubKeyMain);
+            this.Genesis = genesisBlock;
 
             this.Consensus = new XRCConsensus(
                 consensusFactory: consensusFactory,
@@ -112,8 +116,6 @@ namespace Blockcore.Networks.XRC
                 powNoRetargeting: false,
                 powLimit: new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
                 powLimit2: new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
-                powLimit2Time: 0,
-                powLimit2Height: 0,
                 minimumChainWork: uint256.Zero,
                 isProofOfStake: false,
                 lastPowBlock: default(int),

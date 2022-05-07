@@ -32,12 +32,10 @@ namespace Blockcore.Node
                                    .Select(arg => arg.Replace("--upgradedbonversion=", string.Empty, ignoreCase: true, CultureInfo.InvariantCulture))
                                    .FirstOrDefault();
 
-                if (version != null && version != "") {
+                var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var x42MainFolder = appDataFolder + "\\Blockcore\\x42\\x42Main";
 
-
-                    var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-                    var x42MainFolder = appDataFolder + "\\Blockcore\\x42\\x42Main";
+                if (version != null && version != "" && Directory.Exists(x42MainFolder)) {
 
                     VersionFileData versionFileData = new VersionFileData() { Version = version, Upgraded = false };
                     string fileName = x42MainFolder + "\\upgrade.json";

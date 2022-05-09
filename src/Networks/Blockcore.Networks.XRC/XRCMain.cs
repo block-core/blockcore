@@ -82,7 +82,7 @@ namespace Blockcore.Networks.XRC
                 PowLimit2Time = 1541879606,
                 PowLimit2Height = 1648,
                 PowDigiShieldX11Height = 136135,
-                PowDigiShieldX11Time = 2541879606
+                PowDigiShieldX11Time = 1652082380
             };
 
             Block genesisBlock = CreateXRCGenesisBlock(consensusFactory, this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, pubKeyMain);

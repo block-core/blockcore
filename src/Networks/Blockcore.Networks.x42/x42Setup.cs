@@ -106,15 +106,15 @@ namespace Blockcore.Networks.x42
             PubKeyAddress = 65,
             ScriptAddress = 196,
             SecretAddress = 65 + 128,
-            GenesisTime = 1591458972,
+            GenesisTime = 1652054199,
             GenesisNonce = 2433759,
             GenesisBits = new Target(new uint256("0000ffff00000000000000000000000000000000000000000000000000000000")),
             GenesisVersion = 1,
             GenesisReward = Money.Zero,
-            HashGenesisBlock = "0xa92bf124a1e6f237015440d5f1e1999bdef8e321f2d3fdc367eb2f7733b17854",
-            HashMerkleRoot = "0xd0695e2d2562e7054b599c053fad4a72997f2e9629a2f9760e57584cf850ae57",
+            HashGenesisBlock = "0x8cfb6674e48320009b1228644fab3fe850d53d073689365c1ecad55d8f77b504",
+            HashMerkleRoot = "0x1d825dbc2ff5f9078885824347d231e54d72733779b0a3563b457c19368018ae",
             DNS = new[] { "testnet1.x42seed.host" },
-            Nodes = new[] { "63.32.82.169", "35.155.194.159" },
+            Nodes = new[] { "18.138.31.117" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 { 0, new CheckpointInfo(new uint256("0x11bd504102b42b24680d7b4f9b9e9521adc1b690253494d108193cdfcdd2ef0b"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) }, // Genisis

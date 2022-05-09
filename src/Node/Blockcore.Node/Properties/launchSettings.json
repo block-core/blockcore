@@ -74,7 +74,7 @@
     },
     "X42 (TEST/LOCAL)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=X42 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -testnet -dbtype=leveldb"
+      "commandLineArgs": "--chain=X42 -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -testnet -dbtype=leveldb --upgradedbonversion=true"
     },
     "XDS (MAIN/LOCAL)": {
       "commandName": "Project",

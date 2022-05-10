@@ -14,7 +14,7 @@ namespace Blockcore.Networks.XRC.Consensus
 
         public override BlockHeader CreateBlockHeader()
         {
-            return new XRCBlockHeader();
+            return new XRCBlockHeader((XRCConsensusProtocol)this.Protocol);
         }
     }
 }

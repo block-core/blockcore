@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
@@ -12,7 +14,7 @@ namespace Blockcore.Networks.XRC.Rules
     public class XRCCheckDifficultyPowRule : HeaderValidationConsensusRule
     {
         private static BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
-
+        int MedianTimeSpan = 11;
         public override void Run(RuleContext context)
         {
             if (!CheckProofOfWork((XRCBlockHeader)context.ValidationContext.ChainedHeaderToValidate.Header))
@@ -47,14 +49,20 @@ namespace Blockcore.Networks.XRC.Rules
             if (chainedHeaderToValidate.Height == 0)
                 return consensus.PowLimit2;
 
+            var XRCConsensusProtocol = (XRCConsensusProtocol)consensus.ConsensusFactory.Protocol;
+
             //hard fork
-            if (chainedHeaderToValidate.Height == consensus.PowLimit2Height + 1)
+            if (chainedHeaderToValidate.Height == XRCConsensusProtocol.PowLimit2Height + 1)
                 return consensus.PowLimit;
+
+            //hard fork 2 - DigiShield + X11
+            if (chainedHeaderToValidate.Height > XRCConsensusProtocol.PowDigiShieldX11Height)
+                return GetWorkRequiredDigiShield(chainedHeaderToValidate, consensus);
 
             Target proofOfWorkLimit;
 
             // Hard fork to higher difficulty
-            if (chainedHeaderToValidate.Height > consensus.PowLimit2Height)
+            if (chainedHeaderToValidate.Height > XRCConsensusProtocol.PowLimit2Height)
             {
                 proofOfWorkLimit = consensus.PowLimit;
             }
@@ -120,6 +128,72 @@ namespace Blockcore.Networks.XRC.Rules
                 finalTarget = proofOfWorkLimit;
 
             return finalTarget;
+        }
+
+        public Target GetWorkRequiredDigiShield(ChainedHeader chainedHeaderToValidate, XRCConsensus consensus)
+        {
+            var nAveragingInterval = 10 * 5; // block
+            var multiAlgoTargetSpacingV4 = 10 * 60; // seconds
+            var nAveragingTargetTimespanV4 = nAveragingInterval * multiAlgoTargetSpacingV4;
+            var nMaxAdjustDownV4 = 16;
+            var nMaxAdjustUpV4 = 8;
+            var nMinActualTimespanV4 = TimeSpan.FromSeconds(nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100);
+            var nMaxActualTimespanV4 = TimeSpan.FromSeconds(nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100);
+
+            var height = chainedHeaderToValidate.Height;
+            Target proofOfWorkLimit = consensus.PowLimit;
+            ChainedHeader lastBlock = chainedHeaderToValidate.Previous;
+            ChainedHeader firstBlock = chainedHeaderToValidate.GetAncestor(height - nAveragingInterval);
+
+            var XRCConsensusProtocol = (XRCConsensusProtocol)consensus.ConsensusFactory.Protocol;
+
+            if (((height - XRCConsensusProtocol.PowDigiShieldX11Height) <= (nAveragingInterval + this.MedianTimeSpan))
+                && (consensus.CoinType == (int)XRCCoinType.CoinTypes.XRCMain))
+            {
+                return new Target(new uint256("000000000001a61a000000000000000000000000000000000000000000000000"));
+            }
+
+            // Limit adjustment step
+            // Use medians to prevent time-warp attacks
+            TimeSpan nActualTimespan = GetAverageTimePast(lastBlock) - GetAverageTimePast(firstBlock);
+            nActualTimespan = TimeSpan.FromSeconds(nAveragingTargetTimespanV4
+                                    + (nActualTimespan.TotalSeconds - nAveragingTargetTimespanV4) / 4);
+
+            if (nActualTimespan < nMinActualTimespanV4)
+                nActualTimespan = nMinActualTimespanV4;
+            if (nActualTimespan > nMaxActualTimespanV4)
+                nActualTimespan = nMaxActualTimespanV4;
+
+            // Retarget.
+            BigInteger newTarget = lastBlock.Header.Bits.ToBigInteger();
+
+            newTarget = newTarget.Multiply(BigInteger.ValueOf((long)nActualTimespan.TotalSeconds));
+            newTarget = newTarget.Divide(BigInteger.ValueOf((long)nAveragingTargetTimespanV4));
+
+            var finalTarget = new Target(newTarget);
+            if (finalTarget > proofOfWorkLimit)
+                finalTarget = proofOfWorkLimit;
+
+            return finalTarget;
+        }
+
+        public DateTimeOffset GetAverageTimePast(ChainedHeader chainedHeaderToValidate)
+        {
+            var median = new List<DateTimeOffset>();
+
+            ChainedHeader chainedHeader = chainedHeaderToValidate;
+            for (int i = 0; i < this.MedianTimeSpan && chainedHeader != null; i++, chainedHeader = chainedHeader.Previous)
+                median.Add(chainedHeader.Header.BlockTime);
+
+            median.Sort();
+
+            DateTimeOffset firstTimespan = median.First();
+            DateTimeOffset lastTimespan = median.Last();
+            TimeSpan differenceTimespan = lastTimespan - firstTimespan;
+            var timespan = differenceTimespan.TotalSeconds / 2;
+            DateTimeOffset averageDateTime = firstTimespan.AddSeconds((long)timespan);
+
+            return averageDateTime;
         }
 
         private long GetDifficultyAdjustmentInterval(IConsensus consensus)

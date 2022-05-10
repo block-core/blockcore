@@ -140,12 +140,18 @@ namespace Blockcore.Networks.XRC
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
 
             this.Checkpoints = new Dictionary<int, CheckpointInfo>();
+            this.Checkpoints.Add(17, new CheckpointInfo(new uint256("2430c4151e10cdc5ccbdea56b909c7c37ab2a852d3e7fb908e0a32493e2ac706")));
+            this.Checkpoints.Add(117, new CheckpointInfo(new uint256("bf3082be3b2da88187ebeb902548b41dbff3bcac6687352e0c47d902acd28e62")));
+            this.Checkpoints.Add(400, new CheckpointInfo(new uint256("20cb04127f12c1ae7a04ee6dc4c7e36f4c85ee2038c92126b3fd537110d96595")));
+            this.Checkpoints.Add(800, new CheckpointInfo(new uint256("df37ca401ecccfc6dedf68ab76a7161496ad93d47c2a474075efb3220e3f3526")));
             this.Checkpoints.Add(2015, new CheckpointInfo(new uint256("574605587514315bf8dac135c093a50e5982cb26e47ac78f2a712b9289f5cc7e")));
             this.Checkpoints.Add(10079, new CheckpointInfo(new uint256("a960cf32c570de76b4a2035831608bf884c3b8dad7a6e77d6a40b5dcb7f84f5e")));
             this.Checkpoints.Add(18143, new CheckpointInfo(new uint256("fb2df6739907716b4a9c20d45f7db968481b76d97a4bd279a14d19d4dad2a18a")));
             this.Checkpoints.Add(26207, new CheckpointInfo(new uint256("90034dfe536ef2c692d9fad3fc95ea16d0b3a004cb23677eb0cc6ba51b38fc40")));
+            this.Checkpoints.Add(26800, new CheckpointInfo(new uint256("c4efd4b6fa294fd72ab6f614dd6705eea43d0a83cd03d597c3214eaaf857a4b6")));
             this.Checkpoints.Add(34271, new CheckpointInfo(new uint256("f8e3cf72102112a26a7af75fff195321226023a2e2617723b5c6259d63d419da")));
             this.Checkpoints.Add(42335, new CheckpointInfo(new uint256("8bbeb434aba05f41ed2f4d4091289d7c6cd4f6e6168dfc207361b3b53d885970")));
+            this.Checkpoints.Add(43034, new CheckpointInfo(new uint256("4df06bd483d2c4ccde5cd1efe3b2ea7d969c41e5923a74c2bba1656a41fc6891")));
             this.Checkpoints.Add(50399, new CheckpointInfo(new uint256("07e3d655eb39be8e1297ff1835aa09ebe68ca2a1c31d9b412ac029f9066e75e1")));
             this.Checkpoints.Add(58463, new CheckpointInfo(new uint256("88b714a59faa29037b1cf63eb35bcd243a60768bb2cc21cfb500c77fe67d3369")));
             this.Checkpoints.Add(66527, new CheckpointInfo(new uint256("113d337fe7b6aa8d059a674bc339506fa9f69e0c390e978582253c6dd9dcd5b6")));
@@ -154,11 +160,11 @@ namespace Blockcore.Networks.XRC
             this.Checkpoints.Add(90719, new CheckpointInfo(new uint256("782ac4559002e425cc63fe71bb1cb89e03305cc1270d2846baa451d4d4bf9c43")));
             this.Checkpoints.Add(98783, new CheckpointInfo(new uint256("53505abcda5dff8278113d67949b260ce6a79a01dd6b775e6cfc50619d7d0656")));
             this.Checkpoints.Add(106847, new CheckpointInfo(new uint256("6661f25d3850a2cb95a2dd3c1eb7752a7ab9f780c745a8b8fd5ce9fba5acfdbf")));
+            this.Checkpoints.Add(110000, new CheckpointInfo(new uint256("d1d1282681f20223a281393528e6c624539e60177ecb42ab4512555974ac7775")));
             this.Checkpoints.Add(114911, new CheckpointInfo(new uint256("f343f45fdff7bede9db8bb10ab1c00ebcd7c173823ef6e49e493ed86e71d2f27")));
             this.Checkpoints.Add(122975, new CheckpointInfo(new uint256("2181671223c47b11f67512e3bc3040eb562da25d5fcbe33cb53d1862cb7bf0dc")));
             this.Checkpoints.Add(131039, new CheckpointInfo(new uint256("81aa79d04b430fc536592f4b6017fae8506869b84b208df655b3d4fe733f5204")));
             this.Checkpoints.Add(136082, new CheckpointInfo(new uint256("2755d2940a031cd27631ad9529ddc96bbbabb4bd0b34be2aa92f92c070d0d417")));
-
 
             this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder("rh");

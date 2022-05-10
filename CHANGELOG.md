@@ -1,3 +1,14 @@
+##  (2022-05-10)
+
+* change nodes IP for SBC and RSC (#394) ([968052b](https://github.com/block-core/blockcore/commit/968052b)), closes [#394](https://github.com/block-core/blockcore/issues/394)
+* Coldstake redeem bug (#396) ([cfeda4a](https://github.com/block-core/blockcore/commit/cfeda4a)), closes [#396](https://github.com/block-core/blockcore/issues/396)
+* Node UI (#399) ([5e5c67a](https://github.com/block-core/blockcore/commit/5e5c67a)), closes [#399](https://github.com/block-core/blockcore/issues/399)
+* Update NuGet packages (#400) ([1a1c2ee](https://github.com/block-core/blockcore/commit/1a1c2ee)), closes [#400](https://github.com/block-core/blockcore/issues/400)
+* update SBC, RSC and CY logos (#401) ([25d68dc](https://github.com/block-core/blockcore/commit/25d68dc)), closes [#401](https://github.com/block-core/blockcore/issues/401)
+* XRC HardFork - X11, DigiShield POW algo (#402) ([59458b4](https://github.com/block-core/blockcore/commit/59458b4)), closes [#402](https://github.com/block-core/blockcore/issues/402)
+
+
+
 ##  (2022-01-30)
 
 * add checkpoints to strax ([cc038cf](https://github.com/block-core/blockcore/commit/cc038cf))

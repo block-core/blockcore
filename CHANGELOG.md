@@ -1,3 +1,9 @@
+##  (2022-05-13)
+
+* Synced PowLimit condition with Official XRC Node (#403) ([baf9929](https://github.com/block-core/blockcore/commit/baf9929)), closes [#403](https://github.com/block-core/blockcore/issues/403)
+
+
+
 ##  (2022-05-10)
 
 * change nodes IP for SBC and RSC (#394) ([968052b](https://github.com/block-core/blockcore/commit/968052b)), closes [#394](https://github.com/block-core/blockcore/issues/394)

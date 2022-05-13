@@ -141,7 +141,7 @@ namespace Blockcore.Networks.XRC.Rules
             var nMaxActualTimespanV4 = TimeSpan.FromSeconds(nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100);
 
             var height = chainedHeaderToValidate.Height;
-            Target proofOfWorkLimit = consensus.PowLimit;
+            Target proofOfWorkLimit = consensus.PowLimit2;
             ChainedHeader lastBlock = chainedHeaderToValidate.Previous;
             ChainedHeader firstBlock = chainedHeaderToValidate.GetAncestor(height - nAveragingInterval);
 

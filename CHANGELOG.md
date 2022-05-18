@@ -1,3 +1,9 @@
+##  (2022-05-18)
+
+* Add sign/verify schnorr using bouncy castle (#404) ([dd61fed](https://github.com/block-core/blockcore/commit/dd61fed)), closes [#404](https://github.com/block-core/blockcore/issues/404)
+
+
+
 ##  (2022-05-13)
 
 * Synced PowLimit condition with Official XRC Node (#403) ([baf9929](https://github.com/block-core/blockcore/commit/baf9929)), closes [#403](https://github.com/block-core/blockcore/issues/403)

@@ -366,7 +366,7 @@ namespace NBitcoin
             ms.Write(bytes, 0, bytes.Length);
         }
 
-        internal static Array BigIntegerToBytes(BigInteger b, int numBytes)
+        internal static byte[] BigIntegerToBytes(BigInteger b, int numBytes)
         {
             if (b == null)
             {

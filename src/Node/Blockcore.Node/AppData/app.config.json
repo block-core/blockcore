@@ -1,0 +1,4 @@
+{
+  "fullNodeEndpoint": "https://xcore-{profile}.xserver.network/api",
+  "xServerEndpoint": "https://xserver-{profile}.xserver.network"
+}

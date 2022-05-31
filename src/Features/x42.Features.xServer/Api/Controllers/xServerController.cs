@@ -7,6 +7,7 @@ using Blockcore.Utilities.ModelStateErrors;
 using x42.Features.xServer.Interfaces;
 using x42.Features.xServer.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace x42.Features.xServer.Api.Controllers
 {
@@ -65,6 +66,38 @@ namespace x42.Features.xServer.Api.Controllers
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
         }
+
+        
+
+        /// <summary>
+        ///     Searches for the xServer by profile name or sign address.
+        /// </summary>
+        /// <returns>A JSON object containing the xServer search result.</returns>
+        [Route("setUpxServer")]
+        [HttpPost]
+        public async Task<IActionResult> SetUpxServer([FromBody] xServerProvisioningRequest request)
+        {
+
+            await this.xServerManager.SetUpxServer(request);
+            return Ok();
+     
+        }
+
+
+        /// <summary>
+        ///     Searches for the xServer by profile name or sign address.
+        /// </summary>
+        /// <returns>A JSON object containing the xServer search result.</returns>
+        [Route("testSshCredentials")]
+        [HttpPost]
+        public async Task<IActionResult> TestSshCredentials([FromBody] TestSshCredentialRequest request)
+        {
+
+            var connected = await this.xServerManager.TestSshCredentials(request);
+            return Ok(connected);
+
+        }
+
 
         /// <summary>
         ///     Searches for the xServer by profile name or sign address.
@@ -258,6 +291,60 @@ namespace x42.Features.xServer.Api.Controllers
             try
             {
                 var result = this.xServerManager.ReserveProfile(reserveRequest);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        /// <summary>
+        ///     Reserves a profile to the network.
+        /// </summary>
+        /// <param name="reserveRequest">The object with all of the nessesary data to reserve a profile.</param>
+        /// <returns>A <see cref="ReserveProfileResult" /> with reservation result.</returns>
+        [HttpPost]
+        [Route("reservewordpresspreviewdomain")]
+        public IActionResult ReserveWordpressPreviewDomain([FromBody] WordPressReserveRequest reserveRequest)
+        {
+            try
+            {
+                var result = this.xServerManager.ReserveWordpressPreviewDomain(reserveRequest);
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+
+        [HttpGet]
+        [Route("wordpresspreviewdomains")]
+        public async Task<IActionResult> GetWordPressPreviewDomainsAsync()
+        {
+            try
+            {
+                var result = await this.xServerManager.GetWordPressPreviewDomainsAsync();
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Route("provisionWordPress")]
+        public IActionResult ProvisionWordPress([FromBody] ProvisionWordPressRequest  provisionWordPressRequest)
+        {
+            try
+            {
+                var result = this.xServerManager.ProvisionWordPressAsync(provisionWordPressRequest);
                 return Json(result);
             }
             catch (Exception e)

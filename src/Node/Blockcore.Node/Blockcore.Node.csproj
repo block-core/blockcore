@@ -5,6 +5,7 @@
     <AssemblyName>Blockcore.Node</AssemblyName>
     <PackageId>Blockcore.Node</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+	<UseRazorSourceGenerator>False</UseRazorSourceGenerator>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Networks\BlockCore.Networks.Cybits\Blockcore.Networks.Cybits.csproj" />
@@ -45,5 +46,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AppData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="AppData\.env">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="AppData\app.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="AppData\xServer.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -18,6 +18,11 @@ using System.Net.Sockets;
 using System.Linq;
 using RestSharp.Serializers.NewtonsoftJson;
 using Blockcore.Networks;
+using Blockcore.Features.NodeHost.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json.Serialization;
+using Renci.SshNet;
+using System.Threading;
 
 namespace x42.Features.xServer
 {
@@ -101,13 +106,24 @@ namespace x42.Features.xServer
         /// <param name="asyncProvider">The async loop factory.</param>
         /// <param name="nodeLifetime">The managment of the node process.</param>
         /// <param name="network">The network managment.</param>
+        /// 
+
+
+
+        private readonly ISshManager sshManager;
+        private readonly NodeHub nodeHub;
+
+
+
         public xServerManager(
             ILoggerFactory loggerFactory,
             DataFolder dataFolders,
             IAsyncProvider asyncProvider,
             INodeLifetime nodeLifetime,
             xServerSettings xServerSettings,
-            Network network)
+            Network network,
+            ISshManager sshManager,
+            NodeHub nodeHub)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(dataFolders, nameof(dataFolders));
@@ -126,6 +142,8 @@ namespace x42.Features.xServer
             this.xServerPeerList = new xServerPeers(path);
 
             this.xServerPeersLock = new object();
+            this.sshManager = sshManager;
+            this.nodeHub = nodeHub;
         }
 
         /// <inheritdoc />
@@ -157,6 +175,189 @@ namespace x42.Features.xServer
         {
             this.xServerDiscoveryLoop?.Dispose();
             this.xServerRefreshLoop?.Dispose();
+        }
+
+        /// <inheritdoc />
+
+        public async Task<bool> TestSshCredentials(TestSshCredentialRequest request)
+        {
+
+            return await this.sshManager.TestSshCredentialsAsync(request);
+
+        }
+
+        /// <inheritdoc />
+
+        public async Task SetUpxServer(xServerProvisioningRequest request)
+        {
+
+
+            CopyConfigFiles(".env");
+            CopyConfigFiles("app.config.json");
+            CopyConfigFiles("xServer.conf");
+            ReplaceVariable(".env", "profile", request.Profile.ToLower());
+            ReplaceVariable(".env", "postgrespass", request.DatabasePassword);
+            ReplaceVariable("app.config.json", "profile", request.Profile.ToLower());
+            ReplaceVariable("xServer.conf", "postgrespass", request.DatabasePassword);
+
+            await this.nodeHub.Echo(" ");
+            await this.nodeHub.Echo("*******************************************");
+            await this.nodeHub.Echo("Welcome to the xServer provisioning tool!");
+            await this.nodeHub.Echo("*******************************************");
+            await this.nodeHub.Echo(" ");
+
+            await this.nodeHub.Echo("Connecting via ssh...");
+
+            var commndList = new List<Models.SshCommand>();
+
+
+            commndList.Add(new Models.SshCommand() { Command = "apt-get update -y", Description = "Updates" });
+            commndList.Add(new Models.SshCommand() { Command = "apt-get install git -y", Description = "Install Git" });
+            commndList.Add(new Models.SshCommand() { Command = "git clone https://github.com/x42protocol/x42-Server-Deployment", Description = "Clone Repository" });
+
+            commndList.Add(new Models.SshCommand() { Command = "cd x42-Server-Deployment && sh setup.sh", Description = "Running Setup" });
+
+            commndList.Add(new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && sh create_ca.sh", Description = "Generating Certificate Authority" });
+
+            await this.nodeHub.Echo("SSH Connection success!");
+            await this.nodeHub.Echo("Installing xServer...");
+
+
+
+            var scopedSshManager = new SshManager(request.IpAddress, request.SshUser, request.SsHPassword, this.nodeHub);
+
+            foreach (var commandItem in commndList)
+            {
+
+                await this.nodeHub.Echo($"Starting {commandItem.Description}...");
+
+                await scopedSshManager.ExecuteCommand(commandItem.Command);
+                Thread.Sleep(5000);
+
+                await this.nodeHub.Echo($"Finished {commandItem.Description}...");
+
+            }
+
+
+            using (var sftp = new SftpClient(request.IpAddress, request.SshUser, request.SsHPassword))
+            {
+                sftp.Connect();
+                UploadFile(sftp, ".env", "xserver");
+                UploadFile(sftp, "app.config.json", "xserver/xserverui");
+                UploadFile(sftp, "xServer.conf", "xserver/xserver");
+
+                sftp.Disconnect();
+
+            }
+
+            var startTraefik = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && docker-compose up -d", Description = "Starting Traefik" };
+
+            Thread.Sleep(5000);
+
+            var issueClientCertificate = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && sh client_certificates.sh " + request.Profile + " " + request.CertificatePassword + " " + request.EmailAddress + "", Description = "Issuing Certificate" };
+
+            var startDocker = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd xserver && docker-compose up -d", Description = "Starting xServer" };
+
+
+
+            await this.nodeHub.Echo($"Starting {startTraefik.Description}...");
+
+            await scopedSshManager.ExecuteCommand(startTraefik.Command);
+
+            await this.nodeHub.Echo($"Finished {startTraefik.Description}...");
+
+
+            await this.nodeHub.Echo($"Starting {issueClientCertificate.Description}...");
+
+            await scopedSshManager.ExecuteCommand(issueClientCertificate.Command);
+
+            await this.nodeHub.Echo($"Finished {issueClientCertificate.Description}...");
+
+
+            await this.nodeHub.Echo($"Starting {startDocker.Description}...");
+
+            await scopedSshManager.ExecuteCommand(startDocker.Command);
+
+            await this.nodeHub.Echo($"Finished {startDocker.Description}...");
+
+            using (var sftp = new SftpClient(request.IpAddress, request.SshUser, request.SsHPassword))
+            {
+                sftp.Connect();
+                DownloadClientCertificate(sftp, request.Profile);
+                sftp.Disconnect();
+
+            }
+
+
+            await this.nodeHub.Echo("xServer installation Complete!");
+
+             
+
+
+        }
+
+        private static void CopyConfigFiles(string fileName)
+        {
+            var x42MainFolder = Path.Combine(Environment.CurrentDirectory, "AppData");
+
+            if (!Directory.Exists(Path.Combine(x42MainFolder, "Config")))
+            {
+
+                Directory.CreateDirectory(Path.Combine(x42MainFolder, "Config"));
+
+            }
+            string sourceFile = Path.Combine(x42MainFolder, fileName);
+            string desitinationFile = Path.Combine(x42MainFolder, "Config", fileName);
+            if (File.Exists(desitinationFile)) {
+
+                File.Delete(desitinationFile);
+            }
+
+            File.Copy(sourceFile, desitinationFile);
+        }
+
+        private static void ReplaceVariable(string fileName, string variable, string value)
+        {
+            var x42MainFolder = Path.Combine(Environment.CurrentDirectory, "AppData");
+           
+         
+            string pathString = Path.Combine(x42MainFolder, "Config", fileName);
+
+            string text = File.ReadAllText(pathString);
+            text = text.Replace("{" + variable + "}", value);
+            File.WriteAllText(pathString, text);
+        }
+
+        private static void UploadFile(SftpClient sftp, string fileName, string destination)
+        {
+
+            var x42MainFolder = Path.Combine(Environment.CurrentDirectory, "AppData");
+        
+
+            string pathString = Path.Combine(x42MainFolder,"Config");
+
+
+            using (FileStream filestream = File.OpenRead(Path.Combine(pathString, fileName)))
+            {
+                sftp.UploadFile(filestream, "/" + "/root/x42-Server-Deployment/" + destination + "/" + fileName, null);
+
+            }
+        }
+
+        private static void DownloadClientCertificate(SftpClient sftp, string profileName)
+        {
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var x42MainFolder = appDataFolder + "\\Blockcore\\x42\\x42Main";
+
+
+            string pathString = Path.Combine(x42MainFolder,"certificates");
+            using (Stream file1 = File.OpenWrite(pathString + "\\" + profileName + ".p12"))
+            {
+                sftp.DownloadFile("/root/x42-Server-Deployment/traefik/pki/" + profileName + "/" + profileName + ".p12", file1);
+            }
+
+
+
         }
 
         /// <inheritdoc />
@@ -215,9 +416,8 @@ namespace x42.Features.xServer
             string xServerURL = Utils.GetServerUrl(registerRequest.NetworkProtocol, registerRequest.NetworkAddress, registerRequest.NetworkPort);
             var client = new RestClient(xServerURL);
             var registerRestRequest = new RestRequest("/registerserver", Method.Post);
-            var request = JsonConvert.SerializeObject(registerRequest);
-            registerRestRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
-            registerRestRequest.RequestFormat = DataFormat.Json;
+            registerRestRequest.AddBody(registerRequest);
+
 
             var registerResult = client.ExecuteAsync<RegisterResult>(registerRestRequest).Result;
             if (registerResult.StatusCode == HttpStatusCode.OK)
@@ -274,9 +474,8 @@ namespace x42.Features.xServer
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
                 var createPriceLockRequest = new RestRequest("/createpricelock", Method.Post);
-                var request = JsonConvert.SerializeObject(priceLockRequest);
-                createPriceLockRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
-                createPriceLockRequest.RequestFormat = DataFormat.Json;
+
+                createPriceLockRequest.AddBody(priceLockRequest);
 
                 var createPLResult = client.ExecuteAsync<PriceLockResult>(createPriceLockRequest).Result;
                 if (createPLResult.StatusCode == HttpStatusCode.OK)
@@ -359,9 +558,7 @@ namespace x42.Features.xServer
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
                 var paymentRequest = new RestRequest("/submitpayment", Method.Post);
-                var request = JsonConvert.SerializeObject(submitPaymentRequest);
-                paymentRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
-                paymentRequest.RequestFormat = DataFormat.Json;
+                paymentRequest.AddBody(submitPaymentRequest);
 
                 var submitPaymentResult = client.ExecuteAsync<SubmitPaymentResult>(paymentRequest).Result;
                 if (submitPaymentResult.StatusCode == HttpStatusCode.OK)
@@ -439,7 +636,7 @@ namespace x42.Features.xServer
                 {
                     result.ResultMessage = "Not connected to any tier 2 servers";
                 }
-        
+
             }
             return result;
         }
@@ -452,14 +649,24 @@ namespace x42.Features.xServer
             if (t2Node != null)
             {
                 string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
+
+                DefaultContractResolver contractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+
                 var client = new RestClient(xServerURL);
                 client.UseNewtonsoftJson();
                 var reserveProfileRequest = new RestRequest("/reserveprofile", Method.Post);
                 var request = JsonConvert.SerializeObject(reserveRequest);
-                reserveProfileRequest.AddParameter("application/json; charset=utf-8", request, ParameterType.RequestBody);
+                reserveProfileRequest.AddJsonBody(reserveRequest);
+
                 reserveProfileRequest.RequestFormat = DataFormat.Json;
 
                 var reserveProfileResult = client.ExecuteAsync<ReserveProfileResult>(reserveProfileRequest).Result;
+
+
+
                 if (reserveProfileResult.StatusCode == HttpStatusCode.OK)
                 {
                     if (reserveProfileResult.Data == null)
@@ -492,6 +699,152 @@ namespace x42.Features.xServer
             }
             return result;
         }
+
+        public async Task<List<string>> GetWordPressPreviewDomainsAsync()
+        {
+
+            var t2Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two && n.NetworkAddress.Contains("144.91.95.234")).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t2Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
+
+                DefaultContractResolver contractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var reserveWordPressRequest = new RestRequest("/wordpresspreviewdomains", Method.Get);
+
+                reserveWordPressRequest.RequestFormat = DataFormat.Json;
+
+                var response = client.ExecuteAsync<List<string>>(reserveWordPressRequest).Result;
+
+                return response.Data;
+            }
+            return new List<string>();
+        }
+        public ReserveWordPressResult ReserveWordpressPreviewDomain(WordPressReserveRequest wordpressrequest)
+        {
+            var result = new ReserveWordPressResult();
+            var t2Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two && n.NetworkAddress.Contains("144.91.95.234")).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t2Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
+
+                DefaultContractResolver contractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var reserveWordPressRequest = new RestRequest("/reservewordpresspreviewDNS", Method.Post);
+                var request = JsonConvert.SerializeObject(wordpressrequest);
+                reserveWordPressRequest.AddJsonBody(wordpressrequest);
+
+                reserveWordPressRequest.RequestFormat = DataFormat.Json;
+
+                var reserveWordpressResult = client.ExecuteAsync<ReserveWordPressResult>(reserveWordPressRequest).Result;
+
+
+
+                if (reserveWordpressResult.StatusCode == HttpStatusCode.OK)
+                {
+                    if (reserveWordpressResult.Data == null)
+                    {
+                        result.Success = false;
+                    }
+                    else
+                    {
+                        result = reserveWordpressResult.Data;
+                        result.Success = true;
+                    }
+                }
+                else
+                {
+                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(reserveWordpressResult.Content);
+                    if (errorResponse != null)
+                    {
+                        result.ResultMessage = errorResponse.errors[0].message;
+                    }
+                    else
+                    {
+                        result.ResultMessage = "Failed to access xServer";
+                    }
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.ResultMessage = "Not connected to any tier 2 servers";
+            }
+            return result;
+        }
+
+        public async Task ProvisionWordPressAsync(ProvisionWordPressRequest provisionWordPressRequest)
+        {
+
+    
+            var result = new ReserveWordPressResult();
+            var t2Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two && n.NetworkAddress.Contains("144.91.95.234")).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t2Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
+
+                DefaultContractResolver contractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+
+                var options = new RestClientOptions(xServerURL)
+                {
+                    ThrowOnAnyError = true,
+                    Timeout = 120000  // 1 second. or whatever time you want.
+                };
+                var client = new RestClient(options);
+                 
+
+                client.UseNewtonsoftJson();
+                var reserveWordPressRequest = new RestRequest("/provisionWordPress", Method.Post);
+                var request = JsonConvert.SerializeObject(provisionWordPressRequest);
+                reserveWordPressRequest.AddJsonBody(provisionWordPressRequest);
+
+                reserveWordPressRequest.RequestFormat = DataFormat.Json;
+
+                var reserveWordpressResult = await client.ExecuteAsync(reserveWordPressRequest);
+
+
+
+                if (reserveWordpressResult.StatusCode == HttpStatusCode.OK)
+                {
+                    result.Success = true;
+
+                }
+                else
+                {
+                    var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(reserveWordpressResult.Content);
+                    if (errorResponse != null)
+                    {
+                        result.ResultMessage = errorResponse.errors[0].message;
+                    }
+                    else
+                    {
+                        result.ResultMessage = "Failed to access xServer";
+                    }
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.ResultMessage = "Not connected to any tier 2 servers";
+            }
+            await Task.FromResult(result);
+        }
+
+
+
 
         /// <inheritdoc />
         public TestResult TestXServerPorts(TestRequest testRequest)

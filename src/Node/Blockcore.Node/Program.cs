@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Blockcore.Builder;
 using Blockcore.Configuration;
 using Blockcore.Utilities;
- 
+
 namespace Blockcore.Node
 {
     public class Program
@@ -35,7 +35,8 @@ namespace Blockcore.Node
                 var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var x42MainFolder = appDataFolder + "\\Blockcore\\x42\\x42Main";
 
-                if (version != null && version != "" && Directory.Exists(x42MainFolder)) {
+                if (version != null && version != "" && Directory.Exists(x42MainFolder))
+                {
 
                     VersionFileData versionFileData = new VersionFileData() { Version = version, Upgraded = false };
                     string fileName = x42MainFolder + "\\upgrade.json";
@@ -45,10 +46,11 @@ namespace Blockcore.Node
 
                         File.WriteAllText(fileName, JsonSerializer.Serialize(versionFileData));
                     }
-                    else {
+                    else
+                    {
 
                         versionFileData = JsonSerializer.Deserialize<VersionFileData>(File.ReadAllText(fileName));
-                  
+
                     }
 
                     if (versionFileData.Version == version && versionFileData.Upgraded == false)
@@ -65,9 +67,6 @@ namespace Blockcore.Node
                     }
 
                 }
-
-
-
 
                 NodeSettings nodeSettings = NetworkSelector.Create(chain, args);
                 IFullNodeBuilder nodeBuilder = NodeBuilder.Create(chain, nodeSettings);

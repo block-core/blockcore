@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 using x42.Features.xServer.Models;
 
 namespace x42.Features.xServer.Interfaces
@@ -67,5 +69,10 @@ namespace x42.Features.xServer.Interfaces
         ///     Reserves a profile to the network.
         /// </summary>
         ReserveProfileResult ReserveProfile(ProfileReserveRequest reserveRequest);
+        Task<bool> TestSshCredentials(TestSshCredentialRequest request);
+        Task SetUpxServer(xServerProvisioningRequest request);
+        ReserveWordPressResult ReserveWordpressPreviewDomain(WordPressReserveRequest wordpressrequest);
+        Task<List<string>> GetWordPressPreviewDomainsAsync();
+        Task ProvisionWordPressAsync(ProvisionWordPressRequest provisionWordPressRequest);
     }
 }

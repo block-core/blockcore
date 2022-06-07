@@ -7,12 +7,10 @@ namespace Blockcore.Features.Miner.UI
     public class MineNavigationItem : INavigationItem
     {
         private readonly Network network;
-        private readonly IWalletSyncManager walletSyncManager;
         private readonly IWalletManager WalletManager;
-        public MineNavigationItem(Network network, IWalletSyncManager walletSyncManager, IWalletManager WalletManager)
+        public MineNavigationItem(Network network, IWalletManager WalletManager)
         {
             this.network = network;
-            this.walletSyncManager = walletSyncManager;
             this.WalletManager = WalletManager;
         }
 
@@ -23,7 +21,7 @@ namespace Blockcore.Features.Miner.UI
         public int NavOrder => 15;
         private bool CheckIsVisible()
         {
-            if (this.network.Consensus.IsProofOfStake && (this.walletSyncManager.WalletTip.Height > this.network.Consensus.LastPOWBlock))
+            if (this.network.Consensus.IsProofOfStake && (this.WalletManager?.WalletTipHeight > this.network.Consensus.LastPOWBlock))
             {
                 return false;
             }

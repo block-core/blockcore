@@ -8,10 +8,12 @@ namespace Blockcore.Features.Miner.UI
     {
         private readonly Network network;
         private readonly IWalletSyncManager walletSyncManager;
-        public MineNavigationItem(Network network, IWalletSyncManager walletSyncManager)
+        private readonly IWalletManager WalletManager;
+        public MineNavigationItem(Network network, IWalletSyncManager walletSyncManager, IWalletManager WalletManager)
         {
             this.network = network;
             this.walletSyncManager = walletSyncManager;
+            this.WalletManager = WalletManager;
         }
 
         public string Name => "Mining";
@@ -25,7 +27,7 @@ namespace Blockcore.Features.Miner.UI
             {
                 return false;
             }
-            return true;
+            return this.WalletManager?.ContainsWallets ?? false;
         }
     }
     public class StakeNavigationItem : INavigationItem

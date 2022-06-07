@@ -6,17 +6,17 @@ namespace Blockcore.Features.Wallet.UI
 {
     public class ColdStakingNavigationItem : INavigationItem
     {
-        private readonly IWalletManager WalletManager;
+        private readonly IWalletManager walletManager;
 
-        public ColdStakingNavigationItem(IWalletManager WalletManager)
+        public ColdStakingNavigationItem(IWalletManager walletManager)
         {
-            this.WalletManager = WalletManager;
+            this.walletManager = walletManager;
         }
 
         public string Name => "Cold Staking";
         public string Navigation => "ColdStaking";
         public string Icon => "oi-pulse";
-        public bool IsVisible => this.WalletManager?.ContainsWallets ?? false;
+        public bool IsVisible => this.walletManager?.ContainsWallets ?? false;
         public int NavOrder => 30;
 
     }

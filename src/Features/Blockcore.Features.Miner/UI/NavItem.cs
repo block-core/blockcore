@@ -7,11 +7,11 @@ namespace Blockcore.Features.Miner.UI
     public class MineNavigationItem : INavigationItem
     {
         private readonly Network network;
-        private readonly IWalletSyncManager walletSyncManager;
-        public MineNavigationItem(Network network, IWalletSyncManager walletSyncManager)
+        private readonly IWalletManager walletManager;
+        public MineNavigationItem(Network network, IWalletManager walletManager)
         {
             this.network = network;
-            this.walletSyncManager = walletSyncManager;
+            this.walletManager = walletManager;
         }
 
         public string Name => "Mining";
@@ -21,26 +21,26 @@ namespace Blockcore.Features.Miner.UI
         public int NavOrder => 15;
         private bool CheckIsVisible()
         {
-            if (this.network.Consensus.IsProofOfStake && (this.walletSyncManager.WalletTip.Height > this.network.Consensus.LastPOWBlock))
+            if (this.network.Consensus.IsProofOfStake && (this.walletManager?.WalletTipHeight > this.network.Consensus.LastPOWBlock))
             {
                 return false;
             }
-            return true;
+            return this.walletManager?.ContainsWallets ?? false;
         }
     }
     public class StakeNavigationItem : INavigationItem
     {
-        private readonly IWalletManager WalletManager;
+        private readonly IWalletManager walletManager;
 
-        public StakeNavigationItem(IWalletManager WalletManager)
+        public StakeNavigationItem(IWalletManager walletManager)
         {
-            this.WalletManager = WalletManager;
+            this.walletManager = walletManager;
         }
 
         public string Name => "Staking";
         public string Navigation => "Stake";
         public string Icon => "oi-bolt";
-        public bool IsVisible => this.WalletManager?.ContainsWallets ?? false;
+        public bool IsVisible => this.walletManager?.ContainsWallets ?? false;
         public int NavOrder => 20;
     }
 }

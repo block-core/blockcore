@@ -12,6 +12,7 @@
 @using Blockcore.Networks
 @using NBitcoin
 @using System.Text
+@using Blockcore.Interfaces
 @using static System.Net.WebRequestMethods
 
 @inject IWalletManager walletManager
@@ -19,7 +20,7 @@
 @inject MiningFeature miningFeature
 @inject IPowMining powMining
 @inject Network network
-@inject Blockcore.Interfaces.IInitialBlockDownloadState InitialBlockDownloadState
+@inject IInitialBlockDownloadState initialBlockDownloadState
 
 @if (!this.walletManager.ContainsWallets)
 {
@@ -154,7 +155,7 @@ else
     }
    
     private readonly IConsensusManager consensusManager;
-    public const string LastPowBlockExceededMessage = "This is a POS node and mining is not allowed past block {0}";
+    public const string lastPowBlockExceededMessage = "This is a POS node and mining is not allowed past block {0}";
     public MinerSettings minerSettings;
   
     private async void LoadStats()
@@ -188,7 +189,7 @@ else
    
     private Boolean CheckBeforMine()
     {   
-        if (this.InitialBlockDownloadState.IsInitialBlockDownload() && this.walletManager.WalletTipHeight > 0)
+        if (this.initialBlockDownloadState.IsInitialBlockDownload() && this.walletManager.WalletTipHeight > 0)
         {
             Alert = "Chain Syncing. Please wait...";
             return false;
@@ -196,7 +197,7 @@ else
 
         if (this.network.Consensus.IsProofOfStake && (this.walletManager.WalletTipHeight > this.network.Consensus.LastPOWBlock))
         {
-            Alert = string.Format(LastPowBlockExceededMessage, this.network.Consensus.LastPOWBlock);
+            Alert = string.Format(lastPowBlockExceededMessage, this.network.Consensus.LastPOWBlock);
             return false;
         }
 

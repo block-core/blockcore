@@ -11,63 +11,69 @@ using Blockcore.Networks.RoyalSportsCity.Networks.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
+using Blockcore.Networks.RoyalSportsCity.Networks.Deployments;
 
 namespace Blockcore.Networks.RoyalSportsCity.Networks
 {
-   public class RoyalSportsCityTest : RoyalSportsCityMain
-   {
-      public RoyalSportsCityTest()
-      {
-         CoinSetup setup = RoyalSportsCitySetup.Instance.Setup;
-         NetworkSetup network = RoyalSportsCitySetup.Instance.Test;
+    public class RoyalSportsCityTest : RoyalSportsCityMain
+    {
+        public RoyalSportsCityTest()
+        {
+            CoinSetup setup = RoyalSportsCitySetup.Instance.Setup;
+            NetworkSetup network = RoyalSportsCitySetup.Instance.Test;
 
-         NetworkType = NetworkType.Testnet;
+            NetworkType = NetworkType.Testnet;
 
-         Name = network.Name;
-         CoinTicker = network.CoinTicker;
-         Magic = ConversionTools.ConvertToUInt32(setup.Magic, true);
-         RootFolderName = network.RootFolderName;
-         DefaultPort = network.DefaultPort;
-         DefaultRPCPort = network.DefaultRPCPort;
-         DefaultAPIPort = network.DefaultAPIPort;
+            Name = network.Name;
+            CoinTicker = network.CoinTicker;
+            Magic = ConversionTools.ConvertToUInt32(setup.Magic, true);
+            RootFolderName = network.RootFolderName;
+            DefaultPort = network.DefaultPort;
+            DefaultRPCPort = network.DefaultRPCPort;
+            DefaultAPIPort = network.DefaultAPIPort;
 
-         var consensusFactory = new PosConsensusFactory();
+            var consensusFactory = new PosConsensusFactory();
 
-         // Create the genesis block.
-         GenesisTime = network.GenesisTime;
-         GenesisNonce = network.GenesisNonce;
-         GenesisBits = network.GenesisBits;
-         GenesisVersion = network.GenesisVersion;
-         GenesisReward = network.GenesisReward;
+            // Create the genesis block.
+            GenesisTime = network.GenesisTime;
+            GenesisNonce = network.GenesisNonce;
+            GenesisBits = network.GenesisBits;
+            GenesisVersion = network.GenesisVersion;
+            GenesisReward = network.GenesisReward;
 
-         Block genesisBlock = CreateGenesisBlock(consensusFactory,
-            GenesisTime,
-            GenesisNonce,
-            GenesisBits,
-            GenesisVersion,
-            GenesisReward,
-            setup.GenesisText);
+            Block genesisBlock = CreateGenesisBlock(consensusFactory,
+               GenesisTime,
+               GenesisNonce,
+               GenesisBits,
+               GenesisVersion,
+               GenesisReward,
+               setup.GenesisText);
 
-         Genesis = genesisBlock;
+            Genesis = genesisBlock;
 
-         var consensusOptions = new PosConsensusOptions
-         {
-            MaxBlockBaseSize = 1_000_000,
-            MaxStandardVersion = 2,
-            MaxStandardTxWeight = 100_000,
-            MaxBlockSigopsCost = 20_000,
-            MaxStandardTxSigopsCost = 20_000 / 5,
-            WitnessScaleFactor = 4
-         };
+            var consensusOptions = new PosConsensusOptions
+            {
+                MaxBlockBaseSize = 1_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 4
+            };
 
-         var buriedDeployments = new BuriedDeploymentsArray
-         {
-            [BuriedDeployments.BIP34] = 0,
-            [BuriedDeployments.BIP65] = 0,
-            [BuriedDeployments.BIP66] = 0
-         };
-
-         Consensus = new Blockcore.Consensus.Consensus(
+            var buriedDeployments = new BuriedDeploymentsArray
+            {
+                [BuriedDeployments.BIP34] = 0,
+                [BuriedDeployments.BIP65] = 0,
+                [BuriedDeployments.BIP66] = 0
+            };
+            var bip9Deployments = new RoyalSportsCityBIP9Deployments()
+            {
+                [RoyalSportsCityBIP9Deployments.CSV] = new BIP9DeploymentsParameters("CSV", 0, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [RoyalSportsCityBIP9Deployments.Segwit] = new BIP9DeploymentsParameters("Segwit", 1, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+                [RoyalSportsCityBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
+            };
+            Consensus = new Blockcore.Consensus.Consensus(
              consensusFactory: consensusFactory,
              consensusOptions: consensusOptions,
              coinType: setup.CoinType,
@@ -77,7 +83,7 @@ namespace Blockcore.Networks.RoyalSportsCity.Networks
              majorityRejectBlockOutdated: 950,
              majorityWindow: 1000,
              buriedDeployments: buriedDeployments,
-             bip9Deployments: new NoBIP9Deployments(),
+             bip9Deployments: bip9Deployments,
              bip34Hash: null,
              minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
              maxReorgLength: 500,
@@ -102,36 +108,36 @@ namespace Blockcore.Networks.RoyalSportsCity.Networks
              proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
          );
 
-         Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
-         Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
-         Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
-         Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
-         Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
-         Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
-         Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
-         Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
-         Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-         Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
+            Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
+            Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
+            Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
+            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
+            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
+            Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
+            Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
+            Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
+            Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
+            Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
 
-         Bech32Encoders = new Bech32Encoder[2];
-         var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
-         Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
-         Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
+            Bech32Encoders = new Bech32Encoder[2];
+            var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
+            Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
+            Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 
-         Checkpoints = network.Checkpoints;
-         DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-         SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
+            Checkpoints = network.Checkpoints;
+            DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
+            SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
 
-         StandardScriptsRegistry = new RoyalSportsCityStandardScriptsRegistry();
+            StandardScriptsRegistry = new RoyalSportsCityStandardScriptsRegistry();
 
-         // 64 below should be changed to TargetSpacingSeconds when we move that field.
-         Assert(DefaultBanTimeSeconds <= Consensus.MaxReorgLength * 64 / 2);
+            // 64 below should be changed to TargetSpacingSeconds when we move that field.
+            Assert(DefaultBanTimeSeconds <= Consensus.MaxReorgLength * 64 / 2);
 
-         Assert(Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
-         Assert(Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
+            Assert(Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
+            Assert(Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
 
-         RegisterRules(Consensus);
-         RegisterMempoolRules(Consensus);
-      }
-   }
+            RegisterRules(Consensus);
+            RegisterMempoolRules(Consensus);
+        }
+    }
 }

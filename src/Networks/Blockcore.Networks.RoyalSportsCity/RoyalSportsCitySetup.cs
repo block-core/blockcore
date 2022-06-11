@@ -62,9 +62,9 @@ namespace Blockcore.Networks.RoyalSportsCity
             DefaultPort = 24001,
             DefaultRPCPort = 24002,
             DefaultAPIPort = 24003,
-            PubKeyAddress = 111,
-            ScriptAddress = 196,
-            SecretAddress = 239,
+            PubKeyAddress = 60, // R 
+            ScriptAddress = 122, // r
+            SecretAddress = 122,
             GenesisTime = 1641376738,
             GenesisNonce = 128636,
             GenesisBits = 0x1F00FFFF,
@@ -88,9 +88,9 @@ namespace Blockcore.Networks.RoyalSportsCity
             DefaultPort = 34001,
             DefaultRPCPort = 34002,
             DefaultAPIPort = 34003,
-            PubKeyAddress = 111,
-            ScriptAddress = 196,
-            SecretAddress = 239,
+            PubKeyAddress = 60, // R 
+            ScriptAddress = 122, // r
+            SecretAddress = 122,
             GenesisTime = 1641376746,
             GenesisNonce = 7719,
             GenesisBits = 0x1F0FFFFF,

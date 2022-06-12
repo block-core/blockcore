@@ -1,3 +1,12 @@
+##  (2022-06-12)
+
+* bump version ([2a34841](https://github.com/block-core/blockcore/commit/2a34841))
+* Hidden Mining menu when there is no wallet (#405) ([58d4540](https://github.com/block-core/blockcore/commit/58d4540)), closes [#405](https://github.com/block-core/blockcore/issues/405)
+* Mine UI code correction (#406) ([ef8a08d](https://github.com/block-core/blockcore/commit/ef8a08d)), closes [#406](https://github.com/block-core/blockcore/issues/406)
+* Update TSBC Consensus and TRSC Consensus (#407) ([23be1a7](https://github.com/block-core/blockcore/commit/23be1a7)), closes [#407](https://github.com/block-core/blockcore/issues/407)
+
+
+
 ##  (2022-05-18)
 
 * Add sign/verify schnorr using bouncy castle (#404) ([dd61fed](https://github.com/block-core/blockcore/commit/dd61fed)), closes [#404](https://github.com/block-core/blockcore/issues/404)

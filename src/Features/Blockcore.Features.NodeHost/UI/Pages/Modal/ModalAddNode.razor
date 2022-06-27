@@ -1,3 +1,4 @@
+@using Blockcore.P2P.Peer
 @using Blockcore.Utilities.Extensions
 @using Blockcore.UI.BlazorModal
 
@@ -6,6 +7,9 @@
 
 @if (ShowForm)
 {
+
+ 
+
 <div class="input-group">
 		<input @bind="NodeIp" type="text" class="form-control bg-secondary text-light" placeholder="Node IP Address" />
 		<div class="input-group-append">

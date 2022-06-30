@@ -19,7 +19,7 @@
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label">IP ADDRESS</label>
                         <label class="col-sm-8 col-form-label text-info">
-                            @if (peerModel.Endpoint.Address.IsIPv4MappedToIPv6() == true)
+                            @if (peerModel.Endpoint.Address.IsIPv4MappedToIPv6)
                             {
                                 PeerAddress = @peerModel.Endpoint.Address.MapToIPv4().ToString();
                                 PeerPort = @peerModel.Endpoint.Port;

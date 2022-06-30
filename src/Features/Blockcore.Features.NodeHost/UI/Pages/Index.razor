@@ -143,7 +143,6 @@
                         <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowPeers"> Peers</button>
                         <button type="button" class="btn btn-sm btn-primary ml-1" @onclick="tabShowBanList"> Ban List</button>
                     </div>
-
                 </div>
                 @if (ShowTabPeer)
                 {
@@ -170,7 +169,6 @@
                                             <td class="align-middle">
                                                 <button class="btn btn-sm btn-secondary" @onclick="() => {AddPeerToBanList(peer); }"> <span class="oi oi-ban" aria-hidden="true"></span></button>
                                             </td>
-
                                         </tr>
                                     }
                                 </tbody>
@@ -223,8 +221,6 @@
             </div>
         </div>
     </div>
-
-
 
 }
 @code

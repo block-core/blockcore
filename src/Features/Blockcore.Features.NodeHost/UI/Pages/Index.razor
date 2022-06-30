@@ -2,6 +2,9 @@
 
 @implements IDisposable
 
+@using Blockcore.Connection
+@using Blockcore.P2P
+@using Blockcore.P2P.Peer
 @using Blockcore.Utilities.Extensions
 @using Blockcore.Networks
 @using Blockcore.UI.BlazorModal
@@ -10,6 +13,7 @@
 @using Blockcore.EventBus.CoreEvents
 @using Blockcore.EventBus.CoreEvents.Peer
 @using Blockcore.Signals
+@using System.Net
 
 @inject IFullNode FullNode
 @inject Network Network
@@ -19,6 +23,7 @@
 @inject NavigationManager NavigationManager
 @inject ModalService ModalService
 @inject ISignals Signals
+@inject IPeerBanning peerBanning;
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -124,6 +129,8 @@
             </div>
         </div>
     </div>
+
+
     <div class="row">
         <div class="col-xl-12 col-sm-12 ">
             <div class="card">
@@ -131,37 +138,90 @@
                     <h4 class="card-title">
                         Peers
                     </h4>
-                    <button class="btn btn-sm btn-primary" @onclick="AddNode"><span class="oi oi-plus" aria-hidden="true"></span> Add Node</button>
-                </div>
-
-                <div class="card-body">
-                    <div class="table-responsive small">
-                        <table class="table table-border-bottom table-striped table-sm table-hover">
-                            <thead class="thead">
-                                <tr>
-                                    <th class="text-primary"><strong>IP ADDRESS</strong></th>
-                                    <th class="text-primary"><strong>CONNECTION</strong></th>
-                                    <th class="text-primary"><strong>AGENT</strong></th>
-                                    <th class="text-primary"><strong>VERSION</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var peer in this.ConnectionManager.ConnectedPeers)
-                                {
-                                    <tr>
-                                        <td class="align-middle"><h5 class="oi oi-monitor" aria-hidden="true"></h5> @peer.RemoteSocketEndpoint.ToString()</td>
-                                        <td class="align-middle">@(peer.Inbound ? "Inbound" : "Outbound") </td>
-                                        <td class="align-middle">@peer.PeerVersion?.UserAgent</td>
-                                        <td class="align-middle">@peer.PeerVersion?.Version</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button class="btn btn-sm btn-primary mr-1" @onclick="AddNode"><span class="oi oi-plus" aria-hidden="true"></span> Add Node</button>
+                        <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowPeers"> Peers</button>
+                        <button type="button" class="btn btn-sm btn-primary ml-1" @onclick="tabShowBanList"> Ban List</button>
                     </div>
                 </div>
+                @if (ShowTabPeer)
+                {
+                    <div class="card-body">
+                        <div class="table-responsive small">
+                            <table class="table table-border-bottom table-striped table-sm table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th class="text-primary"><strong>IP ADDRESS</strong></th>
+                                        <th class="text-primary"><strong>CONNECTION</strong></th>
+                                        <th class="text-primary"><strong>AGENT</strong></th>
+                                        <th class="text-primary"><strong>VERSION</strong></th>
+                                        <th class="text-primary"><strong>ACTION</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var peer in this.ConnectionManager.ConnectedPeers)
+                                    {
+                                        <tr>
+                                            <td class="align-middle"><h5 class="oi oi-monitor" aria-hidden="true"></h5> @peer.RemoteSocketEndpoint.ToString()</td>
+                                            <td class="align-middle">@(peer.Inbound ? "Inbound" : "Outbound") </td>
+                                            <td class="align-middle">@peer.PeerVersion?.UserAgent</td>
+                                            <td class="align-middle">@peer.PeerVersion?.Version</td>
+                                            <td class="align-middle">
+                                                <button class="btn btn-sm btn-secondary" @onclick="() => {AddPeerToBanList(peer); }"> <span class="oi oi-ban" aria-hidden="true"></span></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+
+                @if (ShowTabBanList)
+                {
+                    var allBanList = this.peerBanning.GetAllBanned();
+
+                    <div class="card-body">
+                        <div class="table-responsive small">
+                            <table class="table table-border-bottom table-striped table-sm table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th class="text-primary"><strong>IP ADDRESS</strong></th>
+                                        <th class="text-primary"><strong>Until</strong></th>
+                                        <th class="text-primary"><strong>Reason</strong></th>
+                                        <th class="text-primary"><strong>ACTION</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var peer in allBanList)
+                                    {
+                                        <tr>
+                                            <td class="align-middle"><h5 class="oi oi-monitor" aria-hidden="true"></h5> @peer.Endpoint.ToString()</td>
+
+                                            <td class="align-middle">@peer.BanUntil</td>
+                                            <td class="align-middle">@(peer.BanReason.Length > 20 ? peer.BanReason.Substring(0,20)+"..." : peer.BanReason)</td>
+                                            <td class="align-middle">
+                                                <button class="btn btn-sm btn-secondary" @onclick="() => { RemovePeerFromBanList(peer);  }"> <span class="oi oi-arrow-circle-top" aria-hidden="true"></span></button>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @if (allBanList.Count > 0)
+                    {
+                        <div class="card-footer">
+                            <button class="btn btn-primary mr-1" @onclick="clearbanned">Clear banned</button>
+                        </div>
+                    }
+                }
+
             </div>
         </div>
     </div>
+
 }
 @code
 {
@@ -176,6 +236,40 @@
     private void AddNode()
     {
         ModalService.Show("Add Node", typeof(Modal.ModalAddNode));
+    }
+
+
+    private void clearbanned()
+    {
+        try
+        {
+            this.peerBanning.ClearBannedPeers();
+        }
+        catch { }
+    }
+
+    private void AddPeerToBanList(INetworkPeer peer)
+    {
+        ModalService.Show("Add IP Address To Banned List", typeof(Modal.ModalAddPeerToBanList), peer);
+    }
+
+    private void RemovePeerFromBanList(PeerAddress peer)
+    {
+        ModalService.Show("Remove IP Address From Banned List", typeof(Modal.ModalRemovePeerFromBanList), peer);
+    }
+
+    public Boolean ShowTabPeer { get; set; } = true;
+    public Boolean ShowTabBanList { get; set; }
+    private void tabShowPeers()
+    {
+        ShowTabPeer = true;
+        ShowTabBanList = false;
+    }
+
+    private void tabShowBanList()
+    {
+        ShowTabPeer = false;
+        ShowTabBanList = true;
     }
 
     List<SubscriptionToken> subscriptionTokens;

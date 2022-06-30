@@ -1,0 +1,102 @@
+@using Blockcore.Connection
+@using Blockcore.P2P
+@using Blockcore.UI.BlazorModal
+@using Blockcore.Networks
+@using Blockcore.P2P.Peer
+@using System.Net
+@inject ModalService modalService
+@inject Network network
+@inject IPeerBanning peerBanning;
+
+@if (ShowForm)
+{
+    var peerModel = ((INetworkPeer)modalService.Parameter);
+
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">IP ADDRESS</label>
+                        <label class="col-sm-8 col-form-label text-info">
+                            @if (peerModel.RemoteSocketEndpoint.Address.IsIPv4MappedToIPv6)
+                            {
+                                PeerAddress = @peerModel.RemoteSocketAddress.MapToIPv4().ToString();
+                                PeerPort = @peerModel.RemoteSocketPort;
+                            }
+                            else
+                            {
+                                PeerAddress = @peerModel.RemoteSocketEndpoint.ToString();
+                                PeerPort = @peerModel.RemoteSocketPort;
+                            }
+                            <input @bind="PeerAddress" type="text" class="form-control bg-secondary text-light" placeholder="IP address" />
+                            <input @bind="PeerPort" type="hidden" />
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Reason</label>
+                        <label class="col-sm-8 col-form-label text-info">
+                            <input @bind="Reason" type="text" class="form-control bg-secondary text-light" placeholder="Reason" />
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Duration(Seconds)</label>
+                        <label class="col-sm-8 col-form-label text-info">
+                            <input @bind="DurationSeconds" type="text" class="form-control bg-secondary text-light" placeholder="Duration(Seconds)" />
+                        </label>
+                    </div>
+                    <div class="input-group mt-1">
+                        <div class="text-danger">@Alert</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                    <button class="btn btn-danger" @onclick="AddToBanList">Add To Ban List</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-success">@Alert</h5>
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code
+{
+    bool ShowForm { get; set; } = true;
+    private void CloseModal()
+    {
+        modalService.Close();
+    }
+    private string Reason { get; set; }
+    private int DurationSeconds { get; set; } = 10;
+    private int PeerPort { get; set; }
+    private string PeerAddress { get; set; }
+    string Alert { get; set; }
+    private void AddToBanList()
+    {
+        try
+        {
+            if (DurationSeconds < 1) { this.Alert = "You must enter an number in seconds"; return; }
+            if (string.IsNullOrEmpty(this.Reason)) { this.Alert = "Enter the reason for the Ban"; return; }
+            var endpoint = new IPEndPoint(IPAddress.Parse(PeerAddress), PeerPort);
+            this.peerBanning.BanAndDisconnectPeer(endpoint, DurationSeconds, Reason);
+            this.Alert = "ip successfully blocked";
+            ShowForm = false;
+        }
+        catch { }
+    }
+
+}

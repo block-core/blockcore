@@ -947,6 +947,14 @@ namespace Blockcore.Features.Wallet.Types
         public ICollection<Script> RedeemScripts { get; set; }
 
         /// <summary>
+        /// A collection of scripts that is used for P2SH and P2WSH scenarios (mostly used for cold staking)
+        /// that can be marked as expired for staking, this is to be use together with the -enforceStakingFlag 
+        /// mainly for cold staking pools.
+        /// </summary>
+        [JsonProperty(PropertyName = "redeemScriptsExpiery")]
+        public ICollection<RedeemScriptExpiery> RedeemScriptExpiery { get; set; }
+
+        /// <summary>
         /// A path to the address as defined in BIP44.
         /// </summary>
         [JsonProperty(PropertyName = "hdPath")]
@@ -1000,6 +1008,22 @@ namespace Blockcore.Features.Wallet.Types
 
             return (confirmed, total - confirmed, trx.Any());
         }
+    }
+
+    public class RedeemScriptExpiery
+    {
+        /// <summary>
+        /// A script that is used for P2SH and P2WSH scenarios (mostly used for staking).
+        /// </summary>
+        [JsonProperty(PropertyName = "redeemScript")]
+        [JsonConverter(typeof(ScriptJsonConverter))]
+        public Script RedeemScript { get; set; }
+
+        /// <summary>
+        /// Specify whether UTXOs associated with this address is within the allowed staking time.
+        /// </summary>
+        [JsonProperty(PropertyName = "stakingExpiry", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? StakingExpiry { get; set; }
     }
 
     /// <summary>

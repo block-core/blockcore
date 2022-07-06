@@ -734,7 +734,10 @@ namespace Blockcore.Features.ColdStaking
                 if (address.RedeemScripts == null)
                     address.RedeemScripts = new List<Script>();
 
-                address.RedeemScripts.Add(address.RedeemScriptObsolete);
+                if (!address.RedeemScripts.Contains(address.RedeemScriptObsolete))
+                {
+                    address.RedeemScripts.Add(address.RedeemScriptObsolete);
+                }
             }
 
             if (address.RedeemScripts != null)

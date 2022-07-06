@@ -190,7 +190,7 @@
     },
     "SBC (MAIN)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=SBC -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=0"
+      "commandLineArgs": "--chain=SBC -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=0  -enforceStakingFlag=true"
     },
     "SBC (MAIN/LOCAL)": {
       "commandName": "Project",

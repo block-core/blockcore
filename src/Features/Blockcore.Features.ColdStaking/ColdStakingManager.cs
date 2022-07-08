@@ -656,7 +656,7 @@ namespace Blockcore.Features.ColdStaking
 
         /// <summary>
         /// The purpose of this method is to try to identify the P2SH and P2WSH that are coldstake outputs for this wallet
-        /// We look for an opreturn script that is created when seting up a P2SH and P2WSH cold stake trx
+        /// We look for an opreturn script that is created when setting up a P2SH and P2WSH cold stake trx
         /// if we find any then try to find the keys and track the script before calling in to the main wallet.
         /// </summary>
         /// <inheritdoc/>

@@ -1,4 +1,4 @@
-﻿@page "/walletreceive/{walletname}/{accountname}"
+﻿@page "/coldstakereceive/{walletname}/{accountname}"
 
 @using Blockcore.Features.Wallet.Api.Models
 @using Blockcore.Features.Wallet.Interfaces
@@ -16,13 +16,10 @@
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-         <h1 class="h2"><strong>Wallet : @walletname : @accountname : Receive </strong></h1>
+         <h1 class="h2"><strong>ColdStake : @walletname : Hot Account : Receive </strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname ,accountname); }">
-                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
-            </button>
-            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }">
-                <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeView(walletname); }">
+                <span class="oi oi-pulse" aria-hidden="true"></span> ColdStake View
             </button>
         </div>
     </div>
@@ -49,7 +46,7 @@
         </div>
     </div>
 
-    Types.Wallet wallet = this.WalletManager.GetWallet(walletname);
+    Blockcore.Features.Wallet.Types.Wallet wallet = this.WalletManager.GetWallet(walletname);
     HdAccount account = wallet.GetAccount(accountname);
 
     var accountmodel = new AddressesModel
@@ -186,17 +183,9 @@
         _ShowTab_IsChanged = true;
     }
 
-    private void NavigateToWallet(string walletName, string accountname)
+    private void NavigateToColdStakeView(string walletName)
     {
-        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
-    }
-    private void NavigateToReceiveWallet(string walletName, string accountname)
-    {
-        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
-    }
-    private void NavigateToSendWallet(string walletName, string accountname)
-    {
-        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
     }
     private void OnSelected(string selection)
     {

@@ -41,8 +41,11 @@
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
                 <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate
             </button>
-            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWithdraw(walletname); }">
                 <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw
+            </button>
+             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeHotReceiveView(walletname); }">
+                <span class="oi oi-cloud-download" aria-hidden="true"></span> Hot Receive
             </button>
         </div>
     </div>
@@ -165,7 +168,10 @@
     {
         NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
     }
-
+    private void NavigateToColdStakeHotReceiveView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakereceive/" + walletName + "/coldStakingHotAddresses");
+    }
     private void ViewTransaction()
     {
         ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction));

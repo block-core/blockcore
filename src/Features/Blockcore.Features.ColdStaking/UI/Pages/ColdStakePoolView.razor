@@ -115,7 +115,7 @@
         foreach (var input in inputs)
         {
             Blockcore.Consensus.ScriptInfo.Script coldstakeScript = null;
-            DateTime? stakingExpiry;
+            DateTime? stakingExpiry = null;
             string oututType;
 
             if (Blockcore.Consensus.ScriptInfo.PayToScriptHashTemplate.Instance.CheckScriptPubKey(input.Transaction.ScriptPubKey) ||
@@ -125,7 +125,10 @@
                     throw new Exception("Wallet has no redeem scripts");
 
                 coldstakeScript = input.Address.RedeemScripts.FirstOrDefault(r => r.Hash.ScriptPubKey == input.Transaction.ScriptPubKey || r.WitHash.ScriptPubKey == input.Transaction.ScriptPubKey);
-                stakingExpiry = input.Address.RedeemScriptExpiery.FirstOrDefault(r => r.RedeemScript == coldstakeScript)?.StakingExpiry ?? null;
+                if (input.Address.RedeemScriptExpiery != null)
+                {
+                    stakingExpiry = input.Address.RedeemScriptExpiery.FirstOrDefault(r => r.RedeemScript == coldstakeScript)?.StakingExpiry ?? null;
+                }
 
                 if (coldstakeScript.Hash.ScriptPubKey == input.Transaction.ScriptPubKey)
                     oututType = "P2SH";

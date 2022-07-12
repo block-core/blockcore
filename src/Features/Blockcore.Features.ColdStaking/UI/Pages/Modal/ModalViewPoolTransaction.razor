@@ -41,7 +41,7 @@
                      <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Type</label>
                         <label class="col-sm-10 col-form-label text-info">
-                            @_TModel.OututType
+                            @_TModel.OutputType
                         </label>
                     </div>
 
@@ -105,7 +105,7 @@
 
         var item = ((Blockcore.Features.ColdStaking.UI.Pages.ColdStakePoolView.AddressBalance)ModalService.Parameter);
 
-        if (item.OututType == "ColdStake")
+        if (item.OutputType == "ColdStake")
         {
             item.HdAddress.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value);
         }

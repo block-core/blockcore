@@ -90,7 +90,7 @@
                                     <tr>
                                         <td>@item.Value.HotAddress</td>
                                         <td>@item.Value.ColdAddress</td>
-                                        <td>@item.Value.OututType</td>
+                                        <td>@item.Value.OutputType</td>
                                         @if (item.Value.AmountUnconfirmed > 0)
                                         {
                                             <td class="text-right">@item.Value.AmountConfirmed (@item.Value.AmountUnconfirmed)</td>
@@ -136,7 +136,7 @@
         public Money AmountConfirmed;
         public Money AmountUnconfirmed;
         public DateTime? StakingExpiry;
-        public string OututType;
+        public string OutputType;
         public Blockcore.Features.Wallet.Types.HdAddress HdAddress;
         public Blockcore.Consensus.ScriptInfo.Script ColdstakeScript;
     }
@@ -151,7 +151,7 @@
         {
             Blockcore.Consensus.ScriptInfo.Script coldstakeScript = null;
             DateTime? stakingExpiry = null;
-            string oututType;
+            string outputType;
 
             if (Blockcore.Consensus.ScriptInfo.PayToScriptHashTemplate.Instance.CheckScriptPubKey(input.Transaction.ScriptPubKey) ||
                 Blockcore.Consensus.ScriptInfo.PayToWitScriptHashTemplate.Instance.CheckScriptPubKey(input.Transaction.ScriptPubKey))
@@ -166,15 +166,15 @@
                 }
 
                 if (coldstakeScript.Hash.ScriptPubKey == input.Transaction.ScriptPubKey)
-                    oututType = "P2SH";
+                    outputType = "P2SH";
                 else
-                    oututType = "P2WSH";
+                    outputType = "P2WSH";
             }
             else
             {
                 coldstakeScript = input.Transaction.ScriptPubKey;
                 stakingExpiry = input.Address.StakingExpiry;
-                oututType = "ColdStake";
+                outputType = "ColdStake";
             }
 
             Blockcore.Consensus.ScriptInfo.ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(coldstakeScript, out KeyId hotPubKeyHash, out KeyId coldPubKeyHash);
@@ -196,7 +196,7 @@
                             AmountConfirmed = input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
                             AmountUnconfirmed = !input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
                             StakingExpiry = stakingExpiry,
-                            OututType = oututType,
+                            OutputType = outputType,
                             HdAddress = input.Address,
                             ColdstakeScript = coldstakeScript
                         });
@@ -212,7 +212,7 @@
                         ColdAddress = "na",
                         AmountConfirmed = input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
                         AmountUnconfirmed = !input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
-                        OututType = Network.StandardScriptsRegistry.GetTemplateFromScriptPubKey(input.Transaction.ScriptPubKey)?.Type.ToString(),
+                        OutputType = Network.StandardScriptsRegistry.GetTemplateFromScriptPubKey(input.Transaction.ScriptPubKey)?.Type.ToString(),
                     });
             }
         }

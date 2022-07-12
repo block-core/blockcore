@@ -1008,6 +1008,22 @@ namespace Blockcore.Features.Wallet.Types
 
             return (confirmed, total - confirmed, trx.Any());
         }
+
+        /// <summary>
+        /// Check if the address path is a BIP84 segwit address.
+        /// </summary>
+        public bool IsBip84
+        {
+            get { return HdOperations.GetPurpose(this.HdPath) == 84; }
+        }
+
+        /// <summary>
+        /// Check if the address path is a BIP84 segwit address.
+        /// </summary>
+        public bool IsBip44
+        {
+            get { return HdOperations.GetPurpose(this.HdPath) == 44; }
+        }
     }
 
     public class RedeemScriptExpiery

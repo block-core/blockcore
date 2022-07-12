@@ -140,7 +140,9 @@ else
                                         <tr @onclick="() => { NavigateToColdStakeView(walletName); }">
 
                                             @{
-                                                <td class="align-middle">@walletName</td>
+                                                 <td class="align-middle">
+                                                    <button class="btn btn-sm btn-secondary">@walletName</button>
+                                                </td>
 
                                                 @if (walletItem.Value.Main.AmountUnconfirmed > 0)
                                                 {

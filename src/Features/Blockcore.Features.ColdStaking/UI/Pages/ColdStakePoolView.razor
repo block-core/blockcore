@@ -79,8 +79,7 @@
                                     <th class="text-primary"><strong>TYPE</strong></th>
 
                                     <th class="text-primary text-right"><strong>AMOUNT</strong></th>
-                                    <th class="text-primary text-right"><strong>UNCONFIRMED</strong></th>
-                                    <th class="text-primary text-right"><strong>EXPIERY</strong></th>
+                                    <th class="text-primary text-center"><strong>EXPIERY</strong></th>
                                     <th class="text-primary text-right"><strong>VIEW</strong></th>
                                 </tr>
                             </thead>
@@ -99,8 +98,14 @@
                                         {
                                             <td class="text-right">@item.Value.AmountConfirmed </td>
                                         }
-                                        <td class="text-right">@item.Value.AmountUnconfirmed</td>
-                                        <td class="text-center">@String.Format("{0:f}", item.Value.StakingExpiry)</td>
+                                        @if (item.Value.StakingExpiry != null)
+                                        {
+                                            <td class="text-center">@String.Format("{0:f}", item.Value.StakingExpiry) (@ParseDate(item.Value.StakingExpiry))</td>
+                                        }
+                                        else
+                                        {
+                                                <td class="text-center"></td>
+                                        }
                                         <td class="text-center align-middle">
                                             <button class="btn btn-sm btn-secondary" @onclick="() => { ViewTransaction(item.Value); }"> <span class="oi oi-list" aria-hidden="true"></span></button>
                                         </td>
@@ -139,6 +144,25 @@
         public string OutputType;
         public Blockcore.Features.Wallet.Types.HdAddress HdAddress;
         public Blockcore.Consensus.ScriptInfo.Script ColdstakeScript;
+    }
+
+    public static string ParseDate(DateTime? dateTime)
+    {
+        if (dateTime == null)
+        {
+            return string.Empty;
+        }
+
+        if (DateTime.UtcNow > dateTime)
+        {
+            var totalDay = DateTime.UtcNow - dateTime;
+            return $"{(int)totalDay.Value.TotalDays} days ago";
+        }
+        else
+        {
+            var totalDay = dateTime - DateTime.UtcNow;
+            return $"in {(int)totalDay.Value.TotalDays} days";
+        }
     }
 
     private Dictionary<string, AddressBalance> GetAddressesWithBalances(string walletName)
@@ -205,7 +229,7 @@
             else
             {
                 // this is not suppose to happen unless coins are sent to an address of hot account by mistake
-                
+
                 entries.Add($"{input.Transaction.OutPoint}", new AddressBalance
                     {
                         HotAddress = "na",
@@ -241,6 +265,10 @@
     private void ViewTransaction(AddressBalance addressBalance)
     {
         ModalService.Show("Transaction Details", typeof(Modal.ModalViewPoolTransaction), addressBalance);
+        ModalService.OnClose += () =>
+        {
+            this.StateHasChanged();
+        };
     }
     private void NavigateToColdStakeView(string walletName)
     {

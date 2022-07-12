@@ -49,11 +49,13 @@
                         <label class="col-sm-2 col-form-label">Expiry</label>
                         <label class="col-sm-10 col-form-label text-info">
                             @String.Format("{0:f}", _TModel.StakingExpiry)
+
+                            (@Blockcore.Features.ColdStaking.UI.Pages.ColdStakePoolView.ParseDate(_TModel.StakingExpiry))
                         </label>
                     </div>
 
                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Set</label>
+                        <label class="col-sm-2 col-form-label">Days to expiery</label>
                         <label class="col-sm-10 col-form-label text-info">
                             <input @bind="StakingExpiryDays" type="text" class="form-control bg-secondary text-light m-1" placeholder="Days for staking to expire" />
                         </label>
@@ -63,7 +65,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <button class="btn btn-primary" @onclick="UdateModal">Update</button>
+                    <button class="btn btn-primary" @onclick="UpdateModal">Update</button>
                     <button class="btn btn-primary" @onclick="CloseModal">Close</button>                   
                 </div>
                
@@ -95,8 +97,10 @@
         ModalService.Close();
     }
 
-    private void UdateModal()
+    private void UpdateModal()
     {
+        this.Alert = string.Empty;
+
         if (this.StakingExpiryDays == null)
         {
             this.Alert = "set expiry days";
@@ -108,6 +112,7 @@
         if (item.OutputType == "ColdStake")
         {
             item.HdAddress.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value);
+            item.StakingExpiry = item.HdAddress.StakingExpiry;
         }
         else
         {
@@ -116,6 +121,7 @@
             if (expiry != null)
             {
                 expiry.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value);
+                item.StakingExpiry = expiry.StakingExpiry;
             }
             else
             {
@@ -125,17 +131,18 @@
                 if (item.HdAddress.RedeemScriptExpiery == null)
                     item.HdAddress.RedeemScriptExpiery = new List<Blockcore.Features.Wallet.Types.RedeemScriptExpiery>();
 
-                item.HdAddress.RedeemScriptExpiery.Add(new Blockcore.Features.Wallet.Types.RedeemScriptExpiery
-                    {
-                        RedeemScript = item.ColdstakeScript,
-                        StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value)
-                    });
-            }
+                expiry = new Blockcore.Features.Wallet.Types.RedeemScriptExpiery
+                {
+                    RedeemScript = item.ColdstakeScript,
+                    StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value)
+                };
 
+                item.HdAddress.RedeemScriptExpiery.Add(expiry);
+                item.StakingExpiry = expiry.StakingExpiry;
+            }
         }
 
-        item.StakingExpiry = item.HdAddress.StakingExpiry;
-        
+        this.StateHasChanged();
     }
 
 	private void Submit()

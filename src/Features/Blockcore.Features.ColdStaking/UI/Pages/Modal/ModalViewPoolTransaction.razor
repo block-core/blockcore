@@ -55,7 +55,7 @@
                     </div>
 
                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Days to expiery</label>
+                        <label class="col-sm-2 col-form-label">Days to expiry</label>
                         <label class="col-sm-10 col-form-label text-info">
                             <input @bind="StakingExpiryDays" type="text" class="form-control bg-secondary text-light m-1" placeholder="Days for staking to expire" />
                         </label>
@@ -116,7 +116,7 @@
         }
         else
         {
-            var expiry = item.HdAddress.RedeemScriptExpiery?.FirstOrDefault(r => r.RedeemScript == item.ColdstakeScript);
+            var expiry = item.HdAddress.RedeemScriptExpiry?.FirstOrDefault(r => r.RedeemScript == item.ColdstakeScript);
 
             if (expiry != null)
             {
@@ -128,16 +128,16 @@
                 if (item.HdAddress.RedeemScripts.FirstOrDefault(r => r == item.ColdstakeScript) == null)
                     throw new Exception("ColdstakeScript was expected but not found");
 
-                if (item.HdAddress.RedeemScriptExpiery == null)
-                    item.HdAddress.RedeemScriptExpiery = new List<Blockcore.Features.Wallet.Types.RedeemScriptExpiery>();
+                if (item.HdAddress.RedeemScriptExpiry == null)
+                    item.HdAddress.RedeemScriptExpiry = new List<Blockcore.Features.Wallet.Types.RedeemScriptExpiry>();
 
-                expiry = new Blockcore.Features.Wallet.Types.RedeemScriptExpiery
+                expiry = new Blockcore.Features.Wallet.Types.RedeemScriptExpiry
                 {
                     RedeemScript = item.ColdstakeScript,
                     StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value)
                 };
 
-                item.HdAddress.RedeemScriptExpiery.Add(expiry);
+                item.HdAddress.RedeemScriptExpiry.Add(expiry);
                 item.StakingExpiry = expiry.StakingExpiry;
             }
         }

@@ -79,7 +79,7 @@
                                     <th class="text-primary"><strong>TYPE</strong></th>
 
                                     <th class="text-primary text-right"><strong>AMOUNT</strong></th>
-                                    <th class="text-primary text-center"><strong>EXPIERY</strong></th>
+                                    <th class="text-primary text-center"><strong>EXPIRY</strong></th>
                                     <th class="text-primary text-right"><strong>VIEW</strong></th>
                                 </tr>
                             </thead>
@@ -184,9 +184,9 @@
                     throw new Exception("Wallet has no redeem scripts");
 
                 coldstakeScript = input.Address.RedeemScripts.FirstOrDefault(r => r.Hash.ScriptPubKey == input.Transaction.ScriptPubKey || r.WitHash.ScriptPubKey == input.Transaction.ScriptPubKey);
-                if (input.Address.RedeemScriptExpiery != null)
+                if (input.Address.RedeemScriptExpiry != null)
                 {
-                    stakingExpiry = input.Address.RedeemScriptExpiery.FirstOrDefault(r => r.RedeemScript == coldstakeScript)?.StakingExpiry ?? null;
+                    stakingExpiry = input.Address.RedeemScriptExpiry.FirstOrDefault(r => r.RedeemScript == coldstakeScript)?.StakingExpiry ?? null;
                 }
 
                 if (coldstakeScript.Hash.ScriptPubKey == input.Transaction.ScriptPubKey)

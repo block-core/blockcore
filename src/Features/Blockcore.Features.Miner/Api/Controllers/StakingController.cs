@@ -216,19 +216,19 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                             if (address.RedeemScripts.Contains(redeemScript))
                             {
-                                if (address.RedeemScriptExpiery == null)
-                                    address.RedeemScriptExpiery = new List<RedeemScriptExpiery>();
+                                if (address.RedeemScriptExpiry == null)
+                                    address.RedeemScriptExpiry = new List<RedeemScriptExpiry>();
 
-                                var expiryScript = address.RedeemScriptExpiery.FirstOrDefault(w => w.RedeemScript == redeemScript);
+                                var expiryScript = address.RedeemScriptExpiry.FirstOrDefault(w => w.RedeemScript == redeemScript);
 
                                 if (expiryScript == null)
                                 {
-                                    expiryScript = new RedeemScriptExpiery
+                                    expiryScript = new RedeemScriptExpiry
                                     {
                                         RedeemScript = redeemScript,
                                     };
 
-                                    address.RedeemScriptExpiery.Add(expiryScript);
+                                    address.RedeemScriptExpiry.Add(expiryScript);
                                 }
 
                                 expiryScript.StakingExpiry = request.StakingExpiry;
@@ -280,9 +280,9 @@ namespace Blockcore.Features.Miner.Api.Controllers
                             model.Addresses.Add(addressItem);
                         }
 
-                        if (address.RedeemScriptExpiery != null)
+                        if (address.RedeemScriptExpiry != null)
                         {
-                            foreach (RedeemScriptExpiery redeemScriptExpiery in address.RedeemScriptExpiery)
+                            foreach (RedeemScriptExpiry redeemScriptExpiry in address.RedeemScriptExpiry)
                             {
                                 if (addressItem == null)
                                 {
@@ -294,14 +294,14 @@ namespace Blockcore.Features.Miner.Api.Controllers
                                     };
                                 }
 
-                                var redeemScriptExpieryItem = new RedeemScriptExpieryItem
+                                var redeemScriptExpiryItem = new RedeemScriptExpiryItem
                                 {
-                                    RedeemScript = Encoders.Hex.EncodeData(((Script)redeemScriptExpiery.RedeemScript).ToBytes(false)),
-                                    StakingExpiry = redeemScriptExpiery.StakingExpiry,
-                                    Expired = redeemScriptExpiery.StakingExpiry > DateTime.UtcNow
+                                    RedeemScript = Encoders.Hex.EncodeData(((Script)redeemScriptExpiry.RedeemScript).ToBytes(false)),
+                                    StakingExpiry = redeemScriptExpiry.StakingExpiry,
+                                    Expired = redeemScriptExpiry.StakingExpiry > DateTime.UtcNow
                                 };
 
-                                addressItem.RedeemScriptExpiery.Add(redeemScriptExpieryItem);
+                                addressItem.RedeemScriptExpiry.Add(redeemScriptExpiryItem);
                             }
                         }
                     }

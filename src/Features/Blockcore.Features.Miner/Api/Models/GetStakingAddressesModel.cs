@@ -10,7 +10,7 @@ namespace Blockcore.Features.Miner.Api.Models
         public IList<GetStakingAddressesModelItem> Addresses { get; set; }
     }
 
-    public class RedeemScriptExpieryItem
+    public class RedeemScriptExpiryItem
     {
         /// <summary>
         /// A script that is used for P2SH and P2WSH scenarios (mostly used for staking).
@@ -39,7 +39,7 @@ namespace Blockcore.Features.Miner.Api.Models
         [JsonProperty(PropertyName = "expired")]
         public bool Expired { get; set; }
 
-        [JsonProperty(PropertyName = "redeemScriptsExpiery")]
-        public ICollection<RedeemScriptExpieryItem> RedeemScriptExpiery { get; set; } = new List<RedeemScriptExpieryItem>();
+        [JsonProperty(PropertyName = "redeemScriptsExpiry")]
+        public ICollection<RedeemScriptExpiryItem> RedeemScriptExpiry { get; set; } = new List<RedeemScriptExpiryItem>();
     }
 }

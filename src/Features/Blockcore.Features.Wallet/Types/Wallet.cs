@@ -951,8 +951,8 @@ namespace Blockcore.Features.Wallet.Types
         /// that can be marked as expired for staking, this is to be use together with the -enforceStakingFlag 
         /// mainly for cold staking pools.
         /// </summary>
-        [JsonProperty(PropertyName = "redeemScriptsExpiery")]
-        public ICollection<RedeemScriptExpiery> RedeemScriptExpiery { get; set; }
+        [JsonProperty(PropertyName = "redeemScriptsExpiry")]
+        public ICollection<RedeemScriptExpiry> RedeemScriptExpiry { get; set; }
 
         /// <summary>
         /// A path to the address as defined in BIP44.
@@ -1026,7 +1026,7 @@ namespace Blockcore.Features.Wallet.Types
         }
     }
 
-    public class RedeemScriptExpiery
+    public class RedeemScriptExpiry
     {
         /// <summary>
         /// A script that is used for P2SH and P2WSH scenarios (mostly used for staking).

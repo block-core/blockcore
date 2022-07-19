@@ -10,6 +10,24 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">ColdStake Script</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.ColdstakeScript.ToString()
+                        </label>
+                    </div>
+
+                    @if (_TModel.OutputType != "ColdStake")
+                    {
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Script Hash</label>
+                            <label class="col-sm-10 col-form-label text-info">
+                                @(_TModel.OutputType == "P2SH" ?  
+                                @_TModel.ColdstakeScript.Hash.ScriptPubKey.ToString() : 
+                                @_TModel.ColdstakeScript.WitHash.ScriptPubKey.ToString())
+                            </label>
+                        </div>
+                    }
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Hot Address</label>
                         <label class="col-sm-10 col-form-label text-info">
                             @_TModel.HotAddress
@@ -111,7 +129,7 @@
 
         if (item.OutputType == "ColdStake")
         {
-            item.HdAddress.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value);
+            item.HdAddress.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value).AddMinutes(10);
             item.StakingExpiry = item.HdAddress.StakingExpiry;
         }
         else
@@ -120,7 +138,7 @@
 
             if (expiry != null)
             {
-                expiry.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value);
+                expiry.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value).AddMinutes(10);
                 item.StakingExpiry = expiry.StakingExpiry;
             }
             else
@@ -134,7 +152,7 @@
                 expiry = new Blockcore.Features.Wallet.Types.RedeemScriptExpiry
                 {
                     RedeemScript = item.ColdstakeScript,
-                    StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value)
+                    StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value).AddMinutes(10)
                 };
 
                 item.HdAddress.RedeemScriptExpiry.Add(expiry);
@@ -143,6 +161,7 @@
         }
 
         this.StateHasChanged();
+        this.CloseModal();
     }
 
 	private void Submit()

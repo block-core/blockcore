@@ -15,7 +15,11 @@
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 style="max-width: 18em" class="h2"><strong>Cold Staking Pool Addresses</strong></h1>
-        
+         <div class="btn-toolbar mb-2 mb-md-0">
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeHotReceiveView(walletname); }">
+                <span class="oi oi-cloud-download" aria-hidden="true"></span> Hot Receive
+            </button>
+        </div>
     </div>
 
     var hotAddresses = this.GetAddressesWithBalances(walletname);
@@ -273,6 +277,10 @@
     private void NavigateToColdStakeView(string walletName)
     {
         NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+    }
+    private void NavigateToColdStakeHotReceiveView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakereceive/" + walletName + "/coldStakingHotAddresses");
     }
     private void OnSelected(string selection)
     {

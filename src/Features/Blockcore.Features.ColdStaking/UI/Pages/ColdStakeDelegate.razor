@@ -167,14 +167,6 @@
     {
         ColdStakingManager = this.WalletManager as ColdStakingManager;
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
-        //var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
-        //this.SegwitChangeAddress = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
-        //this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
-        //if (this.ColdWalletAddress == null)
-        //{
-        //    this.Alert = "The cold staking account does not exist.";
-        //    return Task.CompletedTask;
-        //}
         return Task.CompletedTask;
     }
     public void SendMax()

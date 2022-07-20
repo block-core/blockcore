@@ -167,14 +167,14 @@
     {
         ColdStakingManager = this.WalletManager as ColdStakingManager;
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
-        var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
-        this.SegwitChangeAddress = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
-        this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
-        if (this.ColdWalletAddress == null)
-        {
-            this.Alert = "The cold staking account does not exist.";
-            return Task.CompletedTask;
-        }
+        //var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
+        //this.SegwitChangeAddress = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
+        //this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
+        //if (this.ColdWalletAddress == null)
+        //{
+        //    this.Alert = "The cold staking account does not exist.";
+        //    return Task.CompletedTask;
+        //}
         return Task.CompletedTask;
     }
     public void SendMax()
@@ -199,8 +199,46 @@
     private async Task Setup()
     {
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
-        if (string.IsNullOrEmpty(this.ColdWalletAddress)) { this.Alert = "Your cold wallet address is missing"; return; }
         if (string.IsNullOrEmpty(this.HotWalletAddress)) { this.Alert = "Your hot wallet address is missing"; return; }
+
+        if (BitcoinWitPubKeyAddress.IsValid(this.HotWalletAddress, this.Network, out Exception error))
+        {
+            bool segwitActivated = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
+
+            if (!segwitActivated)
+            {
+                this.Alert = "Segwit is not activated, can't use segwit address.";
+                return;
+            }
+
+            this.SegwitChangeAddress = true;
+        }
+        else
+        {
+            this.Alert = error.Message; 
+            return;
+        }
+
+        var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
+
+        if (address == null)
+        {
+            this.Alert = "The cold staking account does not exist.";
+            return;
+        }
+
+        if (this.SegwitChangeAddress != address.IsBip84)
+        {
+            this.Alert = "Trying to send to a segwit address from a non segwit wallet.";
+            return;
+        }
+
+        this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
+        if (this.ColdWalletAddress == null)
+        {
+            this.Alert = "The cold staking account does not exist.";
+            return;
+        }
 
         this.Alert = string.Empty;
 

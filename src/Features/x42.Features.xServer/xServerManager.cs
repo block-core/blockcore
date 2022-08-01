@@ -322,6 +322,12 @@ namespace x42.Features.xServer
            
          
             string pathString = Path.Combine(x42MainFolder, "Config", fileName);
+            if (!Directory.Exists(pathString))
+            {
+
+                Directory.CreateDirectory(pathString);
+
+            }
 
             string text = File.ReadAllText(pathString);
             text = text.Replace("{" + variable + "}", value);
@@ -351,6 +357,13 @@ namespace x42.Features.xServer
 
 
             string pathString = Path.Combine(x42MainFolder,"certificates");
+
+            if (!Directory.Exists(pathString))
+            {
+
+                Directory.CreateDirectory(pathString);
+
+            }
             using (Stream file1 = File.OpenWrite(pathString + "\\" + profileName + ".p12"))
             {
                 sftp.DownloadFile("/root/x42-Server-Deployment/traefik/pki/" + profileName + "/" + profileName + ".p12", file1);

@@ -194,6 +194,16 @@ namespace x42.Features.xServer
             try
             {
 
+                var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var configPath = Path.Combine(appDataFolder, "Config");
+                var configExists = Directory.Exists(configPath);
+                if (!configExists)
+                {
+
+                    Directory.CreateDirectory(configPath);
+
+                }
+
                 CopyConfigFiles(".env");
                 CopyConfigFiles("app.config.json");
                 CopyConfigFiles("xServer.conf");
@@ -295,7 +305,7 @@ namespace x42.Features.xServer
             }
             catch (Exception e)
             {
-                this.logger.LogError(e.InnerException.Message);
+                this.logger.LogError(e.Message);
                
             }
 
@@ -308,15 +318,17 @@ namespace x42.Features.xServer
         private static void CopyConfigFiles(string fileName)
         {
             var x42MainFolder = Path.Combine(Environment.CurrentDirectory, "AppData");
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            if (!Directory.Exists(Path.Combine(x42MainFolder, "Config")))
+
+            if (!Directory.Exists(Path.Combine(appDataFolder, "Config")))
             {
 
-                Directory.CreateDirectory(Path.Combine(x42MainFolder, "Config"));
+                Directory.CreateDirectory(Path.Combine(appDataFolder, "Config"));
 
             }
             string sourceFile = Path.Combine(x42MainFolder, fileName);
-            string desitinationFile = Path.Combine(x42MainFolder, "Config", fileName);
+            string desitinationFile = Path.Combine(appDataFolder, "Config", fileName);
             if (File.Exists(desitinationFile)) {
 
                 File.Delete(desitinationFile);
@@ -327,10 +339,9 @@ namespace x42.Features.xServer
 
         private static void ReplaceVariable(string fileName, string variable, string value)
         {
-            var x42MainFolder = Path.Combine(Environment.CurrentDirectory, "AppData");
-           
-         
-            string pathString = Path.Combine(x42MainFolder, "Config", fileName);
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            string pathString = Path.Combine(appDataFolder, "Config", fileName);
              
 
             string text = File.ReadAllText(pathString);
@@ -344,10 +355,10 @@ namespace x42.Features.xServer
         private static void UploadFile(SftpClient sftp, string fileName, string destination)
         {
 
-            var x42MainFolder = Path.Combine(Environment.CurrentDirectory, "AppData");
-        
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            string pathString = Path.Combine(x42MainFolder,"Config");
+
+            string pathString = Path.Combine(appDataFolder, "Config");
 
 
             using (FileStream filestream = File.OpenRead(Path.Combine(pathString, fileName)))

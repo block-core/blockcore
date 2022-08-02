@@ -191,105 +191,114 @@ namespace x42.Features.xServer
         public async Task SetUpxServer(xServerProvisioningRequest request)
         {
 
-
-            CopyConfigFiles(".env");
-            CopyConfigFiles("app.config.json");
-            CopyConfigFiles("xServer.conf");
-            ReplaceVariable(".env", "profile", request.Profile.ToLower());
-            ReplaceVariable(".env", "postgrespass", request.DatabasePassword);
-            ReplaceVariable("app.config.json", "profile", request.Profile.ToLower());
-            ReplaceVariable("xServer.conf", "postgrespass", request.DatabasePassword);
-
-            await this.nodeHub.Echo(" ");
-            await this.nodeHub.Echo("*******************************************");
-            await this.nodeHub.Echo("Welcome to the xServer provisioning tool!");
-            await this.nodeHub.Echo("*******************************************");
-            await this.nodeHub.Echo(" ");
-
-            await this.nodeHub.Echo("Connecting via ssh...");
-
-            var commndList = new List<Models.SshCommand>();
-
-
-            commndList.Add(new Models.SshCommand() { Command = "apt-get update -y", Description = "Updates" });
-            commndList.Add(new Models.SshCommand() { Command = "apt-get install git -y", Description = "Install Git" });
-            commndList.Add(new Models.SshCommand() { Command = "git clone https://github.com/x42protocol/x42-Server-Deployment", Description = "Clone Repository" });
-
-            commndList.Add(new Models.SshCommand() { Command = "cd x42-Server-Deployment && sh setup.sh", Description = "Running Setup" });
-
-            commndList.Add(new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && sh create_ca.sh", Description = "Generating Certificate Authority" });
-
-            await this.nodeHub.Echo("SSH Connection success!");
-            await this.nodeHub.Echo("Installing xServer...");
-
-
-
-            var scopedSshManager = new SshManager(request.IpAddress, request.SshUser, request.SsHPassword, this.nodeHub);
-
-            foreach (var commandItem in commndList)
+            try
             {
 
-                await this.nodeHub.Echo($"Starting {commandItem.Description}...");
+                CopyConfigFiles(".env");
+                CopyConfigFiles("app.config.json");
+                CopyConfigFiles("xServer.conf");
+                ReplaceVariable(".env", "profile", request.Profile.ToLower());
+                ReplaceVariable(".env", "postgrespass", request.DatabasePassword);
+                ReplaceVariable("app.config.json", "profile", request.Profile.ToLower());
+                ReplaceVariable("xServer.conf", "postgrespass", request.DatabasePassword);
 
-                await scopedSshManager.ExecuteCommand(commandItem.Command);
+                await this.nodeHub.Echo(" ");
+                await this.nodeHub.Echo("*******************************************");
+                await this.nodeHub.Echo("Welcome to the xServer provisioning tool!");
+                await this.nodeHub.Echo("*******************************************");
+                await this.nodeHub.Echo(" ");
+
+                await this.nodeHub.Echo("Connecting via ssh...");
+
+                var commndList = new List<Models.SshCommand>();
+
+
+                commndList.Add(new Models.SshCommand() { Command = "apt-get update -y", Description = "Updates" });
+                commndList.Add(new Models.SshCommand() { Command = "apt-get install git -y", Description = "Install Git" });
+                commndList.Add(new Models.SshCommand() { Command = "git clone https://github.com/x42protocol/x42-Server-Deployment", Description = "Clone Repository" });
+
+                commndList.Add(new Models.SshCommand() { Command = "cd x42-Server-Deployment && sh setup.sh", Description = "Running Setup" });
+
+                commndList.Add(new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && sh create_ca.sh", Description = "Generating Certificate Authority" });
+
+                await this.nodeHub.Echo("SSH Connection success!");
+                await this.nodeHub.Echo("Installing xServer...");
+
+
+
+                var scopedSshManager = new SshManager(request.IpAddress, request.SshUser, request.SsHPassword, this.nodeHub);
+
+                foreach (var commandItem in commndList)
+                {
+
+                    await this.nodeHub.Echo($"Starting {commandItem.Description}...");
+
+                    await scopedSshManager.ExecuteCommand(commandItem.Command);
+                    Thread.Sleep(5000);
+
+                    await this.nodeHub.Echo($"Finished {commandItem.Description}...");
+
+                }
+
+
+                using (var sftp = new SftpClient(request.IpAddress, request.SshUser, request.SsHPassword))
+                {
+                    sftp.Connect();
+                    UploadFile(sftp, ".env", "xserver");
+                    UploadFile(sftp, "app.config.json", "xserver/xserverui");
+                    UploadFile(sftp, "xServer.conf", "xserver/xserver");
+
+                    sftp.Disconnect();
+
+                }
+
+                var startTraefik = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && docker-compose up -d", Description = "Starting Traefik" };
+
                 Thread.Sleep(5000);
 
-                await this.nodeHub.Echo($"Finished {commandItem.Description}...");
+                var issueClientCertificate = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && sh client_certificates.sh " + request.Profile + " " + request.CertificatePassword + " " + request.EmailAddress + "", Description = "Issuing Certificate" };
 
+                var startDocker = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd xserver && docker-compose up -d", Description = "Starting xServer" };
+
+
+
+                await this.nodeHub.Echo($"Starting {startTraefik.Description}...");
+
+                await scopedSshManager.ExecuteCommand(startTraefik.Command);
+
+                await this.nodeHub.Echo($"Finished {startTraefik.Description}...");
+
+
+                await this.nodeHub.Echo($"Starting {issueClientCertificate.Description}...");
+
+                await scopedSshManager.ExecuteCommand(issueClientCertificate.Command);
+
+                await this.nodeHub.Echo($"Finished {issueClientCertificate.Description}...");
+
+
+                await this.nodeHub.Echo($"Starting {startDocker.Description}...");
+
+                await scopedSshManager.ExecuteCommand(startDocker.Command);
+
+                await this.nodeHub.Echo($"Finished {startDocker.Description}...");
+
+                using (var sftp = new SftpClient(request.IpAddress, request.SshUser, request.SsHPassword))
+                {
+                    sftp.Connect();
+                    DownloadClientCertificate(sftp, request.Profile);
+                    sftp.Disconnect();
+
+                }
+
+
+                await this.nodeHub.Echo("xServer installation Complete!");
             }
-
-
-            using (var sftp = new SftpClient(request.IpAddress, request.SshUser, request.SsHPassword))
+            catch (Exception e)
             {
-                sftp.Connect();
-                UploadFile(sftp, ".env", "xserver");
-                UploadFile(sftp, "app.config.json", "xserver/xserverui");
-                UploadFile(sftp, "xServer.conf", "xserver/xserver");
-
-                sftp.Disconnect();
-
+                this.logger.LogError(e.InnerException.Message);
+               
             }
 
-            var startTraefik = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && docker-compose up -d", Description = "Starting Traefik" };
-
-            Thread.Sleep(5000);
-
-            var issueClientCertificate = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd traefik && sh client_certificates.sh " + request.Profile + " " + request.CertificatePassword + " " + request.EmailAddress + "", Description = "Issuing Certificate" };
-
-            var startDocker = new Models.SshCommand() { Command = "cd x42-Server-Deployment && cd xserver && docker-compose up -d", Description = "Starting xServer" };
-
-
-
-            await this.nodeHub.Echo($"Starting {startTraefik.Description}...");
-
-            await scopedSshManager.ExecuteCommand(startTraefik.Command);
-
-            await this.nodeHub.Echo($"Finished {startTraefik.Description}...");
-
-
-            await this.nodeHub.Echo($"Starting {issueClientCertificate.Description}...");
-
-            await scopedSshManager.ExecuteCommand(issueClientCertificate.Command);
-
-            await this.nodeHub.Echo($"Finished {issueClientCertificate.Description}...");
-
-
-            await this.nodeHub.Echo($"Starting {startDocker.Description}...");
-
-            await scopedSshManager.ExecuteCommand(startDocker.Command);
-
-            await this.nodeHub.Echo($"Finished {startDocker.Description}...");
-
-            using (var sftp = new SftpClient(request.IpAddress, request.SshUser, request.SsHPassword))
-            {
-                sftp.Connect();
-                DownloadClientCertificate(sftp, request.Profile);
-                sftp.Disconnect();
-
-            }
-
-
-            await this.nodeHub.Echo("xServer installation Complete!");
 
              
 
@@ -322,15 +331,13 @@ namespace x42.Features.xServer
            
          
             string pathString = Path.Combine(x42MainFolder, "Config", fileName);
-            if (!Directory.Exists(pathString))
-            {
-
-                Directory.CreateDirectory(pathString);
-
-            }
+             
 
             string text = File.ReadAllText(pathString);
             text = text.Replace("{" + variable + "}", value);
+            if (File.Exists(pathString)) {
+                File.Delete(pathString);
+            }
             File.WriteAllText(pathString, text);
         }
 

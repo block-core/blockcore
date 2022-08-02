@@ -204,6 +204,14 @@ namespace x42.Features.xServer
 
                 }
 
+                if(!(await UpdateProfileDNSAsync(new ProfileDnsUpdateRequest() { Ip = request.IpAddress, Profile = request.Profile })))
+                {
+
+                    await this.nodeHub.Echo("An Error has Occured");
+
+
+                }
+
                 CopyConfigFiles(".env");
                 CopyConfigFiles("app.config.json");
                 CopyConfigFiles("xServer.conf");
@@ -756,6 +764,39 @@ namespace x42.Features.xServer
             }
             return new List<string>();
         }
+
+
+        public async Task<bool> UpdateProfileDNSAsync(ProfileDnsUpdateRequest request)
+        {
+            var t2Node = this.xServerPeerList.GetPeers().Where(n => n.Tier == (int)TierLevel.Two && n.NetworkAddress.Contains("144.91.95.234")).OrderBy(n => n.ResponseTime).FirstOrDefault();
+            if (t2Node != null)
+            {
+                string xServerURL = Utils.GetServerUrl(t2Node.NetworkProtocol, t2Node.NetworkAddress, t2Node.NetworkPort);
+
+                DefaultContractResolver contractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+
+                var client = new RestClient(xServerURL);
+                client.UseNewtonsoftJson();
+                var updateDnsRequest = new RestRequest("/UpdateProfileDNS", Method.Post);
+                updateDnsRequest.AddJsonBody(request);
+
+                updateDnsRequest.RequestFormat = DataFormat.Json;
+
+                var updateDnsResult = await client.ExecuteAsync(updateDnsRequest);
+
+                if (updateDnsResult.StatusCode == HttpStatusCode.OK)
+                {
+                    return true;
+                }
+                
+            }
+            return false;
+            
+         }
+
         public ReserveWordPressResult ReserveWordpressPreviewDomain(WordPressReserveRequest wordpressrequest)
         {
             var result = new ReserveWordPressResult();

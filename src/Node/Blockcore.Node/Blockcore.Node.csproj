@@ -48,9 +48,6 @@
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AppData\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="AppData\.env">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

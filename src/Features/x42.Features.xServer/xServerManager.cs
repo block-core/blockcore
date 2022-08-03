@@ -190,7 +190,11 @@ namespace x42.Features.xServer
 
         public async Task SetUpxServer(xServerProvisioningRequest request)
         {
-
+            await this.nodeHub.Echo(" ");
+            await this.nodeHub.Echo("*******************************************");
+            await this.nodeHub.Echo("Welcome to the xServer provisioning tool!");
+            await this.nodeHub.Echo("*******************************************");
+            await this.nodeHub.Echo(" ");
             try
             {
 
@@ -220,11 +224,7 @@ namespace x42.Features.xServer
                 ReplaceVariable("app.config.json", "profile", request.Profile.ToLower());
                 ReplaceVariable("xServer.conf", "postgrespass", request.DatabasePassword);
 
-                await this.nodeHub.Echo(" ");
-                await this.nodeHub.Echo("*******************************************");
-                await this.nodeHub.Echo("Welcome to the xServer provisioning tool!");
-                await this.nodeHub.Echo("*******************************************");
-                await this.nodeHub.Echo(" ");
+    
 
                 await this.nodeHub.Echo("Connecting via ssh...");
 
@@ -314,7 +314,9 @@ namespace x42.Features.xServer
             catch (Exception e)
             {
                 this.logger.LogError(e.Message);
-               
+                await this.nodeHub.Echo(e.Message);
+                 
+
             }
 
 
@@ -325,7 +327,7 @@ namespace x42.Features.xServer
 
         private static void CopyConfigFiles(string fileName)
         {
-            var x42MainFolder = Path.Combine(Environment.CurrentDirectory, "AppData");
+            var x42MainFolder = Path.Combine(Environment.CurrentDirectory,"resources", "daemon", "AppData");
             var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
 

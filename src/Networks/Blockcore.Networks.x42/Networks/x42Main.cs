@@ -171,11 +171,10 @@ namespace Blockcore.Networks.x42.Networks
 
             this.XServerSeedNodes = new List<NetworkXServer>
             {
-                new NetworkXServer("144.91.95.234", 4242),
-                new NetworkXServer("xserverpub-wordpresspreview.xserver.network", 443),
-                new NetworkXServer("xserverpub-dimit3.xserver.network", 443),
-                new NetworkXServer("x42serverpub.xserver.network", 443),
-                new NetworkXServer("54.79.155.69", 443),
+                new NetworkXServer("xserverpub-gabe.xserver.network", 443,2),
+                new NetworkXServer("xserverpub-gabriel.xserver.network", 443,2),
+                new NetworkXServer("xserverpub-dimit3.xserver.network", 443,2),
+                new NetworkXServer("aliens.asuscomm.com", 4242)
             };
 
             this.StandardScriptsRegistry = new x42StandardScriptsRegistry();

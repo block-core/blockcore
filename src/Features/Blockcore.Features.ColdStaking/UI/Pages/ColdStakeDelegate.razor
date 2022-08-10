@@ -207,8 +207,15 @@
         }
         else
         {
-            this.Alert = error.Message; 
-            return;
+            if (BitcoinPubKeyAddress.IsValid(this.HotWalletAddress, this.Network))
+            {
+                // address is fine
+            }
+            else
+            {
+                this.Alert = error.Message;
+                return;
+            }
         }
 
         var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);

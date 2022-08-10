@@ -137,7 +137,7 @@ else
                                     var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
                                     if (walletItem.Value.Cold != null)
                                     {
-                                        <tr @onclick="() => { NavigateToColdStakeView(walletName); }">
+                                        <tr @onclick="() => { NavigateToColdStakeAccountView(walletName); }">
 
                                             @{
                                                  <td class="align-middle">
@@ -251,14 +251,14 @@ else
     {
         NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
     }
-    private void NavigateToColdStakeView(string walletName)
+    private void NavigateToColdStakeAccountView(string walletName)
     {
-        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+        NavigationManager.NavigateTo("coldstaking-accounts/" + walletName);
     }
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToColdStakeView(selection);
+        NavigateToColdStakeAccountView(selection);
     }
 
 }

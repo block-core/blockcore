@@ -16,9 +16,9 @@
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-         <h1 class="h2"><strong>ColdStake : @walletname : Hot Account : Receive </strong></h1>
+         <h1 class="h2"><strong>@walletname : @accountType : receive </strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeView(walletname); }">
+             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeView(walletname, accountname); }">
                 <span class="oi oi-pulse" aria-hidden="true"></span> ColdStake View
             </button>
         </div>
@@ -162,6 +162,19 @@
     public Boolean _ShowTab_UnUsedAddress = false;
     public Boolean _ShowTab_IsChanged = false;
 
+    private string accountType = "unknown";
+
+    protected override Task OnInitializedAsync()
+    {
+        if (accountname == "coldStakingHotAddresses")
+            accountType = "hot-account";
+
+        if (accountname == "coldStakingColdAddresses")
+            accountType = "cold-account";
+
+        return Task.CompletedTask;
+    }
+
     private void tabShowUsedAddress()
     {
         _ShowTab_UsedAddress = true;
@@ -183,9 +196,9 @@
         _ShowTab_IsChanged = true;
     }
 
-    private void NavigateToColdStakeView(string walletName)
+    private void NavigateToColdStakeView(string walletName, string account)
     {
-        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/" + account);
     }
     private void OnSelected(string selection)
     {

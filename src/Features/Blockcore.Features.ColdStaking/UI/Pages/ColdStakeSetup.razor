@@ -192,7 +192,7 @@
         var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
 
         // this.SegwitChangeAddress = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
-        this.SegwitChangeAddress = address.IsBip84;
+        this.SegwitChangeAddress = address.IsBip84();
 
         this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
 

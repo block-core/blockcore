@@ -226,7 +226,7 @@
             return;
         }
 
-        if (this.SegwitChangeAddress != address.IsBip84)
+        if (this.SegwitChangeAddress != address.IsBip84())
         {
             this.Alert = "Trying to send to a segwit address from a non segwit wallet.";
             return;

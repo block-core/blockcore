@@ -1012,17 +1012,17 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// Check if the address path is a BIP84 segwit address.
         /// </summary>
-        public bool IsBip84
+        public bool IsBip84()
         {
-            get { return HdOperations.GetPurpose(this.HdPath) == 84; }
+            return HdOperations.GetPurpose(this.HdPath) == 84;
         }
 
         /// <summary>
         /// Check if the address path is a BIP84 segwit address.
         /// </summary>
-        public bool IsBip44
+        public bool IsBip44()
         {
-            get { return HdOperations.GetPurpose(this.HdPath) == 44; }
+            return HdOperations.GetPurpose(this.HdPath) == 44;
         }
     }
 

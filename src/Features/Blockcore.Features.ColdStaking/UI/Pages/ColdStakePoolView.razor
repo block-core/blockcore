@@ -84,6 +84,7 @@
 
                                     <th class="text-primary text-right"><strong>AMOUNT</strong></th>
                                     <th class="text-primary text-center"><strong>EXPIRY</strong></th>
+                                    <th class="text-primary text-center"><strong></strong></th>
                                     <th class="text-primary text-right"><strong>VIEW</strong></th>
                                 </tr>
                             </thead>
@@ -109,6 +110,14 @@
                                         else
                                         {
                                                 <td class="text-center"></td>
+                                        }
+                                        @if (item.Value.StakingExpiry != null && item.Value.StakingExpiry > DateTime.UtcNow)
+                                        {
+                                              <td class="text-center"><h3 style="font-size: 20px" class="oi oi-circle-check text-success" aria-hidden="true"></h3></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"><h3 style="font-size: 20px" class="oi oi-circle-x text-danger" aria-hidden="true"></h3></td>
                                         }
                                         <td class="text-center align-middle">
                                             <button class="btn btn-sm btn-secondary" @onclick="() => { ViewTransaction(item.Value); }"> <span class="oi oi-list" aria-hidden="true"></span></button>

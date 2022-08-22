@@ -964,6 +964,41 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         }
 
         /// <summary>
+        /// Get the public key for a specified address, wallet and account
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="walletName"></param>
+        /// <param name="accountName"></param>
+        /// <returns></returns>
+
+
+        [Route("publicKey")]
+        [HttpGet]
+        public IActionResult GetPublicKey(string address, string walletName, string accountName)
+        {
+            int index = 1;
+            int change = 0;
+
+            var keyPath = new KeyPath($"{change}/{index}");
+
+            Types.Wallet wallet = this.walletManager.GetWallet(walletName);
+            HdAddress hdAddress = wallet.GetAddress(address, account => account.Name.Equals(accountName));
+
+            try
+            {
+                return Ok(hdAddress.Pubkey.ToHex());
+
+            }
+            catch (Exception e)
+            {
+
+                this.logger.LogError(e.Message);
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+
+        }
+
+        /// <summary>
         /// Lists all the files found in the default wallet folder.
         /// </summary>
         /// <returns>A JSON object containing the wallet folder path and

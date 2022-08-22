@@ -1,7 +1,7 @@
 
 <p align="center">
   <p align="center">
-    <img src="https://user-images.githubusercontent.com/5221349/72841405-93c2ce80-3c96-11ea-844b-3e1ff782b1ae.png" height="100" alt="Blockcore" />
+    <img src="https://avatars3.githubusercontent.com/u/53176002?s=200&v=4" height="100" alt="Blockcore" />
   </p>
   <h3 align="center">
     About Blockcore

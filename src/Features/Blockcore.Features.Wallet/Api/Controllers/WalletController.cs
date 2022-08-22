@@ -976,11 +976,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         [HttpGet]
         public IActionResult GetPublicKey(string address, string walletName, string accountName)
         {
-            int index = 1;
-            int change = 0;
-
-            var keyPath = new KeyPath($"{change}/{index}");
-
+   
             Types.Wallet wallet = this.walletManager.GetWallet(walletName);
             HdAddress hdAddress = wallet.GetAddress(address, account => account.Name.Equals(accountName));
 

@@ -1,4 +1,5 @@
-﻿using Blockcore.Consensus;
+﻿using Blockcore.Connection;
+using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Wallet;
@@ -30,8 +31,9 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
             StoreSettings storeSettings,
             IWalletManager walletManager,
             WalletSettings walletSettings,
+            IConnectionManager connectionManager,
             IWalletTransactionHandler walletTransactionHandler) :
-            base(blockStore, broadcasterManager, chainIndexer, consensusManager, fullNode, loggerFactory, network, scriptAddressReader, storeSettings, walletManager, walletSettings, walletTransactionHandler)
+            base(blockStore, broadcasterManager, chainIndexer, consensusManager, fullNode, loggerFactory, network, scriptAddressReader, storeSettings, walletManager, walletSettings, connectionManager, walletTransactionHandler)
         {
         }
     }

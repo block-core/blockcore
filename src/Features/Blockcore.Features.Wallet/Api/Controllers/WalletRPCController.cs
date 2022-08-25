@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Blockcore.Connection;
+using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
@@ -52,6 +54,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
         /// <summary>Wallet related configuration.</summary>
         private readonly WalletSettings walletSettings;
+        private readonly IConnectionManager connectionManager;
 
         /// <summary>
         /// The wallet name set by selectwallet method. This is static since the controller is a stateless type. This value should probably be cached by an injected service in the future.
@@ -70,6 +73,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             StoreSettings storeSettings,
             IWalletManager walletManager,
             WalletSettings walletSettings,
+            IConnectionManager connectionManager,
             IWalletTransactionHandler walletTransactionHandler) : base(fullNode: fullNode, consensusManager: consensusManager, chainIndexer: chainIndexer, network: network)
         {
             this.blockStore = blockStore;
@@ -79,6 +83,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             this.storeSettings = storeSettings;
             this.walletManager = walletManager;
             this.walletSettings = walletSettings;
+            this.connectionManager = connectionManager;
             this.walletTransactionHandler = walletTransactionHandler;
         }
 
@@ -160,12 +165,37 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         [ActionDescription("Submits raw transaction (serialized, hex-encoded) to local node and network.")]
         public async Task<uint256> SendTransactionAsync(string hex)
         {
-            Transaction transaction = this.FullNode.Network.CreateTransaction(hex);
-            await this.broadcasterManager.BroadcastTransactionAsync(transaction);
+            if (!this.connectionManager.ConnectedPeers.Any())
+            {
+                this.logger.LogTrace("(-)[NO_CONNECTED_PEERS]");
+                throw new RPCServerException(RPCErrorCode.RPC_CLIENT_NOT_CONNECTED, "Can't send transaction: sending transaction requires at least one connection!");
+            }
 
-            uint256 hash = transaction.GetHash();
+            try
+            {
+                Transaction transaction = this.FullNode.Network.CreateTransaction(hex);
+                this.broadcasterManager.BroadcastTransactionAsync(transaction).GetAwaiter().GetResult();
 
-            return hash;
+                BroadcastTransactionStateChanedEntry transactionBroadCastEntry = this.broadcasterManager.GetTransaction(transaction.GetHash());
+
+                if (transactionBroadCastEntry.TransactionBroadcastState == TransactionBroadcastState.FailedBroadcast)
+                {
+                    this.logger.LogError("Exception occurred: {0}", transactionBroadCastEntry.ErrorMessage);
+                    throw new RPCServerException(RPCErrorCode.RPC_TRANSACTION_REJECTED, transactionBroadCastEntry.ErrorMessage);
+                }
+
+                uint256 hash = transaction.GetHash();
+                return hash;
+            }
+            catch (RPCServerException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("Exception occurred: {0}", e.ToString());
+                throw new RPCServerException(RPCErrorCode.RPC_TRANSACTION_ERROR, e.Message);
+            }
         }
 
         /// <summary>

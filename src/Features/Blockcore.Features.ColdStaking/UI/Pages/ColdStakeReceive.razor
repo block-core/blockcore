@@ -68,7 +68,7 @@
                     </h5>
                     <div class="btn-group" role="group" aria-label="Basic example">
                                        
-                    @if (_ShowTab_UnUsedAddress)
+                    @if (ShowTab_UnUsedAddress)
                     {
                         <button type="button" class="btn btn-sm btn-primary mr-1" @onclick="generateAddress">Generate a new address</button>
                     }
@@ -85,12 +85,12 @@
                                 <tr>
                                     <th class="text-primary"><strong>Address</strong></th>
                                     <th class="text-primary text-center"><strong>Is Change</strong></th>
-                                    <th class="text-primary text-center"><strong>confirmed amount</strong></th>
-                                    <th class="text-primary text-center"><strong>unconfirmed amount</strong></th>
+                                    <th class="text-primary text-center"><strong>Confirmed amount</strong></th>
+                                    <th class="text-primary text-center"><strong>Unconfirmed amount</strong></th>
                                 </tr>
                             </thead>
 
-                            @if (_ShowTab_UsedAddress)
+                            @if (ShowTab_UsedAddress)
                             {
                                 <tbody>
                                     @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == true))
@@ -109,7 +109,7 @@
 
                             }
 
-                            @if (_ShowTab_UnUsedAddress)
+                            @if (ShowTab_UnUsedAddress)
                             {
                                 <tbody>
                                     @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == false && li.IsChange == false))
@@ -127,7 +127,7 @@
 
                             }
 
-                            @if (_ShowTab_IsChanged)
+                            @if (ShowTab_IsChanged)
                             {
                                 <tbody>
                                     @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed = false && li.IsChange == true))
@@ -158,9 +158,9 @@
     public string accountname { get; set; }
 
 
-    public Boolean _ShowTab_UsedAddress = true;
-    public Boolean _ShowTab_UnUsedAddress = false;
-    public Boolean _ShowTab_IsChanged = false;
+    public Boolean ShowTab_UsedAddress = true;
+    public Boolean ShowTab_UnUsedAddress = false;
+    public Boolean ShowTab_IsChanged = false;
 
     private string accountType = "unknown";
 
@@ -177,23 +177,23 @@
 
     private void tabShowUsedAddress()
     {
-        _ShowTab_UsedAddress = true;
-        _ShowTab_UnUsedAddress = false;
-        _ShowTab_IsChanged = false;
+        ShowTab_UsedAddress = true;
+        ShowTab_UnUsedAddress = false;
+        ShowTab_IsChanged = false;
     }
 
     private void tabShowUnUsedAddress()
     {
-        _ShowTab_UsedAddress = false;
-        _ShowTab_UnUsedAddress = true;
-        _ShowTab_IsChanged = false;
+        ShowTab_UsedAddress = false;
+        ShowTab_UnUsedAddress = true;
+        ShowTab_IsChanged = false;
     }
 
     private void tabShowIsChangedAddress()
     {
-        _ShowTab_UsedAddress = false;
-        _ShowTab_UnUsedAddress = false;
-        _ShowTab_IsChanged = true;
+        ShowTab_UsedAddress = false;
+        ShowTab_UnUsedAddress = false;
+        ShowTab_IsChanged = true;
     }
 
     private void NavigateToColdStakeView(string walletName, string account)
@@ -208,7 +208,7 @@
 
     private void generateAddress()
     {
-        if (this._ShowTab_UnUsedAddress)
+        if (this.ShowTab_UnUsedAddress)
         {
             var ac = new WalletAccountReference { WalletName = this.walletname, AccountName = this.accountname };
             var newaddresses = this.WalletManager.GetUnusedAddresses(ac, 1, false, true);

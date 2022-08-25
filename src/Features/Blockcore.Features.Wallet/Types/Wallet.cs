@@ -1018,7 +1018,7 @@ namespace Blockcore.Features.Wallet.Types
         }
 
         /// <summary>
-        /// Check if the address path is a BIP84 segwit address.
+        /// Check if the address path is a BIP44 address.
         /// </summary>
         public bool IsBip44()
         {

@@ -82,7 +82,7 @@
                       
                     @if (_ShowTab_UnUsedAddress)
                     {
-                        <button type="button" class="btn btn-sm btn-primary mr-1" @onclick="generateAddress">Generate a new address</button>
+                        <button type="button" class="btn btn-sm btn-primary mr-1" @onclick="GenerateAddress">Generate a new address</button>
                     }
 
                         <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowUsedAddress">Used</button>
@@ -99,8 +99,8 @@
                                 <tr>
                                     <th class="text-primary"><strong>Address</strong></th>
                                     <th class="text-primary text-center"><strong>Is Change</strong></th>
-                                    <th class="text-primary text-center"><strong>confirmed amount</strong></th>
-                                    <th class="text-primary text-center"><strong>unconfirmed amount</strong></th>
+                                    <th class="text-primary text-center"><strong>Confirmed amount</strong></th>
+                                    <th class="text-primary text-center"><strong>Unconfirmed amount</strong></th>
                                 </tr>
                             </thead>
 
@@ -209,7 +209,7 @@
     {
         NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
     }
-    private void generateAddress()
+    private void GenerateAddress()
     {
         if (this._ShowTab_UnUsedAddress)
         {

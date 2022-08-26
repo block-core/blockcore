@@ -5,6 +5,7 @@ using Blockcore.Connection;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.RPC;
+using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
@@ -226,8 +227,12 @@ namespace Blockcore.IntegrationTests.RPC
         public void SendRawTransaction()
         {
             var tx = new Transaction();
+            tx.Inputs.Add(new TxIn());
             tx.Outputs.Add(new TxOut(Money.Coins(1.0m), new Key()));
-            this.rpcTestFixture.RpcClient.SendRawTransaction(tx);
+            var ex = Assert.Throws<RPCException>(() => this.rpcTestFixture.RpcClient.SendRawTransaction(tx));
+
+            // just check that the method reached the rpc we don't need to check if a trx is valid.
+            Assert.Equal(ex.Message, "invalid coinbase size");
         }
 
         /// <summary>

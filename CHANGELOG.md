@@ -1,3 +1,13 @@
+##  (2022-08-26)
+
+* add changelog ([5e5cde6](https://github.com/block-core/blockcore/commit/5e5cde6))
+* Add error handling for rpc trx broad cast (#413) ([405629b](https://github.com/block-core/blockcore/commit/405629b)), closes [#413](https://github.com/block-core/blockcore/issues/413)
+* Add UI for ban list (#408) ([6446575](https://github.com/block-core/blockcore/commit/6446575)), closes [#408](https://github.com/block-core/blockcore/issues/408)
+* Change Blockcore logo (#412) ([8a4157e](https://github.com/block-core/blockcore/commit/8a4157e)), closes [#412](https://github.com/block-core/blockcore/issues/412)
+* Preparing for cold staking pools (#410) ([f0cbd71](https://github.com/block-core/blockcore/commit/f0cbd71)), closes [#410](https://github.com/block-core/blockcore/issues/410)
+
+
+
 ##  (2022-06-12)
 
 * bump version ([2a34841](https://github.com/block-core/blockcore/commit/2a34841))

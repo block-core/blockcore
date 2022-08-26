@@ -1,0 +1,299 @@
+﻿@page "/coldstakepoolview/{walletName}/{accountname}"
+
+@using Blockcore.Features.Wallet.Interfaces
+@using NBitcoin;
+@using Blockcore.Features.Wallet.Api.Controllers
+@using Blockcore.Features.Wallet.Api.Models
+@using Blockcore.Networks
+@using Blockcore.UI.BlazorModal
+
+@inject NavigationManager NavigationManager
+@inject IWalletManager WalletManager
+@inject Network Network
+@inject ModalService ModalService
+
+@{
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 style="max-width: 18em" class="h2"><strong>Cold Staking Pool Addresses</strong></h1>
+         <div class="btn-toolbar mb-2 mb-md-0">
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeHotReceiveView(walletname); }">
+                <span class="oi oi-cloud-download" aria-hidden="true"></span> Hot Receive
+            </button>
+        </div>
+    </div>
+
+    var hotAddresses = this.GetAddressesWithBalances(walletname);
+    var amountConfirmed = (Money)hotAddresses.Values.Sum(s => s.AmountConfirmed);
+    var amountUnconfirmed = (Money)hotAddresses.Values.Sum(s => s.AmountUnconfirmed);
+    var amountConfirmedActive = (Money)hotAddresses.Values.Where(w => w.StakingExpiry > DateTime.UtcNow).Sum(s => s.AmountConfirmed);
+    var amountUnconfirmedActive = (Money)hotAddresses.Values.Where(w => w.StakingExpiry > DateTime.UtcNow).Sum(s => s.AmountUnconfirmed);
+
+    <div class="row mb-3">
+        <div class="col-xl-6 col-sm-6 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Main Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@amountConfirmed</h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@amountUnconfirmed (unconfirmed)</h6>
+                </div>
+            </div>
+        </div>
+         <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Active Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@Money.Satoshis(amountConfirmedActive) </h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@Money.Satoshis(amountUnconfirmedActive) (unconfirmed)</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Staking addresses</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary"><strong>HOT ADDRESS</strong></th>
+                                    <th class="text-primary"><strong>COLD ADDRESS</strong></th>
+                                    <th class="text-primary"><strong>TYPE</strong></th>
+
+                                    <th class="text-primary text-right"><strong>AMOUNT</strong></th>
+                                    <th class="text-primary text-center"><strong>EXPIRY</strong></th>
+                                    <th class="text-primary text-center"><strong></strong></th>
+                                    <th class="text-primary text-right"><strong>VIEW</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in hotAddresses)
+                                {
+                                    <tr>
+                                        <td>@item.Value.HotAddress</td>
+                                        <td>@item.Value.ColdAddress</td>
+                                        <td>@item.Value.OutputType</td>
+                                        @if (item.Value.AmountUnconfirmed > 0)
+                                        {
+                                            <td class="text-right">@item.Value.AmountConfirmed (@item.Value.AmountUnconfirmed)</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-right">@item.Value.AmountConfirmed </td>
+                                        }
+                                        @if (item.Value.StakingExpiry != null)
+                                        {
+                                            <td class="text-center">@String.Format("{0:f}", item.Value.StakingExpiry) (@ParseDate(item.Value.StakingExpiry))</td>
+                                        }
+                                        else
+                                        {
+                                                <td class="text-center"></td>
+                                        }
+                                        @if (item.Value.StakingExpiry != null && item.Value.StakingExpiry > DateTime.UtcNow)
+                                        {
+                                              <td class="text-center"><h3 style="font-size: 20px" class="oi oi-circle-check text-success" aria-hidden="true"></h3></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"><h3 style="font-size: 20px" class="oi oi-circle-x text-danger" aria-hidden="true"></h3></td>
+                                        }
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-sm btn-secondary" @onclick="() => { ViewTransaction(item.Value); }"> <span class="oi oi-list" aria-hidden="true"></span></button>
+                                        </td>
+                                        
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string walletname { get; set; }
+    [Parameter]
+    public string accountname { get; set; }
+    ColdStakingManager ColdStakingManager;
+    protected override Task OnInitializedAsync()
+    {
+        ColdStakingManager = this.WalletManager as ColdStakingManager;
+        return Task.CompletedTask;
+    }
+
+    public class AddressBalance
+    {
+        public string HotAddress;
+        public string ColdAddress;
+        public Money AmountConfirmed;
+        public Money AmountUnconfirmed;
+        public DateTime? StakingExpiry;
+        public string OutputType;
+        public Blockcore.Features.Wallet.Types.HdAddress HdAddress;
+        public Blockcore.Consensus.ScriptInfo.Script ColdstakeScript;
+    }
+
+    public static string ParseDate(DateTime? dateTime)
+    {
+        if (dateTime == null)
+        {
+            return string.Empty;
+        }
+
+        if (DateTime.UtcNow > dateTime)
+        {
+            var totalDay = DateTime.UtcNow - dateTime;
+            return $"{(int)totalDay.Value.TotalDays} days ago";
+        }
+        else
+        {
+            var totalDay = dateTime - DateTime.UtcNow;
+            return $"in {(int)totalDay.Value.TotalDays} days";
+        }
+    }
+
+    private Dictionary<string, AddressBalance> GetAddressesWithBalances(string walletName)
+    {
+        var entries = new Dictionary<string, AddressBalance>();
+
+        var inputs = this.ColdStakingManager.GetUnspentTransactionsInWallet(walletName, 0, a => a.Index == ColdStakingManager.HotWalletAccountIndex);
+
+        foreach (var input in inputs)
+        {
+            Blockcore.Consensus.ScriptInfo.Script coldstakeScript = null;
+            DateTime? stakingExpiry = null;
+            string outputType;
+
+            if (Blockcore.Consensus.ScriptInfo.PayToScriptHashTemplate.Instance.CheckScriptPubKey(input.Transaction.ScriptPubKey) ||
+                Blockcore.Consensus.ScriptInfo.PayToWitScriptHashTemplate.Instance.CheckScriptPubKey(input.Transaction.ScriptPubKey))
+            {
+                if (input.Address.RedeemScripts == null)
+                    throw new Exception("Wallet has no redeem scripts");
+
+                coldstakeScript = input.Address.RedeemScripts.FirstOrDefault(r => r.Hash.ScriptPubKey == input.Transaction.ScriptPubKey || r.WitHash.ScriptPubKey == input.Transaction.ScriptPubKey);
+                if (input.Address.RedeemScriptExpiry != null)
+                {
+                    stakingExpiry = input.Address.RedeemScriptExpiry.FirstOrDefault(r => r.RedeemScript == coldstakeScript)?.StakingExpiry ?? null;
+                }
+
+                if (coldstakeScript.Hash.ScriptPubKey == input.Transaction.ScriptPubKey)
+                    outputType = "P2SH";
+                else
+                    outputType = "P2WSH";
+            }
+            else
+            {
+                coldstakeScript = input.Transaction.ScriptPubKey;
+                stakingExpiry = input.Address.StakingExpiry;
+                outputType = "ColdStake";
+            }
+
+            Blockcore.Consensus.ScriptInfo.ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(coldstakeScript, out KeyId hotPubKeyHash, out KeyId coldPubKeyHash);
+            if (hotPubKeyHash != null && coldPubKeyHash != null)
+            {
+                var hotAddress = hotPubKeyHash.GetAddress(this.Network).ToString();
+                var coldAddress = coldPubKeyHash.GetAddress(this.Network).ToString();
+                if (entries.TryGetValue($"{hotAddress}-{coldAddress}", out AddressBalance entry))
+                {
+                    entry.AmountConfirmed += input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0;
+                    entry.AmountUnconfirmed += !input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0;
+                }
+                else
+                {
+                    entries.Add($"{hotAddress}-{coldAddress}", new AddressBalance
+                        {
+                            HotAddress = hotAddress,
+                            ColdAddress = coldAddress,
+                            AmountConfirmed = input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
+                            AmountUnconfirmed = !input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
+                            StakingExpiry = stakingExpiry,
+                            OutputType = outputType,
+                            HdAddress = input.Address,
+                            ColdstakeScript = coldstakeScript
+                        });
+                }
+            }
+            else
+            {
+                // this is not suppose to happen unless coins are sent to an address of hot account by mistake
+
+                entries.Add($"{input.Transaction.OutPoint}", new AddressBalance
+                    {
+                        HotAddress = "na",
+                        ColdAddress = "na",
+                        AmountConfirmed = input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
+                        AmountUnconfirmed = !input.Transaction.IsConfirmed() ? input.Transaction.Amount : 0,
+                        OutputType = Network.StandardScriptsRegistry.GetTemplateFromScriptPubKey(input.Transaction.ScriptPubKey)?.Type.ToString(),
+                    });
+            }
+        }
+
+        return entries;
+    }
+
+    private void NavigateToEnableWallet()
+    {
+        NavigationManager.NavigateTo("coldstaking-enablewallet");
+    }
+    private void NavigateToWithdraw(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-withdraw/" + walletName);
+    }
+
+    private void NavigateToSetup(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-setup/" + walletName);
+    }
+    private void NavigateToDelegate(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
+    }
+
+    private void ViewTransaction(AddressBalance addressBalance)
+    {
+        ModalService.Show("Transaction Details", typeof(Modal.ModalViewPoolTransaction), addressBalance);
+        ModalService.OnClose += () =>
+        {
+            this.StateHasChanged();
+        };
+    }
+    private void NavigateToColdStakeView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+    }
+    private void NavigateToColdStakeHotReceiveView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakereceive/" + walletName + "/coldStakingHotAddresses");
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakeView(selection);
+    }
+}

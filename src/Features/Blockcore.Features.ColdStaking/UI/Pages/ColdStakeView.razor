@@ -14,65 +14,39 @@
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 style="max-width: 18em" class="h2"><strong>Cold Staking</strong></h1>
+        <h1 style="max-width: 18em" class="h2"><strong>@walletname : @accountType </strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            @if (this.ColdStakingManager.GetWalletsNames().Count() > 1)
+            
+            @if(!isHot)
             {
-                <Dropdown TItem="string" OnSelected="@OnSelected">
-                    <InitialTip>@walletname</InitialTip>
-                    <ChildContent>
-                        @foreach (var walletName in this.ColdStakingManager.GetWalletsNames())
-                        {
-                            var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
-                            if (coldStakingWalletEnabled != null)
-                            {
-                                foreach (var account in this.ColdStakingManager.GetAccounts(walletName))
-                                {
-                                    <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                                }
-                            }
-                        }
-                    </ChildContent>
-                </Dropdown>
+                 <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
+                    <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake
+                </button>
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
+                    <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate
+                </button>
+                <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWithdraw(walletname); }">
+                    <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw
+                </button>   
             }
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToSetup(walletname); }">
-                <span class="oi oi-pulse" aria-hidden="true"></span> Coldstake
-            </button>
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToDelegate(walletname); }">
-                <span class="oi oi-cloud-upload" aria-hidden="true"></span> Delegate
-            </button>
-            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToWithdraw(walletname); }">
-                <span class="oi oi-cloud-download" aria-hidden="true"></span> Withdraw
+            else
+            {
+                
+            }
+            
+             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeReceiveView(walletname, accountname); }">
+                <span class="oi oi-cloud-download" aria-hidden="true"></span> Receive
             </button>
         </div>
     </div>
 
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
-    var mainAccountBalance = this.WalletManager.GetBalances(walletname, "account 0").Single();
 
     <div class="row mb-3">
         <div class="col-xl-6 col-sm-6 ">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title">Main Balance</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="d-flex align-items-center align-self-start">
-                                <h3 class="text-left">@mainAccountBalance.AmountConfirmed</h3>
-                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
-                            </div>
-                        </div>
-                    </div>
-                    <h6 class="text-left text-muted font-weight-normal">@mainAccountBalance.AmountUnconfirmed (unconfirmed)</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6 col-sm-6 ">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Cold Balance</h5>
+                    <h5 class="card-title"> @(isHot ? "Hot" : "Cold") Balance</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -142,12 +116,26 @@
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
+
     ColdStakingManager ColdStakingManager;
+    private string accountType = "unknown";
+    private bool isHot = true;
+
     protected override Task OnInitializedAsync()
     {
         ColdStakingManager = this.WalletManager as ColdStakingManager;
+
+        if (accountname == "coldStakingHotAddresses")
+            accountType = "hot-account";
+
+        if (accountname == "coldStakingColdAddresses")
+            accountType = "cold-account";
+
+        isHot = accountType == "hot-account" ? true : false;
+
         return Task.CompletedTask;
     }
+
     private void NavigateToEnableWallet()
     {
         NavigationManager.NavigateTo("coldstaking-enablewallet");
@@ -165,18 +153,12 @@
     {
         NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
     }
-
+    private void NavigateToColdStakeReceiveView(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("coldstakereceive/" + walletName + "/" + accountname);
+    }
     private void ViewTransaction()
     {
         ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction));
-    }
-    private void NavigateToColdStakeView(string walletName)
-    {
-        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
-    }
-    private void OnSelected(string selection)
-    {
-        Console.WriteLine(selection);
-        NavigateToColdStakeView(selection);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security;
+using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Wallet.Interfaces;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using NBitcoin.DataEncoders;
 
 namespace Blockcore.Features.Miner.Api.Controllers
 {
@@ -192,6 +194,12 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 if (!this.minerSettings.EnforceStakingFlag)
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.Forbidden, "Operation not allowed", "This operation is only allowed if EnforceStakingFlag is true");
 
+                Script redeemScript = null;
+                if (!string.IsNullOrEmpty(request.RedeemScript))
+                {
+                    redeemScript = Script.FromBytesUnsafe(Encoders.Hex.DecodeData(request.RedeemScript));
+                }
+
                 Wallet.Types.Wallet wallet = this.walletManager.GetWallet(request.WalletName);
 
                 foreach (HdAccount account in wallet.GetAccounts(account => true))
@@ -201,6 +209,30 @@ namespace Blockcore.Features.Miner.Api.Controllers
                         if ((address.Address == request.Address) || address.Bech32Address == request.Address)
                         {
                             address.StakingExpiry = request.StakingExpiry;
+                        }
+
+                        if (redeemScript != null && address.RedeemScripts != null)
+                        {
+
+                            if (address.RedeemScripts.Contains(redeemScript))
+                            {
+                                if (address.RedeemScriptExpiry == null)
+                                    address.RedeemScriptExpiry = new List<RedeemScriptExpiry>();
+
+                                var expiryScript = address.RedeemScriptExpiry.FirstOrDefault(w => w.RedeemScript == redeemScript);
+
+                                if (expiryScript == null)
+                                {
+                                    expiryScript = new RedeemScriptExpiry
+                                    {
+                                        RedeemScript = redeemScript,
+                                    };
+
+                                    address.RedeemScriptExpiry.Add(expiryScript);
+                                }
+
+                                expiryScript.StakingExpiry = request.StakingExpiry;
+                            }
                         }
                     }
                 }
@@ -234,13 +266,43 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 {
                     foreach (HdAddress address in account.GetCombinedAddresses())
                     {
-                        if (address.StakingExpiry != null && address.StakingExpiry > DateTime.UtcNow)
+                        GetStakingAddressesModelItem addressItem = null;
+
+                        if (address.StakingExpiry != null)
                         {
-                            model.Addresses.Add(new GetStakingAddressesModelItem
+                            addressItem = new GetStakingAddressesModelItem
                             {
                                 Addresses = request.Segwit ? address.Bech32Address : address.Address,
-                                Expiry = address.StakingExpiry
-                            });
+                                Expiry = address.StakingExpiry,
+                                Expired = address.StakingExpiry < DateTime.UtcNow,
+                            };
+
+                            model.Addresses.Add(addressItem);
+                        }
+
+                        if (address.RedeemScriptExpiry != null)
+                        {
+                            foreach (RedeemScriptExpiry redeemScriptExpiry in address.RedeemScriptExpiry)
+                            {
+                                if (addressItem == null)
+                                {
+                                    addressItem = new GetStakingAddressesModelItem
+                                    {
+                                        Addresses = request.Segwit ? address.Bech32Address : address.Address,
+                                        Expiry = address.StakingExpiry,
+                                        Expired = address.StakingExpiry < DateTime.UtcNow,
+                                    };
+                                }
+
+                                var redeemScriptExpiryItem = new RedeemScriptExpiryItem
+                                {
+                                    RedeemScript = Encoders.Hex.EncodeData(((Script)redeemScriptExpiry.RedeemScript).ToBytes(false)),
+                                    StakingExpiry = redeemScriptExpiry.StakingExpiry,
+                                    Expired = redeemScriptExpiry.StakingExpiry > DateTime.UtcNow
+                                };
+
+                                addressItem.RedeemScriptExpiry.Add(redeemScriptExpiryItem);
+                            }
                         }
                     }
                 }

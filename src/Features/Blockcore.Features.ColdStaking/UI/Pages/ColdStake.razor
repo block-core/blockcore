@@ -137,14 +137,16 @@ else
                                     var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
                                     if (walletItem.Value.Cold != null)
                                     {
-                                        <tr @onclick="() => { NavigateToColdStakeView(walletName); }">
+                                        <tr @onclick="() => { NavigateToColdStakeAccountView(walletName); }">
 
                                             @{
-                                                <td class="align-middle">@walletName</td>
+                                                 <td class="align-middle">
+                                                    <button class="btn btn-sm btn-secondary">@walletName</button>
+                                                </td>
 
                                                 @if (walletItem.Value.Main.AmountUnconfirmed > 0)
                                                 {
-                                                    <td class="align-middle">@walletItem.Value.Main.AmountConfirmed (@walletItem.Value.Main.AmountUnconfirmed )</td>
+                                                    <td class="align-middle">@walletItem.Value.Main.AmountConfirmed (@walletItem.Value.Main.AmountUnconfirmed)</td>
                                                 }
                                                 else
                                                 {
@@ -155,7 +157,7 @@ else
                                                 {
                                                     @if (walletItem.Value.Cold.AmountUnconfirmed > 0)
                                                     {
-                                                        <td class="align-middle">@walletItem.Value.Cold.AmountConfirmed (@walletItem.Value.Cold.AmountUnconfirmed )</td>
+                                                        <td class="align-middle">@walletItem.Value.Cold.AmountConfirmed (@walletItem.Value.Cold.AmountUnconfirmed)</td>
                                                     }
                                                     else
                                                     {
@@ -167,7 +169,7 @@ else
                                                 {
                                                     @if (walletItem.Value.Hot.AmountUnconfirmed > 0)
                                                     {
-                                                        <td class="align-middle">@walletItem.Value.Hot.AmountConfirmed (@walletItem.Value.Hot.AmountUnconfirmed )</td>
+                                                        <td class="align-middle">@walletItem.Value.Hot.AmountConfirmed (@walletItem.Value.Hot.AmountUnconfirmed)</td>
                                                     }
                                                     else
                                                     {
@@ -249,14 +251,14 @@ else
     {
         NavigationManager.NavigateTo("coldstaking-delegate/" + walletName);
     }
-    private void NavigateToColdStakeView(string walletName)
+    private void NavigateToColdStakeAccountView(string walletName)
     {
-        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/coldStakingColdAddresses");
+        NavigationManager.NavigateTo("coldstaking-accounts/" + walletName);
     }
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToColdStakeView(selection);
+        NavigateToColdStakeAccountView(selection);
     }
 
 }

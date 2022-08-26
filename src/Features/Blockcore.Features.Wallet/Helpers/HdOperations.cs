@@ -167,6 +167,29 @@ namespace Blockcore.Features.Wallet.Helpers
         }
 
         /// <summary>
+        /// Gets the purpose field of this HD path.
+        /// </summary>
+        /// <param name="hdPath">The HD path.</param>
+        /// <returns>The purpose of the coin. <seealso cref="https://github.com/satoshilabs/slips/blob/master/slip-0044.md"/>.</returns>
+        /// <exception cref="FormatException">An exception is thrown if the HD path is not well-formed.</exception>
+        /// <remarks>Refer to <seealso cref="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#path-levels"/> for the format of the HD path.</remarks>
+        public static int GetPurpose(string hdPath)
+        {
+            Guard.NotEmpty(hdPath, nameof(hdPath));
+
+            string[] pathElements = hdPath.Split('/');
+            if (pathElements.Length < 3)
+                throw new FormatException($"Could not parse Purpose from HdPath {hdPath}.");
+
+            if (int.TryParse(pathElements[1].Replace("'", string.Empty), out int purpose))
+            {
+                return purpose;
+            }
+
+            throw new FormatException($"Could not parse Purpose from HdPath {hdPath}.");
+        }
+
+        /// <summary>
         /// Gets the account index of coin this HD path is for.
         /// </summary>
         /// <param name="hdPath">The HD path.</param>

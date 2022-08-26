@@ -1,4 +1,4 @@
-﻿@page "/walletreceive/{walletname}/{accountname}"
+﻿@page "/coldstakereceive/{walletname}/{accountname}"
 
 @using Blockcore.Features.Wallet.Api.Models
 @using Blockcore.Features.Wallet.Interfaces
@@ -16,13 +16,10 @@
 
 @{
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-         <h1 class="h2"><strong>Wallet : @walletname : @accountname : Receive </strong></h1>
+         <h1 class="h2"><strong>@walletname : @accountType : receive </strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname ,accountname); }">
-                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
-            </button>
-            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }">
-                <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToColdStakeView(walletname, accountname); }">
+                <span class="oi oi-pulse" aria-hidden="true"></span> ColdStake View
             </button>
         </div>
     </div>
@@ -35,21 +32,13 @@
         </div>
         <div class="card-body">
             <div class="row">
-                @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness))
-                {
-                    <div class="col-sm-2"><strong>Address:</strong></div>
-                    <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
-                }
-                else
-                {
-                    <div class="col-sm-2"><strong>Address:</strong></div>
-                    <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
-                }
+                <div class="col-sm-2"><strong>Address:</strong></div>
+                <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
             </div>
         </div>
     </div>
 
-    Types.Wallet wallet = this.WalletManager.GetWallet(walletname);
+    Blockcore.Features.Wallet.Types.Wallet wallet = this.WalletManager.GetWallet(walletname);
     HdAccount account = wallet.GetAccount(accountname);
 
     var accountmodel = new AddressesModel
@@ -60,9 +49,8 @@
 
                     return new AddressModel
                     {
-                        Address = (bool)(NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) ? address.Bech32Address : address.Address,
-                        // Address =  request.Segwit ? address.Bech32Address : address.Address,
-                        //  Address = address.Address,
+                        // Address = (bool)(NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) ? address.Bech32Address : address.Address,
+                        Address = address.Address,
                         IsUsed = anyTrx,
                         IsChange = address.IsChangeAddress(),
                         AmountConfirmed = confirmedAmount,
@@ -79,17 +67,15 @@
                         Account Address
                     </h5>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                      
-                    @if (_ShowTab_UnUsedAddress)
+                                       
+                    @if (ShowTab_UnUsedAddress)
                     {
-                        <button type="button" class="btn btn-sm btn-primary mr-1" @onclick="GenerateAddress">Generate a new address</button>
+                        <button type="button" class="btn btn-sm btn-primary mr-1" @onclick="generateAddress">Generate a new address</button>
                     }
 
                         <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowUsedAddress">Used</button>
                         <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowUnUsedAddress">UnUsed</button>
                         <button type="button" class="btn btn-sm btn-primary " @onclick="tabShowIsChangedAddress">Changed</button>
-
-
                     </div>
                 </div>
                 <div class="card-body">
@@ -104,7 +90,7 @@
                                 </tr>
                             </thead>
 
-                            @if (_ShowTab_UsedAddress)
+                            @if (ShowTab_UsedAddress)
                             {
                                 <tbody>
                                     @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == true))
@@ -120,14 +106,14 @@
 
                                     }
                                 </tbody>
+
                             }
 
-                            @if (_ShowTab_UnUsedAddress)
+                            @if (ShowTab_UnUsedAddress)
                             {
                                 <tbody>
                                     @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed == false && li.IsChange == false))
                                     {
-
                                         <tr>
                                             @* @onclick="ViewTransaction" > *@
                                             <td><CopyToClipboard Text="@_address.Address" /> </td>
@@ -141,7 +127,7 @@
 
                             }
 
-                            @if (_ShowTab_IsChanged)
+                            @if (ShowTab_IsChanged)
                             {
                                 <tbody>
                                     @foreach (var _address in @accountmodel.Addresses.Where(li => li.IsUsed = false && li.IsChange == true))
@@ -172,46 +158,57 @@
     public string accountname { get; set; }
 
 
-    public Boolean _ShowTab_UsedAddress = true;
-    public Boolean _ShowTab_UnUsedAddress = false;
-    public Boolean _ShowTab_IsChanged = false;
+    public Boolean ShowTab_UsedAddress = true;
+    public Boolean ShowTab_UnUsedAddress = false;
+    public Boolean ShowTab_IsChanged = false;
+
+    private string accountType = "unknown";
+
+    protected override Task OnInitializedAsync()
+    {
+        if (accountname == "coldStakingHotAddresses")
+            accountType = "hot-account";
+
+        if (accountname == "coldStakingColdAddresses")
+            accountType = "cold-account";
+
+        return Task.CompletedTask;
+    }
 
     private void tabShowUsedAddress()
     {
-        _ShowTab_UsedAddress = true;
-        _ShowTab_UnUsedAddress = false;
-        _ShowTab_IsChanged = false;
+        ShowTab_UsedAddress = true;
+        ShowTab_UnUsedAddress = false;
+        ShowTab_IsChanged = false;
     }
 
     private void tabShowUnUsedAddress()
     {
-        _ShowTab_UsedAddress = false;
-        _ShowTab_UnUsedAddress = true;
-        _ShowTab_IsChanged = false;
+        ShowTab_UsedAddress = false;
+        ShowTab_UnUsedAddress = true;
+        ShowTab_IsChanged = false;
     }
 
     private void tabShowIsChangedAddress()
     {
-        _ShowTab_UsedAddress = false;
-        _ShowTab_UnUsedAddress = false;
-        _ShowTab_IsChanged = true;
+        ShowTab_UsedAddress = false;
+        ShowTab_UnUsedAddress = false;
+        ShowTab_IsChanged = true;
     }
 
-    private void NavigateToWallet(string walletName, string accountname)
+    private void NavigateToColdStakeView(string walletName, string account)
     {
-        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+        NavigationManager.NavigateTo("coldstakeview/" + walletName + "/" + account);
     }
-    private void NavigateToReceiveWallet(string walletName, string accountname)
+    private void OnSelected(string selection)
     {
-        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+        Console.WriteLine(selection);
+
     }
-    private void NavigateToSendWallet(string walletName, string accountname)
+
+    private void generateAddress()
     {
-        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
-    }
-    private void GenerateAddress()
-    {
-        if (this._ShowTab_UnUsedAddress)
+        if (this.ShowTab_UnUsedAddress)
         {
             var ac = new WalletAccountReference { WalletName = this.walletname, AccountName = this.accountname };
             var newaddresses = this.WalletManager.GetUnusedAddresses(ac, 1, false, true);

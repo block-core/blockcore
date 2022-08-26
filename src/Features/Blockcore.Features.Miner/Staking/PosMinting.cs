@@ -454,11 +454,25 @@ namespace Blockcore.Features.Miner.Staking
                 {
                     if (this.minerSettings.EnforceStakingFlag)
                     {
-                        if (utxo.Address.StakingExpiry == null)
-                            return false;
+                        if (utxo.Address.RedeemScriptExpiry != null)
+                        {
+                            foreach (RedeemScriptExpiry redeemScriptExpiry in utxo.Address.RedeemScriptExpiry)
+                            {
+                                if (redeemScriptExpiry.RedeemScript.Hash.ScriptPubKey == utxo.Transaction.ScriptPubKey ||
+                                    redeemScriptExpiry.RedeemScript.WitHash.ScriptPubKey == utxo.Transaction.ScriptPubKey)
+                                {
+                                    if (redeemScriptExpiry.StakingExpiry > this.dateTimeProvider.GetUtcNow())
+                                        return true;
 
-                        if (utxo.Address.StakingExpiry < this.dateTimeProvider.GetUtcNow())
-                            return false;
+                                    return false;
+                                }
+                            }
+                        }
+
+                        if (utxo.Address.StakingExpiry > this.dateTimeProvider.GetUtcNow())
+                            return true;
+
+                        return false;
                     }
 
                     return true;

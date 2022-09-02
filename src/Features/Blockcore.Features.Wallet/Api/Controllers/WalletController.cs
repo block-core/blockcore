@@ -340,6 +340,29 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             }
         }
 
+        [Route("publicKey")]
+        [HttpGet]
+        public IActionResult GetPublicKey(string address, string walletName, string accountName)
+        {
+
+            Types.Wallet wallet = this.walletManager.GetWallet(walletName);
+            HdAddress hdAddress = wallet.GetAddress(address, account => account.Name.Equals(accountName));
+
+            try
+            {
+                return Ok(hdAddress.Pubkey.ToHex());
+
+            }
+            catch (Exception e)
+            {
+
+                this.logger.LogError(e.Message);
+                return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
+            }
+
+        }
+
+
         /// <summary>
         /// Gets some general information about a wallet. This includes the network the wallet is for,
         /// the creation date and time for the wallet, the height of the blocks the wallet currently holds,

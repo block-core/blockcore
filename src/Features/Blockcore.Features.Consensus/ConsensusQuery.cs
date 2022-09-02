@@ -6,6 +6,7 @@ using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
+using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 

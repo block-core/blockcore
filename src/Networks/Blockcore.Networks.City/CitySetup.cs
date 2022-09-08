@@ -45,8 +45,8 @@ namespace Blockcore.Networks.City
             GenesisReward = Money.Zero,
             HashGenesisBlock = "00000b0517068e602ed5279c20168cfa1e69884ee4e784909652da34c361bff2",
             HashMerkleRoot = "b3425d46594a954b141898c7eebe369c6e6a35d2dab393c1f495504d2147883b",
-            DNS = new[] { "seed.city-chain.org", "seed.citychain.foundation", "seed.city-coin.org", "seed.liberstad.com", "city.seed.blockcore.net" },
-            Nodes = new[] { "23.97.234.230", "13.73.143.193", "89.10.227.34" },
+            DNS = new[] { "seed.city-chain.org", "seed.city-coin.org", "seed.liberstad.com", "city.seed.blockcore.net" },
+            Nodes = new[] { "95.217.210.139", "195.201.16.145", "89.10.224.54" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
          {
                 { 0, new CheckpointInfo(new uint256("0x00000b0517068e602ed5279c20168cfa1e69884ee4e784909652da34c361bff2"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) },

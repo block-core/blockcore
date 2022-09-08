@@ -57,6 +57,7 @@ namespace Blockcore.Networks.City
                 { 800000, new CheckpointInfo(new uint256("0xaf94ebd59507829e82d2e98e75f8777224bf54e2f4ad76ff7bdc2ebebc634cb9"), new uint256("0xbe19a177b90653ee3a654e7fd307e93410db3478dbc28225e24aea9d2087d04b")) },
                 { 1060000, new CheckpointInfo(new uint256("0xea17e88ff533ca71dbaf0a8772d1f680845371e774250e35251671227fdcb699"), new uint256("0xfc4d6eec52900c6623711427d11357afe6becc6aafa71ed3ade3fe3128d9f23f")) },
                 { 1125570, new CheckpointInfo(new uint256("0x1295cd37612f19ad8847531f84489f25fa1612a0cb91e95bff44b566a0de2cfa"), new uint256("0xa62070bd16f609f33b724e2de7bd555fcef28161a6146e6270dfcaf784b21d61")) },
+                { 1764800, new CheckpointInfo(new uint256("0xbec401a33c003c5949658afa253f73369ed3b2b8c9d9b067c589befaf33ec727"), new uint256("0xf0f969a1ab26187c01fd71e9b5955d5923d6b4f7dece270c1f3d1705d330210b")) },
          }
         };
 

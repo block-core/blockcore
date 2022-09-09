@@ -242,11 +242,6 @@ namespace Blockcore.Features.ColdStaking.Api.Models
         public string Fees { get; set; }
 
         /// <summary>
-        /// Whether to send the change to a P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool SegwitChangeAddress { get; set; }
-
-        /// <summary>
         /// Use script outputs (P2SH and P2WSH) for cold staking
         /// </summary>
         public bool PayToScript { get; set; }

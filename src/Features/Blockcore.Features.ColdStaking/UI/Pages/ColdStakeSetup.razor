@@ -179,8 +179,6 @@
 
     private decimal Fee { get; set; }
 
-    public bool SegwitChangeAddress { get; set; }
-
     public bool PayToScript { get; set; }
 
     protected override Task OnInitializedAsync()
@@ -191,10 +189,7 @@
 
         var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(this.walletname, true);
 
-        // this.SegwitChangeAddress = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
-        this.SegwitChangeAddress = address.IsBip84();
-
-        this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
+        this.ColdWalletAddress = address?.Address;
 
         if (this.ColdWalletAddress == null)
         {
@@ -209,7 +204,7 @@
     {
         var address = this.ColdStakingManager.GetFirstUnusedColdStakingAddress(hotWalletName, false);
 
-        this.HotWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
+        this.HotWalletAddress = address?.Address;
 
         if (this.HotWalletAddress == null)
         {
@@ -261,7 +256,6 @@
                 this.Password,
                 new Money(this.Amount, MoneyUnit.BTC),
                 new Money(this.Fee, MoneyUnit.BTC),
-                this.SegwitChangeAddress,
                 this.PayToScript);
 
             await this.BroadcasterManager.BroadcastTransactionAsync(transaction);

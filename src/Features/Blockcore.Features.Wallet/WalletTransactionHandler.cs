@@ -281,9 +281,10 @@ namespace Blockcore.Features.Wallet
                 context.ChangeAddress = this.walletManager.GetUnusedChangeAddress(new WalletAccountReference(context.AccountReference.WalletName, context.AccountReference.AccountName));
             }
 
-            if (context.UseSegwitChangeAddress)
+            if (context.ChangeAddress.IsBip84())
             {
-                context.TransactionBuilder.SetChange(new BitcoinWitPubKeyAddress(context.ChangeAddress.Bech32Address, this.network).ScriptPubKey);
+                // TODO: do we actually need this conversion? the context.ChangeAddress.ScriptPubKey should already be a setwit script 
+                context.TransactionBuilder.SetChange(new BitcoinWitPubKeyAddress(context.ChangeAddress.Address, this.network).ScriptPubKey);
             }
             else
             {
@@ -570,10 +571,5 @@ namespace Blockcore.Features.Wallet
         /// The timestamp to set on the transaction.
         /// </summary>
         public uint? Time { get; set; }
-
-        /// <summary>
-        /// Whether to send the change to a P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool UseSegwitChangeAddress { get; set; }
     }
 }

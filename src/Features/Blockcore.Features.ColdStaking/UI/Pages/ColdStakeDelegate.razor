@@ -232,7 +232,7 @@
             return;
         }
 
-        this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
+        this.ColdWalletAddress = address?.Address;
         if (this.ColdWalletAddress == null)
         {
             this.Alert = "The cold staking account does not exist.";

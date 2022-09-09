@@ -383,7 +383,7 @@ namespace Blockcore.Features.Wallet.Types
         public HdAddress GetAddress(string address, Func<HdAccount, bool> accountFilter = null)
         {
             Guard.NotNull(address, nameof(address));
-            return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address || a.Bech32Address == address);
+            return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address);
         }
     }
 
@@ -783,20 +783,35 @@ namespace Blockcore.Features.Wallet.Types
                 // Retrieve the pubkey associated with the private key of this address index.
                 PubKey pubkey = HdOperations.GeneratePublicKey(this.ExtendedPubKey, i, isChange);
 
-                // Generate the P2PKH address corresponding to the pubkey.
-                BitcoinPubKeyAddress address = pubkey.GetAddress(network);
-                BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(network);
-
                 // Add the new address details to the list of addresses.
                 var newAddress = new HdAddress
                 {
                     Index = i,
                     HdPath = HdOperations.CreateHdPath((int)this.GetCoinType(), this.Index, isChange, i),
-                    ScriptPubKey = address.ScriptPubKey,
-                    Pubkey = pubkey.ScriptPubKey,
-                    Bech32Address = witAddress.ToString(),
-                    Address = address.ToString(),
+                    Pubkey = pubkey.ScriptPubKey, // this is a P2PK script type
                 };
+
+                if (newAddress.IsBip44())
+                {
+                    // Generate the P2PKH address corresponding to the pubkey.
+                    BitcoinPubKeyAddress address = pubkey.GetAddress(network);
+                    newAddress.ScriptPubKey = pubkey.ScriptPubKey;
+                    newAddress.Address = address.ToString();
+                }
+
+                if (newAddress.IsBip84())
+                {
+                    // Generate the PW2PKH address corresponding to the pubkey.
+                    BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(network);
+                    newAddress.ScriptPubKey = witAddress.ScriptPubKey;
+                    newAddress.Address = witAddress.ToString();
+                }
+
+                // TODO: should we check this and throw or just skip if no derivation path is found (in that case we default to only P2PK)
+                if (newAddress.Address == null)
+                {
+                    throw new WalletException("Unknown derivation path");
+                }
 
                 addresses.Add(newAddress);
                 addressesCreated.Add(newAddress);

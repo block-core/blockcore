@@ -422,11 +422,6 @@ namespace Blockcore.Features.Wallet.Api.Models
         [Required(ErrorMessage = "A password is required.")]
         public string Password { get; set; }
 
-        /// <summary>
-        /// Whether to send the change to a P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool SegwitChangeAddress { get; set; }
-
         /// <inheritdoc />
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -575,11 +570,6 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// The name of the account for which to get the address.
         /// </summary>
         public string AccountName { get; set; }
-
-        /// <summary>
-        /// Whether to return the P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool Segwit { get; set; }
     }
 
     /// <summary>
@@ -608,11 +598,6 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// </summary>
         [Required]
         public string Count { get; set; }
-
-        /// <summary>
-        /// Whether to return the P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool Segwit { get; set; }
     }
 
     /// <summary>
@@ -635,11 +620,6 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// The name of the account for which to get the addresses.
         /// </summary>
         public string AccountName { get; set; }
-
-        /// <summary>
-        /// Whether to return the P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool Segwit { get; set; }
     }
 
     /// <summary>

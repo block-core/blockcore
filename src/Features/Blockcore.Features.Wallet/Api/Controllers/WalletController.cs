@@ -751,7 +751,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     AllowOtherInputs = false,
                     Recipients = recipients,
                     ChangeAddress = changeAddress,
-                    UseSegwitChangeAddress = request.SegwitChangeAddress
                 };
 
                 if (!string.IsNullOrEmpty(request.FeeType))
@@ -1018,7 +1017,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 HdAddress result = this.walletManager.GetUnusedAddress(new WalletAccountReference(request.WalletName, request.AccountName));
-                return this.Json(request.Segwit ? result.Bech32Address : result.Address);
+                return this.Json(result.Address);
             }
             catch (Exception e)
             {
@@ -1051,7 +1050,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 IEnumerable<HdAddress> result = this.walletManager.GetUnusedAddresses(new WalletAccountReference(request.WalletName, request.AccountName), count);
-                return this.Json(result.Select(x => request.Segwit ? x.Bech32Address : x.Address).ToArray());
+                return this.Json(result.Select(x => x.Address).ToArray());
             }
             catch (Exception e)
             {
@@ -1093,7 +1092,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                         return new AddressModel
                         {
-                            Address = request.Segwit ? address.Bech32Address : address.Address,
+                            Address = address.Address,
                             IsUsed = anyTrx,
                             IsChange = address.IsChangeAddress(),
                             AmountConfirmed = confirmedAmount,

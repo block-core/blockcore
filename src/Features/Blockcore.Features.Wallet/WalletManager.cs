@@ -887,7 +887,7 @@ namespace Blockcore.Features.Wallet
 
                 foreach (Types.Wallet wallet in this.Wallets)
                 {
-                    hdAddress = wallet.GetAllAddresses().FirstOrDefault(a => a.Address == address || a.Bech32Address == address);
+                    hdAddress = wallet.GetAllAddresses().FirstOrDefault(a => a.Address == address);
                     if (hdAddress == null) continue;
 
                     // When this query to get balance on specific address, we will exclude the cold staking UTXOs.
@@ -1743,15 +1743,16 @@ namespace Blockcore.Features.Wallet
             }
 
             // Track the P2PKH of this pubic key
-            walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
+            if (address.IsBip44())
+                walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
 
             // Track the P2PK of this public key
             if (address.Pubkey != null)
                 walletIndex.ScriptToAddressLookup[address.Pubkey] = address;
 
             // Track the P2WPKH of this pubic key
-            if (address.Bech32Address != null)
-                walletIndex.ScriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Bech32Address, this.network).ScriptPubKey] = address;
+            if (address.IsBip84())
+                walletIndex.ScriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Address, this.network).ScriptPubKey] = address;
         }
 
         /// <summary>

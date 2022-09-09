@@ -32,6 +32,7 @@ namespace Blockcore.Networks.Strax
             //this.DefaultSignalRPort = 27102;
             this.MaxTipAge = 2 * 60 * 60;
             this.MinTxFee = 10000;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = 10000;
             this.MinRelayTxFee = 10000;
             this.RootFolderName = StraxNetwork.StraxRootFolderName;

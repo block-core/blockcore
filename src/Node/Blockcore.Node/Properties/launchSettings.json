@@ -174,7 +174,7 @@
     },
     "STRAX (TEST)": {
       "commandName": "Project",
-      "commandLineArgs": "--chain=STRAX  -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -testnet"
+      "commandLineArgs": "--chain=STRAX -txindex=1 -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -testnet"
     },
     "STRAX (MAIN/LOCAL)": {
       "commandName": "Project",

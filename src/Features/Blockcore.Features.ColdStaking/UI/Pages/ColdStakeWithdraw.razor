@@ -180,9 +180,7 @@
     {
         var result = this.WalletManager.GetUnusedAddress(new Wallet.Types.WalletAccountReference(this.walletname, "account 0"));
 
-        var segwit = this.NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness);
-
-        this.Address = segwit ? result.Bech32Address : result.Address;
+        this.Address = result.Address;
     }
     public void MaxAmount()
     {

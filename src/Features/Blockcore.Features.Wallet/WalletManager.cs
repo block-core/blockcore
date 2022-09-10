@@ -235,12 +235,15 @@ namespace Blockcore.Features.Wallet
             foreach (Types.Wallet wallet in wallets)
             {
                 this.Load(wallet);
+
                 foreach (HdAccount account in wallet.GetAccounts())
                 {
                     this.AddAddressesToMaintainBuffer(wallet, account, false);
                     this.AddAddressesToMaintainBuffer(wallet, account, true);
                 }
             }
+
+            //this.CheckForLegacySegwitAddresses();
 
             if (this.walletSettings.IsDefaultWalletEnabled())
             {
@@ -1613,6 +1616,7 @@ namespace Blockcore.Features.Wallet
 
             var walletFile = new Types.Wallet
             {
+                Version = "2",
                 Name = name,
                 EncryptedSeed = encryptedSeed,
                 ChainCode = chainCode,
@@ -1650,6 +1654,7 @@ namespace Blockcore.Features.Wallet
 
             var walletFile = new Types.Wallet
             {
+                Version = "2",
                 Name = name,
                 IsExtPubKeyWallet = true,
                 CreationTime = creationTime ?? this.dateTimeProvider.GetTimeOffset(),
@@ -1688,8 +1693,72 @@ namespace Blockcore.Features.Wallet
             wallet.AccountsRoot.Single().LastBlockSyncedHash = wallet.walletStore.GetData().WalletTip.Hash;
             wallet.AccountsRoot.Single().LastBlockSyncedHeight = wallet.walletStore.GetData().WalletTip.Height;
 
+            if (wallet.Version == null)
+                wallet.Version = "1";
+
             this.Wallets.Add(wallet);
         }
+
+        /// <summary>
+        /// When the wallet was upgrade to V2 segwit addresses derived under bip44 path will not show up anymore in the wallet
+        /// We do not allow to load old V1 wallets that have any segwit coins 
+        /// instead the user will need to start an older version of the node to send the coins to a new wallet
+        /// </summary>
+        /// <exception cref="WalletException">node is shutting down because legacy wallet has segwit coins</exception>
+        //private void CheckForLegacySegwitAddresses()
+        //{
+        //    // check if any wallet is a V1 wallet and if they have any segwit outputs
+        //    List<string> failedWallets = new List<string>();
+        //    foreach (Types.Wallet wallet in this.Wallets)
+        //    {
+        //        if (wallet.Version == "1")
+        //        {
+        //            bool foundWallet = false;
+        //            foreach (HdAccount account in wallet.GetAccounts())
+        //            {
+        //                foreach (HdAddress address in account.GetCombinedAddresses())
+        //                {
+        //                    foreach (TransactionOutputData data in wallet.walletStore.GetForAddress(address.Address))
+        //                    {
+        //                        if (data.ScriptPubKey.IsScriptType(ScriptType.Witness))
+        //                        {
+        //                            // legacy segwit data found
+        //                            failedWallets.Add(wallet.Name);
+        //                            foundWallet = true;
+        //                        }
+
+        //                        if (foundWallet) break;
+        //                    }
+
+        //                    if (foundWallet) break;
+        //                }
+
+        //                if (foundWallet) break;
+        //            }
+        //        }
+        //    }
+
+        //    if (failedWallets.Any())
+        //    {
+        //        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        //        sb.AppendLine("=========== WARNING ===============");
+        //        sb.AppendLine("The following wallets are legacy wallets that contain segwit addresses that are derived under bip44 path");
+        //        sb.AppendLine("Such coins will not appear in the new V2 wallet, where segwit addresses are derived under bip84 path");
+        //        sb.AppendLine("To fix this issue please follow the link on how to resolve old bip44 segwit wallets");
+        //        sb.AppendLine("https://github.com/block-core/blockcore/issues/416");
+        //        sb.AppendLine("The node will not load until this is corrected!");
+        //        foreach (string wallet in failedWallets.Distinct())
+        //        {
+        //            sb.AppendLine($"Wallet - {wallet}");
+        //        }
+        //        sb.AppendLine("=========== WARNING ===============");
+
+        //        this.logger.LogError(sb.ToString());
+
+        //        this.nodeLifetime.StopApplication();
+        //        throw new WalletException("Legacy segwit bip44 coins detected, see logs for more info");
+        //    }
+        //}
 
         /// <summary>
         /// Loads the keys and transactions we're tracking in memory for faster lookups.
@@ -1742,17 +1811,38 @@ namespace Blockcore.Features.Wallet
                 walletIndex = this.walletIndex[wallet.Name];
             }
 
-            // Track the P2PKH of this pubic key
-            if (address.IsBip44())
-                walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
-
             // Track the P2PK of this public key
             if (address.Pubkey != null)
                 walletIndex.ScriptToAddressLookup[address.Pubkey] = address;
 
+            // TODO: the address.ScriptPubKey should already reflect the bip44 or bip84 script so perhaps this test is not needed
+
+            // Track the P2PKH of this pubic key
+            if (address.IsBip44())
+            {
+                walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
+
+                if (wallet.Version == "1")
+                {
+                    var pubkey = PayToPubkeyTemplate.Instance.ExtractScriptPubKeyParameters(address.Pubkey);
+                    BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(this.network);
+                    var bech32 = witAddress.ToString();
+                    walletIndex.ScriptToAddressLookup[witAddress.ScriptPubKey] = address;
+
+                    //walletIndex.ScriptToAddressLookup[new BitcoinWitPubKeyAddress(bech32, this.network).ScriptPubKey] = address;
+                }
+            }
+
             // Track the P2WPKH of this pubic key
             if (address.IsBip84())
-                walletIndex.ScriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Address, this.network).ScriptPubKey] = address;
+            {
+                walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
+
+               // walletIndex.ScriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Address, this.network).ScriptPubKey] = address;
+
+                if (new BitcoinWitPubKeyAddress(address.Address, this.network).ScriptPubKey != address.ScriptPubKey)
+                    throw new Exception();
+            }
         }
 
         /// <summary>

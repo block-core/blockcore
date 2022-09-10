@@ -337,7 +337,6 @@
                     Shuffle = true, // We shuffle transaction outputs by default as it's better for anonymity.
                     WalletPassword = Password,
                     Recipients = recipients,
-                    UseSegwitChangeAddress = recipients[0].ScriptPubKey.IsScriptType(ScriptType.Witness),
                     TransactionFee = new Money(this.Fee, MoneyUnit.BTC)
                 };
 

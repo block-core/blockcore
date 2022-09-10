@@ -134,6 +134,7 @@
                     Id = st.Transaction.Id,
                     Amount = st.Transaction.Amount,
                     Address = st.Address.Address,
+                    Script = st.Transaction.ScriptPubKey.ToString(),
                     Index = st.Transaction.Index,
                     IsChange = st.Address.IsChangeAddress(),
                     CreationTime = st.Transaction.CreationTime,

@@ -44,6 +44,12 @@ namespace Blockcore.Features.Wallet.Types
         public IWalletStore walletStore { get; set; }
 
         /// <summary>
+        /// The wallet version.
+        /// </summary>
+        [JsonProperty(PropertyName = "version")]
+        public string Version { get; set; }
+
+        /// <summary>
         /// The name of this wallet.
         /// </summary>
         [JsonProperty(PropertyName = "name")]
@@ -798,8 +804,7 @@ namespace Blockcore.Features.Wallet.Types
                     newAddress.ScriptPubKey = pubkey.ScriptPubKey;
                     newAddress.Address = address.ToString();
                 }
-
-                if (newAddress.IsBip84())
+                else if (newAddress.IsBip84())
                 {
                     // Generate the PW2PKH address corresponding to the pubkey.
                     BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(network);

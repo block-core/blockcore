@@ -68,6 +68,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// <summary>
         /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
         /// </summary>
+        [EnumDataType(typeof(BIP44Purpose),ErrorMessage = "The Purpose must be 44 (legacy) or 84 (segwit)")]
         public int? Purpose { get; set; }
     }
 
@@ -133,6 +134,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// <summary>
         /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
         /// </summary>
+        [EnumDataType(typeof(BIP44Purpose), ErrorMessage = "The Purpose must be 44 (legacy) or 84 (segwit)")]
         public int? Purpose { get; set; }
 
         /// <summary>
@@ -183,7 +185,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// <summary>
         /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
         /// </summary>
-        [EnumDataType(typeof(BIP44Purpose))]
+        [EnumDataType(typeof(BIP44Purpose), ErrorMessage = "The Purpose must be 44 (legacy) or 84 (segwit)")]
         public int? Purpose { get; set; }
     }
 
@@ -720,7 +722,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// <summary>
         /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
         /// </summary>
-        [EnumDataType(typeof(BIP44Purpose))]
+        [EnumDataType(typeof(BIP44Purpose), ErrorMessage = "The Purpose must be 44 (legacy) or 84 (segwit)")]
         public int? Purpose { get; set; }
     }
 

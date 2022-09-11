@@ -64,6 +64,11 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// </summary>
         [Required(ErrorMessage = "The name of the wallet to create is missing.")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
+        /// </summary>
+        public int? Purpose { get; set; }
     }
 
     /// <summary>
@@ -126,9 +131,20 @@ namespace Blockcore.Features.Wallet.Api.Models
         public int? CoinType { get; set; }
 
         /// <summary>
+        /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
+        /// </summary>
+        public int? Purpose { get; set; }
+
+        /// <summary>
         /// Optional flag that indicates if the "coldStakingColdAddresses" and "coldStakingHotAddresses" accounts should be restored.
         /// </summary>
         public bool? IsColdStakingWallet { get; set; }
+    }
+
+    public enum BIP44Purpose
+    {
+        Bip44 = 44,
+        Bip84 = 84,
     }
 
     /// <summary>
@@ -163,6 +179,12 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// </summary>
         [JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime CreationDate { get; set; }
+
+        /// <summary>
+        /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
+        /// </summary>
+        [EnumDataType(typeof(BIP44Purpose))]
+        public int? Purpose { get; set; }
     }
 
     /// <summary>
@@ -694,6 +716,12 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// </summary>
         [Required]
         public string Password { get; set; }
+
+        /// <summary>
+        /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
+        /// </summary>
+        [EnumDataType(typeof(BIP44Purpose))]
+        public int? Purpose { get; set; }
     }
 
     /// <summary>

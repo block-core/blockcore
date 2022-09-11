@@ -43,6 +43,23 @@
                             <input @bind="WalletName" type="text" class="form-control bg-secondary text-light" placeholder="Please enter your wallet name" />
                         </div>
                     </div>
+                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">
+                            <span class="text">Format</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <Dropdown TItem="(string name, int number)" OnSelected="@OnSelected">
+                                <InitialTip>Address Format</InitialTip>
+                                <ChildContent>
+                                    @foreach (var prp in Purposes)
+                                    {                                       
+                                         <DropdownListItem Item="@prp">@prp.name</DropdownListItem>
+                                    }
+                                </ChildContent>
+                            </Dropdown>
+
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">
                             <span class="text">Password</span>
@@ -91,6 +108,8 @@ else
     public string Mnemonic { get; set; }
     private string Password { get; set; }
     private string Passphrase { get; set; }
+    private List<(string name, int number)> Purposes { get; set; } = new List<(string name, int number)> { ("Legacy", 44), ("Segwit", 84) };
+    private int Purpose { get; set; }
     string Alert { get; set; }
     private bool IsSubmitting { get; set; }
     private async Task callCreateWallet()
@@ -108,11 +127,12 @@ else
         if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "Ensure that you have generated a new Mnemonic"; return; }
         if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
+        if (this.Purpose != 44 && this.Purpose != 84) { this.Alert = "Select address format"; return; }
         if (this.Passphrase == null)
             this.Passphrase = string.Empty;
         this.Alert = string.Empty;
         var requestMnemonic = new Mnemonic(this.Mnemonic);
-        Mnemonic mnemonic = this.WalletManager.CreateWallet(this.Password, this.WalletName, this.Passphrase, mnemonic: requestMnemonic);
+        Mnemonic mnemonic = this.WalletManager.CreateWallet(this.Password, this.WalletName, this.Passphrase, purpose: this.Purpose, mnemonic: requestMnemonic);
         // start syncing the wallet from the creation date
         this.WalletSyncManager.SyncFromDate(this.DateTimeProvider.GetUtcNow());
         this.Alert = "Your wallet has now been created.";
@@ -128,5 +148,9 @@ else
     {
         ModalService.Close();
         NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
+    }
+    private void OnSelected((string name, int number) selection)
+    {
+        this.Purpose = selection.number;
     }
 }

@@ -240,7 +240,11 @@ namespace Blockcore.Features.ColdStaking
                 accountName = HotWalletAccountName;
             }
 
-            account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), accountIndex, accountName);
+            // TODO: coldtake account in initially used the BIP44 purpose field
+            // This should have probably been allocated a new purpose field and not a new account indexer field
+            // We should investigate the amount of effort required to move to a purpose field instead of account index
+            int bip44Purpose = 44;
+            account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), bip44Purpose, accountIndex, accountName);
 
             // Maintain at least one unused address at all times. This will ensure that wallet recovery will also work.
             IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1, false);
@@ -258,9 +262,9 @@ namespace Blockcore.Features.ColdStaking
         /// track addresses under the <see cref="ColdWalletAccountIndex"/> HD account.
         /// </summary>
         /// <inheritdoc />
-        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null, bool? isColdStakingWallet = false)
+        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? purpose = null, int? coinType = null, bool? isColdStakingWallet = false)
         {
-            Wallet.Types.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, coinType);
+            Wallet.Types.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, purpose, coinType);
 
             if (isColdStakingWallet.HasValue && isColdStakingWallet == true)
             {
@@ -531,7 +535,7 @@ namespace Blockcore.Features.ColdStaking
             {
                 AccountReference = accountReference,
                 // Specify a dummy change address to prevent a change (internal) address from being created.
-                // Will be changed after the transacton is built and before it is signed.
+                // Will be changed after the transaction is built and before it is signed.
                 ChangeAddress = coldAccount.ExternalAddresses.First(),
                 TransactionFee = feeAmount,
                 MinConfirmations = 0,

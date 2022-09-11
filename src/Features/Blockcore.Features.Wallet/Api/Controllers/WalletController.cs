@@ -128,7 +128,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 Mnemonic requestMnemonic = string.IsNullOrEmpty(request.Mnemonic) ? null : new Mnemonic(request.Mnemonic);
 
-                Mnemonic mnemonic = this.walletManager.CreateWallet(request.Password, request.Name, request.Passphrase, mnemonic: requestMnemonic);
+                Mnemonic mnemonic = this.walletManager.CreateWallet(request.Password, request.Name, request.Passphrase, mnemonic: requestMnemonic, purpose: request.Purpose);
 
                 // start syncing the wallet from the creation date
                 this.walletSyncManager.SyncFromDate(this.dateTimeProvider.GetUtcNow());
@@ -264,7 +264,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, request.CoinType, request.IsColdStakingWallet);
+                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, purpose: request.Purpose, request.CoinType, request.IsColdStakingWallet);
 
                 this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 
@@ -314,8 +314,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                         ? request.ExtPubKey
                         : LegacyExtPubKeyConverter.ConvertIfInLegacyStratisFormat(request.ExtPubKey, this.network);
 
-                this.walletManager.RecoverWallet(request.Name, ExtPubKey.Parse(accountExtPubKey), request.AccountIndex,
-                    request.CreationDate);
+                this.walletManager.RecoverWallet(request.Name, ExtPubKey.Parse(accountExtPubKey), request.AccountIndex, request.CreationDate, request.Purpose);
 
                 this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 
@@ -951,7 +950,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                HdAccount result = this.walletManager.GetUnusedAccount(request.WalletName, request.Password);
+                HdAccount result = this.walletManager.GetUnusedAccount(request.WalletName, request.Password, request.Purpose);
                 return this.Json(result.Name);
             }
             catch (CannotAddAccountToXpubKeyWalletException e)

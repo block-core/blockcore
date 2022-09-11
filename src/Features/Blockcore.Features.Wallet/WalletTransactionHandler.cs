@@ -281,15 +281,7 @@ namespace Blockcore.Features.Wallet
                 context.ChangeAddress = this.walletManager.GetUnusedChangeAddress(new WalletAccountReference(context.AccountReference.WalletName, context.AccountReference.AccountName));
             }
 
-            if (context.ChangeAddress.IsBip84())
-            {
-                // TODO: do we actually need this conversion? the context.ChangeAddress.ScriptPubKey should already be a setwit script 
-                context.TransactionBuilder.SetChange(new BitcoinWitPubKeyAddress(context.ChangeAddress.Address, this.network).ScriptPubKey);
-            }
-            else
-            {
-                context.TransactionBuilder.SetChange(context.ChangeAddress.ScriptPubKey);
-            }
+            context.TransactionBuilder.SetChange(context.ChangeAddress.ScriptPubKey);
         }
 
         /// <summary>

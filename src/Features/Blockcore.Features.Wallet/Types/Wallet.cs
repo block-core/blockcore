@@ -47,7 +47,7 @@ namespace Blockcore.Features.Wallet.Types
         /// The wallet version.
         /// </summary>
         [JsonProperty(PropertyName = "version")]
-        public string Version { get; set; }
+        public int Version { get; set; }
 
         /// <summary>
         /// The name of this wallet.

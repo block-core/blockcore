@@ -363,9 +363,9 @@ namespace Blockcore.IntegrationTests
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
                 // Even though we are mining, we still want to use PoS consensus rules.
-                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithWallet().Start();
+                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithSegwitWallet().Start();
 
-                var address = BitcoinWitPubKeyAddress.Create(node.FullNode.WalletManager().GetUnusedAddress().Bech32Address, KnownNetworks.StratisRegTest);
+                var address = BitcoinWitPubKeyAddress.Create(node.FullNode.WalletManager().GetUnusedAddress().Address, KnownNetworks.StratisRegTest);
 
                 // A P2WPKH scriptPubKey - so that funds get mined into the node's wallet as segwit UTXOs
                 var script = address.ScriptPubKey;
@@ -529,8 +529,8 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithWallet().Start();
-                CoreNode listener = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithWallet().Start();
+                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithSegwitWallet().Start();
+                CoreNode listener = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithSegwitWallet().Start();
 
                 IConnectionManager listenerConnMan = listener.FullNode.NodeService<IConnectionManager>();
                 listenerConnMan.Parameters.TemplateBehaviors.Add(new TestBehavior());
@@ -549,7 +549,7 @@ namespace Blockcore.IntegrationTests
 
                 // Send a transaction from first node to itself so that it has a proper segwit input to spend.
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
-                var witAddress = destinationAddress.Bech32Address;
+                var witAddress = destinationAddress.Address;
 
                 IActionResult transactionResult = node.FullNode.NodeController<WalletController>()
                     .BuildTransaction(new BuildTransactionRequest
@@ -632,8 +632,8 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithWallet().Start();
-                CoreNode listener = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithWallet().Start();
+                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithSegwitWallet().Start();
+                CoreNode listener = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithSegwitWallet().Start();
 
                 TestHelper.Connect(listener, node);
 
@@ -648,7 +648,7 @@ namespace Blockcore.IntegrationTests
 
                 // Send a transaction from first node to itself so that it has a proper segwit input to spend.
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
-                var witAddress = destinationAddress.Bech32Address;
+                var witAddress = destinationAddress.Address;
 
                 var p2wpkhAmount = Money.Coins(1);
 
@@ -683,7 +683,7 @@ namespace Blockcore.IntegrationTests
                 // Make sure wallet is synced.
                 TestBase.WaitLoop(() => node.CreateRPCClient().GetBlockCount() == node.FullNode.WalletManager().LastBlockHeight(), cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
 
-                var spendable = node.FullNode.WalletManager().GetSpendableTransactionsInWallet(node.WalletName).Where(t => t.Address.Bech32Address != witAddress);
+                var spendable = node.FullNode.WalletManager().GetSpendableTransactionsInWallet(node.WalletName).Where(t => t.Address.Address != witAddress);
 
                 // By sending more than the size of the P2WPKH UTXO, we guarantee that at least one non-P2WPKH UTXO gets included
                 transactionResult = node.FullNode.NodeController<WalletController>()
@@ -721,7 +721,7 @@ namespace Blockcore.IntegrationTests
         {
             using (NodeBuilder builder = NodeBuilder.Create(this))
             {
-                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithWallet().Start();
+                CoreNode node = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithSegwitWallet().Start();
                 CoreNode listener = builder.CreateStratisPosNode(KnownNetworks.StratisRegTest).WithWallet().Start();
 
                 TestHelper.Connect(listener, node);
@@ -736,8 +736,9 @@ namespace Blockcore.IntegrationTests
                 TestBase.WaitLoop(() => TestHelper.AreNodesSynced(node, listener));
 
                 var destinationAddress = node.FullNode.WalletManager().GetUnusedAddress();
-                var witAddress = destinationAddress.Bech32Address;
-                var nonWitAddress = destinationAddress.Address;
+                var destinationAddress1 = listener.FullNode.WalletManager().GetUnusedAddress();
+                var witAddress = destinationAddress.Address;
+                var nonWitAddress = destinationAddress1.Address;
 
                 IActionResult transactionResult = node.FullNode.NodeController<WalletController>()
                     .BuildTransaction(new BuildTransactionRequest

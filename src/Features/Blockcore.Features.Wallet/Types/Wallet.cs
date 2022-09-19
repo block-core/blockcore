@@ -814,7 +814,7 @@ namespace Blockcore.Features.Wallet.Types
                 {
                     // Generate the P2PKH address corresponding to the pubkey.
                     BitcoinPubKeyAddress address = pubkey.GetAddress(network);
-                    newAddress.ScriptPubKey = pubkey.ScriptPubKey;
+                    newAddress.ScriptPubKey = address.ScriptPubKey;
                     newAddress.Address = address.ToString();
                 }
                 else if (newAddress.IsBip84())

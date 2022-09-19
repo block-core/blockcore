@@ -240,11 +240,16 @@ namespace Blockcore.Features.ColdStaking
                 accountName = HotWalletAccountName;
             }
 
-            // TODO: coldtake account in initially used the BIP44 purpose field
-            // This should have probably been allocated a new purpose field and not a new account indexer field
-            // We should investigate the amount of effort required to move to a purpose field instead of account index
-            int bip44Purpose = 44;
-            account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), bip44Purpose, accountIndex, accountName);
+            HdAccount defaultAccount =  wallet.GetAccount(0);
+            int purposeField = defaultAccount.Purpose;
+
+            //if (wallet.Version < 2)
+            //{
+            //    // to maintain backwards compatibility we default to bip44 for old wallets.
+            //    purposeField = 44;
+            //}
+
+            account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), purposeField, accountIndex, accountName);
 
             // Maintain at least one unused address at all times. This will ensure that wallet recovery will also work.
             IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1, false);

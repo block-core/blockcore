@@ -122,6 +122,16 @@ namespace Blockcore.Features.Wallet.Types
         }
 
         /// <summary>
+        /// Gets an account from the wallet's accounts.
+        /// </summary>
+        /// <param name="index">The index of the account to retrieve.</param>
+        /// <returns>The requested account or <c>null</c> if the account does not exist.</returns>
+        public HdAccount GetAccount(int index)
+        {
+            return this.AccountsRoot.SingleOrDefault()?.GetAccountByIndex(index);
+        }
+
+        /// <summary>
         /// Update the last block synced height and hash in the wallet.
         /// </summary>
         /// <param name="block">The block whose details are used to update the wallet.</param>
@@ -467,6 +477,16 @@ namespace Blockcore.Features.Wallet.Types
         public HdAccount GetAccountByName(string accountName)
         {
             return this.Accounts?.SingleOrDefault(a => a.Name == accountName);
+        }
+
+        /// <summary>
+        /// Gets the account matching the index passed as a parameter.
+        /// </summary>
+        /// <param name="index">The index of the account to get.</param>
+        /// <returns>The HD account specified by the parameter or <c>null</c> if the account does not exist.</returns>
+        public HdAccount GetAccountByIndex(int index)
+        {
+            return this.Accounts?.SingleOrDefault(a => a.Index == index);
         }
 
         /// <summary>

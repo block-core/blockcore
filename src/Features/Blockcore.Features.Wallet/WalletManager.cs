@@ -1767,7 +1767,7 @@ namespace Blockcore.Features.Wallet
             {
                 walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
 
-                if (wallet.Version < 2)
+                if (wallet.Version < 2 && address.Pubkey != null)
                 {
                     var pubkey = PayToPubkeyTemplate.Instance.ExtractScriptPubKeyParameters(address.Pubkey);
                     BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(this.network);

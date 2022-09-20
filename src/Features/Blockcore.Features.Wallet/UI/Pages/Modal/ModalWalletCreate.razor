@@ -48,16 +48,15 @@
                             <span class="text">Format</span>
                         </label>
                         <div class="col-sm-10">
-                            <Dropdown TItem="(string name, int number)" OnSelected="@OnSelected">
-                                <InitialTip>Address Format</InitialTip>
-                                <ChildContent>
+                            <select @bind="SelectedPurpose" type="text" class="form-control bg-secondary text-light">
+                                <option value=""></option>
+                                @{
                                     @foreach (var prp in Purposes)
-                                    {                                       
-                                         <DropdownListItem Item="@prp">@prp.name</DropdownListItem>
+                                    {          
+                                        <option value="@prp">@prp</option>
                                     }
-                                </ChildContent>
-                            </Dropdown>
-
+                                }
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -108,7 +107,8 @@ else
     public string Mnemonic { get; set; }
     private string Password { get; set; }
     private string Passphrase { get; set; }
-    private List<(string name, int number)> Purposes { get; set; } = new List<(string name, int number)> { ("Legacy", 44), ("Segwit", 84) };
+    private List<string> Purposes { get; set; } = new List<string> { "Legacy", "Segwit" };
+    private string SelectedPurpose { get; set; }
     private int Purpose { get; set; }
     string Alert { get; set; }
     private bool IsSubmitting { get; set; }
@@ -124,6 +124,9 @@ else
     }
     private async Task CreateWallet()
     {
+        if (SelectedPurpose == "Legacy") Purpose = 44;
+        if (SelectedPurpose == "Segwit") Purpose = 84;
+
         if (string.IsNullOrEmpty(this.Mnemonic)) { this.Alert = "Ensure that you have generated a new Mnemonic"; return; }
         if (string.IsNullOrEmpty(this.WalletName)) { this.Alert = "Please enter a wallet name"; return; }
         if (string.IsNullOrEmpty(this.Password)) { this.Alert = "Please enter a password"; return; }
@@ -148,9 +151,5 @@ else
     {
         ModalService.Close();
         NavigationManager.NavigateTo("walletview/" + WalletName + "/account 0");
-    }
-    private void OnSelected((string name, int number) selection)
-    {
-        this.Purpose = selection.number;
     }
 }

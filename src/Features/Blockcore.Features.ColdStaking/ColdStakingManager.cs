@@ -243,12 +243,6 @@ namespace Blockcore.Features.ColdStaking
             HdAccount defaultAccount =  wallet.GetAccount(0);
             int purposeField = defaultAccount.Purpose;
 
-            //if (wallet.Version < 2)
-            //{
-            //    // to maintain backwards compatibility we default to bip44 for old wallets.
-            //    purposeField = 44;
-            //}
-
             account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), purposeField, accountIndex, accountName);
 
             // Maintain at least one unused address at all times. This will ensure that wallet recovery will also work.
@@ -391,10 +385,8 @@ namespace Blockcore.Features.ColdStaking
             KeyId coldPubKeyHash = null;
 
             // Check if this is a segwit address
-            //if (coldAddress?.Bech32Address == coldWalletAddress || hotAddress?.Bech32Address == hotWalletAddress)
             if ((coldAddress != null && coldAddress.IsBip84()) || (hotAddress != null && hotAddress.IsBip84()))
             {
-                //TODO: check that both hot and cold address are same (segwit or none segwit and throw if not)
                 hotPubKeyHash = new BitcoinWitPubKeyAddress(hotWalletAddress, wallet.Network).Hash.AsKeyId();
                 coldPubKeyHash = new BitcoinWitPubKeyAddress(coldWalletAddress, wallet.Network).Hash.AsKeyId();
                 destination = ColdStakingScriptTemplate.Instance.GenerateScriptPubKey(hotPubKeyHash, coldPubKeyHash);

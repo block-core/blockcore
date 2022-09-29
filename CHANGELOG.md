@@ -1,3 +1,14 @@
+##  (2022-09-29)
+
+* Add additional checkpoint for City Chain ([f928dab](https://github.com/block-core/blockcore/commit/f928dab))
+* Configure reloadOnChange to be false ([229a3ed](https://github.com/block-core/blockcore/commit/229a3ed)), closes [#418](https://github.com/block-core/blockcore/issues/418)
+* Define a maximum tx fee or else zero few is required ([885634a](https://github.com/block-core/blockcore/commit/885634a))
+* Fix wallet to use segwit in the correct derivation path (#415) ([3ef32a7](https://github.com/block-core/blockcore/commit/3ef32a7)), closes [#415](https://github.com/block-core/blockcore/issues/415)
+* Update DNS and seed nodes for City Chain ([f0fc349](https://github.com/block-core/blockcore/commit/f0fc349))
+* Update version ([c36bf5e](https://github.com/block-core/blockcore/commit/c36bf5e))
+
+
+
 ##  (2022-08-26)
 
 * add changelog ([5e5cde6](https://github.com/block-core/blockcore/commit/5e5cde6))

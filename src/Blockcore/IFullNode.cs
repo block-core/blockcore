@@ -2,7 +2,6 @@
 using Blockcore.Builder;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using Microsoft.AspNetCore.Hosting;
 
 namespace Blockcore
 {
@@ -27,7 +26,7 @@ namespace Blockcore
         Version Version { get; }
 
         /// <summary>ASP.NET Core host for RPC server.</summary>
-        IWebHost RPCHost { get; set; }
+        IDisposable RPCHost { get; set; }
 
         /// <summary>Provides current state of the node.</summary>
         FullNodeState State { get; }

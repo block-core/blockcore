@@ -154,6 +154,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.SeniorBl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.RoyalSportsCity", "Networks\Blockcore.Networks.RoyalSportsCity\Blockcore.Networks.RoyalSportsCity.csproj", "{D176C98F-E2EF-49C6-B073-32F08889BD27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1.Server", "BlazorApp1\Server\BlazorApp1.Server.csproj", "{F3910DF6-DCEF-4D7F-A837-8670BB45D65D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1.Client", "BlazorApp1\Client\BlazorApp1.Client.csproj", "{003B32A4-9858-4154-82D7-814F496A3DDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1.Shared", "BlazorApp1\Shared\BlazorApp1.Shared.csproj", "{03FD11E3-602C-497D-A730-B9FCAD9D838D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -404,6 +410,18 @@ Global
 		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3910DF6-DCEF-4D7F-A837-8670BB45D65D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3910DF6-DCEF-4D7F-A837-8670BB45D65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3910DF6-DCEF-4D7F-A837-8670BB45D65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3910DF6-DCEF-4D7F-A837-8670BB45D65D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{003B32A4-9858-4154-82D7-814F496A3DDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{003B32A4-9858-4154-82D7-814F496A3DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{003B32A4-9858-4154-82D7-814F496A3DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{003B32A4-9858-4154-82D7-814F496A3DDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03FD11E3-602C-497D-A730-B9FCAD9D838D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03FD11E3-602C-497D-A730-B9FCAD9D838D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03FD11E3-602C-497D-A730-B9FCAD9D838D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03FD11E3-602C-497D-A730-B9FCAD9D838D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

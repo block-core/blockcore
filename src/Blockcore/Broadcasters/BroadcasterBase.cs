@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.EventBus;
 using Blockcore.Utilities;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace Blockcore.Broadcasters

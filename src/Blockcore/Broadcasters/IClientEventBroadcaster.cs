@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.SignalR;
 
 namespace Blockcore.Broadcasters
 {

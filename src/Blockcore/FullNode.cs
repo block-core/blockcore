@@ -12,7 +12,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -46,7 +45,7 @@ namespace Blockcore
         public Signals.ISignals Signals { get; set; }
 
         /// <summary>ASP.NET Core host for RPC server.</summary>
-        public IWebHost RPCHost { get; set; }
+        public IDisposable RPCHost { get; set; }
 
         /// <inheritdoc />
         public FullNodeState State { get; private set; }

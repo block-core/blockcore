@@ -69,7 +69,8 @@ namespace Blockcore.Features.RPC
             {
                 // TODO: The web host wants to create IServiceProvider, so build (but not start)
                 // earlier, if you want to use dependency injection elsewhere
-                this.fullNode.RPCHost = new WebHostBuilder()
+                
+                var webHost = new WebHostBuilder()
                 .UseKestrel(o => o.AllowSynchronousIO = true)
                 .ForFullNode(this.fullNode)
                 .UseUrls(this.rpcSettings.GetUrls())
@@ -105,7 +106,8 @@ namespace Blockcore.Features.RPC
                 .UseStartup<Startup>()
                 .Build();
 
-                this.fullNode.RPCHost.Start();
+                webHost.Start();
+                this.fullNode.RPCHost = webHost as IDisposable;
                 this.logger.LogInformation("RPC listening on: " + Environment.NewLine + string.Join(Environment.NewLine, this.rpcSettings.GetUrls()));
             }
             else

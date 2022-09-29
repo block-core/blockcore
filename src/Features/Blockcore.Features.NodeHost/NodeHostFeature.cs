@@ -129,6 +129,10 @@ namespace Blockcore.Features.NodeHost
                     services.AddSingleton<NodeHostSettings>();
                     services.AddSingleton<IEventsSubscriptionService, EventSubscriptionService>();
                     services.AddSingleton<ICertificateStore, CertificateStore>();
+
+                    // Controller
+                    services.AddTransient<Blockcore.Controllers.NodeController>();
+
                 });
             });
 

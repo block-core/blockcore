@@ -92,7 +92,5 @@ namespace Blockcore.Features.Miner.Api.Models
         /// </summary>
         [Required(ErrorMessage = "Name of wallet.")]
         public string WalletName { get; set; }
-
-        public bool Segwit { get; set; }
     }
 }

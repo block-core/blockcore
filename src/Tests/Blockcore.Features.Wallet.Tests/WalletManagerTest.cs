@@ -627,7 +627,7 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
 
-            HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
+            HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow, 44);
 
             Assert.Equal(1, wallet.AccountsRoot.ElementAt(0).Accounts.Count);
             var extKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, "password", wallet.Network), wallet.ChainCode);
@@ -635,6 +635,29 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal($"account 0", result.Name);
             Assert.Equal(0, result.Index);
             Assert.Equal($"m/44'/0'/0'", result.HdPath);
+            Assert.Equal(expectedExtendedPubKey, result.ExtendedPubKey);
+            Assert.Equal(0, result.InternalAddresses.Count);
+            Assert.Equal(0, result.ExternalAddresses.Count);
+        }
+
+        [Fact]
+        public void CreateNewBIP84AccountGivenNoAccountsExistingInWalletCreatesNewAccount()
+        {
+            DataFolder dataFolder = CreateDataFolder(this);
+
+            var walletManager = new WalletManager(this.LoggerFactory.Object, this.Network, new Mock<ChainIndexer>().Object, new WalletSettings(NodeSettings.Default(this.Network)),
+                dataFolder, new Mock<IWalletFeePolicy>().Object, new Mock<IAsyncProvider>().Object, new NodeLifetime(), DateTimeProvider.Default, new ScriptAddressReader());
+            Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
+            wallet.AccountsRoot.ElementAt(0).Accounts.Clear();
+
+            HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow, 84);
+
+            Assert.Equal(1, wallet.AccountsRoot.ElementAt(0).Accounts.Count);
+            var extKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, "password", wallet.Network), wallet.ChainCode);
+            string expectedExtendedPubKey = extKey.Derive(new KeyPath($"m/84'/0'/0'")).Neuter().ToString(wallet.Network);
+            Assert.Equal($"account 0", result.Name);
+            Assert.Equal(0, result.Index);
+            Assert.Equal($"m/84'/0'/0'", result.HdPath);
             Assert.Equal(expectedExtendedPubKey, result.ExtendedPubKey);
             Assert.Equal(0, result.InternalAddresses.Count);
             Assert.Equal(0, result.ExternalAddresses.Count);
@@ -651,7 +674,7 @@ namespace Blockcore.Features.Wallet.Tests
             Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("testWallet", "password");
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount { Name = "unused" });
 
-            HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow);
+            HdAccount result = wallet.AddNewAccount("password", DateTimeOffset.UtcNow, 44);
 
             Assert.Equal(2, wallet.AccountsRoot.ElementAt(0).Accounts.Count);
             var extKey = new ExtKey(Key.Parse(wallet.EncryptedSeed, "password", wallet.Network), wallet.ChainCode);
@@ -784,6 +807,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "myAccount",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountExtendedPubKey,
@@ -810,6 +834,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "myAccount",
                 HdPath = "m/44'/0'/0'",
                 ExternalAddresses = new List<HdAddress>
@@ -855,6 +880,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "myAccount",
                 HdPath = "m/44'/0'/0'",
                 ExternalAddresses = new List<HdAddress>
@@ -898,6 +924,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "myAccount",
                 HdPath = "m/44'/0'/0'",
                 ExternalAddresses = new List<HdAddress>
@@ -940,6 +967,7 @@ namespace Blockcore.Features.Wallet.Tests
             var account = new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "myAccount",
                 HdPath = "m/44'/0'/0'",
                 ExternalAddresses = new List<HdAddress>
@@ -985,6 +1013,7 @@ namespace Blockcore.Features.Wallet.Tests
             var account = new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "myAccount",
                 HdPath = "m/44'/0'/0'",
                 ExternalAddresses = new List<HdAddress>(),
@@ -1328,6 +1357,7 @@ namespace Blockcore.Features.Wallet.Tests
             data.wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 ExternalAddresses = new List<HdAddress> {
                     address
                 },
@@ -1359,6 +1389,7 @@ namespace Blockcore.Features.Wallet.Tests
                 data.wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
                 {
                     Index = 0,
+                    Purpose = 44,
                     ExternalAddresses = new List<HdAddress>(),
                     InternalAddresses = new List<HdAddress>(),
                     Name = "savings account"
@@ -1420,6 +1451,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -1510,6 +1542,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -1597,6 +1630,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -1679,6 +1713,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -1764,6 +1799,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -1861,6 +1897,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -2253,6 +2290,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Name = "First account",
+                Purpose = 44,
                 ExternalAddresses = WalletTestsHelpers.CreateSpentTransactionsOfBlockHeights((WalletMemoryStore)wallet.walletStore, this.Network, 1, 2, 3, 4, 5).ToList(),
                 InternalAddresses = WalletTestsHelpers.CreateSpentTransactionsOfBlockHeights((WalletMemoryStore)wallet.walletStore, this.Network, 1, 2, 3, 4, 5).ToList()
             });
@@ -2361,6 +2399,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -2823,7 +2862,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void CreateBip44PathWithChangeAddressReturnsPath()
         {
-            string result = HdOperations.CreateHdPath((int)KnownCoinTypes.Stratis, 4, true, 3);
+            string result = HdOperations.CreateHdPath(44, (int)KnownCoinTypes.Stratis, 4, true, 3);
 
             Assert.Equal("m/44'/105'/4'/1/3", result);
         }
@@ -2831,9 +2870,17 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void CreateBip44PathWithoutChangeAddressReturnsPath()
         {
-            string result = HdOperations.CreateHdPath((int)KnownCoinTypes.Stratis, 4, false, 3);
+            string result = HdOperations.CreateHdPath(44, (int)KnownCoinTypes.Stratis, 4, false, 3);
 
             Assert.Equal("m/44'/105'/4'/0/3", result);
+        }
+
+        [Fact]
+        public void CreateBip84PathWithoutChangeAddressReturnsPath()
+        {
+            string result = HdOperations.CreateHdPath(84, (int)KnownCoinTypes.Stratis, 4, false, 3);
+
+            Assert.Equal("m/84'/105'/4'/0/3", result);
         }
 
         [Fact]
@@ -3101,6 +3148,7 @@ namespace Blockcore.Features.Wallet.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account1",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -3262,7 +3310,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             try
             {
-                wallet.AddNewAccount(ExtPubKey.Parse(stratisAccount1ExtPubKey), 0, DateTime.Now.AddHours(-2));
+                wallet.AddNewAccount(ExtPubKey.Parse(stratisAccount1ExtPubKey), 0, DateTime.Now.AddHours(-2), 44);
 
                 Assert.True(false, "should have thrown exception but didn't.");
             }
@@ -3281,7 +3329,7 @@ namespace Blockcore.Features.Wallet.Tests
             var walletManager = this.CreateWalletManager(dataFolder, KnownNetworks.StratisMain);
             var wallet = walletManager.RecoverWallet("wallet1", ExtPubKey.Parse(stratisAccount0ExtPubKey), 0, DateTime.Now.AddHours(-2));
 
-            var addNewAccount = new Action(() => wallet.AddNewAccount(ExtPubKey.Parse(stratisAccount0ExtPubKey), 1, DateTime.Now.AddHours(-2)));
+            var addNewAccount = new Action(() => wallet.AddNewAccount(ExtPubKey.Parse(stratisAccount0ExtPubKey), 1, DateTime.Now.AddHours(-2), 44));
 
             addNewAccount.Should().Throw<WalletException>()
                 .WithMessage("There is already an account in this wallet with this xpubkey: " + stratisAccount0ExtPubKey);

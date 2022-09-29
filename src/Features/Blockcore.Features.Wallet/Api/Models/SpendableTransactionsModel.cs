@@ -39,6 +39,12 @@ namespace Blockcore.Features.Wallet.Api.Models
         public string Address { get; set; }
 
         /// <summary>
+        /// The script.
+        /// </summary>
+        [JsonProperty(PropertyName = "script")]
+        public string Script { get; set; }
+
+        /// <summary>
         /// A value indicating whether this address is a change address.
         /// </summary>
         [JsonProperty(PropertyName = "isChange")]

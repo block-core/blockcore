@@ -125,7 +125,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
         [ActionName("sendtoaddress")]
         [ActionDescription("Sends money to an address. Requires wallet to be unlocked using walletpassphrase.")]
-        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, decimal amount, string commentTx, string commentDest, decimal? fee = null, bool isSegwit = false)
+        public async Task<uint256> SendToAddressAsync(BitcoinAddress address, decimal amount, string commentTx, string commentDest, decimal? fee = null)
         {
             decimal transactionFee = fee ?? Money.Satoshis(this.FullNode.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
 
@@ -135,7 +135,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 Recipients = new[] { new Recipient { Amount = Money.Coins(amount), ScriptPubKey = address.ScriptPubKey } }.ToList(),
                 CacheSecret = false,
                 TransactionFee = Money.Coins(transactionFee),
-                UseSegwitChangeAddress = isSegwit
             };
 
             try
@@ -223,9 +222,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             HdAddress hdAddress = this.walletManager.GetUnusedAddresses(accountReference, 1, alwaysnew: true).Single();
 
-            string address = hdAddress.Address; // legacy address
-            if (addressType != null && addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
-                address = hdAddress.Bech32Address;
+            string address = hdAddress.Address;
 
             return new NewAddressModel(address);
         }
@@ -252,9 +249,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             }
             HdAddress hdAddress = this.walletManager.GetUnusedAddress(this.GetWalletAccountReference());
 
-            string address = hdAddress.Address; // legacy address
-            if (addressType != null && addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
-                address = hdAddress.Bech32Address;
+            string address = hdAddress.Address;
 
             return new NewAddressModel(address);
         }

@@ -128,7 +128,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 Mnemonic requestMnemonic = string.IsNullOrEmpty(request.Mnemonic) ? null : new Mnemonic(request.Mnemonic);
 
-                Mnemonic mnemonic = this.walletManager.CreateWallet(request.Password, request.Name, request.Passphrase, mnemonic: requestMnemonic);
+                Mnemonic mnemonic = this.walletManager.CreateWallet(request.Password, request.Name, request.Passphrase, mnemonic: requestMnemonic, purpose: request.Purpose);
 
                 // start syncing the wallet from the creation date
                 this.walletSyncManager.SyncFromDate(this.dateTimeProvider.GetUtcNow());
@@ -264,7 +264,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, request.CoinType, request.IsColdStakingWallet);
+                Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, purpose: request.Purpose, request.CoinType, request.IsColdStakingWallet);
 
                 this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 
@@ -314,8 +314,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                         ? request.ExtPubKey
                         : LegacyExtPubKeyConverter.ConvertIfInLegacyStratisFormat(request.ExtPubKey, this.network);
 
-                this.walletManager.RecoverWallet(request.Name, ExtPubKey.Parse(accountExtPubKey), request.AccountIndex,
-                    request.CreationDate);
+                this.walletManager.RecoverWallet(request.Name, ExtPubKey.Parse(accountExtPubKey), request.AccountIndex, request.CreationDate, request.Purpose);
 
                 this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 
@@ -751,7 +750,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     AllowOtherInputs = false,
                     Recipients = recipients,
                     ChangeAddress = changeAddress,
-                    UseSegwitChangeAddress = request.SegwitChangeAddress
                 };
 
                 if (!string.IsNullOrEmpty(request.FeeType))
@@ -952,7 +950,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             try
             {
-                HdAccount result = this.walletManager.GetUnusedAccount(request.WalletName, request.Password);
+                HdAccount result = this.walletManager.GetUnusedAccount(request.WalletName, request.Password, request.Purpose);
                 return this.Json(result.Name);
             }
             catch (CannotAddAccountToXpubKeyWalletException e)
@@ -1018,7 +1016,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 HdAddress result = this.walletManager.GetUnusedAddress(new WalletAccountReference(request.WalletName, request.AccountName));
-                return this.Json(request.Segwit ? result.Bech32Address : result.Address);
+                return this.Json(result.Address);
             }
             catch (Exception e)
             {
@@ -1051,7 +1049,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 IEnumerable<HdAddress> result = this.walletManager.GetUnusedAddresses(new WalletAccountReference(request.WalletName, request.AccountName), count);
-                return this.Json(result.Select(x => request.Segwit ? x.Bech32Address : x.Address).ToArray());
+                return this.Json(result.Select(x => x.Address).ToArray());
             }
             catch (Exception e)
             {
@@ -1093,7 +1091,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                         return new AddressModel
                         {
-                            Address = request.Segwit ? address.Bech32Address : address.Address,
+                            Address = address.Address,
                             IsUsed = anyTrx,
                             IsChange = address.IsChangeAddress(),
                             AmountConfirmed = confirmedAmount,

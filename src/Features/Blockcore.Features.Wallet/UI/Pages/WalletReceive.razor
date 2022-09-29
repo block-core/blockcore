@@ -35,16 +35,8 @@
         </div>
         <div class="card-body">
             <div class="row">
-                @if (NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness))
-                {
-                    <div class="col-sm-2"><strong>Address:</strong></div>
-                    <div class="col-sm-10"><CopyToClipboard Text="@result.Bech32Address" /></div>
-                }
-                else
-                {
-                    <div class="col-sm-2"><strong>Address:</strong></div>
-                    <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
-                }
+                <div class="col-sm-2"><strong>Address:</strong></div>
+                <div class="col-sm-10"><CopyToClipboard Text="@result.Address" /></div>
             </div>
         </div>
     </div>
@@ -60,9 +52,7 @@
 
                     return new AddressModel
                     {
-                        Address = (bool)(NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.Witness)) ? address.Bech32Address : address.Address,
-                        // Address =  request.Segwit ? address.Bech32Address : address.Address,
-                        //  Address = address.Address,
+                        Address = address.Address,
                         IsUsed = anyTrx,
                         IsChange = address.IsChangeAddress(),
                         AmountConfirmed = confirmedAmount,

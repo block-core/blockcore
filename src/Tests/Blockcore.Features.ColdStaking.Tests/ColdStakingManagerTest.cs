@@ -162,6 +162,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             wallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = 0,
+                Purpose = 44,
                 Name = "account 0",
                 HdPath = "m/44'/0'/0'",
                 ExtendedPubKey = accountKeys.ExtPubKey,
@@ -172,6 +173,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             coldWallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = ColdStakingManager.ColdWalletAccountIndex,
+                Purpose = 44,
                 Name = ColdStakingManager.ColdWalletAccountName,
                 HdPath = $"m/44'/0'/{ColdStakingManager.ColdWalletAccountIndex}'",
                 ExtendedPubKey = accountColdKeys.ExtPubKey,
@@ -182,6 +184,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             hotWallet.AccountsRoot.ElementAt(0).Accounts.Add(new HdAccount
             {
                 Index = ColdStakingManager.HotWalletAccountIndex,
+                Purpose = 44,
                 Name = ColdStakingManager.HotWalletAccountName,
                 HdPath = $"m/44'/0'/{ColdStakingManager.HotWalletAccountIndex}'",
                 ExtendedPubKey = accountHotKeys.ExtPubKey,

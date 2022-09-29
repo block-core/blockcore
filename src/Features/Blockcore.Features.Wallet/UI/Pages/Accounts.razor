@@ -120,6 +120,7 @@
                                 <thead class="thead">
                                     <tr>
                                         <th class="text-primary"><strong>Account Name</strong></th>
+                                        <th class="text-primary"><strong>Format</strong></th>
                                         <th class="text-primary"><strong>CONFIRMED BALANCE</strong></th>
                                         <th class="text-primary"><strong>UNCONFIRMED BALANCE</strong></th>
                                         <th class="text-primary text-center"><strong>DETAILS</strong></th>
@@ -134,6 +135,7 @@
                                                 <td class="align-middle">
                                                     <button class="btn btn-sm btn-secondary" @onclick="() => { NavigateToWallet(walletname, _account.Name); }">@_account.Name</button>
                                                 </td>
+                                                <td class="align-middle">@ParseAccount(_account)</td>
                                                 <td class="align-middle">@accountBalance.AmountConfirmed</td>
                                                 <td class="align-middle">@accountBalance.AmountUnconfirmed</td>
                                                 <td class="text-center align-middle">
@@ -175,7 +177,20 @@
     {
         NavigationManager.NavigateTo("walletrecover");
     }
+    private string ParseAccount(Blockcore.Features.Wallet.Types.HdAccount account)
+    {
+        if (account.Purpose == 44)
+        {
+            return "legacy";
+        }
 
+        if (account.Purpose == 84)
+        {
+            return "segwit";
+        }
+
+        return "unknown";
+    }
     private Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)> ReadCurrentWallets()
     {
         var walletBalances = new Dictionary<string, (Types.AccountBalance AccountBalance, string AccountName)>();

@@ -159,8 +159,6 @@
 
     private decimal Fee { get; set; }
 
-    public bool SegwitChangeAddress { get; set; }
-
     public bool PayToScript { get; set; }
 
     protected override Task OnInitializedAsync()
@@ -202,8 +200,6 @@
                 this.Alert = "Segwit is not activated, can't use segwit address.";
                 return;
             }
-
-            this.SegwitChangeAddress = true;
         }
         else
         {
@@ -226,13 +222,7 @@
             return;
         }
 
-        if (this.SegwitChangeAddress != address.IsBip84())
-        {
-            this.Alert = "Trying to send to a segwit address from a non segwit wallet.";
-            return;
-        }
-
-        this.ColdWalletAddress = this.SegwitChangeAddress ? address?.Bech32Address : address?.Address;
+        this.ColdWalletAddress = address?.Address;
         if (this.ColdWalletAddress == null)
         {
             this.Alert = "The cold staking account does not exist.";
@@ -252,7 +242,6 @@
                 this.Password,
                 new Money(this.Amount, MoneyUnit.BTC),
                 new Money(this.Fee, MoneyUnit.BTC),
-                this.SegwitChangeAddress,
                 this.PayToScript);
 
             await this.BroadcasterManager.BroadcastTransactionAsync(transaction);

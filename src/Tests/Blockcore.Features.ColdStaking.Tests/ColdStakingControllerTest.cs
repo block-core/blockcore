@@ -29,6 +29,7 @@ using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.Networks;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Networks.Stratis.Policies;
 using Blockcore.Signals;
@@ -61,10 +62,10 @@ namespace Blockcore.Features.ColdStaking.Tests
         private const string hotWalletAddress1 = "SaVUwmJSvRiofghrePxrBQGoke1pLfmfXN";
         private const string coldWalletAddress2 = "Sagbh9LuzNAV7y2FHyUQJcgmjcuogSssef";
         private const string hotWalletAddress2 = "SVoMim67CMF1St6j6toAWnnQ2mCvb8V4mT";
-        private const string coldWalletSegwitAddress1 = "strat1qp79yqxx44gza9mzmwjk25cxmyg6wdee4hnf7c9";
-        private const string hotWalletSegwitAddress1 = "strat1qjrzc9ju366mdwa7rrjy36j2rlm2wmtp63vre6g";
-        private const string coldWalletSegwitAddress2 = "strat1qjt0ms2wnrnh7dgrnru6r9h4yzkt2y7xedlgcp9";
-        private const string hotWalletSegwitAddress2 = "strat1qt489d0ct9snhutaam7dmttrtf4f3hfk23xmn0s";
+        private const string coldWalletSegwitAddress1 = "strat1qcspg2d96hl2e2xz8925jlzj4vwtuhrakyw0vam"; // "strat1qp79yqxx44gza9mzmwjk25cxmyg6wdee4hnf7c9";
+        private const string hotWalletSegwitAddress1 = "strat1qf3s8ezwl6hwvwalevltuvzsgmgc2uzvcy9kgmf";  //"strat1qjrzc9ju366mdwa7rrjy36j2rlm2wmtp63vre6g";
+        private const string coldWalletSegwitAddress2 = "strat1qymk6rq8cw2c5afeugd9wxq5g0zgw2y57q02nkq"; // "strat1qjt0ms2wnrnh7dgrnru6r9h4yzkt2y7xedlgcp9";
+        private const string hotWalletSegwitAddress2 = "strat1qyegz7ed6asrsa7ycxac6xh7q6np4kfl3zffws8"; // "strat1qt489d0ct9snhutaam7dmttrtf4f3hfk23xmn0s";
 
         private ColdStakingManager coldStakingManager;
         private ColdStakingController coldStakingController;
@@ -147,6 +148,20 @@ namespace Blockcore.Features.ColdStaking.Tests
                 });
         }
 
+        private class NodeDeploymentsWitnessMock : NodeDeployments
+        {
+            public NodeDeploymentsWitnessMock(Network network, ChainIndexer chainIndexer) : base(network, chainIndexer)
+            {
+            }
+
+            public override DeploymentFlags GetFlags(ChainedHeader block)
+            {
+                var flags = base.GetFlags(block);
+                flags.ScriptFlags |= ScriptVerify.Witness;
+                return flags;
+            }
+        }
+
         /// <summary>
         /// Create the MempoolManager used for testing whether transactions are accepted to the memory pool.
         /// </summary>
@@ -157,7 +172,8 @@ namespace Blockcore.Features.ColdStaking.Tests
             this.txMemPool = new TxMempool(this.dateTimeProvider, new BlockPolicyEstimator(
                 new MempoolSettings(this.nodeSettings), this.loggerFactory, this.nodeSettings), this.loggerFactory, this.nodeSettings);
             this.chainIndexer = new ChainIndexer(this.Network);
-            this.nodeDeployments = new NodeDeployments(this.Network, this.chainIndexer);
+
+            this.nodeDeployments = new NodeDeploymentsWitnessMock(this.Network, this.chainIndexer);
 
             this.MockCoinView();
             this.MockStakeChain();
@@ -563,7 +579,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             this.Initialize();
             this.CreateMempoolManager();
 
-            this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
+            this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1), purpose: 84);
 
             Wallet.Types.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
 
@@ -588,9 +604,9 @@ namespace Blockcore.Features.ColdStaking.Tests
             Assert.Equal((uint)0, transaction.Inputs[0].PrevOut.N);
             Assert.Equal(2, transaction.Outputs.Count);
             Assert.Equal(Money.Coins(0.99m), transaction.Outputs[0].Value);
-            Assert.Equal("OP_DUP OP_HASH160 970e19fc2f6565b0b1c65fd88ef1512cb3da4d7b OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[0].ScriptPubKey.ToString());
+            Assert.Equal("0 124486fdd0c9f1dec0467c43596c5d59b4a869c6", transaction.Outputs[0].ScriptPubKey.ToString());
             Assert.Equal(Money.Coins(100), transaction.Outputs[1].Value);
-            Assert.Equal("OP_DUP OP_HASH160 OP_ROT OP_IF OP_CHECKCOLDSTAKEVERIFY 90c582cb91d6b6d777c31c891d4943fed4edac3a OP_ELSE 92dfb829d31cefe6a0731f3432dea41596a278d9 OP_ENDIF OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[1].ScriptPubKey.ToString());
+            Assert.Equal("OP_DUP OP_HASH160 OP_ROT OP_IF OP_CHECKCOLDSTAKEVERIFY 4c607c89dfd5dcc777f967d7c60a08da30ae0998 OP_ELSE 26eda180f872b14ea73c434ae302887890e5129e OP_ENDIF OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[1].ScriptPubKey.ToString());
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
@@ -714,7 +730,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             this.Initialize();
             this.CreateMempoolManager();
 
-            this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
+            this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2), purpose: 84);
 
             Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
@@ -740,9 +756,9 @@ namespace Blockcore.Features.ColdStaking.Tests
             Assert.Equal((uint)0, transaction.Inputs[0].PrevOut.N);
             Assert.Equal(2, transaction.Outputs.Count);
             Assert.Equal(Money.Coins(0.99m), transaction.Outputs[0].Value);
-            Assert.Equal("OP_DUP OP_HASH160 3d36028dc0fd3d3e433c801d9ebfff05ea663816 OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[0].ScriptPubKey.ToString());
+            Assert.Equal("0 302fe798130e5bcec50fe69f2de4b6085305e50e", transaction.Outputs[0].ScriptPubKey.ToString());
             Assert.Equal(Money.Coins(100), transaction.Outputs[1].Value);
-            Assert.Equal("OP_DUP OP_HASH160 OP_ROT OP_IF OP_CHECKCOLDSTAKEVERIFY 90c582cb91d6b6d777c31c891d4943fed4edac3a OP_ELSE 92dfb829d31cefe6a0731f3432dea41596a278d9 OP_ENDIF OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[1].ScriptPubKey.ToString());
+            Assert.Equal("OP_DUP OP_HASH160 OP_ROT OP_IF OP_CHECKCOLDSTAKEVERIFY 4c607c89dfd5dcc777f967d7c60a08da30ae0998 OP_ELSE 26eda180f872b14ea73c434ae302887890e5129e OP_ENDIF OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[1].ScriptPubKey.ToString());
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.
@@ -759,7 +775,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             this.Initialize();
             this.CreateMempoolManager();
 
-            this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
+            this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2), purpose: 84);
 
             Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
@@ -785,10 +801,11 @@ namespace Blockcore.Features.ColdStaking.Tests
             Assert.Equal(prevTran.GetHash(), transaction.Inputs[0].PrevOut.Hash);
             Assert.Equal((uint)0, transaction.Inputs[0].PrevOut.N);
             Assert.Equal(3, transaction.Outputs.Count);
+            Assert.True(transaction.Outputs[2].ScriptPubKey.IsUnspendable);
             Assert.Equal(Money.Coins(0.99m), transaction.Outputs[0].Value);
-            Assert.Equal("OP_DUP OP_HASH160 3d36028dc0fd3d3e433c801d9ebfff05ea663816 OP_EQUALVERIFY OP_CHECKSIG", transaction.Outputs[0].ScriptPubKey.ToString());
+            Assert.Equal("0 302fe798130e5bcec50fe69f2de4b6085305e50e", transaction.Outputs[0].ScriptPubKey.ToString());
             Assert.Equal(Money.Coins(100), transaction.Outputs[1].Value);
-            Assert.Equal("0 344874146cfe398540d00bf978e747781f29a77ff586049ad23d2fe6df4f458b", transaction.Outputs[1].ScriptPubKey.ToString());
+            Assert.Equal("0 01c4750fa7241ffe09e42a4d0225c08ae4748cf6e2c7d7bd1d6bb15d01f0610f", transaction.Outputs[1].ScriptPubKey.ToString());
             Assert.False(transaction.IsCoinBase || transaction.IsCoinStake || transaction.IsColdCoinStake);
 
             // Record the spendable outputs.

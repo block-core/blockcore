@@ -206,7 +206,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 {
                     foreach (HdAddress address in account.GetCombinedAddresses())
                     {
-                        if ((address.Address == request.Address) || address.Bech32Address == request.Address)
+                        if ((address.Address == request.Address))
                         {
                             address.StakingExpiry = request.StakingExpiry;
                         }
@@ -272,7 +272,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                         {
                             addressItem = new GetStakingAddressesModelItem
                             {
-                                Addresses = request.Segwit ? address.Bech32Address : address.Address,
+                                Addresses = address.Address,
                                 Expiry = address.StakingExpiry,
                                 Expired = address.StakingExpiry < DateTime.UtcNow,
                             };
@@ -288,7 +288,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                                 {
                                     addressItem = new GetStakingAddressesModelItem
                                     {
-                                        Addresses = request.Segwit ? address.Bech32Address : address.Address,
+                                        Addresses = address.Address,
                                         Expiry = address.StakingExpiry,
                                         Expired = address.StakingExpiry < DateTime.UtcNow,
                                     };

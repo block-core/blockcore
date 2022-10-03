@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Mvc;
+
 namespace Blockcore.Utilities.JsonErrors
 {
     public class ErrorResult : ObjectResult

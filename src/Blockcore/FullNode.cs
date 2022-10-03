@@ -44,9 +44,6 @@ namespace Blockcore
         /// <summary>Provider of notification about newly available blocks and transactions.</summary>
         public Signals.ISignals Signals { get; set; }
 
-        /// <summary>ASP.NET Core host for RPC server.</summary>
-        public IDisposable RPCHost { get; set; }
-
         /// <inheritdoc />
         public FullNodeState State { get; private set; }
 
@@ -282,9 +279,6 @@ namespace Blockcore
 
             this.logger.LogInformation("Disposing connection manager.");
             this.ConnectionManager.Dispose();
-
-            this.logger.LogInformation("Disposing RPC host.");
-            this.RPCHost?.Dispose();
 
             this.logger.LogInformation("Disposing periodic logging loops.");
             this.periodicLogLoop?.Dispose();

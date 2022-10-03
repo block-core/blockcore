@@ -16,6 +16,9 @@ namespace Blockcore.Features.RPC
 {
     public class RPCFeature : FullNodeFeature
     {
+        /// <summary>How long we are willing to wait for the NodeHost to stop.</summary>
+        private const int NodeHostStopTimeoutSeconds = 10;
+
         private readonly FullNode fullNode;
 
         private readonly NodeSettings nodeSettings;
@@ -25,6 +28,8 @@ namespace Blockcore.Features.RPC
         private readonly IFullNodeBuilder fullNodeBuilder;
 
         private readonly RpcSettings rpcSettings;
+
+        public IWebHost RPCHost { get; set; }
 
         public RPCFeature(IFullNodeBuilder fullNodeBuilder, FullNode fullNode, NodeSettings nodeSettings, ILoggerFactory loggerFactory, RpcSettings rpcSettings)
         {
@@ -107,7 +112,7 @@ namespace Blockcore.Features.RPC
                 .Build();
 
                 webHost.Start();
-                this.fullNode.RPCHost = webHost as IDisposable;
+                this.RPCHost = webHost;
                 this.logger.LogInformation("RPC listening on: " + Environment.NewLine + string.Join(Environment.NewLine, this.rpcSettings.GetUrls()));
             }
             else
@@ -116,6 +121,18 @@ namespace Blockcore.Features.RPC
             }
             
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            // Make sure we are releasing the listening ip address / port.
+            if (this.RPCHost != null)
+            {
+                this.logger.LogInformation("Disposing RPC host.");
+                this.RPCHost.StopAsync(TimeSpan.FromSeconds(NodeHostStopTimeoutSeconds)).Wait();
+                this.RPCHost = null;
+            }
         }
     }
 

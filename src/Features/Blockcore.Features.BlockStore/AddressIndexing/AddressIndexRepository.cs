@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Controllers.Models;
 using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;

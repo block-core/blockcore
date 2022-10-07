@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet.Host\Blockcore.Features.Wallet.Host.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -2,29 +2,20 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
-using Blockcore.Connection;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.MemoryPool;
-using Blockcore.Features.MemoryPool.Broadcasting;
-using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet.AddressBook;
-using Blockcore.Features.Wallet.Broadcasters;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
-using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces;
 using Blockcore.Interfaces.UI;
 using Blockcore.Networks;
-using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 using NBitcoin.Policy;
 
 namespace Blockcore.Features.Wallet
@@ -159,7 +150,6 @@ namespace Blockcore.Features.Wallet
                 .AddFeature<WalletFeature>()
                 .DependOn<MempoolFeature>()
                 .DependOn<BlockStoreFeature>()
-                .DependOn<RPCFeature>()
                 .FeatureServices(services =>
                     {
                         services.AddSingleton<IWalletSyncManager, WalletSyncManager>();
@@ -170,8 +160,6 @@ namespace Blockcore.Features.Wallet
                         services.AddSingleton<IScriptAddressReader>(new ScriptAddressReader());
                         services.AddSingleton<StandardTransactionPolicy>();
                         services.AddSingleton<IAddressBookManager, AddressBookManager>();
-                        services.AddSingleton<INavigationItem, WalletNavigationItem>();
-                        services.AddSingleton<IClientEventBroadcaster, WalletInfoBroadcaster>();
                     });
             });
 

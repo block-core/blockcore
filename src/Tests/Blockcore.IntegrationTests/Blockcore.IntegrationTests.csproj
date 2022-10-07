@@ -30,6 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Features\Blockcore.Features.BlockStore.Host\Blockcore.Features.BlockStore.Host.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus.Host\Blockcore.Features.Consensus.Host.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.MemoryPool.Host\Blockcore.Features.MemoryPool.Host.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Miner.Host\Blockcore.Features.Miner.Host.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Wallet.Host\Blockcore.Features.Wallet.Host.csproj" />
     <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Base.Persistence.LevelDb\Blockcore.Features.Base.Persistence.LevelDb.csproj" />
     <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.BlockStore.Persistence.LevelDb\Blockcore.Features.BlockStore.Persistence.LevelDb.csproj" />
     <ProjectReference Include="..\..\Features\Persistence\Blockcore.Features.Consensus.Persistence.LevelDb\Blockcore.Features.Consensus.Persistence.LevelDb.csproj" />

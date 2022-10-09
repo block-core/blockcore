@@ -35,7 +35,7 @@ namespace Blockcore.Features.RPC.Controllers
 
         /// <summary>RPC Client Factory.</summary>
         private readonly IRPCClientFactory rpcClientFactory;
-        private readonly RPCFeature rpcFeature;
+        private readonly IRPCFeature rpcFeature;
 
         /// <summary>ControllerActionDescriptor dictionary.</summary>
         private Dictionary<string, ControllerActionDescriptor> ActionDescriptors { get; set; }
@@ -46,7 +46,7 @@ namespace Blockcore.Features.RPC.Controllers
         /// <param name="fullNode">The full node.</param>
         /// <param name="loggerFactory">Factory to be used to create logger for the node.</param>
         /// <param name="rpcSettings">The RPC Settings of the full node.</param>
-        public RPCController(IFullNode fullNode, ILoggerFactory loggerFactory, RpcSettings rpcSettings, IRPCClientFactory rpcClientFactory, RPCFeature rpcFeature)
+        public RPCController(IFullNode fullNode, ILoggerFactory loggerFactory, RpcSettings rpcSettings, IRPCClientFactory rpcClientFactory, IRPCFeature rpcFeature)
         {
             Guard.NotNull(fullNode, nameof(fullNode));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));

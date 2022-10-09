@@ -14,7 +14,12 @@ using NBitcoin;
 
 namespace Blockcore.Features.RPC
 {
-    public class RPCFeature : FullNodeFeature
+    public interface IRPCFeature
+    {
+        IWebHost RPCHost { get; set; }
+    }
+
+    public class RPCFeature : FullNodeFeature, IRPCFeature
     {
         /// <summary>How long we are willing to wait for the NodeHost to stop.</summary>
         private const int NodeHostStopTimeoutSeconds = 10;
@@ -150,7 +155,11 @@ namespace Blockcore.Features.RPC
                 features
                 .AddFeature<RPCFeature>()
                 .DependOn<ConsensusFeature>()
-                .FeatureServices(services => services.AddSingleton(fullNodeBuilder));
+                .FeatureServices(services =>
+                {
+                    services.AddSingleton(fullNodeBuilder);
+                    services.AddSingleton<IRPCFeature>(provider => provider.GetService<RPCFeature>());
+                });
             });
 
             fullNodeBuilder.ConfigureServices(service =>

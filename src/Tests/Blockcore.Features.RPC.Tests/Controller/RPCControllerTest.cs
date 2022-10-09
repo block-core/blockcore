@@ -35,7 +35,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         private readonly RPCController controller;
         private readonly Mock<IRPCClientFactory> rpcClientFactory;
         private readonly Mock<IWebHost> rpcHost;
-        private readonly Mock<RPCFeature> rpcFeature;
+        private readonly Mock<IRPCFeature> rpcFeature;
         private readonly Mock<IServiceProvider> serviceProvider;
         private readonly Mock<IActionDescriptorCollectionProvider> actionDescriptorCollectionProvider;
         private readonly Mock<IRPCClient> rpcClient;
@@ -59,6 +59,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             this.rpcClientFactory.Setup(r => r.Create(It.IsAny<RpcSettings>(), It.Is<Uri>(u => u.ToString() == "http://127.0.0.1:0/"), It.IsAny<Network>()))
                 .Returns(this.rpcClient.Object);
 
+            this.rpcFeature = new Mock<IRPCFeature>();
             this.rpcFeature.Setup(f => f.RPCHost)
                 .Returns(this.rpcHost.Object);
             this.rpcHost.Setup(c => c.Services)

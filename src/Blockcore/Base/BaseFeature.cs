@@ -17,7 +17,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.Validators;
-using Blockcore.Controllers;
 using Blockcore.EventBus;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
@@ -502,9 +501,6 @@ namespace Blockcore.Base
 
                     // Console
                     services.AddSingleton<INodeStats, NodeStats>();
-
-                    // Controller
-                    services.AddTransient<NodeController>();
                 });
             });
 

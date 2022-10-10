@@ -52,7 +52,7 @@ namespace Blockcore.Controllers
                 Guard.NotEmpty(endpoint, nameof(endpoint));
                 Guard.NotEmpty(command, nameof(command));
 
-                return this.Json(ConnectionManagerRPCController.AddNode(this.ConnectionManager, this.peerBanning, endpoint, command));
+                return this.Json(ConnectionManagerHelper.AddNode(this.ConnectionManager, this.peerBanning, endpoint, command));
             }
             catch (Exception e)
             {
@@ -74,7 +74,7 @@ namespace Blockcore.Controllers
         {
             try
             {
-                return this.Json(ConnectionManagerRPCController.GetPeerInfo(this.ConnectionManager));
+                return this.Json(ConnectionManagerHelper.GetPeerInfo(this.ConnectionManager));
             }
             catch (Exception e)
             {

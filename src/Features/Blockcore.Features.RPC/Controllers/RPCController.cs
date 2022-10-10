@@ -35,6 +35,7 @@ namespace Blockcore.Features.RPC.Controllers
 
         /// <summary>RPC Client Factory.</summary>
         private readonly IRPCClientFactory rpcClientFactory;
+        private readonly IRPCFeature rpcFeature;
 
         /// <summary>ControllerActionDescriptor dictionary.</summary>
         private Dictionary<string, ControllerActionDescriptor> ActionDescriptors { get; set; }
@@ -45,7 +46,7 @@ namespace Blockcore.Features.RPC.Controllers
         /// <param name="fullNode">The full node.</param>
         /// <param name="loggerFactory">Factory to be used to create logger for the node.</param>
         /// <param name="rpcSettings">The RPC Settings of the full node.</param>
-        public RPCController(IFullNode fullNode, ILoggerFactory loggerFactory, RpcSettings rpcSettings, IRPCClientFactory rpcClientFactory)
+        public RPCController(IFullNode fullNode, ILoggerFactory loggerFactory, RpcSettings rpcSettings, IRPCClientFactory rpcClientFactory, IRPCFeature rpcFeature)
         {
             Guard.NotNull(fullNode, nameof(fullNode));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
@@ -56,6 +57,7 @@ namespace Blockcore.Features.RPC.Controllers
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.rpcSettings = rpcSettings;
             this.rpcClientFactory = rpcClientFactory;
+            this.rpcFeature = rpcFeature;
         }
 
         /// <summary>
@@ -66,7 +68,8 @@ namespace Blockcore.Features.RPC.Controllers
             if (this.ActionDescriptors == null)
             {
                 this.ActionDescriptors = new Dictionary<string, ControllerActionDescriptor>();
-                var actionDescriptorProvider = this.fullNode?.RPCHost.Services.GetService(typeof(IActionDescriptorCollectionProvider)) as IActionDescriptorCollectionProvider;
+                var host = this.rpcFeature.RPCHost;
+                var actionDescriptorProvider = host?.Services.GetService(typeof(IActionDescriptorCollectionProvider)) as IActionDescriptorCollectionProvider;
                 // This approach is similar to the one used by RPCRouteHandler so should only give us the descriptors
                 // that RPC would normally act on subject to the method name matching the "ActionName".
                 foreach (ControllerActionDescriptor actionDescriptor in actionDescriptorProvider?.ActionDescriptors.Items.OfType<ControllerActionDescriptor>())

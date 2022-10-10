@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<Description>Blockcore Features Wallet Host</Description>
+		<AssemblyTitle>Blockcore.Features.Wallet.Host</AssemblyTitle>
+		<AssemblyName>Blockcore.Features.Wallet.Host</AssemblyName>
+		<PackageId>Blockcore.Features.Wallet.Host</PackageId>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
+		<ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
+		<ProjectReference Include="..\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+		<ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+	</ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;1705;IDE0008;</NoWarn>
+		<DocumentationFile>
+		</DocumentationFile>
+	</PropertyGroup>
+</Project>

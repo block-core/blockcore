@@ -1,5 +1,4 @@
 ﻿using Blockcore.Base;
-using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus;
@@ -11,12 +10,8 @@ using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
-using Blockcore.Features.Miner.Broadcasters;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Miner.UI;
-using Blockcore.Features.RPC;
 using Blockcore.Interfaces;
-using Blockcore.Interfaces.UI;
 using Blockcore.Mining;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -73,7 +68,6 @@ namespace Blockcore.Networks.X1.Components
                 features
                     .AddFeature<X1MiningFeature>()
                     .DependOn<MempoolFeature>()
-                    .DependOn<RPCFeature>()
                     // TODO: Need a better way to check dependencies. This is really just dependent on IWalletManager...
                     // Alternatively "DependsOn" should take a list of features that will satisfy the dependency.
                     //.DependOn<WalletFeature>()
@@ -87,8 +81,8 @@ namespace Blockcore.Networks.X1.Components
                         services.AddSingleton<BlockDefinition, PowBlockDefinition>();
                         services.AddSingleton<BlockDefinition, PosBlockDefinition>();
                         services.AddSingleton<BlockDefinition, PosPowBlockDefinition>();
-                        services.AddSingleton<INavigationItem, StakeNavigationItem>();
-                        services.AddSingleton<IClientEventBroadcaster, StakingBroadcaster>();
+                        //services.AddSingleton<INavigationItem, StakeNavigationItem>();
+                        //services.AddSingleton<IClientEventBroadcaster, StakingBroadcaster>();
                     });
             });
 

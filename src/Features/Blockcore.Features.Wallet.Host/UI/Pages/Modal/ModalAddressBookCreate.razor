@@ -120,7 +120,7 @@ else
 
         ModalService.Close();
         NavigationManager.NavigateTo("walletsend/" + ModalService.Parameter.ToString().Split(Convert.ToChar("|"))[0] + "/" + ModalService.Parameter.ToString().Split(Convert.ToChar("|"))[1]);
-        AddressBookNotification.AddressBookChanged(this, true);
+        Blockcore.Features.Wallet.UI.AddressBookNotification.AddressBookChanged(this, true);
         //  NavigationManager.NavigateTo("walletsend/MyWallet/account 0");
     }
 }

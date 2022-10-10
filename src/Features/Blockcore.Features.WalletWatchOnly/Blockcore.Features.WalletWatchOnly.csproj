@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Blockcore.Features.Notifications\Blockcore.Features.Notifications.csproj" />
+    <ProjectReference Include="..\Blockcore.Features.Wallet.Host\Blockcore.Features.Wallet.Host.csproj" />
     <ProjectReference Include="..\Blockcore.Features.Wallet\Blockcore.Features.Wallet.csproj" />
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
   </ItemGroup>

@@ -14,7 +14,6 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;

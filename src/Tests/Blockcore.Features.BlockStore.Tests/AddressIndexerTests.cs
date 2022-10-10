@@ -10,7 +10,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Controllers.Models;
+//using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;

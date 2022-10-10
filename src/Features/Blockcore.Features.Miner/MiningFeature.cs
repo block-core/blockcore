@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Blockcore.Base;
-using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
@@ -11,14 +10,10 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.MemoryPool;
-using Blockcore.Features.Miner.Broadcasters;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
-using Blockcore.Features.Miner.UI;
-using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Interfaces;
-using Blockcore.Interfaces.UI;
 using Blockcore.Mining;
 using Blockcore.Networks;
 using Microsoft.Extensions.DependencyInjection;
@@ -222,7 +217,6 @@ namespace Blockcore.Features.Miner
                 features
                     .AddFeature<MiningFeature>()
                     .DependOn<MempoolFeature>()
-                    .DependOn<RPCFeature>()
                     .DependOn<BaseWalletFeature>()
                     .FeatureServices(services =>
                     {
@@ -250,7 +244,6 @@ namespace Blockcore.Features.Miner
                 features
                     .AddFeature<MiningFeature>()
                     .DependOn<MempoolFeature>()
-                    .DependOn<RPCFeature>()
                     // TODO: Need a better way to check dependencies. This is really just dependent on IWalletManager...
                     // Alternatively "DependsOn" should take a list of features that will satisfy the dependency.
                     //.DependOn<WalletFeature>()
@@ -264,9 +257,6 @@ namespace Blockcore.Features.Miner
                         services.AddSingleton<BlockDefinition, PosBlockDefinition>();
                         services.AddSingleton<BlockDefinition, PosPowBlockDefinition>();
                         services.AddSingleton<MinerSettings>();
-                        services.AddSingleton<INavigationItem, StakeNavigationItem>();
-                        services.AddSingleton<INavigationItem, MineNavigationItem>();
-                        services.AddSingleton<IClientEventBroadcaster, StakingBroadcaster>();
                     });
             });
 

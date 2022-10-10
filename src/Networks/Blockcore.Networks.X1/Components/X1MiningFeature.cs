@@ -3,28 +3,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Blockcore.Base;
-using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
-using Blockcore.Configuration.Logging;
 using Blockcore.Configuration.Settings;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.BlockStore;
-using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
-using Blockcore.Features.Miner.Broadcasters;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
-using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
-using Blockcore.Features.Wallet.UI;
-using Blockcore.Interfaces.UI;
-using Blockcore.Mining;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.DataEncoders;
 
 namespace Blockcore.Networks.X1.Components
 {

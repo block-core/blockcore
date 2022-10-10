@@ -195,7 +195,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
 
                 this.logger.LogDebug("Asking data for {0} addresses.", addressesArray.Length);
 
-                AddressBalancesResult result = this.addressIndexer.GetAddressBalances(addressesArray, minConfirmations);
+                AddressIndexing.AddressBalancesResult result = this.addressIndexer.GetAddressBalances(addressesArray, minConfirmations);
 
                 this.logger.LogDebug("Sending data for {0} addresses.", result.Balances.Count);
 
@@ -221,7 +221,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
 
                 this.logger.LogDebug("Asking data for {0} addresses.", addressesArray.Length);
 
-                VerboseAddressBalancesResult result = this.addressIndexer.GetAddressIndexerState(addressesArray);
+                AddressIndexing.VerboseAddressBalancesResult result = this.addressIndexer.GetAddressIndexerState(addressesArray);
 
                 return this.Json(result);
             }

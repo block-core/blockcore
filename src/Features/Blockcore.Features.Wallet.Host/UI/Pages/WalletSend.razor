@@ -228,7 +228,7 @@
     {
         this.Fee = new Money(this.Network.MinTxFee).ToDecimal(MoneyUnit.BTC);
 
-        AddressBookNotification.AddressBookChanged += AddressBookChanged;
+        Blockcore.Features.Wallet.UI.AddressBookNotification.AddressBookChanged += AddressBookChanged;
     }
     private async void AddressBookChanged(object sender, bool e)
     {

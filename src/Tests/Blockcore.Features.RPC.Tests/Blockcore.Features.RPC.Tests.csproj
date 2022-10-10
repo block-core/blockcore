@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Features\Blockcore.Features.Miner\Blockcore.Features.Miner.csproj" />
     <ProjectReference Include="..\..\Features\Blockcore.Features.RPC\Blockcore.Features.RPC.csproj" />
+    <ProjectReference Include="..\..\Features\Blockcore.Features.Wallet.Host\Blockcore.Features.Wallet.Host.csproj" />
     <ProjectReference Include="..\Blockcore.Tests.Common\Blockcore.Tests.Common.csproj" />
     <ProjectReference Include="..\Blockcore.Tests.Wallet.Common\Blockcore.Tests.Wallet.Common.csproj" />
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />

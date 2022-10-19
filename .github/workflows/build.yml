@@ -28,10 +28,16 @@ jobs:
     - uses: actions/checkout@v2
       name: Checkout
 
-    - name: Setup Node.js (12.x)
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: | 
+          6.0.x
+
+    - name: Setup Node.js (16.x)
       uses: actions/setup-node@v1
       with:
-        node-version: 12.x
+        node-version: 18
 
     - name: Variables
       run: |
@@ -53,8 +59,9 @@ jobs:
 
     - name: Release
       if: matrix.os == 'ubuntu-latest'
-      uses: sondreb/action-release@master
+      uses: sondreb/action-release@main
       with:
+        commit: 'master'
         token: ${{ secrets.GITHUB_TOKEN }}
         folder: "${{github.workspace}}/package/"
         draft: true

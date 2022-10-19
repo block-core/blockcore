@@ -187,46 +187,6 @@
     "CYBITS (MAIN/LOCAL)": {
       "commandName": "Project",
       "commandLineArgs": "--chain=CYBITS -server -iprangefiltering=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
-    },
-    "SBC (MAIN)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=SBC -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=0"
-    },
-    "TSBC coldstake pool (TEST)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=SBC -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=0 -testnet -enforceStakingFlag=1"
-    },
-    "SBC (MAIN/LOCAL)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=SBC -server -addressindex -txindex=1 -reindex=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=0"
-    },
-    "SBC (TEST/LOCAL)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=SBC -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
-    },
-    "RSC (MAIN)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=RSC -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -enableauth=0"
-    },
-    "RSC (MAIN/LOCAL)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=RSC -server -addressindex -txindex=1 -reindex=0 -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -enableauth=0"
-    },
-    "RSC (TEST/LOCAL)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=RSC -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
-    },
-    "MOL (MAIN)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=MOL: -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
-    },
-    "MOL (MAIN/LOCAL)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=MOL -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
-    },
-    "MOL (TEST/LOCAL)": {
-      "commandName": "Project",
-      "commandLineArgs": "--chain=MOL -server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
     }
   }
 }

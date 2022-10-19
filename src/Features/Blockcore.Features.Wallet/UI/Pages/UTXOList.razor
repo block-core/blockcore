@@ -1,0 +1,199 @@
+﻿@page "/UTXO/{walletname}/{accountname}"
+@implements IDisposable
+
+@using Blockcore.Base.Deployments
+@using Blockcore.Consensus.ScriptInfo
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Features.Wallet.Types
+@using NBitcoin;
+@using Blockcore.Features.Wallet.Api.Controllers
+@using Blockcore.Features.Wallet.Api.Models
+@using Blockcore.Features.Wallet.Events
+@using Blockcore.Networks
+@using Blockcore.Signals
+@using Blockcore.UI.BlazorModal
+@using Blockcore.EventBus
+
+@inject NavigationManager NavigationManager
+@inject IWalletManager WalletManager
+@inject Network Network
+@inject ModalService ModalService
+@inject ISignals Signals
+@inject NodeDeployments NodeDeployments
+
+@{
+    var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>Wallet : @walletname : @accountname </strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname); }">
+                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
+            </button>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWalletHistory(walletname, accountname); }">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Wallet History
+            </button>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }">
+                <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
+            </button>
+            <button class="btn btn-sm btn-primary" @onclick="() => { NavigateToSendWallet(walletname, accountname); }">
+                <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Send
+            </button>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-xl-12 col-sm-12 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">@accountname Balance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@accountBalance.AmountConfirmed </h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@accountBalance.AmountUnconfirmed (unconfirmed)</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    var st_model = GetSpendableTransactions(_walletname: walletname, _accountname: accountname);
+
+    <div class="row mb-3">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Spendable Transactions ( UTXO List )</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive small maxheight600">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary"><strong>ID</strong></th>
+                                    <th class="text-primary"><strong>AMOUNT</strong></th>
+                                    <th class="text-primary"><strong>ADDRESS</strong></th>
+                                    <th class="text-primary"><strong>DETAILS</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var Stransaction in st_model.SpendableTransactions)
+                                {
+                                    <tr>
+                                        @* @onclick="ViewTransaction" > *@
+                                        <td>@Stransaction.Id</td>
+                                        <td>@Stransaction.Amount</td>
+                                        <td>@Stransaction.Address</td>
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-sm btn-secondary" @onclick="() => { ViewSpendableTransactions(Stransaction); }"> <span class="oi oi-list" aria-hidden="true"></span></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public string walletname { get; set; }
+    [Parameter]
+    public string accountname { get; set; }
+    private void NavigateToWallet(string walletName)
+    {
+        NavigationManager.NavigateTo("Accounts/" + walletName);
+    }
+    private void NavigateToWalletHistory(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("WalletView/" + walletName + "/" + accountname);
+    }
+    private void NavigateToReceiveWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletreceive/" + walletName + "/" + accountname);
+    }
+    private void NavigateToSendWallet(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
+    }
+    private SpendableTransactionsModel GetSpendableTransactions(string _walletname, string _accountname, int confirmations = 0)
+    {
+        IEnumerable<UnspentOutputReference> spendableTransactions = this.WalletManager.GetSpendableTransactionsInAccount(new WalletAccountReference(walletname = _walletname, accountname = _accountname), confirmations);
+        var model = new SpendableTransactionsModel()
+            {
+                SpendableTransactions = spendableTransactions.Select(st => new SpendableTransactionModel
+                {
+                    Id = st.Transaction.Id,
+                    Amount = st.Transaction.Amount,
+                    Address = st.Address.Address,
+                    Script = st.Transaction.ScriptPubKey.ToString(),
+                    Index = st.Transaction.Index,
+                    IsChange = st.Address.IsChangeAddress(),
+                    CreationTime = st.Transaction.CreationTime,
+                    Confirmations = st.Confirmations
+                }).ToList()
+            };
+        return model;
+    }
+
+    private void ViewTransaction(TransactionItemModel _TM)
+    {
+        ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction), _TM);
+    }
+
+
+    private void ViewSpendableTransactions(SpendableTransactionModel _TM)
+    {
+        ModalService.Show("Spendable Transactions Details", typeof(Modal.ModalViewSpendableTransactions), _TM);
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+
+    }
+
+    List<SubscriptionToken> subscriptionTokens;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && this.Signals != null)
+        {
+            this.subscriptionTokens = new List<SubscriptionToken>()
+        {
+                this.Signals.Subscribe<TransactionFound>(this.ReloadEvent),
+                this.Signals.Subscribe<TransactionSpent>(this.ReloadEvent),
+            };
+        }
+    }
+
+    DateTime lastRefresh = DateTime.UtcNow;
+
+    private void ReloadEvent(object _)
+    {
+        if ((DateTime.UtcNow - lastRefresh).Seconds > 1)
+        {
+            lastRefresh = DateTime.UtcNow;
+
+            InvokeAsync(this.StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (subscriptionTokens != null)
+        {
+            foreach (var subscriptionToken in subscriptionTokens)
+            {
+                subscriptionToken.Dispose();
+            }
+        }
+    }
+}

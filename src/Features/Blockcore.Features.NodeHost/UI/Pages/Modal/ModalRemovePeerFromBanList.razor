@@ -1,0 +1,102 @@
+@using Blockcore.Connection
+@using Blockcore.P2P
+@using Blockcore.UI.BlazorModal
+@using Blockcore.Networks
+@using Blockcore.P2P.Peer
+@using System.Net
+@inject ModalService modalService
+@inject Network network
+@inject IPeerBanning peerBanning;
+
+@if (ShowForm)
+{
+    var peerModel = ((PeerAddress)modalService.Parameter);
+
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">IP ADDRESS</label>
+                        <label class="col-sm-8 col-form-label text-info">
+                            @if (peerModel.Endpoint.Address.IsIPv4MappedToIPv6)
+                            {
+                                PeerAddress = @peerModel.Endpoint.Address.MapToIPv4().ToString();
+                                PeerPort = @peerModel.Endpoint.Port;
+                            }
+                            else
+                            {
+                                PeerAddress = @peerModel.Endpoint.Address.ToString();
+                                PeerPort = @peerModel.Endpoint.Port;
+                            }
+                            @PeerAddress
+                            <input @bind="PeerPort" type="hidden" />
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Reason</label>
+                        <label class="col-sm-8 col-form-label text-info">
+                            @peerModel.BanReason
+
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Until</label>
+                        <label class="col-sm-8 col-form-label text-info">
+                            @peerModel.BanUntil
+                        </label>
+                    </div>
+
+                    <div class="input-group mt-1">
+                        <div class="text-danger">@Alert</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                    <button class="btn btn-success" @onclick="RemoveFromBanList">Remove From Ban List</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-success">@Alert</h5>
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code
+{
+    bool ShowForm { get; set; } = true;
+    private void CloseModal()
+    {
+        modalService.Close();
+    }
+    private string Reason { get; set; }
+    private int DurationSeconds { get; set; } = 10;
+    private int PeerPort { get; set; }
+    private string PeerAddress { get; set; }
+    string Alert { get; set; }
+    private void RemoveFromBanList()
+    {
+        try
+        {
+            var endpoint = new IPEndPoint(IPAddress.Parse(PeerAddress), PeerPort);
+            this.peerBanning.UnBanPeer(endpoint);
+            this.Alert = "ip successfully Remove From Banl List";
+            ShowForm = false;
+        }
+        catch { }
+    }
+
+}

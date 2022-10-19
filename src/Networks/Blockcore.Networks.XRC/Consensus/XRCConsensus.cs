@@ -48,8 +48,6 @@ namespace Blockcore.Networks.XRC.Consensus
 
         public Target PowLimit { get; }
         public Target PowLimit2 { get; }
-        public int PowLimit2Height { get; }
-        public uint PowLimit2Time { get; }
 
         public TimeSpan TargetTimespan { get; }
 
@@ -131,8 +129,6 @@ namespace Blockcore.Networks.XRC.Consensus
             bool powNoRetargeting,
             Target powLimit,
             Target powLimit2,
-            int powLimit2Height,
-            uint powLimit2Time,
             uint256 minimumChainWork,
             bool isProofOfStake,
             int lastPowBlock,
@@ -158,8 +154,6 @@ namespace Blockcore.Networks.XRC.Consensus
             this.BIP34Hash = bip34Hash;
             this.PowLimit = powLimit;
             this.PowLimit2 = powLimit2;
-            this.PowLimit2Height = powLimit2Height;
-            this.PowLimit2Time = powLimit2Time;
             this.TargetTimespan = targetTimespan;
             this.TargetSpacing = targetSpacing;
             this.PowAllowMinDifficultyBlocks = powAllowMinDifficultyBlocks;

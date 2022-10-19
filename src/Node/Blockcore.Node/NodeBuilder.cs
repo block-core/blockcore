@@ -51,10 +51,12 @@ namespace Blockcore.Node
                 case "XDS":
                 case "XLR":
                 case "IMPLX":
+                case "MOL":
                 case "HOME":
                 case "SERF":
                 case "CYBITS":
-                case "MOL":
+                case "SBC":
+                case "RSC":
                     nodeBuilder.UsePosConsensus().AddPowPosMining().UseColdStakingWallet();
                     break;
             }

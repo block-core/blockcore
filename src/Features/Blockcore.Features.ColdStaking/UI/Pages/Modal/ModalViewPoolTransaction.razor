@@ -1,0 +1,172 @@
+@using Blockcore.UI.BlazorModal
+@inject ModalService ModalService
+
+@if (ShowForm)
+{
+    var _TModel = ((Blockcore.Features.ColdStaking.UI.Pages.ColdStakePoolView.AddressBalance)ModalService.Parameter);
+
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">ColdStake Script</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.ColdstakeScript.ToString()
+                        </label>
+                    </div>
+
+                    @if (_TModel.OutputType != "ColdStake")
+                    {
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Script Hash</label>
+                            <label class="col-sm-10 col-form-label text-info">
+                                @(_TModel.OutputType == "P2SH" ?  
+                                @_TModel.ColdstakeScript.Hash.ScriptPubKey.ToString() : 
+                                @_TModel.ColdstakeScript.WitHash.ScriptPubKey.ToString())
+                            </label>
+                        </div>
+                    }
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Hot Address</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.HotAddress
+                        </label>
+                    </div>
+
+                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Cold Address</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.ColdAddress
+                        </label>
+                    </div>
+
+                  
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Amount</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @if (_TModel.AmountUnconfirmed > 0)
+                            {
+                                <td class="text-right">@_TModel.AmountConfirmed (@_TModel.AmountUnconfirmed)</td>
+                            }
+                            else
+                            {
+                                <td class="text-right">@_TModel.AmountConfirmed </td>
+                            }
+                        </label>
+                    </div>
+
+                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Type</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @_TModel.OutputType
+                        </label>
+                    </div>
+
+                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Expiry</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            @String.Format("{0:f}", _TModel.StakingExpiry)
+
+                            (@Blockcore.Features.ColdStaking.UI.Pages.ColdStakePoolView.ParseDate(_TModel.StakingExpiry))
+                        </label>
+                    </div>
+
+                   <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Days to expiry</label>
+                        <label class="col-sm-10 col-form-label text-info">
+                            <input @bind="StakingExpiryDays" type="text" class="form-control bg-secondary text-light m-1" placeholder="Days for staking to expire" />
+                        </label>
+                    </div>
+
+                      <h5 class="text-danger">@Alert</h5>
+                </div>
+
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="UpdateModal">Update</button>
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>                   
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+} else {
+<div class="row ">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-success">@Alert</h5>
+                <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@code
+{
+    bool ShowForm { get; set; } = true;
+    string Alert { get; set; }
+
+    int? StakingExpiryDays { get; set; }
+    private void CloseModal()
+    {
+        ModalService.Close();
+    }
+
+    private void UpdateModal()
+    {
+        this.Alert = string.Empty;
+
+        if (this.StakingExpiryDays == null)
+        {
+            this.Alert = "set expiry days";
+            return;
+        }
+
+        var item = ((Blockcore.Features.ColdStaking.UI.Pages.ColdStakePoolView.AddressBalance)ModalService.Parameter);
+
+        if (item.OutputType == "ColdStake")
+        {
+            item.HdAddress.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value).AddMinutes(10);
+            item.StakingExpiry = item.HdAddress.StakingExpiry;
+        }
+        else
+        {
+            var expiry = item.HdAddress.RedeemScriptExpiry?.FirstOrDefault(r => r.RedeemScript == item.ColdstakeScript);
+
+            if (expiry != null)
+            {
+                expiry.StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value).AddMinutes(10);
+                item.StakingExpiry = expiry.StakingExpiry;
+            }
+            else
+            {
+                if (item.HdAddress.RedeemScripts.FirstOrDefault(r => r == item.ColdstakeScript) == null)
+                    throw new Exception("ColdstakeScript was expected but not found");
+
+                if (item.HdAddress.RedeemScriptExpiry == null)
+                    item.HdAddress.RedeemScriptExpiry = new List<Blockcore.Features.Wallet.Types.RedeemScriptExpiry>();
+
+                expiry = new Blockcore.Features.Wallet.Types.RedeemScriptExpiry
+                {
+                    RedeemScript = item.ColdstakeScript,
+                    StakingExpiry = DateTime.UtcNow.AddDays(this.StakingExpiryDays.Value).AddMinutes(10)
+                };
+
+                item.HdAddress.RedeemScriptExpiry.Add(expiry);
+                item.StakingExpiry = expiry.StakingExpiry;
+            }
+        }
+
+        this.StateHasChanged();
+        this.CloseModal();
+    }
+
+	private void Submit()
+	{
+		ShowForm = false;
+		this.Alert = "Update this message";
+	}
+}

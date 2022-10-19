@@ -12,7 +12,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -44,9 +43,6 @@ namespace Blockcore
 
         /// <summary>Provider of notification about newly available blocks and transactions.</summary>
         public Signals.ISignals Signals { get; set; }
-
-        /// <summary>ASP.NET Core host for RPC server.</summary>
-        public IWebHost RPCHost { get; set; }
 
         /// <inheritdoc />
         public FullNodeState State { get; private set; }
@@ -283,9 +279,6 @@ namespace Blockcore
 
             this.logger.LogInformation("Disposing connection manager.");
             this.ConnectionManager.Dispose();
-
-            this.logger.LogInformation("Disposing RPC host.");
-            this.RPCHost?.Dispose();
 
             this.logger.LogInformation("Disposing periodic logging loops.");
             this.periodicLogLoop?.Dispose();

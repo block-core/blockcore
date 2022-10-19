@@ -108,11 +108,6 @@ namespace Blockcore.Features.ColdStaking.Api.Models
         [JsonProperty(PropertyName = "isColdWalletAddress")]
         public bool IsColdWalletAddress { get; set; }
 
-        /// <summary>
-        /// Whether to return the P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool Segwit { get; set; }
-
         /// <summary>Creates a string containing the properties of this object.</summary>
         /// <returns>A string containing the properties of the object.</returns>
         public override string ToString()
@@ -240,11 +235,6 @@ namespace Blockcore.Features.ColdStaking.Api.Models
         [MoneyFormat(ErrorMessage = "The fees are not in the correct format.")]
         [JsonProperty(PropertyName = "fees")]
         public string Fees { get; set; }
-
-        /// <summary>
-        /// Whether to send the change to a P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool SegwitChangeAddress { get; set; }
 
         /// <summary>
         /// Use script outputs (P2SH and P2WSH) for cold staking

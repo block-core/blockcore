@@ -113,9 +113,9 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc/>
         public void Mine(Script reserveScript)
         {
+
             if (this.miningLoop != null)
                 return;
-
             this.miningCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(new[] { this.nodeLifetime.ApplicationStopping });
 
             this.miningLoop = this.asyncProvider.CreateAndRunAsyncLoop("PowMining.Mine", token =>
@@ -161,6 +161,10 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc/>
         public void StopMining()
         {
+            if (this.miningCancellationTokenSource == null)
+            {
+                return;
+            }
             this.miningCancellationTokenSource.Cancel();
             this.miningLoop?.Dispose();
             this.miningLoop = null;
@@ -201,6 +205,13 @@ namespace Blockcore.Features.Miner
         /// </summary>
         private bool ConsensusIsAtTip(MineBlockContext context)
         {
+            // check null
+
+            if (this.miningCancellationTokenSource == null)
+            {
+                this.miningCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(new[] { this.nodeLifetime.ApplicationStopping });
+            }
+
             this.miningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             context.ChainTip = this.consensusManager.Tip;
@@ -249,15 +260,17 @@ namespace Blockcore.Features.Miner
             Block block = context.BlockTemplate.Block;
             while ((context.MaxTries > 0) && (block.Header.Nonce < InnerLoopCount) && !block.CheckProofOfWork())
             {
+                if (this.miningCancellationTokenSource == null)
+                {
+                    return false;
+                }
                 this.miningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                 ++block.Header.Nonce;
                 --context.MaxTries;
             }
-
             if (context.MaxTries == 0)
                 return false;
-
             return true;
         }
 
@@ -345,7 +358,6 @@ namespace Blockcore.Features.Miner
             public ulong MaxTries { get; set; }
             public bool MiningCanContinue { get { return this.CurrentHeight < this.ChainHeight + this.amountOfBlocksToMine; } }
             public readonly ReserveScript ReserveScript;
-
             public MineBlockContext(ulong amountOfBlocksToMine, ulong chainHeight, ulong maxTries, ReserveScript reserveScript)
             {
                 this.amountOfBlocksToMine = amountOfBlocksToMine;

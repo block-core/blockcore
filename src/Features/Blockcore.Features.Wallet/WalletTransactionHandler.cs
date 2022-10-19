@@ -281,14 +281,7 @@ namespace Blockcore.Features.Wallet
                 context.ChangeAddress = this.walletManager.GetUnusedChangeAddress(new WalletAccountReference(context.AccountReference.WalletName, context.AccountReference.AccountName));
             }
 
-            if (context.UseSegwitChangeAddress)
-            {
-                context.TransactionBuilder.SetChange(new BitcoinWitPubKeyAddress(context.ChangeAddress.Bech32Address, this.network).ScriptPubKey);
-            }
-            else
-            {
-                context.TransactionBuilder.SetChange(context.ChangeAddress.ScriptPubKey);
-            }
+            context.TransactionBuilder.SetChange(context.ChangeAddress.ScriptPubKey);
         }
 
         /// <summary>
@@ -570,10 +563,5 @@ namespace Blockcore.Features.Wallet
         /// The timestamp to set on the transaction.
         /// </summary>
         public uint? Time { get; set; }
-
-        /// <summary>
-        /// Whether to send the change to a P2WPKH (segwit bech32) addresses, or a regular P2PKH address
-        /// </summary>
-        public bool UseSegwitChangeAddress { get; set; }
     }
 }

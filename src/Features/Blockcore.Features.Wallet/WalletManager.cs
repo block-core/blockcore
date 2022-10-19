@@ -78,6 +78,9 @@ namespace Blockcore.Features.Wallet
         /// <summary>The type of coin used in this manager.</summary>
         protected readonly int coinType;
 
+        /// <summary>The purpose field as defined in BIP44, we default the value is regular derivation.</summary>
+        protected readonly int defaultPurpose = 44;
+
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         protected readonly Network network;
 
@@ -235,6 +238,7 @@ namespace Blockcore.Features.Wallet
             foreach (Types.Wallet wallet in wallets)
             {
                 this.Load(wallet);
+
                 foreach (HdAccount account in wallet.GetAccounts())
                 {
                     this.AddAddressesToMaintainBuffer(wallet, account, false);
@@ -290,7 +294,7 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
-        public Mnemonic CreateWallet(string password, string name, string passphrase, Mnemonic mnemonic = null, int? coinType = null)
+        public Mnemonic CreateWallet(string password, string name, string passphrase, Mnemonic mnemonic = null, int? coinType = null, int? purpose = null)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(name, nameof(name));
@@ -309,7 +313,7 @@ namespace Blockcore.Features.Wallet
             // Generate multiple accounts and addresses from the get-go.
             for (int i = 0; i < WalletCreationAccountsCount; i++)
             {
-                HdAccount account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset());
+                HdAccount account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset(), purpose ?? this.defaultPurpose);
                 IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
                 IEnumerable<HdAddress> newChangeAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer, true);
                 this.UpdateKeysLookup(wallet, newReceivingAddresses.Concat(newChangeAddresses));
@@ -461,7 +465,7 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
-        public virtual Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null, bool? isColdStakingWallet = false)
+        public virtual Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? purpose = null, int? coinType = null, bool? isColdStakingWallet = false)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(name, nameof(name));
@@ -495,7 +499,7 @@ namespace Blockcore.Features.Wallet
                 HdAccount account;
                 lock (this.lockObject)
                 {
-                    account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset());
+                    account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset(), purpose ?? this.defaultPurpose);
                 }
 
                 IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
@@ -523,7 +527,7 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
-        public Types.Wallet RecoverWallet(string name, ExtPubKey extPubKey, int accountIndex, DateTime creationTime)
+        public Types.Wallet RecoverWallet(string name, ExtPubKey extPubKey, int accountIndex, DateTime creationTime, int? purpose = null)
         {
             Guard.NotEmpty(name, nameof(name));
             Guard.NotNull(extPubKey, nameof(extPubKey));
@@ -536,7 +540,7 @@ namespace Blockcore.Features.Wallet
             HdAccount account;
             lock (this.lockObject)
             {
-                account = wallet.AddNewAccount(extPubKey, accountIndex, this.dateTimeProvider.GetTimeOffset());
+                account = wallet.AddNewAccount(extPubKey, accountIndex, this.dateTimeProvider.GetTimeOffset(), purpose ?? this.defaultPurpose);
             }
 
             IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
@@ -563,7 +567,7 @@ namespace Blockcore.Features.Wallet
         }
 
         /// <inheritdoc />
-        public HdAccount GetUnusedAccount(string walletName, string password)
+        public HdAccount GetUnusedAccount(string walletName, string password, int? purpose = null)
         {
             Guard.NotEmpty(walletName, nameof(walletName));
             Guard.NotEmpty(password, nameof(password));
@@ -576,12 +580,12 @@ namespace Blockcore.Features.Wallet
                 throw new CannotAddAccountToXpubKeyWalletException("Use recover-via-extpubkey instead.");
             }
 
-            HdAccount res = this.GetUnusedAccount(wallet, password);
+            HdAccount res = this.GetUnusedAccount(wallet, password, purpose ?? this.defaultPurpose);
             return res;
         }
 
         /// <inheritdoc />
-        public HdAccount GetUnusedAccount(Types.Wallet wallet, string password)
+        public HdAccount GetUnusedAccount(Types.Wallet wallet, string password, int? purpose = null)
         {
             Guard.NotNull(wallet, nameof(wallet));
             Guard.NotEmpty(password, nameof(password));
@@ -599,7 +603,7 @@ namespace Blockcore.Features.Wallet
                 }
 
                 // No unused account was found, create a new one.
-                account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset());
+                account = wallet.AddNewAccount(password, this.dateTimeProvider.GetTimeOffset(), purpose ?? this.defaultPurpose);
                 IEnumerable<HdAddress> newReceivingAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer);
                 IEnumerable<HdAddress> newChangeAddresses = account.CreateAddresses(this.network, this.walletSettings.UnusedAddressesBuffer, true);
                 this.UpdateKeysLookup(wallet, newReceivingAddresses.Concat(newChangeAddresses));
@@ -887,7 +891,7 @@ namespace Blockcore.Features.Wallet
 
                 foreach (Types.Wallet wallet in this.Wallets)
                 {
-                    hdAddress = wallet.GetAllAddresses().FirstOrDefault(a => a.Address == address || a.Bech32Address == address);
+                    hdAddress = wallet.GetAllAddresses().FirstOrDefault(a => a.Address == address);
                     if (hdAddress == null) continue;
 
                     // When this query to get balance on specific address, we will exclude the cold staking UTXOs.
@@ -1613,6 +1617,7 @@ namespace Blockcore.Features.Wallet
 
             var walletFile = new Types.Wallet
             {
+                Version = 2,
                 Name = name,
                 EncryptedSeed = encryptedSeed,
                 ChainCode = chainCode,
@@ -1650,6 +1655,7 @@ namespace Blockcore.Features.Wallet
 
             var walletFile = new Types.Wallet
             {
+                Version = 2,
                 Name = name,
                 IsExtPubKeyWallet = true,
                 CreationTime = creationTime ?? this.dateTimeProvider.GetTimeOffset(),
@@ -1687,6 +1693,14 @@ namespace Blockcore.Features.Wallet
             wallet.BlockLocator = wallet.walletStore.GetData().BlockLocator;
             wallet.AccountsRoot.Single().LastBlockSyncedHash = wallet.walletStore.GetData().WalletTip.Hash;
             wallet.AccountsRoot.Single().LastBlockSyncedHeight = wallet.walletStore.GetData().WalletTip.Height;
+
+            if (wallet.Version < 2)
+            {
+                foreach (HdAccount hdAccount in wallet.GetAccounts())
+                {
+                    hdAccount.Purpose = 44;
+                }
+            }
 
             this.Wallets.Add(wallet);
         }
@@ -1742,16 +1756,30 @@ namespace Blockcore.Features.Wallet
                 walletIndex = this.walletIndex[wallet.Name];
             }
 
-            // Track the P2PKH of this pubic key
-            walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
-
             // Track the P2PK of this public key
             if (address.Pubkey != null)
                 walletIndex.ScriptToAddressLookup[address.Pubkey] = address;
 
+            // TODO: the address.ScriptPubKey should already reflect the bip44 or bip84 script so perhaps this test is not needed
+
+            // Track the P2PKH of this pubic key
+            if (address.IsBip44())
+            {
+                walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
+
+                if (wallet.Version < 2 && address.Pubkey != null)
+                {
+                    var pubkey = PayToPubkeyTemplate.Instance.ExtractScriptPubKeyParameters(address.Pubkey);
+                    BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(this.network);
+                    walletIndex.ScriptToAddressLookup[witAddress.ScriptPubKey] = address;
+                }
+            }
+
             // Track the P2WPKH of this pubic key
-            if (address.Bech32Address != null)
-                walletIndex.ScriptToAddressLookup[new BitcoinWitPubKeyAddress(address.Bech32Address, this.network).ScriptPubKey] = address;
+            if (address.IsBip84())
+            {
+                walletIndex.ScriptToAddressLookup[address.ScriptPubKey] = address;
+            }
         }
 
         /// <summary>

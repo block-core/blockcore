@@ -17,7 +17,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.Validators;
-using Blockcore.Controllers;
 using Blockcore.EventBus;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
@@ -247,7 +246,7 @@ namespace Blockcore.Base
 
             this.chainState.ConsensusTip = this.consensusManager.Tip;
 
-            this.nodeStats.RegisterStats(sb => sb.Append(this.asyncProvider.GetStatistics(!this.nodeSettings.Log.DebugArgs.Any())), StatsType.Component, this.GetType().Name, 100);
+            this.nodeStats.RegisterStats(sb => sb.Append(this.asyncProvider.GetStatistics(!this.nodeSettings.Log.DebugArgs.Any(a => a == "tasks"))), StatsType.Component, this.GetType().Name, 100);
 
             ((IBlockStoreQueue)this.blockStore).ReindexChain(this.consensusManager, this.nodeLifetime.ApplicationStopping);
         }
@@ -502,9 +501,6 @@ namespace Blockcore.Base
 
                     // Console
                     services.AddSingleton<INodeStats, NodeStats>();
-
-                    // Controller
-                    services.AddTransient<NodeController>();
                 });
             });
 

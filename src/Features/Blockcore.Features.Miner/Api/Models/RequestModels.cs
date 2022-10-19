@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Utilities.JsonConverters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -69,7 +71,7 @@ namespace Blockcore.Features.Miner.Api.Models
         /// <summary>
         /// Address to change.
         /// </summary>
-        [Required(ErrorMessage = "Address to change.")]
+        //[Required(ErrorMessage = "Address to change.")]
         public string Address { get; set; }
 
         /// <summary>
@@ -78,6 +80,9 @@ namespace Blockcore.Features.Miner.Api.Models
         [JsonProperty(PropertyName = "stakingExpiry", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime? StakingExpiry { get; set; }
+
+        [JsonProperty(PropertyName = "redeemScript")]
+        public string RedeemScript { get; set; }
     }
 
     public class StakingNotExpiredRequest : RequestModel
@@ -87,7 +92,5 @@ namespace Blockcore.Features.Miner.Api.Models
         /// </summary>
         [Required(ErrorMessage = "Name of wallet.")]
         public string WalletName { get; set; }
-
-        public bool Segwit { get; set; }
     }
 }

@@ -368,7 +368,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <param name="transaction">Transaction for which we are computing the cost.</param>
         /// <param name="inputs">Map of previous transactions that have outputs we're spending.</param>
         /// <returns>Signature operation cost for transaction.</returns>
-        private uint GetP2SHSignatureOperationsCount(Transaction transaction, UnspentOutputSet inputs)
+        protected virtual uint GetP2SHSignatureOperationsCount(Transaction transaction, UnspentOutputSet inputs)
         {
             if (transaction.IsCoinBase)
                 return 0;
@@ -389,7 +389,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// </summary>
         /// <param name="transaction">Transaction for which we are computing the cost.</param>
         /// <returns>Legacy signature operation cost for transaction.</returns>
-        private long GetLegacySignatureOperationsCount(Transaction transaction)
+        protected virtual long GetLegacySignatureOperationsCount(Transaction transaction)
         {
             long sigOps = 0;
             foreach (TxIn txin in transaction.Inputs)

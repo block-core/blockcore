@@ -240,7 +240,10 @@ namespace Blockcore.Features.ColdStaking
                 accountName = HotWalletAccountName;
             }
 
-            account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), accountIndex, accountName);
+            HdAccount defaultAccount =  wallet.GetAccount(0);
+            int purposeField = defaultAccount.Purpose;
+
+            account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), purposeField, accountIndex, accountName);
 
             // Maintain at least one unused address at all times. This will ensure that wallet recovery will also work.
             IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1, false);
@@ -258,9 +261,9 @@ namespace Blockcore.Features.ColdStaking
         /// track addresses under the <see cref="ColdWalletAccountIndex"/> HD account.
         /// </summary>
         /// <inheritdoc />
-        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? coinType = null, bool? isColdStakingWallet = false)
+        public override Wallet.Types.Wallet RecoverWallet(string password, string name, string mnemonic, DateTime creationTime, string passphrase, int? purpose = null, int? coinType = null, bool? isColdStakingWallet = false)
         {
-            Wallet.Types.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, coinType);
+            Wallet.Types.Wallet wallet = base.RecoverWallet(password, name, mnemonic, creationTime, passphrase, purpose, coinType);
 
             if (isColdStakingWallet.HasValue && isColdStakingWallet == true)
             {
@@ -324,7 +327,6 @@ namespace Blockcore.Features.ColdStaking
         /// <param name="walletPassword">The wallet password.</param>
         /// <param name="amount">The amount to cold stake.</param>
         /// <param name="feeAmount">The fee to pay for the cold staking setup transaction.</param>
-        /// <param name="useSegwitChangeAddress">Use a segwit style change address.</param>
         /// <param name="payToScript">Indicate script staking (P2SH or P2WSH outputs).</param>
         /// <returns>The <see cref="Transaction"/> for setting up cold staking.</returns>
         /// <exception cref="WalletException">Thrown if any of the rules listed in the remarks section of this method are broken.</exception>
@@ -332,7 +334,7 @@ namespace Blockcore.Features.ColdStaking
 
         internal Transaction GetColdStakingSetupTransaction(IWalletTransactionHandler walletTransactionHandler,
             string coldWalletAddress, string hotWalletAddress, string walletName, string walletAccount,
-            string walletPassword, Money amount, Money feeAmount, bool useSegwitChangeAddress = false, bool payToScript = false, bool createHotAccount = true)
+            string walletPassword, Money amount, Money feeAmount, bool payToScript = false, bool createHotAccount = true)
         {
             Guard.NotNull(walletTransactionHandler, nameof(walletTransactionHandler));
             Guard.NotEmpty(coldWalletAddress, nameof(coldWalletAddress));
@@ -357,8 +359,8 @@ namespace Blockcore.Features.ColdStaking
                 hotAccount = this.GetColdStakingAccount(this.GetWalletByName(walletName), false);
             }
 
-            HdAddress coldAddress = coldAccount?.ExternalAddresses.FirstOrDefault(s => s.Address == coldWalletAddress || s.Bech32Address == coldWalletAddress);
-            HdAddress hotAddress = hotAccount?.ExternalAddresses.FirstOrDefault(s => s.Address == hotWalletAddress || s.Bech32Address == hotWalletAddress);
+            HdAddress coldAddress = coldAccount?.ExternalAddresses.FirstOrDefault(s => s.Address == coldWalletAddress);
+            HdAddress hotAddress = hotAccount?.ExternalAddresses.FirstOrDefault(s => s.Address == hotWalletAddress);
 
             bool thisIsColdWallet = coldAddress != null;
             bool thisIsHotWallet = hotAddress != null;
@@ -383,7 +385,7 @@ namespace Blockcore.Features.ColdStaking
             KeyId coldPubKeyHash = null;
 
             // Check if this is a segwit address
-            if (coldAddress?.Bech32Address == coldWalletAddress || hotAddress?.Bech32Address == hotWalletAddress)
+            if ((coldAddress != null && coldAddress.IsBip84()) || (hotAddress != null && hotAddress.IsBip84()))
             {
                 hotPubKeyHash = new BitcoinWitPubKeyAddress(hotWalletAddress, wallet.Network).Hash.AsKeyId();
                 coldPubKeyHash = new BitcoinWitPubKeyAddress(coldWalletAddress, wallet.Network).Hash.AsKeyId();
@@ -392,7 +394,9 @@ namespace Blockcore.Features.ColdStaking
                 if (payToScript)
                 {
                     HdAddress address = coldAddress ?? hotAddress;
-                    address.RedeemScript = destination;
+                    if (address.RedeemScripts == null) 
+                        address.RedeemScripts = new List<Script>();
+                    address.RedeemScripts.Add(destination);
                     destination = destination.WitHash.ScriptPubKey;
                 }
             }
@@ -405,7 +409,9 @@ namespace Blockcore.Features.ColdStaking
                 if (payToScript)
                 {
                     HdAddress address = coldAddress ?? hotAddress;
-                    address.RedeemScript = destination;
+                    if (address.RedeemScripts == null)
+                        address.RedeemScripts = new List<Script>();
+                    address.RedeemScripts.Add(destination);
                     destination = destination.Hash.ScriptPubKey;
                 }
             }
@@ -423,7 +429,6 @@ namespace Blockcore.Features.ColdStaking
                 TransactionFee = feeAmount,
                 MinConfirmations = 0,
                 Shuffle = false,
-                UseSegwitChangeAddress = useSegwitChangeAddress,
                 WalletPassword = walletPassword,
                 Recipients = new List<Recipient>() { new Recipient { Amount = amount, ScriptPubKey = destination } }
             };
@@ -496,14 +501,14 @@ namespace Blockcore.Features.ColdStaking
             }
 
             // Prevent reusing cold stake addresses as regular withdrawal addresses.
-            if (coldAccount.ExternalAddresses.Concat(coldAccount.InternalAddresses).Any(s => s.Address == receivingAddress || s.Bech32Address == receivingAddress))
+            if (coldAccount.ExternalAddresses.Concat(coldAccount.InternalAddresses).Any(s => s.Address == receivingAddress ))
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_INVALID_COLD_WALLET_ADDRESS_USAGE]");
                 throw new WalletException("You can't send the money to a cold staking cold wallet account.");
             }
 
             HdAccount hotAccount = this.GetColdStakingAccount(wallet, false);
-            if (hotAccount != null && hotAccount.ExternalAddresses.Concat(hotAccount.InternalAddresses).Any(s => s.Address == receivingAddress || s.Bech32Address == receivingAddress))
+            if (hotAccount != null && hotAccount.ExternalAddresses.Concat(hotAccount.InternalAddresses).Any(s => s.Address == receivingAddress))
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_INVALID_HOT_WALLET_ADDRESS_USAGE]");
                 throw new WalletException("You can't send the money to a cold staking hot wallet account.");
@@ -527,7 +532,7 @@ namespace Blockcore.Features.ColdStaking
             {
                 AccountReference = accountReference,
                 // Specify a dummy change address to prevent a change (internal) address from being created.
-                // Will be changed after the transacton is built and before it is signed.
+                // Will be changed after the transaction is built and before it is signed.
                 ChangeAddress = coldAccount.ExternalAddresses.First(),
                 TransactionFee = feeAmount,
                 MinConfirmations = 0,
@@ -567,11 +572,16 @@ namespace Blockcore.Features.ColdStaking
 
                 if (prevscript.IsScriptType(ScriptType.P2SH) || prevscript.IsScriptType(ScriptType.P2WSH))
                 {
-                    if (item.Address.RedeemScript == null)
-                        throw new WalletException("Missing redeem script");
+                    if (item.Address.RedeemScripts == null)
+                        throw new WalletException("Wallet has no redeem scripts");
+
+                    Script redeemScript = item.Address.RedeemScripts.FirstOrDefault(r => r.Hash.ScriptPubKey == item.Transaction.ScriptPubKey || r.WitHash.ScriptPubKey == item.Transaction.ScriptPubKey);
+
+                    if (redeemScript == null)
+                        throw new WalletException($"RedeemScript was not found for address '{item.Address.Address}' with output '{item.Transaction.ScriptPubKey}'");
 
                     // Provide the redeem script to the builder
-                    var scriptCoin = ScriptCoin.Create(this.network, item.ToOutPoint(), new TxOut(item.Transaction.Amount, prevscript), item.Address.RedeemScript);
+                    var scriptCoin = ScriptCoin.Create(this.network, item.ToOutPoint(), new TxOut(item.Transaction.Amount, prevscript), redeemScript);
                     context.TransactionBuilder.AddCoins(scriptCoin);
                 }
 
@@ -626,12 +636,18 @@ namespace Blockcore.Features.ColdStaking
             {
                 if (this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(script, out HdAddress address))
                 {
-                    if (ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(address.RedeemScript, out hotPubKeyHash, out coldPubKeyHash))
+                    if (address.RedeemScripts != null)
                     {
-                        base.TransactionFoundInternal(wallet, hotPubKeyHash.ScriptPubKey, a => a.Index == HotWalletAccountIndex);
-                        base.TransactionFoundInternal(wallet, coldPubKeyHash.ScriptPubKey, a => a.Index == ColdWalletAccountIndex);
+                        foreach (Script redeemScript in address.RedeemScripts)
+                        {
+                            if (ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(redeemScript, out hotPubKeyHash, out coldPubKeyHash))
+                            {
+                                base.TransactionFoundInternal(wallet, hotPubKeyHash.ScriptPubKey, a => a.Index == HotWalletAccountIndex);
+                                base.TransactionFoundInternal(wallet, coldPubKeyHash.ScriptPubKey, a => a.Index == ColdWalletAccountIndex);
 
-                        return;
+                                return;
+                            }
+                        }
                     }
                 }
             }
@@ -641,7 +657,7 @@ namespace Blockcore.Features.ColdStaking
 
         /// <summary>
         /// The purpose of this method is to try to identify the P2SH and P2WSH that are coldstake outputs for this wallet
-        /// We look for an opreturn script that is created when seting up a P2SH and P2WSH cold stake trx
+        /// We look for an opreturn script that is created when setting up a P2SH and P2WSH cold stake trx
         /// if we find any then try to find the keys and track the script before calling in to the main wallet.
         /// </summary>
         /// <inheritdoc/>
@@ -670,7 +686,14 @@ namespace Blockcore.Features.ColdStaking
                                 || walletIndexItem.Value.ScriptToAddressLookup.TryGetValue(coldPubKey.ScriptPubKey, out address))
                                 {
                                     Script destination = ColdStakingScriptTemplate.Instance.GenerateScriptPubKey(hotPubKey, coldPubKey);
-                                    address.RedeemScript = destination;
+
+                                    if (address.RedeemScripts == null)
+                                        address.RedeemScripts = new List<Script>();
+
+                                    if (!address.RedeemScripts.Contains(destination))
+                                    {
+                                        address.RedeemScripts.Add(destination);
+                                    }
 
                                     // Find the type of script for the opreturn (P2SH or P2WSH)
                                     foreach (TxOut utxoInner in transaction.Outputs)
@@ -705,16 +728,32 @@ namespace Blockcore.Features.ColdStaking
         {
             base.AddAddressToIndex(wallet, address);
 
-            if (address.RedeemScript != null)
+            if (address.RedeemScriptObsolete != null)
             {
-                // The redeem script has no indication on the script type (P2SH or P2WSH),
-                // so we track both, add both to the indexer then.
+                // this is to support legacy wallet that still have the RedeemScript set
+                // we just push it to the RedeemScripts collection and go on as usual.
+                if (address.RedeemScripts == null)
+                    address.RedeemScripts = new List<Script>();
 
-                if (!this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(address.RedeemScript.Hash.ScriptPubKey, out HdAddress _))
-                    this.walletIndex[wallet.Name].ScriptToAddressLookup[address.RedeemScript.Hash.ScriptPubKey] = address;
+                if (!address.RedeemScripts.Contains(address.RedeemScriptObsolete))
+                {
+                    address.RedeemScripts.Add(address.RedeemScriptObsolete);
+                }
+            }
 
-                if (!this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(address.RedeemScript.WitHash.ScriptPubKey, out HdAddress _))
-                    this.walletIndex[wallet.Name].ScriptToAddressLookup[address.RedeemScript.WitHash.ScriptPubKey] = address;
+            if (address.RedeemScripts != null)
+            {
+                foreach (Script redeemScript in address.RedeemScripts)
+                {
+                    // The redeem script has no indication on the script type (P2SH or P2WSH),
+                    // so we track both, add both to the indexer then.
+
+                    if (!this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(redeemScript.Hash.ScriptPubKey, out HdAddress _))
+                        this.walletIndex[wallet.Name].ScriptToAddressLookup[redeemScript.Hash.ScriptPubKey] = address;
+
+                    if (!this.walletIndex[wallet.Name].ScriptToAddressLookup.TryGetValue(redeemScript.WitHash.ScriptPubKey, out HdAddress _))
+                        this.walletIndex[wallet.Name].ScriptToAddressLookup[redeemScript.WitHash.ScriptPubKey] = address;
+                }
             }
         }
     }

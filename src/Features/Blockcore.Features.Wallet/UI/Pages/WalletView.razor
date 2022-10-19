@@ -1,7 +1,10 @@
 ﻿@page "/walletview/{walletname}/{accountname}"
 @implements IDisposable
 
+@using Blockcore.Base.Deployments
+@using Blockcore.Consensus.ScriptInfo
 @using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Features.Wallet.Types
 @using NBitcoin;
 @using Blockcore.Features.Wallet.Api.Controllers
 @using Blockcore.Features.Wallet.Api.Models
@@ -16,25 +19,19 @@
 @inject Network Network
 @inject ModalService ModalService
 @inject ISignals Signals
+@inject NodeDeployments NodeDeployments
 
 @{
     var accountBalance = this.WalletManager.GetBalances(walletname, accountname).Single();
-
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h2"><strong>Wallet</strong></h1>
+        <h1 class="h2"><strong>Wallet : @walletname : @accountname </strong></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <Dropdown TItem="string" OnSelected="@OnSelected">
-                <InitialTip>@walletname</InitialTip>
-                <ChildContent>
-                    @foreach (var walletName in this.WalletManager.GetWalletsNames())
-                    {
-                        foreach (var account in this.WalletManager.GetAccounts(walletName))
-                        {
-                            <DropdownListItem Item="@walletName">@walletName</DropdownListItem>
-                        }
-                    }
-                </ChildContent>
-            </Dropdown>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToWallet(walletname); }">
+                <span class="oi oi-grid-three-up" aria-hidden="true"></span> @walletname
+            </button>
+            <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToUTXOList(walletname, accountname); }">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> UTXO List
+            </button>
             <button class="btn btn-sm btn-primary mr-1" @onclick="() => { NavigateToReceiveWallet(walletname, accountname); }">
                 <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receive
             </button>
@@ -47,8 +44,10 @@
     <div class="row mb-3">
         <div class="col-xl-12 col-sm-12 ">
             <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">@accountname Balance</h5>
+                </div>
                 <div class="card-body">
-                    <h5>Main Balance</h5>
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex align-items-center align-self-start">
@@ -64,12 +63,14 @@
     </div>
 
     // For now just show last 100 trx of history.
-    var model = WalletModelBuilder.GetHistorySlim(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 100 });
-    <div class="row ">
+    var model = WalletModelBuilder.GetHistorySlim(this.WalletManager, Network, new WalletHistoryRequest { WalletName = walletname, AccountName = accountname, Take = 1000 });
+    <div class="row mb-3">
         <div class="col-12 grid-margin">
             <div class="card">
-                <div class="mx-3 mt-3">
-                    <h4 class="card-title">History</h4>
+                <div class="card-header">
+                    <h5 class="card-title">History</h5>
+                </div>
+                <div class="card-body">
                     <div class="table-responsive small">
                         <table class="table table-border-bottom table-striped table-sm table-hover">
                             <thead class="thead">
@@ -93,7 +94,7 @@
                                             <td class="text-right">@transaction.Amount</td>
                                             <td class="text-right">@transaction.ConfirmedInBlock</td>
                                             <td class="text-center align-middle">
-                                                <button class="btn btn-sm btn-secondary"> <span class="oi oi-list" aria-hidden="true"></span></button>
+                                                <button class="btn btn-sm btn-secondary" @onclick="() => { ViewTransaction(transaction); }"> <span class="oi oi-list" aria-hidden="true"></span></button>
                                             </td>
                                         </tr>
                                     }
@@ -105,15 +106,20 @@
             </div>
         </div>
     </div>
+
 }
 @code {
     [Parameter]
     public string walletname { get; set; }
     [Parameter]
     public string accountname { get; set; }
-    private void NavigateToWallet(string walletName, string accountname)
+    private void NavigateToWallet(string walletName)
     {
-        NavigationManager.NavigateTo("walletview/" + walletName + "/" + accountname);
+        NavigationManager.NavigateTo("accounts/" + walletName);
+    }
+    private void NavigateToUTXOList(string walletName, string accountname)
+    {
+        NavigationManager.NavigateTo("UTXO/" + walletName + "/" + accountname);
     }
     private void NavigateToReceiveWallet(string walletName, string accountname)
     {
@@ -123,14 +129,16 @@
     {
         NavigationManager.NavigateTo("walletsend/" + walletName + "/" + accountname);
     }
-    private void ViewTransaction()
+
+    private void ViewTransaction(TransactionItemModel _TM)
     {
-        ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction));
+        ModalService.Show("Transaction Details", typeof(Modal.ModalViewTransaction), _TM);
     }
+
     private void OnSelected(string selection)
     {
         Console.WriteLine(selection);
-        NavigateToWallet(selection, "account 0");
+
     }
 
     List<SubscriptionToken> subscriptionTokens;

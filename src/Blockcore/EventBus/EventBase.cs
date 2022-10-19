@@ -1,5 +1,4 @@
 ﻿using System;
-using Blockcore.Broadcasters;
 
 namespace Blockcore.EventBus
 {

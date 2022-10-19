@@ -57,15 +57,16 @@ namespace Blockcore.Features.Wallet.Helpers
         /// </summary>
         /// <param name="privateKey">The private key from which to generate the extended public key.</param>
         /// <param name="chainCode">The chain code used in creating the extended public key.</param>
+        /// <param name="purpose">Purpose of the coin this account is in.</param>
         /// <param name="coinType">Type of the coin of the account for which to generate an extended public key.</param>
         /// <param name="accountIndex">Index of the account for which to generate an extended public key.</param>
         /// <returns>The extended public key for an account, used to derive child keys.</returns>
-        public static ExtPubKey GetExtendedPublicKey(Key privateKey, byte[] chainCode, int coinType, int accountIndex)
+        public static ExtPubKey GetExtendedPublicKey(Key privateKey, byte[] chainCode, int purpose, int coinType, int accountIndex)
         {
             Guard.NotNull(privateKey, nameof(privateKey));
             Guard.NotNull(chainCode, nameof(chainCode));
 
-            string accountHdPath = GetAccountHdPath(coinType, accountIndex);
+            string accountHdPath = GetAccountHdPath(purpose, coinType, accountIndex);
             return GetExtendedPublicKey(privateKey, chainCode, accountHdPath);
         }
 
@@ -92,12 +93,13 @@ namespace Blockcore.Features.Wallet.Helpers
         /// <summary>
         /// Gets the HD path of an account.
         /// </summary>
+        /// <param name="purpose">Purpose of the coin this account is in.</param>
         /// <param name="coinType">Type of the coin this account is in.</param>
         /// <param name="accountIndex">Index of the account.</param>
         /// <returns>The HD path of an account.</returns>
-        public static string GetAccountHdPath(int coinType, int accountIndex)
+        public static string GetAccountHdPath(int purpose, int coinType, int accountIndex)
         {
-            return $"m/44'/{coinType}'/{accountIndex}'";
+            return $"m/{purpose}'/{coinType}'/{accountIndex}'";
         }
 
         /// <summary>
@@ -131,16 +133,17 @@ namespace Blockcore.Features.Wallet.Helpers
         /// <summary>
         /// Creates an address' HD path, according to BIP 44.
         /// </summary>
+        /// <param name="purpose">Purpose of the coin this account is in.</param>
         /// <param name="coinType">Type of coin in the HD path.</param>
         /// <param name="accountIndex">Index of the account in the HD path.</param>
         /// <param name="isChange">A value indicating whether the HD path to generate corresponds to a change address.</param>
         /// <param name="addressIndex">Index of the address in the HD path.</param>
         /// <returns>The HD path.</returns>
         /// <remarks>Refer to <seealso cref="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#path-levels"/> for the format of the HD path.</remarks>
-        public static string CreateHdPath(int coinType, int accountIndex, bool isChange, int addressIndex)
+        public static string CreateHdPath(int purpose, int coinType, int accountIndex, bool isChange, int addressIndex)
         {
             int change = isChange ? 1 : 0;
-            return $"m/44'/{coinType}'/{accountIndex}'/{change}/{addressIndex}";
+            return $"m/{purpose}'/{coinType}'/{accountIndex}'/{change}/{addressIndex}";
         }
 
         /// <summary>
@@ -164,6 +167,29 @@ namespace Blockcore.Features.Wallet.Helpers
             }
 
             throw new FormatException($"Could not parse CoinType from HdPath {hdPath}.");
+        }
+
+        /// <summary>
+        /// Gets the purpose field of this HD path.
+        /// </summary>
+        /// <param name="hdPath">The HD path.</param>
+        /// <returns>The purpose of the coin. <seealso cref="https://github.com/satoshilabs/slips/blob/master/slip-0044.md"/>.</returns>
+        /// <exception cref="FormatException">An exception is thrown if the HD path is not well-formed.</exception>
+        /// <remarks>Refer to <seealso cref="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#path-levels"/> for the format of the HD path.</remarks>
+        public static int GetPurpose(string hdPath)
+        {
+            Guard.NotEmpty(hdPath, nameof(hdPath));
+
+            string[] pathElements = hdPath.Split('/');
+            if (pathElements.Length < 3)
+                throw new FormatException($"Could not parse Purpose from HdPath {hdPath}.");
+
+            if (int.TryParse(pathElements[1].Replace("'", string.Empty), out int purpose))
+            {
+                return purpose;
+            }
+
+            throw new FormatException($"Could not parse Purpose from HdPath {hdPath}.");
         }
 
         /// <summary>

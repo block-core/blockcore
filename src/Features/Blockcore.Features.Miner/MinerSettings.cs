@@ -48,7 +48,7 @@ namespace Blockcore.Features.Miner
         public bool Mine { get; private set; }
 
         /// <summary>
-        /// If true this will only allow staking coins that have been flaged.
+        /// If true this will only allow staking coins that have been flagged.
         /// </summary>
         public bool EnforceStakingFlag { get; private set; }
 
@@ -130,7 +130,7 @@ namespace Blockcore.Features.Miner
             builder.AppendLine($"-minimumstakingcoinvalue=<number>   Minimum size of the coins considered for staking, in satoshis. Default value is {MinimumStakingCoinValueDefaultValue:N0} satoshis (= {MinimumStakingCoinValueDefaultValue / (decimal)Money.COIN:N1} Coin).");
             builder.AppendLine($"-minimumsplitcoinvalue=<number>     Targeted minimum value of staking coins after splitting, in satoshis. Default value is {MinimumSplitCoinValueDefaultValue:N0} satoshis (= {MinimumSplitCoinValueDefaultValue / Money.COIN} Coin).");
 
-            builder.AppendLine($"-enforceStakingFlag=<0 or 1>        If true staking will require whitelisting addresses in order to stake. Defult is false");
+            builder.AppendLine($"-enforceStakingFlag=<0 or 1>        If true staking will require whitelisting addresses in order to stake. Default is false");
 
             defaults.Logger.LogInformation(builder.ToString());
         }

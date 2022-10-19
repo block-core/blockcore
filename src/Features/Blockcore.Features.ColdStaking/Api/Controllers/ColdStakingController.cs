@@ -22,7 +22,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class ColdStakingController : Controller
+    public class ColdStakingController : Microsoft.AspNetCore.Mvc.Controller
     {
         public ColdStakingManager ColdStakingManager { get; private set; }
         private readonly IWalletTransactionHandler walletTransactionHandler;
@@ -148,7 +148,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
 
                 var model = new GetColdStakingAddressResponse
                 {
-                    Address = request.Segwit ? address?.Bech32Address : address?.Address
+                    Address = address?.Address
                 };
 
                 if (model.Address == null)
@@ -213,7 +213,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
 
                 Transaction transaction = this.ColdStakingManager.GetColdStakingSetupTransaction(
                     this.walletTransactionHandler, request.ColdWalletAddress, request.HotWalletAddress,
-                    request.WalletName, request.WalletAccount, request.WalletPassword, amount, feeAmount, request.SegwitChangeAddress, request.PayToScript, createHotAccount);
+                    request.WalletName, request.WalletAccount, request.WalletPassword, amount, feeAmount, request.PayToScript, createHotAccount);
 
                 var model = new SetupColdStakingResponse
                 {

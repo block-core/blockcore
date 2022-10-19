@@ -44,6 +44,12 @@ namespace Blockcore.Features.Wallet.Types
         public IWalletStore walletStore { get; set; }
 
         /// <summary>
+        /// The wallet version.
+        /// </summary>
+        [JsonProperty(PropertyName = "version")]
+        public int Version { get; set; }
+
+        /// <summary>
         /// The name of this wallet.
         /// </summary>
         [JsonProperty(PropertyName = "name")]
@@ -113,6 +119,16 @@ namespace Blockcore.Features.Wallet.Types
         public HdAccount GetAccount(string accountName)
         {
             return this.AccountsRoot.SingleOrDefault()?.GetAccountByName(accountName);
+        }
+
+        /// <summary>
+        /// Gets an account from the wallet's accounts.
+        /// </summary>
+        /// <param name="index">The index of the account to retrieve.</param>
+        /// <returns>The requested account or <c>null</c> if the account does not exist.</returns>
+        public HdAccount GetAccount(int index)
+        {
+            return this.AccountsRoot.SingleOrDefault()?.GetAccountByIndex(index);
         }
 
         /// <summary>
@@ -221,15 +237,16 @@ namespace Blockcore.Features.Wallet.Types
         /// <seealso cref="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki"/>
         /// <param name="password">The password used to decrypt the wallet's <see cref="EncryptedSeed"/>.</param>
         /// <param name="accountCreationTime">Creation time of the account to be created.</param>
+        /// <param name="purpose">A BIP44 purpose (also used in BIP84 and BIP49), this will allow to overwrite the default BIP44 purpose.</param>
         /// <param name="accountIndex">The index at which an account will be created. If left null, a new account will be created after the last used one.</param>
         /// <param name="accountName">The name of the account to be created. If left null, an account will be created according to the <see cref="Wallet.AccountNamePattern"/>.</param>
         /// <returns>A new HD account.</returns>
-        public HdAccount AddNewAccount(string password, DateTimeOffset accountCreationTime, int? accountIndex = null, string accountName = null)
+        public HdAccount AddNewAccount(string password, DateTimeOffset accountCreationTime, int purpose, int? accountIndex = null, string accountName = null)
         {
             Guard.NotEmpty(password, nameof(password));
 
             AccountRoot accountRoot = this.AccountsRoot.Single();
-            return accountRoot.AddNewAccount(password, this.EncryptedSeed, this.ChainCode, this.Network, accountCreationTime, accountIndex, accountName);
+            return accountRoot.AddNewAccount(password, this.EncryptedSeed, this.ChainCode, this.Network, accountCreationTime, purpose, accountIndex, accountName);
         }
 
         /// <summary>
@@ -243,11 +260,12 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="extPubKey">The extended public key for the wallet<see cref="EncryptedSeed"/>.</param>
         /// <param name="accountIndex">Zero-based index of the account to add.</param>
         /// <param name="accountCreationTime">Creation time of the account to be created.</param>
+        /// <param name="purpose">A BIP44 purpose (also used in BIP84 and BIP49), this will allow to overwrite the default BIP44 purpose.</param>
         /// <returns>A new HD account.</returns>
-        public HdAccount AddNewAccount(ExtPubKey extPubKey, int accountIndex, DateTimeOffset accountCreationTime)
+        public HdAccount AddNewAccount(ExtPubKey extPubKey, int accountIndex, DateTimeOffset accountCreationTime, int purpose)
         {
             AccountRoot accountRoot = this.AccountsRoot.Single();
-            return accountRoot.AddNewAccount(extPubKey, accountIndex, this.Network, accountCreationTime);
+            return accountRoot.AddNewAccount(extPubKey, accountIndex, this.Network, accountCreationTime, purpose);
         }
 
         /// <summary>
@@ -383,7 +401,7 @@ namespace Blockcore.Features.Wallet.Types
         public HdAddress GetAddress(string address, Func<HdAccount, bool> accountFilter = null)
         {
             Guard.NotNull(address, nameof(address));
-            return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address || a.Bech32Address == address);
+            return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address);
         }
     }
 
@@ -462,6 +480,16 @@ namespace Blockcore.Features.Wallet.Types
         }
 
         /// <summary>
+        /// Gets the account matching the index passed as a parameter.
+        /// </summary>
+        /// <param name="index">The index of the account to get.</param>
+        /// <returns>The HD account specified by the parameter or <c>null</c> if the account does not exist.</returns>
+        public HdAccount GetAccountByIndex(int index)
+        {
+            return this.Accounts?.SingleOrDefault(a => a.Index == index);
+        }
+
+        /// <summary>
         /// Adds an account to the current account root using encrypted seed and password.
         /// </summary>
         /// <remarks>The name given to the account is of the form "account (i)" by default, where (i) is an incremental index starting at 0.
@@ -474,8 +502,9 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="accountCreationTime">Creation time of the account to be created.</param>
         /// <param name="accountIndex">The index at which an account will be created. If left null, a new account will be created after the last used one.</param>
         /// <param name="accountName">The name of the account to be created. If left null, an account will be created according to the <see cref="AccountNamePattern"/>.</param>
+        /// <param name="purpose">A BIP44 purpose (also used in BIP84 and BIP49), this will allow to overwrite the default BIP44 purpose.</param>
         /// <returns>A new HD account.</returns>
-        public HdAccount AddNewAccount(string password, string encryptedSeed, byte[] chainCode, Network network, DateTimeOffset accountCreationTime, int? accountIndex = null, string accountName = null)
+        public HdAccount AddNewAccount(string password, string encryptedSeed, byte[] chainCode, Network network, DateTimeOffset accountCreationTime, int purpose, int? accountIndex = null, string accountName = null)
         {
             Guard.NotEmpty(password, nameof(password));
             Guard.NotEmpty(encryptedSeed, nameof(encryptedSeed));
@@ -502,7 +531,7 @@ namespace Blockcore.Features.Wallet.Types
                 }
             }
 
-            HdAccount newAccount = this.CreateAccount(password, encryptedSeed, chainCode, network, accountCreationTime, accountIndex.Value, accountName);
+            HdAccount newAccount = this.CreateAccount(password, encryptedSeed, chainCode, network, accountCreationTime, purpose, accountIndex.Value, accountName);
 
             hdAccounts.Add(newAccount);
             this.Accounts = hdAccounts;
@@ -520,9 +549,10 @@ namespace Blockcore.Features.Wallet.Types
         /// <param name="accountCreationTime">Creation time of the account to be created.</param>
         /// <param name="newAccountIndex">The optional account index to use.</param>
         /// <param name="newAccountName">The optional account name to use.</param>
+        /// <param name="purpose">A BIP44 purpose (also used in BIP84 and BIP49), this will allow to overwrite the default BIP44 purpose.</param>
         /// <returns>A new HD account.</returns>
         public HdAccount CreateAccount(string password, string encryptedSeed, byte[] chainCode,
-            Network network, DateTimeOffset accountCreationTime,
+            Network network, DateTimeOffset accountCreationTime, int purpose,
             int newAccountIndex, string newAccountName = null)
         {
             if (string.IsNullOrEmpty(newAccountName))
@@ -531,7 +561,7 @@ namespace Blockcore.Features.Wallet.Types
             }
 
             // Get the extended pub key used to generate addresses for this account.
-            string accountHdPath = HdOperations.GetAccountHdPath((int)this.CoinType, newAccountIndex);
+            string accountHdPath = HdOperations.GetAccountHdPath(purpose, this.CoinType, newAccountIndex);
             Key privateKey = HdOperations.DecryptSeed(encryptedSeed, password, network);
             ExtPubKey accountExtPubKey = HdOperations.GetExtendedPublicKey(privateKey, chainCode, accountHdPath);
 
@@ -543,6 +573,7 @@ namespace Blockcore.Features.Wallet.Types
                 InternalAddresses = new List<HdAddress>(),
                 Name = newAccountName,
                 HdPath = accountHdPath,
+                Purpose = purpose,
                 CreationTime = accountCreationTime
             };
         }
@@ -553,7 +584,8 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         /// <param name="accountExtPubKey">The extended public key for the account.</param>
         /// <param name="accountIndex">The zero-based account index.</param>
-        public HdAccount AddNewAccount(ExtPubKey accountExtPubKey, int accountIndex, Network network, DateTimeOffset accountCreationTime)
+        /// <param name="purpose">A BIP44 purpose (also used in BIP84 and BIP49), this will allow to overwrite the default BIP44 purpose.</param>
+        public HdAccount AddNewAccount(ExtPubKey accountExtPubKey, int accountIndex, Network network, DateTimeOffset accountCreationTime, int purpose)
         {
             ICollection<HdAccount> hdAccounts = this.Accounts.ToList();
 
@@ -568,7 +600,7 @@ namespace Blockcore.Features.Wallet.Types
                                             accountExtPubKey.ToString(network));
             }
 
-            string accountHdPath = HdOperations.GetAccountHdPath((int)this.CoinType, accountIndex);
+            string accountHdPath = HdOperations.GetAccountHdPath(purpose, this.CoinType, accountIndex);
 
             var newAccount = new HdAccount
             {
@@ -578,6 +610,7 @@ namespace Blockcore.Features.Wallet.Types
                 InternalAddresses = new List<HdAddress>(),
                 Name = $"account {accountIndex}",
                 HdPath = accountHdPath,
+                Purpose = purpose,
                 CreationTime = accountCreationTime
             };
 
@@ -608,6 +641,12 @@ namespace Blockcore.Features.Wallet.Types
         /// </remarks>
         [JsonProperty(PropertyName = "index")]
         public int Index { get; set; }
+
+        /// <summary>
+        /// The purpose of the coin as described in BIP44.
+        /// </summary>
+        [JsonProperty(PropertyName = "purpose")]
+        public int Purpose { get; set; }
 
         /// <summary>
         /// The name of this account.
@@ -783,20 +822,34 @@ namespace Blockcore.Features.Wallet.Types
                 // Retrieve the pubkey associated with the private key of this address index.
                 PubKey pubkey = HdOperations.GeneratePublicKey(this.ExtendedPubKey, i, isChange);
 
-                // Generate the P2PKH address corresponding to the pubkey.
-                BitcoinPubKeyAddress address = pubkey.GetAddress(network);
-                BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(network);
-
                 // Add the new address details to the list of addresses.
                 var newAddress = new HdAddress
                 {
                     Index = i,
-                    HdPath = HdOperations.CreateHdPath((int)this.GetCoinType(), this.Index, isChange, i),
-                    ScriptPubKey = address.ScriptPubKey,
-                    Pubkey = pubkey.ScriptPubKey,
-                    Bech32Address = witAddress.ToString(),
-                    Address = address.ToString(),
+                    HdPath = HdOperations.CreateHdPath(this.Purpose, this.GetCoinType(), this.Index, isChange, i),
+                    Pubkey = pubkey.ScriptPubKey, // this is a P2PK script type
                 };
+
+                if (newAddress.IsBip44())
+                {
+                    // Generate the P2PKH address corresponding to the pubkey.
+                    BitcoinPubKeyAddress address = pubkey.GetAddress(network);
+                    newAddress.ScriptPubKey = address.ScriptPubKey;
+                    newAddress.Address = address.ToString();
+                }
+                else if (newAddress.IsBip84())
+                {
+                    // Generate the PW2PKH address corresponding to the pubkey.
+                    BitcoinWitPubKeyAddress witAddress = pubkey.GetSegwitAddress(network);
+                    newAddress.ScriptPubKey = witAddress.ScriptPubKey;
+                    newAddress.Address = witAddress.ToString();
+                }
+
+                // TODO: should we check this and throw or just skip if no derivation path is found (in that case we default to only P2PK)
+                if (newAddress.Address == null)
+                {
+                    throw new WalletException("Unknown derivation path");
+                }
 
                 addresses.Add(newAddress);
                 addressesCreated.Add(newAddress);
@@ -916,12 +969,6 @@ namespace Blockcore.Features.Wallet.Types
         public Script Pubkey { get; set; }
 
         /// <summary>
-        /// The base32 representation of a segwit (P2WPH) address.
-        /// </summary>
-        [JsonProperty(PropertyName = "bech32Address")]
-        public string Bech32Address { get; set; }
-
-        /// <summary>
         /// The Base58 representation of this address.
         /// </summary>
         [JsonProperty(PropertyName = "address")]
@@ -930,9 +977,29 @@ namespace Blockcore.Features.Wallet.Types
         /// <summary>
         /// A script that is used for P2SH and P2WSH scenarios (mostly used for staking).
         /// </summary>
+        /// <remarks>
+        /// Obsolete: This is kept for legacy reasons, use the the <see cref="RedeemScripts"/> property instead.
+        /// </remarks>
         [JsonProperty(PropertyName = "redeemScript")]
         [JsonConverter(typeof(ScriptJsonConverter))]
-        public Script RedeemScript { get; set; }
+        [ObsoleteAttribute("This is kept for legacy reasons, use the the RedeemScripts property instead.")]
+        public Script RedeemScriptObsolete { get; set; }
+
+        /// <summary>
+        /// A collection of scripts that is used for P2SH and P2WSH scenarios (mostly used for cold staking).
+        /// This solves issue https://github.com/block-core/blockcore/issues/395
+        /// </summary>
+        [JsonProperty(PropertyName = "redeemScripts")]
+        [JsonConverter(typeof(ScriptCollectionJsonConverter))]
+        public ICollection<Script> RedeemScripts { get; set; }
+
+        /// <summary>
+        /// A collection of scripts that is used for P2SH and P2WSH scenarios (mostly used for cold staking)
+        /// that can be marked as expired for staking, this is to be use together with the -enforceStakingFlag 
+        /// mainly for cold staking pools.
+        /// </summary>
+        [JsonProperty(PropertyName = "redeemScriptsExpiry")]
+        public ICollection<RedeemScriptExpiry> RedeemScriptExpiry { get; set; }
 
         /// <summary>
         /// A path to the address as defined in BIP44.
@@ -988,6 +1055,38 @@ namespace Blockcore.Features.Wallet.Types
 
             return (confirmed, total - confirmed, trx.Any());
         }
+
+        /// <summary>
+        /// Check if the address path is a BIP84 segwit address.
+        /// </summary>
+        public bool IsBip84()
+        {
+            return HdOperations.GetPurpose(this.HdPath) == 84;
+        }
+
+        /// <summary>
+        /// Check if the address path is a BIP44 address.
+        /// </summary>
+        public bool IsBip44()
+        {
+            return HdOperations.GetPurpose(this.HdPath) == 44;
+        }
+    }
+
+    public class RedeemScriptExpiry
+    {
+        /// <summary>
+        /// A script that is used for P2SH and P2WSH scenarios (mostly used for staking).
+        /// </summary>
+        [JsonProperty(PropertyName = "redeemScript")]
+        [JsonConverter(typeof(ScriptJsonConverter))]
+        public Script RedeemScript { get; set; }
+
+        /// <summary>
+        /// Specify whether UTXOs associated with this address is within the allowed staking time.
+        /// </summary>
+        [JsonProperty(PropertyName = "stakingExpiry", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? StakingExpiry { get; set; }
     }
 
     /// <summary>

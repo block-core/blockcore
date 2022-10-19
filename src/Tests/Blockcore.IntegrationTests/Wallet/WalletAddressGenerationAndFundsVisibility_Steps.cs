@@ -109,7 +109,7 @@ namespace Blockcore.IntegrationTests.Wallet
         {
             ExtKey xPrivKey = node.Mnemonic.DeriveExtKey(WalletPassphrase);
             Key privateKey = xPrivKey.PrivateKey;
-            ExtPubKey xPublicKey = HdOperations.GetExtendedPublicKey(privateKey, xPrivKey.ChainCode, KnownCoinTypes.Bitcoin, 0);
+            ExtPubKey xPublicKey = HdOperations.GetExtendedPublicKey(privateKey, xPrivKey.ChainCode, 44, KnownCoinTypes.Bitcoin, 0);
             return xPublicKey;
         }
 

@@ -1,0 +1,162 @@
+﻿@page "/coldstakingpool"
+
+@using Blockcore.Features.ColdStaking
+@using Blockcore.Features.Wallet.Interfaces
+@using Blockcore.Base.Deployments
+@using Blockcore.Consensus.ScriptInfo
+@using NBitcoin;
+@using Blockcore.Features.Wallet;
+@using Blockcore.Networks
+
+@inject IWalletManager WalletManager
+@inject NavigationManager NavigationManager
+@inject NodeDeployments NodeDeployments
+@inject Network Network
+
+@if (!NodeDeployments.GetFlags().ScriptFlags.HasFlag(ScriptVerify.CheckColdStakeVerify))
+{
+    <h2>Cold staking is not activated</h2>
+    return;
+}
+
+@if (!this.WalletManager.ContainsWallets)
+{
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>No wallets available</strong></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><strong>Cold Staking Pool</strong></h1>
+    </div>
+
+    var wallets = ReadWallets();
+
+    var totalConfirmedHot = wallets.Sum(w => w.Value?.AmountConfirmed ?? 0);
+    var totalUnconfirmedHot = wallets.Sum(w => w.Value?.AmountUnconfirmed ?? 0);
+
+    <div class="row mb-3">
+        <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Hot Balance</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center align-self-start">
+                                <h3 class="text-left">@Money.Satoshis(totalConfirmedHot) </h3>
+                                <p class="text-success ml-2 mb-0 font-weight-medium">@this.Network.CoinTicker.ToUpper()</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="text-left text-muted font-weight-normal">@Money.Satoshis(totalUnconfirmedHot) (unconfirmed)</h6>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="row ">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Balances</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive small">
+                        <table class="table table-border-bottom table-striped table-sm table-hover">
+                            <thead class="thead">
+                                <tr>
+                                    <th class="text-primary"><strong>WALLET</strong></th>
+                                    <th class="text-primary"><strong>HOT BALANCE</strong></th>
+                                    <th class="text-primary text-center"><strong>DETAILS</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var walletItem in wallets)
+                                {
+                                    var walletName = walletItem.Key;
+
+                                    var coldStakingWalletEnabled = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), true);
+                                    if (walletItem.Value != null)
+                                    {
+                                        <tr @onclick="() => { NavigateToColdStakePoolView(walletName); }">
+                                            @{
+                                                <td class="align-middle">
+                                                    <button class="btn btn-sm btn-secondary">@walletName</button>
+                                                </td>
+
+                                                @if (walletItem.Value != null)
+                                                {
+                                                    @if (walletItem.Value.AmountUnconfirmed > 0)
+                                                    {
+                                                        <td class="align-middle">@walletItem.Value.AmountConfirmed (@walletItem.Value.AmountUnconfirmed)</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="align-middle">@walletItem.Value.AmountConfirmed</td>
+                                                    }
+                                                }
+                                            }
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-secondary"><span class="oi oi-arrow-right" aria-hidden="true"></span></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code
+{
+    ColdStakingManager ColdStakingManager;
+    string Alert { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        ColdStakingManager = this.WalletManager as ColdStakingManager;
+
+        return Task.CompletedTask;
+    }
+    private Dictionary<string, Blockcore.Features.Wallet.Types.AccountBalance> ReadWallets()
+    {
+        var walletBalances = new Dictionary<string, Blockcore.Features.Wallet.Types.AccountBalance>();
+
+        foreach (var walletName in this.WalletManager.GetWalletsNames())
+        {
+            foreach (var account in this.WalletManager.GetAccounts(walletName))
+            {
+                Blockcore.Features.Wallet.Types.AccountBalance hot = null;
+
+                var hotStakingAccount = ColdStakingManager.GetColdStakingAccount(this.WalletManager.GetWallet(walletName), false);
+                if (hotStakingAccount != null)
+                {
+                    hot = ColdStakingManager.GetBalances(walletName, hotStakingAccount.Name).Single();
+                }
+
+                walletBalances.Add(walletName, hot);
+            }
+        }
+
+        return walletBalances;
+    }
+    private void NavigateToColdStakePoolView(string walletName)
+    {
+        NavigationManager.NavigateTo("coldstakepoolview/" + walletName + "/coldStakingHotAddresses");
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+        NavigateToColdStakePoolView(selection);
+    }
+
+}

@@ -1,0 +1,93 @@
+@using Blockcore.UI.BlazorModal
+@using Blockcore.Networks
+@inject ModalService ModalService
+@inject Network Network
+
+
+
+@if (ShowForm)
+{
+    var _TModel = ((Blockcore.Features.Wallet.Api.Models.SpendableTransactionModel)ModalService.Parameter);
+
+    <div class="row ">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Id</label>
+                        <div class="col-sm-10">
+                            <CopyToClipboard Text="@_TModel.Id.ToString()" />
+                        </div>
+                    </div>
+                    @*<div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Explorer</label>
+                        <div class="col-sm-10">
+                            <CopyToClipboard Text="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" />
+                        </div>
+                    </div>*@
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Address</label>
+                        <div class="col-sm-10">
+                            <CopyToClipboard Text="@_TModel.Address.ToString()" />
+                        </div>
+                    </div>
+                       <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">ScriptPubKey</label>
+                          <label class="col-sm-10">
+                            @_TModel.Script
+                        </label>
+                    </div>
+                    @*<div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Explorer</label>
+                        <div class="col-sm-10">
+                            <CopyToClipboard Text="@string.Format("https://explorer.blockcore.net/{0}/explorer/address/{1}", Network.CoinTicker.ToLower(),@_TModel.Address.ToString())" />
+                        </div>
+                    </div>*@
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Amount</label>
+                        <label class="col-sm-10">
+                            @_TModel.Amount
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Confirmations</label>
+                        <label class="col-sm-10 col-form-label">
+                            @_TModel.Confirmations
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Index</label>
+                        <label class="col-sm-10 col-form-label">
+                            @_TModel.Index
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Is Change</label>
+                        <label class="col-sm-10 col-form-label">
+                            @_TModel.IsChange
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Creation Time</label>
+                        <label class="col-sm-10 col-form-label">
+                            @_TModel.CreationTime
+                        </label>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="CloseModal">Close</button>
+                    @*<a href="@string.Format("https://explorer.blockcore.net/{0}/explorer/transaction/{1}", Network.CoinTicker.ToLower(),@_TModel.Id.ToString())" target="_blank" class="btn btn-primary" @onclick="CloseModal">Go to Explorer</a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code
+{
+    bool ShowForm { get; set; } = true;
+
+    private void CloseModal()
+    {
+        ModalService.Close();
+    }
+    }

@@ -49,12 +49,16 @@ namespace Blockcore.Networks.Molie
             public const string HashMerkleRoot = "0x9f9930c2112eb4fc90d4abfa4085708d2e913c8cd638335be715e48601292bed";
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
-            {
-                new DNSSeedData("seed1", "impleum.com"),
-                new DNSSeedData("seed2", "seed1.impleum.com"),
-                new DNSSeedData("seed3", "seed2.impleum.com"),
-                new DNSSeedData("seed4", "seed3.impleum.com"),
-                new DNSSeedData("seed5", "seed4.impleum.com")
+            {                   
+                new DNSSeedData("seed1", "mol.molie.net"),
+                new DNSSeedData("seed2", "mol1.molie.net"),
+                new DNSSeedData("seed3", "mol2.molie.net"),
+                new DNSSeedData("seed4", "mol3.molie.net"),
+                new DNSSeedData("seed5", "impleum.com"),
+                new DNSSeedData("seed6", "seed1.impleum.com"),
+                new DNSSeedData("seed7", "seed2.impleum.com"),
+                new DNSSeedData("seed8", "seed3.impleum.com"),
+                new DNSSeedData("seed9", "seed4.impleum.com")
             };
 
             public static List<NetworkAddress> Nodes = new List<NetworkAddress>
@@ -69,6 +73,18 @@ namespace Blockcore.Networks.Molie
                 { 10, new CheckpointInfo(new uint256("0x4d1c528735266dbf999d070b5a18f54e535f87084bbe92e8febaa5bb2db6c74b"), new uint256("0xd50af11c4d301bfec5a4b5d1f46e0a751aac640da1bbbc31ac0db1af5b585f44")) },
                 { 100, new CheckpointInfo(new uint256("0xd2fe88d6e4f56a4b55a27e3fc8e0257adc4497e5ec5ccaa64075b9ff007d3eff"), new uint256("0x2c783e2d5c82e4f42c7def4451e8236cf44ef7594fa37da3f7ca65ebb66911e2")) },
                 { 1000, new CheckpointInfo(new uint256("0x994bda728098cfa6b815d8cf5bd29aa3d0b1d6a4e421b9d7460b56c5e7ecb9a2"), new uint256("0x54676536898e94ec1fada28d45eb0b5ec4dfc9f7e6d8a4b999d3593ad53f5ab1")) },
+                { 2000, new CheckpointInfo(new uint256("0x291652a0e4712729ea82f60dee6b0127f25d2271cf0216b924f858e30a97e291"), new uint256("0x0eb067d54218fb3f488ed67d97ee82bdc7c4641718948761bbff7e83a1217603")) },
+                { 5000, new CheckpointInfo(new uint256("0xf1a228bc882042d190a674fe69b50f76da8649bfc6005b05bfcf3f12674ba724"), new uint256("0x90e53f8e32bfdfed191fbf4f3eb6b8ae0b9f797071a9cc457c9698ee7bd5d684")) },
+                { 10000, new CheckpointInfo(new uint256("0xe496c00c50b0176c6695ed303d4dcb44ed78ea16221fece64cc86054c0243630"), new uint256("0x38a01ba181957490efd395169f66a2fc62ac525ca584a0f54bd239abf6e0f931")) },
+                { 20000, new CheckpointInfo(new uint256("0x6db25eeb5034b2831635abe5e986f86f7dd41064c6840bd5e141c3d28c2c3396"), new uint256("0xb264ac835c1c5fee9bc4ef7712d01ca652cd0a966e363e574998b58d245ee9f8")) },
+                { 30000, new CheckpointInfo(new uint256("0x73c188629decfb81a4236d2f7c581a855aa9d7aa4b44533b7311a23f35a11ef7"), new uint256("0xd6ca6c00e58d47919d4b4c06711887664be3d1a753ca1af3e6a02486a525f4ce")) },
+                { 50000, new CheckpointInfo(new uint256("0xf55e286d695b6e28dc1cea55db23e2c8f4e282db4d58f3cef2a9963785d760eb"), new uint256("0xb7ca872b75e9ee41a6d1f848fd67847211d31b9b3bfefce1a829e21db30394e6")) },
+                { 100000, new CheckpointInfo(new uint256("0x4cba2e2b952ecf0f3671c17d4468800005db24d117315d1cff9cefbad5e85a79"), new uint256("0x34f0dfd00940e7724a4c89773775fc039e8d37155f29ea7cd1133e3e1eb4826a")) },
+                { 150000, new CheckpointInfo(new uint256("0x9da6c50706dccb8eddee2dbf8bfd401be6d991e4b65bd09bbfd8fcd9f3e14214"), new uint256("0xd110b60a280b829bd370fc5a9388345c835db61638507ba56304d9a5c59c922c")) },
+                { 200000, new CheckpointInfo(new uint256("0xfc9380c469d3f09aa0638ce6f6b2344322694c0958cbb7b36e80ee0e993b68d1"), new uint256("0x66156e9f4f09d69a3cee9bed6ddbdf0deac42251fa77b82c1dac558fef668275")) },
+                { 300000, new CheckpointInfo(new uint256("0x398986ca2d89f7c267253e5d814663b56962fdf94f87a26c1311ec15638d81bb"), new uint256("0x50e45783c89c58cdd7a33f4823cdc49aad266d3ac110ac68825b2eea0a833bea")) },
+                { 400000, new CheckpointInfo(new uint256("0x5811caef1f89a497f55135bbc244bdfc9f50c21ca9ff906f7762e81fb5eddeee"), new uint256("0x69daf3b1547b33a5b2b19ef28274054a31fcc879148c1cc4c29857e76bfb1966")) },
+                { 500000, new CheckpointInfo(new uint256("0x91132a91aa24a6c2bebf90c02acbfe58def98cbab1072e0d3aec6f6873c3d7a9"), new uint256("0x902ee692a6a9f92d9eb32632f8e58399c5a4cbb256864b346e39965ea80c4135")) }
             };
         }
 
@@ -144,10 +160,10 @@ namespace Blockcore.Networks.Molie
 
            public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                new DNSSeedData("seed1", "mn1.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed2", "mn2.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed3", "mn3.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed4", "mn4.uh420058.ukrdomen.com"),
+                new DNSSeedData("seed1", "mol.molie.net"),
+                new DNSSeedData("seed2", "mol1.molie.net"),
+                new DNSSeedData("seed3", "mol2.molie.net"),
+                new DNSSeedData("seed4", "mol3.molie.net"),
                 new DNSSeedData("seed5", "impleum.com"),
                 new DNSSeedData("seed6", "seed1.impleum.com"),
                 new DNSSeedData("seed7", "seed2.impleum.com"),

@@ -50,15 +50,11 @@ namespace Blockcore.Networks.Molie
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                new DNSSeedData("seed1", "mn1.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed2", "mn2.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed3", "mn3.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed4", "mn4.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed5", "impleum.com"),
-                new DNSSeedData("seed6", "seed1.impleum.com"),
-                new DNSSeedData("seed7", "seed2.impleum.com"),
-                new DNSSeedData("seed8", "seed3.impleum.com"),
-                new DNSSeedData("seed9", "seed4.impleum.com")
+                new DNSSeedData("seed1", "impleum.com"),
+                new DNSSeedData("seed2", "seed1.impleum.com"),
+                new DNSSeedData("seed3", "seed2.impleum.com"),
+                new DNSSeedData("seed4", "seed3.impleum.com"),
+                new DNSSeedData("seed5", "seed4.impleum.com")
             };
 
             public static List<NetworkAddress> Nodes = new List<NetworkAddress>
@@ -101,10 +97,10 @@ namespace Blockcore.Networks.Molie
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
-                new DNSSeedData("seed1", "mn1.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed2", "mn2.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed3", "mn3.uh420058.ukrdomen.com"),
-                new DNSSeedData("seed4", "mn4.uh420058.ukrdomen.com"),
+                new DNSSeedData("seed1", "mol.molie.net"),
+                new DNSSeedData("seed2", "mol1.molie.net"),
+                new DNSSeedData("seed3", "mol2.molie.net"),
+                new DNSSeedData("seed4", "mol3.molie.net"),
                 new DNSSeedData("seed5", "impleum.com"),
                 new DNSSeedData("seed6", "seed1.impleum.com"),
                 new DNSSeedData("seed7", "seed2.impleum.com"),

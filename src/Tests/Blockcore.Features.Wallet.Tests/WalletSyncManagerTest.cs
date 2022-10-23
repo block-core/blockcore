@@ -51,7 +51,7 @@ namespace Blockcore.Features.Wallet.Tests
             this.walletManager.Setup(w => w.ContainsWallets).Returns(true);
         }
 
-        [Fact(Skip = "Enables this whwn wallet can support prunning")]
+        [Fact(Skip = "Enables this when wallet can support pruning")]
         public void Start_HavingPrunedStoreSetting_ThrowsWalletException()
         {
             this.storeSettings.AmountOfBlocksToKeep = 1;

@@ -13,6 +13,8 @@ namespace NBitcoin
     /// </summary>
     public class ExtKey : IBitcoinSerializable, IDestination, ISecret
     {
+        public static bool UseBCForHMACSHA512 = false;
+
         /// <summary>
         /// Parses the Base58 data (checking the network if specified), checks it represents the
         /// correct type of item, and then returns the corresponding ExtKey.
@@ -167,6 +169,20 @@ namespace NBitcoin
 
         private void SetMaster(byte[] seed)
         {
+            if (UseBCForHMACSHA512)
+            {
+                var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new NBitcoin.BouncyCastle.Crypto.Digests.Sha512Digest());
+                mac.Init(new NBitcoin.BouncyCastle.Crypto.Parameters.KeyParameter(hashkey));
+                byte[] hashMACBC = new byte[mac.GetMacSize()];
+                byte[] hash = new byte[mac.GetMacSize()];
+                mac.BlockUpdate(seed, 0, seed.Length);
+                mac.DoFinal(hash, 0);
+                Array.Copy(hash, hashMACBC, hashMACBC.Length);
+                this.key = new Key(hashMACBC.SafeSubarray(0, 32));
+                Buffer.BlockCopy(hashMACBC, 32, this.vchChainCode, 0, ChainCodeLength);
+                return;
+            }
+
             byte[] hashMAC = Hashes.HMACSHA512(hashkey, seed);
             this.key = new Key(hashMAC.SafeSubarray(0, 32));
 

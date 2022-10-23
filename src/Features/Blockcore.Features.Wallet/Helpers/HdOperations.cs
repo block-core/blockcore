@@ -24,10 +24,26 @@ namespace Blockcore.Features.Wallet.Helpers
         {
             Guard.NotEmpty(accountExtPubKey, nameof(accountExtPubKey));
 
+            return GeneratePublicKey(ExtPubKey.Parse(accountExtPubKey), index, isChange);
+        }
+
+        /// <summary>
+        /// Generates an HD public key derived from an extended public key.
+        /// </summary>
+        /// <param name="accountExtPubKey">The extended public key used to generate child keys.</param>
+        /// <param name="index">The index of the child key to generate.</param>
+        /// <param name="isChange">A value indicating whether the public key to generate corresponds to a change address.</param>
+        /// <returns>
+        /// An HD public key derived from an extended public key.
+        /// </returns>
+        public static PubKey GeneratePublicKey(ExtPubKey accountExtPubKey, int index, bool isChange)
+        {
+            Guard.NotNull(accountExtPubKey, nameof(accountExtPubKey));
+
             int change = isChange ? 1 : 0;
             var keyPath = new KeyPath($"{change}/{index}");
             // TODO: Should probably explicitly be passing the network into Parse
-            ExtPubKey extPubKey = ExtPubKey.Parse(accountExtPubKey).Derive(keyPath);
+            ExtPubKey extPubKey = accountExtPubKey.Derive(keyPath);
             return extPubKey.PubKey;
         }
 

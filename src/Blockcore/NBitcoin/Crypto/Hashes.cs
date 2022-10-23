@@ -3,11 +3,14 @@ using System.IO;
 using System.Linq;
 using NBitcoin.BouncyCastle.Crypto.Digests;
 using System.Security.Cryptography;
+using NBitcoin.BouncyCastle.Crypto.Parameters;
 
 namespace NBitcoin.Crypto
 {
     public static class Hashes
     {
+        public static bool UseBCForHMACSHA512 = false;
+
         #region Hash256
 
         public static uint256 Hash256(byte[] data)
@@ -65,7 +68,7 @@ namespace NBitcoin.Crypto
 
         #region RIPEMD160
 
-        private static byte[] RIPEMD160(byte[] data)
+        public static byte[] RIPEMD160(byte[] data)
         {
             return RIPEMD160(data, 0, data.Length);
         }
@@ -380,6 +383,16 @@ namespace NBitcoin.Crypto
 
         public static byte[] HMACSHA512(byte[] key, byte[] data)
         {
+            if (UseBCForHMACSHA512)
+            {
+                var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new Sha512Digest());
+                mac.Init(new KeyParameter(key));
+                mac.BlockUpdate(data, 0, data.Length);
+                byte[] result = new byte[mac.GetMacSize()];
+                mac.DoFinal(result, 0);
+                return result;
+            }
+
             return new HMACSHA512(key).ComputeHash(data);
         }
 

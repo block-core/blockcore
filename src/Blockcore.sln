@@ -154,6 +154,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.SeniorBl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.RoyalSportsCity", "Networks\Blockcore.Networks.RoyalSportsCity\Blockcore.Networks.RoyalSportsCity.csproj", "{D176C98F-E2EF-49C6-B073-32F08889BD27}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Networks.Molie", "Networks\Blockcore.Networks.Molie\Blockcore.Networks.Molie.csproj", "{876BAE76-9A83-4757-9688-84E3692134FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -404,6 +406,10 @@ Global
 		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D176C98F-E2EF-49C6-B073-32F08889BD27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{876BAE76-9A83-4757-9688-84E3692134FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{876BAE76-9A83-4757-9688-84E3692134FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{876BAE76-9A83-4757-9688-84E3692134FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{876BAE76-9A83-4757-9688-84E3692134FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -472,6 +478,7 @@ Global
 		{2834DEF2-0CF7-4012-A73D-07F06256CC75} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{9C962CB5-A11B-47F1-A5D3-2AD2215CF100} = {3B56C02B-4468-4268-B797-851562789FCC}
 		{D176C98F-E2EF-49C6-B073-32F08889BD27} = {3B56C02B-4468-4268-B797-851562789FCC}
+		{876BAE76-9A83-4757-9688-84E3692134FE} = {3B56C02B-4468-4268-B797-851562789FCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C780ABA-5872-4B83-AD3F-A5BD423AD907}

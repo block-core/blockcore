@@ -51,6 +51,10 @@ namespace Blockcore.Node
                 case "IMPLX":
                     nodeSettings = new NodeSettings(networksSelector: Networks.Impleum.Networks.Impleum, args: args);
                     break;
+                
+                case "MOL":
+                    nodeSettings = new NodeSettings(networksSelector: Networks.Molie.Networks.Molie, args: args);
+                    break;   
 
                 case "X1":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.X1.Networks.X1, args: args);

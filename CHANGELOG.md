@@ -1,3 +1,18 @@
+##  (2022-10-24)
+
+* Add back the SBC and RSC launch settings ([5e529f3](https://github.com/block-core/blockcore/commit/5e529f3))
+* Adding BC flags for SHA512 hashes ([62f41df](https://github.com/block-core/blockcore/commit/62f41df))
+* Adding MOL blockchain (#423) ([91eaea8](https://github.com/block-core/blockcore/commit/91eaea8)), closes [#423](https://github.com/block-core/blockcore/issues/423)
+* Bump version and update change log ([d6f143a](https://github.com/block-core/blockcore/commit/d6f143a))
+* Enable blazor (#419) ([6829168](https://github.com/block-core/blockcore/commit/6829168)), closes [#419](https://github.com/block-core/blockcore/issues/419)
+* Ensure that configuration file for MOL is lower-case only ([d631c72](https://github.com/block-core/blockcore/commit/d631c72))
+* Ensure that folder name is lower-case for MOL ([7826a8d](https://github.com/block-core/blockcore/commit/7826a8d))
+* Ensure that impleumx test and regtest is lowercase ([f5fc937](https://github.com/block-core/blockcore/commit/f5fc937))
+* Remove empty solution folder ([4ab57b2](https://github.com/block-core/blockcore/commit/4ab57b2))
+* Remove the reload on change to reduce listeners handlers (OS resources) ([09be90a](https://github.com/block-core/blockcore/commit/09be90a))
+
+
+
 ##  (2022-09-29)
 
 * Add additional checkpoint for City Chain ([f928dab](https://github.com/block-core/blockcore/commit/f928dab))

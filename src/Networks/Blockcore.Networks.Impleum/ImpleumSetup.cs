@@ -99,7 +99,7 @@ namespace Blockcore.Networks.Impleum
         internal class Test
         {
             public const string Name = "ImpleumXTest";
-            public const string RootFolderName = "impleumxTest";
+            public const string RootFolderName = "impleumxtest";
             public const string CoinTicker = "TIMPLX";
             public const int DefaultPort = 28105;
             public const int DefaultRPCPort = 28104;
@@ -140,7 +140,7 @@ namespace Blockcore.Networks.Impleum
         internal class RegTest
         {
             public const string Name = "ImpleumXRegTest";
-            public const string RootFolderName = "impleumxRegTest";
+            public const string RootFolderName = "impleumxregtest";
             public const string CoinTicker = "TIMPLX";
             public const int DefaultPort = 38105;
             public const int DefaultRPCPort = 38104;

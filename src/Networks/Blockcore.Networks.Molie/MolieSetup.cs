@@ -10,7 +10,7 @@ namespace Blockcore.Networks.Molie
 {
     public class MolieSetup
     {
-        public const string ConfigFileName = "Molie.conf";
+        public const string ConfigFileName = "molie.conf";
 
         /// <summary>
         /// Molie cointype. For Molie it was 769

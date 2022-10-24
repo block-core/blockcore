@@ -29,7 +29,7 @@ namespace Blockcore.Networks.Molie
         internal class Main
         {
             public const string Name = "MolieMain";
-            public const string RootFolderName = "Molie";
+            public const string RootFolderName = "molie";
             public const string CoinTicker = "MOL";
             public const int DefaultPort = 22105;
             public const int DefaultRPCPort = 22104;
@@ -92,7 +92,7 @@ namespace Blockcore.Networks.Molie
         internal class Test
         {
             public const string Name = "MolieTest";
-            public const string RootFolderName = "MolieTest";
+            public const string RootFolderName = "molietest";
             public const string CoinTicker = "TMOL";
             public const int DefaultPort = 32105;
             public const int DefaultRPCPort = 32104;
@@ -139,7 +139,7 @@ namespace Blockcore.Networks.Molie
         internal class RegTest
         {
             public const string Name = "MolieRegTest";
-            public const string RootFolderName = "MolieRegTest";
+            public const string RootFolderName = "molieregtest";
             public const string CoinTicker = "TMOL";
             public const int DefaultPort = 42105;
             public const int DefaultRPCPort = 42104;

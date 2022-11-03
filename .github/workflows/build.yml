@@ -1,71 +1,47 @@
-name: Build
-
+name: SonarCloud
 on:
   push:
     branches:
       - master
-#  repository_dispatch:
-#    types: [build]
-  workflow_dispatch:
-
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
-
-  buildAndUnitTest:
-
-    strategy:
-      matrix:
-        os: [ windows-latest, ubuntu-latest, macos-latest ]
-      fail-fast: false
-
-    runs-on: ${{ matrix.os }}
-
-    env:
-      SOLUTION_PATH: 'src/Blockcore.sln'
-      BUILD_CONFIGURATION: 'Release'
-
+  build:
+    name: Build and analyze
+    runs-on: windows-latest
     steps:
-
-    - uses: actions/checkout@v2
-      name: Checkout
-
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: | 
-          6.0.x
-
-    - name: Setup Node.js (16.x)
-      uses: actions/setup-node@v1
-      with:
-        node-version: 18
-
-    - name: Variables
-      run: |
-        echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
-      shell: bash
-
-    - name: Unit Test
-      run: |
-        dotnet nuget locals all --clear
-        dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}
-
-    - name: Nuget Pack
-      run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Blockcore-${{env.VERSION}}-${{matrix.os}}-preview
-        path: "${{github.workspace}}/package/"
-
-    - name: Release
-      if: matrix.os == 'ubuntu-latest'
-      uses: sondreb/action-release@main
-      with:
-        commit: 'master'
-        token: ${{ secrets.GITHUB_TOKEN }}
-        folder: "${{github.workspace}}/package/"
-        draft: true
-        prerelease: false
-        body: ''
-        name: "Blockcore ${{env.VERSION}}"
-        tag: ${{env.VERSION}}
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"URIS-2022_Tim-8" /o:"uris-2022" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"

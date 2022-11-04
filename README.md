@@ -14,6 +14,8 @@
 | IT78/2019 *Sandra	Stojanov*	|
 | IT25/2019 *Aleksandra	Vrekić*	|
 
+[SonarCloud Project ->](https://sonarcloud.io/project/overview?id=URIS-2022_Tim-8)
+
 <hr/>
 
 <p align="center">

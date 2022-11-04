@@ -1,3 +1,20 @@
+# Upravljanje razvojem informacionih sistema 2022/23 IIS
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=URIS-2022_Tim-8&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=URIS-2022_Tim-8)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=URIS-2022_Tim-8&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=URIS-2022_Tim-8)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=URIS-2022_Tim-8&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=URIS-2022_Tim-8)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=URIS-2022_Tim-8&metric=bugs)](https://sonarcloud.io/summary/new_code?id=URIS-2022_Tim-8)
+
+| Grupa 8 - Dužnici |
+|:---|
+| IT06/2019 *Marko	Rakić*	|
+| IT37/2019 *Mladen	Krsmanović* |
+| IT40/2019 *Dejan	Petrov* |
+| IT68/2019 *Mladen	Draganović*	|
+| IT70/2019 *Andrea	Ilić*	| 
+| IT78/2019 *Sandra	Stojanov*	|
+| IT25/2019 *Aleksandra	Vrekić*	|
+
+<hr/>
 
 <p align="center">
   <p align="center">

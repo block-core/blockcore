@@ -621,26 +621,22 @@ namespace Blockcore.Consensus.ScriptInfo
             {
                 using (ScriptReader reader = CreateReader())
                 {
+
                     foreach (Op op in reader.ToEnumerable())
                     {
-                        if (op.IsInvalid)
-                            return false;
-                        if (op.Code > OpcodeType.OP_16)
-                            continue;
-                        if (op.Code < OpcodeType.OP_PUSHDATA1 && op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16))
-                            // Could have used an OP_n code, rather than a 1-byte push.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA1 && op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1)
-                            // Could have used a normal n-byte push, rather than OP_PUSHDATA1.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA2 && op.PushData.Length <= 0xFF)
-                            // Could have used an OP_PUSHDATA1.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA4 && op.PushData.Length <= 0xFFFF)
-                            // Could have used an OP_PUSHDATA2.
-                            return false;
+
+                        switch(op)
+                        { 
+                        case (op.IsInvalid): {return false;break;}
+                        case (op.Code > OpcodeType.OP_16): {continue;}
+                        case (op.Code < OpcodeType.OP_PUSHDATA1): {if(op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16)) return false;continue;}
+                        case (op.Code == OpcodeType.OP_PUSHDATA1) :{if(op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1) return false;continue;}
+                        case (op.Code == OpcodeType.OP_PUSHDATA2 ): {if(op.PushData.Length <= 0xFF) return false;continue;}
+                        case (op.Code == OpcodeType.OP_PUSHDATA4): {if( op.PushData.Length <= 0xFFFF) return false;continue;}
+                        default: {return true; break;}    
+                        }
                     }
-                    return true;
+                    
                 }
             }
         }
@@ -1318,24 +1314,31 @@ namespace Blockcore.Consensus.ScriptInfo
         private static Script CombineSignatures(Network network, Script scriptPubKey, TransactionChecker checker, byte[][] sigs1, byte[][] sigs2, HashVersion hashVersion)
         {
             ScriptTemplate template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
-
-            if (template is PayToWitPubKeyHashTemplate)
+            switch(template)
+           { 
+            case (template is PayToWitPubKeyHashTemplate):
             {
                 scriptPubKey = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(1, 20)).ScriptPubKey;
                 template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
+                continue;
             }
-            if (template == null || template is TxNullDataTemplate)
-                return PushAll(Max(sigs1, sigs2));
+            case (template == null || template is TxNullDataTemplate):
+            {
+                 return PushAll(Max(sigs1, sigs2));
+                 continue;
+            }
 
-            if (template is PayToPubkeyTemplate || template is PayToPubkeyHashTemplate)
+
+            case ((template is PayToPubkeyTemplate) || (template is PayToPubkeyHashTemplate)):
             {
                 if (sigs1.Length == 0 || sigs1[0].Length == 0)
                     return PushAll(sigs2);
                 else
                     return PushAll(sigs1);
+            continue;
             }
 
-            if (template is PayToScriptHashTemplate || template is PayToWitTemplate)
+            case (template is PayToScriptHashTemplate || template is PayToWitTemplate):
             {
                 if (sigs1.Length == 0 || sigs1[sigs1.Length - 1].Length == 0)
                     return PushAll(sigs2);
@@ -1352,12 +1355,15 @@ namespace Blockcore.Consensus.ScriptInfo
                 return result;
             }
 
-            if (template is PayToMultiSigTemplate)
+            case (template is PayToMultiSigTemplate):
             {
                 return CombineMultisig(network, scriptPubKey, checker, sigs1, sigs2, hashVersion);
+                continue;
             }
 
-            return null;
+            default: {return null;}
+            
+            }
         }
 
         private static Script CombineMultisig(Network network, Script scriptPubKey, TransactionChecker checker, byte[][] sigs1, byte[][] sigs2, HashVersion hashVersion)

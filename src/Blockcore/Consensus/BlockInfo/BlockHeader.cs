@@ -26,11 +26,11 @@ namespace Blockcore.Consensus.BlockInfo
 
         private uint256 hashPrevBlock;
 
-        public uint256 HashPrevBlock { get; set; }
+        public uint256 HashPrevBlock { get { return this.hashPrevBlock; } set { this.hashPrevBlock = value; } }
 
         private uint time;
 
-        public uint Time { get; set; }
+        public uint Time { get { return this.time; } set { this.time = value; } }
 
         private uint bits;
 

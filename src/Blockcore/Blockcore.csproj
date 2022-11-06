@@ -35,8 +35,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NStratis.HashLib" Version="1.0.0.1" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-    <PackageReference Include="System.Collections.Immutable.Net40" Version="1.0.30.17" />
   </ItemGroup>
 
   <ItemGroup>

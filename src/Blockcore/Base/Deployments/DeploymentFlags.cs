@@ -91,7 +91,7 @@ namespace Blockcore.Base.Deployments
             ChainedHeader bip34HeightChainedHeader = chainIndexer.GetHeader(chainparams.BuriedDeployments[BuriedDeployments.BIP34]);
 
             // Only continue to enforce if we're below BIP34 activation height or the block hash at that height doesn't correspond.
-            enforceBIP30 = enforceBIP30 && ((bip34HeightChainedHeader == null) || (bip34HeightChainedHeader.HashBlock != chainparams.BIP34Hash));
+            enforceBIP30 = enforceBIP30 && ((bip34HeightChainedHeader == null) || !(bip34HeightChainedHeader.HashBlock == chainparams.BIP34Hash));
 
             return enforceBIP30;
         }

@@ -24,7 +24,7 @@ namespace Blockcore.AsyncWork
         /// Execution context holding information about the current status of the execution
         /// in order to recognize if <see cref="Dispose"/> was called within the callback method.
         /// </summary>
-        sealed class AsyncContext
+        private class AsyncContext
         {
             /// <summary>
             /// Set to <c>true</c> if <see cref="Dispose"/> was called from within the callback routine,

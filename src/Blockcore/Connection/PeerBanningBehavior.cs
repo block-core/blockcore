@@ -53,7 +53,7 @@ namespace Blockcore.Connection
                     this.logger.LogDebug("Peer '{0}' was previously banned.", peer.RemoteSocketEndpoint);
                     peer.Disconnect("A banned node tried to connect.");
                     this.logger.LogTrace("(-)[PEER_BANNED]");
-                    
+                    return;
                 }
             }
         }

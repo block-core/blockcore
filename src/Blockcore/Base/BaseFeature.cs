@@ -94,7 +94,7 @@ namespace Blockcore.Base
         private readonly ITimeSyncBehaviorState timeSyncBehaviorState;
 
         /// <summary>Manager of node's network peers.</summary>
-        private readonly IPeerAddressManager peerAddressManager;
+        private IPeerAddressManager peerAddressManager;
 
         /// <summary>Periodic task to save list of peers to disk.</summary>
         private IAsyncLoop flushAddressManagerLoop;

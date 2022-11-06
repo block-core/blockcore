@@ -13,7 +13,7 @@ namespace Blockcore.AsyncWork
     /// </summary>
     /// <typeparam name="T">Type of the queued items used in the delegate.</typeparam>
     /// <seealso cref="System.IDisposable" />
-    public interface IAsyncDelegateDequeuer<in T> : IAsyncDelegate
+    public interface IAsyncDelegateDequeuer<T> : IAsyncDelegate
     {
         /// <summary>
         /// Add a new item to the queue and signal to the consumer task.

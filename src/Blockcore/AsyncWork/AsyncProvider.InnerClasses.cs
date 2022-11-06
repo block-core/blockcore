@@ -10,7 +10,7 @@ namespace Blockcore.AsyncWork
         /// </summary>
         private interface IAsyncTaskInfoSetter
         {
-            TaskStatus Status { set; }
+            TaskStatus Status { set; get; }
 
             Exception Exception { set; }
         }

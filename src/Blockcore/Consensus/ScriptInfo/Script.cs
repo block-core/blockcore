@@ -1080,6 +1080,11 @@ namespace Blockcore.Consensus.ScriptInfo
             return ToBytes(false);
         }
 
+        public byte[] ToRawScript(bool @unsafe)
+        {
+            return @unsafe ? this._Script : this._Script.ToArray();
+        }
+
         /// <summary>
         /// Get script byte array
         /// </summary>
@@ -1089,16 +1094,15 @@ namespace Blockcore.Consensus.ScriptInfo
             return ToBytes(false);
         }
 
+       
+
         /// <summary>
         /// Get script byte array
         /// </summary>
         /// <param name="unsafe">if false, returns a copy of the internal byte array</param>
         /// <returns></returns>
         [Obsolete("Use ToBytes instead")]
-        public byte[] ToRawScript(bool @unsafe)
-        {
-            return @unsafe ? this._Script : this._Script.ToArray();
-        }
+       
 
         /// <summary>
         /// Get script byte array

@@ -24,7 +24,7 @@ namespace Blockcore.Configuration.Settings
         private const bool DefaultBlocksOnly = false;
 
         /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
+       /// private readonly ILogger logger;
 
         /// <summary>List of end points that the node should try to connect to.</summary>
         /// <remarks>All access should be protected under <see cref="addNodeLock"/></remarks>
@@ -42,8 +42,8 @@ namespace Blockcore.Configuration.Settings
         public ConnectionManagerSettings(NodeSettings nodeSettings)
         {
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
-
-            this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConnectionManagerSettings).FullName);
+                ILogger logger;
+                logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConnectionManagerSettings).FullName);
 
             this.addNodeLock = new object();
 

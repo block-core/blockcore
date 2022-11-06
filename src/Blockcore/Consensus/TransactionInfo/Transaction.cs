@@ -916,11 +916,11 @@ namespace Blockcore.Consensus.TransactionInfo
         public WitScript(params Op[] ops)
         {
             var pushes = new List<byte[]>();
-            foreach (Op op in ops.Select(opp => opp.PushData))
+            foreach (Op op in ops)
             {
-                if (opp==null)
+                if (op.PushData == null)
                     throw new ArgumentException("Non push operation unsupported in WitScript", "ops");
-                pushes.Add(opp);
+                pushes.Add(op.PushData);
             }
 
             this._Pushes = pushes.ToArray();

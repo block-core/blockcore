@@ -206,7 +206,7 @@ namespace Blockcore.Base
             bool startWarningLoopNow = false;
             lock (this.lockObject)
             {
-                if (this.SwitchedOff==null)
+                if (!this.SwitchedOff)
                 {
                     HashSet<IPAddress> sources = isInboundConnection ? this.inboundSampleSources : this.outboundSampleSources;
                     bool alreadyIncluded = sources.Contains(peerAddress);
@@ -253,8 +253,6 @@ namespace Blockcore.Base
 
             return res;
         }
-
-
 
         /// <summary>
         /// Calculates a new value for <see cref="timeOffset"/> based on existing samples.

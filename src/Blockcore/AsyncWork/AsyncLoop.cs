@@ -135,7 +135,7 @@ namespace Blockcore.AsyncWork
                     this.logger.LogCritical(new EventId(0), this.UncaughtException, this.Name + " threw an unhandled exception");
 
                     // You can touch this one.
-                    this.logger.LogError("{0} threw an unhandled exception: {1}", this.Name, this.UncaughtException.ToString());
+                    this.logger.LogError("{logName} threw an unhandled exception: {logUncaughtException}", this.Name, this.UncaughtException.ToString());
                 }
             }, cancellation);
         }
@@ -145,6 +145,9 @@ namespace Blockcore.AsyncWork
         /// </summary>
         public void Dispose()
         {
+
+            GC.SuppressFinalize(this);
+
             if (!this.RunningTask.IsCanceled)
             {
                 try

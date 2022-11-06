@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace NBitcoin.BouncyCastle.Utilities
 {
-    internal abstract class Platform
+    internal abstract class Platform 
     {
         private static readonly CompareInfo InvariantCompareInfo = CultureInfo.InvariantCulture.CompareInfo;
 
@@ -85,7 +85,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         internal static readonly string NewLine = GetNewLine();
 
-        internal static void Dispose(IDisposable d)
+        internal static void DisposePlatform(IDisposable d)
         {
             d.Dispose();
         }

@@ -35,7 +35,7 @@ namespace Blockcore.AsyncWork
         private ILoggerFactory loggerFactory;
         private ILogger logger;
         private ISignals signals;
-        private readonly INodeLifetime nodeLifetime;
+
 
         private (string Name, int Width)[] benchmarkColumnsDefinition = new[]
         {
@@ -260,7 +260,7 @@ namespace Blockcore.AsyncWork
             }
 
             int running = taskInformations.Where(info => info.IsRunning).Count();
-            int faulted = taskInformations.Where(info => !info.IsRunning).Count();
+            int faulted = taskInformations.Count(info => !info.IsRunning);
 
             var sb = new StringBuilder();
             sb.AppendLine();
@@ -432,7 +432,7 @@ namespace Blockcore.AsyncWork
                 {
                     // When AsyncLoop fails with an uncaughtException, it handle it completing fine.
                     // I want instead to keep its failed status visible on console so I handle this scenario as faulted task.
-                    // TODO: discuss about this decision.
+
                     if (state is AsyncLoop asyncLoop && asyncLoop.UncaughtException != null)
                     {
                         // casted to IAsyncTaskInfoSetter to be able to set properties

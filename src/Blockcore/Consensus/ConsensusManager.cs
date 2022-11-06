@@ -28,6 +28,7 @@ namespace Blockcore.Consensus
     /// <inheritdoc cref="IConsensusManager"/>
     public class ConsensusManager : IConsensusManager
     {
+      
         /// <summary>
         /// Maximum memory in bytes that can be taken by the blocks that were downloaded but
         /// not yet validated or included to the consensus chain.
@@ -1321,45 +1322,9 @@ namespace Blockcore.Consensus
                 int freeSlots = MaxBlocksToAskFromPuller - awaitingBlocksCount;
                 this.logger.LogDebug("{0} slots are available.", freeSlots);
 
-                if (freeSlots < ConsumptionThresholdSlots)
-                {
-                    this.logger.LogTrace("(-)[NOT_ENOUGH_SLOTS]");
-                    return;
-                }
-
-                if (this.chainedHeaderTree.UnconsumedBlocksCount > MaxUnconsumedBlocksCount)
-                {
-                    this.logger.LogTrace("(-)[MAX_UNCONSUMED_BLOCKS_REACHED]");
-                    return;
-                }
-
-                long freeBytes = this.maxUnconsumedBlocksDataBytes - this.chainedHeaderTree.UnconsumedBlocksDataBytes - this.expectedBlockDataBytes;
-                this.logger.LogDebug("{0} bytes worth of blocks is available for download.", freeBytes);
-
-                if (freeBytes <= this.ConsumptionThresholdBytes)
-                {
-                    this.logger.LogTrace("(-)[THRESHOLD_NOT_MET]");
-                    return;
-                }
-
-                // To fix issue https://github.com/stratisproject/StratisBitcoinFullNode/issues/2294#issue-364513736
-                // if there are no samples, assume the worst scenario (you are going to donwload full blocks).
-                long avgSize = (long)this.blockPuller.GetAverageBlockSizeBytes();
-                if (avgSize == 0)
-                {
-                    avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
-                }
-
-                int maxBlocksToAsk = Math.Min((int)(freeBytes / avgSize), freeSlots);
-
-                this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", avgSize, maxBlocksToAsk);
-
-                if (maxBlocksToAsk <= 0)
-                {
-                    this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
-                    return;
-                }
-
+           if  (!this.ValidateConditions())
+                return; 
+                
                 BlockDownloadRequest request = this.toDownloadQueue.Peek();
 
                 if (request.BlocksToDownload.Count <= maxBlocksToAsk)
@@ -1390,6 +1355,53 @@ namespace Blockcore.Consensus
 
                 this.logger.LogDebug("Expected block data bytes was set to {0} and we are expecting {1} blocks to be delivered.", this.expectedBlockDataBytes, this.expectedBlockSizes.Count);
             }
+        }
+
+        private bool ValidateConditions()
+        {
+
+            if (freeSlots < ConsumptionThresholdSlots)
+            {
+                    this.logger.LogTrace("(-)[NOT_ENOUGH_SLOTS]");
+                    return false;
+            }
+
+            if (this.chainedHeaderTree.UnconsumedBlocksCount > MaxUnconsumedBlocksCount)
+            {
+                    this.logger.LogTrace("(-)[MAX_UNCONSUMED_BLOCKS_REACHED]");
+                    return false;
+            }
+
+            long freeBytes = this.maxUnconsumedBlocksDataBytes - this.chainedHeaderTree.UnconsumedBlocksDataBytes - this.expectedBlockDataBytes;
+                this.logger.LogDebug("{0} bytes worth of blocks is available for download.", freeBytes);
+
+                if (freeBytes <= this.ConsumptionThresholdBytes)
+                {
+                    this.logger.LogTrace("(-)[THRESHOLD_NOT_MET]");
+                    return false;
+                }
+
+                // To fix issue https://github.com/stratisproject/StratisBitcoinFullNode/issues/2294#issue-364513736
+                // if there are no samples, assume the worst scenario (you are going to donwload full blocks).
+                long avgSize = (long)this.blockPuller.GetAverageBlockSizeBytes();
+                if (avgSize == 0)
+                {
+                    avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
+                }
+
+                int maxBlocksToAsk = Math.Min((int)(freeBytes / avgSize), freeSlots);
+
+                this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", avgSize, maxBlocksToAsk);
+
+                if (maxBlocksToAsk <= 0)
+                {
+                    this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
+                    return false;
+                }
+
+
+            return true;
+
         }
 
         /// <summary>

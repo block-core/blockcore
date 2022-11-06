@@ -626,6 +626,7 @@ namespace Blockcore.Consensus.TransactionInfo
         /// <summary>
         /// This field should be mandatory in the constructor.
         /// </summary>
+        /// 
         public Network Network
         {
             get;
@@ -941,7 +942,6 @@ namespace Blockcore.Consensus.TransactionInfo
 
             return this;
         }
-
         private Money GetDust()
         {
             return GetDust(new Script(new byte[25]));
@@ -1340,12 +1340,13 @@ namespace Blockcore.Consensus.TransactionInfo
         public ICoin FindSignableCoin(IndexedTxIn txIn)
         {
             ICoin coin = FindCoin(txIn.PrevOut);
+            coin=coin as IColoredCoin;
 
             if (coin is IColoredCoin)
-                coin = ((IColoredCoin)coin).Bearer;
+                coin = coin.Bearer;
 
             if (coin == null || coin is ScriptCoin)
-                return coin; 
+                return coin;
 
             TxDestination hash = ScriptCoin.GetRedeemHash(this.Network, coin.TxOut.ScriptPubKey);
             if (hash != null)

@@ -42,7 +42,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         private uint nonce;
 
-        public uint Nonce { get { return this.nonce; } set { this.nonce = value; } }
+        public uint Nonce { get; set; }
 
         private uint256 hashMerkleRoot;
 

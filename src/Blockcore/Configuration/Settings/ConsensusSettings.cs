@@ -12,7 +12,7 @@ namespace Blockcore.Configuration.Settings
     public class ConsensusSettings
     {
         /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
+       // private readonly ILogger logger;
 
         /// <summary>Whether use of checkpoints is enabled or not.</summary>
         public bool UseCheckpoints { get; set; }
@@ -48,18 +48,19 @@ namespace Blockcore.Configuration.Settings
         /// <param name="nodeSettings">The node configuration.</param>
         public ConsensusSettings(NodeSettings nodeSettings)
         {
+            ILogger logger;
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
 
-            this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConsensusSettings).FullName);
+            logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConsensusSettings).FullName);
 
             TextFileConfiguration config = nodeSettings.ConfigReader;
 
-            this.UseCheckpoints = config.GetOrDefault<bool>("checkpoints", true, this.logger);
-            this.BlockAssumedValid = config.GetOrDefault<uint256>("assumevalid", nodeSettings.Network.Consensus.DefaultAssumeValid, this.logger);
-            this.MaxTipAge = config.GetOrDefault("maxtipage", nodeSettings.Network.MaxTipAge, this.logger);
-            this.MaxBlockMemoryInMB = config.GetOrDefault("maxblkmem", 200, this.logger);
-            this.MaxCoindbCacheInMB = config.GetOrDefault("dbcache", 200, this.logger);
-            this.CoindbIbdFlushMin = config.GetOrDefault("dbflush", 10, this.logger);
+            this.UseCheckpoints = config.GetOrDefault<bool>("checkpoints", true, logger);
+            this.BlockAssumedValid = config.GetOrDefault<uint256>("assumevalid", nodeSettings.Network.Consensus.DefaultAssumeValid, logger);
+            this.MaxTipAge = config.GetOrDefault("maxtipage", nodeSettings.Network.MaxTipAge, logger);
+            this.MaxBlockMemoryInMB = config.GetOrDefault("maxblkmem", 200, logger);
+            this.MaxCoindbCacheInMB = config.GetOrDefault("dbcache", 200, logger);
+            this.CoindbIbdFlushMin = config.GetOrDefault("dbflush", 10, logger);
         }
 
         /// <summary>Prints the help information on how to configure the Consensus settings to the logger.</summary>

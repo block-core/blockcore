@@ -11,7 +11,7 @@ namespace Blockcore.Utilities
         /// Reset a timer from the start.
         /// </summary>
         /// <param name="timer">The timer to reset.</param>
-        public static void Reset(this Timer timer)
+        public static void Reset(this System.Timers.Timer timer)
         {
             timer.Stop();
             timer.Start();

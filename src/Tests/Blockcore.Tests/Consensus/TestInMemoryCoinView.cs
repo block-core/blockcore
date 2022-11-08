@@ -14,7 +14,7 @@ namespace Blockcore.Tests.Consensus
     public class TestInMemoryCoinView : ICoinView
     {
         /// <summary>Lock object to protect access to <see cref="unspents"/> and <see cref="tipHash"/>.</summary>
-        private readonly ReaderWriterLock lockobj = new ReaderWriterLock();
+        private readonly Blockcore.Utilities.ReaderWriterLock lockobj = new Blockcore.Utilities.ReaderWriterLock();
 
         /// <summary>Information about unspent outputs mapped by transaction IDs the outputs belong to.</summary>
         /// <remarks>All access to this object has to be protected by <see cref="lockobj"/>.</remarks>

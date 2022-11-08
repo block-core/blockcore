@@ -11,7 +11,7 @@ namespace NBitcoin
         private ITransactionRepository _Inner;
         private Dictionary<uint256, Transaction> _Transactions = new Dictionary<uint256, Transaction>();
         private Queue<uint256> _EvictionQueue = new Queue<uint256>();
-        private ReaderWriterLock @lock = new ReaderWriterLock();
+        private Blockcore.Utilities.ReaderWriterLock @lock = new Blockcore.Utilities.ReaderWriterLock();
 
         public CachedTransactionRepository(ITransactionRepository inner)
         {

@@ -275,7 +275,7 @@ namespace Blockcore.Consensus.TransactionInfo
 
         private class KnownSignatureSigner : ISigner, IKeyRepository
         {
-            private ICoin coin;
+            private readonly ICoin coin;
             private SigHash sigHash;
             private IndexedTxIn txIn;
             private List<Tuple<PubKey, ECDSASignature>> _KnownSignatures;

@@ -27,7 +27,7 @@ namespace Blockcore
         private ILogger logger;
 
         /// <summary>Factory for creating loggers.</summary>
-        private ILoggerFactory loggerFactory;
+        private ILoggerFactory loggerFactory; // kada izbrisem,pojavi se greska
 
         /// <summary>Component responsible for starting and stopping all the node's features.</summary>
         private FullNodeFeatureExecutor fullNodeFeatureExecutor;

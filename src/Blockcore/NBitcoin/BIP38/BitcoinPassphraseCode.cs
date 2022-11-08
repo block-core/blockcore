@@ -132,7 +132,9 @@ namespace NBitcoin
             var item = obj as LotSequence;
             return item != null && this.Id.Equals(item.Id);
         }
-        public static bool operator ==(LotSequence a, LotSequence b)
+        
+        /*
+        public static bool operator  ==(LotSequence a, LotSequence b)
         {
             if(ReferenceEquals(a, b))
                 return true;
@@ -140,11 +142,14 @@ namespace NBitcoin
                 return false;
             return a.Id == b.Id;
         }
+        */
+        /*
 
         public static bool operator !=(LotSequence a, LotSequence b)
         {
             return !(a == b);
         }
+        */
 
         public override int GetHashCode()
         {

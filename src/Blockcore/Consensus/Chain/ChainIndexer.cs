@@ -124,7 +124,8 @@ namespace Blockcore.Consensus.Chain
             ChainedHeader block = this.GetHeader(blockHash);
 
             if (block == null)
-                return new ChainedHeader[0];
+                return new ChainedHeader[0]; 
+                
 
             return this.EnumerateAfter(block);
         }

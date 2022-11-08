@@ -103,7 +103,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
                                 {
                                     this.logger.LogDebug("Sending for transaction data from peer '{0}'.", peer.RemoteSocketEndpoint);
                                     var filterPayload = new FeeFilterPayload() { NewFeeFilter = filterToSend };
-                                    await peer.SendMessageAsync(filterPayload).ConfigureAwait(false);
+                                    await peer.SendMessageAsync(filterPayload,System.Threading.CancellationToken.None).ConfigureAwait(false);
                                     this.lastSendFilter = filterToSend;
                                 }
                             }

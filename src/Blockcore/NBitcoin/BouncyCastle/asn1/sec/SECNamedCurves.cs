@@ -1109,14 +1109,14 @@ namespace NBitcoin.BouncyCastle.Asn1.Sec
         /*
          * sect571r1
          */
-        internal class Sect571r1Holder
+        internal class Sect571R1Holder
             : X9ECParametersHolder
         {
-            private Sect571r1Holder()
+            private Sect571R1Holder()
             {
             }
 
-            internal static readonly X9ECParametersHolder Instance = new Sect571r1Holder();
+            internal static readonly X9ECParametersHolder Instance = new Sect571R1Holder();
 
             private const int m = 571;
             private const int k1 = 2;
@@ -1190,7 +1190,7 @@ namespace NBitcoin.BouncyCastle.Asn1.Sec
             DefineCurve("sect409k1", SecObjectIdentifiers.SecT409k1, Sect409k1Holder.Instance);
             DefineCurve("sect409r1", SecObjectIdentifiers.SecT409r1, Sect409r1Holder.Instance);
             DefineCurve("sect571k1", SecObjectIdentifiers.SecT571k1, Sect571k1Holder.Instance);
-            DefineCurve("sect571r1", SecObjectIdentifiers.SecT571r1, Sect571r1Holder.Instance);
+            DefineCurve("sect571r1", SecObjectIdentifiers.SecT571r1, Sect571R1Holder.Instance);
         }
 
         public static X9ECParameters GetByName(

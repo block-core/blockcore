@@ -329,7 +329,7 @@ namespace Blockcore.Connection
             if (addNodeBuilder.Length > 0)
             {
                 builder.AppendLine(">>> AddNode:");
-                builder.Append(addNodeBuilder.ToString());
+                builder.Append(addNodeBuilder);
                 builder.AppendLine("<<<");
             }
 

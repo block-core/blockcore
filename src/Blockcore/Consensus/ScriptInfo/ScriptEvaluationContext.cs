@@ -168,7 +168,7 @@ namespace Blockcore.Consensus.ScriptInfo
     {
         public Network Network { get; }
 
-        private class CScriptNum
+        private sealed class CScriptNum
         {
             private const long nMaxNumSize = 4;
             /**
@@ -230,7 +230,7 @@ namespace Blockcore.Consensus.ScriptInfo
 
             public override bool Equals(object obj)
             {
-                if (obj == null || !(obj is CScriptNum))
+                if (!(obj is CScriptNum))
                     return false;
                 var item = (CScriptNum)obj;
                 return this.m_value == item.m_value;

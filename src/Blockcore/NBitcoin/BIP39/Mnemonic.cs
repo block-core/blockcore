@@ -185,7 +185,7 @@ namespace NBitcoin
 
 
     }
-    public enum WordCount : int
+    public enum WordCount
     {
         Twelve = 12,
         Fifteen = 15,

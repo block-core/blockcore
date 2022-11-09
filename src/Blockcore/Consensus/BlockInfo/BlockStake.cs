@@ -469,11 +469,8 @@ namespace Blockcore.Consensus.BlockInfo
         /// <summary>
         /// The block signature type.
         /// </summary>
-        public BlockSignature BlockSignature
-        {
-            get { return this.blockSignature; }
-            set { this.blockSignature = value; }
-        }
+        public BlockSignature BlockSignature { get; set; }
+        
 
         /// <summary>
         /// The additional serialization of the block POS block.

@@ -107,7 +107,7 @@ namespace NBitcoin
             this._Network = network;
         }
 
-        private string _Str;
+        private readonly string _Str;
 
         private Script _ScriptPubKey;
 

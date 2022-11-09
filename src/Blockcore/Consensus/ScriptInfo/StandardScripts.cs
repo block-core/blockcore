@@ -4,12 +4,14 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using NBitcoin.BitcoinCore;
 using NBitcoin.Policy;
+using System.Collections.Immutable;
+using System.Collections.Immutable.IImmutableList<T>;
 
 namespace Blockcore.Consensus.ScriptInfo
 {
     public static class StandardScripts
     {
-        public static readonly List<ScriptTemplate> StandardTemplates = new List<ScriptTemplate>
+        public static readonly ImmutableList<ScriptTemplate> StandardTemplates = new ImmutableList<ScriptTemplate>
         {
             PayToPubkeyHashTemplate.Instance,
             PayToPubkeyTemplate.Instance,

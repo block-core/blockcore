@@ -301,10 +301,10 @@ namespace NBitcoin
 
         public void ReadWrite(ref ulong data)
         {
-            ulong l = (ulong)data;
+            ulong l = data;
             ReadWriteNumber(ref l, sizeof(ulong));
             if(!this.Serializing)
-                data = (ulong)l;
+                data = l;
         }
 
         public ulong ReadWrite(ulong data)

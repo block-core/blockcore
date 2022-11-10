@@ -353,7 +353,7 @@ namespace Blockcore.Base.Deployments
         /// Throws an 'Assertion failed' exception if the passed argument is <c>false</c>.
         /// </summary>
         /// <param name="v">The passed argument which, if false, raises a 'Assertion Failed' exception.</param>
-        private void Assert(bool v)
+        private static void Assert(bool v)
         {
             if (!v)
                 throw new Exception("Assertion failed");

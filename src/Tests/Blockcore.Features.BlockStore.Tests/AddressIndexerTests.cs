@@ -66,6 +66,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             this.addressIndexer.Initialize();
             this.addressIndexer.Dispose();
+            //Assert.IsTrue(result);
         }
 
         [Fact]

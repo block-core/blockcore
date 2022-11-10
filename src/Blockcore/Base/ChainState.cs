@@ -25,7 +25,6 @@ namespace Blockcore.Base
         bool IsAtBestChainTip { get; set; }
 
         /// <summary>Maximal length of reorganization that the node is willing to accept, or 0 to disable long reorganization protection.</summary>
-        /// <remarks>TODO: This should be removed once consensus options are part of network.</remarks>
         uint MaxReorgLength { get; set; }
     }
 
@@ -34,7 +33,7 @@ namespace Blockcore.Base
     /// The data are provided by different components and the chaine state is a mechanism that allows
     /// these components to share that data without creating extra dependencies.
     /// </summary>
-    /// TODO this class should be removed since consensus and block store are moved or about to be moved to base feature
+    
     public class ChainState : IChainState
     {
         /// <inheritdoc />

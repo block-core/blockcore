@@ -742,7 +742,7 @@ namespace Blockcore.Consensus.Chain
         /// </summary>
         /// <param name="n">Number to invert lowest bit.</param>
         /// <returns>New number.</returns>
-        private int InvertLowestOne(int n)
+        private static int InvertLowestOne(int n)
         {
             return n & (n - 1);
         }

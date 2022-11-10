@@ -187,7 +187,7 @@ namespace Blockcore.Features.Dns
             }
 
             // Create async loop for outputting metrics.
-            this.metricsLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.LogMetrics), async (token) => await Task.Run(() => this.LogMetrics()), this.nodeLifetime.ApplicationStopping, repeatEvery: TimeSpan.FromSeconds(MetricsLogRate));
+            this.metricsLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.LogMetrics), async (token) => await Task.Run(() => this.LogMetrics(), System.Threading.CancellationToken.None), this.nodeLifetime.ApplicationStopping, repeatEvery: TimeSpan.FromSeconds(MetricsLogRate));
 
             // Create async loop for saving the master file.
             this.StartSaveMasterfileLoop();

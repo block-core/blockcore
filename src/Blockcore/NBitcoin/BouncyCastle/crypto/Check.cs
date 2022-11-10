@@ -1,6 +1,6 @@
 ﻿namespace NBitcoin.BouncyCastle.Crypto
 {
-    internal class Check
+    internal static class Check
     {
         internal static void DataLength(bool condition, string msg)
         {
@@ -10,7 +10,7 @@
 
         internal static void DataLength(byte[] buf, int off, int len, string msg)
         {
-            if(off + len > buf.Length)
+            if (off + len > buf.Length)
                 throw new DataLengthException(msg);
         }
 

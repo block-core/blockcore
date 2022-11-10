@@ -170,7 +170,7 @@ namespace Blockcore.Features.MemoryPool
         public static MempoolError BadTxnsSpendsConflictingTx = new MempoolError(RejectInvalid, "bad-txns-spends-conflicting-tx");
 
         /// <summary>'too-many-potential-replacements' error returns a <see cref="RejectNonstandard"/> reject code.</summary>
-        public static MempoolError TooManyPotentialReplacements = new MempoolError(RejectNonstandard, "too-many-potential-replacements");
+        public static readonly MempoolError TooManyPotentialReplacements = new MempoolError(RejectNonstandard, "too-many-potential-replacements");
 
         /// <summary>'replacement-adds-unconfirmed' error returns a <see cref="RejectNonstandard"/> reject code.</summary>
         public static MempoolError ReplacementAddsUnconfirmed = new MempoolError(RejectNonstandard, "replacement-adds-unconfirmed");

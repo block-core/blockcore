@@ -46,7 +46,7 @@ namespace Blockcore.P2P
         private readonly ILogger logger;
 
         /// <summary>Logger factory to create loggers.</summary>
-        private readonly ILoggerFactory loggerFactory;
+        //private readonly ILoggerFactory loggerFactory;
 
         /// <summary>Global application life cycle control - triggers when application shuts down.</summary>
         private readonly INodeLifetime nodeLifetime;
@@ -67,16 +67,18 @@ namespace Blockcore.P2P
 
         public PeerDiscovery(
             IAsyncProvider asyncProvider,
-            ILoggerFactory loggerFactory,
+            ILoggerFactory loggerFactory1,
             Network network,
             INetworkPeerFactory networkPeerFactory,
             INodeLifetime nodeLifetime,
             NodeSettings nodeSettings,
             IPeerAddressManager peerAddressManager)
         {
+             ILoggerFactory loggerFactory;
+
             this.asyncProvider = asyncProvider;
-            this.loggerFactory = loggerFactory;
-            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
+            loggerFactory = loggerFactory1;
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.peerAddressManager = peerAddressManager;
             this.network = network;
             this.networkPeerFactory = networkPeerFactory;

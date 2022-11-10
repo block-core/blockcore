@@ -243,7 +243,7 @@ namespace Blockcore.Base
 
                         res = true;
                     }
-                    else this.logger.LogDebug("Sample from peer '{0}' is already included.", peerAddress);
+                    else this.logger.LogDebug("Sample from peer '{peerAddress}' is already included.", peerAddress);
                 }
                 else this.logger.LogDebug("Time sync feature is switched off.");
             }

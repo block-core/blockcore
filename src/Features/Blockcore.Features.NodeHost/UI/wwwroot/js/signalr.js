@@ -308,7 +308,7 @@ function flush() {
 
 function attemptVertx() {
   try {
-    var r = require;
+    
     var vertx = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module 'vertx'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
     vertxNext = vertx.runOnLoop || vertx.runOnContext;
     return useVertxTimer();

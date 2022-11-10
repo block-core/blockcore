@@ -98,7 +98,7 @@ namespace Blockcore.Builder.Feature
                 configureServicesDelegate(serviceCollection);
 
             if (this.FeatureStartupType != null)
-                this.FeatureStartup(serviceCollection, this.FeatureStartupType);
+                FeatureRegistration<TImplementation>.FeatureStartup(serviceCollection, this.FeatureStartupType);
         }
 
         /// <inheritdoc />

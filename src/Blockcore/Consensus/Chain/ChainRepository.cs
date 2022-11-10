@@ -24,7 +24,7 @@ namespace Blockcore.Consensus.Chain
         private readonly IChainStore chainStore;
 
         /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
+        private readonly ILogger logger; // kada obršem izbacuje mi grešku
 
         private BlockLocator locator;
 

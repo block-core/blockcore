@@ -1469,8 +1469,8 @@ namespace Blockcore.Consensus.TransactionInfo
             return this.IsCoinBase;
         }
 
-        public static uint CURRENT_VERSION = 2;
-        public static uint MAX_STANDARD_TX_SIZE = 100000;
+        public const uint CURRENT_VERSION = 2;
+        public const uint MAX_STANDARD_TX_SIZE = 100000;
 
         public TxOut AddOutput(Money money, IDestination destination)
         {

@@ -41,10 +41,10 @@ namespace Blockcore.EventBus
         }
 
         /// <inheritdoc />
-        public SubscriptionToken Subscribe<TEvent>(Action<TEvent> handler) where TEvent : EventBase
+        public SubscriptionToken Subscribe<TEvent>(Action<TEvent> action) where TEvent : EventBase
         {
-            if (handler == null)
-                throw new ArgumentNullException(nameof(handler));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
 
             lock (this.subscriptionsLock)
             {
@@ -54,7 +54,7 @@ namespace Blockcore.EventBus
                 }
 
                 var subscriptionToken = new SubscriptionToken(this, typeof(TEvent));
-                this.subscriptions[typeof(TEvent)].Add(new Subscription<TEvent>(handler, subscriptionToken));
+                this.subscriptions[typeof(TEvent)].Add(new Subscription<TEvent>(action, subscriptionToken));
 
                 return subscriptionToken;
             }

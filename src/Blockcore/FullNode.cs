@@ -133,11 +133,13 @@ namespace Blockcore
                     {
                         return new Version(versionString);
                     }
-                    catch (ArgumentException)
+                    catch (ArgumentException e)
                     {
+                        Console.WriteLine("{0}: {1}", e.GetType().Name, e.Message);
                     }
-                    catch (OverflowException)
+                    catch (OverflowException o)
                     {
+                        Console.WriteLine("{0}: {1}", o.GetType().Name, o.Message);
                     }
                 }
 

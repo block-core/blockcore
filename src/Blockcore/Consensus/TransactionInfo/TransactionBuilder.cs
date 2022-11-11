@@ -795,7 +795,7 @@ namespace Blockcore.Consensus.TransactionInfo
         private SendBuilder _LastSendBuilder;
         private SendBuilder _SubstractFeeBuilder;
 
-        private class SendBuilder
+        private sealed class SendBuilder
         {
             internal TxOut _TxOut;
 

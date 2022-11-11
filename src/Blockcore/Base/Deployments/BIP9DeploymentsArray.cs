@@ -23,7 +23,7 @@ namespace Blockcore.Base.Deployments
     /// <summary>
     /// Interface for recording deployment parameters and returning deployment flags.
     /// </summary>
-    public interface IBIP9DeploymentsArray
+    public interface IBip9DeploymentsArray
     {
         /// <summary>The number of elements/deployments in the array.</summary>
         int Length { get; }
@@ -46,7 +46,7 @@ namespace Blockcore.Base.Deployments
     /// <summary>
     /// Used for recording deployment parameters and returning deployment flags.
     /// </summary>
-    public abstract class BIP9DeploymentsArray : IBIP9DeploymentsArray
+    public abstract class BIP9DeploymentsArray : IBip9DeploymentsArray
     {
         protected readonly BIP9DeploymentsParameters[] parameters;
 

@@ -20,9 +20,7 @@ namespace Blockcore.Connection
     {
         /// <summary>Logger factory to create loggers.</summary>
         private readonly ILoggerFactory loggerFactory;
-
-        /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
+        
 
         /// <summary>
         /// Instance logger that we use for logging of INFO level messages that are visible on the console.

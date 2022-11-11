@@ -10,7 +10,7 @@ namespace Blockcore.P2P.Protocol.Payloads
     [Flags]
     public enum NetworkPeerServices : ulong
     {
-        Nothing = 0,
+        None = 0,
 
         /// <summary>
         /// NODE_NETWORK means that the node is capable of serving the block chain. It is currently

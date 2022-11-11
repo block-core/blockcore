@@ -102,7 +102,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
         {
             var t = new byte[((this.n.BitLength + 7) / 8)];
 
-            for(;;)
+            while()
             {
                 int tOff = 0;
 

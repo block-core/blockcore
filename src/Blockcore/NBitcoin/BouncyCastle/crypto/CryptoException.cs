@@ -2,7 +2,7 @@ using System;
 
 namespace NBitcoin.BouncyCastle.Crypto
 {
-    internal class CryptoException
+    public class CryptoException
         : Exception
     {
         public CryptoException()

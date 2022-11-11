@@ -21,7 +21,7 @@
         /// Create a new instance of the GenericEventBase class.
         /// </summary>
         /// <param name="content">Content of the event</param>
-        public GenericEventBase(TContent content)
+        protected GenericEventBase(TContent content)
         {
             this.Content = content;
         }

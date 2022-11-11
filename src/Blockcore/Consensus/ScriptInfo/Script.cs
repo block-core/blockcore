@@ -929,7 +929,6 @@ namespace Blockcore.Consensus.ScriptInfo
             // TODO: Is the network needed?
             if (!this.IsScriptType(ScriptType.P2SH))
                 return GetSigOpCount(true);
-            // This is a pay-to-script-hash scriptPubKey;
             // get the last item that the scriptSig
             // pushes onto the stack:
             bool validSig = new PayToScriptHashTemplate().CheckScriptSig(network, scriptSig, this);

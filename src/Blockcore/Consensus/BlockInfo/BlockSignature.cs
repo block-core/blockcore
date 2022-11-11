@@ -29,7 +29,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public BlockSignature()
         {
-            this.signature = new byte[0];
+            this.signature = new Array.Empty<byte>();
         }
 
         private byte[] signature;

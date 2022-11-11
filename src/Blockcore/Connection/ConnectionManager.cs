@@ -82,8 +82,6 @@ namespace Blockcore.Connection
         /// <summary>Maintains a list of connected peers and ensures their proper disposal.</summary>
         private readonly NetworkPeerDisposer networkPeerDisposer;
 
-        private readonly IVersionProvider versionProvider;
-
         private readonly IAsyncProvider asyncProvider;
 
         private IConsensusManager consensusManager;
@@ -336,7 +334,7 @@ namespace Blockcore.Connection
             if (oneTryBuilder.Length > 0)
             {
                 builder.AppendLine(">>> OneTry:");
-                builder.Append(oneTryBuilder.ToString());
+                builder.Append(oneTryBuilder);
                 builder.AppendLine("<<<");
             }
 

@@ -224,7 +224,7 @@ namespace Blockcore.Features.Dns
         /// Disposes of the object.
         /// </summary>
         /// <param name="disposing"><c>true</c> if the object is being disposed of deterministically, otherwise <c>false</c>.</param>
-        protected virtual void Dispose(bool disposing)
+        protected virtual void Grind(bool disposing)
         {
             if (!this.disposed)
             {

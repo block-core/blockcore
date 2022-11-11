@@ -955,7 +955,7 @@ namespace Blockcore.Consensus.Chain
                 {
                     // Sanity check. That should never happen.
                     this.logger.LogTrace("(-)[OLD_TIP_NULL]");
-                    throw new Exception("Old tip is null!");
+                    throw new ArgumentNullException("Old tip is null!");
                 }
 
                 this.RemovePeerClaim(networkPeerId, oldTip);

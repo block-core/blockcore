@@ -406,7 +406,7 @@ namespace Blockcore.Features.Consensus
         /// </summary>
         /// <param name="input"><see cref="BigInteger"/> input value.</param>
         /// <returns><see cref="uint256"/> version of <paramref name="input"/>.</returns>
-        private uint256 ToUInt256(BigInteger input)
+        private static uint256 ToUInt256(BigInteger input)
         {
             byte[] array = input.ToByteArray();
 

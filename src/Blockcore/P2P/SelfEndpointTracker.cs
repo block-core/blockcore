@@ -57,7 +57,7 @@ namespace Blockcore.P2P
         }
 
         /// <inheritdoc/>
-        public void UpdateAndAssignMyExternalAddress(IPEndPoint ipEndPoint, bool suppliedEndPointIsFinal, int ipEndPointScore = 0)
+        public void UpdateAndAssignMyExternalAddress(IPEndPoint ipEndPoint, bool suppliedEndPointIsFinal, int ipEndPointPeerScore = 0)
         {
             lock (this.lockObject)
             {

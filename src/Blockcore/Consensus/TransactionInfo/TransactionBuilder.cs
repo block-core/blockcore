@@ -1073,8 +1073,6 @@ namespace Blockcore.Consensus.TransactionInfo
         {
             if (fees == null)
                 throw new ArgumentNullException("fees");
-
-            BuilderGroup lastGroup = this.CurrentGroup; //Make sure at least one group exists
             decimal totalWeight = this._BuilderGroups.Select(b => b.FeeWeight).Sum();
             Money totalSent = Money.Zero;
             foreach (BuilderGroup group in this._BuilderGroups)

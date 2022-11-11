@@ -227,7 +227,7 @@ namespace Blockcore.Base
                         {
                             // If we reached the maximum number of samples, we need to remove oldest sample.
                             sources.Remove(oldSample.Source);
-                            this.logger.LogDebug("Oldest sample {0} from peer '{1}' removed.", oldSample.TimeOffset, oldSample.Source);
+                            this.logger.LogDebug("Oldest sample {oldSample.TimeOffset} from peer '{oldSample.Source}' removed.", oldSample.TimeOffset, oldSample.Source);
                         }
 
                         this.RecalculateTimeOffsetLocked();

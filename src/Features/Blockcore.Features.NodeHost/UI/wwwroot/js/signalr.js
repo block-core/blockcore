@@ -404,8 +404,8 @@ var PROMISE_ID = Math.random().toString(36).substring(16);
 function noop() {}
 
 var PENDING = void 0;
-var FULFILLED = 1;
-var REJECTED = 2;
+let FULFILLED = 1;
+let REJECTED = 2;
 
 var GET_THEN_ERROR = new ErrorObject();
 

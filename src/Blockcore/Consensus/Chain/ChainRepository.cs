@@ -19,7 +19,7 @@ namespace Blockcore.Consensus.Chain
         Task SaveAsync(ChainIndexer chainIndexer);
     }
 
-    public class ChainRepository : IChainRepository
+    public sealed class ChainRepository : IChainRepository
     {
         private readonly IChainStore chainStore;
 
@@ -28,7 +28,7 @@ namespace Blockcore.Consensus.Chain
 
         private BlockLocator locator;
 
-        private object lockObj;
+        private readonly object lockObj;
 
         public Network Network { get; }
 

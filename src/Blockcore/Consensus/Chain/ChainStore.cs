@@ -82,7 +82,7 @@ namespace Blockcore.Consensus.Chain
         {
             if (!this.chainData.TryGetValue(height, out ChainData data))
             {
-                throw new ApplicationException("ChainData must exist if requested");
+                throw new ArgumentNullException("ChainData must exist if requested");
             }
 
             return data;

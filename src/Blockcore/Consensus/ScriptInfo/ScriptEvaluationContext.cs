@@ -721,7 +721,7 @@ namespace Blockcore.Consensus.ScriptInfo
                             return SetError(ScriptError.DisabledOpCode);
                         }
 
-                        bool fExec = vfExec.All(o => o); //!count(vfExec.begin(), vfExec.end(), false);
+                        bool fExec = vfExec.All(o => o); 
                         if (fExec && opcode.IsInvalid)
                             return SetError(ScriptError.BadOpCode);
 
@@ -733,8 +733,8 @@ namespace Blockcore.Consensus.ScriptInfo
                             this._stack.Push(opcode.PushData);
                         }
 
-                        //if(fExec && opcode.PushData != null)
-                        //	_Stack.Push(opcode.PushData);
+                        
+                        
                         else if (fExec || (OpcodeType.OP_IF <= opcode.Code && opcode.Code <= OpcodeType.OP_ENDIF))
                         {
                             switch (opcode.Code)

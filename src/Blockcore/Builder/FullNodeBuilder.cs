@@ -17,7 +17,8 @@ namespace Blockcore.Builder
     /// Exception thrown by FullNodeBuilder.Build.
     /// </summary>
     /// <seealso cref="FullNodeBuilder.Build"/>
-    public class NodeBuilderException : Exception
+    [Serializable]
+    public sealed class NodeBuilderException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the class with a specified error message.
@@ -252,7 +253,7 @@ namespace Blockcore.Builder
                     this.NodeSettings.Logger.LogCritical("Feature {0} cannot be configured because it depends on other features that were not registered",
                         featureRegistration.FeatureType.Name);
 
-                    throw e;
+                    throw;
                 }
 
                 featureRegistration.BuildFeature(this.Services);

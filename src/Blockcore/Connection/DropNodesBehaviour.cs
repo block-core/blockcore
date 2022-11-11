@@ -59,9 +59,8 @@ namespace Blockcore.Connection
                 // Find how much 20% max nodes.
                 decimal thresholdCount = Math.Round(peerConnector.MaxOutboundConnections * this.dropThreshold, MidpointRounding.ToEven);
 
-                if (thresholdCount < this.connection.ConnectedPeers.Count())
+                if ((thresholdCount < this.connection.ConnectedPeers.Count()) && (version.StartHeight < this.chainIndexer.Height))
                 {
-                    if (version.StartHeight < this.chainIndexer.Height)
                         peer.Disconnect($"Node at height = {version.StartHeight} too far behind current height");
                 }
             }

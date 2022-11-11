@@ -33,8 +33,8 @@ namespace Blockcore.Base
         /// <summary>User defined consensus settings.</summary>
         private readonly ConsensusSettings consensusSettings;
 
-        private int lastCheckpointHeight;
-        private uint256 minimumChainWork;
+        private readonly int lastCheckpointHeight;
+        private readonly uint256 minimumChainWork;
 
         public InitialBlockDownloadState(IChainState chainState, Network network, ConsensusSettings consensusSettings, ICheckpoints checkpoints, ILoggerFactory loggerFactory, IDateTimeProvider dateTimeProvider)
         {

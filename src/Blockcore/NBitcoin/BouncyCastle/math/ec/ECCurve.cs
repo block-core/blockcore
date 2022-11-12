@@ -406,13 +406,14 @@ namespace NBitcoin.BouncyCastle.Math.EC
          */
         public virtual ECMultiplier GetMultiplier()
         {
-            lock(this)
+            ECCurve eCCurve = this;
+            lock (eCCurve)
             {
-                if(this.m_multiplier == null)
+                if(eCCurve.m_multiplier == null)
                 {
-                    this.m_multiplier = CreateDefaultMultiplier();
+                    eCCurve.m_multiplier = eCCurve.CreateDefaultMultiplier();
                 }
-                return this.m_multiplier;
+                return eCCurve.m_multiplier;
             }
         }
 
@@ -1104,7 +1105,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public override ECFieldElement FromBigInteger(BigInteger x)
         {
-            return new F2mFieldElement(this.m, this.k1, this.k2, this.k3, x);
+            return new F2MFieldElement(this.m, this.k1, this.k2, this.k3, x);
         }
 
         protected internal override ECPoint CreateRawPoint(ECFieldElement x, ECFieldElement y, bool withCompression)

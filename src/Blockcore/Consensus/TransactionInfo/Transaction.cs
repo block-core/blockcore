@@ -371,7 +371,7 @@ namespace Blockcore.Consensus.TransactionInfo
             return n;
         }
 
-        private TxOut _TxOut = new TxOut();
+        private readonly TxOut _TxOut = new TxOut();
 
         public TxOut TxOut
         {

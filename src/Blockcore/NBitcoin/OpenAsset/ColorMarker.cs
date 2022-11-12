@@ -41,9 +41,8 @@ namespace NBitcoin.OpenAsset
                 return false;
             foreach (Op op in script.ToOps())
             {
-                if (op.PushData != null && !op.IsInvalid)
+                if (op.PushData != null && !op.IsInvalid && ReadData(op.PushData))
                 {
-                    if (ReadData(op.PushData))
                         return true;
                 }
             }

@@ -254,7 +254,7 @@ namespace Blockcore.Consensus.TransactionInfo
 
         internal class TransactionBuilderKeyRepository : IKeyRepository
         {
-            private TransactionSigningContext _Ctx;
+            private readonly TransactionSigningContext _Ctx;
             private TransactionBuilder _TxBuilder;
 
             public TransactionBuilderKeyRepository(TransactionBuilder txBuilder, TransactionSigningContext ctx)
@@ -1007,7 +1007,7 @@ namespace Blockcore.Consensus.TransactionInfo
                 ColorMarker marker = ctx.GetColorMarker(true);
                 if (ctx.IssuanceCoin == null)
                 {
-                    IssuanceCoin issuance = ctx.Group.Coins.Values.OfType<IssuanceCoin>().Where(i => i.AssetId == asset.Id).FirstOrDefault();
+                    IssuanceCoin issuance = ctx.Group.Coins.Values.OfType<IssuanceCoin>().FirstOrDefault(i => i.AssetId == asset.Id);
                     if (issuance == null)
                         throw new InvalidOperationException("No issuance coin for emitting asset found");
                     ctx.IssuanceCoin = issuance;

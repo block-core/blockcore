@@ -135,7 +135,7 @@ namespace NBitcoin.Crypto
 
                 while (size-- != 0)
                 {
-                    t |= ((ulong)((data[offset++]))) << (int)(8 * (c % 8));
+                    t |= ((ulong)(data[offset++])) << (int)(8 * (c % 8));
                     c++;
                     if ((c & 7) == 0)
                     {

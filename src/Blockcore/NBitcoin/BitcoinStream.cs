@@ -21,7 +21,7 @@ namespace NBitcoin
 
     public class Scope : IDisposable
     {
-        private Action close;
+        private readonly Action close;
 
         public Scope(Action open, Action close)
         {

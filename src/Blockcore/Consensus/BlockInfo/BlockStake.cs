@@ -23,7 +23,13 @@ namespace Blockcore.Consensus.BlockInfo
 
     public class BlockStake : IBitcoinSerializable
     {
-        public int Mint;
+        private int Mint;
+
+        public int MintMethod
+        {
+            get { return Mint; }
+	        set { Mint = value ; }
+        }
 
         public OutPoint PrevoutStake;
 

@@ -80,7 +80,7 @@ namespace Blockcore.Base
     /// the one in Bitcoin.
     /// </para>
     /// </remarks>
-    public class TimeSyncBehaviorState : ITimeSyncBehaviorState
+    public sealed class TimeSyncBehaviorState : ITimeSyncBehaviorState
     {
         /// <summary>
         /// Description of a single timestamp offset sample from a peer.
@@ -276,7 +276,7 @@ namespace Blockcore.Base
         {
             if (this.outboundTimestampOffsets.Count >= MinOutboundSampleCount)
             {
-                this.logger.LogDebug("We have {0} outbound samples and {1} inbound samples.", this.outboundTimestampOffsets.Count, this.inboundSampleSources.Count);
+                this.logger.LogDebug("We have {this.outboundTimestampOffsets.Count} outbound samples and {this.inboundSampleSources.Count} inbound samples.", this.outboundTimestampOffsets.Count, this.inboundSampleSources.Count);
                 List<double> inboundOffsets = this.inboundTimestampOffsets.Select(s => s.TimeOffset.TotalSeconds).ToList();
                 List<double> outboundOffsets = this.outboundTimestampOffsets.Select(s => s.TimeOffset.TotalSeconds).ToList();
 

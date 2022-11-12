@@ -26,7 +26,7 @@ namespace Blockcore.Consensus
         public override T TryCreateNew<T>()
         {
             if (this.IsBlock<T>() || this.IsBlockHeader<T>() || this.IsTransaction<T>())
-                throw new Exception(string.Format("{0} cannot be created by this consensus factory, please use the appropriate one.", typeof(T).Name));
+                throw new InvalidOperationException(string.Format("{0} cannot be created by this consensus factory, please use the appropriate one.", typeof(T).Name));
 
             // Manually add a POS type Proven header
             if (typeof(ProvenBlockHeader).GetTypeInfo().IsAssignableFrom(typeof(T).GetTypeInfo()))

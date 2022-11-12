@@ -371,9 +371,9 @@ namespace NBitcoin
                 throw new InvalidOperationException("The derived chain code of the parent is not equal to this child chain code");
 
             byte[] keyBytes = this.PrivateKey.ToBytes();
-            var key = new BigInteger(1, keyBytes);
+            var _key = new BigInteger(1, keyBytes);
 
-            BigInteger kPar = key.Add(parse256LL.Negate()).Mod(N);
+            BigInteger kPar = _key.Add(parse256LL.Negate()).Mod(N);
             byte[] keyParentBytes = kPar.ToByteArrayUnsigned();
             if(keyParentBytes.Length < 32)
                 keyParentBytes = new byte[32 - keyParentBytes.Length].Concat(keyParentBytes).ToArray();

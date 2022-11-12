@@ -3671,6 +3671,7 @@ var HttpConnection = /** @class */ (function () {
                     case 7:
                         _a.sent();
                         _a.label = 8;
+                        break;
                     case 8:
                         if (negotiateResponse.url && redirects < MAX_REDIRECTS) return [3 /*break*/, 6];
                         _a.label = 9;
@@ -3682,6 +3683,7 @@ var HttpConnection = /** @class */ (function () {
                     case 10:
                         _a.sent();
                         _a.label = 11;
+                        break;
                     case 11:
                         if (this.transport instanceof _LongPollingTransport__WEBPACK_IMPORTED_MODULE_3__["LongPollingTransport"]) {
                             this.features.inherentKeepAlive = true;

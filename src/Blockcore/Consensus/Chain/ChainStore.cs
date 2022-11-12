@@ -19,7 +19,8 @@ namespace Blockcore.Consensus.Chain
 
     public class ChainData : IBitcoinSerializable
     {
-        public uint256 Hash;
+        private uint256 Hash;
+        public uint256 Hash { get; set; };
         public byte[] Work;
 
         public ChainData()

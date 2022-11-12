@@ -53,18 +53,18 @@ namespace Blockcore.EventBus
                     this.subscriptions.Add(typeof(TEvent), new List<ISubscription>());
                 }
 
-                var subscriptionToken = new SubscriptionToken(this, typeof(TEvent));
-                this.subscriptions[typeof(TEvent)].Add(new Subscription<TEvent>(handler, subscriptionToken));
+                var token = new SubscriptionToken(this, typeof(TEvent));
+                this.subscriptions[typeof(TEvent)].Add(new Subscription<TEvent>(handler, token));
 
-                return subscriptionToken;
+                return token;
             }
         }
 
         /// <inheritdoc />
-        public void Unsubscribe(SubscriptionToken subscriptionToken)
+        public void Unsubscribe(SubscriptionToken token)
         {
             // Ignore null token
-            if (subscriptionToken == null)
+            if (token == null)
             {
                 this.logger.LogDebug("Unsubscribe called with a null token, ignored.");
                 return;
@@ -72,13 +72,13 @@ namespace Blockcore.EventBus
 
             lock (this.subscriptionsLock)
             {
-                if (this.subscriptions.ContainsKey(subscriptionToken.EventType))
+                if (this.subscriptions.ContainsKey(token.EventType))
                 {
-                    var allSubscriptions = this.subscriptions[subscriptionToken.EventType];
+                    var allSubscriptions = this.subscriptions[token.EventType];
 
-                    var subscriptionToRemove = allSubscriptions.FirstOrDefault(sub => sub.SubscriptionToken.Token == subscriptionToken.Token);
+                    var subscriptionToRemove = allSubscriptions.FirstOrDefault(sub => sub.SubscriptionToken.Token == token.Token);
                     if (subscriptionToRemove != null)
-                        this.subscriptions[subscriptionToken.EventType].Remove(subscriptionToRemove);
+                        this.subscriptions[token.EventType].Remove(subscriptionToRemove);
                 }
             }
         }

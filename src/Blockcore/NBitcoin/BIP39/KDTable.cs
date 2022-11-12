@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NBitcoin
 {
-    internal class KDTable
+    internal static class KDTable
     {
         public static string NormalizeKD(string str)
         {

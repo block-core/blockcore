@@ -8,37 +8,15 @@ namespace NBitcoin.BitcoinCore
 {
     public class Coins : IBitcoinSerializable
     {
-        private bool fCoinStake;
-        private uint nTime;
         private uint nHeight;
         private uint nVersion;
 
         // Determines whether transaction is a coinbase.
         public bool CoinBase { get; set; }
 
-        public bool CoinStake
-        {
-            get
-            {
-                return this.fCoinStake;
-            }
-            set
-            {
-                this.fCoinStake = value;
-            }
-        }
+        public bool CoinStake { get; set; }
 
-        public uint Time
-        {
-            get
-            {
-                return this.nTime;
-            }
-            set
-            {
-                this.nTime = value;
-            }
-        }
+        public uint Time { get; set; }
 
         // Specifies at which height this transaction was included in the active block chain
         public uint Height

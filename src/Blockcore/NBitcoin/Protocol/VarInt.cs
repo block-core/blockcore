@@ -148,9 +148,9 @@ namespace NBitcoin.Protocol
             }
             else if (prefix == 0xFE)
             {
-                var value = (uint)0;
-                bs.ReadWrite(ref value);
-                return value;
+                var _value = (uint)0;
+                bs.ReadWrite(ref _value);
+                return _value;
             }
             else
             {

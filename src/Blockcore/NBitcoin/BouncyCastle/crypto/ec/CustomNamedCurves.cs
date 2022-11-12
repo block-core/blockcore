@@ -9,7 +9,7 @@ namespace NBitcoin.BouncyCastle.Crypto.EC
 {
     internal sealed class CustomNamedCurves
     {
-        private CustomNamedCurves()
+        public CustomNamedCurves()
         {
         }
 

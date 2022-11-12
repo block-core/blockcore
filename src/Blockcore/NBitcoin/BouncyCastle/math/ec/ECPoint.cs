@@ -497,7 +497,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
     internal abstract class ECPointBase
         : ECPoint
     {
-        protected internal ECPointBase(
+        private protected ECPointBase(
             ECCurve curve,
             ECFieldElement x,
             ECFieldElement y,
@@ -506,7 +506,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
         }
 
-        protected internal ECPointBase(ECCurve curve, ECFieldElement x, ECFieldElement y, ECFieldElement[] zs, bool withCompression)
+        private protected ECPointBase(ECCurve curve, ECFieldElement x, ECFieldElement y, ECFieldElement[] zs, bool withCompression)
             : base(curve, x, y, zs, withCompression)
         {
         }

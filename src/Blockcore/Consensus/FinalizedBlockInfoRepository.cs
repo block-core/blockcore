@@ -102,8 +102,9 @@ namespace Blockcore.Consensus
                 {
                     await this.queueUpdatedEvent.WaitAsync(this.cancellation.Token).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException excp)
                 {
+                    this.logger.LogError("Error was thrown: {message}", excp.Message);
                 }
 
                 this.queueUpdatedEvent.Reset();

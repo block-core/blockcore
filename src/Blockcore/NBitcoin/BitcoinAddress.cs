@@ -157,15 +157,6 @@ namespace NBitcoin
             return this._Str.Equals(item._Str);
         }
 
-        public static bool operator ==(BitcoinAddress a, BitcoinAddress b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-            if (((object)a == null) || ((object)b == null))
-                return false;
-            return a._Str == b._Str;
-        }
-
         public static bool operator !=(BitcoinAddress a, BitcoinAddress b)
         {
             return !(a == b);

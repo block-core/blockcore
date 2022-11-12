@@ -397,6 +397,11 @@ namespace Blockcore.Consensus.ScriptInfo
         {
         }
 
+        public Script(byte[] data)
+            : this((IEnumerable<byte>)data)
+        {
+        }
+
         public Script(params Op[] ops)
             : this((IEnumerable<Op>)ops)
         {
@@ -444,11 +449,6 @@ namespace Blockcore.Consensus.ScriptInfo
         public static Script FromHex(string hex)
         {
             return FromBytesUnsafe(Encoders.Hex.DecodeData(hex));
-        }
-
-        public Script(byte[] data)
-            : this((IEnumerable<byte>)data)
-        {
         }
 
         private Script(byte[] data, bool @unsafe, bool unused)
@@ -726,13 +726,12 @@ namespace Blockcore.Consensus.ScriptInfo
             SigHash hashType = nHashType & (SigHash)31;
 
             // Check for invalid use of SIGHASH_SINGLE.
-            if (hashType == SigHash.Single)
+            if (hashType == SigHash.Single && nIn >= txTo.Outputs.Count)
             {
-                if (nIn >= txTo.Outputs.Count)
-                {
+               
                     Utils.log("ERROR: SignatureHash() : nOut=" + nIn + " out of range\n");
                     return uint256.One;
-                }
+                
             }
 
             var scriptCopy = new Script(scriptCode._Script);

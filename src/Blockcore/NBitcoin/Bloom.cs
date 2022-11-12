@@ -142,14 +142,6 @@ namespace NBitcoin
             return Encoders.Hex.EncodeData(this.data);
         }
 
-        public static bool operator ==(Bloom obj1, Bloom obj2)
-        {
-            if (object.ReferenceEquals(obj1, null))
-                return object.ReferenceEquals(obj2, null);
-
-            return Enumerable.SequenceEqual(obj1.data, obj2.data);
-        }
-
         public static bool operator !=(Bloom obj1, Bloom obj2)
         {
             return !(obj1 == obj2);
@@ -205,7 +197,7 @@ namespace NBitcoin
                     if (j >= (maxSize - 1))
                         return b;
 
-                    c[j++] = (byte)zeros;
+                    c[j++] = zeros;
                     c[j++] = b[i];
                     zeros = 0;
                 }

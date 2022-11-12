@@ -276,12 +276,12 @@ namespace NBitcoin.BouncyCastle.Crypto
         public override byte[] DoFinal(
             byte[] input,
             int inOff,
-            int inLen)
+            int length)
         {
             if(input == null)
                 throw new ArgumentNullException("input");
 
-            int length = GetOutputSize(inLen);
+            int length = GetOutputSize(length);
 
             byte[] outBytes = EmptyBuffer;
 
@@ -289,8 +289,8 @@ namespace NBitcoin.BouncyCastle.Crypto
             {
                 outBytes = new byte[length];
 
-                int pos = (inLen > 0)
-                    ? ProcessBytes(input, inOff, inLen, outBytes, 0)
+                int pos = (length > 0)
+                    ? ProcessBytes(input, inOff, length, outBytes, 0)
                     : 0;
 
                 pos += DoFinal(outBytes, pos);

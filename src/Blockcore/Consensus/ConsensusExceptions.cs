@@ -3,6 +3,7 @@ using System.Net;
 
 namespace Blockcore.Consensus
 {
+    [Serializable]
     public class ConsensusException : Exception
     {
         protected ConsensusException() : base()
@@ -62,6 +63,11 @@ namespace Blockcore.Consensus
     public class BlockDownloadedForMissingChainedHeaderException : ConsensusException
     {
         public BlockDownloadedForMissingChainedHeaderException() : base()
+        {
+        }
+
+        protected BlockDownloadedForMissingChainedHeaderException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
         {
         }
     }

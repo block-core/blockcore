@@ -7,10 +7,7 @@
             get;
         }
 
-        //BigInteger[] GetCoefficients();
-
         int[] GetExponentsPresent();
 
-        //Term[] GetNonZeroTerms();
     }
 }

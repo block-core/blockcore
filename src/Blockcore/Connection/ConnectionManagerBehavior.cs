@@ -21,7 +21,6 @@ namespace Blockcore.Connection
         /// <summary>Logger factory to create loggers.</summary>
         private readonly ILoggerFactory loggerFactory;
         
-
         /// <summary>
         /// Instance logger that we use for logging of INFO level messages that are visible on the console.
         /// <para>Unlike <see cref="logger"/>, this one is created without prefix for the nicer console output.</para>
@@ -36,7 +35,6 @@ namespace Blockcore.Connection
 
         public ConnectionManagerBehavior(IConnectionManager connectionManager, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.infoLogger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
 

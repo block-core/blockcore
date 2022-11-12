@@ -564,17 +564,8 @@ namespace Blockcore.Consensus.TransactionInfo
     {
         private Script publicKey = Script.Empty;
 
-        public Script ScriptPubKey
-        {
-            get
-            {
-                return this.publicKey;
-            }
-            set
-            {
-                this.publicKey = value;
-            }
-        }
+        public Script ScriptPubKey { get; set; }
+        
 
         public bool IsEmpty => (this.Value == 0 && this.ScriptPubKey.Length == 0);
 
@@ -1130,7 +1121,7 @@ namespace Blockcore.Consensus.TransactionInfo
 
     internal class Witness
     {
-        private TxInList _Inputs;
+        private readonly TxInList _Inputs;
 
         public Witness(TxInList inputs)
         {

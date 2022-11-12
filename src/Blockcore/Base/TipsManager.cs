@@ -186,7 +186,7 @@ namespace Blockcore.Base
         }
 
         /// <summary>Finds common fork between multiple chains.</summary>
-        private ChainedHeader FindCommonFork(List<ChainedHeader> tips)
+        private static ChainedHeader FindCommonFork(List<ChainedHeader> tips)
         {
             ChainedHeader fork = null;
 

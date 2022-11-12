@@ -4,11 +4,13 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
     {
         private X9ECParameters parameters;
 
+        private readonly object lockObj = new object();
+
         public X9ECParameters Parameters
         {
             get
             {
-                lock(this)
+                lock(lockObj)
                 {
                     if(this.parameters == null)
                     {

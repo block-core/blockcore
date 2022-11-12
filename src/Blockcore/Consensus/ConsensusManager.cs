@@ -26,7 +26,7 @@ using NBitcoin;
 namespace Blockcore.Consensus
 {
     /// <inheritdoc cref="IConsensusManager"/>
-    public class ConsensusManager : IConsensusManager
+    public class ConsensusManager : IConsensusManager, IDisposable
     {
         /// <summary>
         /// Maximum memory in bytes that can be taken by the blocks that were downloaded but
@@ -811,7 +811,7 @@ namespace Blockcore.Consensus
 
                 this.logger.LogDebug("New tip = {0}-{1} : time  = {2} ml : size = {3} mb : trx count = {4}",
                     blockToConnect.ChainedHeader.Height, blockToConnect.ChainedHeader.HashBlock,
-                    dsb.Watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.Block.Transactions.Count());
+                    dsb.Watch.ElapsedMilliseconds, blockToConnect.Block.BlockSize.Value.BytesToMegaBytes(), blockToConnect.Block.Transactions.Count);
             }
 
             // After successfully connecting all blocks set the tree tip and claim the branch.
@@ -1482,7 +1482,17 @@ namespace Blockcore.Consensus
         /// <inheritdoc />
         public void Dispose()
         {
-            this.reorgLock.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.reorgLock.Dispose();
+            }
         }
     }
 }

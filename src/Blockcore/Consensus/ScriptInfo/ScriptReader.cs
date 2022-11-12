@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using NBitcoin;
 using NBitcoin.DataEncoders;
@@ -587,44 +588,56 @@ namespace Blockcore.Consensus.ScriptInfo
 
         public static implicit operator Op(OpcodeType codeType)
         {
-            if(!IsPushCode(codeType))
+            try
             {
-                return new Op()
-                {
-                    Code = codeType,
-                };
-            }
-            else
-            {
-                if(OpcodeType.OP_1 <= codeType && codeType <= OpcodeType.OP_16)
+
+
+                if (!IsPushCode(codeType))
                 {
                     return new Op()
                     {
                         Code = codeType,
-                        PushData = new byte[] { (byte)((byte)codeType - (byte)OpcodeType.OP_1 + 1) }
-                    };
-                }
-                else if(codeType == OpcodeType.OP_0)
-                {
-                    return new Op()
-                    {
-                        Code = codeType,
-                        PushData = new byte[0]
-                    };
-                }
-                else if(codeType == OpcodeType.OP_1NEGATE)
-                {
-                    return new Op()
-                    {
-                        Code = codeType,
-                        PushData = new byte[] { 0x81 }
                     };
                 }
                 else
                 {
-                    throw new InvalidOperationException("Push OP without any data provided detected, Op.PushData instead");
+                    if (OpcodeType.OP_1 <= codeType && codeType <= OpcodeType.OP_16)
+                    {
+                        return new Op()
+                        {
+                            Code = codeType,
+                            PushData = new byte[] { (byte)((byte)codeType - (byte)OpcodeType.OP_1 + 1) }
+                        };
+                    }
+                    else if (codeType == OpcodeType.OP_0)
+                    {
+                        return new Op()
+                        {
+                            Code = codeType,
+                            PushData = new byte[0]
+                        };
+                    }
+                    else if (codeType == OpcodeType.OP_1NEGATE)
+                    {
+                        return new Op()
+                        {
+                            Code = codeType,
+                            PushData = new byte[] { 0x81 }
+                        };
+                    } else
+                    {
+                        return new Op();
+                    }
+             
+                    
                 }
             }
+
+            catch (InvalidOperationException ioe)
+            {
+                throw new InvalidOperationException( ioe+ " Push OP without any data provided detected, Op.PushData instead");
+            }
+
         }
 
         private static string ReadWord(TextReader textReader)

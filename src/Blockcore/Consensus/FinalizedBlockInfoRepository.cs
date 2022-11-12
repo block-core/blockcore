@@ -104,6 +104,7 @@ namespace Blockcore.Consensus
                 }
                 catch (OperationCanceledException)
                 {
+                    Console.WriteLine("Operation canceled");
                 }
 
                 this.queueUpdatedEvent.Reset();

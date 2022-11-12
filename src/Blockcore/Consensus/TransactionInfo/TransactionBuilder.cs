@@ -48,7 +48,7 @@ namespace Blockcore.Consensus.TransactionInfo
         {
         }
 
-        private Random _Rand = new Random();
+        readonly private Random _Rand = new Random();
 
         public DefaultCoinSelector(int seed)
         {

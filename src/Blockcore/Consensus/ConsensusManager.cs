@@ -1481,7 +1481,7 @@ namespace Blockcore.Consensus
                 log.AppendLine($"Tip Age: { TimeSpan.FromSeconds(tipAge).ToString(@"dd\.hh\:mm\:ss") } (maximum is { TimeSpan.FromSeconds(maxTipAge).ToString(@"dd\.hh\:mm\:ss") })");
                 log.AppendLine($"In IBD Stage: { (this.isIbd ? "Yes" : "No") }");
 
-                string unconsumedBlocks = this.FormatBigNumber(this.chainedHeaderTree.UnconsumedBlocksCount);
+                string unconsumedBlocks = FormatBigNumber(this.chainedHeaderTree.UnconsumedBlocksCount);
 
                 double filledPercentage = Math.Round((this.chainedHeaderTree.UnconsumedBlocksDataBytes / (double)this.maxUnconsumedBlocksDataBytes) * 100, 2);
 
@@ -1496,7 +1496,7 @@ namespace Blockcore.Consensus
 
         /// <summary>Formats the big number.</summary>
         /// <remarks><c>123456789</c> => <c>123,456,789</c>.</remarks>
-        private string FormatBigNumber(long number)
+       static private string FormatBigNumber(long number)
         {
             return $"{number:#,##0}";
         }

@@ -615,30 +615,37 @@ namespace Blockcore.Consensus.ScriptInfo
             }
         }
 
-        public bool HasCanonicalPushes
+        public bool HasCanonicalPushes()
         {
-            get
-            {
+            
+            
                 using (ScriptReader reader = CreateReader())
                 {
 
                     foreach (Op op in reader.ToEnumerable())
                     {
 
-                        switch(op)
-                        { 
-                        case (op.IsInvalid): {return false;break;}
-                        case (op.Code > OpcodeType.OP_16): {continue;}
-                        case (op.Code < OpcodeType.OP_PUSHDATA1): {if(op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16)) return false;continue;}
-                        case (op.Code == OpcodeType.OP_PUSHDATA1) :{if(op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1) return false;continue;}
-                        case (op.Code == OpcodeType.OP_PUSHDATA2 ): {if(op.PushData.Length <= 0xFF) return false;continue;}
-                        case (op.Code == OpcodeType.OP_PUSHDATA4): {if( op.PushData.Length <= 0xFFFF) return false;continue;}
-                        default: {return true; break;}    
+                        if (!op.IsInvalid)
+                        {
+                            switch (op.Code)
+                            {
+
+                                case (> OpcodeType.OP_16): { continue; }
+                                case (< OpcodeType.OP_PUSHDATA1): { if (op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16)) return false; continue; }
+                                case (OpcodeType.OP_PUSHDATA1): { if (op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1) return false; continue; }
+                                case (OpcodeType.OP_PUSHDATA2): { if (op.PushData.Length <= 0xFF) return false; continue; }
+                                case (OpcodeType.OP_PUSHDATA4): { if (op.PushData.Length <= 0xFFFF) return false; continue; }
+                                default: { return true; break; }
+                                    
+                            }
+                            
                         }
+
+                        
                     }
                     
                 }
-            }
+            return true;
         }
 
         //https://en.bitcoin.it/wiki/OP_CHECKSIG
@@ -1316,29 +1323,32 @@ namespace Blockcore.Consensus.ScriptInfo
             ScriptTemplate template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
             switch(template)
            { 
-            case (template is PayToWitPubKeyHashTemplate):
+            case  PayToWitPubKeyHashTemplate :
             {
                 scriptPubKey = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(1, 20)).ScriptPubKey;
                 template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
-                continue;
+                        break;
             }
-            case (template == null || template is TxNullDataTemplate):
+            case null:
+            case TxNullDataTemplate :
             {
                  return PushAll(Max(sigs1, sigs2));
-                 continue;
+                        break;
             }
 
 
-            case ((template is PayToPubkeyTemplate) || (template is PayToPubkeyHashTemplate)):
+                case PayToPubkeyTemplate:
+                case PayToPubkeyHashTemplate:
             {
                 if (sigs1.Length == 0 || sigs1[0].Length == 0)
                     return PushAll(sigs2);
                 else
                     return PushAll(sigs1);
-            continue;
+                        break;
             }
 
-            case (template is PayToScriptHashTemplate || template is PayToWitTemplate):
+                case PayToScriptHashTemplate:
+                case PayToWitTemplate:
             {
                 if (sigs1.Length == 0 || sigs1[sigs1.Length - 1].Length == 0)
                     return PushAll(sigs2);
@@ -1353,17 +1363,20 @@ namespace Blockcore.Consensus.ScriptInfo
                 Script result = CombineSignatures(network, redeem, checker, sigs1, sigs2, hashVersion);
                 result += Op.GetPushOp(redeemBytes);
                 return result;
+                        break;
             }
 
-            case (template is PayToMultiSigTemplate):
+            case  PayToMultiSigTemplate:
             {
                 return CombineMultisig(network, scriptPubKey, checker, sigs1, sigs2, hashVersion);
-                continue;
+                        break;
             }
 
-            default: {return null;}
+            default: {return null; break; }
+
             
             }
+            return null;
         }
 
         private static Script CombineMultisig(Network network, Script scriptPubKey, TransactionChecker checker, byte[][] sigs1, byte[][] sigs2, HashVersion hashVersion)

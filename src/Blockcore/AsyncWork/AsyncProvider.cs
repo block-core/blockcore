@@ -59,7 +59,7 @@ namespace Blockcore.AsyncWork
             this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.signals = Guard.NotNull(signals, nameof(signals));
-            this.nodeLifetime = Guard.NotNull(nodeLifetime, nameof(nodeLifetime));
+            nodeLifetime = Guard.NotNull(nodeLifetime, nameof(nodeLifetime));
         }
 
         /// <inheritdoc />

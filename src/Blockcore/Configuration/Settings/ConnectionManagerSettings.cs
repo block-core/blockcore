@@ -61,7 +61,7 @@ namespace Blockcore.Configuration.Settings
 
             try
             {
-                this.Connect.AddRange(config.GetAll("connect", this.logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
+                this.Connect.AddRange(config.GetAll("connect", logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
             }
             catch (FormatException)
             {
@@ -70,7 +70,7 @@ namespace Blockcore.Configuration.Settings
 
             try
             {
-                foreach (IPEndPoint addNode in config.GetAll("addnode", this.logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)))
+                foreach (IPEndPoint addNode in config.GetAll("addnode", logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)))
                     this.AddAddNode(addNode);
             }
             catch (FormatException)
@@ -78,11 +78,11 @@ namespace Blockcore.Configuration.Settings
                 throw new ConfigurationException("Invalid 'addnode' parameter.");
             }
 
-            this.Port = config.GetOrDefault<int>("port", nodeSettings.Network.DefaultPort, this.logger);
+            this.Port = config.GetOrDefault<int>("port", nodeSettings.Network.DefaultPort, logger);
 
             try
             {
-                IEnumerable<IPEndPoint> whitebindEndpoints = config.GetAll("whitebind", this.logger).Select(s => s.ToIPEndPoint(this.Port));
+                IEnumerable<IPEndPoint> whitebindEndpoints = config.GetAll("whitebind", logger).Select(s => s.ToIPEndPoint(this.Port));
 
                 this.Bind = whitebindEndpoints.Where(x => x.Address.AnyIP()).Select(x => new NodeServerEndpoint(x, true)).ToList();
 
@@ -121,14 +121,14 @@ namespace Blockcore.Configuration.Settings
 
             try
             {
-                this.Whitelist.AddRange(config.GetAll("whitelist", this.logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
+                this.Whitelist.AddRange(config.GetAll("whitelist", logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
             }
             catch (FormatException)
             {
                 throw new ConfigurationException("Invalid 'whitelist' parameter.");
             }
 
-            string externalIp = config.GetOrDefault<string>("externalip", null, this.logger);
+            string externalIp = config.GetOrDefault<string>("externalip", null, logger);
             if (externalIp != null)
             {
                 try
@@ -146,33 +146,33 @@ namespace Blockcore.Configuration.Settings
                 this.ExternalEndpoint = new IPEndPoint(IPAddress.Loopback, this.Port);
             }
 
-            this.BanTimeSeconds = config.GetOrDefault<int>("bantime", nodeSettings.Network.DefaultBanTimeSeconds, this.logger);
+            this.BanTimeSeconds = config.GetOrDefault<int>("bantime", nodeSettings.Network.DefaultBanTimeSeconds, logger);
 
             // Listen option will default to true in case there are no connect option specified.
             // When running the node with connect option listen flag has to be explicitly passed to the node to enable listen flag.
-            this.Listen = config.GetOrDefault<bool>("listen", !this.Connect.Any(), this.logger);
+            this.Listen = config.GetOrDefault<bool>("listen", !this.Connect.Any(), logger);
 
-            this.MaxOutboundConnections = config.GetOrDefault<int>("maxoutboundconnections", nodeSettings.Network.DefaultMaxOutboundConnections, this.logger);
+            this.MaxOutboundConnections = config.GetOrDefault<int>("maxoutboundconnections", nodeSettings.Network.DefaultMaxOutboundConnections, logger);
             if (this.MaxOutboundConnections <= 0)
                 throw new ConfigurationException("The 'maxoutboundconnections' must be greater than zero.");
 
-            this.MaxInboundConnections = config.GetOrDefault<int>("maxinboundconnections", nodeSettings.Network.DefaultMaxInboundConnections, this.logger);
+            this.MaxInboundConnections = config.GetOrDefault<int>("maxinboundconnections", nodeSettings.Network.DefaultMaxInboundConnections, logger);
             if (this.MaxInboundConnections < 0)
                 throw new ConfigurationException("The 'maxinboundconnections' must be greater or equal to zero.");
 
-            this.InitialConnectionTarget = config.GetOrDefault("initialconnectiontarget", 1, this.logger);
-            this.SyncTimeEnabled = config.GetOrDefault<bool>("synctime", true, this.logger);
-            this.RelayTxes = !config.GetOrDefault("blocksonly", DefaultBlocksOnly, this.logger);
-            this.IpRangeFiltering = config.GetOrDefault<bool>("IpRangeFiltering", true, this.logger);
+            this.InitialConnectionTarget = config.GetOrDefault("initialconnectiontarget", 1, logger);
+            this.SyncTimeEnabled = config.GetOrDefault<bool>("synctime", true, logger);
+            this.RelayTxes = !config.GetOrDefault("blocksonly", DefaultBlocksOnly, logger);
+            this.IpRangeFiltering = config.GetOrDefault<bool>("IpRangeFiltering", true, logger);
 
-            var agentPrefix = config.GetOrDefault("agentprefix", string.Empty, this.logger).Replace("-", string.Empty);
+            var agentPrefix = config.GetOrDefault("agentprefix", string.Empty, logger).Replace("-", string.Empty);
             if (agentPrefix.Length > MaximumAgentPrefixLength)
                 agentPrefix = agentPrefix.Substring(0, MaximumAgentPrefixLength);
 
             this.Agent = string.IsNullOrEmpty(agentPrefix) ? nodeSettings.Agent : $"{agentPrefix}-{nodeSettings.Agent}";
-            this.logger.LogDebug("Agent set to '{0}'.", this.Agent);
+            logger.LogDebug("Agent set to '{0}'.", this.Agent);
 
-            this.IsGateway = config.GetOrDefault<bool>("gateway", false, this.logger);
+            this.IsGateway = config.GetOrDefault<bool>("gateway", false, logger);
         }
 
         public void AddAddNode(IPEndPoint addNode)

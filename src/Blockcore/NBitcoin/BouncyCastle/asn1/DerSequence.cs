@@ -75,7 +75,7 @@ namespace NBitcoin.BouncyCastle.Asn1
                 dOut.WriteObject(obj);
             }
 
-            Platform.Dispose(dOut);
+            Platform.DisposePlatform(dOut);
 
             byte[] bytes = bOut.ToArray();
 

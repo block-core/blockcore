@@ -1343,7 +1343,12 @@ namespace Blockcore.Consensus.TransactionInfo
             coin=coin as IColoredCoin;
 
             if (coin is IColoredCoin)
-                coin = coin.Bearer;
+            {  
+            
+               IColoredCoin bearer = (IColoredCoin)coin;
+
+                coin = bearer.Bearer;
+            }
 
             if (coin == null || coin is ScriptCoin)
                 return coin;

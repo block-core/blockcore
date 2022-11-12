@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using System.Runtime.Serialization;
 using NBitcoin;
 
 namespace Blockcore.Configuration
@@ -10,8 +11,13 @@ namespace Blockcore.Configuration
     /// <summary>
     /// Exception that is used when a problem in command line or configuration file configuration is found.
     /// </summary>
+    [Serializable]
     public class ConfigurationException : Exception
     {
+      
+        protected ConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        { 
+        }
         public ConfigurationException(string message) : base(message)
         {
         }

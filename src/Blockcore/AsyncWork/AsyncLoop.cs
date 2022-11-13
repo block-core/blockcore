@@ -105,6 +105,7 @@ namespace Blockcore.AsyncWork
 
                 while (!cancellation.IsCancellationRequested)
                 {
+
                     await this.loopAsync(cancellation).ConfigureAwait(false);
                     if (!cancellation.IsCancellationRequested)
                         await Task.Delay(this.RepeatEvery, cancellation).ConfigureAwait(false);
@@ -115,7 +116,7 @@ namespace Blockcore.AsyncWork
                 if (!cancellation.IsCancellationRequested)
                 {
                     this.logger.LogCritical(new EventId(0), ex, this.Name + " threw an unhandled exception");
-                    this.logger.LogError("{0} threw an unhandled exception: {1}", this.Name, ex.ToString());
+                    this.logger.LogError("{name} threw an unhandled exception: {exception}", this.Name, ex.ToString());
                     return;
                 }
             }

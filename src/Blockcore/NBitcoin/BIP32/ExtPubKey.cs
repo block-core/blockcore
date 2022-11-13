@@ -198,19 +198,6 @@ namespace NBitcoin
                 return false;
             return this.Hash.Equals(item.Hash);
         }
-        public static bool operator ==(ExtPubKey a, ExtPubKey b)
-        {
-            if(ReferenceEquals(a, b))
-                return true;
-            if(((object)a == null) || ((object)b == null))
-                return false;
-            return a.Hash == b.Hash;
-        }
-
-        public static bool operator !=(ExtPubKey a, ExtPubKey b)
-        {
-            return !(a == b);
-        }
 
         public override int GetHashCode()
         {

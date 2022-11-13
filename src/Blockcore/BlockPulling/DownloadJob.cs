@@ -8,7 +8,9 @@ namespace Blockcore.BlockPulling
     public struct DownloadJob
     {
         /// <summary>Unique identifier of this job.</summary>
-        public int Id;
+        private int id;
+
+        public int Id { get { return this.id; } set { this.id = value; } }
 
         /// <summary>Headers of blocks that are to be downloaded.</summary>
         public List<ChainedHeader> Headers;

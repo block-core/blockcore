@@ -619,9 +619,17 @@ namespace NBitcoin
         {
             if (!this.IsP2SH)
                 return null;
-            Script p2shRedeem = this.RedeemType == RedeemType.P2SH ? this.Redeem :
-                this.RedeemType == RedeemType.WitnessV0 ? this.Redeem.WitHash.ScriptPubKey :
+            Script p2shRedeem;
+            if (this.RedeemType == RedeemType.P2SH)
+            {
+                p2shRedeem = this.Redeem;
+            }
+            else
+            {
+                p2shRedeem = this.RedeemType == RedeemType.WitnessV0 ? this.Redeem.WitHash.ScriptPubKey :
                             null;
+            }
+
             if (p2shRedeem == null)
                 throw new NotSupportedException("RedeemType not supported for getting the P2SH script, contact the library author");
             return p2shRedeem;

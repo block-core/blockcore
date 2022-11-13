@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 using NBitcoin.BitcoinCore;
 using NBitcoin.Policy;
-using System.Collections.Immutable;
-using System.Collections.Immutable.IImmutableList<T>;
 
 namespace Blockcore.Consensus.ScriptInfo
 {

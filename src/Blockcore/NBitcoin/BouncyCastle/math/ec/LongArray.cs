@@ -1512,32 +1512,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             return new LongArray(buf, off, rLen);
         }
 
-        //    private static void deInterleave(long[] x, int xOff, long[] z, int zOff, int count, int rounds)
-        //    {
-        //        for (int i = 0; i < count; ++i)
-        //        {
-        //            z[zOff + i] = deInterleave(x[zOff + i], rounds);
-        //        }
-        //    }
-        //
-        //    private static long deInterleave(long x, int rounds)
-        //    {
-        //        while (--rounds >= 0)
-        //        {
-        //            x = deInterleave32(x & DEInterleave_MASK) | (deInterleave32((x >>> 1) & DEInterleave_MASK) << 32);
-        //        }
-        //        return x;
-        //    }
-        //
-        //    private static long deInterleave32(long x)
-        //    {
-        //        x = (x | (x >>> 1)) & 0x3333333333333333L;
-        //        x = (x | (x >>> 2)) & 0x0F0F0F0F0F0F0F0FL;
-        //        x = (x | (x >>> 4)) & 0x00FF00FF00FF00FFL;
-        //        x = (x | (x >>> 8)) & 0x0000FFFF0000FFFFL;
-        //        x = (x | (x >>> 16)) & 0x00000000FFFFFFFFL;
-        //        return x;
-        //    }
+       
 
         private static int ReduceInPlace(long[] buf, int off, int len, int m, int[] ks)
         {

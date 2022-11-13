@@ -20,12 +20,12 @@ namespace Blockcore.EventBus
             this.SubscriptionToken = token ?? throw new ArgumentNullException(nameof(token));
         }
 
-        public void Publish(EventBase eventItem)
+        public void Publish(EventBase eventBase)
         {
-            if (!(eventItem is TEventBase))
+            if (!(eventBase is TEventBase))
                 throw new ArgumentException("Event Item is not the correct type.");
 
-            this.action.Invoke(eventItem as TEventBase);
+            this.action.Invoke(eventBase as TEventBase);
         }
     }
 }

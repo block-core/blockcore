@@ -259,7 +259,7 @@ namespace Blockcore.Base
         {
             if (!Directory.Exists(this.dataFolder.ChainPath))
             {
-                this.logger.LogInformation("Creating {0}.", this.dataFolder.ChainPath);
+                this.logger.LogInformation("Creating {this.dataFolder.ChainPath}.", this.dataFolder.ChainPath);
                 Directory.CreateDirectory(this.dataFolder.ChainPath);
             }
 

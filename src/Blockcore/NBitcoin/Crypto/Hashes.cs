@@ -232,7 +232,7 @@ namespace NBitcoin.Crypto
                         return val.Part4;
 
                     default:
-                        throw new ArgumentOutOfRangeException("position should be less than 4", "position");
+                        throw new ArgumentOutOfRangeException("position", "position should be less than 4"); 
                 }
             }
 

@@ -82,7 +82,7 @@ namespace Blockcore.Builder.Feature
         public Type FeatureType { get; private set; }
 
         /// <summary> List of dependency features that should be registered in order to add this feature.</summary>
-        private List<Type> dependencies;
+        private readonly List<Type> dependencies;
 
         /// <inheritdoc />
         public void BuildFeature(IServiceCollection serviceCollection)
@@ -98,7 +98,7 @@ namespace Blockcore.Builder.Feature
                 configureServicesDelegate(serviceCollection);
 
             if (this.FeatureStartupType != null)
-                this.FeatureStartup(serviceCollection, this.FeatureStartupType);
+                FeatureRegistration<TImplementation>.FeatureStartup(serviceCollection, this.FeatureStartupType);
         }
 
         /// <inheritdoc />
@@ -142,7 +142,7 @@ namespace Blockcore.Builder.Feature
         /// </summary>
         /// <param name="serviceCollection">Collection of service descriptors to be passed to the ConfigureServices method of the feature registration startup class.</param>
         /// <param name="startupType">Type of the feature registration startup class. If it implements ConfigureServices method, it is invoked to configure the feature's services.</param>
-        private void FeatureStartup(IServiceCollection serviceCollection, Type startupType)
+        private static void FeatureStartup(IServiceCollection serviceCollection, Type startupType)
         {
             MethodInfo method = startupType.GetMethod("ConfigureServices");
             ParameterInfo[] parameters = method?.GetParameters();

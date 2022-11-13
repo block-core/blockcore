@@ -256,10 +256,10 @@ namespace Blockcore.Configuration.Logging
         /// <param name="settings">Settings that hold potential debug arguments, if null no debug arguments will be loaded."/></param>
         public static void ConfigureConsoleFilters(ILoggingBuilder builder, LogSettings settings)
         {
-            if (settings != null)
+            if (settings != null && settings.DebugArgs.Any())
             {
-                if (settings.DebugArgs.Any())
-                {
+                
+                
                     if (settings.DebugArgs[0] == "1")
                     {
                         // Increase all logging to Debug.
@@ -288,7 +288,7 @@ namespace Blockcore.Configuration.Logging
                             }
                         }
                     }
-                }
+                
             }
         }
     }

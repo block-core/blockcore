@@ -82,7 +82,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public bool IsProofOfWork()
         {
-            return !((this.Flags & BlockFlag.BLOCK_PROOF_OF_STAKE) > 0);
+            return (this.Flags <=0 & BlockFlag.BLOCK_PROOF_OF_STAKE<=0) ;
         }
 
         public bool IsProofOfStake()

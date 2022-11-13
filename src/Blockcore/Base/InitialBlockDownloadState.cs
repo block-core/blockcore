@@ -43,7 +43,7 @@ namespace Blockcore.Base
             this.checkpoints = checkpoints;
             this.dateTimeProvider = dateTimeProvider;
 
-            this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
+            this.lastCheckpointHeight = this.checkpoints.LastCheckpointHeight;
             this.minimumChainWork = this.network.Consensus.MinimumChainWork ?? uint256.Zero;
         }
 

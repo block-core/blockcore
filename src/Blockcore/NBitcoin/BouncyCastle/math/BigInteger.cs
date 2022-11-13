@@ -1757,7 +1757,7 @@ namespace NBitcoin.BouncyCastle.Math
 
             if(v3.sign > 0)
             {
-                for(;;)
+                while(true)
                 {
                     BigInteger[] q = u3.DivideAndRemainder(v3);
                     u3 = v3;

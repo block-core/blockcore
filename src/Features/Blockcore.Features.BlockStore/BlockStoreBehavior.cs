@@ -261,7 +261,7 @@ namespace Blockcore.Features.BlockStore
                     this.logger.LogDebug("Setting peer's last block sent to '{0}'.", lastAddedChainedHeader);
                     ChainedHeader lastSentHeader;
                     lastSentHeader = lastAddedChainedHeader;
-                    this.consensusManagerBehavior.UpdateBestSentHeader(this.lastSentHeader);
+                    this.consensusManagerBehavior.UpdateBestSentHeader(lastSentHeader);
 
                     // Set last item of the batch (unless we are announcing the tip), which is then used
                     // when the peer sends us "getdata" message. When we detect "getdata" message for this block,
@@ -427,7 +427,7 @@ namespace Blockcore.Features.BlockStore
 
                         ChainedHeader lastSentHeader;
                         lastSentHeader = bestIndex;
-                        this.consensusManagerBehavior.UpdateBestSentHeader(this.lastSentHeader);
+                        this.consensusManagerBehavior.UpdateBestSentHeader(lastSentHeader);
 
                         await peer.SendMessageAsync(this.BuildHeadersAnnouncePayload(headers)).ConfigureAwait(false);
                         this.logger.LogTrace("(-)[SEND_HEADERS_PAYLOAD]");
@@ -461,7 +461,7 @@ namespace Blockcore.Features.BlockStore
                 {
                     ChainedHeader lastSentHeader;
                     lastSentHeader = inventoryBlockToSend.Last();
-                    this.consensusManagerBehavior.UpdateBestSentHeader( this.lastSentHeader);
+                    this.consensusManagerBehavior.UpdateBestSentHeader(lastSentHeader);
 
                     await this.SendAsBlockInventoryAsync(peer, inventoryBlockToSend).ConfigureAwait(false);
                     this.logger.LogTrace("(-)[SEND_INVENTORY]");

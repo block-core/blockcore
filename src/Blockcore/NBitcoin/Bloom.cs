@@ -142,11 +142,6 @@ namespace NBitcoin
             return Encoders.Hex.EncodeData(this.data);
         }
 
-        public static bool operator !=(Bloom obj1, Bloom obj2)
-        {
-            return !(obj1 == obj2);
-        }
-
         public override bool Equals(object obj)
         {
             return this.Equals(obj as Bloom);

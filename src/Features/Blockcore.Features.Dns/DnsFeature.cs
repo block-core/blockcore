@@ -215,8 +215,6 @@ namespace Blockcore.Features.Dns
         public override void Dispose()
         {
             this.logger.LogInformation("Stopping DNS...");
-
-            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 

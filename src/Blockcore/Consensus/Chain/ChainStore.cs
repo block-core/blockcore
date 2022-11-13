@@ -20,7 +20,9 @@ namespace Blockcore.Consensus.Chain
     public class ChainData : IBitcoinSerializable
     {
         private uint256 hash;
-        public uint256 Hash { get; set; };
+
+        public uint256 Hash { get { return this.hash; } set { this.hash = value; } }
+
         public byte[] Work;
 
         public ChainData()
@@ -29,7 +31,7 @@ namespace Blockcore.Consensus.Chain
 
         public void ReadWrite(BitcoinStream stream)
         {
-            stream.ReadWrite(ref this.Hash);
+            stream.ReadWrite(ref this.hash);
             if (stream.Serializing)
             {
                 int len = this.Work.Length;

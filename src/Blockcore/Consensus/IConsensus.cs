@@ -49,7 +49,7 @@ namespace Blockcore.Consensus
 
         BuriedDeploymentsArray BuriedDeployments { get; }
 
-        IBIP9DeploymentsArray BIP9Deployments { get; }
+        IBip9DeploymentsArray BIP9Deployments { get; }
 
         int SubsidyHalvingInterval { get; }
 

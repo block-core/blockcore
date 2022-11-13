@@ -157,11 +157,6 @@ namespace NBitcoin
             return this._Str.Equals(item._Str);
         }
 
-        public static bool operator !=(BitcoinAddress a, BitcoinAddress b)
-        {
-            return !(a == b);
-        }
-
         public override int GetHashCode()
         {
             return this._Str.GetHashCode();

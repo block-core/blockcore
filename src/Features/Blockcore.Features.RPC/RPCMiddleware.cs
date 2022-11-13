@@ -186,7 +186,7 @@ namespace Blockcore.Features.RPC
         private async Task<JArray> InvokeBatchAsync(HttpContext httpContext, JArray requests)
         {
             JArray responseArray = new JArray();
-            foreach (JToken requestObj in requests)
+            foreach (JObject requestObj in requests)
             {
                 JObject response = await InvokeSingleAsync(httpContext, requestObj);
                 responseArray.Add(response);

@@ -158,8 +158,6 @@ namespace Blockcore.Consensus.BlockInfo
 
         public Target Bits { get { return this.posBlockHeader.Bits; } }
 
-        protected int version;
-
         public int Version { get { return this.posBlockHeader.Version; } }
 
         public uint Nonce { get { return this.posBlockHeader.Nonce; } }

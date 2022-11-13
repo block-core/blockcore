@@ -124,10 +124,10 @@ namespace Blockcore.Consensus.BlockInfo
         public virtual uint256 GetHash()
         {
             uint256 hash = null;
-            uint256[] hashes = this.hashes;
+            uint256[] local_hashes = this.hashes;
 
-            if (hashes != null)
-                hash = hashes[0];
+            if (local_hashes != null)
+                hash = local_hashes[0];
 
             if (hash != null)
                 return hash;
@@ -138,10 +138,10 @@ namespace Blockcore.Consensus.BlockInfo
                 hash = hs.GetHash();
             }
 
-            hashes = this.hashes;
-            if (hashes != null)
+            local_hashes = this.hashes;
+            if (local_hashes != null)
             {
-                hashes[0] = hash;
+                local_hashes[0] = hash;
             }
 
             return hash;

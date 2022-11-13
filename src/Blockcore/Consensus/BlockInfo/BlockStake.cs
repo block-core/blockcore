@@ -148,7 +148,7 @@ namespace Blockcore.Consensus.BlockInfo
         public static bool Validate(Network network, ChainedHeader chainedHeader)
         {
             if (network == null)
-                throw new ArgumentNullException("network");
+                throw new ArgumentNullException(nameof(network));
 
             if (chainedHeader.Height != 0 && chainedHeader.Previous == null)
                 return false;

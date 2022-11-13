@@ -13,6 +13,7 @@ using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using RabbitMQ.Client;
 
 namespace Blockcore.BlockPulling
 {
@@ -364,11 +365,8 @@ namespace Blockcore.BlockPulling
 
                 Queue<DownloadJob> queue = highPriority ? this.reassignedJobsQueue : this.downloadJobsQueue;
 
-                queue.Enqueue(new DownloadJob()
-                {
-                    Headers = new List<ChainedHeader>(headers),
-                    Id = jobId
-                });
+
+                queue.Enqueue(new DownloadJob(jobId, new List<ChainedHeader>(headers))) ;
 
                 this.logger.LogDebug("{0} blocks were requested from puller. Job ID {1} was created.", headers.Count, jobId);
 
@@ -477,13 +475,13 @@ namespace Blockcore.BlockPulling
             while ((jobsQueue.Count > 0) && (emptySlots > 0))
             {
                 DownloadJob jobToAssign = jobsQueue.Peek();
-                int jobHeadersCount = jobToAssign.Headers.Count;
+                int jobHeadersCount = jobToAssign.getHeaders().Count;
 
                 List<AssignedDownload> assignments = this.DistributeHeadersLocked(jobToAssign, failedHashes, emptySlots);
 
                 emptySlots -= assignments.Count;
 
-                this.logger.LogDebug("Assigned {0} headers out of {1} for job {2}.", assignments.Count, jobHeadersCount, jobToAssign.Id);
+                this.logger.LogDebug("Assigned {0} headers out of {1} for job {2}.", assignments.Count, jobHeadersCount, jobToAssign.getId());
 
                 lock (this.assignedLock)
                 {
@@ -495,7 +493,7 @@ namespace Blockcore.BlockPulling
                 }
 
                 // Remove job from the queue if it was fully consumed.
-                if (jobToAssign.Headers.Count == 0)
+                if (jobToAssign.getHeaders().Count == 0)
                     jobsQueue.Dequeue();
             }
         }
@@ -633,14 +631,14 @@ namespace Blockcore.BlockPulling
 
             if (peerBehaviors.Count == 0)
             {
-                this.logger.LogDebug("There are no peers that can participate in download job distribution! Job ID {0} failed.", downloadJob.Id);
+                this.logger.LogDebug("There are no peers that can participate in download job distribution! Job ID {0} failed.", downloadJob.getId());
                 jobFailed = true;
             }
 
             int lastSucceededIndex = -1;
-            for (int index = 0; (index < downloadJob.Headers.Count) && (index < emptySlots) && !jobFailed; index++)
+            for (int index = 0; (index < downloadJob.getHeaders().Count) && (index < emptySlots) && !jobFailed; index++)
             {
-                ChainedHeader header = downloadJob.Headers[index];
+                ChainedHeader header = downloadJob.getHeaders()[index];
 
                 while (!jobFailed)
                 {
@@ -672,7 +670,7 @@ namespace Blockcore.BlockPulling
                         newAssignments.Add(new AssignedDownload()
                         {
                             PeerId = peerId,
-                            JobId = downloadJob.Id,
+                            JobId = downloadJob.getId(),
                             AssignedTime = this.dateTimeProvider.GetUtcNow(),
                             Header = header
                         });
@@ -691,23 +689,23 @@ namespace Blockcore.BlockPulling
                             continue;
 
                         jobFailed = true;
-                        this.logger.LogDebug("Job {0} failed because there is no peer claiming header '{1}'.", downloadJob.Id, header);
+                        this.logger.LogDebug("Job {0} failed because there is no peer claiming header '{1}'.", downloadJob.getId(), header);
                     }
                 }
             }
 
             if (!jobFailed)
             {
-                downloadJob.Headers.RemoveRange(0, lastSucceededIndex + 1);
+                downloadJob.getHeaders().RemoveRange(0, lastSucceededIndex + 1);
             }
             else
             {
                 int removeFrom = (lastSucceededIndex == -1) ? 0 : lastSucceededIndex + 1;
 
-                IEnumerable<uint256> failed = downloadJob.Headers.GetRange(removeFrom, downloadJob.Headers.Count - removeFrom).Select(x => x.HashBlock);
+                IEnumerable<uint256> failed = downloadJob.getHeaders().GetRange(removeFrom, downloadJob.getHeaders().Count - removeFrom).Select(x => x.HashBlock);
                 failedHashes.AddRange(failed);
 
-                downloadJob.Headers.Clear();
+                downloadJob.getHeaders().Clear();
             }
 
             return newAssignments;
@@ -945,11 +943,8 @@ namespace Blockcore.BlockPulling
         {
             foreach (KeyValuePair<int, List<ChainedHeader>> jobIdToHeaders in headersByJobId)
             {
-                var newJob = new DownloadJob()
-                {
-                    Id = jobIdToHeaders.Key,
-                    Headers = jobIdToHeaders.Value
-                };
+                var newJob = new DownloadJob(jobIdToHeaders.Key, jobIdToHeaders.Value);
+                
 
                 this.reassignedJobsQueue.Enqueue(newJob);
             }
@@ -971,7 +966,7 @@ namespace Blockcore.BlockPulling
                 int unassignedDownloads = 0;
 
                 foreach (DownloadJob downloadJob in this.downloadJobsQueue)
-                    unassignedDownloads += downloadJob.Headers.Count;
+                    unassignedDownloads += downloadJob.getHeaders().Count;
 
                 statsBuilder.AppendLine($"Queued downloads: {unassignedDownloads}");
             }

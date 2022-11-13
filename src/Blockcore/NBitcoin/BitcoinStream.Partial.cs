@@ -351,10 +351,10 @@ namespace NBitcoin
 
         public void ReadWrite(ref long data)
         {
-            long l = (long)data;
+            long l = data;
             ReadWriteNumber(ref l, sizeof(long));
             if(!this.Serializing)
-                data = (long)l;
+                data = l;
         }
 
         public long ReadWrite(long data)

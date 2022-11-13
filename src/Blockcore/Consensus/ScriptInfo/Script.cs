@@ -616,34 +616,37 @@ namespace Blockcore.Consensus.ScriptInfo
             }
         }
 
-        public bool HasCanonicalPushes
+        public bool HasCanonicalPushes()
         {
-            get
-            {
+            
+            
                 using (ScriptReader reader = CreateReader())
                 {
+
                     foreach (Op op in reader.ToEnumerable())
                     {
-                        if (op.IsInvalid)
-                            return false;
-                        if (op.Code > OpcodeType.OP_16)
-                            continue;
-                        if (op.Code < OpcodeType.OP_PUSHDATA1 && op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16))
-                            // Could have used an OP_n code, rather than a 1-byte push.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA1 && op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1)
-                            // Could have used a normal n-byte push, rather than OP_PUSHDATA1.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA2 && op.PushData.Length <= 0xFF)
-                            // Could have used an OP_PUSHDATA1.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA4 && op.PushData.Length <= 0xFFFF)
-                            // Could have used an OP_PUSHDATA2.
-                            return false;
+
+                        if (!op.IsInvalid)
+                        {
+                            switch (op.Code)
+                            {
+
+                                case (> OpcodeType.OP_16): { continue; }
+                                case (< OpcodeType.OP_PUSHDATA1): { if (op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16)) return false; continue; }
+                                case (OpcodeType.OP_PUSHDATA1): { if (op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1) return false; continue; }
+                                case (OpcodeType.OP_PUSHDATA2): { if (op.PushData.Length <= 0xFF) return false; continue; }
+                                case (OpcodeType.OP_PUSHDATA4): { if (op.PushData.Length <= 0xFFFF) return false; continue; }
+                                default: { return true; break; }
+                                    
+                            }
+                            
+                        }
+
+                        
                     }
-                    return true;
+                    
                 }
-            }
+            return true;
         }
 
         //https://en.bitcoin.it/wiki/OP_CHECKSIG
@@ -1081,6 +1084,11 @@ namespace Blockcore.Consensus.ScriptInfo
             return ToBytes(false);
         }
 
+        public byte[] ToRawScript(bool @unsafe)
+        {
+            return @unsafe ? this._Script : this._Script.ToArray();
+        }
+
         /// <summary>
         /// Get script byte array
         /// </summary>
@@ -1090,16 +1098,15 @@ namespace Blockcore.Consensus.ScriptInfo
             return ToBytes(false);
         }
 
+       
+
         /// <summary>
         /// Get script byte array
         /// </summary>
         /// <param name="unsafe">if false, returns a copy of the internal byte array</param>
         /// <returns></returns>
         [Obsolete("Use ToBytes instead")]
-        public byte[] ToRawScript(bool @unsafe)
-        {
-            return @unsafe ? this._Script : this._Script.ToArray();
-        }
+       
 
         /// <summary>
         /// Get script byte array
@@ -1315,24 +1322,34 @@ namespace Blockcore.Consensus.ScriptInfo
         private static Script CombineSignatures(Network network, Script scriptPubKey, TransactionChecker checker, byte[][] sigs1, byte[][] sigs2, HashVersion hashVersion)
         {
             ScriptTemplate template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
-
-            if (template is PayToWitPubKeyHashTemplate)
+            switch(template)
+           { 
+            case  PayToWitPubKeyHashTemplate :
             {
                 scriptPubKey = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(1, 20)).ScriptPubKey;
                 template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
+                        break;
             }
-            if (template == null || template is TxNullDataTemplate)
-                return PushAll(Max(sigs1, sigs2));
+            case null:
+            case TxNullDataTemplate :
+            {
+                 return PushAll(Max(sigs1, sigs2));
+                        break;
+            }
 
-            if (template is PayToPubkeyTemplate || template is PayToPubkeyHashTemplate)
+
+                case PayToPubkeyTemplate:
+                case PayToPubkeyHashTemplate:
             {
                 if (sigs1.Length == 0 || sigs1[0].Length == 0)
                     return PushAll(sigs2);
                 else
                     return PushAll(sigs1);
+                        break;
             }
 
-            if (template is PayToScriptHashTemplate || template is PayToWitTemplate)
+                case PayToScriptHashTemplate:
+                case PayToWitTemplate:
             {
                 if (sigs1.Length == 0 || sigs1[sigs1.Length - 1].Length == 0)
                     return PushAll(sigs2);
@@ -1347,13 +1364,19 @@ namespace Blockcore.Consensus.ScriptInfo
                 Script result = CombineSignatures(network, redeem, checker, sigs1, sigs2, hashVersion);
                 result += Op.GetPushOp(redeemBytes);
                 return result;
+                        break;
             }
 
-            if (template is PayToMultiSigTemplate)
+            case  PayToMultiSigTemplate:
             {
                 return CombineMultisig(network, scriptPubKey, checker, sigs1, sigs2, hashVersion);
+                        break;
             }
 
+            default: {return null; break; }
+
+            
+            }
             return null;
         }
 

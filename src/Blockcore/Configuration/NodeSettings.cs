@@ -187,7 +187,16 @@ namespace Blockcore.Configuration
                 if (testNet && regTest)
                     throw new ConfigurationException("Invalid combination of regtest and testnet.");
 
-                this.Network = testNet ? networksSelector.Testnet() : regTest ? networksSelector.Regtest() : networksSelector.Mainnet();
+                if (testNet) 
+                {
+                    this.Network = networksSelector.Testnet();
+                } 
+                else
+                {
+                    this.Network = regTest ? networksSelector.Regtest() : networksSelector.Mainnet();
+                }
+                    
+
 
                 this.Logger.LogDebug("Network set to '{0}'.", this.Network.Name);
             }

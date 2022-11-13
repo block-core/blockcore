@@ -22,7 +22,7 @@ namespace Blockcore.Features.NodeHost.Authentication
 
         public Task<ApiKey> Execute(string providedApiKey)
         {
-            ApiKey key = this.settings.API.Keys.Where(key => key.Key == providedApiKey && key.Enabled ==  true).SingleOrDefault();
+            ApiKey key = this.settings.API.Keys.Where(key => key.Key == providedApiKey && key.Enabled).SingleOrDefault();
             return Task.FromResult(key);
         }
     }

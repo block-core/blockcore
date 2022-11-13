@@ -52,7 +52,7 @@ namespace NBitcoin.BouncyCastle.Utilities.IO
         {
             if (disposing)
             {
-                Platform.Dispose(this.s);
+                Platform.DisposePlatform(this.s);
             }
             base.Dispose(disposing);
         }

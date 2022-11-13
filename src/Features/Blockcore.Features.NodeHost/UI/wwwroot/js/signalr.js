@@ -2037,6 +2037,7 @@ var HubConnection = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         _a.label = 2;
+                        break;
                     case 2:
                         _a.trys.push([2, 5, , 7]);
                         handshakeRequest = {

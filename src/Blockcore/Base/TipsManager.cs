@@ -39,8 +39,8 @@ namespace Blockcore.Base
         /// </remarks>
         void CommitTipPersisted(ITipProvider provider, ChainedHeader tip);
     }
-
-    public class TipsManager : ITipsManager
+    
+    public class TipsManager : ITipsManager, IDisposable
     {
         private readonly IKeyValueRepository keyValueRepo;
 
@@ -64,6 +64,8 @@ namespace Blockcore.Base
 
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
+
+
 
         public TipsManager(IKeyValueRepository keyValueRepo, ILoggerFactory loggerFactory)
         {
@@ -202,11 +204,23 @@ namespace Blockcore.Base
         }
 
         /// <inheritdoc />
+
+
         public void Dispose()
         {
-            this.cancellation.Cancel();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
 
-            this.commonTipPersistingTask?.GetAwaiter().GetResult();
+                this.cancellation.Cancel();
+
+                this.commonTipPersistingTask?.GetAwaiter().GetResult();
+
+            }
         }
     }
 }

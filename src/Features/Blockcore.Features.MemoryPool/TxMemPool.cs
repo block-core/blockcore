@@ -1019,7 +1019,7 @@ namespace Blockcore.Features.MemoryPool
         /// <inheritdoc />
         public static double AllowFreeThreshold()
         {
-            return Money.COIN * 144 / 250;
+            return (double) Money.COIN * 144 / 250;
         }
 
         /// <inheritdoc />
@@ -1327,10 +1327,13 @@ namespace Blockcore.Features.MemoryPool
         public class NextTxPair
         {
             /// <summary>The outpoint of the transaction.</summary>
-            public OutPoint OutPoint;
+            private OutPoint outPoint;
+            public OutPoint OutPoint { get; set; }
 
             /// <summary>The next transaction.</summary>
-            public Transaction Transaction;
+
+            private Transaction transaction;
+            public Transaction Transaction { get; set; }
         }
     }
 }

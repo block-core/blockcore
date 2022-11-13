@@ -4693,6 +4693,7 @@ var WebSocketTransport = /** @class */ (function () {
                             url += (url.indexOf("?") < 0 ? "?" : "&") + ("access_token=" + encodeURIComponent(token));
                         }
                         _a.label = 2;
+                        break;
                     case 2: return [2 /*return*/, new Promise(function (resolve, reject) {
                             url = url.replace(/^http/, "ws");
                             var webSocket;

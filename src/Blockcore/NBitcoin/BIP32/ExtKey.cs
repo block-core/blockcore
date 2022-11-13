@@ -13,7 +13,7 @@ namespace NBitcoin
     /// </summary>
     public class ExtKey : IBitcoinSerializable, IDestination, ISecret
     {
-        public static bool UseBCForHMACSHA512 = false;
+        public const bool UseBCForHMACSHA512 = false;
 
         /// <summary>
         /// Parses the Base58 data (checking the network if specified), checks it represents the

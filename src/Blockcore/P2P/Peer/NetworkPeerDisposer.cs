@@ -110,7 +110,7 @@ namespace Blockcore.P2P.Peer
             {
                 peer.Disconnect("Node shutdown");
 
-                this.logger.LogDebug("Disposing and waiting for connection ID {0}.", peer.Connection.Id);
+                this.logger.LogDebug("Disposing and waiting for connection ID {peer.Connection.Id}.", peer.Connection.Id);
 
                 peer.Dispose();
             }

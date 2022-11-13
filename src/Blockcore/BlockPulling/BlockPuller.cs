@@ -990,7 +990,7 @@ namespace Blockcore.BlockPulling
             double blocksPerSec = Math.Round(totalSpeedBytesPerSec / avgBlockSizeBytes, 2);
             statsBuilder.AppendLine($"Amount of blocks node can download in 1 second: {blocksPerSec}");
 
-            // TODO: add logging per each peer
+ 
             // peer -- quality score -- assigned blocks -- speed  (SORT BY QualityScore)
         }
 

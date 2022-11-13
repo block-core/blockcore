@@ -32,14 +32,14 @@ namespace NBitcoin.BouncyCastle.Asn1.Sec
         /*
          * secp112r1
          */
-        internal class Secp112r1Holder
+        internal class Secp112R1Holder
             : X9ECParametersHolder
         {
-            private Secp112r1Holder()
+            private Secp112R1Holder()
             {
             }
 
-            internal static readonly X9ECParametersHolder Instance = new Secp112r1Holder();
+            internal static readonly X9ECParametersHolder Instance = new Secp112R1Holder();
 
             protected override X9ECParameters CreateParameters()
             {
@@ -1157,7 +1157,7 @@ namespace NBitcoin.BouncyCastle.Asn1.Sec
 
         static SecNamedCurves()
         {
-            DefineCurve("secp112r1", SecObjectIdentifiers.SecP112r1, Secp112r1Holder.Instance);
+            DefineCurve("secp112r1", SecObjectIdentifiers.SecP112r1, Secp112R1Holder.Instance);
             DefineCurve("secp112r2", SecObjectIdentifiers.SecP112r2, Secp112r2Holder.Instance);
             DefineCurve("secp128r1", SecObjectIdentifiers.SecP128r1, Secp128r1Holder.Instance);
             DefineCurve("secp128r2", SecObjectIdentifiers.SecP128r2, Secp128r2Holder.Instance);

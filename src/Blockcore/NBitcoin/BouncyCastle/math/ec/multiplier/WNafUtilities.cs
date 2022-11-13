@@ -287,7 +287,7 @@ namespace NBitcoin.BouncyCastle.Math.EC.Multiplier
 
         public static WNafPreCompInfo GetWNafPreCompInfo(PreCompInfo preCompInfo)
         {
-            if((preCompInfo != null) && (preCompInfo is WNafPreCompInfo))
+            if(preCompInfo is WNafPreCompInfo)
             {
                 return (WNafPreCompInfo)preCompInfo;
             }

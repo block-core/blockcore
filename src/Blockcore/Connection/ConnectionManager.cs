@@ -212,7 +212,7 @@ namespace Blockcore.Connection
                 catch (SocketException e)
                 {
                     this.logger.LogCritical("Unable to listen on port {0} (you can change the port using '-port=[number]'). Error message: {1}", listen.Endpoint.Port, e.Message);
-                    throw e;
+                    throw;
                 }
 
                 logs.Append(listen.Endpoint.Address + ":" + listen.Endpoint.Port);

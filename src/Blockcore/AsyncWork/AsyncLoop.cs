@@ -125,7 +125,7 @@ namespace Blockcore.AsyncWork
                 }
                 finally
                 {
-                    this.logger.LogInformation(this.Name + " stopping.");
+                    this.logger.LogInformation("{name} stopping. ", this.Name);
                 }
 
                 if (this.UncaughtException != null)
@@ -135,7 +135,7 @@ namespace Blockcore.AsyncWork
                     this.logger.LogCritical(new EventId(0), this.UncaughtException, this.Name + " threw an unhandled exception");
 
                     // You can touch this one.
-                    this.logger.LogError("{0} threw an unhandled exception: {1}", this.Name, this.UncaughtException.ToString());
+                    this.logger.LogError("{name} threw an unhandled exception: {exception}", this.Name, this.UncaughtException.ToString());
                 }
             }, cancellation);
         }

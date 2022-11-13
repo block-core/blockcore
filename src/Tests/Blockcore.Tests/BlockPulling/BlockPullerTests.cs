@@ -198,7 +198,7 @@ namespace Blockcore.Tests.BlockPulling
             DownloadJob reassignedJob = this.puller.ReassignedJobsQueue.Peek();
 
             foreach (ChainedHeader chainedHeader in headers)
-                Assert.True(reassignedJob.getHeaders().Exists(x => x == chainedHeader));
+                Assert.True(reassignedJob.Headers.Exists(x => x == chainedHeader));
 
             await this.puller.AssignDownloadJobsAsync();
 
@@ -278,7 +278,7 @@ namespace Blockcore.Tests.BlockPulling
 
             // getHeaders() were added to the jobs queue.
             Assert.Single(this.puller.DownloadJobsQueue);
-            Assert.Equal(2, this.puller.DownloadJobsQueue.Peek().getHeaders().Count);
+            Assert.Equal(2, this.puller.DownloadJobsQueue.Peek().Headers.Count);
             Assert.True(this.puller.ProcessQueuesSignal.IsSet);
 
             await this.puller.AssignDownloadJobsAsync();
@@ -316,7 +316,7 @@ namespace Blockcore.Tests.BlockPulling
 
             Assert.Empty(this.puller.PullerBehaviorsByPeerId);
             Assert.Single(this.puller.ReassignedJobsQueue);
-            Assert.Equal(headers.Count, this.puller.ReassignedJobsQueue.Peek().getHeaders().Count);
+            Assert.Equal(headers.Count, this.puller.ReassignedJobsQueue.Peek().Headers.Count);
 
             await this.puller.AssignDownloadJobsAsync();
 
@@ -524,7 +524,7 @@ namespace Blockcore.Tests.BlockPulling
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, 50);
 
             Assert.Equal(50, assignedDownloads.Count);
-            Assert.Equal(50, job.getHeaders().Count);
+            Assert.Equal(50, job.Headers.Count);
         }
 
         /// <summary>
@@ -587,7 +587,7 @@ namespace Blockcore.Tests.BlockPulling
 
             // If nothing was assigned, no callbacks with null are called.
             Assert.Empty(this.helper.CallbacksCalled);
-            Assert.Equal(10, this.puller.DownloadJobsQueue.Peek().getHeaders().Count);
+            Assert.Equal(10, this.puller.DownloadJobsQueue.Peek().Headers.Count);
         }
 
         /// <summary>
@@ -617,7 +617,7 @@ namespace Blockcore.Tests.BlockPulling
             await this.puller.AssignDownloadJobsAsync();
 
             Assert.Single(this.puller.DownloadJobsQueue);
-            Assert.Equal(9, this.puller.DownloadJobsQueue.Peek().getHeaders().Count);
+            Assert.Equal(9, this.puller.DownloadJobsQueue.Peek().Headers.Count);
 
             Assert.Equal(jobSizes[0], behaviors[0].RequestedHashes.Count);
             Assert.Equal(jobSizes[1], behaviors[1].RequestedHashes.Count);
@@ -689,7 +689,7 @@ namespace Blockcore.Tests.BlockPulling
 
             Assert.Single(this.puller.ReassignedJobsQueue);
             Assert.Empty(this.puller.DownloadJobsQueue);
-            Assert.Equal(headersReassignedFromPeer2Count, this.puller.ReassignedJobsQueue.Peek().getHeaders().Count);
+            Assert.Equal(headersReassignedFromPeer2Count, this.puller.ReassignedJobsQueue.Peek().Headers.Count);
             Assert.Single(this.puller.PullerBehaviorsByPeerId);
 
             await this.puller.AssignDownloadJobsAsync();
@@ -731,8 +731,8 @@ namespace Blockcore.Tests.BlockPulling
             Assert.Single(this.puller.ReassignedJobsQueue);
             Assert.Single(this.puller.DownloadJobsQueue);
 
-            Assert.Equal(2, this.puller.ReassignedJobsQueue.Peek().getHeaders().Count);
-            Assert.Equal(2, this.puller.DownloadJobsQueue.Peek().getHeaders().Count);
+            Assert.Equal(2, this.puller.ReassignedJobsQueue.Peek().Headers.Count);
+            Assert.Equal(2, this.puller.DownloadJobsQueue.Peek().Headers.Count);
 
             // 1 empty slot.
             this.puller.SetMaxBlocksBeingDownloaded(1);
@@ -741,7 +741,7 @@ namespace Blockcore.Tests.BlockPulling
 
             Assert.Empty(this.puller.ReassignedJobsQueue);
             Assert.Single(this.puller.DownloadJobsQueue);
-            Assert.Single(this.puller.DownloadJobsQueue.Peek().getHeaders());
+            Assert.Single(this.puller.DownloadJobsQueue.Peek().Headers);
         }
 
         /// <summary>
@@ -798,7 +798,7 @@ namespace Blockcore.Tests.BlockPulling
 
             var chainedHeaders = new List<ChainedHeader>();
             foreach (DownloadJob downloadJob in this.puller.ReassignedJobsQueue)
-                chainedHeaders.AddRange(downloadJob.getHeaders());
+                chainedHeaders.AddRange(downloadJob.Headers);
 
             Assert.True(chainedHeaders.All(x => peer1Assignments.Exists(y => y.Header == x)));
         }
@@ -857,7 +857,7 @@ namespace Blockcore.Tests.BlockPulling
 
             var chainedHeaders = new List<ChainedHeader>();
             foreach (DownloadJob downloadJob in this.puller.ReassignedJobsQueue)
-                chainedHeaders.AddRange(downloadJob.getHeaders());
+                chainedHeaders.AddRange(downloadJob.Headers);
 
             // All important headers are reassigned.
             Assert.True(importantHeaders.All(x => chainedHeaders.Exists(y => y == x)));
@@ -900,7 +900,7 @@ namespace Blockcore.Tests.BlockPulling
             Assert.Equal(BlockPullerBehavior.MinQualityScore, behavior1.QualityScore);
 
             Assert.Single(this.puller.ReassignedJobsQueue);
-            Assert.Equal(this.puller.ReassignedJobsQueue.Peek().getHeaders().Count, headers.Count);
+            Assert.Equal(this.puller.ReassignedJobsQueue.Peek().Headers.Count, headers.Count);
 
             await this.puller.AssignDownloadJobsAsync();
 

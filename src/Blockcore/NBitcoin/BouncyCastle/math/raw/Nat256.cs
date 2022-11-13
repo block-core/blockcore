@@ -1069,6 +1069,10 @@ namespace NBitcoin.BouncyCastle.Math.Raw
             ulong x_2 = x[xOff + 2];
             ulong zz_3 = zz[zzOff + 3];
             ulong zz_4 = zz[zzOff + 4];
+            
+            
+            
+            
             {
                 zz_2 += x_2 * x_0;
                 w = (uint)zz_2;

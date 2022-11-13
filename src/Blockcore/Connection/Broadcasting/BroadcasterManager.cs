@@ -9,6 +9,7 @@ using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using ConcurrentCollections;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
 
 namespace Blockcore.Connection.Broadcasting
@@ -18,6 +19,8 @@ namespace Blockcore.Connection.Broadcasting
         protected readonly IConnectionManager connectionManager;
         private readonly ISignals signals;
         private readonly IEnumerable<IBroadcastCheck> broadcastChecks;
+        /// <summary>Instance logger.</summary>
+        private readonly ILogger logger;
 
         private Dictionary<uint256, BroadcastTransactionStateChanedEntry> Broadcasts { get; }
 
@@ -106,16 +109,13 @@ namespace Blockcore.Connection.Broadcasting
 
         public async Task<bool> BroadcastTransactionAsync(uint256 trxHash)
         {
-            if (this.Broadcasts.TryGetValue(trxHash, out BroadcastTransactionStateChanedEntry entry))
+            if (this.Broadcasts.TryGetValue(trxHash, out BroadcastTransactionStateChanedEntry entry) && (entry.TransactionBroadcastState == TransactionBroadcastState.ReadyToBroadcast ||
+                    entry.TransactionBroadcastState == TransactionBroadcastState.Broadcasted))
             {
-                if (entry.TransactionBroadcastState == TransactionBroadcastState.ReadyToBroadcast ||
-                    entry.TransactionBroadcastState == TransactionBroadcastState.Broadcasted)
-                {
                     // broadacste
                     await this.PropagateTransactionToPeersAsync(entry.Transaction).ConfigureAwait(false);
-
                     return true;
-                }
+
             }
 
             return false;
@@ -142,8 +142,9 @@ namespace Blockcore.Connection.Broadcasting
                         await peer.SendMessageAsync(invPayload).ConfigureAwait(false);
                     }
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException ex)
                 {
+                    this.logger.LogError("Error was thrown: {message}", ex.Message);
                 }
             }
         }

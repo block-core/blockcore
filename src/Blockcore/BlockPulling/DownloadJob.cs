@@ -14,20 +14,8 @@ namespace Blockcore.BlockPulling
             this.Headers = Headers;
         }
         /// <summary>Unique identifier of this job.</summary>
-        private int Id;
+        private int id;
 
-        private List<ChainedHeader> Headers;
-
-
-        public int getId() { return this.Id; }
-
-        public List<ChainedHeader> getHeaders() { return this.Headers; }
-
-    };
+        public int Id { get { return this.id; } set { this.id = value; } }
 
 }
-
-
-
-
-

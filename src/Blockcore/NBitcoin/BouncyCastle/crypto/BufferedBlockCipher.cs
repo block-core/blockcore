@@ -91,9 +91,9 @@ namespace NBitcoin.BouncyCastle.Crypto
         * with len bytes of input.
         */
         public override int GetUpdateOutputSize(
-            int length)
+            int inputLen)
         {
-            int total = length + this.bufOff;
+            int total = inputLen + this.bufOff;
             int leftOver = total % this.buf.Length;
             return total - leftOver;
         }

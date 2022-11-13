@@ -202,6 +202,7 @@ namespace Blockcore.Features.ColdStaking
         /// <inheritdoc />
         public override void Dispose()
         {
+            // Ova metoda je virtuelna,zato mora ostati prazna
         }
     }
 

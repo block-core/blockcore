@@ -42,7 +42,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         private uint nonce;
 
-        public uint Nonce { get { return this.nonce; } set { this.nonce = value; } }
+        public uint Nonce { get; set; }
 
         private uint256 hashMerkleRoot;
 
@@ -124,10 +124,10 @@ namespace Blockcore.Consensus.BlockInfo
         public virtual uint256 GetHash()
         {
             uint256 hash = null;
-            uint256[] hashes = this.hashes;
+            uint256[] local_hashes = this.hashes;
 
-            if (hashes != null)
-                hash = hashes[0];
+            if (local_hashes != null)
+                hash = local_hashes[0];
 
             if (hash != null)
                 return hash;
@@ -138,10 +138,10 @@ namespace Blockcore.Consensus.BlockInfo
                 hash = hs.GetHash();
             }
 
-            hashes = this.hashes;
-            if (hashes != null)
+            local_hashes = this.hashes;
+            if (local_hashes != null)
             {
-                hashes[0] = hash;
+                local_hashes[0] = hash;
             }
 
             return hash;
@@ -178,8 +178,8 @@ namespace Blockcore.Consensus.BlockInfo
 
         public bool CheckProofOfWork()
         {
-            BigInteger bits = this.Bits.ToBigInteger();
-            if ((bits.CompareTo(BigInteger.Zero) <= 0) || (bits.CompareTo(pow256) >= 0))
+            BigInteger bitse = this.Bits.ToBigInteger();
+            if ((bitse.CompareTo(BigInteger.Zero) <= 0) || (bitse.CompareTo(pow256) >= 0))
                 return false;
 
             return this.GetPoWHash() <= this.Bits.ToUInt256();

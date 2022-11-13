@@ -56,15 +56,15 @@ namespace NBitcoin.BouncyCastle.Asn1
         }
 
         public override int Read(
-            byte[] buf,
-            int off,
-            int len)
+            byte[] buffer,
+            int offset,
+            int count)
         {
             if(this._remaining == 0)
                 return 0;
 
-            int toRead = System.Math.Min(len, this._remaining);
-            int numRead = this._in.Read(buf, off, toRead);
+            int toRead = System.Math.Min(count, this._remaining);
+            int numRead = this._in.Read(buffer, offset, toRead);
 
             if(numRead < 1)
                 throw new EndOfStreamException("DEF length " + this._originalLength + " object truncated by " + this._remaining);

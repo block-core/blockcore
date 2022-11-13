@@ -31,7 +31,7 @@ namespace NBitcoin
         {
             string list = _WordLists.TryGet(name);
             if(list == null)
-                return null;
+                return Task.FromResult<Wordlist>(null);
             return Task.FromResult(new Wordlist(list.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries),
                 name == "japanese" ? '　' : ' ', name
                 ));

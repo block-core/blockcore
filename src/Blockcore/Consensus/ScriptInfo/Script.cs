@@ -167,6 +167,7 @@ namespace Blockcore.Consensus.ScriptInfo
     /// <summary>
     /// Signature hash types/flags
     /// </summary>
+    [Flags]
     public enum SigHash : uint
     {
         Undefined = 0,

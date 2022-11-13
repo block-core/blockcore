@@ -32,7 +32,7 @@ namespace Blockcore.Consensus
                     break;
 
                 case TxOutType.TX_COLDSTAKE:
-                    destinationAddress = this.GetColdStakeAddresses(network, script);
+                    destinationAddress = GetColdStakeAddresses(network, script);
                     break;
 
                 case TxOutType.TX_SEGWIT:
@@ -48,7 +48,7 @@ namespace Blockcore.Consensus
             return destinationAddress;
         }
 
-        public ScriptAddressResult GetColdStakeAddresses(Network network, Script script)
+        public static ScriptAddressResult GetColdStakeAddresses(Network network, Script script)
         {
             var destinationAddressResult = script.GetColdStakeDestinationAddress(network);
             return new ScriptAddressResult()

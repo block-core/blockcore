@@ -14,7 +14,7 @@ namespace Blockcore.AsyncWork
     /// to make the task run only once. Running the task for other than one or infinite number of times is not supported.
     /// </para>
     /// </summary>
-    public class AsyncLoop : IAsyncLoop
+    public sealed class AsyncLoop : IAsyncLoop
     {
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
@@ -73,7 +73,7 @@ namespace Blockcore.AsyncWork
             if (repeatEvery != null)
                 this.RepeatEvery = repeatEvery.Value;
 
-            this.RunningTask = this.StartAsync(cancellation, startAfter);
+            this.RunningTask = Task.Run(async () => await this.StartAsync(cancellation, startAfter), cancellation);
 
             return this;
         }
@@ -83,61 +83,52 @@ namespace Blockcore.AsyncWork
         /// </summary>
         /// <param name="cancellation">Cancellation token that triggers when the task and the loop should be cancelled.</param>
         /// <param name="delayStart">Delay before the first run of the task, or null if no startup delay is required.</param>
-        private Task StartAsync(CancellationToken cancellation, TimeSpan? delayStart = null)
+        private async Task StartAsync(CancellationToken cancellation, TimeSpan? delayStart = null)
         {
-            return Task.Run(async () =>
+            try
             {
-                try
+                if (cancellation.IsCancellationRequested) return;
+
+                if (delayStart != null)
                 {
-                    if (delayStart != null)
-                    {
-                        this.logger.LogInformation("{0} starting in {1} seconds.", this.Name, delayStart.Value.TotalSeconds);
-                        await Task.Delay(delayStart.Value, cancellation).ConfigureAwait(false);
-                    }
-
-                    this.logger.LogInformation("{0} starting.", this.Name);
-
-                    if (this.RepeatEvery == TimeSpans.RunOnce)
-                    {
-                        if (cancellation.IsCancellationRequested)
-                            return;
-
-                        await this.loopAsync(cancellation).ConfigureAwait(false);
-
-                        return;
-                    }
-
-                    while (!cancellation.IsCancellationRequested)
-                    {
-                        await this.loopAsync(cancellation).ConfigureAwait(false);
-                        if (!cancellation.IsCancellationRequested)
-                            await Task.Delay(this.RepeatEvery, cancellation).ConfigureAwait(false);
-                    }
+                    this.logger.LogInformation("{0} starting in {1} seconds.", this.Name, delayStart.Value.TotalSeconds);
+                    await Task.Delay(delayStart.Value, cancellation).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException ex)
+
+                this.logger.LogInformation("{name} starting.", this.Name);
+
+                if (this.RepeatEvery == TimeSpans.RunOnce)
                 {
+                    await this.loopAsync(cancellation).ConfigureAwait(false);
+                    return;
+                }
+
+                while (!cancellation.IsCancellationRequested)
+                {
+                    await this.loopAsync(cancellation).ConfigureAwait(false);
                     if (!cancellation.IsCancellationRequested)
-                        this.UncaughtException = ex;
+                        await Task.Delay(this.RepeatEvery, cancellation).ConfigureAwait(false);
                 }
-                catch (Exception ex)
+            }
+            catch (OperationCanceledException ex)
+            {
+                if (!cancellation.IsCancellationRequested)
                 {
-                    this.UncaughtException = ex;
+                    this.logger.LogCritical(new EventId(0), ex, this.Name + " threw an unhandled exception");
+                    this.logger.LogError("{logName} threw an unhandled exception: {logUncaughtException}", this.Name, ex.ToString());
+                    return;
                 }
-                finally
-                {
-                    this.logger.LogInformation(this.Name + " stopping.");
-                }
-
-                if (this.UncaughtException != null)
-                {
-                    // WARNING: Do NOT touch this line unless you want to fix weird AsyncLoop tests.
-                    // The following line has to be called EXACTLY as it is.
-                    this.logger.LogCritical(new EventId(0), this.UncaughtException, this.Name + " threw an unhandled exception");
-
-                    // You can touch this one.
-                    this.logger.LogError("{logName} threw an unhandled exception: {logUncaughtException}", this.Name, this.UncaughtException.ToString());
-                }
-            }, cancellation);
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogCritical(new EventId(0), ex, this.Name + " threw an unhandled exception");
+                this.logger.LogError("{0} threw an unhandled exception: {1}", this.Name, ex.ToString());
+                return;
+            }
+            finally
+            {
+                this.logger.LogInformation(this.Name + " stopping.");
+            }
         }
 
         /// <summary>
@@ -152,12 +143,12 @@ namespace Blockcore.AsyncWork
             {
                 try
                 {
-                    this.logger.LogInformation("Waiting for {0} to finish or be cancelled.", this.Name);
+                    this.logger.LogInformation("Waiting for {name} to finish or be cancelled.", this.Name);
                     this.RunningTask.Wait();
                 }
                 catch (TaskCanceledException)
                 {
-                    this.logger.LogInformation("{0} cancelled.", this.Name);
+                    this.logger.LogInformation("{name} cancelled.", this.Name);
                 }
             }
         }

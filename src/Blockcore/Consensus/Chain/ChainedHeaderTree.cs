@@ -349,14 +349,14 @@ namespace Blockcore.Consensus.Chain
             if (!chainedHeader.IsReferenceConnected)
             {
                 this.logger.LogTrace("(-)[HEADER_DISCONNECTED]:null");
-                return null;
+                return new List<ChainedHeaderBlock>();
             }
 
             // Can happen in case peer was disconnected during the validation and it was the only peer claiming that header.
             if (!this.chainedHeadersByHash.ContainsKey(chainedHeader.HashBlock))
             {
                 this.logger.LogTrace("(-)[HEADER_NOT_FOUND]:null");
-                return null;
+                return new List<ChainedHeaderBlock>();
             }
 
             // Can happen when peer was disconnected after sending the block but before the validation was completed
@@ -364,7 +364,7 @@ namespace Blockcore.Consensus.Chain
             if (chainedHeader.Block == null)
             {
                 this.logger.LogTrace("(-)[BLOCK_DATA_NULL]:null");
-                return null;
+                return new List<ChainedHeaderBlock>();
             }
 
             // Can happen in case of a race condition when peer 1 presented a block, we started partial validation, peer 1 disconnected,
@@ -374,7 +374,7 @@ namespace Blockcore.Consensus.Chain
             {
                 this.logger.LogDebug("Previous block validation state invalid: {0}", chainedHeader.Previous);
                 this.logger.LogTrace("(-)[PREV_BLOCK_NOT_VALIDATED]:null");
-                return null;
+                return new List<ChainedHeaderBlock>();
             }
 
             // Same scenario as above except for prev block was validated which triggered next partial validation to be started.
@@ -382,7 +382,7 @@ namespace Blockcore.Consensus.Chain
                 (chainedHeader.BlockValidationState == ValidationState.FullyValidated))
             {
                 this.logger.LogTrace("(-)[ALREADY_VALIDATED]:null");
-                return null;
+                return new List<ChainedHeaderBlock>();
             }
 
             chainedHeader.BlockValidationState = ValidationState.PartiallyValidated;
@@ -1006,7 +1006,7 @@ namespace Blockcore.Consensus.Chain
             if (!this.TryFindNewHeaderIndex(headers, out int newHeaderIndex))
             {
                 this.logger.LogTrace("(-)[NO_NEW_HEADERS_FOUND]:null");
-                return null;
+                return (List<ChainedHeader>)Enumerable.Empty<ChainedHeader>() ;
             }
 
             ChainedHeader previousChainedHeader;

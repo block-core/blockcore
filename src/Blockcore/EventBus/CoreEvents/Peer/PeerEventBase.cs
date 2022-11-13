@@ -17,7 +17,7 @@ namespace Blockcore.EventBus.CoreEvents.Peer
         /// </value>
         public IPEndPoint PeerEndPoint { get; }
 
-        public PeerEventBase(IPEndPoint peerEndPoint)
+        protected PeerEventBase(IPEndPoint peerEndPoint)
         {
             this.PeerEndPoint = peerEndPoint;
         }

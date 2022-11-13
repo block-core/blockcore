@@ -82,7 +82,7 @@ namespace Blockcore.Base
         public void Initialize(ChainedHeader highestHeader)
         {
             if (this.commonTipPersistingTask != null)
-                throw new Exception("Already initialized.");
+                throw new InvalidOperationException("Already initialized.");
 
             var commonTipHashHeight = this.keyValueRepo.LoadValue<HashHeightPair>(CommonTipKey);
 

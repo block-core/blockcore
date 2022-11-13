@@ -146,19 +146,6 @@ namespace Blockcore.Consensus.TransactionInfo
                 return false;
             return this.Id.Equals(item.Id);
         }
-        public static bool operator ==(TransactionSignature a, TransactionSignature b)
-        {
-            if(ReferenceEquals(a, b))
-                return true;
-            if(((object)a == null) || ((object)b == null))
-                return false;
-            return a.Id == b.Id;
-        }
-
-        public static bool operator !=(TransactionSignature a, TransactionSignature b)
-        {
-            return !(a == b);
-        }
 
         public override int GetHashCode()
         {

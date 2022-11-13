@@ -99,7 +99,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
         {
             Finish();
 
-            Pack.UInt32_To_BE((uint) this.H1, output, outOff);
+            Pack.UInt32_To_BE(this.H1, output, outOff);
             Pack.UInt32_To_BE((uint) this.H2, output, outOff + 4);
             Pack.UInt32_To_BE((uint) this.H3, output, outOff + 8);
             Pack.UInt32_To_BE((uint) this.H4, output, outOff + 12);

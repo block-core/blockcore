@@ -195,7 +195,7 @@ function isFunction(x) {
 
 
 
-var _isArray = void 0;
+const _isArray = void 0;
 if (Array.isArray) {
   _isArray = Array.isArray;
 } else {
@@ -308,7 +308,7 @@ function flush() {
 
 function attemptVertx() {
   try {
-    var r = require;
+    
     var vertx = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module 'vertx'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
     vertxNext = vertx.runOnLoop || vertx.runOnContext;
     return useVertxTimer();
@@ -407,7 +407,7 @@ var PENDING = void 0;
 var FULFILLED = 1;
 var REJECTED = 2;
 
-var GET_THEN_ERROR = new ErrorObject();
+let GET_THEN_ERROR = new ErrorObject();
 
 function selfFulfillment() {
   return new TypeError("You cannot resolve a promise with itself");

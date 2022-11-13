@@ -1595,12 +1595,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
             if(x != null)
             {
                 // Check if x and y are elements of the same field
-                F2mFieldElement.CheckFieldElements(x, y);
+                F2MFieldElement.CheckFieldElements(x, y);
 
                 // Check if x and a are elements of the same field
                 if(curve != null)
                 {
-                    F2mFieldElement.CheckFieldElements(x, curve.A);
+                    F2MFieldElement.CheckFieldElements(x, curve.A);
                 }
             }
         }

@@ -22,11 +22,14 @@ namespace NBitcoin
                 throw new ArgumentOutOfRangeException("Array size too big");
             if(!this.Serializing)
                 data = new T[this._VarInt.ToLong()];
-            for(int i = 0 ; i < data.Length ; i++)
+            if (data != null)
             {
-                T obj = data[i];
-                ReadWrite(ref obj);
-                data[i] = obj;
+                for (int i = 0; i < data.Length; i++)
+                {
+                    T obj = data[i];
+                    ReadWrite(ref obj);
+                    data[i] = obj;
+                }
             }
         }
 

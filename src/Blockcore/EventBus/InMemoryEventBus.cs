@@ -84,11 +84,11 @@ namespace Blockcore.EventBus
         }
 
         /// <inheritdoc />
-        public void Publish<TEvent>(TEvent @event) where TEvent : EventBase
+        public void Publish<TEvent>(TEvent @eventItem) where TEvent : EventBase
         {
-            if (@event == null)
+            if (@eventItem == null)
             {
-                throw new ArgumentNullException(nameof(@event));
+                throw new ArgumentNullException(nameof(@eventItem));
             }
 
             List<ISubscription> allSubscriptions = new List<ISubscription>();
@@ -107,11 +107,11 @@ namespace Blockcore.EventBus
 
                 try
                 {
-                    subscription.Publish(@event);
+                    subscription.Publish(@eventItem);
                 }
                 catch (Exception ex)
                 {
-                    this.subscriptionErrorHandler?.Handle(@event, ex, subscription);
+                    this.subscriptionErrorHandler?.Handle(@eventItem, ex, subscription);
                 }
             }
         }

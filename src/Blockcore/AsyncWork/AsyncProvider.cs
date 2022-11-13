@@ -259,8 +259,8 @@ namespace Blockcore.AsyncWork
                 taskInformations.AddRange(this.registeredTasks.Values);
             }
 
-            int running = taskInformations.Where(info => info.IsRunning).Count();
-            int faulted = taskInformations.Where(info => !info.IsRunning).Count();
+            int running = taskInformations.Count(info => info.IsRunning);
+            int faulted = taskInformations.Count(info => !info.IsRunning);
 
             var sb = new StringBuilder();
             sb.AppendLine();

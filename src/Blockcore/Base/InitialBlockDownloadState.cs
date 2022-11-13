@@ -24,9 +24,6 @@ namespace Blockcore.Base
         /// <summary>Information about node's chain.</summary>
         private readonly IChainState chainState;
 
-        /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
-
         /// <summary>Specification of the network the node runs on - regtest/testnet/mainnet.</summary>
         private readonly Network network;
 
@@ -48,8 +45,6 @@ namespace Blockcore.Base
 
             this.lastCheckpointHeight = this.checkpoints.GetLastCheckpointHeight();
             this.minimumChainWork = this.network.Consensus.MinimumChainWork ?? uint256.Zero;
-
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />

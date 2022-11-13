@@ -409,7 +409,7 @@ namespace Blockcore.Consensus.ScriptInfo
             return result;
         }
 
-        public Script GenerateScriptSig(byte[][] pushes, Script redeemScript)
+        private Script GenerateScriptSig(byte[][] pushes, Script redeemScript)
         {
             var ops = new List<Op>();
             foreach (byte[] push in pushes)

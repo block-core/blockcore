@@ -567,7 +567,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
      * basis representations are supported. Gaussian normal basis (GNB)
      * representation is not supported.
      */
-    internal class F2mFieldElement
+    internal class F2MFieldElement
         : ECFieldElement
     {
         /**
@@ -620,7 +620,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             * represents the reduction polynomial <code>f(z)</code>.
             * @param x The BigInteger representing the value of the field element.
             */
-        public F2mFieldElement(
+        public F2MFieldElement(
             int m,
             int k1,
             int k2,
@@ -659,7 +659,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             * polynomial <code>f(z)</code>.
             * @param x The BigInteger representing the value of the field element.
             */
-        public F2mFieldElement(
+        public F2MFieldElement(
             int m,
             int k,
             BigInteger x)
@@ -668,7 +668,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             // Set k1 to k, and set k2 and k3 to 0
         }
 
-        private F2mFieldElement(int m, int[] ks, LongArray x)
+        private F2MFieldElement(int m, int[] ks, LongArray x)
         {
             this.m = m;
             this.representation = (ks.Length == 1) ? Tpb : Ppb;
@@ -741,14 +741,14 @@ namespace NBitcoin.BouncyCastle.Math.EC
             ECFieldElement a,
             ECFieldElement b)
         {
-            if(!(a is F2mFieldElement) || !(b is F2mFieldElement))
+            if(!(a is F2MFieldElement) || !(b is F2MFieldElement))
             {
                 throw new ArgumentException("Field elements are not "
                     + "both instances of F2mFieldElement");
             }
 
-            var aF2m = (F2mFieldElement)a;
-            var bF2m = (F2mFieldElement)b;
+            var aF2m = (F2MFieldElement)a;
+            var bF2m = (F2MFieldElement)b;
 
             if(aF2m.representation != bF2m.representation)
             {
@@ -769,14 +769,14 @@ namespace NBitcoin.BouncyCastle.Math.EC
             // elements involved are checked in ECPoint.F2m
             // checkFieldElements(this, b);
             LongArray iarrClone = this.x.Copy();
-            var bF2m = (F2mFieldElement)b;
+            var bF2m = (F2MFieldElement)b;
             iarrClone.AddShiftedByWords(bF2m.x, 0);
-            return new F2mFieldElement(this.m, this.ks, iarrClone);
+            return new F2MFieldElement(this.m, this.ks, iarrClone);
         }
 
         public override ECFieldElement AddOne()
         {
-            return new F2mFieldElement(this.m, this.ks, this.x.AddOne());
+            return new F2MFieldElement(this.m, this.ks, this.x.AddOne());
         }
 
         public override ECFieldElement Subtract(
@@ -796,7 +796,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             // No check performed here for performance reasons. Instead the
             // elements involved are checked in ECPoint.F2m
             // checkFieldElements(this, b);
-            return new F2mFieldElement(this.m, this.ks, this.x.ModMultiply(((F2mFieldElement)b).x, this.m, this.ks));
+            return new F2MFieldElement(this.m, this.ks, this.x.ModMultiply(((F2MFieldElement)b).x, this.m, this.ks));
         }
 
         public override ECFieldElement MultiplyMinusProduct(ECFieldElement b, ECFieldElement x, ECFieldElement y)
@@ -806,7 +806,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public override ECFieldElement MultiplyPlusProduct(ECFieldElement b, ECFieldElement x, ECFieldElement y)
         {
-            LongArray ax = this.x, bx = ((F2mFieldElement)b).x, xx = ((F2mFieldElement)x).x, yx = ((F2mFieldElement)y).x;
+            LongArray ax = this.x, bx = ((F2MFieldElement)b).x, xx = ((F2MFieldElement)x).x, yx = ((F2MFieldElement)y).x;
 
             LongArray ab = ax.Multiply(bx, this.m, this.ks);
             LongArray xy = xx.Multiply(yx, this.m, this.ks);
@@ -819,7 +819,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             ab.AddShiftedByWords(xy, 0);
             ab.Reduce(this.m, this.ks);
 
-            return new F2mFieldElement(this.m, this.ks, ab);
+            return new F2MFieldElement(this.m, this.ks, ab);
         }
 
         public override ECFieldElement Divide(
@@ -838,7 +838,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public override ECFieldElement Square()
         {
-            return new F2mFieldElement(this.m, this.ks, this.x.ModSquare(this.m, this.ks));
+            return new F2MFieldElement(this.m, this.ks, this.x.ModSquare(this.m, this.ks));
         }
 
         public override ECFieldElement SquareMinusProduct(ECFieldElement x, ECFieldElement y)
@@ -848,7 +848,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public override ECFieldElement SquarePlusProduct(ECFieldElement x, ECFieldElement y)
         {
-            LongArray ax = this.x, xx = ((F2mFieldElement)x).x, yx = ((F2mFieldElement)y).x;
+            LongArray ax = this.x, xx = ((F2MFieldElement)x).x, yx = ((F2MFieldElement)y).x;
 
             LongArray aa = ax.Square(this.m, this.ks);
             LongArray xy = xx.Multiply(yx, this.m, this.ks);
@@ -861,17 +861,17 @@ namespace NBitcoin.BouncyCastle.Math.EC
             aa.AddShiftedByWords(xy, 0);
             aa.Reduce(this.m, this.ks);
 
-            return new F2mFieldElement(this.m, this.ks, aa);
+            return new F2MFieldElement(this.m, this.ks, aa);
         }
 
         public override ECFieldElement SquarePow(int pow)
         {
-            return pow < 1 ? this : new F2mFieldElement(this.m, this.ks, this.x.ModSquareN(pow, this.m, this.ks));
+            return pow < 1 ? this : new F2MFieldElement(this.m, this.ks, this.x.ModSquareN(pow, this.m, this.ks));
         }
 
         public override ECFieldElement Invert()
         {
-            return new F2mFieldElement(this.m, this.ks, this.x.ModInverse(this.m, this.ks));
+            return new F2MFieldElement(this.m, this.ks, this.x.ModInverse(this.m, this.ks));
         }
 
         public override ECFieldElement Sqrt()
@@ -957,7 +957,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             if(obj == this)
                 return true;
 
-            var other = obj as F2mFieldElement;
+            var other = obj as F2MFieldElement;
 
             if(other == null)
                 return false;
@@ -966,7 +966,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         }
 
         public virtual bool Equals(
-            F2mFieldElement other)
+            F2MFieldElement other)
         {
             return ((this.m == other.m)
                 && (this.representation == other.representation)

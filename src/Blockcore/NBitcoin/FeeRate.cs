@@ -28,20 +28,20 @@ namespace NBitcoin
 
         public FeeRate(Money feePerK)
         {
-            if(feePerK == null)
+            if (feePerK == null)
                 throw new ArgumentNullException("feePerK");
-            if(feePerK.Satoshi < 0)
+            if (feePerK.Satoshi < 0)
                 throw new ArgumentOutOfRangeException("feePerK");
             this._FeePerK = feePerK;
         }
 
         public FeeRate(Money feePaid, int size)
         {
-            if(feePaid == null)
+            if (feePaid == null)
                 throw new ArgumentNullException("feePaid");
-            if(feePaid.Satoshi < 0)
+            if (feePaid.Satoshi < 0)
                 throw new ArgumentOutOfRangeException("feePaid");
-            if(size > 0)
+            if (size > 0)
                 this._FeePerK = (long)(feePaid.Satoshi / (decimal)size * 1000);
             else
                 this._FeePerK = 0;
@@ -55,7 +55,7 @@ namespace NBitcoin
         public Money GetFee(int virtualSize)
         {
             Money nFee = this._FeePerK.Satoshi * virtualSize / 1000;
-            if(nFee == 0 && this._FeePerK.Satoshi > 0)
+            if (nFee == 0 && this._FeePerK.Satoshi > 0)
                 nFee = this._FeePerK.Satoshi;
             return nFee;
         }
@@ -66,13 +66,13 @@ namespace NBitcoin
 
         public override bool Equals(object obj)
         {
-            if(ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, obj))
                 return true;
-            if(((object)this == null) || (obj == null))
+            if (((object)this == null) || (obj == null))
                 return false;
             FeeRate left = this;
             var right = obj as FeeRate;
-            if(right == null)
+            if (right == null)
                 return false;
             return left._FeePerK == right._FeePerK;
         }
@@ -118,10 +118,6 @@ namespace NBitcoin
 
         public static bool operator <(FeeRate left, FeeRate right)
         {
-            if (left == null)
-                throw new ArgumentNullException("left");
-            if (right == null)
-                throw new ArgumentNullException("right");
             return left._FeePerK < right._FeePerK;
         }
         public static bool operator >(FeeRate left, FeeRate right)

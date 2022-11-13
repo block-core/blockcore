@@ -129,10 +129,9 @@ namespace Blockcore.Builder.Feature
         /// <inheritdoc />
         public void EnsureDependencies(List<IFeatureRegistration> featureRegistrations)
         {
-            foreach (Type dependency in this.dependencies)
+            foreach (var dependency in this.dependencies.Where(dependency => featureRegistrations.All(x => !dependency.IsAssignableFrom(x.FeatureType))))
             {
-                if (featureRegistrations.All(x => !dependency.IsAssignableFrom(x.FeatureType)))
-                    throw new MissingDependencyException($"Dependency feature {dependency.Name} cannot be found.");
+                throw new MissingDependencyException($"Dependency feature {dependency.Name} cannot be found.");
             }
         }
 

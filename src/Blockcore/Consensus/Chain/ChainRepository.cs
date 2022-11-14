@@ -33,12 +33,10 @@ namespace Blockcore.Consensus.Chain
         public ChainRepository(ILoggerFactory loggerFactory, IChainStore chainStore, Network network)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
-            ILogger logger;
+
             this.chainStore = chainStore;
             this.Network = network;
             this.lockObj = new object();
-
-            logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />

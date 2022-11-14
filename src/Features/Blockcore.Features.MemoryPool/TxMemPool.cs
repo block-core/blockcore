@@ -667,7 +667,7 @@ namespace Blockcore.Features.MemoryPool
             var toremove = new SetEntries();
             foreach (TxMempoolEntry entry in this.MapTx.EntryTime)
             {
-                if (!(entry.Time < time)) break;
+                if ((entry.Time >= time)) break;
                 toremove.Add(entry);
             }
 

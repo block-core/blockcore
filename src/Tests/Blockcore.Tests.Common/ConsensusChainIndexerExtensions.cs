@@ -24,7 +24,7 @@ namespace Blockcore.Tests.Common
         public static bool TrySetTip(this ChainIndexer chainIndexer, BlockHeader header, out ChainedHeader chainedHeader)
         {
             if (header == null)
-                throw new ArgumentNullException("header");
+                throw new ArgumentNullException(nameof(header));
 
             chainedHeader = null;
             ChainedHeader prev = chainIndexer.GetHeader(header.HashPrevBlock);

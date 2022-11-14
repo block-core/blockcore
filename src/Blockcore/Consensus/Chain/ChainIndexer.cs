@@ -88,7 +88,7 @@ namespace Blockcore.Consensus.Chain
         public ChainedHeader FindFork(IEnumerable<uint256> hashes)
         {
             if (hashes == null)
-                throw new ArgumentNullException("hashes");
+                throw new ArgumentNullException(nameof(hashes));
 
             // Find the first block the caller has in the main chain.
             foreach (uint256 hash in hashes)
@@ -137,7 +137,7 @@ namespace Blockcore.Consensus.Chain
         public IEnumerable<ChainedHeader> EnumerateToTip(ChainedHeader block)
         {
             if (block == null)
-                throw new ArgumentNullException("block");
+                throw new ArgumentNullException(nameof(block));
 
             return this.EnumerateToTip(block.HashBlock);
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;

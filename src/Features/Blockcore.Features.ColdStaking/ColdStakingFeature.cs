@@ -8,7 +8,6 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Connection;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.MemoryPool;
@@ -23,7 +22,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.ColdStaking
 {

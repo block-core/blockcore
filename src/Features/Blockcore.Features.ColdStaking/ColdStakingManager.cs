@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
@@ -240,7 +239,7 @@ namespace Blockcore.Features.ColdStaking
                 accountName = HotWalletAccountName;
             }
 
-            HdAccount defaultAccount =  wallet.GetAccount(0);
+            HdAccount defaultAccount = wallet.GetAccount(0);
             int purposeField = defaultAccount.Purpose;
 
             account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), purposeField, accountIndex, accountName);
@@ -394,7 +393,7 @@ namespace Blockcore.Features.ColdStaking
                 if (payToScript)
                 {
                     HdAddress address = coldAddress ?? hotAddress;
-                    if (address.RedeemScripts == null) 
+                    if (address.RedeemScripts == null)
                         address.RedeemScripts = new List<Script>();
                     address.RedeemScripts.Add(destination);
                     destination = destination.WitHash.ScriptPubKey;
@@ -501,7 +500,7 @@ namespace Blockcore.Features.ColdStaking
             }
 
             // Prevent reusing cold stake addresses as regular withdrawal addresses.
-            if (coldAccount.ExternalAddresses.Concat(coldAccount.InternalAddresses).Any(s => s.Address == receivingAddress ))
+            if (coldAccount.ExternalAddresses.Concat(coldAccount.InternalAddresses).Any(s => s.Address == receivingAddress))
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_INVALID_COLD_WALLET_ADDRESS_USAGE]");
                 throw new WalletException("You can't send the money to a cold staking cold wallet account.");

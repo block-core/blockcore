@@ -46,7 +46,7 @@ namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
             this.consensusFactory = (PoAConsensusFactory)this.Parent.Network.Consensus.ConsensusFactory;
 
             this.maxReorg = this.Parent.Network.Consensus.MaxReorgLength;
-            this.votingEnabled = ((PoAConsensusOptions) this.Parent.Network.Consensus.Options).VotingEnabled;
+            this.votingEnabled = ((PoAConsensusOptions)this.Parent.Network.Consensus.Options).VotingEnabled;
         }
 
         public override void Run(RuleContext context)

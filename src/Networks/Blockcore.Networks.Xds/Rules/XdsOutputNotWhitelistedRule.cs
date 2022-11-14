@@ -4,7 +4,6 @@ using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Networks.Xds.Rules
 {

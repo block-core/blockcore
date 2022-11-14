@@ -91,7 +91,7 @@ namespace Blockcore.Features.Dns
             Interlocked.Add(ref this.elapsedTicks, elapsedTicks);
             Interlocked.Exchange(ref this.lastPeerCount, peerCount);
             Interlocked.Exchange(ref this.lastElapsedTicks, elapsedTicks);
-            
+
             if (requestFailed)
             {
                 Interlocked.Increment(ref this.requestFailureCount);

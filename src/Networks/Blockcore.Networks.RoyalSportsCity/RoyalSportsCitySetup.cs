@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
-using Blockcore.Networks.RoyalSportsCity.Networks;
 using Blockcore.Networks.RoyalSportsCity.Networks.Setup;
 using NBitcoin;
 

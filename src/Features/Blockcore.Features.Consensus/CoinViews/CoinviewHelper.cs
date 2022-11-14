@@ -17,7 +17,7 @@ namespace Blockcore.Features.Consensus.CoinViews
         public OutPoint[] GetIdsToFetch(Block block, bool enforceBIP30)
         {
             var ids = new HashSet<OutPoint>();
-            var trx = new HashSet<uint256>(); 
+            var trx = new HashSet<uint256>();
             foreach (Transaction tx in block.Transactions)
             {
                 if (enforceBIP30)

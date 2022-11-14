@@ -7,7 +7,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Base
 {
@@ -39,7 +38,7 @@ namespace Blockcore.Base
         /// </remarks>
         void CommitTipPersisted(ITipProvider provider, ChainedHeader tip);
     }
-    
+
     public class TipsManager : ITipsManager, IDisposable
     {
         private readonly IKeyValueRepository keyValueRepo;

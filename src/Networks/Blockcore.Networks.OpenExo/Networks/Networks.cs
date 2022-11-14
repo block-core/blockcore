@@ -1,5 +1,4 @@
 ﻿using Blockcore.Networks;
-using NBitcoin;
 
 namespace OpenExo.Networks
 {

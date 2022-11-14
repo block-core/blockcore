@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Text;
-using System.Timers;
 using Blockcore.Configuration;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.NodeHost
 {
@@ -116,8 +114,8 @@ namespace Blockcore.Features.NodeHost
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine($"-apiuri=<string>                  URI to node's API interface. Defaults to '{ DefaultApiHost }'.");
-            builder.AppendLine($"-apiport=<0-65535>                Port of node's API interface. Defaults to { network.DefaultAPIPort }.");
+            builder.AppendLine($"-apiuri=<string>                  URI to node's API interface. Defaults to '{DefaultApiHost}'.");
+            builder.AppendLine($"-apiport=<0-65535>                Port of node's API interface. Defaults to {network.DefaultAPIPort}.");
             builder.AppendLine($"-keepalive=<seconds>              Keep Alive interval (set in seconds). Default: 0 (no keep alive).");
             builder.AppendLine($"-usehttps=<bool>                  Use https protocol on the API. Defaults to false.");
             builder.AppendLine($"-certificatefilepath=<string>     Path to the certificate used for https traffic encryption. Defaults to <null>. Password protected files are not supported. On MacOs, only p12 certificates can be used without password.");
@@ -137,10 +135,10 @@ namespace Blockcore.Features.NodeHost
         public static void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
         {
             builder.AppendLine("####API Settings####");
-            builder.AppendLine($"#URI to node's API interface. Defaults to '{ DefaultApiHost }'.");
-            builder.AppendLine($"#apiuri={ DefaultApiHost }");
-            builder.AppendLine($"#Port of node's API interface. Defaults to { network.DefaultAPIPort }.");
-            builder.AppendLine($"#apiport={ network.DefaultAPIPort }");
+            builder.AppendLine($"#URI to node's API interface. Defaults to '{DefaultApiHost}'.");
+            builder.AppendLine($"#apiuri={DefaultApiHost}");
+            builder.AppendLine($"#Port of node's API interface. Defaults to {network.DefaultAPIPort}.");
+            builder.AppendLine($"#apiport={network.DefaultAPIPort}");
             builder.AppendLine($"#Use HTTPS protocol on the API. Default is false.");
             builder.AppendLine($"#usehttps=false");
             builder.AppendLine($"#Enable the Web Socket endpoints. Defaults to false.");

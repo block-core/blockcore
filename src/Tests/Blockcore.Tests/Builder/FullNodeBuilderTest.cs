@@ -8,9 +8,7 @@ using Blockcore.Features.Consensus;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 
 using Xunit;
 

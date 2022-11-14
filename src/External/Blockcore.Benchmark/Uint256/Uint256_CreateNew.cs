@@ -1,6 +1,5 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using Blockcore.Benchmark.Uint256;
 
 namespace Blockcore.Benchmark.Uint256
 {

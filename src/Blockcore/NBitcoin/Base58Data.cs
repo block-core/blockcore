@@ -39,7 +39,7 @@ namespace NBitcoin
 
         protected Base58Data(byte[] rawBytes, Network network)
         {
-            if(network == null)
+            if (network == null)
                 throw new ArgumentNullException("network");
             this._Network = network;
             SetData(rawBytes);
@@ -47,10 +47,10 @@ namespace NBitcoin
 
         private void SetString(string base64)
         {
-            if(this._Network == null)
+            if (this._Network == null)
             {
                 this._Network = NetworkRegistration.GetNetworkFromBase58Data(base64, this.Type);
-                if(this._Network == null)
+                if (this._Network == null)
                     throw new FormatException("Invalid " + GetType().Name);
             }
 
@@ -59,13 +59,13 @@ namespace NBitcoin
 
 
             this.vchVersion = vchTemp.SafeSubarray(0, expectedVersion.Length);
-            if(!Utils.ArrayEqual(this.vchVersion, expectedVersion))
+            if (!Utils.ArrayEqual(this.vchVersion, expectedVersion))
                 throw new FormatException("The version prefix does not match the expected one " + String.Join(",", expectedVersion));
 
             this.vchData = vchTemp.SafeSubarray(expectedVersion.Length);
             this.wifData = base64;
 
-            if(!this.IsValid)
+            if (!this.IsValid)
                 throw new FormatException("Invalid " + GetType().Name);
 
         }
@@ -77,7 +77,7 @@ namespace NBitcoin
             this.vchVersion = this._Network.GetVersionBytes(this.Type, true);
             this.wifData = Encoders.Base58Check.EncodeData(this.vchVersion.Concat(vchData).ToArray());
 
-            if(!this.IsValid)
+            if (!this.IsValid)
                 throw new FormatException("Invalid " + GetType().Name);
         }
 
@@ -113,15 +113,15 @@ namespace NBitcoin
         public override bool Equals(object obj)
         {
             var item = obj as Base58Data;
-            if(item == null)
+            if (item == null)
                 return false;
             return ToString().Equals(item.ToString());
         }
         public static bool operator ==(Base58Data a, Base58Data b)
         {
-            if(ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
                 return true;
-            if(((object)a == null) || ((object)b == null))
+            if (((object)a == null) || ((object)b == null))
                 return false;
             return a.ToString() == b.ToString();
         }

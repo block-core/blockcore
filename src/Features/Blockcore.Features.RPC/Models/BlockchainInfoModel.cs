@@ -65,7 +65,7 @@ namespace Blockcore.Features.RPC.Models
 
         [JsonProperty(PropertyName = "difficulty")]
         public double Difficulty { get; set; }
-        
+
         [JsonProperty(PropertyName = "networkWeight")]
         public long NetworkWeight { get; set; }
 

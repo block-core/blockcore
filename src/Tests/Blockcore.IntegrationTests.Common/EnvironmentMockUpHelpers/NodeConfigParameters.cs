@@ -17,7 +17,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public void SetDefaultValueIfUndefined(string key, string value)
         {
-            if(!this.ContainsKey(key)) this.Add(key, value);
+            if (!this.ContainsKey(key)) this.Add(key, value);
         }
 
         public override string ToString()

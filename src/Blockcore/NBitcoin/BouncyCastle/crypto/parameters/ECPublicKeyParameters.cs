@@ -21,7 +21,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Parameters
             ECDomainParameters parameters)
             : base(algorithm, false, parameters)
         {
-            if(q == null)
+            if (q == null)
                 throw new ArgumentNullException("q");
 
             this.q = q.Normalize();
@@ -37,12 +37,12 @@ namespace NBitcoin.BouncyCastle.Crypto.Parameters
 
         public override bool Equals(object obj)
         {
-            if(obj == this)
+            if (obj == this)
                 return true;
 
             var other = obj as ECPublicKeyParameters;
 
-            if(other == null)
+            if (other == null)
                 return false;
 
             return Equals(other);

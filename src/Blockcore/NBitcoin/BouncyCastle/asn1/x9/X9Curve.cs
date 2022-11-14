@@ -26,17 +26,17 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
             ECCurve curve,
             byte[] seed)
         {
-            if(curve == null)
+            if (curve == null)
                 throw new ArgumentNullException("curve");
 
             this.curve = curve;
             this.seed = Arrays.Clone(seed);
 
-            if(ECAlgorithms.IsFpCurve(curve))
+            if (ECAlgorithms.IsFpCurve(curve))
             {
                 this.fieldIdentifier = X9ObjectIdentifiers.PrimeField;
             }
-            else if(ECAlgorithms.IsF2mCurve(curve))
+            else if (ECAlgorithms.IsF2mCurve(curve))
             {
                 this.fieldIdentifier = X9ObjectIdentifiers.CharacteristicTwoField;
             }
@@ -50,14 +50,14 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
             X9FieldID fieldID,
             Asn1Sequence seq)
         {
-            if(fieldID == null)
+            if (fieldID == null)
                 throw new ArgumentNullException("fieldID");
-            if(seq == null)
+            if (seq == null)
                 throw new ArgumentNullException("seq");
 
             this.fieldIdentifier = fieldID.Identifier;
 
-            if(this.fieldIdentifier.Equals(X9ObjectIdentifiers.PrimeField))
+            if (this.fieldIdentifier.Equals(X9ObjectIdentifiers.PrimeField))
             {
                 BigInteger q = ((DerInteger)fieldID.Parameters).Value;
                 var x9A = new X9FieldElement(q, (Asn1OctetString)seq[0]);
@@ -66,7 +66,7 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
             }
             else
             {
-                if(this.fieldIdentifier.Equals(X9ObjectIdentifiers.CharacteristicTwoField))
+                if (this.fieldIdentifier.Equals(X9ObjectIdentifiers.CharacteristicTwoField))
                 {
                     // Characteristic two field
                     var parameters = (DerSequence)fieldID.Parameters;
@@ -77,7 +77,7 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
                     int k1 = 0;
                     int k2 = 0;
                     int k3 = 0;
-                    if(representation.Equals(X9ObjectIdentifiers.TPBasis))
+                    if (representation.Equals(X9ObjectIdentifiers.TPBasis))
                     {
                         // Trinomial basis representation
                         k1 = ((DerInteger)parameters[2]).Value.IntValue;
@@ -125,7 +125,7 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
         {
             var v = new Asn1EncodableVector();
 
-            if(this.fieldIdentifier.Equals(X9ObjectIdentifiers.PrimeField)
+            if (this.fieldIdentifier.Equals(X9ObjectIdentifiers.PrimeField)
                 || this.fieldIdentifier.Equals(X9ObjectIdentifiers.CharacteristicTwoField))
             {
                 v.Add(new X9FieldElement(this.curve.A).ToAsn1Object());

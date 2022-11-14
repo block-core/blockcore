@@ -381,7 +381,7 @@ namespace Blockcore.Networks.X1.Components
         {
             Guard.NotNull(prevChainedHeader, nameof(ChainedHeader));
 
-            return ((X1ConsensusOptions) this.network.Consensus.Options).GetStakeMinConfirmations(prevChainedHeader.Height + 1, this.network) - 1;
+            return ((X1ConsensusOptions)this.network.Consensus.Options).GetStakeMinConfirmations(prevChainedHeader.Height + 1, this.network) - 1;
         }
 
         /// <summary>

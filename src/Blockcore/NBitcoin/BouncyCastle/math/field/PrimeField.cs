@@ -28,12 +28,12 @@
 
         public override bool Equals(object obj)
         {
-            if(this == obj)
+            if (this == obj)
             {
                 return true;
             }
             var other = obj as PrimeField;
-            if(null == other)
+            if (null == other)
             {
                 return false;
             }

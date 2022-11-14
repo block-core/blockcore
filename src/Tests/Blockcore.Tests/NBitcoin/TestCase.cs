@@ -21,11 +21,11 @@ namespace NBitcoin.Tests
 
         public static TestCase[] read_json(string fileName)
         {
-            using(FileStream fs = File.Open(fileName, FileMode.Open))
+            using (FileStream fs = File.Open(fileName, FileMode.Open))
             {
                 var seria = new JsonSerializer();
                 var result = (TestCase[])seria.Deserialize(new StreamReader(fs), typeof(TestCase[]));
-                for(int i = 0; i < result.Length; i++)
+                for (int i = 0; i < result.Length; i++)
                 {
                     result[i].Index = i;
                 }

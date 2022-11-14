@@ -10,7 +10,7 @@ namespace Blockcore.Features.PoA.Events
     {
         public IFederationMember KickedMember { get; }
 
-        public FedMemberKicked(IFederationMember  kickedMember)
+        public FedMemberKicked(IFederationMember kickedMember)
         {
             this.KickedMember = kickedMember;
         }

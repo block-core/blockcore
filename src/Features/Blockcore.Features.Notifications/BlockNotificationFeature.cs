@@ -1,17 +1,15 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.Base;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
-using Blockcore.Features.Notifications.Controllers;
 using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.P2P.Peer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Notifications.Tests")]
 

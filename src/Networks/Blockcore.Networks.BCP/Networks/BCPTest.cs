@@ -4,7 +4,6 @@ using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
-using Blockcore.Networks;
 using Blockcore.Networks.BCP.Networks.Policies;
 using Blockcore.Networks.BCP.Networks.Setup;
 using Blockcore.P2P;

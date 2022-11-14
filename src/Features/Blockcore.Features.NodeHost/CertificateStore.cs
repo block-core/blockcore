@@ -13,7 +13,7 @@ namespace Blockcore.Features.NodeHost
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
-        
+
         /// <inheritdoc />
         public bool TryGet(string filePath, out X509Certificate2 certificate)
         {

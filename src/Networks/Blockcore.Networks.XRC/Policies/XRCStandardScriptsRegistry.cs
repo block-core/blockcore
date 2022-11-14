@@ -2,7 +2,6 @@
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
 using NBitcoin.BitcoinCore;
 
 namespace Blockcore.Networks.XRC.Policies

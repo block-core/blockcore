@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Features.Wallet.Interfaces;
-using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 

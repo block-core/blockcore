@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Types;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet
 {

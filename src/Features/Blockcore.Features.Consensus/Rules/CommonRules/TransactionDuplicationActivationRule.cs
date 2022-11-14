@@ -7,7 +7,6 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
@@ -34,7 +33,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                 {
                     foreach (Transaction tx in block.Transactions)
                     {
-                        foreach(IndexedTxOut indexedTxOut in tx.Outputs.AsIndexedOutputs())
+                        foreach (IndexedTxOut indexedTxOut in tx.Outputs.AsIndexedOutputs())
                         {
                             UnspentOutput coins = view.AccessCoins(indexedTxOut.ToOutPoint());
                             if ((coins?.Coins != null) && !coins.Coins.IsPrunable)
@@ -43,7 +42,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                                 this.Logger.LogTrace("(-)[BAD_TX_BIP_30]");
                                 ConsensusErrors.BadTransactionBIP30.Throw();
                             }
-}
+                        }
 
                     }
                 }

@@ -135,9 +135,9 @@ namespace NBitcoin
         public static bool operator >=(FeeRate left, FeeRate right)
         {
             if (left == null)
-             //   throw new ArgumentNullException("left");
-            if (right == null)
-                throw new ArgumentNullException("right");
+                //   throw new ArgumentNullException("left");
+                if (right == null)
+                    throw new ArgumentNullException("right");
             return left._FeePerK >= right._FeePerK;
         }
 

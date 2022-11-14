@@ -171,8 +171,8 @@ namespace Blockcore.Features.Miner
         protected virtual void CreateCoinbase()
         {
             this.coinbase = this.Network.CreateTransaction();
-            if(this.coinbase is IPosTransactionWithTime posTrx)
-                posTrx.Time =  (uint)this.DateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
+            if (this.coinbase is IPosTransactionWithTime posTrx)
+                posTrx.Time = (uint)this.DateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
             this.coinbase.AddInput(TxIn.CreateCoinbase(this.ChainTip.Height + 1));
             this.coinbase.AddOutput(new TxOut(Money.Zero, this.scriptPubKey));
 

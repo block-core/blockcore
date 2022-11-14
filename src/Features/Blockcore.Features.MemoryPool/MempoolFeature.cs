@@ -14,11 +14,8 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.MemoryPool.Tests")]
 

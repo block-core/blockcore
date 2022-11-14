@@ -29,7 +29,7 @@ namespace Blockcore.Features.RPC.Tests
 
             WriteConfigurationToFile(confFile, configLines);
 
-            var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+            var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
             var rpcSettings = new RpcSettings(nodeSettings);
 
@@ -44,7 +44,7 @@ namespace Blockcore.Features.RPC.Tests
             Assert.NotEmpty(rpcSettings.AllowIp);
             Assert.Equal("0.0.0.0", rpcSettings.AllowIp[0].ToString());
         }
-        
+
         [Fact]
         public void Load_DefaultConfiguration_UsesDefaultNodeSettings()
         {
@@ -53,7 +53,7 @@ namespace Blockcore.Features.RPC.Tests
             var configLines = new List<string>() { "" };
             WriteConfigurationToFile(confFile, configLines);
 
-            var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+            var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
             var rpcSettings = new RpcSettings(nodeSettings);
 
@@ -81,7 +81,7 @@ namespace Blockcore.Features.RPC.Tests
 
                 WriteConfigurationToFile(confFile, configLines);
 
-                var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+                var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
                 var rpcSettings = new RpcSettings(nodeSettings);
             });
@@ -102,7 +102,7 @@ namespace Blockcore.Features.RPC.Tests
 
                 WriteConfigurationToFile(confFile, configLines);
 
-                var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+                var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
                 var rpcSettings = new RpcSettings(nodeSettings);
             });
@@ -126,7 +126,7 @@ namespace Blockcore.Features.RPC.Tests
 
                 WriteConfigurationToFile(confFile, configLines);
 
-                var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+                var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
                 var rpcSettings = new RpcSettings(nodeSettings);
             });
@@ -150,7 +150,7 @@ namespace Blockcore.Features.RPC.Tests
 
                 WriteConfigurationToFile(confFile, configLines);
 
-                var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+                var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
                 var rpcSettings = new RpcSettings(nodeSettings);
             });
@@ -173,7 +173,7 @@ namespace Blockcore.Features.RPC.Tests
 
             WriteConfigurationToFile(confFile, configLines);
 
-            var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+            var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
             var rpcSettings = new RpcSettings(nodeSettings);
             string[] urls = rpcSettings.GetUrls();
@@ -194,7 +194,7 @@ namespace Blockcore.Features.RPC.Tests
 
             WriteConfigurationToFile(confFile, configLines);
 
-            var nodeSettings = new NodeSettings(this.Network, args:new string[] { "-conf=" + confFile });
+            var nodeSettings = new NodeSettings(this.Network, args: new string[] { "-conf=" + confFile });
 
             var rpcSettings = new RpcSettings(new NodeSettings(this.Network));
             string[] urls = rpcSettings.GetUrls();

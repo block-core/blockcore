@@ -9,7 +9,6 @@ using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
-using NBitcoin;
 
 namespace Blockcore.Connection
 {

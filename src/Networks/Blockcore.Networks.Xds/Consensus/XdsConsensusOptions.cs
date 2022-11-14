@@ -1,5 +1,4 @@
 using Blockcore.Consensus;
-using NBitcoin;
 
 namespace Blockcore.Networks.Xds.Consensus
 {

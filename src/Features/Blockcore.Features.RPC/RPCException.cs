@@ -188,7 +188,7 @@ namespace Blockcore.Features.RPC
 
         private static string FindMessage(RPCErrorCode code)
         {
-            switch(code)
+            switch (code)
             {
                 case RPCErrorCode.RPC_MISC_ERROR:
                     return "std::exception thrown in command handling";

@@ -15,7 +15,7 @@ namespace Blockcore.Tests.NodeConfiguration
         {
             var validHexBlock = new uint256("00000000229d9fb87182d73870d53f9fdd9b76bfc02c059e6d9a6c7a3507031d");
             Network network = KnownNetworks.TestNet;
-            var nodeSettings = new NodeSettings(network, args:new string[] { $"-assumevalid={validHexBlock.ToString()}" });
+            var nodeSettings = new NodeSettings(network, args: new string[] { $"-assumevalid={validHexBlock.ToString()}" });
             var settings = new ConsensusSettings(nodeSettings);
             Assert.Equal(validHexBlock, settings.BlockAssumedValid);
         }
@@ -25,7 +25,7 @@ namespace Blockcore.Tests.NodeConfiguration
         {
             var loggerFactory = new LoggerFactory();
             Network network = KnownNetworks.TestNet;
-            var nodeSettings = new NodeSettings(network, args:new string[] { "-assumevalid=0" });
+            var nodeSettings = new NodeSettings(network, args: new string[] { "-assumevalid=0" });
             var settings = new ConsensusSettings(nodeSettings);
             Assert.Null(settings.BlockAssumedValid);
         }
@@ -35,7 +35,7 @@ namespace Blockcore.Tests.NodeConfiguration
         {
             var loggerFactory = new LoggerFactory();
             Network network = KnownNetworks.TestNet;
-            var nodeSettings = new NodeSettings(network, args:new string[] { "-assumevalid=xxx" });
+            var nodeSettings = new NodeSettings(network, args: new string[] { "-assumevalid=xxx" });
             Assert.Throws<ConfigurationException>(() => new ConsensusSettings(nodeSettings));
         }
 

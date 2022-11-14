@@ -6,12 +6,9 @@ using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Configuration.Logging;
-using Blockcore.Connection;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.MemoryPool;
-using Blockcore.Features.MemoryPool.Broadcasting;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet.AddressBook;
 using Blockcore.Features.Wallet.Broadcasters;
@@ -21,10 +18,8 @@ using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces;
 using Blockcore.Interfaces.UI;
 using Blockcore.Networks;
-using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 using NBitcoin.Policy;
 
 namespace Blockcore.Features.Wallet

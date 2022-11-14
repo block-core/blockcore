@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Blockcore.Features.NodeHost;
 using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.NodeHost;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Xunit;
 

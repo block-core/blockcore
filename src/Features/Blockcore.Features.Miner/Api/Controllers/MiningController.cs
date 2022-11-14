@@ -14,7 +14,6 @@ using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests.Controllers")]
 namespace Blockcore.Features.Miner.Api.Controllers
@@ -64,7 +63,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
         /// tries all possible header nonces values.</remarks>
         [Route("generate")]
         [HttpPost]
-        public IActionResult Generate([FromBody]MiningRequest request)
+        public IActionResult Generate([FromBody] MiningRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -136,7 +135,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
         {
             const string noWalletMessage = "No wallet found";
             const string noAccountMessage = "No account found on wallet";
-            
+
 
             string walletName = this.walletManager.GetWalletsNames().FirstOrDefault();
             if (walletName == null)

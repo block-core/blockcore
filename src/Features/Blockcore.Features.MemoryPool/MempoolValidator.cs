@@ -17,7 +17,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Features.MemoryPool
 {

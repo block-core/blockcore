@@ -1,6 +1,4 @@
-﻿using NBitcoin;
-
-namespace Blockcore.Interfaces
+﻿namespace Blockcore.Interfaces
 {
     public interface INetworkWeight
     {

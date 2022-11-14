@@ -111,7 +111,7 @@ namespace Blockcore.Tests.Utilities
                 };
 
                 executionEvent.Register(callback1Async);
-                
+
                 // We can register a second callback with same body, but it is different function.
                 executionEvent.Register(callback2Async);
 

@@ -40,7 +40,7 @@ namespace Blockcore.AsyncWork
         /// <value>
         /// The uncaught exception.
         /// </value>
-        internal Exception UncaughtException{ get; private set; }
+        internal Exception UncaughtException { get; private set; }
 
         /// <summary>
         /// Initializes a named instance of the object.

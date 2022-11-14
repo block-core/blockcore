@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
 
 namespace Blockcore.Features.Notifications
 {

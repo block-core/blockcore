@@ -8,7 +8,6 @@ using Blockcore.Features.PoA.Payloads;
 using Blockcore.Interfaces;
 using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.Behaviors
 {

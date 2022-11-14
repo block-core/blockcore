@@ -149,7 +149,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
                         if (coin.Coins == null)
                         {
                             this.logger.LogDebug("Outputs of transaction ID '{0}' are prunable and will be removed from the database.", coin.OutPoint);
-                            batch.Delete(new byte[] { coinsTable }.Concat(coin.OutPoint.ToBytes()).ToArray() );
+                            batch.Delete(new byte[] { coinsTable }.Concat(coin.OutPoint.ToBytes()).ToArray());
                         }
                         else
                         {

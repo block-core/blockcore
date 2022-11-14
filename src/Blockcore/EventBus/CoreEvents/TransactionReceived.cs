@@ -1,6 +1,4 @@
-﻿using System;
-using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+﻿using Blockcore.Consensus.TransactionInfo;
 using Newtonsoft.Json;
 
 namespace Blockcore.EventBus.CoreEvents

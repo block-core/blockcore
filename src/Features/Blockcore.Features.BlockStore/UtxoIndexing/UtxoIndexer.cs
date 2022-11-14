@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.Chain;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
-using Blockcore.Consensus.Chain;
-using Blockcore.Consensus.BlockInfo;
-using Blockcore.Consensus.TransactionInfo;
+using Microsoft.Extensions.Logging;
 
 namespace Blockcore.Features.BlockStore
 {

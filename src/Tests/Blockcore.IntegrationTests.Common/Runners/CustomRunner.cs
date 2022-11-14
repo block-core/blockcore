@@ -7,7 +7,6 @@ using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.Tests.Common;
-using NBitcoin;
 using NBitcoin.Protocol;
 
 namespace Blockcore.IntegrationTests.Common.Runners

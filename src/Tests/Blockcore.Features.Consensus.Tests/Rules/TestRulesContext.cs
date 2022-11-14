@@ -159,7 +159,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules
         /// <summary>
         /// Creates test chain with a consensus loop.
         /// </summary>
-        public static TestRulesContext CreateAsync(Network network, [CallerMemberName]string pathName = null)
+        public static TestRulesContext CreateAsync(Network network, [CallerMemberName] string pathName = null)
         {
             var testRulesContext = new TestRulesContext() { Network = network };
 

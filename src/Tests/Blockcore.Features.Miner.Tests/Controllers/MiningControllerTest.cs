@@ -9,7 +9,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Features.Miner.Api.Controllers;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Networks;
@@ -41,7 +40,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
             this.fullNode = new Mock<IFullNode>();
             this.fullNode.Setup(i => i.Network).Returns(this.network);
 
-            this.loggerFactory = ExtendedLoggerFactory.Create(); 
+            this.loggerFactory = ExtendedLoggerFactory.Create();
             this.fullNode.Setup(i => i.NodeService<ILoggerFactory>(false)).Returns(this.loggerFactory);
         }
 

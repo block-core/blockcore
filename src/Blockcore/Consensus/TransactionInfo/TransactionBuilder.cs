@@ -1340,12 +1340,12 @@ namespace Blockcore.Consensus.TransactionInfo
         public ICoin FindSignableCoin(IndexedTxIn txIn)
         {
             ICoin coin = FindCoin(txIn.PrevOut);
-            coin=coin as IColoredCoin;
+            coin = coin as IColoredCoin;
 
             if (coin is IColoredCoin)
-            {  
-            
-               IColoredCoin bearer = (IColoredCoin)coin;
+            {
+
+                IColoredCoin bearer = (IColoredCoin)coin;
 
                 coin = bearer.Bearer;
             }

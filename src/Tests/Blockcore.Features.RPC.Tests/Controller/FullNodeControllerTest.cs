@@ -24,7 +24,6 @@ using FluentAssertions;
 using Moq;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 
 using Xunit;
 

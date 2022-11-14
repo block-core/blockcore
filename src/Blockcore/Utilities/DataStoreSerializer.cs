@@ -80,7 +80,7 @@ namespace Blockcore.Utilities
 
         public T Deserialize<T>(byte[] bytes)
         {
-            return (T) this.Deserialize(bytes, typeof(T));
+            return (T)this.Deserialize(bytes, typeof(T));
         }
 
         /// <summary>

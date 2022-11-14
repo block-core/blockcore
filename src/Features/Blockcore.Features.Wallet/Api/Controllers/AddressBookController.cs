@@ -47,7 +47,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the newly added entry.</returns>
         [Route("address")]
         [HttpPost]
-        public IActionResult AddAddress([FromBody]AddressBookEntryRequest request)
+        public IActionResult AddAddress([FromBody] AddressBookEntryRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -82,7 +82,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the removed entry.</returns>
         [Route("address")]
         [HttpDelete]
-        public IActionResult RemoveAddress([FromQuery]string label)
+        public IActionResult RemoveAddress([FromQuery] string label)
         {
             Guard.NotEmpty(label, nameof(label));
 
@@ -118,7 +118,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the address book.</returns>
         [Route("")]
         [HttpGet]
-        public IActionResult GetAddressBook([FromQuery]int? skip, int? take)
+        public IActionResult GetAddressBook([FromQuery] int? skip, int? take)
         {
             try
             {

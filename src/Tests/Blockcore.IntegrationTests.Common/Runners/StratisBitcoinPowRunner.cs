@@ -1,11 +1,11 @@
 ﻿using Blockcore.Base;
 using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
@@ -13,7 +13,6 @@ using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.P2P;
-using NBitcoin;
 using Blockcore.Tests.Common;
 
 namespace Blockcore.IntegrationTests.Common.Runners

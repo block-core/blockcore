@@ -6,7 +6,6 @@ using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;

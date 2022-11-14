@@ -11,7 +11,6 @@ using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;
-using NBitcoin;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -65,7 +64,7 @@ namespace Blockcore.IntegrationTests.Wallet
                     .AppendPathSegment("addressbook/address")
                     .PostJsonAsync(new { label = "label1", address = "TQNyrEPc4qHxWN96dBAjncBeB2ghJPqYVu" })
                     .ReceiveJson<AddressBookEntryModel>();
-                
+
                 // Act.
                 // Add an entry with the same address and label already exist.
                 Func<Task> firstAttempt = async () => await $"http://localhost:{node.ApiPort}/api"
@@ -217,7 +216,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 AddressBookModel addressBook = await $"http://localhost:{node.ApiPort}/api"
                     .AppendPathSegment("addressbook")
                     .GetJsonAsync<AddressBookModel>();
-                
+
                 // Assert.
                 addressBook.Addresses.Should().HaveCount(5);
                 addressBook.Addresses.First().Label.Should().Be("label1");

@@ -7,7 +7,6 @@ using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 
 namespace Blockcore.Tests.Common.Logging
 {

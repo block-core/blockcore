@@ -10,7 +10,6 @@ using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.PoA.Tests.Rules

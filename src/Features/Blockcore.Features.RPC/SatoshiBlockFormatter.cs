@@ -89,13 +89,13 @@ namespace Blockcore.Features.RPC
             Block block = consensusFactory.CreateBlock();
 
             block.Header.Time = rpcBlock.time;
-                //BlockStake = new BlockStake
-                //{
-                //    HashProof = uint256.Parse( rpcBlock.proofhash),
-                //    Mint = rpcBlock.mint,
-                //    StakeModifierV2 = uint256.Parse(rpcBlock.modifierv2)
-                //},
-                block.Header.HashMerkleRoot = uint256.Parse(rpcBlock.merkleroot);
+            //BlockStake = new BlockStake
+            //{
+            //    HashProof = uint256.Parse( rpcBlock.proofhash),
+            //    Mint = rpcBlock.mint,
+            //    StakeModifierV2 = uint256.Parse(rpcBlock.modifierv2)
+            //},
+            block.Header.HashMerkleRoot = uint256.Parse(rpcBlock.merkleroot);
             block.Header.Bits = new Target(Encoders.Hex.DecodeData(rpcBlock.bits));
             block.Header.HashPrevBlock = uint256.Parse(rpcBlock.previousblockhash);
             block.Header.Nonce = rpcBlock.nonce;

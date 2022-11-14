@@ -9,14 +9,12 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.Persistence.LevelDb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Interfaces;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders

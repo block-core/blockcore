@@ -3,7 +3,6 @@ using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Networks.Bitcoin.Rules;
 using Blockcore.Tests.Common;
 using NBitcoin;
@@ -226,7 +225,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public void Run_GoodVersionHeightBelowBip34_DoesNotThrowException()
         {
-            
+
             this.ruleContext.Time = new DateTimeOffset(new DateTime(2017, 1, 1, 0, 1, 0));
             var header = this.network.Consensus.ConsensusFactory.CreateBlockHeader();
             this.ruleContext.ValidationContext.BlockToValidate = this.network.CreateBlock();

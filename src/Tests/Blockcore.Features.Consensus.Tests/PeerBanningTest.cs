@@ -11,7 +11,6 @@ using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;

@@ -82,7 +82,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             };
 
             this.ruleContext.ValidationContext.BlockToValidate.Header.BlockTime = new DateTimeOffset(new DateTime(2018, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-            
+
             await this.consensusRules.RegisterRule<TransactionLocktimeActivationRule>().RunAsync(this.ruleContext);
         }
 
@@ -108,7 +108,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         private static Transaction CreateCoinStakeTransaction(Network network, Key key, int height, uint256 prevout)
         {
             var coinStake = network.CreateTransaction();
-           // coinStake.Time = (uint)18276127;
+            // coinStake.Time = (uint)18276127;
             coinStake.AddInput(new TxIn(new OutPoint(prevout, 1)));
             coinStake.AddOutput(new TxOut(0, new Script()));
             coinStake.AddOutput(new TxOut(network.GetReward(height), key.ScriptPubKey));

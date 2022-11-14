@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
 using Blockcore.Connection;
-using Blockcore.Features.Notifications.Controllers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Blockcore.Features.Notifications
 {

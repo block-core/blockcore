@@ -67,9 +67,9 @@ namespace Blockcore.Consensus.Chain
         {
             if (!this.headers.TryGetValue(hash, out BlockHeader header))
             {
-                
+
                 throw new ArgumentNullException("Header must exist if requested");
-                
+
             }
 
             return header;

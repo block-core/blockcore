@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common.TestFramework;
 using Blockcore.Utilities.JsonErrors;

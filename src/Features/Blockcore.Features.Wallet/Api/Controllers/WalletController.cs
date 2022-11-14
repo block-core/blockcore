@@ -1621,7 +1621,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 var responseModel = this.walletManager.Sweep(request.PrivateKeys, request.DestinationAddress, request.Broadcast);
                 return this.Json(responseModel);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.logger.LogError("Exception occurred: {0}", e.ToString());
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
@@ -1651,6 +1651,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 return (null, false);
             }
-        }        
+        }
     }
 }

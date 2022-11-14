@@ -68,7 +68,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             this.X[this.xOff++] = (input[inOff] & 0xff) | ((input[inOff + 1] & 0xff) << 8)
                 | ((input[inOff + 2] & 0xff) << 16) | ((input[inOff + 3] & 0xff) << 24);
 
-            if(this.xOff == 16)
+            if (this.xOff == 16)
             {
                 ProcessBlock();
             }
@@ -77,7 +77,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
         internal override void ProcessLength(
             long bitLength)
         {
-            if(this.xOff > 14)
+            if (this.xOff > 14)
             {
                 ProcessBlock();
             }
@@ -129,7 +129,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
 
             this.xOff = 0;
 
-            for(int i = 0; i != this.X.Length; i++)
+            for (int i = 0; i != this.X.Length; i++)
             {
                 this.X[i] = 0;
             }
@@ -584,7 +584,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             // reset the offset and clean out the word buffer.
             //
             this.xOff = 0;
-            for(int i = 0; i != this.X.Length; i++)
+            for (int i = 0; i != this.X.Length; i++)
             {
                 this.X[i] = 0;
             }

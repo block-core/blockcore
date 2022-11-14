@@ -34,7 +34,7 @@ namespace Blockcore.Features.Miner
         /// </summary>
         public BlockDefinitionOptions RestrictForNetwork(Network network)
         {
-            uint minAllowedBlockWeight = MinBlockSize * (uint) network.Consensus.Options.WitnessScaleFactor;
+            uint minAllowedBlockWeight = MinBlockSize * (uint)network.Consensus.Options.WitnessScaleFactor;
             this.BlockMaxWeight = Math.Max(minAllowedBlockWeight, Math.Min(network.Consensus.Options.MaxBlockWeight, this.BlockMaxWeight));
             this.BlockMaxSize = Math.Max(MinBlockSize, Math.Min(network.Consensus.Options.MaxBlockSerializedSize, this.BlockMaxSize));
             this.BlockMinFeeRate = new FeeRate(Math.Max(network.Consensus.Options.MinBlockFeeRate, this.BlockMinFeeRate.FeePerK));

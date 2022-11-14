@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Blockcore.Consensus;
-using Blockcore.Networks;
-using NBitcoin;
 
 namespace Blockcore.Networks.City.Networks.Consensus
 {

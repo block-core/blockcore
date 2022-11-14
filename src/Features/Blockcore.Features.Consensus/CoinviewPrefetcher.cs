@@ -4,14 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Base.Deployments;
-using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus
 {

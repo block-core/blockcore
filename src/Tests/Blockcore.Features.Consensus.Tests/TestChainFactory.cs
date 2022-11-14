@@ -17,7 +17,6 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Consensus.Validators;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.BlockStore.Persistence.LevelDb;
-using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;

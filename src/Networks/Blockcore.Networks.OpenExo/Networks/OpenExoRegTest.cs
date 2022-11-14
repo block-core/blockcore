@@ -5,13 +5,13 @@ using Blockcore.Base.Deployments;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using Blockcore.P2P;
+using NBitcoin;
+using NBitcoin.BouncyCastle.Math;
+using NBitcoin.DataEncoders;
 using OpenExo.Networks.Consensus;
 using OpenExo.Networks.Deployments;
 using OpenExo.Networks.Policies;
 using OpenExo.Networks.Setup;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 
 
 namespace OpenExo.Networks

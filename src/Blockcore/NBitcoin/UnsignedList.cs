@@ -13,7 +13,7 @@ namespace NBitcoin
         }
         public UnsignedList(Transaction parent)
         {
-            if(parent == null)
+            if (parent == null)
                 throw new ArgumentNullException("parent");
             this.Transaction = parent;
         }

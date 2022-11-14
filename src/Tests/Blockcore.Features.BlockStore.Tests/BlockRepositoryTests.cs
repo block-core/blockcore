@@ -4,7 +4,6 @@ using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Persistence.LevelDb;
-using Blockcore.Features.BlockStore.Persistence.RocksDb;
 using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Networks;
 using Blockcore.Tests.Common.Logging;

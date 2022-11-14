@@ -68,7 +68,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// <summary>
         /// Optional BIP44 Purpose field, this can be either 44 or 48 (default to 44).
         /// </summary>
-        [EnumDataType(typeof(BIP44Purpose),ErrorMessage = "The Purpose must be 44 (legacy) or 84 (segwit)")]
+        [EnumDataType(typeof(BIP44Purpose), ErrorMessage = "The Purpose must be 44 (legacy) or 84 (segwit)")]
         public int? Purpose { get; set; }
     }
 
@@ -771,7 +771,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         /// </summary>
         public bool Verbose { get; set; }
     }
-    
+
     /// <summary>
     /// A class containing the necessary parameters to perform an add address book entry request.
     /// </summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using Blockcore.Consensus.ScriptInfo;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Networks;
 using NBitcoin;

@@ -20,9 +20,9 @@ namespace NBitcoin.OpenAsset
         public BitcoinAssetId(AssetId assetId, Network network)
             : this(assetId._Bytes, network)
         {
-            if(assetId == null)
+            if (assetId == null)
                 throw new ArgumentNullException("assetId");
-            if(network == null)
+            if (network == null)
                 throw new ArgumentNullException("network");
         }
 
@@ -31,7 +31,7 @@ namespace NBitcoin.OpenAsset
         {
             get
             {
-                if(this._AssetId == null) this._AssetId = new AssetId(this.vchData);
+                if (this._AssetId == null) this._AssetId = new AssetId(this.vchData);
                 return this._AssetId;
             }
         }
@@ -54,7 +54,7 @@ namespace NBitcoin.OpenAsset
 
         public static implicit operator AssetId(BitcoinAssetId id)
         {
-            if(id == null)
+            if (id == null)
                 return null;
             return id.AssetId;
         }

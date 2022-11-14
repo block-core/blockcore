@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Policy;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
@@ -14,7 +12,6 @@ using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
-using DBreeze.Utils;
 using NBitcoin;
 using NBitcoin.Crypto;
 using Newtonsoft.Json;

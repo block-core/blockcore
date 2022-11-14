@@ -258,37 +258,37 @@ namespace Blockcore.Configuration.Logging
         {
             if (settings != null && settings.DebugArgs.Any())
             {
-                
-                
-                    if (settings.DebugArgs[0] == "1")
+
+
+                if (settings.DebugArgs[0] == "1")
+                {
+                    // Increase all logging to Debug.
+                    builder.AddFilter<ConsoleLoggerProvider>($"{nameof(Blockcore)}", Microsoft.Extensions.Logging.LogLevel.Debug);
+                }
+                else
+                {
+                    lock (KeyCategories)
                     {
-                        // Increase all logging to Debug.
-                        builder.AddFilter<ConsoleLoggerProvider>($"{nameof(Blockcore)}", Microsoft.Extensions.Logging.LogLevel.Debug);
-                    }
-                    else
-                    {
-                        lock (KeyCategories)
+                        var usedCategories = new HashSet<string>(StringComparer.Ordinal);
+
+                        // Increase selected categories to Debug.
+                        foreach (string key in settings.DebugArgs)
                         {
-                            var usedCategories = new HashSet<string>(StringComparer.Ordinal);
-
-                            // Increase selected categories to Debug.
-                            foreach (string key in settings.DebugArgs)
+                            if (!KeyCategories.TryGetValue(key.Trim(), out string category))
                             {
-                                if (!KeyCategories.TryGetValue(key.Trim(), out string category))
-                                {
-                                    // Allow direct specification - e.g. "-debug=Blockcore.Miner".
-                                    category = key.Trim();
-                                }
+                                // Allow direct specification - e.g. "-debug=Blockcore.Miner".
+                                category = key.Trim();
+                            }
 
-                                if (!usedCategories.Contains(category))
-                                {
-                                    usedCategories.Add(category);
-                                    builder.AddFilter<ConsoleLoggerProvider>(category.TrimEnd('*').TrimEnd('.'), Microsoft.Extensions.Logging.LogLevel.Debug);
-                                }
+                            if (!usedCategories.Contains(category))
+                            {
+                                usedCategories.Add(category);
+                                builder.AddFilter<ConsoleLoggerProvider>(category.TrimEnd('*').TrimEnd('.'), Microsoft.Extensions.Logging.LogLevel.Debug);
                             }
                         }
                     }
-                
+                }
+
             }
         }
     }

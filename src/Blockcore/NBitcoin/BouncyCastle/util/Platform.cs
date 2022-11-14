@@ -1,10 +1,10 @@
 using System;
-using System.Globalization;
 using System.Collections;
+using System.Globalization;
 
 namespace NBitcoin.BouncyCastle.Utilities
 {
-    internal abstract class Platform 
+    internal abstract class Platform
     {
         private static readonly CompareInfo InvariantCompareInfo = CultureInfo.InvariantCulture.CompareInfo;
 

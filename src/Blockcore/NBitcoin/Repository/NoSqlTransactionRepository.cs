@@ -10,7 +10,7 @@ namespace NBitcoin
         public NoSqlRepository Repository { get; }
 
         public NoSqlTransactionRepository(Network network)
-            :this(new InMemoryNoSqlRepository(network))
+            : this(new InMemoryNoSqlRepository(network))
         {
         }
 

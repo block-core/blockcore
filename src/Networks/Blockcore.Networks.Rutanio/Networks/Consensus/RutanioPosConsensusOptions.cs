@@ -1,6 +1,5 @@
 using Blockcore.Consensus;
 using Blockcore.Networks;
-using NBitcoin;
 
 namespace Rutanio.Networks.Consensus
 {

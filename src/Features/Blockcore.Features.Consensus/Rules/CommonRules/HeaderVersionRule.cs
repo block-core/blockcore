@@ -1,7 +1,6 @@
 ﻿using Blockcore.Base.Deployments;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {

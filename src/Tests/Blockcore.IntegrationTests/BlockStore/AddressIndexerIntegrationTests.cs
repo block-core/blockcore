@@ -3,7 +3,6 @@ using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.IntegrationTests.Common.TestNetworks;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using NBitcoin;

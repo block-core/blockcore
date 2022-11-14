@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Features.RPC;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Controllers;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Types;
@@ -9,7 +8,6 @@ using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Wallet;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using FluentAssertions;

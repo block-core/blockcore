@@ -25,7 +25,7 @@ namespace NBitcoin
 
             if (isValid)
                 return bech32;
-            
+
             throw new FormatException("Invalid BitcoinWitPubKeyAddress");
         }
 
@@ -75,7 +75,7 @@ namespace NBitcoin
 
         private static string NotNull(WitKeyId segwitKeyId)
         {
-            if(segwitKeyId == null)
+            if (segwitKeyId == null)
                 throw new ArgumentNullException("segwitKeyId");
             return null;
         }
@@ -180,7 +180,7 @@ namespace NBitcoin
 
         private static string NotNull(WitScriptId segwitScriptId)
         {
-            if(segwitScriptId == null)
+            if (segwitScriptId == null)
                 throw new ArgumentNullException("segwitScriptId");
             return null;
         }
@@ -192,7 +192,7 @@ namespace NBitcoin
             {
                 return this._Hash;
             }
-        }        
+        }
 
         protected override Script GeneratePaymentScript()
         {

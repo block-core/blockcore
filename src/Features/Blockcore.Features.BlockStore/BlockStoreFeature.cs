@@ -15,7 +15,6 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

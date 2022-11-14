@@ -3,7 +3,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NBitcoin;
-using NBitcoin.DataEncoders;
 
 namespace Blockcore.Benchmark.Uint256.New
 {

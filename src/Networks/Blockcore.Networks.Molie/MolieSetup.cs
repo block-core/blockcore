@@ -20,8 +20,8 @@ namespace Blockcore.Networks.Molie
         public const decimal PremineReward = 1049966250;
         public const decimal PoWBlockReward = 50;
         public const decimal PoSBlockReward = 0;
-        public const long MaxSupply = 10500000000; 
-        public const string GenesisText = "Multifunctional decentralized messenger and multi-currency wallet"; 
+        public const long MaxSupply = 10500000000;
+        public const string GenesisText = "Multifunctional decentralized messenger and multi-currency wallet";
         public static TimeSpan TargetSpacing = TimeSpan.FromSeconds(45);
         public const uint ProofOfStakeTimestampMask = 0x0000000F; // 0x0000003F // 64 sec
         public const int PoSVersion = 4;
@@ -49,7 +49,7 @@ namespace Blockcore.Networks.Molie
             public const string HashMerkleRoot = "0x9f9930c2112eb4fc90d4abfa4085708d2e913c8cd638335be715e48601292bed";
 
             public static List<DNSSeedData> DNS = new List<DNSSeedData>
-            {                   
+            {
                 new DNSSeedData("seed1", "mol.molie.net"),
                 new DNSSeedData("seed2", "mol1.molie.net"),
                 new DNSSeedData("seed3", "mol2.molie.net"),
@@ -132,7 +132,7 @@ namespace Blockcore.Networks.Molie
 
             public static Dictionary<int, CheckpointInfo> Checkpoints = new Dictionary<int, CheckpointInfo>
             {
-                
+
             };
         }
 
@@ -158,7 +158,7 @@ namespace Blockcore.Networks.Molie
             public const string HashGenesisBlock = "0x000083c58f9fc90470670c6ccee600f8db5837fc38f6b0d19d3984234d2ec8e3";
             public const string HashMerkleRoot = "0x81ff297a766f945a1c4c536969900ca4fa5f3bd359d567ada6adb1accf063626";
 
-           public static List<DNSSeedData> DNS = new List<DNSSeedData>
+            public static List<DNSSeedData> DNS = new List<DNSSeedData>
             {
                 new DNSSeedData("seed1", "mol.molie.net"),
                 new DNSSeedData("seed2", "mol1.molie.net"),

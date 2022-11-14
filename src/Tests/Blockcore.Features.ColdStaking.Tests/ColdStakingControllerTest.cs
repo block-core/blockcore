@@ -41,7 +41,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
 using NBitcoin.Policy;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.Features.ColdStaking.Tests

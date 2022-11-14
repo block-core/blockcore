@@ -17,7 +17,6 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Consensus.Validators;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;

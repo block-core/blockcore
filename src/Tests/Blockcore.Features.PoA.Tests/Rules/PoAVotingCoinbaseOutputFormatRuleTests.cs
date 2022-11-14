@@ -30,14 +30,14 @@ namespace Blockcore.Features.PoA.Tests.Rules
             block.Transactions.Add(new Transaction());
             block.Transactions[0].AddOutput(Money.COIN, Script.Empty);
 
-            this.votingFormatRule.RunAsync(new RuleContext(new ValidationContext() {BlockToValidate = block}, DateTimeOffset.Now)).GetAwaiter().GetResult();
+            this.votingFormatRule.RunAsync(new RuleContext(new ValidationContext() { BlockToValidate = block }, DateTimeOffset.Now)).GetAwaiter().GetResult();
         }
 
         [Fact]
         public void ThrowsIfCantEncode()
         {
             List<byte> votingData = new List<byte>(VotingDataEncoder.VotingOutputPrefixBytes);
-            votingData.AddRange(new List<byte>() { 1, 2, 3, 4, 5, 6, 7, 8});
+            votingData.AddRange(new List<byte>() { 1, 2, 3, 4, 5, 6, 7, 8 });
 
             var votingOutputScript = new Script(OpcodeType.OP_RETURN, Op.GetPushOp(votingData.ToArray()));
 
@@ -65,7 +65,7 @@ namespace Blockcore.Features.PoA.Tests.Rules
             block.Transactions[0].AddOutput(Money.COIN, votingOutputScript);
 
             Assert.Throws<ConsensusErrorException>(() =>
-                this.votingFormatRule.RunAsync(new RuleContext(new ValidationContext() {BlockToValidate = block}, DateTimeOffset.Now)).GetAwaiter().GetResult());
+                this.votingFormatRule.RunAsync(new RuleContext(new ValidationContext() { BlockToValidate = block }, DateTimeOffset.Now)).GetAwaiter().GetResult());
         }
     }
 }

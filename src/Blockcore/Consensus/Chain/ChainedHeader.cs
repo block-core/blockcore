@@ -535,7 +535,7 @@ namespace Blockcore.Consensus.Chain
         }
 
         /// <summary>
-        
+
         /// </summary>
         /// <returns>The difficulty adjustment interval in blocks.</returns>
         private long GetDifficultyAdjustmentInterval(IConsensus consensus)

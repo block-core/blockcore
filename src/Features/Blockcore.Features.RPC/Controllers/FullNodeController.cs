@@ -126,7 +126,7 @@ namespace Blockcore.Features.RPC.Controllers
         /// When called without a blockhash argument, getrawtransaction will return the transaction if it is in the mempool, or if -txindex is enabled and the transaction is in a block in the blockchain.</remarks>
         [ActionName("getrawtransaction")]
         [ActionDescription("Gets a raw, possibly pooled, transaction from the full node.")]
-        public async Task<TransactionModel> GetRawTransactionAsync(string txid, [IntToBool]bool verbose = false, string blockHash = null)
+        public async Task<TransactionModel> GetRawTransactionAsync(string txid, [IntToBool] bool verbose = false, string blockHash = null)
         {
             Guard.NotEmpty(txid, nameof(txid));
 

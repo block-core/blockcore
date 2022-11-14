@@ -19,7 +19,6 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Staking;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Tests;

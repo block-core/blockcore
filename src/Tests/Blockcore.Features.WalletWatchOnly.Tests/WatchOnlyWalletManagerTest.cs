@@ -2,9 +2,6 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
-using Newtonsoft.Json;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
@@ -14,6 +11,9 @@ using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Blockcore.Features.WalletWatchOnly.Tests

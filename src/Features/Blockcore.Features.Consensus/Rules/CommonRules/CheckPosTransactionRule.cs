@@ -4,7 +4,6 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.TransactionInfo;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
@@ -22,7 +21,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
             // Check transactions
             foreach (Transaction tx in block.Transactions)
-                this.CheckTransaction(tx);
+                CheckTransaction(tx);
 
             return Task.CompletedTask;
         }

@@ -74,7 +74,7 @@ namespace NBitcoin
 
         protected override Script GeneratePaymentScript()
         {
-            return PayToScriptHashTemplate.Instance.GenerateScriptPubKey((ScriptId)this.Hash);
+            return PayToScriptHashTemplate.Instance.GenerateScriptPubKey(this.Hash);
         }
     }
 
@@ -97,7 +97,7 @@ namespace NBitcoin
             return Network.Parse<BitcoinAddress>(str, expectedNetwork);
         }
 
-        public BitcoinAddress(string str, Network network)
+        protected BitcoinAddress(string str, Network network)
         {
             if (network == null)
                 throw new ArgumentNullException("network");

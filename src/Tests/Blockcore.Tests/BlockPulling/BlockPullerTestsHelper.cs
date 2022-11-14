@@ -12,7 +12,6 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
@@ -55,7 +54,7 @@ namespace Blockcore.Tests.BlockPulling
         /// <summary>Creates a peer with extended puller behavior.</summary>
         public INetworkPeer CreatePeer(out ExtendedBlockPullerBehavior mockedBehavior, bool notSupportedVersion = false)
         {
-            return this.CreatePeerMock(out mockedBehavior, notSupportedVersion).Object;
+            return CreatePeerMock(out mockedBehavior, notSupportedVersion).Object;
         }
 
         /// <summary>Creates a peer with extended puller behavior.</summary>
@@ -84,7 +83,7 @@ namespace Blockcore.Tests.BlockPulling
             peer.SetupGet(x => x.State).Returns(NetworkPeerState.HandShaked);
             peer.SetupGet(x => x.MessageReceived).Returns(new AsyncExecutionEvent<INetworkPeer, IncomingMessage>());
 
-            ExtendedBlockPullerBehavior behavior = this.CreateBlockPullerBehavior();
+            ExtendedBlockPullerBehavior behavior = CreateBlockPullerBehavior();
             behavior.Attach(peer.Object);
             peer.Setup(x => x.Behavior<IBlockPullerBehavior>()).Returns(() => behavior);
 

@@ -36,7 +36,7 @@ namespace NBitcoin.Tests
             curves.Add("K-163", SecObjectIdentifiers.SecT163k1);
         }
 
-        private static Dictionary<string, DerObjectIdentifier> curves;
+        private static readonly Dictionary<string, DerObjectIdentifier> curves;
 
         public DeterministicSignatureTests()
         {

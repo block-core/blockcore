@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using Blockcore.Consensus.Chain;
-using Microsoft.AspNetCore.Mvc;
-using NBitcoin;
 using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using NBitcoin;
 
 namespace Blockcore.Features.Notifications.Controllers
 {
@@ -76,7 +76,7 @@ namespace Blockcore.Features.Notifications.Controllers
                 this.blockNotification.SyncFrom(hashToSyncFrom);
             }
 
-            return this.Ok();
+            return Ok();
         }
     }
 }

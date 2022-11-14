@@ -41,7 +41,7 @@ namespace Blockcore.Features.BlockStore.Api
 
             string arguments = $"{nameof(addresses)}={addrString}&{nameof(minConfirmations)}={minConfirmations}";
 
-            return this.SendGetRequestAsync<AddressBalancesResult>(BlockStoreRouteEndPoint.GetAddressesBalances, arguments, cancellation);
+            return SendGetRequestAsync<AddressBalancesResult>(BlockStoreRouteEndPoint.GetAddressesBalances, arguments, cancellation);
         }
 
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace Blockcore.Features.BlockStore.Api
 
             string arguments = $"{nameof(addresses)}={addrString}";
 
-            return this.SendGetRequestAsync<VerboseAddressBalancesResult>(BlockStoreRouteEndPoint.GetVerboseAddressesBalances, arguments, cancellation);
+            return SendGetRequestAsync<VerboseAddressBalancesResult>(BlockStoreRouteEndPoint.GetVerboseAddressesBalances, arguments, cancellation);
         }
     }
 }

@@ -5,7 +5,6 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Features.Consensus;
 using Blockcore.Tests.Common;
-using Blockcore.Utilities.Store;
 using Xunit;
 
 namespace Blockcore.Tests.Builder.Feature

@@ -34,9 +34,9 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         private BackendPerformanceSnapshot latestPerformanceSnapShot;
 
-        private DataStoreSerializer dataStoreSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
-        private string dataFolder;
+        private readonly string dataFolder;
 
         public FasterKV<Types.StoreKey, Types.StoreValue, Types.StoreInput, Types.StoreOutput, Types.StoreContext, Types.StoreFunctions> db;
         public IDevice log;
@@ -57,12 +57,12 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
             // Create the coinview folder if it does not exist.
             Directory.CreateDirectory(folder);
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.network = network;
             this.performanceCounter = new BackendPerformanceCounter(dateTimeProvider);
             this.dataFolder = folder;
 
-            nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 400);
+            nodeStats.RegisterStats(AddBenchStats, StatsType.Benchmark, GetType().Name, 400);
         }
 
         public void Initialize()
@@ -110,11 +110,11 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
             using (var session = this.db.NewSession())
             {
                 var wrapper = new Types.SessionWrapper { Session = session };
-                if (this.GetTipHash() == null)
+                if (GetTipHash() == null)
                 {
-                    this.SetBlockHash(wrapper, new HashHeightPair(genesis.GetHash(), 0));
+                    SetBlockHash(wrapper, new HashHeightPair(genesis.GetHash(), 0));
 
-                    this.Checkpoint();
+                    Checkpoint();
                     // Genesis coin is unspendable so do not add the coins.
                     //   transaction.Commit();
                 }
@@ -174,7 +174,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
             using (session)
             {
-                tipHash = this.GetTipHash(new Types.SessionWrapper { Session = session });
+                tipHash = GetTipHash(new Types.SessionWrapper { Session = session });
             }
 
             return tipHash;
@@ -261,14 +261,14 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                 using (new StopwatchDisposable(o => this.performanceCounter.AddInsertTime(o)))
                 {
                     var wrapper = new Types.SessionWrapper { Session = session };
-                    HashHeightPair current = this.GetTipHash(wrapper);
+                    HashHeightPair current = GetTipHash(wrapper);
                     if (current != oldBlockHash)
                     {
                         this.logger.LogTrace("(-)[BLOCKHASH_MISMATCH]");
                         throw new InvalidOperationException("Invalid oldBlockHash");
                     }
 
-                    this.SetBlockHash(wrapper, nextBlockHash);
+                    SetBlockHash(wrapper, nextBlockHash);
 
                     // Here we'll add items to be inserted in a second pass.
                     List<UnspentOutput> toInsert = new List<UnspentOutput>();
@@ -327,7 +327,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
                     }
 
                     insertedEntities += unspentOutputs.Count;
-                    this.Checkpoint();
+                    Checkpoint();
                 }
             }
 
@@ -341,7 +341,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
             {
                 var wrapper = new Types.SessionWrapper { Session = session };
 
-                HashHeightPair current = this.GetTipHash(wrapper);
+                HashHeightPair current = GetTipHash(wrapper);
 
                 Types.StoreInput input1 = new Types.StoreInput();
                 Types.StoreOutput output1 = new Types.StoreOutput();
@@ -369,7 +369,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                 var rewindData = this.dataStoreSerializer.Deserialize<RewindData>(output1.value.value);
 
-                this.SetBlockHash(wrapper, rewindData.PreviousBlockHash);
+                SetBlockHash(wrapper, rewindData.PreviousBlockHash);
 
                 foreach (OutPoint outPoint in rewindData.OutputsToRemove)
                 {

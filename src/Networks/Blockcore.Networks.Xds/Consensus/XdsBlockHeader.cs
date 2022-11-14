@@ -13,7 +13,7 @@ namespace Blockcore.Networks.Xds.Consensus
 
             using (var ms = new MemoryStream())
             {
-                this.ReadWriteHashingStream(new BitcoinStream(ms, true));
+                ReadWriteHashingStream(new BitcoinStream(ms, true));
                 serialized = ms.ToArray();
             }
 

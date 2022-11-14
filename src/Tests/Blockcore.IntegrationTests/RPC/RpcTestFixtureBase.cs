@@ -28,7 +28,7 @@ namespace Blockcore.IntegrationTests.RPC
         /// </summary>
         public RpcTestFixtureBase()
         {
-            this.InitializeFixture();
+            InitializeFixture();
         }
 
         /// <summary>
@@ -40,10 +40,20 @@ namespace Blockcore.IntegrationTests.RPC
         /// Disposes of the test fixtures resources.
         /// Note: do not call this dispose in the class itself xunit will handle it.
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            this.Builder.Dispose();
-            this.NetworkPeerClient.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.Builder.Dispose();
+                this.NetworkPeerClient.Dispose();
+            }
         }
 
         /// <summary>

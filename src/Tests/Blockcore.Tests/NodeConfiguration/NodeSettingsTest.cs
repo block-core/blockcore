@@ -3,7 +3,6 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
 using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using Xunit;

@@ -364,11 +364,7 @@ namespace Blockcore.BlockPulling
 
                 Queue<DownloadJob> queue = highPriority ? this.reassignedJobsQueue : this.downloadJobsQueue;
 
-                queue.Enqueue(new DownloadJob()
-                {
-                    Headers = new List<ChainedHeader>(headers),
-                    Id = jobId
-                });
+                queue.Enqueue(new DownloadJob(jobId, new List<ChainedHeader>(headers)));
 
                 this.logger.LogDebug("{0} blocks were requested from puller. Job ID {1} was created.", headers.Count, jobId);
 
@@ -945,11 +941,8 @@ namespace Blockcore.BlockPulling
         {
             foreach (KeyValuePair<int, List<ChainedHeader>> jobIdToHeaders in headersByJobId)
             {
-                var newJob = new DownloadJob()
-                {
-                    Id = jobIdToHeaders.Key,
-                    Headers = jobIdToHeaders.Value
-                };
+                var newJob = new DownloadJob(jobIdToHeaders.Key, jobIdToHeaders.Value);
+
 
                 this.reassignedJobsQueue.Enqueue(newJob);
             }

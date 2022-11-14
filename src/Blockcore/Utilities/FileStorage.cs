@@ -98,12 +98,16 @@ namespace Blockcore.Utilities
             if (options == null)
                 options = FileStorageOption.Default;
 
-            string filePath = Path.Combine(this.FolderPath, fileName);
+            string filePath = Path.GetFullPath(Path.Combine(this.FolderPath, fileName));
+            string fullDestDirPath = Path.GetFullPath(this.FolderPath + Path.DirectorySeparatorChar);
             long uniqueId = DateTime.UtcNow.Ticks;
             string newFilePath = $"{filePath}.{uniqueId}.new";
             string tempFilePath = $"{filePath}.{uniqueId}.temp";
 
-            File.WriteAllText(newFilePath, JsonConvert.SerializeObject(toSave, options.Indent ? Formatting.Indented : Formatting.None, options.GetSerializationSettings()));
+            if (filePath.StartsWith(fullDestDirPath, StringComparison.Ordinal))
+            {
+                File.WriteAllText(newFilePath, JsonConvert.SerializeObject(toSave, options.Indent ? Formatting.Indented : Formatting.None, options.GetSerializationSettings()));
+            }
 
             // If the file does not exist yet, create it.
             if (!File.Exists(filePath))
@@ -134,7 +138,7 @@ namespace Blockcore.Utilities
             catch (IOException)
             {
                 // Marking the file for deletion in the future.
-                File.Move(tempFilePath, $"{ filePath}.{ uniqueId}.del");
+                File.Move(tempFilePath, $"{filePath}.{uniqueId}.del");
             }
         }
 

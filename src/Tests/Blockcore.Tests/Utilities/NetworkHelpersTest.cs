@@ -2,7 +2,6 @@
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Tests.Utilities

@@ -99,7 +99,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules
     {
         public RuleContext RuleContext { get; set; }
 
-        private RuleRegistrationHelper ruleRegistrationHelper;
+        private readonly RuleRegistrationHelper ruleRegistrationHelper;
 
         public TestConsensusRules(Network network, ILoggerFactory loggerFactory, IDateTimeProvider dateTimeProvider, ChainIndexer chainIndexer, NodeDeployments nodeDeployments,
             ConsensusSettings consensusSettings, ICheckpoints checkpoints, IChainState chainState, IInvalidBlockHashStore invalidBlockHashStore, INodeStats nodeStats, ConsensusRulesContainer consensusRulesContainer)
@@ -134,7 +134,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules
     /// </summary>
     public class TestPosConsensusRules : PosConsensusRuleEngine
     {
-        private RuleRegistrationHelper ruleRegistrationHelper;
+        private readonly RuleRegistrationHelper ruleRegistrationHelper;
 
         public TestPosConsensusRules(Network network, ILoggerFactory loggerFactory, IDateTimeProvider dateTimeProvider, ChainIndexer chainIndexer,
             NodeDeployments nodeDeployments, ConsensusSettings consensusSettings, ICheckpoints checkpoints, ICoinView uxtoSet, IStakeChain stakeChain,
@@ -159,7 +159,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules
         /// <summary>
         /// Creates test chain with a consensus loop.
         /// </summary>
-        public static TestRulesContext CreateAsync(Network network, [CallerMemberName]string pathName = null)
+        public static TestRulesContext CreateAsync(Network network, [CallerMemberName] string pathName = null)
         {
             var testRulesContext = new TestRulesContext() { Network = network };
 

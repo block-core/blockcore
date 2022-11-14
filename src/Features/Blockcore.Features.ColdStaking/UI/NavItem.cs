@@ -1,7 +1,6 @@
-﻿using Blockcore.Interfaces.UI;
+﻿using Blockcore.Configuration;
 using Blockcore.Features.Wallet.Interfaces;
-using System.Linq;
-using Blockcore.Configuration;
+using Blockcore.Interfaces.UI;
 using Blockcore.Networks;
 
 namespace Blockcore.Features.Wallet.UI
@@ -57,7 +56,7 @@ namespace Blockcore.Features.Wallet.UI
                 return true;
             }
         }
-        
+
         public int NavOrder => 31;
     }
 }

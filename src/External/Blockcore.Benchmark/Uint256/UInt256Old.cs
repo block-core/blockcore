@@ -304,7 +304,7 @@ namespace Blockcore.Benchmark.Uint256.Old
         public override bool Equals(object obj)
         {
             var item = obj as uint256;
-            return this.Equals(item);
+            return Equals(item);
         }
 
         public bool Equals(uint256 other)
@@ -442,7 +442,7 @@ namespace Blockcore.Benchmark.Uint256.Old
         public byte[] ToBytes(bool lendian = true)
         {
             var arr = new byte[WIDTH_BYTE];
-            this.ToBytes(arr);
+            ToBytes(arr);
             if (!lendian)
                 Array.Reverse(arr);
             return arr;

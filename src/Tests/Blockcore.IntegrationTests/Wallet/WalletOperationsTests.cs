@@ -7,11 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Models;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
@@ -86,7 +84,17 @@ namespace Blockcore.IntegrationTests.Wallet
 
         public void Dispose()
         {
-            this.builder.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.builder.Dispose();
+            }
         }
     }
 

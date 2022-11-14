@@ -174,9 +174,9 @@ namespace Blockcore.Features.RPC
         private string authentication;
         private readonly Uri address;
         private readonly Network network;
-        private static ConcurrentDictionary<Network, string> defaultPaths = new ConcurrentDictionary<Network, string>();
+        private static readonly ConcurrentDictionary<Network, string> defaultPaths = new ConcurrentDictionary<Network, string>();
         private ConcurrentQueue<(RPCRequest request, TaskCompletionSource<RPCResponse> task)> batchedRequests;
-        private RPCCredentialString credentialString;
+        private readonly RPCCredentialString credentialString;
 
         public Uri Address
         {
@@ -208,7 +208,7 @@ namespace Blockcore.Features.RPC
             Guard.NotNull(address, nameof(address));
             Guard.NotNull(network, nameof(network));
 
-            this.RPCClientInit(network);
+            RPCClientInit(network);
 
             if (credentials.UseDefault)
             {
@@ -325,7 +325,7 @@ namespace Blockcore.Features.RPC
         public async Task<RPCCapabilities> ScanRPCCapabilitiesAsync()
         {
             var capabilities = new RPCCapabilities();
-            var rpc = this.PrepareBatch();
+            var rpc = PrepareBatch();
             var waiting = Task.WhenAll(
             SetVersionAsync(capabilities),
             CheckCapabilities(rpc, "scantxoutset", v => capabilities.SupportScanUTXOSet = v),

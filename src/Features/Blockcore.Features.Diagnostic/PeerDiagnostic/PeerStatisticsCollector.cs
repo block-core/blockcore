@@ -19,7 +19,7 @@ namespace Blockcore.Features.Diagnostic.PeerDiagnostic
     /// </summary>
     public sealed class PeerStatisticsCollector : IDisposable
     {
-        private object lockStartStopCollecting;
+        private readonly object lockStartStopCollecting;
 
         private readonly IAsyncProvider asyncProvider;
         private readonly ISignals signals;
@@ -125,14 +125,14 @@ namespace Blockcore.Features.Diagnostic.PeerDiagnostic
 
                 this.peersEventsQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<PeerEventBase>(nameof(this.peersEventsQueue), UpdatePeerStatistics);
 
-                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnected>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnectionAttempt>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnectionAttemptFailed>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<PeerDisconnected>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnected>(EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnectionAttempt>(EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerConnectionAttemptFailed>(EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerDisconnected>(EnqueuePeerEvent));
 
-                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageReceived>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageSent>(this.EnqueuePeerEvent));
-                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageSendFailure>(this.EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageReceived>(EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageSent>(EnqueuePeerEvent));
+                this.eventSubscriptions.Add(this.signals.Subscribe<PeerMessageSendFailure>(EnqueuePeerEvent));
 
                 this.Enabled = true;
             }
@@ -162,7 +162,7 @@ namespace Blockcore.Features.Diagnostic.PeerDiagnostic
 
         public void Dispose()
         {
-            this.StopCollecting();
+            StopCollecting();
         }
     }
 }

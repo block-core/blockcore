@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Networks;
 using NBitcoin.BitcoinCore;
 
 namespace Blockcore.Networks.BCP.Networks.Policies
@@ -26,13 +25,13 @@ namespace Blockcore.Networks.BCP.Networks.Policies
             PayToWitTemplate.Instance
         };
 
-        public override List<ScriptTemplate> GetScriptTemplates => standardTemplates;
+        public override List<ScriptTemplate> GetScriptTemplates => this.standardTemplates;
 
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {
-            if (!standardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
+            if (!this.standardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
             {
-                standardTemplates.Add(scriptTemplate);
+                this.standardTemplates.Add(scriptTemplate);
             }
         }
 
@@ -48,7 +47,7 @@ namespace Blockcore.Networks.BCP.Networks.Policies
 
         public override ScriptTemplate GetTemplateFromScriptPubKey(Script script)
         {
-            return standardTemplates.FirstOrDefault(t => t.CheckScriptPubKey(script));
+            return this.standardTemplates.FirstOrDefault(t => t.CheckScriptPubKey(script));
         }
 
         public override bool IsStandardScriptPubKey(Network network, Script scriptPubKey)

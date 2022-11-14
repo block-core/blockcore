@@ -16,7 +16,6 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Rules;
@@ -62,9 +61,9 @@ namespace Blockcore.Features.MemoryPool.Tests
         {
             int numTx = 22;
             string fileName = "mempool.dat";
-            NodeSettings settings = this.CreateSettings("SaveLoadFileTest");
+            NodeSettings settings = CreateSettings("SaveLoadFileTest");
             var persistence = new MempoolPersistence(settings, new LoggerFactory());
-            IEnumerable<MempoolPersistenceEntry> toSave = this.CreateTestEntries(numTx);
+            IEnumerable<MempoolPersistenceEntry> toSave = CreateTestEntries(numTx);
             IEnumerable<MempoolPersistenceEntry> loaded;
 
             MemPoolSaveResult result = persistence.Save(settings.Network, toSave, fileName);
@@ -81,9 +80,9 @@ namespace Blockcore.Features.MemoryPool.Tests
         {
             int numTx = 22;
             string fileName = "mempool.dat";
-            NodeSettings settings = this.CreateSettings("LoadBadFileTest");
+            NodeSettings settings = CreateSettings("LoadBadFileTest");
             var persistence = new MempoolPersistence(settings, new LoggerFactory());
-            IEnumerable<MempoolPersistenceEntry> toSave = this.CreateTestEntries(numTx);
+            IEnumerable<MempoolPersistenceEntry> toSave = CreateTestEntries(numTx);
             IEnumerable<MempoolPersistenceEntry> loaded;
             string fullFilePath = Path.Combine(settings.DataDir, fileName);
 
@@ -102,7 +101,7 @@ namespace Blockcore.Features.MemoryPool.Tests
         public void LoadNoFileTest()
         {
             string fileName = "mempool.dat";
-            NodeSettings settings = this.CreateSettings("LoadNoFileTest");
+            NodeSettings settings = CreateSettings("LoadNoFileTest");
             var persistence = new MempoolPersistence(settings, new LoggerFactory());
             string fullFilePath = Path.Combine(settings.DataDir, fileName);
 
@@ -117,8 +116,8 @@ namespace Blockcore.Features.MemoryPool.Tests
         {
             int numTx = 5;
             string fileName = "mempool.dat";
-            NodeSettings settings = this.CreateSettings("LoadPoolTest_WithBadTransactions");
-            IEnumerable<MempoolPersistenceEntry> toSave = this.CreateTestEntries(numTx);
+            NodeSettings settings = CreateSettings("LoadPoolTest_WithBadTransactions");
+            IEnumerable<MempoolPersistenceEntry> toSave = CreateTestEntries(numTx);
             MempoolManager mempoolManager = CreateTestMempool(settings, out TxMempool unused);
 
             MemPoolSaveResult result = (new MempoolPersistence(settings, new LoggerFactory())).Save(settings.Network, toSave, fileName);
@@ -134,7 +133,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             string fileName = "mempool.dat";
             Transaction tx1_parent = this.network.CreateTransaction("0100000001c4fadb806f9679c27c30c11b694523f6ac9614f7a69076b8940082ce636040fb000000006b4830450221009ad4b969a40b95017d133b13f7d465031829731f3b0ae4bcdcb5e393f5e919f902207f33aad2c3af48d6d65aaf5dd15a85a1f588ee3d6f477b2236cda1d81d88c43b012102eb184a906e082db44a95347de64110952b5821c42068a2054947aec4bc60db2fffffffff02685e3e00000000001976a9149ed35c9c42543ec67f9e6d1033e2ac1ac76f86ba88acd33e4500000000001976a9143c88fada9101f660d77feec1dd8db4ee9ea01d6788ac00000000");
             Transaction tx1 = this.network.CreateTransaction("0100000001055c4c42511f9d05f2fa817c7f023df567f3d501bebec14ddce7c05a9d5fda52000000006b483045022100de552f011768887141b9a767ae184f61aa3743a32aad394ac1e1ec35345415420220070b3d0afd28414f188c966e334e9f7b65e7440538d93bc1d61f82067fcfd3fa012103b47b6ffce08f54be286620a29f45407fedb7b33acfec938551938ec96a1e1b0bffffffff019f053e000000000017a91493e31884769545a237f164aa07b3caef6b62f6b68700000000");
-            NodeSettings settings = this.CreateSettings("LoadPoolTest_WithGoodTransactions");
+            NodeSettings settings = CreateSettings("LoadPoolTest_WithGoodTransactions");
             TxMempool txMemPool;
             MempoolManager mempoolManager = CreateTestMempool(settings, out txMemPool);
             Money fee = Money.Satoshis(0.00001m);
@@ -171,7 +170,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             string fileName = "mempool.dat";
             Transaction tx1_parent = this.network.CreateTransaction("0100000001c4fadb806f9679c27c30c11b694523f6ac9614f7a69076b8940082ce636040fb000000006b4830450221009ad4b969a40b95017d133b13f7d465031829731f3b0ae4bcdcb5e393f5e919f902207f33aad2c3af48d6d65aaf5dd15a85a1f588ee3d6f477b2236cda1d81d88c43b012102eb184a906e082db44a95347de64110952b5821c42068a2054947aec4bc60db2fffffffff02685e3e00000000001976a9149ed35c9c42543ec67f9e6d1033e2ac1ac76f86ba88acd33e4500000000001976a9143c88fada9101f660d77feec1dd8db4ee9ea01d6788ac00000000");
             Transaction tx1 = this.network.CreateTransaction("0100000001055c4c42511f9d05f2fa817c7f023df567f3d501bebec14ddce7c05a9d5fda52000000006b483045022100de552f011768887141b9a767ae184f61aa3743a32aad394ac1e1ec35345415420220070b3d0afd28414f188c966e334e9f7b65e7440538d93bc1d61f82067fcfd3fa012103b47b6ffce08f54be286620a29f45407fedb7b33acfec938551938ec96a1e1b0bffffffff019f053e000000000017a91493e31884769545a237f164aa07b3caef6b62f6b68700000000");
-            NodeSettings settings = this.CreateSettings("LoadPoolTest_WithExpiredTxs");
+            NodeSettings settings = CreateSettings("LoadPoolTest_WithExpiredTxs");
             TxMempool txMemPool;
             MempoolManager mempoolManager = CreateTestMempool(settings, out txMemPool);
             Money fee = Money.Satoshis(0.00001m);
@@ -207,9 +206,9 @@ namespace Blockcore.Features.MemoryPool.Tests
             int expectedLinesPerTransaction = 3;
             int expectedHeaderLines = 2;
             int expectedLines = numTx * expectedLinesPerTransaction + expectedHeaderLines;
-            var settings = new NodeSettings(this.network, args: new string[] { $"-datadir={ Path.Combine(this.dir, "SaveStreamTest") }" });
+            var settings = new NodeSettings(this.network, args: new string[] { $"-datadir={Path.Combine(this.dir, "SaveStreamTest")}" });
             var persistence = new MempoolPersistence(settings, new LoggerFactory());
-            IEnumerable<MempoolPersistenceEntry> toSave = this.CreateTestEntries(numTx);
+            IEnumerable<MempoolPersistenceEntry> toSave = CreateTestEntries(numTx);
             List<MempoolPersistenceEntry> loaded;
 
             long actualStreamLength = 0;
@@ -242,7 +241,7 @@ namespace Blockcore.Features.MemoryPool.Tests
 
         private NodeSettings CreateSettings(string subDirName)
         {
-            return new NodeSettings(this.network, args: new string[] { $"-datadir={ Directory.CreateDirectory(Path.Combine(this.dir, subDirName)).FullName }" });
+            return new NodeSettings(this.network, args: new string[] { $"-datadir={Directory.CreateDirectory(Path.Combine(this.dir, subDirName)).FullName}" });
         }
 
         private IEnumerable<MempoolPersistenceEntry> CreateTestEntries(int numTx)
@@ -251,7 +250,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             for (int i = 0; i < numTx; i++)
             {
                 int amountSat = 10 * i;
-                Transaction tx = this.MakeRandomTx(amountSat);
+                Transaction tx = MakeRandomTx(amountSat);
                 var entry = new TxMempoolEntry(tx, Money.FromUnit(0.1m, MoneyUnit.MilliBTC), DateTimeOffset.Now.ToUnixTimeSeconds(), i * 100, i, amountSat, i == 0, 10, null, new ConsensusOptions(), new ConsensusFactory());
                 entry.UpdateFeeDelta(numTx - i);
                 entries.Add(entry);

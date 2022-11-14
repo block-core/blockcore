@@ -8,7 +8,7 @@ namespace NBitcoin.DataEncoders
     {
         public Bech32FormatException(string message, int[] indexes) : base(message)
         {
-            if(indexes == null)
+            if (indexes == null)
                 throw new ArgumentNullException("indexes");
             this.ErrorIndexes = indexes;
             Array.Sort(this.ErrorIndexes);
@@ -204,7 +204,7 @@ namespace NBitcoin.DataEncoders
 
         private int[] locate_errors(uint residue, int length)
         {
-            if(residue == 0)
+            if (residue == 0)
             {
                 return new int[0];
             }
@@ -215,39 +215,39 @@ namespace NBitcoin.DataEncoders
             int l_s0 = this.GF1024_LOG[s0];
             int l_s1 = this.GF1024_LOG[s1];
             int l_s2 = this.GF1024_LOG[s2];
-            if(l_s0 != -1 && l_s1 != -1 && l_s2 != -1 && (2 * l_s1 - l_s2 - l_s0 + 2046) % 1023 == 0)
+            if (l_s0 != -1 && l_s1 != -1 && l_s2 != -1 && (2 * l_s1 - l_s2 - l_s0 + 2046) % 1023 == 0)
             {
                 int p1 = (l_s1 - l_s0 + 1023) % 1023;
-                if(p1 >= length)
+                if (p1 >= length)
                     return new int[0];
                 int l_e1 = l_s0 + (1023 - 997) * p1;
-                if((l_e1 % 33) != 0)
+                if ((l_e1 % 33) != 0)
                     return new int[0];
                 return new[] { p1 };
             }
-            for(int p1 = 0; p1 < length; p1++)
+            for (int p1 = 0; p1 < length; p1++)
             {
                 long s2_s1p1 = s2 ^ (s1 == 0 ? 0 : this.GF1024_EXP[(l_s1 + p1) % 1023]);
-                if(s2_s1p1 == 0)
+                if (s2_s1p1 == 0)
                     continue;
                 long s1_s0p1 = s1 ^ (s0 == 0 ? 0 : this.GF1024_EXP[(l_s0 + p1) % 1023]);
-                if(s1_s0p1 == 0)
+                if (s1_s0p1 == 0)
                     continue;
                 int l_s1_s0p1 = this.GF1024_LOG[s1_s0p1];
                 int p2 = (this.GF1024_LOG[s2_s1p1] - l_s1_s0p1 + 1023) % 1023;
-                if(p2 >= length || p1 == p2)
+                if (p2 >= length || p1 == p2)
                     continue;
                 long s1_s0p2 = s1 ^ (s0 == 0 ? 0 : this.GF1024_EXP[(l_s0 + p2) % 1023]);
-                if(s1_s0p2 == 0)
+                if (s1_s0p2 == 0)
                     continue;
                 int inv_p1_p2 = 1023 - this.GF1024_LOG[this.GF1024_EXP[p1] ^ this.GF1024_EXP[p2]];
                 int l_e2 = l_s1_s0p1 + inv_p1_p2 + (1023 - 997) * p2;
-                if((l_e2 % 33) != 0)
+                if ((l_e2 % 33) != 0)
                     continue;
                 int l_e1 = this.GF1024_LOG[s1_s0p2] + inv_p1_p2 + (1023 - 997) * p1;
-                if((l_e1 % 33) != 0)
+                if ((l_e1 % 33) != 0)
                     continue;
-                if(p1 < p2)
+                if (p1 < p2)
                 {
                     return new int[] { p1, p2 };
                 }
@@ -264,13 +264,13 @@ namespace NBitcoin.DataEncoders
         }
         public Bech32Encoder(byte[] hrp)
         {
-            if(hrp == null)
+            if (hrp == null)
                 throw new ArgumentNullException("hrp");
 
             this._Hrp = hrp;
             int len = hrp.Length;
             this._HrpExpand = new byte[(2 * len) + 1];
-            for(int i = 0; i < len; i++)
+            for (int i = 0; i < len; i++)
             {
                 this._HrpExpand[i] = (byte)(hrp[i] >> 5);
                 this._HrpExpand[i + len + 1] = (byte)(hrp[i] & 31);
@@ -290,11 +290,11 @@ namespace NBitcoin.DataEncoders
         private static uint Polymod(byte[] values)
         {
             uint chk = 1;
-            foreach(byte value in values)
+            foreach (byte value in values)
             {
                 uint top = chk >> 25;
                 chk = value ^ ((chk & 0x1ffffff) << 5);
-                foreach(int i in Enumerable.Range(0, 5))
+                foreach (int i in Enumerable.Range(0, 5))
                 {
                     chk ^= ((top >> i) & 1) == 1 ? Generator[i] : 0;
                 }
@@ -307,13 +307,13 @@ namespace NBitcoin.DataEncoders
             errorPosition = null;
             byte[] values = this._HrpExpand.Concat(data);
             uint polymod = Polymod(values) ^ 1;
-            if(polymod != 0)
+            if (polymod != 0)
             {
                 int[] epos = locate_errors(polymod, bechStringLen - 1);
                 errorPosition = epos;
-                if(epos.Length == 0)
+                if (epos.Length == 0)
                     return false;
-                for(int ep = 0; ep < epos.Length; ++ep)
+                for (int ep = 0; ep < epos.Length; ++ep)
                 {
                     epos[ep] = bechStringLen - epos[ep] - (epos[ep] >= data.Length ? 2 : 1);
                 }
@@ -332,7 +332,7 @@ namespace NBitcoin.DataEncoders
             valuesOffset += count;
             uint polymod = Polymod(values) ^ 1;
             var ret = new byte[6];
-            foreach(int i in Enumerable.Range(0, 6))
+            foreach (int i in Enumerable.Range(0, 6))
             {
                 ret[i] = (byte)((polymod >> 5 * (5 - i)) & 31);
             }
@@ -353,7 +353,7 @@ namespace NBitcoin.DataEncoders
             byte[] checkSum = CreateChecksum(data, offset, count);
             Array.Copy(checkSum, 0, combined, combinedOffset, 6);
             combinedOffset += 6;
-            for(int i = 0; i < count + 6; i++)
+            for (int i = 0; i < count + 6; i++)
             {
                 combined[this._Hrp.Length + 1 + i] = Byteset[combined[this._Hrp.Length + 1 + i]];
             }
@@ -363,58 +363,58 @@ namespace NBitcoin.DataEncoders
         public static Bech32Encoder ExtractEncoderFromString(string test)
         {
             int i = test.IndexOf('1');
-            if(i == -1)
+            if (i == -1)
                 throw new FormatException("Invalid Bech32 string");
             return Encoders.Bech32(test.Substring(0, i));
         }
 
         internal static void CheckCase(string hrp)
         {
-            if(hrp.ToLowerInvariant().Equals(hrp))
+            if (hrp.ToLowerInvariant().Equals(hrp))
                 return;
-            if(hrp.ToUpperInvariant().Equals(hrp))
+            if (hrp.ToUpperInvariant().Equals(hrp))
                 return;
             throw new FormatException("Invalid bech32 string, mixed case detected");
         }
 
         public override byte[] DecodeData(string encoded)
         {
-            if(encoded == null)
+            if (encoded == null)
                 throw new ArgumentNullException("encoded");
             CheckCase(encoded);
             byte[] buffer = Encoders.ASCII.DecodeData(encoded);
-            if(buffer.Any(b => b < 33 || b > 126))
+            if (buffer.Any(b => b < 33 || b > 126))
             {
                 throw new FormatException("bech chars are out of range");
             }
             encoded = encoded.ToLowerInvariant();
             buffer = Encoders.ASCII.DecodeData(encoded);
             int pos = encoded.LastIndexOf("1", StringComparison.OrdinalIgnoreCase);
-            if(pos < 1 || pos + 7 > encoded.Length || encoded.Length > 90)
+            if (pos < 1 || pos + 7 > encoded.Length || encoded.Length > 90)
             {
                 throw new FormatException("bech missing separator, separator misplaced or too long input");
             }
-            if(buffer.Skip(pos + 1).Any(x => !Byteset.Contains(x)))
+            if (buffer.Skip(pos + 1).Any(x => !Byteset.Contains(x)))
             {
                 throw new FormatException("bech chars are out of range");
             }
 
             buffer = Encoders.ASCII.DecodeData(encoded);
             byte[] hrp = Encoders.ASCII.DecodeData(encoded.Substring(0, pos));
-            if(!hrp.SequenceEqual(this._Hrp))
+            if (!hrp.SequenceEqual(this._Hrp))
             {
                 throw new FormatException("Mismatching human readeable part");
             }
             var data = new byte[encoded.Length - pos - 1];
-            for(int j = 0, i = pos + 1; i < encoded.Length; i++, j++)
+            for (int j = 0, i = pos + 1; i < encoded.Length; i++, j++)
             {
                 data[j] = (byte)Array.IndexOf(Byteset, buffer[i]);
             }
 
             int[] error;
-            if(!VerifyChecksum(data, encoded.Length, out error))
+            if (!VerifyChecksum(data, encoded.Length, out error))
             {
-                if(error.Length == 0)
+                if (error.Length == 0)
                     throw new FormatException("Error while veriying Bech32 checksum");
                 else
                     throw new Bech32FormatException($"Error in Bech32 string at {String.Join(",", error)}", error);
@@ -428,26 +428,26 @@ namespace NBitcoin.DataEncoders
             int bits = 0;
             int maxv = (1 << toBits) - 1;
             var ret = new List<byte>();
-            foreach(byte value in data)
+            foreach (byte value in data)
             {
-                if((value >> fromBits) > 0)
+                if ((value >> fromBits) > 0)
                     throw new FormatException("Invalid Bech32 string");
                 acc = (acc << fromBits) | value;
                 bits += fromBits;
-                while(bits >= toBits)
+                while (bits >= toBits)
                 {
                     bits -= toBits;
                     ret.Add((byte)((acc >> bits) & maxv));
                 }
             }
-            if(pad)
+            if (pad)
             {
-                if(bits > 0)
+                if (bits > 0)
                 {
                     ret.Add((byte)((acc << (toBits - bits)) & maxv));
                 }
             }
-            else if(bits >= fromBits || (byte)(((acc << (toBits - bits)) & maxv)) != 0)
+            else if (bits >= fromBits || (byte)(((acc << (toBits - bits)) & maxv)) != 0)
             {
                 throw new FormatException("Invalid Bech32 string");
             }
@@ -456,20 +456,20 @@ namespace NBitcoin.DataEncoders
 
         public byte[] Decode(string addr, out byte witnessVerion)
         {
-            if(addr == null)
+            if (addr == null)
                 throw new ArgumentNullException("addr");
             CheckCase(addr);
             byte[] data = DecodeData(addr);
 
             byte[] decoded = ConvertBits(data.Skip(1), 5, 8, false);
-            if(decoded.Length < 2 || decoded.Length > 40)
+            if (decoded.Length < 2 || decoded.Length > 40)
                 throw new FormatException("Invalid decoded data length");
 
             witnessVerion = data[0];
-            if(witnessVerion > 16)
+            if (witnessVerion > 16)
                 throw new FormatException("Invalid decoded witness version");
 
-            if(witnessVerion == 0 && decoded.Length != 20 && decoded.Length != 32)
+            if (witnessVerion == 0 && decoded.Length != 20 && decoded.Length != 32)
                 throw new FormatException("Decoded witness program with unknown length");
             return decoded;
         }

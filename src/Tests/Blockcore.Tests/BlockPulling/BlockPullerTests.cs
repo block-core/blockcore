@@ -276,7 +276,7 @@ namespace Blockcore.Tests.BlockPulling
 
             this.puller.RequestBlocksDownload(headers);
 
-            // Headers were added to the jobs queue.
+            // getHeaders() were added to the jobs queue.
             Assert.Single(this.puller.DownloadJobsQueue);
             Assert.Equal(2, this.puller.DownloadJobsQueue.Peek().Headers.Count);
             Assert.True(this.puller.ProcessQueuesSignal.IsSet);
@@ -342,7 +342,7 @@ namespace Blockcore.Tests.BlockPulling
             this.puller.NewPeerTipClaimed(peer1, peer1Headers.Last());
             this.puller.NewPeerTipClaimed(peer2, peer2Headers.Last());
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>(peer1Headers), Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>(peer1Headers));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);
@@ -366,7 +366,7 @@ namespace Blockcore.Tests.BlockPulling
 
             this.puller.NewPeerTipClaimed(peer1, headers.Last());
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>() { unclaimedHeader }, Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>() { unclaimedHeader });
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);
@@ -391,7 +391,7 @@ namespace Blockcore.Tests.BlockPulling
             this.puller.NewPeerTipClaimed(peer1, headers.Last());
             this.puller.NewPeerTipClaimed(peer2, headers.Last());
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>(headers), Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>(headers));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);
@@ -420,7 +420,7 @@ namespace Blockcore.Tests.BlockPulling
             this.puller.NewPeerTipClaimed(peer1, peer1Headers.Last());
             this.puller.NewPeerTipClaimed(peer2, peer2Headers.Last());
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>(peer1Headers), Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>(peer1Headers));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);
@@ -450,7 +450,7 @@ namespace Blockcore.Tests.BlockPulling
             this.puller.NewPeerTipClaimed(peer1, headers.Last());
             this.puller.NewPeerTipClaimed(peer2, headers.Last());
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>(headers), Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>(headers));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);
@@ -481,12 +481,12 @@ namespace Blockcore.Tests.BlockPulling
 
             List<int> peerIdsClaimingA = peers.Take(5).Select(x => x.Connection.Id).ToList();
 
-            this.Shuffle(peers);
+            Shuffle(peers);
 
             foreach (INetworkPeer peer in peers)
                 this.puller.NewPeerTipClaimed(peer, peerIdsClaimingA.Contains(peer.Connection.Id) ? chainA.Last() : chainB.Last());
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>(chainA), Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>(chainA));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);
@@ -518,7 +518,7 @@ namespace Blockcore.Tests.BlockPulling
 
             this.puller.NewPeerTipClaimed(peer, headers.Last());
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>(headers), Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>(headers));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, 50);
@@ -539,7 +539,7 @@ namespace Blockcore.Tests.BlockPulling
 
             this.puller.NewPeerTipClaimed(peer, headers[49]);
 
-            var job = new DownloadJob() { Headers = new List<ChainedHeader>(headers), Id = 1 };
+            var job = new DownloadJob(1, new List<ChainedHeader>(headers));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);
@@ -626,7 +626,7 @@ namespace Blockcore.Tests.BlockPulling
             Assert.Empty(this.helper.CallbacksCalled);
 
             Assert.Equal(10, this.puller.AssignedDownloadsByHash.Count);
-            this.VerifyAssignedDownloadsSortedOrder();
+            VerifyAssignedDownloadsSortedOrder();
 
             Assert.True(this.puller.AssignedHeadersByPeerId[behaviors[0].AttachedPeer.Connection.Id].Count == jobSizes[0]);
             Assert.True(this.puller.AssignedHeadersByPeerId[behaviors[1].AttachedPeer.Connection.Id].Count == jobSizes[1]);
@@ -698,7 +698,7 @@ namespace Blockcore.Tests.BlockPulling
             Assert.Empty(this.puller.DownloadJobsQueue);
             Assert.Equal(headers.Count, this.puller.AssignedDownloadsByHash.Count);
             Assert.True(this.puller.AssignedDownloadsByHash.All(x => x.Value.PeerId == peer1.Connection.Id));
-            this.VerifyAssignedDownloadsSortedOrder();
+            VerifyAssignedDownloadsSortedOrder();
         }
 
         /// <summary>
@@ -826,7 +826,7 @@ namespace Blockcore.Tests.BlockPulling
 
             this.puller.SetMaxBlocksBeingDownloaded(int.MaxValue);
 
-            this.Shuffle(headers);
+            Shuffle(headers);
             foreach (ChainedHeader header in headers)
                 this.puller.RequestBlocksDownload(new List<ChainedHeader>() { header });
 

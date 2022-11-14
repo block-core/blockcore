@@ -3,7 +3,6 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Interfaces
 {

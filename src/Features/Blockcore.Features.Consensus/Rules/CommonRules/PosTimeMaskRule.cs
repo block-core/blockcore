@@ -4,7 +4,6 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
@@ -56,7 +55,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
             // Check coinstake timestamp.
             if (posRuleContext.BlockStake.IsProofOfStake())
             {
-                if (!this.CheckCoinStakeTimestamp(chainedHeader.Header.Time))
+                if (!CheckCoinStakeTimestamp(chainedHeader.Header.Time))
                 {
                     this.Logger.LogTrace("(-)[BAD_TIME]");
                     ConsensusErrors.StakeTimeViolation.Throw();

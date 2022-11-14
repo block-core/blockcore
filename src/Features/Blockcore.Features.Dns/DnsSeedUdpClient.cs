@@ -51,7 +51,7 @@ namespace Blockcore.Features.Dns
         /// <returns>A task used to await the operation that returns a UDP message.</returns>
         public async Task<Tuple<IPEndPoint, byte[]>> ReceiveAsync()
         {
-            this.ThrowIfDisposed();
+            ThrowIfDisposed();
             UdpReceiveResult result = await this.udpClient.ReceiveAsync();
             return new Tuple<IPEndPoint, byte[]>(result.RemoteEndPoint, result.Buffer);
         }
@@ -65,7 +65,7 @@ namespace Blockcore.Features.Dns
         /// <returns>A task used to await the operation.</returns>
         public async Task<int> SendAsync(byte[] payload, int bytes, IPEndPoint remoteEndpoint)
         {
-            this.ThrowIfDisposed();
+            ThrowIfDisposed();
             return await this.udpClient.SendAsync(payload, bytes, remoteEndpoint);
         }
 
@@ -74,7 +74,7 @@ namespace Blockcore.Features.Dns
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 

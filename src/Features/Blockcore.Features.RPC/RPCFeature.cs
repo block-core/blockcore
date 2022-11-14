@@ -10,7 +10,6 @@ using Blockcore.Networks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.RPC
 {
@@ -41,7 +40,7 @@ namespace Blockcore.Features.RPC
             this.fullNodeBuilder = fullNodeBuilder;
             this.fullNode = fullNode;
             this.nodeSettings = nodeSettings;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.rpcSettings = rpcSettings;
         }
 
@@ -79,7 +78,7 @@ namespace Blockcore.Features.RPC
             {
                 // TODO: The web host wants to create IServiceProvider, so build (but not start)
                 // earlier, if you want to use dependency injection elsewhere
-                
+
                 var webHost = new WebHostBuilder()
                 .UseKestrel(o => o.AllowSynchronousIO = true)
                 .ForFullNode(this.fullNode)
@@ -124,7 +123,7 @@ namespace Blockcore.Features.RPC
             {
                 this.logger.LogInformation("RPC Server is off based on configuration.");
             }
-            
+
             return Task.CompletedTask;
         }
 

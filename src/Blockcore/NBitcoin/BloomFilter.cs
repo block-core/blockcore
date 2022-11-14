@@ -71,9 +71,9 @@ namespace NBitcoin
 
         public void Insert(byte[] vKey)
         {
-            if(this.isFull)
+            if (this.isFull)
                 return;
-            for(uint i = 0; i < this.nHashFuncs; i++)
+            for (uint i = 0; i < this.nHashFuncs; i++)
             {
                 uint nIndex = Hash(i, vKey);
                 // Sets bit nIndex of vData
@@ -85,43 +85,43 @@ namespace NBitcoin
 
         public bool Contains(byte[] vKey)
         {
-            if(this.isFull)
+            if (this.isFull)
                 return true;
-            if(this.isEmpty)
+            if (this.isEmpty)
                 return false;
-            for(uint i = 0; i < this.nHashFuncs; i++)
+            for (uint i = 0; i < this.nHashFuncs; i++)
             {
                 uint nIndex = Hash(i, vKey);
                 // Checks bit nIndex of vData
-                if((this.vData[nIndex >> 3] & (byte)(1 << (7 & (int)nIndex))) == 0)
+                if ((this.vData[nIndex >> 3] & (byte)(1 << (7 & (int)nIndex))) == 0)
                     return false;
             }
             return true;
         }
         public bool Contains(OutPoint outPoint)
         {
-            if(outPoint == null)
+            if (outPoint == null)
                 throw new ArgumentNullException("outPoint");
             return Contains(outPoint.ToBytes());
         }
 
         public bool Contains(uint256 hash)
         {
-            if(hash == null)
+            if (hash == null)
                 throw new ArgumentNullException("hash");
             return Contains(hash.ToBytes());
         }
 
         public void Insert(OutPoint outPoint)
         {
-            if(outPoint == null)
+            if (outPoint == null)
                 throw new ArgumentNullException("outPoint");
             Insert(outPoint.ToBytes());
         }
 
         public void Insert(uint256 value)
         {
-            if(value == null)
+            if (value == null)
                 throw new ArgumentNullException("value");
             Insert(value.ToBytes());
         }
@@ -147,37 +147,37 @@ namespace NBitcoin
 
         public bool IsRelevantAndUpdate(Transaction tx)
         {
-            if(tx == null)
+            if (tx == null)
                 throw new ArgumentNullException("tx");
             uint256 hash = tx.GetHash();
             bool fFound = false;
             // Match if the filter contains the hash of tx
             //  for finding tx when they appear in a block
-            if(this.isFull)
+            if (this.isFull)
                 return true;
-            if(this.isEmpty)
+            if (this.isEmpty)
                 return false;
-            if(Contains(hash))
+            if (Contains(hash))
                 fFound = true;
 
-            for(uint i = 0; i < tx.Outputs.Count; i++)
+            for (uint i = 0; i < tx.Outputs.Count; i++)
             {
                 TxOut txout = tx.Outputs[(int)i];
                 // Match if the filter contains any arbitrary script data element in any scriptPubKey in tx
                 // If this matches, also add the specific output that was matched.
                 // This means clients don't have to update the filter themselves when a new relevant tx 
                 // is discovered in order to find spending transactions, which avoids round-tripping and race conditions.
-                foreach(Op op in txout.ScriptPubKey.ToOps())
+                foreach (Op op in txout.ScriptPubKey.ToOps())
                 {
-                    if(op.PushData != null && op.PushData.Length != 0 && Contains(op.PushData))
+                    if (op.PushData != null && op.PushData.Length != 0 && Contains(op.PushData))
                     {
                         fFound = true;
-                        if((this.nFlags & (byte)BloomFlags.UPDATE_MASK) == (byte)BloomFlags.UPDATE_ALL)
+                        if ((this.nFlags & (byte)BloomFlags.UPDATE_MASK) == (byte)BloomFlags.UPDATE_ALL)
                             Insert(new OutPoint(hash, i));
-                        else if((this.nFlags & (byte)BloomFlags.UPDATE_MASK) == (byte)BloomFlags.UPDATE_P2PUBKEY_ONLY)
+                        else if ((this.nFlags & (byte)BloomFlags.UPDATE_MASK) == (byte)BloomFlags.UPDATE_P2PUBKEY_ONLY)
                         {
                             ScriptTemplate template = StandardScripts.GetTemplateFromScriptPubKey(txout.ScriptPubKey); // this is only valid for Bitcoin.
-                            if(template != null &&
+                            if (template != null &&
                                     (template.Type == TxOutType.TX_PUBKEY || template.Type == TxOutType.TX_MULTISIG))
                                 Insert(new OutPoint(hash, i));
                         }
@@ -186,19 +186,19 @@ namespace NBitcoin
                 }
             }
 
-            if(fFound)
+            if (fFound)
                 return true;
 
-            foreach(TxIn txin in tx.Inputs)
+            foreach (TxIn txin in tx.Inputs)
             {
                 // Match if the filter contains an outpoint tx spends
-                if(Contains(txin.PrevOut))
+                if (Contains(txin.PrevOut))
                     return true;
 
                 // Match if the filter contains any arbitrary script data element in any scriptSig in tx
-                foreach(Op op in txin.ScriptSig.ToOps())
+                foreach (Op op in txin.ScriptSig.ToOps())
                 {
-                    if(op.PushData != null && op.PushData.Length != 0 && Contains(op.PushData))
+                    if (op.PushData != null && op.PushData.Length != 0 && Contains(op.PushData))
                         return true;
                 }
             }

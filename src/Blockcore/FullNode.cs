@@ -14,7 +14,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore
 {
@@ -27,7 +26,7 @@ namespace Blockcore
         private ILogger logger;
 
         /// <summary>Factory for creating loggers.</summary>
-        private ILoggerFactory loggerFactory;
+        private ILoggerFactory loggerFactory; // kada izbrisem,pojavi se greska
 
         /// <summary>Component responsible for starting and stopping all the node's features.</summary>
         private FullNodeFeatureExecutor fullNodeFeatureExecutor;
@@ -133,11 +132,13 @@ namespace Blockcore
                     {
                         return new Version(versionString);
                     }
-                    catch (ArgumentException)
+                    catch (ArgumentException e)
                     {
+                        Console.WriteLine("{0}: {1}", e.GetType().Name, e.Message);
                     }
-                    catch (OverflowException)
+                    catch (OverflowException o)
                     {
+                        Console.WriteLine("{0}: {1}", o.GetType().Name, o.Message);
                     }
                 }
 

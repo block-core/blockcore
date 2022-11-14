@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using Blockcore.Builder;
-using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.Miner;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
@@ -13,8 +13,6 @@ using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using FluentAssertions;
-using NBitcoin;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

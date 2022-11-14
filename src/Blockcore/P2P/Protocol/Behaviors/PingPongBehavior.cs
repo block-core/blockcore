@@ -19,7 +19,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
     /// </summary>
     public class PingPongBehavior : NetworkPeerBehavior
     {
-        private object cs = new object();
+        private readonly object cs = new object();
 
         private PingPongMode mode;
 

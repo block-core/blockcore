@@ -5,11 +5,9 @@ using Blockcore.Connection;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.RPC;
-using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using FluentAssertions;
@@ -34,7 +32,7 @@ namespace Blockcore.IntegrationTests.RPC
             this.NetworkPeerClient.VersionHandshakeAsync().GetAwaiter().GetResult();
 
             // Move a wallet file to the right folder and restart the wallet manager to take it into account.
-            this.InitializeTestWallet(this.Node.FullNode.DataFolder.WalletPath);
+            InitializeTestWallet(this.Node.FullNode.DataFolder.WalletPath);
             var walletManager = this.Node.FullNode.NodeService<IWalletManager>() as WalletManager;
             walletManager.Start();
         }

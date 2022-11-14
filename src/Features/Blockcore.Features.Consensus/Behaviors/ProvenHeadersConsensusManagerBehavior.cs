@@ -13,10 +13,8 @@ using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Payloads;
-using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Behaviors
 {
@@ -57,7 +55,7 @@ namespace Blockcore.Features.Consensus.Behaviors
             ConnectionManagerSettings connectionManagerSettings) : base(chainIndexer, initialBlockDownloadState, consensusManager, peerBanning, loggerFactory)
         {
             this.network = network;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.chainState = chainState;
             this.checkpoints = checkpoints;
             this.provenBlockHeaderStore = provenBlockHeaderStore;
@@ -84,16 +82,16 @@ namespace Blockcore.Features.Consensus.Behaviors
             {
                 case ProvenHeadersPayload provenHeaders:
                     {
-                        await this.ProcessHeadersAsync(peer, provenHeaders.Headers.Select(s => s.PosBlockHeader).Cast<BlockHeader>().ToList()).ConfigureAwait(false);
+                        await ProcessHeadersAsync(peer, provenHeaders.Headers.Select(s => s.PosBlockHeader).Cast<BlockHeader>().ToList()).ConfigureAwait(false);
                         break;
                     }
 
                 case GetProvenHeadersPayload getHeaders:
-                    await this.ProcessGetHeadersAsync(peer, getHeaders).ConfigureAwait(false);
+                    await ProcessGetHeadersAsync(peer, getHeaders).ConfigureAwait(false);
                     break;
 
                 case HeadersPayload headers:
-                    await this.ProcessLegacyHeadersAsync(peer, headers.Headers).ConfigureAwait(false);
+                    await ProcessLegacyHeadersAsync(peer, headers.Headers).ConfigureAwait(false);
                     break;
 
                 default:
@@ -154,7 +152,7 @@ namespace Blockcore.Features.Consensus.Behaviors
 
             var provenHeadersPayload = new ProvenHeadersPayload();
 
-            ChainedHeader header = this.GetLastHeaderToSend(fork, getHeadersPayload.HashStop);
+            ChainedHeader header = GetLastHeaderToSend(fork, getHeadersPayload.HashStop);
             this.logger.LogDebug("Last header that will be sent in headers payload is '{0}'.", header);
 
             for (int heightIndex = header.Height; heightIndex > fork.Height; heightIndex--)
@@ -249,7 +247,7 @@ namespace Blockcore.Features.Consensus.Behaviors
         {
             INetworkPeer peer = this.AttachedPeer;
 
-            bool aboveLastCheckpoint = this.GetCurrentHeight() >= this.lastCheckpointHeight;
+            bool aboveLastCheckpoint = GetCurrentHeight() >= this.lastCheckpointHeight;
 
             if (!aboveLastCheckpoint)
             {
@@ -272,7 +270,7 @@ namespace Blockcore.Features.Consensus.Behaviors
                 return null;
             }
 
-            if (this.CanPeerProcessProvenHeaders(peer))
+            if (CanPeerProcessProvenHeaders(peer))
             {
                 return new GetProvenHeadersPayload()
                 {
@@ -315,14 +313,14 @@ namespace Blockcore.Features.Consensus.Behaviors
                 return;
             }
 
-            bool belowLastCheckpoint = this.GetCurrentHeight() <= this.lastCheckpointHeight;
+            bool belowLastCheckpoint = GetCurrentHeight() <= this.lastCheckpointHeight;
             if (!belowLastCheckpoint)
             {
                 this.logger.LogTrace("(-)[ABOVE_LAST_CHECKPOINT]");
                 return;
             }
 
-            int distanceFromCheckPoint = this.lastCheckpointHeight - this.GetCurrentHeight();
+            int distanceFromCheckPoint = this.lastCheckpointHeight - GetCurrentHeight();
             if (distanceFromCheckPoint < MaxItemsPerHeadersMessage)
             {
                 bool checkpointFound = false;

@@ -31,7 +31,7 @@ namespace Blockcore.Networks.XRC.Consensus
 
             using (var hs = new HashStream())
             {
-                this.ReadWriteHashingStream(new BitcoinStream(hs, true));
+                ReadWriteHashingStream(new BitcoinStream(hs, true));
                 hash = hs.GetHash();
             }
 
@@ -48,8 +48,8 @@ namespace Blockcore.Networks.XRC.Consensus
         {
             using (var ms = new MemoryStream())
             {
-                this.ReadWriteHashingStream(new BitcoinStream(ms, true));
-                
+                ReadWriteHashingStream(new BitcoinStream(ms, true));
+
                 if (this.Time > this.Consensus.PowDigiShieldX11Time)
                 {
                     return XRCHashX11.Instance.Hash(this.ToBytes());

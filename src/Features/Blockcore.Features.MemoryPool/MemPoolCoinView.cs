@@ -175,7 +175,7 @@ namespace Blockcore.Features.MemoryPool
                     inChainInputValue += coins.Coins.TxOut.Value;
                 }
             }
-            return (this.ComputePriority(tx, dResult), inChainInputValue);
+            return (ComputePriority(tx, dResult), inChainInputValue);
         }
 
         /// <summary>

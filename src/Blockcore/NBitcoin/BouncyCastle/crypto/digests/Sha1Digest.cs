@@ -69,7 +69,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
         {
             this.X[this.xOff] = Pack.BE_To_UInt32(input, inOff);
 
-            if(++this.xOff == 16)
+            if (++this.xOff == 16)
             {
                 ProcessBlock();
             }
@@ -77,7 +77,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
 
         internal override void ProcessLength(long bitLength)
         {
-            if(this.xOff > 14)
+            if (this.xOff > 14)
             {
                 ProcessBlock();
             }
@@ -148,7 +148,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             //
             // expand 16 word block into 80 word block.
             //
-            for(int i = 16; i < 80; i++)
+            for (int i = 16; i < 80; i++)
             {
                 uint t = this.X[i - 3] ^ this.X[i - 8] ^ this.X[i - 14] ^ this.X[i - 16];
                 this.X[i] = t << 1 | t >> 31;
@@ -168,7 +168,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             //
             int idx = 0;
 
-            for(int j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 // E = rotateLeft(A, 5) + F(B, C, D) + E + X[idx++] + Y1
                 // B = rotateLeft(B, 30)
@@ -191,7 +191,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             //
             // round 2
             //
-            for(int j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 // E = rotateLeft(A, 5) + H(B, C, D) + E + X[idx++] + Y2
                 // B = rotateLeft(B, 30)
@@ -214,7 +214,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             //
             // round 3
             //
-            for(int j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 // E = rotateLeft(A, 5) + G(B, C, D) + E + X[idx++] + Y3
                 // B = rotateLeft(B, 30)
@@ -237,7 +237,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             //
             // round 4
             //
-            for(int j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 // E = rotateLeft(A, 5) + H(B, C, D) + E + X[idx++] + Y4
                 // B = rotateLeft(B, 30)

@@ -41,12 +41,12 @@ namespace NBitcoin.Crypto
             {
                 var decoder = new Asn1InputStream(derSig);
                 var seq = decoder.ReadObject() as DerSequence;
-                if(seq == null || seq.Count != 2)
+                if (seq == null || seq.Count != 2)
                     throw new FormatException(InvalidDERSignature);
                 this._R = ((DerInteger)seq[0]).Value;
                 this._S = ((DerInteger)seq[1]).Value;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new FormatException(InvalidDERSignature, ex);
             }
@@ -80,7 +80,7 @@ namespace NBitcoin.Crypto
         /// </summary>
         public ECDSASignature MakeCanonical()
         {
-            if(!this.IsLowS)
+            if (!this.IsLowS)
             {
                 return new ECDSASignature(this.R, ECKey.CURVE_ORDER.Subtract(this.S));
             }
@@ -119,11 +119,11 @@ namespace NBitcoin.Crypto
                 FromDER(bytes);
                 return true;
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Utils.error("Unexpected exception in ECDSASignature.IsValidDER " + ex.Message);
                 return false;

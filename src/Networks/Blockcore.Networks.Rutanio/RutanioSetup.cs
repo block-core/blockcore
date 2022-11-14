@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
-using Rutanio.Networks;
-using Rutanio.Networks.Setup;
 using NBitcoin;
+using Rutanio.Networks.Setup;
 
 namespace Rutanio
 {
@@ -21,7 +20,7 @@ namespace Rutanio
             PoWBlockReward = 200,
             PoSBlockReward = 20,
             LastPowBlock = 45000,
-            GenesisText = "https://edition.cnn.com/2019/07/28/sport/tour-de-france-bernal-colombia-spt-intl/index.html", 
+            GenesisText = "https://edition.cnn.com/2019/07/28/sport/tour-de-france-bernal-colombia-spt-intl/index.html",
             TargetSpacing = TimeSpan.FromSeconds(64),
             ProofOfStakeTimestampMask = 0x0000000F, // 0x0000003F // 64 sec
             PoSVersion = 3
@@ -58,7 +57,7 @@ namespace Rutanio
                  { 500, new CheckpointInfo(new uint256("0x09920e672b839b9c20eb08136a47c1d35ffdc645e8b66258d4f19fc5ea6546e8"), new uint256("0x602395ff9a4e052675f58e982df9cc32c61a393162287dcbfd5635df73a1d0f6")) },
                  { 1000, new CheckpointInfo(new uint256("0xf27293554eb63269388c8833c86ac31adb18b4b3ad3f31bb15090914461ff988"), new uint256("0x0acec54f0754e5057ad9f98b59556b6c4ca1451927788fc13e1106b4375147c8")) },
                  { 2000, new CheckpointInfo(new uint256("0xafb6da8a473b613a737862e2f16f11baf53006693d1dce44ab00c599893f195f"), new uint256("0xe4c49686ba6bb2709ad556503d900f93839f8ccec9798e4e671783a3fcd3e107")) }, // 1.0.0.1 RutanioD
-                 { 5000, new CheckpointInfo(new uint256("0x10755a3fc2da7f4c228528dea676de17a6aa89d03cf108f9d823c5419a2201e1"), new uint256("0xcece2418b82cce7f7e77326e4bbf2dbed42afc57b237d2c3118cbd6d45880f8e")) }, 
+                 { 5000, new CheckpointInfo(new uint256("0x10755a3fc2da7f4c228528dea676de17a6aa89d03cf108f9d823c5419a2201e1"), new uint256("0xcece2418b82cce7f7e77326e4bbf2dbed42afc57b237d2c3118cbd6d45880f8e")) },
                  { 10500, new CheckpointInfo(new uint256("0x59001bcb08767fa93cc0ad20b84da1fc0843fd1d8d8c7bc6c196c6cc49236c15"), new uint256("0xbaa0f06120b60fb31938812a86e1d4b65608303b4c803f845643937e1d67d6b8")) }, // 1.0.0.2 RutanioD
                  { 13000, new CheckpointInfo(new uint256("0x6b15c3ce6cb6af2a4b93a74ebb63fa3e2487dad9913ea513159ba9ff019b84d4"), new uint256("0x20d1c7c623700d012a71e7ba456b9ecdd0a3f2441f2b2f677fa8f3360d9ca797")) },
                  { 16000, new CheckpointInfo(new uint256("0x754370ee32607b3037d7e402b6e47df06fadc4664afa8d6e2575df3bc7271d8c"), new uint256("0x229c9cc1148c6018bb1ef3bed59c37a0e82860f398479587f4546d5bdc2759dc")) },
@@ -100,7 +99,7 @@ namespace Rutanio
             GenesisReward = Money.Zero,
             HashGenesisBlock = "000001eaf5fc73c5a2ded387a256d79b34b0acaaead5767a52c8c6081b79d031",
             HashMerkleRoot = "d382311c9e4a1ec84be1b32eddb33f7f0420544a460754f573d7cb7054566d75",
-            DNS = new[] { "seednoderegtest1.rutan.cloud"},
+            DNS = new[] { "seednoderegtest1.rutan.cloud" },
             Nodes = new[] { "vps301.rutan.cloud" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
@@ -140,12 +139,12 @@ namespace Rutanio
 
         public bool IsPoSv3()
         {
-            return Setup.PoSVersion == 3;
+            return this.Setup.PoSVersion == 3;
         }
 
         public bool IsPoSv4()
         {
-            return Setup.PoSVersion == 4;
+            return this.Setup.PoSVersion == 4;
         }
 
     }

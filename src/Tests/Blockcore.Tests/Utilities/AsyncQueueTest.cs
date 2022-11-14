@@ -13,7 +13,7 @@ namespace Blockcore.Tests.Utilities
     public class AsyncQueueTest
     {
         /// <summary>Source of randomness.</summary>
-        private Random random = new Random();
+        private readonly Random random = new Random();
 
         /// <summary>
         /// Tests that <see cref="AsyncQueue{T}.Dispose"/> triggers cancellation inside the on-enqueue callback.
@@ -329,8 +329,8 @@ namespace Blockcore.Tests.Utilities
             using (var cts = new CancellationTokenSource())
             {
                 // We create two consumer tasks that compete for getting items from the queue.
-                Task consumer1 = Task.Run(async () => await this.AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list1, itemsToProcess - 1, cts));
-                Task consumer2 = Task.Run(async () => await this.AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list2, itemsToProcess - 1, cts));
+                Task consumer1 = Task.Run(async () => await AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list1, itemsToProcess - 1, cts));
+                Task consumer2 = Task.Run(async () => await AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list2, itemsToProcess - 1, cts));
 
                 // Start adding the items.
                 for (int i = 0; i < itemsToProcess; i++)
@@ -440,7 +440,7 @@ namespace Blockcore.Tests.Utilities
 
             // We wait until the queue callback calling consumer is finished.
             asyncQueue.ConsumerTask.Wait();
-            
+
             // Now enqueuing another item should not invoke the callback because the queue should be disposed.
             asyncQueue.Enqueue(asyncQueue);
 

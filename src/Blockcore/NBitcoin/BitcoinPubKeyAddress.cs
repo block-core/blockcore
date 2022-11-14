@@ -49,7 +49,7 @@ namespace NBitcoin
 
         private static string NotNull(KeyId keyId)
         {
-            if(keyId == null)
+            if (keyId == null)
                 throw new ArgumentNullException("keyId");
             return null;
         }

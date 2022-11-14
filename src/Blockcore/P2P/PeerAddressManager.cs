@@ -7,7 +7,6 @@ using Blockcore.Configuration;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.P2P
 {
@@ -26,7 +25,7 @@ namespace Blockcore.P2P
         private readonly ILogger logger;
 
         /// <summary>Key value store that indexes all discovered peers by their end point.</summary>
-        private ConcurrentDictionary<IPEndPoint, PeerAddress> peerInfoByPeerAddress;
+        private readonly ConcurrentDictionary<IPEndPoint, PeerAddress> peerInfoByPeerAddress;
 
         /// <inheritdoc />
         public ICollection<PeerAddress> Peers => this.peerInfoByPeerAddress.Values;

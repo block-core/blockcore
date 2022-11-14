@@ -154,7 +154,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>A list of all the transactions in the wallet.</returns>
         public IEnumerable<TransactionOutputData> GetAllTransactions(Func<HdAccount, bool> accountFilter = null)
         {
-            List<HdAccount> accounts = this.GetAccounts(accountFilter).ToList();
+            List<HdAccount> accounts = GetAccounts(accountFilter).ToList();
 
             // First we iterate normal accounts
             foreach (TransactionOutputData txData in accounts.Where(a => a.IsNormalAccount()).SelectMany(x => x.ExternalAddresses).SelectMany(x => this.walletStore.GetForAddress(x.Address)))
@@ -197,7 +197,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>A list of all the public keys contained in the wallet.</returns>
         public IEnumerable<Script> GetAllPubKeys()
         {
-            List<HdAccount> accounts = this.GetAccounts().ToList();
+            List<HdAccount> accounts = GetAccounts().ToList();
 
             foreach (Script script in accounts.SelectMany(x => x.ExternalAddresses).Select(x => x.ScriptPubKey))
             {
@@ -217,7 +217,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>A list of all the addresses contained in this wallet.</returns>
         public IEnumerable<HdAddress> GetAllAddresses(Func<HdAccount, bool> accountFilter = null)
         {
-            IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
+            IEnumerable<HdAccount> accounts = GetAccounts(accountFilter);
 
             var allAddresses = new List<HdAddress>();
             foreach (HdAccount account in accounts)
@@ -319,7 +319,7 @@ namespace Blockcore.Features.Wallet.Types
             Guard.NotNull(address, nameof(address));
 
             // Check if the wallet contains the address.
-            if (!this.ContainsAddress(address))
+            if (!ContainsAddress(address))
             {
                 throw new WalletException("Address not found on wallet.");
             }
@@ -338,7 +338,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>A collection of spendable outputs.</returns>
         public IEnumerable<UnspentOutputReference> GetAllSpendableTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
         {
-            IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
+            IEnumerable<HdAccount> accounts = GetAccounts(accountFilter);
 
             return accounts.SelectMany(x => x.GetSpendableTransactions(walletStore, currentChainHeight, this.Network.Consensus.CoinbaseMaturity, confirmations));
         }
@@ -353,7 +353,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>A collection of spendable outputs.</returns>
         public IEnumerable<UnspentOutputReference> GetAllUnspentTransactions(IWalletStore walletStore, int currentChainHeight, int confirmations = 0, Func<HdAccount, bool> accountFilter = null)
         {
-            IEnumerable<HdAccount> accounts = this.GetAccounts(accountFilter);
+            IEnumerable<HdAccount> accounts = GetAccounts(accountFilter);
 
             // The logic for retrieving unspent transactions is almost identical to determining spendable transactions, we just don't take coinbase/stake maturity into consideration.
             return accounts.SelectMany(x => x.GetSpendableTransactions(walletStore, currentChainHeight, 0, confirmations));
@@ -366,7 +366,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>The fee paid.</returns>
         public Money GetSentTransactionFee(uint256 transactionId)
         {
-            List<TransactionOutputData> allTransactions = this.GetAllTransactions(Wallet.NormalAccounts).ToList();
+            List<TransactionOutputData> allTransactions = GetAllTransactions(Wallet.NormalAccounts).ToList();
 
             // Get a list of all the inputs spent in this transaction.
             List<TransactionOutputData> inputsSpentInTransaction = allTransactions.Where(t => t.SpendingDetails?.TransactionId == transactionId).ToList();
@@ -401,7 +401,7 @@ namespace Blockcore.Features.Wallet.Types
         public HdAddress GetAddress(string address, Func<HdAccount, bool> accountFilter = null)
         {
             Guard.NotNull(address, nameof(address));
-            return this.GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address);
+            return GetAllAddresses(accountFilter).SingleOrDefault(a => a.Address == address);
         }
     }
 
@@ -531,7 +531,7 @@ namespace Blockcore.Features.Wallet.Types
                 }
             }
 
-            HdAccount newAccount = this.CreateAccount(password, encryptedSeed, chainCode, network, accountCreationTime, purpose, accountIndex.Value, accountName);
+            HdAccount newAccount = CreateAccount(password, encryptedSeed, chainCode, network, accountCreationTime, purpose, accountIndex.Value, accountName);
 
             hdAccounts.Add(newAccount);
             this.Accounts = hdAccounts;
@@ -709,7 +709,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>An unused address</returns>
         public HdAddress GetFirstUnusedReceivingAddress(IWalletStore walletStore)
         {
-            return this.GetFirstUnusedAddress(walletStore, false);
+            return GetFirstUnusedAddress(walletStore, false);
         }
 
         /// <summary>
@@ -718,7 +718,7 @@ namespace Blockcore.Features.Wallet.Types
         /// <returns>An unused address</returns>
         public HdAddress GetFirstUnusedChangeAddress(IWalletStore walletStore)
         {
-            return this.GetFirstUnusedAddress(walletStore, true);
+            return GetFirstUnusedAddress(walletStore, true);
         }
 
         /// <summary>
@@ -826,7 +826,7 @@ namespace Blockcore.Features.Wallet.Types
                 var newAddress = new HdAddress
                 {
                     Index = i,
-                    HdPath = HdOperations.CreateHdPath(this.Purpose, this.GetCoinType(), this.Index, isChange, i),
+                    HdPath = HdOperations.CreateHdPath(this.Purpose, GetCoinType(), this.Index, isChange, i),
                     Pubkey = pubkey.ScriptPubKey, // this is a P2PK script type
                 };
 
@@ -880,7 +880,7 @@ namespace Blockcore.Features.Wallet.Types
         {
             // This will take all the spendable coins that belong to the account and keep the reference to the HdAddress and HdAccount.
             // This is useful so later the private key can be calculated just from a given UTXO.
-            foreach (HdAddress address in this.GetCombinedAddresses())
+            foreach (HdAddress address in GetCombinedAddresses())
             {
                 // A block that is at the tip has 1 confirmation.
                 // When calculating the confirmations the tip must be advanced by one.
@@ -904,7 +904,7 @@ namespace Blockcore.Features.Wallet.Types
                     bool isCoinStake = transactionData.IsCoinStake ?? false;
 
                     // Check if this wallet is a normal purpose wallet (not cold staking, etc).
-                    if (this.IsNormalAccount())
+                    if (IsNormalAccount())
                     {
                         bool isColdCoinStake = transactionData.IsColdCoinStake ?? false;
 

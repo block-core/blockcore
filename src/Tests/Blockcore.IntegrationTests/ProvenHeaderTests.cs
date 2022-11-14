@@ -1,15 +1,14 @@
 ﻿using System;
 using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using NBitcoin.Protocol;
 using Xunit;
@@ -54,10 +53,10 @@ namespace Blockcore.IntegrationTests
             using (NodeBuilder builder = NodeBuilder.Create(this).WithLogsEnabled())
             {
                 // Create separate network parameters for this test.
-                CoreNode phEnabledNode = this.CreateNode(builder, "ph-enabled", ProtocolVersion.PROVEN_HEADER_VERSION, new NodeConfigParameters { { "maxoutboundconnections", "3" } }).Start();
-                CoreNode legacyNode1 = this.CreateNode(builder, "legacy1", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
-                CoreNode legacyNode2 = this.CreateNode(builder, "legacy2", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
-                CoreNode legacyNode3 = this.CreateNode(builder, "legacy3", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
+                CoreNode phEnabledNode = CreateNode(builder, "ph-enabled", ProtocolVersion.PROVEN_HEADER_VERSION, new NodeConfigParameters { { "maxoutboundconnections", "3" } }).Start();
+                CoreNode legacyNode1 = CreateNode(builder, "legacy1", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
+                CoreNode legacyNode2 = CreateNode(builder, "legacy2", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
+                CoreNode legacyNode3 = CreateNode(builder, "legacy3", ProtocolVersion.POS_PROTOCOL_VERSION).Start();
 
                 TestHelper.Connect(phEnabledNode, legacyNode1);
                 TestHelper.Connect(phEnabledNode, legacyNode2);

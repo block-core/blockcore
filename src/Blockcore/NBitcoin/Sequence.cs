@@ -75,13 +75,13 @@ namespace NBitcoin
 
         public Sequence(int lockHeight)
         {
-            if(lockHeight > 0xFFFF || lockHeight < 0)
+            if (lockHeight > 0xFFFF || lockHeight < 0)
                 throw new ArgumentOutOfRangeException("Relative lock height must be positive and lower or equals to 0xFFFF (65535 blocks)");
             this._ValueInv = 0xFFFFFFFF - (uint)lockHeight;
         }
         public Sequence(TimeSpan period)
         {
-            if(period.TotalSeconds > (0xFFFF * 512) || period.TotalSeconds < 0)
+            if (period.TotalSeconds > (0xFFFF * 512) || period.TotalSeconds < 0)
                 throw new ArgumentOutOfRangeException("Relative lock time must be positive and lower or equals to " + (0xFFFF * 512) + " seconds (approx 388 days)");
             uint value = (uint)(period.TotalSeconds / (1 << SEQUENCE_LOCKTIME_GRANULARITY));
             value |= SEQUENCE_LOCKTIME_TYPE_FLAG;
@@ -124,17 +124,17 @@ namespace NBitcoin
 
         private void AssertRelativeLock()
         {
-            if(!this.IsRelativeLock)
+            if (!this.IsRelativeLock)
                 throw new InvalidOperationException("This sequence is not a relative lock");
         }
 
         public override string ToString()
         {
-            if(this.IsRelativeLock)
+            if (this.IsRelativeLock)
             {
                 var builder = new StringBuilder();
                 builder.Append("Relative lock (" + this.LockType + "): ");
-                if(this.LockType == SequenceLockType.Height)
+                if (this.LockType == SequenceLockType.Height)
                     builder.Append(this.LockHeight + " blocks");
                 else
                     builder.Append(this.LockPeriod);
@@ -148,7 +148,7 @@ namespace NBitcoin
             get
             {
                 AssertRelativeLock();
-                if(this.LockType != SequenceLockType.Height)
+                if (this.LockType != SequenceLockType.Height)
                     throw new InvalidOperationException("This sequence is a time based relative lock");
                 return (int)(this.Value & SEQUENCE_LOCKTIME_MASK);
             }
@@ -158,7 +158,7 @@ namespace NBitcoin
             get
             {
                 AssertRelativeLock();
-                if(this.LockType != SequenceLockType.Time)
+                if (this.LockType != SequenceLockType.Time)
                     throw new InvalidOperationException("This sequence is a height based relative lock");
                 return TimeSpan.FromSeconds((int)(this.Value & SEQUENCE_LOCKTIME_MASK) * (1 << SEQUENCE_LOCKTIME_GRANULARITY));
             }

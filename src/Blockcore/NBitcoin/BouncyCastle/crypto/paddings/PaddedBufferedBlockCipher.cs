@@ -77,9 +77,9 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
             int total = length + this.bufOff;
             int leftOver = total % this.buf.Length;
 
-            if(leftOver == 0)
+            if (leftOver == 0)
             {
-                if(this.forEncryption)
+                if (this.forEncryption)
                 {
                     return total + this.buf.Length;
                 }
@@ -104,7 +104,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
             int total = length + this.bufOff;
             int leftOver = total % this.buf.Length;
 
-            if(leftOver == 0)
+            if (leftOver == 0)
             {
                 return total - this.buf.Length;
             }
@@ -129,7 +129,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
         {
             int resultLen = 0;
 
-            if(this.bufOff == this.buf.Length)
+            if (this.bufOff == this.buf.Length)
             {
                 resultLen = this.cipher.ProcessBlock(this.buf, 0, output, outOff);
                 this.bufOff = 0;
@@ -159,7 +159,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
             byte[] output,
             int outOff)
         {
-            if(length < 0)
+            if (length < 0)
             {
                 throw new ArgumentException("Can't have a negative input length!");
             }
@@ -167,7 +167,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
             int blockSize = GetBlockSize();
             int outLength = GetUpdateOutputSize(length);
 
-            if(outLength > 0)
+            if (outLength > 0)
             {
                 Check.OutputLength(output, outOff, outLength, "output buffer too short");
             }
@@ -175,7 +175,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
             int resultLen = 0;
             int gapLen = this.buf.Length - this.bufOff;
 
-            if(length > gapLen)
+            if (length > gapLen)
             {
                 Array.Copy(input, inOff, this.buf, this.bufOff, gapLen);
 
@@ -185,7 +185,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
                 length -= gapLen;
                 inOff += gapLen;
 
-                while(length > this.buf.Length)
+                while (length > this.buf.Length)
                 {
                     resultLen += this.cipher.ProcessBlock(input, inOff, output, outOff + resultLen);
 
@@ -222,11 +222,11 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
             int blockSize = this.cipher.GetBlockSize();
             int resultLen = 0;
 
-            if(this.forEncryption)
+            if (this.forEncryption)
             {
-                if(this.bufOff == blockSize)
+                if (this.bufOff == blockSize)
                 {
-                    if((outOff + 2 * blockSize) > output.Length)
+                    if ((outOff + 2 * blockSize) > output.Length)
                     {
                         Reset();
 
@@ -245,7 +245,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Paddings
             }
             else
             {
-                if(this.bufOff == blockSize)
+                if (this.bufOff == blockSize)
                 {
                     resultLen = this.cipher.ProcessBlock(this.buf, 0, this.buf, 0);
                     this.bufOff = 0;

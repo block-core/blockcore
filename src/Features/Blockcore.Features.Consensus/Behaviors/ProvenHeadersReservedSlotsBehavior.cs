@@ -7,7 +7,6 @@ using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
-using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace Blockcore.Features.Consensus.Behaviors
@@ -31,7 +30,7 @@ namespace Blockcore.Features.Consensus.Behaviors
         {
             this.connectionManager = connectionManager;
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace Blockcore.Features.Consensus.Behaviors
             switch (message.Message.Payload)
             {
                 case VersionPayload version:
-                    await this.ProcessVersionAsync(peer, version).ConfigureAwait(false);
+                    await ProcessVersionAsync(peer, version).ConfigureAwait(false);
                     break;
             }
         }
@@ -67,7 +66,7 @@ namespace Blockcore.Features.Consensus.Behaviors
                 int freeSlots = connector.MaxOutboundConnections - connector.ConnectorPeers.Count - 1;
 
                 // Get the number of PH-enabled peers we are already connected to.
-                int phEnabledPeersConnected = connector.ConnectorPeers.Count(p => this.DoesPeerSupportsPH(p.PeerVersion));
+                int phEnabledPeersConnected = connector.ConnectorPeers.Count(p => DoesPeerSupportsPH(p.PeerVersion));
 
                 if (freeSlots >= (MinimumRequiredPeerSupportingPH - phEnabledPeersConnected))
                 {
@@ -76,9 +75,9 @@ namespace Blockcore.Features.Consensus.Behaviors
                     return Task.CompletedTask;
                 }
 
-                if (this.DoesPeerSupportsPH(version))
+                if (DoesPeerSupportsPH(version))
                 {
-                    INetworkPeer nodeToDisconnect = this.GetConnectedLegacyPeersSortedByTip(connector.ConnectorPeers).FirstOrDefault();
+                    INetworkPeer nodeToDisconnect = GetConnectedLegacyPeersSortedByTip(connector.ConnectorPeers).FirstOrDefault();
                     if (nodeToDisconnect != null)
                     {
                         this.logger.LogDebug("Disconnecting legacy peer ({0}). Can't serve Proven Header.", nodeToDisconnect.PeerEndPoint);
@@ -115,12 +114,12 @@ namespace Blockcore.Features.Consensus.Behaviors
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync, true);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync, true);
         }
 
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />

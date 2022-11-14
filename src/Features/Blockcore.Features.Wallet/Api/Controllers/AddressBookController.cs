@@ -37,7 +37,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             Guard.NotNull(addressBookManager, nameof(addressBookManager));
 
             this.addressBookManager = addressBookManager;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the newly added entry.</returns>
         [Route("address")]
         [HttpPost]
-        public IActionResult AddAddress([FromBody]AddressBookEntryRequest request)
+        public IActionResult AddAddress([FromBody] AddressBookEntryRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -61,7 +61,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 AddressBookEntry item = this.addressBookManager.AddNewAddress(request.Label, request.Address);
 
-                return this.Json(new AddressBookEntryModel { Label = item.Label, Address = item.Address });
+                return Json(new AddressBookEntryModel { Label = item.Label, Address = item.Address });
             }
             catch (AddressBookException e)
             {
@@ -82,7 +82,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the removed entry.</returns>
         [Route("address")]
         [HttpDelete]
-        public IActionResult RemoveAddress([FromQuery]string label)
+        public IActionResult RemoveAddress([FromQuery] string label)
         {
             Guard.NotEmpty(label, nameof(label));
 
@@ -95,7 +95,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.NotFound, $"No item with label '{label}' was found in the address book.", string.Empty);
                 }
 
-                return this.Json(new AddressBookEntryModel { Label = removedEntry.Label, Address = removedEntry.Address });
+                return Json(new AddressBookEntryModel { Label = removedEntry.Label, Address = removedEntry.Address });
             }
             catch (Exception e)
             {
@@ -118,7 +118,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         /// <returns>A JSON object containing the address book.</returns>
         [Route("")]
         [HttpGet]
-        public IActionResult GetAddressBook([FromQuery]int? skip, int? take)
+        public IActionResult GetAddressBook([FromQuery] int? skip, int? take)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     Addresses = filteredAddressBook.Select(res => new AddressBookEntryModel { Label = res.Label, Address = res.Address })
                 };
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {

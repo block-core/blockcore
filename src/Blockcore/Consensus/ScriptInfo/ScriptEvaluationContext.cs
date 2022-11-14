@@ -185,7 +185,7 @@ namespace Blockcore.Consensus.ScriptInfo
                 this.m_value = n;
             }
 
-            private long m_value;
+            private readonly long m_value;
 
             public CScriptNum(byte[] vch, bool fRequireMinimal)
                 : this(vch, fRequireMinimal, 4)
@@ -2316,7 +2316,7 @@ namespace Blockcore.Consensus.ScriptInfo
         /// </summary>
         public struct Enumerator : IEnumerator<T>
         {
-            private ContextStack<T> _stack;
+            private readonly ContextStack<T> _stack;
             private int _index;
 
             public Enumerator(ContextStack<T> stack)

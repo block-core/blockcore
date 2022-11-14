@@ -16,15 +16,15 @@ namespace Blockcore.Features.RPC.Tests
 {
     public class RPCMiddlewareTest : LogsTestBase
     {
-        private Mock<IRPCAuthorization> authorization;
-        private Mock<RequestDelegate> delegateContext;
-        private Mock<IHttpContextFactory> httpContextFactory;
-        private DefaultHttpContext httpContext;
-        private RPCMiddleware middleware;
-        private HttpResponseFeature response;
-        private FeatureCollection featureCollection;
-        private HttpRequestFeature request;
-        private StreamResponseBodyFeature responseBody;
+        private readonly Mock<IRPCAuthorization> authorization;
+        private readonly Mock<RequestDelegate> delegateContext;
+        private readonly Mock<IHttpContextFactory> httpContextFactory;
+        private readonly DefaultHttpContext httpContext;
+        private readonly RPCMiddleware middleware;
+        private readonly HttpResponseFeature response;
+        private readonly FeatureCollection featureCollection;
+        private readonly HttpRequestFeature request;
+        private readonly StreamResponseBodyFeature responseBody;
 
         public RPCMiddlewareTest()
         {
@@ -38,7 +38,8 @@ namespace Blockcore.Features.RPC.Tests
             this.featureCollection = new FeatureCollection();
 
             this.httpContextFactory = new Mock<IHttpContextFactory>();
-            this.httpContextFactory.Setup(f => f.Create(It.IsAny<FeatureCollection>())).Returns((FeatureCollection f) => {
+            this.httpContextFactory.Setup(f => f.Create(It.IsAny<FeatureCollection>())).Returns((FeatureCollection f) =>
+            {
                 DefaultHttpContext newHttpContext = new DefaultHttpContext();
                 newHttpContext.Initialize(f);
 
@@ -51,8 +52,8 @@ namespace Blockcore.Features.RPC.Tests
         [Fact]
         public void InvokeValidAuthorizationReturns200()
         {
-            this.SetupValidAuthorization();
-            this.InitializeFeatureContext();
+            SetupValidAuthorization();
+            InitializeFeatureContext();
 
             this.middleware.InvokeAsync(this.httpContext).Wait();
 
@@ -62,7 +63,7 @@ namespace Blockcore.Features.RPC.Tests
         [Fact]
         public void InvokeUnauthorizedReturns401()
         {
-            this.InitializeFeatureContext();
+            InitializeFeatureContext();
             this.authorization.Setup(a => a.IsAuthorized(It.IsAny<IPAddress>()))
                 .Returns(false);
 
@@ -74,7 +75,7 @@ namespace Blockcore.Features.RPC.Tests
         [Fact]
         public void InvokeAuthorizedWithoutAuthorizationHeaderReturns401()
         {
-            this.InitializeFeatureContext();
+            InitializeFeatureContext();
             this.authorization.Setup(a => a.IsAuthorized(It.IsAny<IPAddress>()))
                 .Returns(true);
 
@@ -87,7 +88,7 @@ namespace Blockcore.Features.RPC.Tests
         public void InvokeAuthorizedWithBearerAuthorizationHeaderReturns401()
         {
             this.request.Headers.Add("Authorization", "Bearer hiuehewuytwe");
-            this.InitializeFeatureContext();
+            InitializeFeatureContext();
             this.authorization.Setup(a => a.IsAuthorized(It.IsAny<IPAddress>()))
                 .Returns(true);
 
@@ -100,7 +101,7 @@ namespace Blockcore.Features.RPC.Tests
         public void InvokeAuthorizedWithEmptyAuthorizationHeaderReturns401()
         {
             this.request.Headers.Add("Authorization", "");
-            this.InitializeFeatureContext();
+            InitializeFeatureContext();
             this.authorization.Setup(a => a.IsAuthorized(It.IsAny<IPAddress>()))
                 .Returns(true);
 
@@ -114,7 +115,7 @@ namespace Blockcore.Features.RPC.Tests
         {
             string header = Convert.ToBase64String(Encoding.ASCII.GetBytes("MyUser"));
             this.request.Headers.Add("Authorization", "Basic " + header);
-            this.InitializeFeatureContext();
+            InitializeFeatureContext();
             this.authorization.Setup(a => a.IsAuthorized(It.IsAny<IPAddress>()))
                 .Returns(true);
             this.authorization.Setup(a => a.IsAuthorized("MyUser"))
@@ -129,7 +130,7 @@ namespace Blockcore.Features.RPC.Tests
         public void InvokeAuthorizedWithBasicAuthorizationHeaderWithInvalidEncodingReturns401()
         {
             this.request.Headers.Add("Authorization", "Basic kljseuhtiuorewytiuoer");
-            this.InitializeFeatureContext();
+            InitializeFeatureContext();
             this.authorization.Setup(a => a.IsAuthorized(It.IsAny<IPAddress>()))
                 .Returns(true);
 
@@ -143,8 +144,8 @@ namespace Blockcore.Features.RPC.Tests
         {
             this.delegateContext.Setup(d => d(It.IsAny<DefaultHttpContext>()))
                 .Throws(new ArgumentException("Name is required."));
-            this.SetupValidAuthorization();
-            this.InitializeFeatureContext();
+            SetupValidAuthorization();
+            InitializeFeatureContext();
 
             this.middleware.InvokeAsync(this.httpContext).Wait();
 
@@ -163,8 +164,8 @@ namespace Blockcore.Features.RPC.Tests
         {
             this.delegateContext.Setup(d => d(It.IsAny<DefaultHttpContext>()))
                 .Throws(new FormatException("Int x is invalid format."));
-            this.SetupValidAuthorization();
-            this.InitializeFeatureContext();
+            SetupValidAuthorization();
+            InitializeFeatureContext();
 
             using (this.httpContext.Request.Body = new MemoryStream())
             {
@@ -192,8 +193,8 @@ namespace Blockcore.Features.RPC.Tests
         public void Invoke404WritesMethodNotFoundError()
         {
             this.response.StatusCode = StatusCodes.Status404NotFound;
-            this.SetupValidAuthorization();
-            this.InitializeFeatureContext();
+            SetupValidAuthorization();
+            InitializeFeatureContext();
 
             this.middleware.InvokeAsync(this.httpContext).Wait();
 
@@ -211,8 +212,8 @@ namespace Blockcore.Features.RPC.Tests
         public void Invoke500WritesInternalErrorAndLogsResult()
         {
             this.response.StatusCode = StatusCodes.Status500InternalServerError;
-            this.SetupValidAuthorization();
-            this.InitializeFeatureContext();
+            SetupValidAuthorization();
+            InitializeFeatureContext();
 
             this.middleware.InvokeAsync(this.httpContext).Wait();
 
@@ -224,7 +225,7 @@ namespace Blockcore.Features.RPC.Tests
                 actual.Should().BeEquivalentTo(expected);
 
                 Assert.Equal(StatusCodes.Status500InternalServerError, this.httpContext.Response.StatusCode);
-                this.AssertLog(this.Logger, LogLevel.Error, "Internal error while calling RPC Method");
+                AssertLog(this.Logger, LogLevel.Error, "Internal error while calling RPC Method");
             }
         }
 
@@ -233,8 +234,8 @@ namespace Blockcore.Features.RPC.Tests
         {
             this.delegateContext.Setup(d => d(It.IsAny<DefaultHttpContext>()))
                 .Throws(new InvalidOperationException("Operation not valid."));
-            this.SetupValidAuthorization();
-            this.InitializeFeatureContext();
+            SetupValidAuthorization();
+            InitializeFeatureContext();
 
             using (this.httpContext.Request.Body = new MemoryStream())
             {
@@ -255,7 +256,7 @@ namespace Blockcore.Features.RPC.Tests
                     actual.Should().BeEquivalentTo(expected);
 
                     Assert.Equal(StatusCodes.Status200OK, this.httpContext.Response.StatusCode);
-                    this.AssertLog<InvalidOperationException>(this.Logger, LogLevel.Error, "Operation not valid.", "Internal error while calling RPC Method");
+                    AssertLog<InvalidOperationException>(this.Logger, LogLevel.Error, "Operation not valid.", "Internal error while calling RPC Method");
                 }
             }
         }

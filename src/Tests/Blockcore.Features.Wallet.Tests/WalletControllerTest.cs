@@ -501,7 +501,7 @@ namespace Blockcore.Features.Wallet.Tests
             string walletName = "myWallet";
             string extPubKey = "xpub661MyMwAqRbcEgnsMFfhjdrwR52TgicebTrbnttywb9zn3orkrzn6MHJrgBmKrd7MNtS6LAim44a6V2gizt3jYVPHGYq1MzAN849WEyoedJ";
 
-            this.RecoverWithExtPubAndCheckSuccessfulResponse(walletName, extPubKey);
+            RecoverWithExtPubAndCheckSuccessfulResponse(walletName, extPubKey);
         }
 
         [Fact]
@@ -510,7 +510,7 @@ namespace Blockcore.Features.Wallet.Tests
             string walletName = "myWallet";
             string extPubKey = "xq5hcJV8uJDLaNytrg6FphHY1vdqxP1rCPhAmp4xZwpxzYyYEscYEujAmNR5NrPfy9vzQ6BajEqtFezcyRe4zcGHH3dR6BKaKov43JHd8UYhBVy";
 
-            this.RecoverWithExtPubAndCheckSuccessfulResponse(walletName, extPubKey);
+            RecoverWithExtPubAndCheckSuccessfulResponse(walletName, extPubKey);
         }
 
         private void RecoverWithExtPubAndCheckSuccessfulResponse(string walletName, string extPubKey)
@@ -2425,19 +2425,19 @@ namespace Blockcore.Features.Wallet.Tests
 
         public event EventHandler<NetworkPeerEventArgs> Removed;
 
-        private List<INetworkPeer> networkPeers;
+        private readonly List<INetworkPeer> networkPeers;
 
         public TestReadOnlyNetworkPeerCollection()
         {
-            this.Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
-            this.Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+            Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+            Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
             this.networkPeers = new List<INetworkPeer>();
         }
 
         public TestReadOnlyNetworkPeerCollection(List<INetworkPeer> peers)
         {
-            this.Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
-            this.Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+            Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+            Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
             this.networkPeers = peers;
         }
 
@@ -2463,7 +2463,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

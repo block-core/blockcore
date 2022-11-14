@@ -11,7 +11,6 @@ using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.Signals;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool
 {
@@ -114,7 +113,7 @@ namespace Blockcore.Features.MemoryPool
         /// </summary>
         public void Start()
         {
-            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(this.OnBlockConnected);
+            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(OnBlockConnected);
 
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop("MemoryPool.RelayWorker", async token =>
             {
@@ -140,7 +139,7 @@ namespace Blockcore.Features.MemoryPool
             ChainedHeaderBlock chainedHeaderBlock = blockConnected.ConnectedBlock;
             ChainedHeader blockHeader = chainedHeaderBlock.ChainedHeader;
 
-            Task task = this.RemoveForBlock(chainedHeaderBlock.Block, blockHeader?.Height ?? -1);
+            Task task = RemoveForBlock(chainedHeaderBlock.Block, blockHeader?.Height ?? -1);
 
             // wait for the mempool code to complete
             // until the signaler becomes async

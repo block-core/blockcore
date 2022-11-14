@@ -68,7 +68,7 @@ namespace Blockcore.Features.Wallet.Types
         public Money GetMinimumFee(int txBytes, int confirmTarget)
         {
             // payTxFee is the user-set global for desired feerate
-            return this.GetMinimumFee(txBytes, confirmTarget, this.payTxFee.GetFee(txBytes));
+            return GetMinimumFee(txBytes, confirmTarget, this.payTxFee.GetFee(txBytes));
         }
 
         /// <inheritdoc />
@@ -87,7 +87,7 @@ namespace Blockcore.Features.Wallet.Types
                     nFeeNeeded = this.fallbackFee.GetFee(txBytes);
             }
             // prevent user from paying a fee below minRelayTxFee or minTxFee
-            nFeeNeeded = Math.Max(nFeeNeeded, this.GetRequiredFee(txBytes));
+            nFeeNeeded = Math.Max(nFeeNeeded, GetRequiredFee(txBytes));
             // But always obey the maximum
             if (nFeeNeeded > this.maxTxFee)
                 nFeeNeeded = this.maxTxFee;

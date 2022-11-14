@@ -14,7 +14,7 @@ namespace Blockcore.IntegrationTests
 {
     public class ChainBuilder
     {
-        private Network network;
+        private readonly Network network;
 
         public ChainBuilder(Network network)
         {
@@ -105,7 +105,7 @@ namespace Blockcore.IntegrationTests
         }
 
         internal Dictionary<uint256, Block> Blocks = new Dictionary<uint256, Block>();
-        private List<Transaction> transactions = new List<Transaction>();
+        private readonly List<Transaction> transactions = new List<Transaction>();
 
         public void Broadcast(Transaction tx)
         {

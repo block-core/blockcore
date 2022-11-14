@@ -35,7 +35,7 @@ namespace NBitcoin
         {
             get
             {
-                if(this._ConfirmationCode == null)
+                if (this._ConfirmationCode == null)
                 {
                     this._ConfirmationCode = this._CalculateConfirmation();
                     this._CalculateConfirmation = null;
@@ -66,9 +66,9 @@ namespace NBitcoin
     {
         public LotSequence(int lot, int sequence)
         {
-            if(lot > 1048575 || lot < 0)
+            if (lot > 1048575 || lot < 0)
                 throw new ArgumentOutOfRangeException("lot");
-            if(sequence > 1024 || sequence < 0)
+            if (sequence > 1024 || sequence < 0)
                 throw new ArgumentOutOfRangeException("sequence");
 
             this._Lot = lot;
@@ -87,10 +87,10 @@ namespace NBitcoin
         {
             this._Bytes = bytes.ToArray();
             uint lotSequence =
-                ((uint) this._Bytes[0] << 24) +
-                ((uint) this._Bytes[1] << 16) +
-                ((uint) this._Bytes[2] << 8) +
-                ((uint) this._Bytes[3] << 0);
+                ((uint)this._Bytes[0] << 24) +
+                ((uint)this._Bytes[1] << 16) +
+                ((uint)this._Bytes[2] << 8) +
+                ((uint)this._Bytes[3] << 0);
 
             this._Lot = (int)(lotSequence / 4096);
             this._Sequence = (int)(lotSequence - this._Lot);
@@ -132,7 +132,9 @@ namespace NBitcoin
             var item = obj as LotSequence;
             return item != null && this.Id.Equals(item.Id);
         }
-        public static bool operator ==(LotSequence a, LotSequence b)
+
+        /*
+        public static bool operator  ==(LotSequence a, LotSequence b)
         {
             if(ReferenceEquals(a, b))
                 return true;
@@ -140,11 +142,14 @@ namespace NBitcoin
                 return false;
             return a.Id == b.Id;
         }
+        */
+        /*
 
         public static bool operator !=(LotSequence a, LotSequence b)
         {
             return !(a == b);
         }
+        */
 
         public override int GetHashCode()
         {
@@ -167,7 +172,7 @@ namespace NBitcoin
             ownersalt = ownersalt ?? RandomUtils.GetBytes(8);
             byte[] ownerEntropy = ownersalt;
 
-            if(hasLotSequence)
+            if (hasLotSequence)
             {
                 ownersalt = ownersalt.Take(4).ToArray();
                 ownerEntropy = ownersalt.Concat(lotsequence.ToBytes()).ToArray();
@@ -176,7 +181,7 @@ namespace NBitcoin
 
             byte[] prefactor = SCrypt.BitcoinComputeDerivedKey(Encoding.UTF8.GetBytes(passphrase), ownersalt, 32);
             byte[] passfactor = prefactor;
-            if(hasLotSequence)
+            if (hasLotSequence)
             {
                 passfactor = Hashes.Hash256(prefactor.Concat(ownerEntropy).ToArray()).ToBytes();
             }
@@ -203,7 +208,7 @@ namespace NBitcoin
             get
             {
                 bool hasLotSequence = (this.vchData[0]) == 0x51;
-                if(!hasLotSequence)
+                if (!hasLotSequence)
                     return null;
                 return this._LotSequence ?? (this._LotSequence = new LotSequence(this.OwnerEntropy.Skip(4).Take(4).ToArray()));
             }

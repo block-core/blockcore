@@ -1,7 +1,6 @@
 ﻿using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {
@@ -15,7 +14,7 @@ namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
         public override void Run(RuleContext context)
         {
             BlockSignature expectedSignature = (context.ValidationContext.ChainedHeaderToValidate.Header as PoABlockHeader).BlockSignature;
-            BlockSignature actualSignature = (context.ValidationContext.BlockToValidate.Header  as PoABlockHeader).BlockSignature;
+            BlockSignature actualSignature = (context.ValidationContext.BlockToValidate.Header as PoABlockHeader).BlockSignature;
 
             if (expectedSignature != actualSignature)
             {

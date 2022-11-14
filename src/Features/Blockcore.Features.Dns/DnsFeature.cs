@@ -9,7 +9,6 @@ using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Dns
 {
@@ -120,7 +119,7 @@ namespace Blockcore.Features.Dns
 
             this.dnsServer = dnsServer;
             this.whitelistManager = whitelistManager;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.asyncProvider = asyncProvider;
             this.nodeLifetime = nodeLifetime;
             this.nodeSettings = nodeSettings;
@@ -136,9 +135,9 @@ namespace Blockcore.Features.Dns
         public override Task InitializeAsync()
         {
             // Create long running task for DNS service.
-            this.dnsTask = Task.Factory.StartNew(this.RunDnsService, TaskCreationOptions.LongRunning);
+            this.dnsTask = Task.Factory.StartNew(RunDnsService, TaskCreationOptions.LongRunning);
 
-            this.StartWhitelistRefreshLoop();
+            StartWhitelistRefreshLoop();
 
             NetworkPeerConnectionParameters connectionParameters = this.connectionManager.Parameters;
             connectionParameters.TemplateBehaviors.Add(this.unreliablePeerBehavior);

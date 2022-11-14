@@ -60,7 +60,7 @@ namespace Blockcore.Features.MemoryPool
             this.mempoolPersistence = mempoolPersistence;
             this.coinView = coinView;
             this.network = network;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>Lock for memory pool access.</summary>
@@ -86,7 +86,7 @@ namespace Blockcore.Features.MemoryPool
         /// <inheritdoc />
         public async Task<Transaction> GetTransaction(uint256 trxid)
         {
-            return (await this.InfoAsync(trxid))?.Trx;
+            return (await InfoAsync(trxid))?.Trx;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Blockcore.Features.MemoryPool
             {
                 this.logger.LogInformation("Loading Memory Pool.");
                 IEnumerable<MempoolPersistenceEntry> entries = this.mempoolPersistence.Load(this.network, fileName);
-                await this.AddMempoolEntriesToMempoolAsync(entries);
+                await AddMempoolEntriesToMempoolAsync(entries);
             }
             else
             {
@@ -190,7 +190,7 @@ namespace Blockcore.Features.MemoryPool
         /// <returns>List of transaction information.</returns>
         public Task<List<TxMempoolInfo>> InfoAllAsync()
         {
-            return this.MempoolLock.ReadAsync(this.InfoAll);
+            return this.MempoolLock.ReadAsync(InfoAll);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Blockcore.Features.MemoryPool
         /// <returns>Transaction information.</returns>
         public Task<TxMempoolInfo> InfoAsync(uint256 hash)
         {
-            return this.MempoolLock.ReadAsync(() => this.Info(hash));
+            return this.MempoolLock.ReadAsync(() => Info(hash));
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Blockcore.Features.MemoryPool
         /// <inheritdoc />
         public async Task<UnspentOutput> GetUnspentTransactionAsync(OutPoint outPoint)
         {
-            TxMempoolInfo txInfo = this.Info(outPoint.Hash);
+            TxMempoolInfo txInfo = Info(outPoint.Hash);
             if (txInfo == null)
             {
                 this.logger.LogTrace("(-):[TX_IS_NULL]");

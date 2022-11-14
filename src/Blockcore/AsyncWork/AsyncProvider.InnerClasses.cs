@@ -10,9 +10,9 @@ namespace Blockcore.AsyncWork
         /// </summary>
         private interface IAsyncTaskInfoSetter
         {
-            TaskStatus Status { set; }
+            TaskStatus Status { get; set; }
 
-            Exception Exception { set; }
+            Exception Exception { get; set; }
         }
 
         /// <summary>
@@ -42,9 +42,9 @@ namespace Blockcore.AsyncWork
 
             public Exception Exception { get; private set; }
 
-            TaskStatus IAsyncTaskInfoSetter.Status { set => this.Status = value; }
+            TaskStatus IAsyncTaskInfoSetter.Status { get { return this.Status; } set { this.Status = value; } }
 
-            Exception IAsyncTaskInfoSetter.Exception { set => this.Exception = value; }
+            Exception IAsyncTaskInfoSetter.Exception { get { return this.Exception; } set => this.Exception = value; }
 
             /// <summary>
             /// Specifies which type of async worker this instance contains information about.

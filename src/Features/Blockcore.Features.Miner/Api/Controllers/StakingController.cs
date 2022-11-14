@@ -51,7 +51,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             Guard.NotNull(walletManager, nameof(walletManager));
 
             this.fullNode = fullNode;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.walletManager = walletManager;
             this.minerSettings = minerSettings;
             this.posMinting = posMinting;
@@ -72,7 +72,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                 GetStakingInfoModel model = this.posMinting != null ? this.posMinting.GetGetStakingInfoModel() : new GetStakingInfoModel();
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -97,7 +97,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 double networkWeight = this.posMinting.GetNetworkWeight();
                 double posDifficulty = this.posMinting.GetDifficulty(null);
 
-                return this.Json(new GetNetworkStakingInfoModel { Difficulty = posDifficulty, NetStakeWeight = (long)networkWeight });
+                return Json(new GetNetworkStakingInfoModel { Difficulty = posDifficulty, NetStakeWeight = (long)networkWeight });
             }
             catch (Exception e)
             {
@@ -142,7 +142,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                 this.fullNode.NodeFeature<MiningFeature>(true).StartStaking(request.Name, request.Password);
 
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -169,7 +169,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.MethodNotAllowed, "Method not allowed", "Method only available for Proof of Stake");
 
                 this.fullNode.NodeFeature<MiningFeature>(true).StopStaking();
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -237,7 +237,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                     }
                 }
 
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -307,7 +307,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                     }
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {

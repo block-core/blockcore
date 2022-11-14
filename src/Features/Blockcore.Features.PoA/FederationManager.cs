@@ -72,14 +72,14 @@ namespace Blockcore.Features.PoA
             this.keyValueRepo = Guard.NotNull(keyValueRepo, nameof(keyValueRepo));
             this.signals = Guard.NotNull(signals, nameof(signals));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.locker = new object();
         }
 
         public virtual void Initialize()
         {
             // Load federation from the db.
-            this.federationMembers = this.LoadFederation();
+            this.federationMembers = LoadFederation();
 
             if (this.federationMembers == null)
             {
@@ -87,7 +87,7 @@ namespace Blockcore.Features.PoA
 
                 this.federationMembers = new List<IFederationMember>(this.network.ConsensusOptions.GenesisFederationMembers);
 
-                this.SaveFederation(this.federationMembers);
+                SaveFederation(this.federationMembers);
             }
 
             // Display federation.
@@ -98,7 +98,7 @@ namespace Blockcore.Features.PoA
             Key key = new KeyTool(this.settings.DataFolder).LoadPrivateKey();
 
             this.CurrentFederationKey = key;
-            this.SetIsFederationMember();
+            SetIsFederationMember();
 
             if (this.CurrentFederationKey == null)
             {
@@ -144,7 +144,7 @@ namespace Blockcore.Features.PoA
         {
             lock (this.locker)
             {
-                this.AddFederationMemberLocked(federationMember);
+                AddFederationMemberLocked(federationMember);
             }
 
             this.signals.Publish(new FedMemberAdded(federationMember));
@@ -161,8 +161,8 @@ namespace Blockcore.Features.PoA
 
             this.federationMembers.Add(federationMember);
 
-            this.SaveFederation(this.federationMembers);
-            this.SetIsFederationMember();
+            SaveFederation(this.federationMembers);
+            SetIsFederationMember();
 
             this.logger.LogInformation("Federation member '{0}' was added!", federationMember);
         }
@@ -173,8 +173,8 @@ namespace Blockcore.Features.PoA
             {
                 this.federationMembers.Remove(federationMember);
 
-                this.SaveFederation(this.federationMembers);
-                this.SetIsFederationMember();
+                SaveFederation(this.federationMembers);
+                SetIsFederationMember();
 
                 this.logger.LogInformation("Federation member '{0}' was removed!", federationMember);
             }

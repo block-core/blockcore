@@ -15,16 +15,13 @@ using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Database;
-using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.IntegrationTests
@@ -45,7 +42,7 @@ namespace Blockcore.IntegrationTests
 
         public ProofOfStakeSteps(string displayName)
         {
-            this.nodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, displayName));
+            this.nodeBuilder = NodeBuilder.Create(Path.Combine(GetType().Name, displayName));
         }
 
         public void PremineNodeWithWallet(string testId)
@@ -106,7 +103,7 @@ namespace Blockcore.IntegrationTests
         {
             // Get set of transaction IDs present in wallet before staking is started.
             this.transactionsBeforeStaking.Clear();
-            foreach (TransactionOutputData transactionData in this.GetTransactionsSnapshot())
+            foreach (TransactionOutputData transactionData in GetTransactionsSnapshot())
             {
                 this.transactionsBeforeStaking.Add(transactionData.Id);
             }
@@ -122,7 +119,7 @@ namespace Blockcore.IntegrationTests
             // determine whether staking occurred.
             TestBase.WaitLoop(() =>
             {
-                List<TransactionOutputData> transactions = this.GetTransactionsSnapshot();
+                List<TransactionOutputData> transactions = GetTransactionsSnapshot();
 
                 foreach (TransactionOutputData transactionData in transactions)
                 {
@@ -139,14 +136,14 @@ namespace Blockcore.IntegrationTests
         public void PosRewardForAllCoinstakeTransactionsIsCorrect()
         {
             // build a dictionary of coinstake tx's indexed by tx id.
-            foreach (var tx in this.GetTransactionsSnapshot())
+            foreach (var tx in GetTransactionsSnapshot())
             {
                 this.txLookup[tx.Id] = tx;
             }
 
             TestBase.WaitLoop(() =>
             {
-                List<TransactionOutputData> transactions = this.GetTransactionsSnapshot();
+                List<TransactionOutputData> transactions = GetTransactionsSnapshot();
 
                 foreach (TransactionOutputData transactionData in transactions)
                 {

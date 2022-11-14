@@ -13,8 +13,8 @@ namespace Blockcore.Networks.XRC.Rules
 {
     public class XRCCheckDifficultyPowRule : HeaderValidationConsensusRule
     {
-        private static BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
-        int MedianTimeSpan = 11;
+        private static readonly BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
+        readonly int MedianTimeSpan = 11;
         public override void Run(RuleContext context)
         {
             if (!CheckProofOfWork((XRCBlockHeader)context.ValidationContext.ChainedHeaderToValidate.Header))

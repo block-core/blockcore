@@ -237,7 +237,7 @@ namespace NBitcoin.Tests
 
             for (int i = 0; i < coins.Length; i++)
             {
-                coins[i] = this.CreateCoin("1.0", new Key().ScriptPubKey);
+                coins[i] = CreateCoin("1.0", new Key().ScriptPubKey);
             }
 
             IEnumerable<ICoin> result = selector.Select(coins, Money.Parse("1.5"));
@@ -255,7 +255,7 @@ namespace NBitcoin.Tests
 
             for (int i = 0; i < testCoins.Length; i++)
             {
-                testCoins[i] = this.CreateCoin("1.0");
+                testCoins[i] = CreateCoin("1.0");
             }
 
             IEnumerable<ICoin> result = selector.Select(testCoins, Money.Parse("1.5"));
@@ -1496,7 +1496,7 @@ namespace NBitcoin.Tests
             }
         }
 
-        private static StandardTransactionPolicy EasyPolicy = new StandardTransactionPolicy(KnownNetworks.Main)
+        private static readonly StandardTransactionPolicy EasyPolicy = new StandardTransactionPolicy(KnownNetworks.Main)
         {
             MaxTransactionSize = null,
             MaxTxFee = null,
@@ -1504,7 +1504,7 @@ namespace NBitcoin.Tests
             ScriptVerify = ScriptVerify.Standard & ~ScriptVerify.LowS
         };
 
-        private static StandardTransactionPolicy RelayPolicy = new StandardTransactionPolicy(KnownNetworks.Main)
+        private static readonly StandardTransactionPolicy RelayPolicy = new StandardTransactionPolicy(KnownNetworks.Main)
         {
             MaxTransactionSize = null,
             MaxTxFee = null,
@@ -1551,7 +1551,7 @@ namespace NBitcoin.Tests
             Assert.True(builder.Verify(spending));
         }
 
-        private ScriptVerify allowHighS = ScriptVerify.Standard & ~ScriptVerify.LowS;
+        private readonly ScriptVerify allowHighS = ScriptVerify.Standard & ~ScriptVerify.LowS;
 
         [Fact]
         public void CanUseLockTime()

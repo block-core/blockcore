@@ -229,7 +229,6 @@ namespace NBitcoin.BitcoinCore
                     if (!IsNull(this.Outputs[2 + (int)b * 8 + (int)i]))
                     {
                         fZero = false;
-                        continue;
                     }
                 }
 

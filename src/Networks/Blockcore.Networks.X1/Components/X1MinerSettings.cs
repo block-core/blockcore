@@ -40,7 +40,7 @@ namespace Blockcore.Networks.X1.Components
         /// </summary>
         public int OpenCLWorksizeSplit { get; }
 
-       
+
 
         /// <summary>
         /// Initializes an instance of the object from the node configuration.
@@ -56,7 +56,7 @@ namespace Blockcore.Networks.X1.Components
 
             if (this.Mine)
             {
-                this.MineThreadCount = config.GetOrDefault("minethreads",1, this.logger);
+                this.MineThreadCount = config.GetOrDefault("minethreads", 1, this.logger);
                 this.UseOpenCL = config.GetOrDefault("useopencl", false, this.logger);
                 this.OpenCLDevice = config.GetOrDefault("opencldevice", string.Empty, this.logger);
                 this.OpenCLWorksizeSplit = config.GetOrDefault("openclworksizesplit", 10, this.logger);

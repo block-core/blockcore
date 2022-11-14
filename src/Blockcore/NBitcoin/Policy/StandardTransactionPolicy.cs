@@ -96,7 +96,7 @@ namespace NBitcoin.Policy
                 {
                     errors.Add(new InputPolicyError("All operation should be push", input));
                 }
-                if (!txin.ScriptSig.HasCanonicalPushes)
+                if (!txin.ScriptSig.HasCanonicalPushes())
                 {
                     errors.Add(new InputPolicyError("All operation should be canonical push", input));
                 }

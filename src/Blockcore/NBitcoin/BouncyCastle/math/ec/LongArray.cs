@@ -306,7 +306,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public LongArray(long[] ints, int off, int len)
         {
-            if(off == 0 && len == ints.Length)
+            if (off == 0 && len == ints.Length)
             {
                 this.m_ints = ints;
             }
@@ -319,12 +319,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public LongArray(BigInteger bigInt)
         {
-            if(bigInt == null || bigInt.SignValue < 0)
+            if (bigInt == null || bigInt.SignValue < 0)
             {
                 throw new ArgumentException("invalid F2m field value", "bigInt");
             }
 
-            if(bigInt.SignValue == 0)
+            if (bigInt.SignValue == 0)
             {
                 this.m_ints = new long[] { 0L };
                 return;
@@ -333,7 +333,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             byte[] barr = bigInt.ToByteArray();
             int barrLen = barr.Length;
             int barrStart = 0;
-            if(barr[0] == 0)
+            if (barr[0] == 0)
             {
                 // First byte is 0 to enforce highest (=sign) bit is zero.
                 // In this case ignore barr[0].
@@ -347,9 +347,9 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int rem = barrLen % 8 + barrStart;
             long temp = 0;
             int barrI = barrStart;
-            if(barrStart < rem)
+            if (barrStart < rem)
             {
-                for(; barrI < rem; barrI++)
+                for (; barrI < rem; barrI++)
                 {
                     temp <<= 8;
                     uint barrBarrI = barr[barrI];
@@ -359,10 +359,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
                 this.m_ints[iarrJ--] = temp;
             }
 
-            for(; iarrJ >= 0; iarrJ--)
+            for (; iarrJ >= 0; iarrJ--)
             {
                 temp = 0;
-                for(int i = 0; i < 8; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     temp <<= 8;
                     uint barrBarrI = barr[barrI++];
@@ -376,13 +376,13 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public bool IsOne()
         {
             long[] a = this.m_ints;
-            if(a[0] != 1L)
+            if (a[0] != 1L)
             {
                 return false;
             }
-            for(int i = 1; i < a.Length; ++i)
+            for (int i = 1; i < a.Length; ++i)
             {
-                if(a[i] != 0L)
+                if (a[i] != 0L)
                 {
                     return false;
                 }
@@ -393,9 +393,9 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public bool IsZero()
         {
             long[] a = this.m_ints;
-            for(int i = 0; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
-                if(a[i] != 0L)
+                if (a[i] != 0L)
                 {
                     return false;
                 }
@@ -413,15 +413,15 @@ namespace NBitcoin.BouncyCastle.Math.EC
             long[] a = this.m_ints;
             from = System.Math.Min(from, a.Length);
 
-            if(from < 1)
+            if (from < 1)
             {
                 return 0;
             }
 
             // Check if first element will act as sentinel
-            if(a[0] != 0)
+            if (a[0] != 0)
             {
-                while(a[--from] == 0)
+                while (a[--from] == 0)
                 {
                 }
                 return from + 1;
@@ -429,12 +429,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
             do
             {
-                if(a[--from] != 0)
+                if (a[--from] != 0)
                 {
                     return from + 1;
                 }
             }
-            while(from > 0);
+            while (from > 0);
 
             return 0;
         }
@@ -445,13 +445,13 @@ namespace NBitcoin.BouncyCastle.Math.EC
             long w;
             do
             {
-                if(i == 0)
+                if (i == 0)
                 {
                     return 0;
                 }
                 w = this.m_ints[--i];
             }
-            while(w == 0);
+            while (w == 0);
 
             return (i << 6) + BitLength(w);
         }
@@ -462,13 +462,13 @@ namespace NBitcoin.BouncyCastle.Math.EC
             long w;
             do
             {
-                if(i == 0)
+                if (i == 0)
                 {
                     return 0;
                 }
                 w = this.m_ints[--i];
             }
-            while(w == 0);
+            while (w == 0);
 
             return (i << 6) + BitLength(w);
         }
@@ -500,7 +500,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         private static int BitLength(long w)
         {
             int u = (int)((ulong)w >> 32), b;
-            if(u == 0)
+            if (u == 0)
             {
                 u = (int)w;
                 b = 0;
@@ -511,7 +511,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             }
 
             int t = (int)((uint)u >> 16), k;
-            if(t == 0)
+            if (t == 0)
             {
                 t = (int)((uint)u >> 8);
                 k = (t == 0) ? BitLengths[u] : 8 + BitLengths[t];
@@ -535,7 +535,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public BigInteger ToBigInteger()
         {
             int usedLen = GetUsedLength();
-            if(usedLen == 0)
+            if (usedLen == 0)
             {
                 return BigInteger.Zero;
             }
@@ -544,10 +544,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             var temp = new byte[8];
             int barrI = 0;
             bool trailingZeroBytesDone = false;
-            for(int j = 7; j >= 0; j--)
+            for (int j = 7; j >= 0; j--)
             {
                 byte thisByte = (byte)((ulong)highestInt >> (8 * j));
-                if(trailingZeroBytesDone || (thisByte != 0))
+                if (trailingZeroBytesDone || (thisByte != 0))
                 {
                     trailingZeroBytesDone = true;
                     temp[barrI++] = thisByte;
@@ -556,16 +556,16 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
             int barrLen = 8 * (usedLen - 1) + barrI;
             var barr = new byte[barrLen];
-            for(int j = 0; j < barrI; j++)
+            for (int j = 0; j < barrI; j++)
             {
                 barr[j] = temp[j];
             }
             // Highest value int is done now
 
-            for(int iarrJ = usedLen - 2; iarrJ >= 0; iarrJ--)
+            for (int iarrJ = usedLen - 2; iarrJ >= 0; iarrJ--)
             {
                 long mi = this.m_ints[iarrJ];
-                for(int j = 7; j >= 0; j--)
+                for (int j = 7; j >= 0; j--)
                 {
                     barr[barrI++] = (byte)((ulong)mi >> (8 * j));
                 }
@@ -589,7 +589,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             int shiftInv = 64 - shift;
             long prev = 0;
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 long next = x[xOff + i];
                 x[xOff + i] = (next << shift) | prev;
@@ -602,7 +602,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             int shiftInv = 64 - shift;
             long prev = 0;
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 long next = x[xOff + i];
                 z[zOff + i] = (next << shift) | prev;
@@ -613,7 +613,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public LongArray AddOne()
         {
-            if(this.m_ints.Length == 0)
+            if (this.m_ints.Length == 0)
             {
                 return new LongArray(new long[] { 1L });
             }
@@ -658,14 +658,14 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int words = (int)((uint)bits >> 6);
             int shift = bits & 0x3F;
 
-            if(shift == 0)
+            if (shift == 0)
             {
                 Add(this.m_ints, words, other.m_ints, 0, otherLen);
                 return;
             }
 
             long carry = AddShiftedUp(this.m_ints, words, other.m_ints, 0, otherLen, shift);
-            if(carry != 0L)
+            if (carry != 0L)
             {
                 this.m_ints[otherLen + words] ^= carry;
             }
@@ -675,7 +675,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             int shiftInv = 64 - shift;
             long prev = 0;
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 long next = y[yOff + i];
                 x[xOff + i] ^= (next << shift) | prev;
@@ -689,7 +689,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int shiftInv = 64 - shift;
             long prev = 0;
             int i = count;
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 long next = y[yOff + i];
                 x[xOff + i] ^= (long)((ulong)next >> shift) | prev;
@@ -701,13 +701,13 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public void AddShiftedByWords(LongArray other, int words)
         {
             int otherUsedLen = other.GetUsedLength();
-            if(otherUsedLen == 0)
+            if (otherUsedLen == 0)
             {
                 return;
             }
 
             int minLen = otherUsedLen + words;
-            if(minLen > this.m_ints.Length)
+            if (minLen > this.m_ints.Length)
             {
                 this.m_ints = ResizedInts(minLen);
             }
@@ -717,7 +717,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Add(long[] x, int xOff, long[] y, int yOff, int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 x[xOff + i] ^= y[yOff + i];
             }
@@ -725,7 +725,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Add(long[] x, int xOff, long[] y, int yOff, long[] z, int zOff, int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 z[zOff + i] = x[xOff + i] ^ y[yOff + i];
             }
@@ -733,7 +733,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void AddBoth(long[] x, int xOff, long[] y1, int y1Off, long[] y2, int y2Off, int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 x[xOff + i] ^= y1[y1Off + i] ^ y2[y2Off + i];
             }
@@ -741,7 +741,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Distribute(long[] x, int src, int dst1, int dst2, int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 long v = x[src + i];
                 x[dst1 + i] ^= v;
@@ -761,7 +761,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             int n = off + (int)((uint)bit >> 6);
             int shift = bit & 0x3F;
-            if(shift == 0)
+            if (shift == 0)
             {
                 buf[n] ^= word;
             }
@@ -769,7 +769,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             {
                 buf[n] ^= word << shift;
                 word = (long)((ulong)word >> (64 - shift));
-                if(word != 0)
+                if (word != 0)
                 {
                     buf[++n] ^= word;
                 }
@@ -839,17 +839,17 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void MultiplyWord(long a, long[] b, int bLen, long[] c, int cOff)
         {
-            if((a & 1L) != 0L)
+            if ((a & 1L) != 0L)
             {
                 Add(c, cOff, b, 0, bLen);
             }
             int k = 1;
-            while((a = (long)((ulong)a >> 1)) != 0L)
+            while ((a = (long)((ulong)a >> 1)) != 0L)
             {
-                if((a & 1L) != 0L)
+                if ((a & 1L) != 0L)
                 {
                     long carry = AddShiftedUp(c, cOff, b, 0, bLen, k);
-                    if(carry != 0L)
+                    if (carry != 0L)
                     {
                         c[cOff + bLen] ^= carry;
                     }
@@ -864,12 +864,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Find out the degree of each argument and handle the zero cases
              */
             int aDeg = Degree();
-            if(aDeg == 0)
+            if (aDeg == 0)
             {
                 return this;
             }
             int bDeg = other.Degree();
-            if(bDeg == 0)
+            if (bDeg == 0)
             {
                 return other;
             }
@@ -878,7 +878,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Swap if necessary so that A is the smaller argument
              */
             LongArray A = this, B = other;
-            if(aDeg > bDeg)
+            if (aDeg > bDeg)
             {
                 A = other;
                 B = this;
@@ -894,10 +894,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int bLen = (int)((uint)(bDeg + 63) >> 6);
             int cLen = (int)((uint)(aDeg + bDeg + 62) >> 6);
 
-            if(aLen == 1)
+            if (aLen == 1)
             {
                 long a0 = A.m_ints[0];
-                if(a0 == 1L)
+                if (a0 == 1L)
                 {
                     return B;
                 }
@@ -931,10 +931,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int tOff = bMax;
             ti[1] = tOff;
             Array.Copy(B.m_ints, 0, T0, tOff, bLen);
-            for(int i = 2; i < 16; ++i)
+            for (int i = 2; i < 16; ++i)
             {
                 ti[i] = (tOff += bMax);
-                if((i & 1) == 0)
+                if ((i & 1) == 0)
                 {
                     ShiftUp(T0, (int)((uint)tOff >> 1), T0, tOff, bMax, 1);
                 }
@@ -960,9 +960,9 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Lopez-Dahab algorithm
              */
 
-            for(int k = 56; k >= 0; k -= 8)
+            for (int k = 56; k >= 0; k -= 8)
             {
-                for(int j = 1; j < aLen; j += 2)
+                for (int j = 1; j < aLen; j += 2)
                 {
                     int aVal = (int)((ulong)a[j] >> k);
                     int u = aVal & MASK;
@@ -972,16 +972,16 @@ namespace NBitcoin.BouncyCastle.Math.EC
                 ShiftUp(c, 0, cLen, 8);
             }
 
-            for(int k = 56; k >= 0; k -= 8)
+            for (int k = 56; k >= 0; k -= 8)
             {
-                for(int j = 0; j < aLen; j += 2)
+                for (int j = 0; j < aLen; j += 2)
                 {
                     int aVal = (int)((ulong)a[j] >> k);
                     int u = aVal & MASK;
                     int v = (int)((uint)aVal >> 4) & MASK;
                     AddBoth(c, j, T0, ti[u], T1, ti[v], bMax);
                 }
-                if(k > 0)
+                if (k > 0)
                 {
                     ShiftUp(c, 0, cLen, 8);
                 }
@@ -999,12 +999,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Find out the degree of each argument and handle the zero cases
              */
             int aDeg = Degree();
-            if(aDeg == 0)
+            if (aDeg == 0)
             {
                 return this;
             }
             int bDeg = other.Degree();
-            if(bDeg == 0)
+            if (bDeg == 0)
             {
                 return other;
             }
@@ -1013,7 +1013,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Swap if necessary so that A is the smaller argument
              */
             LongArray A = this, B = other;
-            if(aDeg > bDeg)
+            if (aDeg > bDeg)
             {
                 A = other;
                 B = this;
@@ -1029,10 +1029,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int bLen = (int)((uint)(bDeg + 63) >> 6);
             int cLen = (int)((uint)(aDeg + bDeg + 62) >> 6);
 
-            if(aLen == 1)
+            if (aLen == 1)
             {
                 long a0 = A.m_ints[0];
-                if(a0 == 1L)
+                if (a0 == 1L)
                 {
                     return B;
                 }
@@ -1066,10 +1066,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int tOff = bMax;
             ti[1] = tOff;
             Array.Copy(B.m_ints, 0, T0, tOff, bLen);
-            for(int i = 2; i < 16; ++i)
+            for (int i = 2; i < 16; ++i)
             {
                 ti[i] = (tOff += bMax);
-                if((i & 1) == 0)
+                if ((i & 1) == 0)
                 {
                     ShiftUp(T0, (int)((uint)tOff >> 1), T0, tOff, bMax, 1);
                 }
@@ -1095,18 +1095,18 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Lopez-Dahab (Modified) algorithm
              */
 
-            for(int aPos = 0; aPos < aLen; ++aPos)
+            for (int aPos = 0; aPos < aLen; ++aPos)
             {
                 long aVal = a[aPos];
                 int cOff = aPos;
-                for(;;)
+                for (; ; )
                 {
                     int u = (int)aVal & MASK;
                     aVal = (long)((ulong)aVal >> 4);
                     int v = (int)aVal & MASK;
                     AddBoth(c, cOff, T0, ti[u], T1, ti[v], bMax);
                     aVal = (long)((ulong)aVal >> 4);
-                    if(aVal == 0L)
+                    if (aVal == 0L)
                     {
                         break;
                     }
@@ -1116,7 +1116,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
             {
                 int cOff = c.Length;
-                while((cOff -= cLen) != 0)
+                while ((cOff -= cLen) != 0)
                 {
                     AddShiftedUp(c, cOff - cLen, c, cOff, cLen, 8);
                 }
@@ -1134,12 +1134,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Find out the degree of each argument and handle the zero cases
              */
             int aDeg = Degree();
-            if(aDeg == 0)
+            if (aDeg == 0)
             {
                 return this;
             }
             int bDeg = other.Degree();
-            if(bDeg == 0)
+            if (bDeg == 0)
             {
                 return other;
             }
@@ -1148,7 +1148,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Swap if necessary so that A is the smaller argument
              */
             LongArray A = this, B = other;
-            if(aDeg > bDeg)
+            if (aDeg > bDeg)
             {
                 A = other;
                 B = this;
@@ -1164,10 +1164,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int bLen = (int)((uint)(bDeg + 63) >> 6);
             int cLen = (int)((uint)(aDeg + bDeg + 62) >> 6);
 
-            if(aLen == 1)
+            if (aLen == 1)
             {
                 long a0 = A.m_ints[0];
-                if(a0 == 1L)
+                if (a0 == 1L)
                 {
                     return B;
                 }
@@ -1242,7 +1242,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
                 ci[0] = cTotal;
                 cTotal += bTotal;
                 ci[1] = cTotal;
-                for(int i = 2; i < ci.Length; ++i)
+                for (int i = 2; i < ci.Length; ++i)
                 {
                     cTotal += cLen;
                     ci[i] = cTotal;
@@ -1261,7 +1261,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             {
                 int bOff = aLen;
                 Array.Copy(B.m_ints, 0, c, bOff, bLen);
-                for(int bank = 1; bank < banks; ++bank)
+                for (int bank = 1; bank < banks; ++bank)
                 {
                     ShiftUp(c, aLen, c, bOff += bMax, bMax, bank);
                 }
@@ -1276,17 +1276,17 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int MASK = (1 << width) - 1;
 
             int k = 0;
-            for(;;)
+            for (; ; )
             {
                 int aPos = 0;
                 do
                 {
                     long aVal = (long)((ulong)c[aPos] >> k);
                     int bank = 0, bOff = aLen;
-                    for(;;)
+                    for (; ; )
                     {
                         int index = (int)(aVal) & MASK;
-                        if(index != 0)
+                        if (index != 0)
                         {
                             /*
                              * Add to a 'c' buffer based on the bit-pattern of 'index'. Since A is in
@@ -1295,7 +1295,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
                              */
                             Add(c, aPos + ci[index], c, bOff, bMax);
                         }
-                        if(++bank == banks)
+                        if (++bank == banks)
                         {
                             break;
                         }
@@ -1303,11 +1303,11 @@ namespace NBitcoin.BouncyCastle.Math.EC
                         aVal = (long)((ulong)aVal >> width);
                     }
                 }
-                while(++aPos < aLen);
+                while (++aPos < aLen);
 
-                if((k += stride) >= top)
+                if ((k += stride) >= top)
                 {
-                    if(k >= 64)
+                    if (k >= 64)
                     {
                         break;
                     }
@@ -1327,9 +1327,9 @@ namespace NBitcoin.BouncyCastle.Math.EC
             }
 
             int ciPos = ci.Length;
-            while(--ciPos > 1)
+            while (--ciPos > 1)
             {
-                if((ciPos & 1L) == 0L)
+                if ((ciPos & 1L) == 0L)
                 {
                     /*
                      * For even numbers, shift contents and add to the half-position
@@ -1364,12 +1364,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Find out the degree of each argument and handle the zero cases
              */
             int aDeg = Degree();
-            if(aDeg == 0)
+            if (aDeg == 0)
             {
                 return this;
             }
             int bDeg = other.Degree();
-            if(bDeg == 0)
+            if (bDeg == 0)
             {
                 return other;
             }
@@ -1378,7 +1378,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Swap if necessary so that A is the smaller argument
              */
             LongArray A = this, B = other;
-            if(aDeg > bDeg)
+            if (aDeg > bDeg)
             {
                 A = other;
                 B = this;
@@ -1394,10 +1394,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int bLen = (int)((uint)(bDeg + 63) >> 6);
             int cLen = (int)((uint)(aDeg + bDeg + 62) >> 6);
 
-            if(aLen == 1)
+            if (aLen == 1)
             {
                 long a0 = A.m_ints[0];
-                if(a0 == 1L)
+                if (a0 == 1L)
                 {
                     return B;
                 }
@@ -1432,10 +1432,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int tOff = bMax;
             ti[1] = tOff;
             Array.Copy(B.m_ints, 0, T0, tOff, bLen);
-            for(int i = 2; i < 16; ++i)
+            for (int i = 2; i < 16; ++i)
             {
                 ti[i] = (tOff += bMax);
-                if((i & 1) == 0)
+                if ((i & 1) == 0)
                 {
                     ShiftUp(T0, (int)((uint)tOff >> 1), T0, tOff, bMax, 1);
                 }
@@ -1461,18 +1461,18 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Lopez-Dahab (Modified) algorithm
              */
 
-            for(int aPos = 0; aPos < aLen; ++aPos)
+            for (int aPos = 0; aPos < aLen; ++aPos)
             {
                 long aVal = a[aPos];
                 int cOff = aPos;
-                for(;;)
+                for (; ; )
                 {
                     int u = (int)aVal & MASK;
                     aVal = (long)((ulong)aVal >> 4);
                     int v = (int)aVal & MASK;
                     AddBoth(c, cOff, T0, ti[u], T1, ti[v], bMax);
                     aVal = (long)((ulong)aVal >> 4);
-                    if(aVal == 0L)
+                    if (aVal == 0L)
                     {
                         break;
                     }
@@ -1482,7 +1482,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
             {
                 int cOff = c.Length;
-                while((cOff -= cLen) != 0)
+                while ((cOff -= cLen) != 0)
                 {
                     AddShiftedUp(c, cOff - cLen, c, cOff, cLen, 8);
                 }
@@ -1499,7 +1499,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             long[] buf = this.m_ints;
             int rLen = ReduceInPlace(buf, 0, buf.Length, m, ks);
-            if(rLen < buf.Length)
+            if (rLen < buf.Length)
             {
                 this.m_ints = new long[rLen];
                 Array.Copy(buf, 0, this.m_ints, 0, rLen);
@@ -1512,44 +1512,19 @@ namespace NBitcoin.BouncyCastle.Math.EC
             return new LongArray(buf, off, rLen);
         }
 
-        //    private static void deInterleave(long[] x, int xOff, long[] z, int zOff, int count, int rounds)
-        //    {
-        //        for (int i = 0; i < count; ++i)
-        //        {
-        //            z[zOff + i] = deInterleave(x[zOff + i], rounds);
-        //        }
-        //    }
-        //
-        //    private static long deInterleave(long x, int rounds)
-        //    {
-        //        while (--rounds >= 0)
-        //        {
-        //            x = deInterleave32(x & DEInterleave_MASK) | (deInterleave32((x >>> 1) & DEInterleave_MASK) << 32);
-        //        }
-        //        return x;
-        //    }
-        //
-        //    private static long deInterleave32(long x)
-        //    {
-        //        x = (x | (x >>> 1)) & 0x3333333333333333L;
-        //        x = (x | (x >>> 2)) & 0x0F0F0F0F0F0F0F0FL;
-        //        x = (x | (x >>> 4)) & 0x00FF00FF00FF00FFL;
-        //        x = (x | (x >>> 8)) & 0x0000FFFF0000FFFFL;
-        //        x = (x | (x >>> 16)) & 0x00000000FFFFFFFFL;
-        //        return x;
-        //    }
+
 
         private static int ReduceInPlace(long[] buf, int off, int len, int m, int[] ks)
         {
             int mLen = (m + 63) >> 6;
-            if(len < mLen)
+            if (len < mLen)
             {
                 return len;
             }
 
             int numBits = System.Math.Min(len << 6, (m << 1) - 1); // TODO use actual degree?
             int excessBits = (len << 6) - numBits;
-            while(excessBits >= 64)
+            while (excessBits >= 64)
             {
                 --len;
                 excessBits -= 64;
@@ -1558,24 +1533,24 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int kLen = ks.Length, kMax = ks[kLen - 1], kNext = kLen > 1 ? ks[kLen - 2] : 0;
             int wordWiseLimit = System.Math.Max(m, kMax + 64);
             int vectorableWords = (excessBits + System.Math.Min(numBits - wordWiseLimit, m - kNext)) >> 6;
-            if(vectorableWords > 1)
+            if (vectorableWords > 1)
             {
                 int vectorWiseWords = len - vectorableWords;
                 ReduceVectorWise(buf, off, len, vectorWiseWords, m, ks);
-                while(len > vectorWiseWords)
+                while (len > vectorWiseWords)
                 {
                     buf[off + --len] = 0L;
                 }
                 numBits = vectorWiseWords << 6;
             }
 
-            if(numBits > wordWiseLimit)
+            if (numBits > wordWiseLimit)
             {
                 ReduceWordWise(buf, off, len, wordWiseLimit, m, ks);
                 numBits = wordWiseLimit;
             }
 
-            if(numBits > m)
+            if (numBits > m)
             {
                 ReduceBitWise(buf, off, numBits, m, ks);
             }
@@ -1585,9 +1560,9 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void ReduceBitWise(long[] buf, int off, int BitLength, int m, int[] ks)
         {
-            while(--BitLength >= m)
+            while (--BitLength >= m)
             {
-                if(TestBit(buf, off, BitLength))
+                if (TestBit(buf, off, BitLength))
                 {
                     ReduceBit(buf, off, BitLength, m, ks);
                 }
@@ -1599,7 +1574,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             FlipBit(buf, off, bit);
             int n = bit - m;
             int j = ks.Length;
-            while(--j >= 0)
+            while (--j >= 0)
             {
                 FlipBit(buf, off, ks[j] + n);
             }
@@ -1610,10 +1585,10 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             int toPos = (int)((uint)toBit >> 6);
 
-            while(--len > toPos)
+            while (--len > toPos)
             {
                 long word = buf[off + len];
-                if(word != 0)
+                if (word != 0)
                 {
                     buf[off + len] = 0;
                     ReduceWord(buf, off, (len << 6), word, m, ks);
@@ -1623,7 +1598,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             {
                 int partial = toBit & 0x3F;
                 long word = (long)((ulong)buf[off + toPos] >> partial);
-                if(word != 0)
+                if (word != 0)
                 {
                     buf[off + toPos] ^= word << partial;
                     ReduceWord(buf, off, toBit, word, m, ks);
@@ -1635,7 +1610,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             int offset = bit - m;
             int j = ks.Length;
-            while(--j >= 0)
+            while (--j >= 0)
             {
                 FlipWord(buf, off, offset + ks[j], word);
             }
@@ -1651,7 +1626,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
              */
             int baseBit = (words << 6) - m;
             int j = ks.Length;
-            while(--j >= 0)
+            while (--j >= 0)
             {
                 FlipVector(buf, off, buf, off + words, len - words, baseBit + ks[j]);
             }
@@ -1663,7 +1638,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             xOff += (int)((uint)bits >> 6);
             bits &= 0x3F;
 
-            if(bits == 0)
+            if (bits == 0)
             {
                 Add(x, xOff, y, yOff, yLen);
             }
@@ -1677,7 +1652,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public LongArray ModSquare(int m, int[] ks)
         {
             int len = GetUsedLength();
-            if(len == 0)
+            if (len == 0)
             {
                 return this;
             }
@@ -1686,7 +1661,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             var r = new long[_2len];
 
             int pos = 0;
-            while(pos < _2len)
+            while (pos < _2len)
             {
                 long mi = this.m_ints[(uint)pos >> 1];
                 r[pos++] = Interleave2_32to64((int)mi);
@@ -1699,7 +1674,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public LongArray ModSquareN(int n, int m, int[] ks)
         {
             int len = GetUsedLength();
-            if(len == 0)
+            if (len == 0)
             {
                 return this;
             }
@@ -1708,7 +1683,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             var r = new long[mLen << 1];
             Array.Copy(this.m_ints, 0, r, 0, len);
 
-            while(--n >= 0)
+            while (--n >= 0)
             {
                 SquareInPlace(r, len, m, ks);
                 len = ReduceInPlace(r, 0, r.Length, m, ks);
@@ -1720,7 +1695,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public LongArray Square(int m, int[] ks)
         {
             int len = GetUsedLength();
-            if(len == 0)
+            if (len == 0)
             {
                 return this;
             }
@@ -1729,7 +1704,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
             var r = new long[_2len];
 
             int pos = 0;
-            while(pos < _2len)
+            while (pos < _2len)
             {
                 long mi = this.m_ints[(uint)pos >> 1];
                 r[pos++] = Interleave2_32to64((int)mi);
@@ -1742,7 +1717,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         private static void SquareInPlace(long[] x, int xLen, int m, int[] ks)
         {
             int pos = xLen << 1;
-            while(--xLen >= 0)
+            while (--xLen >= 0)
             {
                 long xVal = x[xLen];
                 x[--pos] = Interleave2_32to64((int)((ulong)xVal >> 32));
@@ -1752,7 +1727,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Interleave(long[] x, int xOff, long[] z, int zOff, int count, int width)
         {
-            switch(width)
+            switch (width)
             {
                 case 3:
                     Interleave3(x, xOff, z, zOff, count);
@@ -1771,7 +1746,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Interleave3(long[] x, int xOff, long[] z, int zOff, int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 z[zOff + i] = Interleave3(x[xOff + i]);
             }
@@ -1811,7 +1786,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Interleave5(long[] x, int xOff, long[] z, int zOff, int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 z[zOff + i] = Interleave5(x[xOff + i]);
             }
@@ -1850,7 +1825,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Interleave7(long[] x, int xOff, long[] z, int zOff, int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 z[zOff + i] = Interleave7(x[xOff + i]);
             }
@@ -1885,7 +1860,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static void Interleave2_n(long[] x, int xOff, long[] z, int zOff, int count, int rounds)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 z[zOff + i] = Interleave2_n(x[xOff + i], rounds);
             }
@@ -1893,7 +1868,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         private static long Interleave2_n(long x, int rounds)
         {
-            while(rounds > 1)
+            while (rounds > 1)
             {
                 rounds -= 2;
                 x = Interleave4_16to64((int)x & 0xFFFF)
@@ -1901,7 +1876,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
                     | Interleave4_16to64((int)((ulong)x >> 32) & 0xFFFF) << 2
                     | Interleave4_16to64((int)((ulong)x >> 48) & 0xFFFF) << 3;
             }
-            if(rounds > 0)
+            if (rounds > 0)
             {
                 x = Interleave2_32to64((int)x) | Interleave2_32to64((int)((ulong)x >> 32)) << 1;
             }
@@ -2072,11 +2047,11 @@ namespace NBitcoin.BouncyCastle.Math.EC
              * Output: a(z)^(-1) mod f(z)
              */
             int uzDegree = Degree();
-            if(uzDegree == 0)
+            if (uzDegree == 0)
             {
                 throw new InvalidOperationException();
             }
-            if(uzDegree == 1)
+            if (uzDegree == 1)
             {
                 return this;
             }
@@ -2106,9 +2081,9 @@ namespace NBitcoin.BouncyCastle.Math.EC
             int dgg1 = ggDeg[b];
             int j = duv1 - uvDeg[1 - b];
 
-            for(;;)
+            for (; ; )
             {
-                if(j < 0)
+                if (j < 0)
                 {
                     j = -j;
                     uvDeg[b] = duv1;
@@ -2121,7 +2096,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
                 uv[b].AddShiftedByBitsSafe(uv[1 - b], uvDeg[1 - b], j);
 
                 int duv2 = uv[b].DegreeFrom(duv1);
-                if(duv2 == 0)
+                if (duv2 == 0)
                 {
                     return gg[1 - b];
                 }
@@ -2131,11 +2106,11 @@ namespace NBitcoin.BouncyCastle.Math.EC
                     gg[b].AddShiftedByBitsSafe(gg[1 - b], dgg2, j);
                     dgg2 += j;
 
-                    if(dgg2 > dgg1)
+                    if (dgg2 > dgg1)
                     {
                         dgg1 = dgg2;
                     }
-                    else if(dgg2 == dgg1)
+                    else if (dgg2 == dgg1)
                     {
                         dgg1 = gg[b].DegreeFrom(dgg1);
                     }
@@ -2153,18 +2128,18 @@ namespace NBitcoin.BouncyCastle.Math.EC
 
         public virtual bool Equals(LongArray other)
         {
-            if(this == other)
+            if (this == other)
                 return true;
-            if(null == other)
+            if (null == other)
                 return false;
             int usedLen = GetUsedLength();
-            if(other.GetUsedLength() != usedLen)
+            if (other.GetUsedLength() != usedLen)
             {
                 return false;
             }
-            for(int i = 0; i < usedLen; i++)
+            for (int i = 0; i < usedLen; i++)
             {
-                if(this.m_ints[i] != other.m_ints[i])
+                if (this.m_ints[i] != other.m_ints[i])
                 {
                     return false;
                 }
@@ -2176,7 +2151,7 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             int usedLen = GetUsedLength();
             int hash = 1;
-            for(int i = 0; i < usedLen; i++)
+            for (int i = 0; i < usedLen; i++)
             {
                 long mi = this.m_ints[i];
                 hash *= 31;
@@ -2195,19 +2170,19 @@ namespace NBitcoin.BouncyCastle.Math.EC
         public override string ToString()
         {
             int i = GetUsedLength();
-            if(i == 0)
+            if (i == 0)
             {
                 return "0";
             }
 
             var sb = new StringBuilder(Convert.ToString(this.m_ints[--i], 2));
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 string s = Convert.ToString(this.m_ints[i], 2);
 
                 // Add leading zeroes, except for highest significant word
                 int len = s.Length;
-                if(len < 64)
+                if (len < 64)
                 {
                     sb.Append(ZEROES.Substring(len));
                 }

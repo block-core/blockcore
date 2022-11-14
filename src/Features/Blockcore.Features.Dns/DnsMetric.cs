@@ -67,7 +67,7 @@ namespace Blockcore.Features.Dns
         {
             // Utmost accuracy isn't important, but useful to do this with as few instructions as possible.
             Interlocked.Increment(ref this.requestCount);
-            
+
             if (peerCount > this.maxPeerCount)
             {
                 this.maxPeerCount = peerCount;

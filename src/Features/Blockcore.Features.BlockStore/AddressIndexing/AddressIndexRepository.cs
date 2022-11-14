@@ -19,7 +19,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         public AddressIndexRepository(LiteDatabase db, ILoggerFactory loggerFactory, int maxBalanceChangesToKeep = 50_000) : base(maxBalanceChangesToKeep)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.addressIndexerDataCollection = db.GetCollection<AddressIndexerData>(DbAddressDataKey);
             this.addressIndexerDataCollection.EnsureIndex("BalanceChangedHeightIndex", "$.BalanceChanges[*].BalanceChangedHeight", false);
         }
@@ -29,14 +29,14 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// <param name="address">The address to retrieve data for.</param>
         public AddressIndexerData GetOrCreateAddress(string address)
         {
-            if (!this.TryGetValue(address, out AddressIndexerData data))
+            if (!TryGetValue(address, out AddressIndexerData data))
             {
                 this.logger.LogDebug("Not found in cache.");
                 data = this.addressIndexerDataCollection.FindById(address) ?? new AddressIndexerData() { Address = address, BalanceChanges = new List<AddressBalanceChange>() };
             }
 
             int size = 1 + data.BalanceChanges.Count / 10;
-            this.AddOrUpdate(address, data, size);
+            AddOrUpdate(address, data, size);
 
             return data;
         }
@@ -55,7 +55,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// <returns>A list of affected addresses containing balance changes above the specified block height.</returns>
         public List<string> GetAddressesHigherThanHeight(int height)
         {
-            this.SaveAllItems();
+            SaveAllItems();
 
             // Need to specify index name explicitly so that it gets used for the query.
             IEnumerable<AddressIndexerData> affectedAddresses = this.addressIndexerDataCollection.Find(Query.GT("BalanceChangedHeightIndex", height));

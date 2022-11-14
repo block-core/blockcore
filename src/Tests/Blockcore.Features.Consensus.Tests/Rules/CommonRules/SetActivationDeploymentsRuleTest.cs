@@ -15,14 +15,14 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         public SetActivationDeploymentsRuleTest()
         {
             this.ChainIndexer = GenerateChainWithHeight(5, this.network);
-            this.consensusRules = this.InitializeConsensusRules();
+            this.consensusRules = InitializeConsensusRules();
         }
 
         [Fact]
         public async Task RunAsync_ValidBlock_SetsConsensusFlagsAsync()
         {
             this.nodeDeployments = new NodeDeployments(this.network, this.ChainIndexer);
-            this.consensusRules = this.InitializeConsensusRules();
+            this.consensusRules = InitializeConsensusRules();
 
             Block block = this.network.CreateBlock();
             block.AddTransaction(this.network.CreateTransaction());

@@ -286,7 +286,7 @@ namespace Blockcore.Controllers.Models
         public ScriptPubKey(Consensus.ScriptInfo.Script script, Network network) : base(script)
         {
             var destinations = new List<TxDestination> { script.GetDestination(network) };
-            this.Type = this.GetScriptType(script.FindTemplate(network));
+            this.Type = GetScriptType(script.FindTemplate(network));
 
             if (destinations[0] == null)
             {

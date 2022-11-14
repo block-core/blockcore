@@ -19,9 +19,9 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LiteDB;
-using FileMode = LiteDB.FileMode;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using FileMode = LiteDB.FileMode;
 using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
@@ -152,7 +152,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             this.lastFlushTime = this.dateTimeProvider.GetUtcNow();
             this.cancellation = new CancellationTokenSource();
             this.chainIndexer = chainIndexer;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.averageTimePerBlock = new AverageCalculator(200);
             int maxReorgLength = GetMaxReorgOrFallbackMaxReorg(this.network);
@@ -210,15 +210,15 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
             this.outpointsRepository = new AddressIndexerOutpointsRepository(this.db, this.loggerFactory);
 
-            this.RewindAndSave(this.IndexerTip);
+            RewindAndSave(this.IndexerTip);
 
             this.logger.LogDebug("Indexer initialized at '{0}'.", this.IndexerTip);
 
-            this.indexingTask = Task.Run(async () => await this.IndexAddressesContinuouslyAsync().ConfigureAwait(false));
+            this.indexingTask = Task.Run(async () => await IndexAddressesContinuouslyAsync().ConfigureAwait(false));
 
             this.asyncProvider.RegisterTask($"{nameof(AddressIndexer)}.{nameof(this.indexingTask)}", this.indexingTask);
 
-            this.nodeStats.RegisterStats(this.AddInlineStats, StatsType.Inline, this.GetType().Name, 400);
+            this.nodeStats.RegisterStats(AddInlineStats, StatsType.Inline, GetType().Name, 400);
         }
 
         private async Task IndexAddressesContinuouslyAsync()
@@ -231,7 +231,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 {
                     this.logger.LogDebug("Flushing changes.");
 
-                    this.SaveAll();
+                    SaveAll();
 
                     this.lastFlushTime = this.dateTimeProvider.GetUtcNow();
 
@@ -264,7 +264,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                     this.logger.LogDebug("Reorganization detected. Rewinding till '{0}'.", lastCommonHeader);
 
-                    this.RewindAndSave(lastCommonHeader);
+                    RewindAndSave(lastCommonHeader);
 
                     continue;
                 }
@@ -302,7 +302,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                 watch.Restart();
 
-                bool success = this.ProcessBlock(blockToProcess, nextHeader);
+                bool success = ProcessBlock(blockToProcess, nextHeader);
 
                 watch.Stop();
                 this.averageTimePerBlock.AddSample(watch.Elapsed.TotalMilliseconds);
@@ -325,7 +325,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 this.IndexerTip = nextHeader;
             }
 
-            this.SaveAll();
+            SaveAll();
         }
 
         private void RewindAndSave(ChainedHeader rewindToHeader)
@@ -351,7 +351,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                 this.IndexerTip = rewindToHeader;
 
-                this.SaveAll();
+                SaveAll();
             }
         }
 
@@ -367,7 +367,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 AddressIndexerTipData tipData = this.tipDataStore.FindAll().FirstOrDefault();
 
                 if (tipData == null)
-                { 
+                {
                     tipData = new AddressIndexerTipData();
                 }
 
@@ -460,13 +460,13 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                     }
 
                     if (address.Address != string.Empty)
-                        this.ProcessBalanceChangeLocked(header.Height, address.Address, amountSpent, false);
+                        ProcessBalanceChangeLocked(header.Height, address.Address, amountSpent, false);
 
                     if (address.HotAddress != string.Empty)
-                        this.ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountSpent, false);
+                        ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountSpent, false);
 
                     if (address.ColdAddress != string.Empty)
-                        this.ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountSpent, false);
+                        ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountSpent, false);
                 }
 
                 // Process outputs.
@@ -490,13 +490,13 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                         }
 
                         if (address.Address != string.Empty)
-                            this.ProcessBalanceChangeLocked(header.Height, address.Address, amountReceived, true);
+                            ProcessBalanceChangeLocked(header.Height, address.Address, amountReceived, true);
 
                         if (address.HotAddress != string.Empty)
-                            this.ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountReceived, true);
+                            ProcessBalanceChangeLocked(header.Height, address.HotAddress, amountReceived, true);
 
                         if (address.ColdAddress != string.Empty)
-                            this.ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountReceived, true);
+                            ProcessBalanceChangeLocked(header.Height, address.ColdAddress, amountReceived, true);
                     }
                 }
 
@@ -512,7 +512,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                 // Remove outpoints that were consumed.
                 foreach (OutPoint consumedOutPoint in inputs.Select(x => x.PrevOut))
-                { 
+                {
                     this.outpointsRepository.RemoveOutPointData(consumedOutPoint);
                 }
             }
@@ -593,7 +593,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         /// <remarks>This is currently not in use but will be required for exchange integration.</remarks>
         public AddressBalancesResult GetAddressBalances(string[] addresses, int minConfirmations = 1)
         {
-            var (isQueryable, reason) = this.IsQueryable();
+            var (isQueryable, reason) = IsQueryable();
 
             if (!isQueryable)
                 return AddressBalancesResult.RequestFailed(reason);
@@ -626,7 +626,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             if (addresses.Length == 0)
                 return result;
 
-            (bool isQueryable, string reason) = this.IsQueryable();
+            (bool isQueryable, string reason) = IsQueryable();
 
             if (!isQueryable)
                 return VerboseAddressBalancesResult.RequestFailed(reason);
@@ -658,7 +658,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 return (false, "Address indexer is not initialized.");
             }
 
-            if (!this.IsSynced())
+            if (!IsSynced())
             {
                 this.logger.LogTrace("(-)[NOT_SYNCED]");
                 return (false, "Address indexer is not synced.");

@@ -16,7 +16,7 @@ namespace Blockcore.Tests.Base
     public class ChainStateTest
     {
         /// <summary>Source of randomness.</summary>
-        private static Random rng = new Random();
+        private static readonly Random rng = new Random();
 
         /// <summary>
         /// Tests <see cref="ChainState.MarkBlockInvalid(uint256, DateTime?)"/> and <see cref="ChainState.IsMarkedInvalid(uint256)"/>

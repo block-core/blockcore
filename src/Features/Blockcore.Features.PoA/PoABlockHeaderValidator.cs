@@ -12,7 +12,7 @@ namespace Blockcore.Features.PoA
 
         public PoABlockHeaderValidator(ILoggerFactory factory)
         {
-            this.logger = factory.CreateLogger(this.GetType().FullName);
+            this.logger = factory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>Signs PoA header with the specified key.</summary>

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using Blockcore.Connection;
-using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Extensions;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +27,7 @@ namespace Blockcore.Controllers
             ILoggerFactory loggerFactory, IPeerBanning peerBanning) : base(connectionManager: connectionManager)
         {
             Guard.NotNull(this.ConnectionManager, nameof(this.ConnectionManager));
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.peerBanning = peerBanning;
         }
 
@@ -52,7 +48,7 @@ namespace Blockcore.Controllers
                 Guard.NotEmpty(endpoint, nameof(endpoint));
                 Guard.NotEmpty(command, nameof(command));
 
-                return this.Json(ConnectionManagerHelper.AddNode(this.ConnectionManager, this.peerBanning, endpoint, command));
+                return Json(ConnectionManagerHelper.AddNode(this.ConnectionManager, this.peerBanning, endpoint, command));
             }
             catch (Exception e)
             {
@@ -74,7 +70,7 @@ namespace Blockcore.Controllers
         {
             try
             {
-                return this.Json(ConnectionManagerHelper.GetPeerInfo(this.ConnectionManager));
+                return Json(ConnectionManagerHelper.GetPeerInfo(this.ConnectionManager));
             }
             catch (Exception e)
             {

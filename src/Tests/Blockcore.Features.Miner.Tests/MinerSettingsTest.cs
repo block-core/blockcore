@@ -54,7 +54,7 @@ namespace Blockcore.Features.Miner.Tests
             Assert.Null(minersettings.MineAddress);
         }
 
-        [Fact]	
+        [Fact]
         public void Load_StakingDisabled_DoesNotLoadWalletDetails()
         {
             var nodeSettings = new NodeSettings(this.Network, args: new string[] {
@@ -119,7 +119,7 @@ namespace Blockcore.Features.Miner.Tests
             });
 
             var minersettings = new MinerSettings(nodeSettings);
-            
+
             // Values assigned maximum
             Assert.Equal(nodeSettings.Network.Consensus.Options.MaxBlockSerializedSize, minersettings.BlockDefinitionOptions.BlockMaxSize);
             Assert.Equal(nodeSettings.Network.Consensus.Options.MaxBlockWeight, minersettings.BlockDefinitionOptions.BlockMaxWeight);
@@ -183,4 +183,4 @@ namespace Blockcore.Features.Miner.Tests
             new Action(() => new MinerSettings(nodeSettings)).Should().Throw<Exception>();
         }
     }
-} 
+}

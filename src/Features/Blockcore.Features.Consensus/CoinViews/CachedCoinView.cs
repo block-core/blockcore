@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Blockcore.Base;
 using Blockcore.Configuration.Settings;
-using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
@@ -14,7 +11,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.CoinViews
 {
@@ -131,7 +127,7 @@ namespace Blockcore.Features.Consensus.CoinViews
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ConsensusSettings consensusSettings;
         private CachePerformanceSnapshot latestPerformanceSnapShot;
-        private int lastCheckpointHeight;
+        private readonly int lastCheckpointHeight;
 
         private readonly Random random;
 
@@ -149,7 +145,7 @@ namespace Blockcore.Features.Consensus.CoinViews
             Guard.NotNull(coindb, nameof(CachedCoinView.coindb));
 
             this.coindb = coindb;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.network = network;
             this.checkpoints = checkpoints;
             this.dateTimeProvider = dateTimeProvider;
@@ -168,7 +164,7 @@ namespace Blockcore.Features.Consensus.CoinViews
             this.MaxCacheSizeBytes = consensusSettings.MaxCoindbCacheInMB * 1024 * 1024;
             this.CacheFlushTimeIntervalSeconds = consensusSettings.CoindbIbdFlushMin * 60;
 
-            nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 300);
+            nodeStats.RegisterStats(AddBenchStats, StatsType.Benchmark, GetType().Name, 300);
         }
 
         public HashHeightPair GetTipHash()
@@ -275,7 +271,7 @@ namespace Blockcore.Features.Consensus.CoinViews
                 // Check if we need to evict items form the cache.
                 // This happens every time data is fetched fomr coindb
 
-                this.TryEvictCacheLocked();
+                TryEvictCacheLocked();
             }
 
             return result;
@@ -352,7 +348,7 @@ namespace Blockcore.Features.Consensus.CoinViews
         {
             if (!force)
             {
-                if (!this.ShouldFlush())
+                if (!ShouldFlush())
                     return;
             }
 
@@ -597,7 +593,7 @@ namespace Blockcore.Features.Consensus.CoinViews
                 // to get the rewind information, blockstore persists much more frequent then coin cache
                 // So using block store for rewinds is not entirely impossible.
 
-                int rewindDataWindow = this.CalculateRewindWindow();
+                int rewindDataWindow = CalculateRewindWindow();
 
                 int rewindToRemove = this.blockHash.Height - (int)rewindDataWindow;
 
@@ -645,7 +641,7 @@ namespace Blockcore.Features.Consensus.CoinViews
             }
 
             // Flush the entire cache before rewinding
-            this.Flush(true);
+            Flush(true);
 
             lock (this.lockobj)
             {

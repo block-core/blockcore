@@ -7,7 +7,6 @@ using Blockcore.Connection;
 using Blockcore.Controllers.Models;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.P2P;
 using Blockcore.Tests.Common;

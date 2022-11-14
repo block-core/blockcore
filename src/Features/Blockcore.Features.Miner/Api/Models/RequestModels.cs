@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Blockcore.Consensus.ScriptInfo;
-using Blockcore.Utilities.JsonConverters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

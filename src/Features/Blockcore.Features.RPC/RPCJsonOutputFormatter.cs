@@ -80,7 +80,7 @@ namespace Blockcore.Features.RPC
                 ["result"] = jsonResult,
                 ["error"] = null
             };
-            
+
             using (TextWriter textWriter = context.WriterFactory(context.HttpContext.Response.Body, selectedEncoding))
             using (JsonTextWriter jsonWriter = new JsonTextWriter(textWriter))
             {

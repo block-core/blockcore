@@ -151,8 +151,8 @@ namespace Blockcore.Networks.XRC
             this.SeedNodes = new List<NetworkAddress>();
             this.StandardScriptsRegistry = new XRCStandardScriptsRegistry();
 
-            this.RegisterRules(this.Consensus);
-            this.RegisterMempoolRules(this.Consensus);
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
         }
     }
 }

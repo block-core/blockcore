@@ -2,7 +2,6 @@
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool
 {
@@ -29,7 +28,7 @@ namespace Blockcore.Features.MemoryPool
             this.settings = settings;
             this.chainIndexer = chainIndexer;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />

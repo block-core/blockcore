@@ -54,7 +54,7 @@ namespace Blockcore.Features.RPC.Controllers
             Guard.NotNull(rpcClientFactory, nameof(rpcClientFactory));
 
             this.fullNode = fullNode;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.rpcSettings = rpcSettings;
             this.rpcClientFactory = rpcClientFactory;
             this.rpcFeature = rpcFeature;
@@ -100,7 +100,7 @@ namespace Blockcore.Features.RPC.Controllers
         /// <returns>A JSON result that varies depending on the RPC method.</returns>
         [Route("callbyname")]
         [HttpPost]
-        public IActionResult CallByName([FromBody]JObject body)
+        public IActionResult CallByName([FromBody] JObject body)
         {
             Guard.NotNull(body, nameof(body));
 
@@ -115,8 +115,8 @@ namespace Blockcore.Features.RPC.Controllers
                 string methodName = (string)body.GetValue("methodName", ignoreCase);
 
                 ControllerActionDescriptor actionDescriptor = null;
-                if (!this.GetActionDescriptors()?.TryGetValue(methodName, out actionDescriptor) ?? false)
-                    throw new Exception($"RPC method '{ methodName }' not found.");
+                if (!GetActionDescriptors()?.TryGetValue(methodName, out actionDescriptor) ?? false)
+                    throw new Exception($"RPC method '{methodName}' not found.");
 
                 // Prepare the named parameters that were passed via the query string in the order that they are expected by SendCommand.
                 List<ControllerParameterDescriptor> paramInfos = actionDescriptor.Parameters.OfType<ControllerParameterDescriptor>().ToList();
@@ -139,14 +139,14 @@ namespace Blockcore.Features.RPC.Controllers
                 RPCRequest request = new RPCRequest(methodName, paramsAsObjects);
 
                 // Build RPC request object.
-                RPCResponse response = this.SendRPCRequest(request);
+                RPCResponse response = SendRPCRequest(request);
 
                 // Throw error if any.
                 if (response?.Error?.Message != null)
                     throw new Exception(response.Error.Message);
 
                 // Return a Json result from the API call.
-                return this.Json(response?.Result);
+                return Json(response?.Result);
             }
             catch (Exception e)
             {
@@ -171,7 +171,7 @@ namespace Blockcore.Features.RPC.Controllers
                 }
 
                 var listMethods = new List<Models.RpcCommandModel>();
-                foreach (ControllerActionDescriptor descriptor in this.GetActionDescriptors().Values.Where(desc => desc.ActionName == desc.ActionName.ToLower()))
+                foreach (ControllerActionDescriptor descriptor in GetActionDescriptors().Values.Where(desc => desc.ActionName == desc.ActionName.ToLower()))
                 {
                     CustomAttributeData attr = descriptor.MethodInfo.CustomAttributes.Where(x => x.AttributeType == typeof(ActionDescriptionAttribute)).FirstOrDefault();
                     string description = attr?.ConstructorArguments.FirstOrDefault().Value as string ?? "";
@@ -195,7 +195,7 @@ namespace Blockcore.Features.RPC.Controllers
                     listMethods.Add(new Models.RpcCommandModel { Command = method.Trim(), Description = description });
                 }
 
-                return this.Json(listMethods);
+                return Json(listMethods);
             }
             catch (Exception e)
             {

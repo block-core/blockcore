@@ -7,7 +7,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Base
 {
@@ -40,7 +39,7 @@ namespace Blockcore.Base
         void CommitTipPersisted(ITipProvider provider, ChainedHeader tip);
     }
 
-    public class TipsManager : ITipsManager
+    public class TipsManager : ITipsManager, IDisposable
     {
         private readonly IKeyValueRepository keyValueRepo;
 
@@ -65,6 +64,8 @@ namespace Blockcore.Base
         /// <summary>Instance logger.</summary>
         private readonly ILogger logger;
 
+
+
         public TipsManager(IKeyValueRepository keyValueRepo, ILoggerFactory loggerFactory)
         {
             this.keyValueRepo = keyValueRepo;
@@ -80,7 +81,7 @@ namespace Blockcore.Base
         public void Initialize(ChainedHeader highestHeader)
         {
             if (this.commonTipPersistingTask != null)
-                throw new Exception("Already initialized.");
+                throw new InvalidOperationException("Already initialized.");
 
             var commonTipHashHeight = this.keyValueRepo.LoadValue<HashHeightPair>(CommonTipKey);
 
@@ -204,9 +205,17 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public void Dispose()
         {
-            this.cancellation.Cancel();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            this.commonTipPersistingTask?.GetAwaiter().GetResult();
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.cancellation.Cancel();
+                this.commonTipPersistingTask?.GetAwaiter().GetResult();
+            }
         }
     }
 }

@@ -10,14 +10,14 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         {
             foreach (KeyValuePair<string, string> kv in configParameters)
             {
-                if (!this.ContainsKey(kv.Key))
-                    this.Add(kv.Key, kv.Value);
+                if (!ContainsKey(kv.Key))
+                    Add(kv.Key, kv.Value);
             }
         }
 
         public void SetDefaultValueIfUndefined(string key, string value)
         {
-            if(!this.ContainsKey(key)) this.Add(key, value);
+            if (!ContainsKey(key)) Add(key, value);
         }
 
         public override string ToString()

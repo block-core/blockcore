@@ -65,7 +65,7 @@ namespace Blockcore.Features.PoA.Voting
             this.votingDataEncoder = new VotingDataEncoder(loggerFactory);
             this.scheduledVotingData = new List<VotingData>();
             this.pollsRepository = new PollsRepository(dataFolder, loggerFactory, dataStoreSerializer);
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.isInitialized = false;
         }
@@ -76,10 +76,10 @@ namespace Blockcore.Features.PoA.Voting
 
             this.polls = this.pollsRepository.GetAllPolls();
 
-            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(this.OnBlockConnected);
-            this.blockDisconnectedSubscription = this.signals.Subscribe<BlockDisconnected>(this.OnBlockDisconnected);
+            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(OnBlockConnected);
+            this.blockDisconnectedSubscription = this.signals.Subscribe<BlockDisconnected>(OnBlockDisconnected);
 
-            this.nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name, 1200);
+            this.nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name, 1200);
 
             this.isInitialized = true;
             this.logger.LogDebug("VotingManager initialized.");
@@ -89,7 +89,7 @@ namespace Blockcore.Features.PoA.Voting
         /// <exception cref="InvalidOperationException">Thrown in case caller is not a federation member.</exception>
         public void ScheduleVote(VotingData votingData)
         {
-            this.EnsureInitialized();
+            EnsureInitialized();
 
             if (!this.federationManager.IsFederationMember)
             {
@@ -101,7 +101,7 @@ namespace Blockcore.Features.PoA.Voting
             {
                 this.scheduledVotingData.Add(votingData);
 
-                this.CleanFinishedPollsLocked();
+                CleanFinishedPollsLocked();
             }
 
             this.logger.LogDebug("Vote was scheduled with key: {0}.", votingData.Key);
@@ -110,11 +110,11 @@ namespace Blockcore.Features.PoA.Voting
         /// <summary>Provides a copy of scheduled voting data.</summary>
         public List<VotingData> GetScheduledVotes()
         {
-            this.EnsureInitialized();
+            EnsureInitialized();
 
             lock (this.locker)
             {
-                this.CleanFinishedPollsLocked();
+                CleanFinishedPollsLocked();
 
                 return new List<VotingData>(this.scheduledVotingData);
             }
@@ -124,11 +124,11 @@ namespace Blockcore.Features.PoA.Voting
         /// <remarks>Used by miner.</remarks>
         public List<VotingData> GetAndCleanScheduledVotes()
         {
-            this.EnsureInitialized();
+            EnsureInitialized();
 
             lock (this.locker)
             {
-                this.CleanFinishedPollsLocked();
+                CleanFinishedPollsLocked();
 
                 List<VotingData> votingData = this.scheduledVotingData;
 
@@ -165,7 +165,7 @@ namespace Blockcore.Features.PoA.Voting
         /// <summary>Provides a collection of polls that are currently active.</summary>
         public List<Poll> GetPendingPolls()
         {
-            this.EnsureInitialized();
+            EnsureInitialized();
 
             lock (this.locker)
             {
@@ -176,7 +176,7 @@ namespace Blockcore.Features.PoA.Voting
         /// <summary>Provides a collection of polls that are already finished and their results applied.</summary>
         public List<Poll> GetFinishedPolls()
         {
-            this.EnsureInitialized();
+            EnsureInitialized();
 
             lock (this.locker)
             {

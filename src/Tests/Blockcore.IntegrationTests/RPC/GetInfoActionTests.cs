@@ -14,7 +14,7 @@ namespace Blockcore.IntegrationTests.RPC
         public void CallWithDependencies()
         {
             string dir = CreateTestDir(this);
-            IFullNode fullNode = this.BuildServicedNode(dir);
+            IFullNode fullNode = BuildServicedNode(dir);
             var controller = fullNode.NodeController<FullNodeController>();
 
             Assert.NotNull(fullNode.NodeService<INetworkDifficulty>(true));

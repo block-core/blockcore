@@ -17,7 +17,6 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Consensus.Validators;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Interfaces;
 using Blockcore.Tests.Common;
@@ -145,7 +144,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         {
             var unspentOutputs = new Dictionary<OutPoint, UnspentOutput>();
 
-            ConsensusManager consensusManager = await this.CreateConsensusManagerAsync(unspentOutputs);
+            ConsensusManager consensusManager = await CreateConsensusManagerAsync(unspentOutputs);
 
             // The keys used by miner 1 and miner 2.
             var minerKey1 = new Key();

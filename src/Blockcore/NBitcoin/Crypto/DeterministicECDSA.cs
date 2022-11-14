@@ -6,7 +6,7 @@ using NBitcoin.BouncyCastle.Crypto.Parameters;
 using NBitcoin.BouncyCastle.Crypto.Signers;
 
 namespace NBitcoin.Crypto
-{    
+{
     internal class DeterministicECDSA : ECDsaSigner
     {
         private byte[] _buffer = new byte[0];

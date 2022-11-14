@@ -11,7 +11,6 @@ using Blockcore.Connection;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
@@ -50,21 +49,21 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsABlockWithBadPrevHashAndPeerDisconnected_ThePeerGetsBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerDisconnected_ThePeerGetsBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerDisconnected_ThePeerGetsBanned_Async(
                 Mine2BlocksAndCreateABlockWithBadPrevHashAsync);
         }
 
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsAMutatedBlockAndPeerDisconnected_ThePeerGetsBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerDisconnected_ThePeerGetsBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerDisconnected_ThePeerGetsBanned_Async(
                 MineAMutatedBlockAsync);
         }
 
         private async Task NodeIsSynced_PeerSendsABadBlockAndPeerDisconnected_ThePeerGetsBanned_Async(
             Func<TestChainContext, Task<Block>> createBadBlock)
         {
-            (TestChainContext context, IPEndPoint peerEndPoint) = await this.InitialiseContextAndPeerEndpointAsync();
+            (TestChainContext context, IPEndPoint peerEndPoint) = await InitialiseContextAndPeerEndpointAsync();
             context.MockReadOnlyNodesCollection.Setup(s => s.FindByEndpoint(It.IsAny<IPEndPoint>()))
                 .Returns((INetworkPeer)null);
 
@@ -77,7 +76,7 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsAMutatedBlockAndPeerDisconnected_AndAddressIsNull_ThePeerGetsBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerDisconnectedAndAddressIsNull_ThePeerGetsBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerDisconnectedAndAddressIsNull_ThePeerGetsBanned_Async(
                 MineAMutatedBlockAsync);
         }
 
@@ -87,7 +86,7 @@ namespace Blockcore.Features.Consensus.Tests
             var mockPeerAddressManager = new Mock<IPeerAddressManager>();
             mockPeerAddressManager.Setup(x => x.FindPeer(It.IsAny<IPEndPoint>())).Returns((PeerAddress)null);
 
-            (TestChainContext context, IPEndPoint peerEndPoint) = await this.InitialiseContextAndPeerEndpointAsync(mockPeerAddressManager);
+            (TestChainContext context, IPEndPoint peerEndPoint) = await InitialiseContextAndPeerEndpointAsync(mockPeerAddressManager);
             context.MockReadOnlyNodesCollection.Setup(s => s.FindByEndpoint(It.IsAny<IPEndPoint>()))
                 .Returns((INetworkPeer)null);
 
@@ -100,21 +99,21 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsABlockWithBadPrevHashAndPeerIsConnected_ThePeerGetsBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerIsConnected_ThePeerGetsBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerIsConnected_ThePeerGetsBanned_Async(
                 Mine2BlocksAndCreateABlockWithBadPrevHashAsync);
         }
 
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsAMutatedBlockAndPeerIsConnected_ThePeerGetsBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerIsConnected_ThePeerGetsBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerIsConnected_ThePeerGetsBanned_Async(
                 MineAMutatedBlockAsync);
         }
 
         private async Task NodeIsSynced_PeerSendsABadBlockAndPeerIsConnected_ThePeerGetsBanned_Async(
             Func<TestChainContext, Task<Block>> createBadBlock)
         {
-            (TestChainContext context, IPEndPoint peerEndPoint) = await this.InitialiseContextAndPeerEndpointAsync();
+            (TestChainContext context, IPEndPoint peerEndPoint) = await InitialiseContextAndPeerEndpointAsync();
 
             MockPeerConnection(context, false);
 
@@ -137,21 +136,21 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsABlockWithBadPrevHashAndPeerIsWhitelisted_ThePeerIsNotBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerIsWhitelisted_ThePeerIsNotBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerIsWhitelisted_ThePeerIsNotBanned_Async(
                 Mine2BlocksAndCreateABlockWithBadPrevHashAsync);
         }
 
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsAMutatedBlockAndPeerIsWhitelisted_ThePeerIsNotBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerIsWhitelisted_ThePeerIsNotBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerIsWhitelisted_ThePeerIsNotBanned_Async(
                 MineAMutatedBlockAsync);
         }
 
         private async Task NodeIsSynced_PeerSendsABadBlockAndPeerIsWhitelisted_ThePeerIsNotBanned_Async(
             Func<TestChainContext, Task<Block>> createBadBlock)
         {
-            (TestChainContext context, IPEndPoint peerEndPoint) = await this.InitialiseContextAndPeerEndpointAsync();
+            (TestChainContext context, IPEndPoint peerEndPoint) = await InitialiseContextAndPeerEndpointAsync();
 
             MockPeerConnection(context, true);
             Block badBlock = await createBadBlock(context);
@@ -163,20 +162,20 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsABlockWithBadPrevHashAndErrorIsNotBanError_ThePeerIsNotBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndErrorIsNotBanError_ThePeerIsNotBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndErrorIsNotBanError_ThePeerIsNotBanned_Async(
                 Mine2BlocksAndCreateABlockWithBadPrevHashAsync);
         }
 
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsAMutatedBlockAndErrorIsNotBanError_ThePeerIsNotBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndErrorIsNotBanError_ThePeerIsNotBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndErrorIsNotBanError_ThePeerIsNotBanned_Async(
                 MineAMutatedBlockAsync);
         }
 
         private async Task NodeIsSynced_PeerSendsABadBlockAndErrorIsNotBanError_ThePeerIsNotBanned_Async(Func<TestChainContext, Task<Block>> createBadBlock)
         {
-            (TestChainContext context, IPEndPoint peerEndPoint) = await this.InitialiseContextAndPeerEndpointAsync();
+            (TestChainContext context, IPEndPoint peerEndPoint) = await InitialiseContextAndPeerEndpointAsync();
 
             MockPeerConnection(context, false);
             Block badBlock = await createBadBlock(context);
@@ -195,20 +194,20 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsABlockWithBadPrevHashAndPeerIsBannedAndBanIsExpired_ThePeerIsNotBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerIsBannedAndBanIsExpired_ThePeerIsNotBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerIsBannedAndBanIsExpired_ThePeerIsNotBanned_Async(
                 Mine2BlocksAndCreateABlockWithBadPrevHashAsync);
         }
 
         [Fact(Skip = "Revisit with ConsensusManager tests")]
         public async Task NodeIsSynced_PeerSendsAMutatedBlockAndPeerIsBannedAndBanIsExpired_ThePeerIsNotBanned_Async()
         {
-            await this.NodeIsSynced_PeerSendsABadBlockAndPeerIsBannedAndBanIsExpired_ThePeerIsNotBanned_Async(
+            await NodeIsSynced_PeerSendsABadBlockAndPeerIsBannedAndBanIsExpired_ThePeerIsNotBanned_Async(
                 MineAMutatedBlockAsync);
         }
 
         private async Task NodeIsSynced_PeerSendsABadBlockAndPeerIsBannedAndBanIsExpired_ThePeerIsNotBanned_Async(Func<TestChainContext, Task<Block>> createBadBlock)
         {
-            (TestChainContext context, IPEndPoint peerEndPoint) = await this.InitialiseContextAndPeerEndpointAsync();
+            (TestChainContext context, IPEndPoint peerEndPoint) = await InitialiseContextAndPeerEndpointAsync();
 
             MockPeerConnection(context, false);
             Block badBlock = await createBadBlock(context);

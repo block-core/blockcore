@@ -47,7 +47,7 @@ namespace Blockcore.Features.PoA
 
                 ms.Seek(0, SeekOrigin.Begin);
 
-                using (FileStream fileStream = File.Create(this.GetPrivateKeySavePath()))
+                using (FileStream fileStream = File.Create(GetPrivateKeySavePath()))
                 {
                     ms.CopyTo(fileStream);
                 }
@@ -57,7 +57,7 @@ namespace Blockcore.Features.PoA
         /// <summary>Loads the private key from default path.</summary>
         public Key LoadPrivateKey()
         {
-            string path = this.GetPrivateKeySavePath();
+            string path = GetPrivateKeySavePath();
 
             if (!File.Exists(path))
                 return null;

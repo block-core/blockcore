@@ -23,7 +23,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public void RunAsync_HeaderVersionBelowMinimalHeaderVersion_ThrowsBadVersionConsensusError()
         {
-            var rule = this.CreateRule<StratisHeaderVersionRule>();
+            var rule = CreateRule<StratisHeaderVersionRule>();
 
             int MinimalHeaderVersion = 7;
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = this.ChainIndexer.GetHeader(1);
@@ -37,9 +37,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public async Task RunAsync_ProofOfWorkTooHigh_ThrowsProofOfWorkTooHighConsensusErrorAsync()
         {
-            var rule = this.CreateRule<PosTimeMaskRule>();
+            var rule = CreateRule<PosTimeMaskRule>();
 
-            this.SetBlockStake();
+            SetBlockStake();
             this.network.Consensus.LastPOWBlock = 2;
             this.ruleContext.ValidationContext = new ValidationContext();
             this.ruleContext.ValidationContext.BlockToValidate = this.network.Consensus.ConsensusFactory.CreateBlock();
@@ -56,9 +56,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public async Task RunAsync_StakeTimestampInvalid_BlockTimeNotTransactionTime_ThrowsStakeTimeViolationConsensusErrorAsync()
         {
-            var rule = this.CreateRule<PosTimeMaskRule>();
+            var rule = CreateRule<PosTimeMaskRule>();
 
-            this.SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
+            SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
             this.ruleContext.ValidationContext = new ValidationContext();
             this.ruleContext.ValidationContext.BlockToValidate = this.network.Consensus.ConsensusFactory.CreateBlock();
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(this.network.CreateTransaction());
@@ -86,9 +86,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public async Task RunAsync_StakeTimestampInvalid_TransactionTimeDoesNotIncludeStakeTimestampMask_ThrowsStakeTimeViolationConsensusErrorAsync()
         {
-            var rule = this.CreateRule<PosTimeMaskRule>();
+            var rule = CreateRule<PosTimeMaskRule>();
 
-            this.SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
+            SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
             this.ruleContext.ValidationContext = new ValidationContext();
             this.ruleContext.ValidationContext.BlockToValidate = this.network.Consensus.ConsensusFactory.CreateBlock();
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(this.network.CreateTransaction());
@@ -115,9 +115,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public void RunAsync_BlockTimestampSameAsPrevious_ThrowsBlockTimestampTooEarlyConsensusError()
         {
-            var rule = this.CreateRule<HeaderTimeChecksPosRule>();
+            var rule = CreateRule<HeaderTimeChecksPosRule>();
 
-            this.SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
+            SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
             this.ruleContext.ValidationContext = new ValidationContext();
             this.ruleContext.ValidationContext.BlockToValidate = this.network.Consensus.ConsensusFactory.CreateBlock();
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(this.network.CreateTransaction());
@@ -140,9 +140,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public async Task RunAsync_ValidRuleContext_DoesNotThrowExceptionAsync()
         {
-            var rule = this.CreateRule<PosTimeMaskRule>();
+            var rule = CreateRule<PosTimeMaskRule>();
 
-            this.SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
+            SetBlockStake(BlockFlag.BLOCK_PROOF_OF_STAKE);
             this.ruleContext.ValidationContext = new ValidationContext();
             this.ruleContext.ValidationContext.BlockToValidate = this.network.Consensus.ConsensusFactory.CreateBlock();
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(this.network.CreateTransaction());

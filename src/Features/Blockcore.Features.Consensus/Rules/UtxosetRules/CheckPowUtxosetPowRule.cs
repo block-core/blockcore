@@ -27,7 +27,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <inheritdoc/>
         public override void CheckBlockReward(RuleContext context, Money fees, int height, Block block)
         {
-            Money blockReward = fees + this.GetProofOfWorkReward(height);
+            Money blockReward = fees + GetProofOfWorkReward(height);
             if (block.Transactions[0].TotalOut > blockReward)
             {
                 this.Logger.LogTrace("(-)[BAD_COINBASE_AMOUNT]");
@@ -38,7 +38,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <inheritdoc/>
         public override Money GetProofOfWorkReward(int height)
         {
-            if (this.IsPremine(height))
+            if (IsPremine(height))
                 return this.consensus.PremineReward;
 
             if (this.consensus.ProofOfWorkReward == 0)

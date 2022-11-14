@@ -60,7 +60,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
 
             BigInteger mInt = BitsToInt(message);
 
-            if(mInt.CompareTo(n) >= 0)
+            if (mInt.CompareTo(n) >= 0)
             {
                 mInt = mInt.Subtract(n);
             }
@@ -106,7 +106,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
             {
                 int tOff = 0;
 
-                while(tOff < t.Length)
+                while (tOff < t.Length)
                 {
                     this.hMac.BlockUpdate(this.V, 0, this.V.Length);
 
@@ -119,7 +119,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
 
                 BigInteger k = BitsToInt(t);
 
-                if(k.SignValue > 0 && k.CompareTo(this.n) < 0)
+                if (k.SignValue > 0 && k.CompareTo(this.n) < 0)
                 {
                     return k;
                 }
@@ -141,7 +141,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
         {
             var v = new BigInteger(1, t);
 
-            if(t.Length * 8 > this.n.BitLength)
+            if (t.Length * 8 > this.n.BitLength)
             {
                 v = v.ShiftRight(t.Length * 8 - this.n.BitLength);
             }

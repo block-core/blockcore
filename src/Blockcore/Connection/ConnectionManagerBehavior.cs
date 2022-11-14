@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
-using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -55,12 +54,9 @@ namespace Blockcore.Connection
             this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
 
             INetworkPeer peer = this.AttachedPeer;
-            if (peer != null)
+            if (peer != null && this.connectionManager.ConnectionSettings.Whitelist.Exists(e => e.MatchIpOnly(peer.PeerEndPoint)))
             {
-                if (this.connectionManager.ConnectionSettings.Whitelist.Exists(e => e.MatchIpOnly(peer.PeerEndPoint)))
-                {
-                    this.Whitelisted = true;
-                }
+                this.Whitelisted = true;
             }
         }
 

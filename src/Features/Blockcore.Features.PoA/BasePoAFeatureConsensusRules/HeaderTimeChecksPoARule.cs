@@ -2,7 +2,6 @@
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {

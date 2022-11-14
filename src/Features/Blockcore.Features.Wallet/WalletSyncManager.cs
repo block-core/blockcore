@@ -73,8 +73,8 @@ namespace Blockcore.Features.Wallet
             this.storeSettings = storeSettings;
             this.signals = signals;
             this.asyncProvider = asyncProvider;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
-            this.blocksQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<Block>($"{nameof(WalletSyncManager)}-{nameof(this.blocksQueue)}", this.OnProcessBlockAsync);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.blocksQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<Block>($"{nameof(WalletSyncManager)}-{nameof(this.blocksQueue)}", OnProcessBlockAsync);
 
             this.blocksQueueSize = 0;
         }
@@ -116,18 +116,18 @@ namespace Blockcore.Features.Wallet
                 this.walletTip = fork;
             }
 
-            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(this.OnBlockConnected);
-            this.transactionReceivedSubscription = this.signals.Subscribe<TransactionReceived>(this.OnTransactionAvailable);
+            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(OnBlockConnected);
+            this.transactionReceivedSubscription = this.signals.Subscribe<TransactionReceived>(OnTransactionAvailable);
         }
 
         private void OnTransactionAvailable(TransactionReceived transactionReceived)
         {
-            this.ProcessTransaction(transactionReceived.ReceivedTransaction);
+            ProcessTransaction(transactionReceived.ReceivedTransaction);
         }
 
         private void OnBlockConnected(BlockConnected blockConnected)
         {
-            this.ProcessBlock(blockConnected.ConnectedBlock.Block);
+            ProcessBlock(blockConnected.ConnectedBlock.Block);
         }
 
         /// <inheritdoc />
@@ -312,7 +312,7 @@ namespace Blockcore.Features.Wallet
         public virtual void SyncFromDate(DateTime date)
         {
             int blockSyncStart = this.chainIndexer.GetHeightAtTime(date);
-            this.SyncFromHeight(blockSyncStart);
+            SyncFromHeight(blockSyncStart);
         }
 
         /// <inheritdoc />

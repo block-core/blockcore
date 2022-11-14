@@ -109,7 +109,7 @@ namespace Blockcore.Consensus.Chain
         public ChainedHeader FindFork(BlockLocator locator)
         {
             if (locator == null)
-                throw new ArgumentNullException("locator");
+                throw new ArgumentNullException(nameof(locator));
 
             return this.FindFork(locator.Blocks);
         }
@@ -124,7 +124,7 @@ namespace Blockcore.Consensus.Chain
             ChainedHeader block = this.GetHeader(blockHash);
 
             if (block == null)
-                return new ChainedHeader[0];
+                return Array.Empty<ChainedHeader>();
 
             return this.EnumerateAfter(block);
         }

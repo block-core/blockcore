@@ -40,7 +40,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         /// <summary>Access to dBreeze database.</summary>
         private readonly DBreezeEngine dBreeze;
 
-        private DataStoreSerializer dataStoreSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
         public DBreezeCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
@@ -59,26 +59,26 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
             // Create the coinview folder if it does not exist.
             Directory.CreateDirectory(folder);
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.dBreeze = new DBreezeEngine(folder);
             this.network = network;
             this.performanceCounter = new BackendPerformanceCounter(dateTimeProvider);
 
-            nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 400);
+            nodeStats.RegisterStats(AddBenchStats, StatsType.Benchmark, GetType().Name, 400);
         }
 
         public void Initialize()
         {
             Block genesis = this.network.GetGenesis();
 
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.ValuesLazyLoadingIsOn = false;
                 transaction.SynchronizeTables("BlockHash");
 
-                if (this.GetTipHash(transaction) == null)
+                if (GetTipHash(transaction) == null)
                 {
-                    this.SetBlockHash(transaction, new HashHeightPair(genesis.GetHash(), 0));
+                    SetBlockHash(transaction, new HashHeightPair(genesis.GetHash(), 0));
 
                     // Genesis coin is unspendable so do not add the coins.
                     transaction.Commit();
@@ -90,10 +90,10 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         {
             HashHeightPair tipHash;
 
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.ValuesLazyLoadingIsOn = false;
-                tipHash = this.GetTipHash(transaction);
+                tipHash = GetTipHash(transaction);
             }
 
             return tipHash;
@@ -102,7 +102,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         public FetchCoinsResponse FetchCoins(OutPoint[] utxos)
         {
             FetchCoinsResponse res = new FetchCoinsResponse();
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.SynchronizeTables("BlockHash", "Coins");
                 transaction.ValuesLazyLoadingIsOn = false;
@@ -156,7 +156,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         {
             int insertedEntities = 0;
 
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.ValuesLazyLoadingIsOn = false;
                 transaction.SynchronizeTables("BlockHash", "Coins", "Rewind");
@@ -169,14 +169,14 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                 using (new StopwatchDisposable(o => this.performanceCounter.AddInsertTime(o)))
                 {
-                    HashHeightPair current = this.GetTipHash(transaction);
+                    HashHeightPair current = GetTipHash(transaction);
                     if (current != oldBlockHash)
                     {
                         this.logger.LogTrace("(-)[BLOCKHASH_MISMATCH]");
                         throw new InvalidOperationException("Invalid oldBlockHash");
                     }
 
-                    this.SetBlockHash(transaction, nextBlockHash);
+                    SetBlockHash(transaction, nextBlockHash);
 
                     // Here we'll add items to be inserted in a second pass.
                     List<UnspentOutput> toInsert = new List<UnspentOutput>();
@@ -235,7 +235,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
         public RewindData GetRewindData(int height)
         {
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.SynchronizeTables("BlockHash", "Coins", "Rewind");
                 Row<int, byte[]> row = transaction.Select<int, byte[]>("Rewind", height);
@@ -247,13 +247,13 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         public HashHeightPair Rewind()
         {
             HashHeightPair res = null;
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.SynchronizeTables("BlockHash", "Coins", "Rewind");
 
                 transaction.ValuesLazyLoadingIsOn = false;
 
-                HashHeightPair current = this.GetTipHash(transaction);
+                HashHeightPair current = GetTipHash(transaction);
 
                 Row<int, byte[]> row = transaction.Select<int, byte[]>("Rewind", current.Height);
 
@@ -266,7 +266,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                 var rewindData = this.dataStoreSerializer.Deserialize<RewindData>(row.Value);
 
-                this.SetBlockHash(transaction, rewindData.PreviousBlockHash);
+                SetBlockHash(transaction, rewindData.PreviousBlockHash);
 
                 foreach (OutPoint outPoint in rewindData.OutputsToRemove)
                 {
@@ -294,10 +294,10 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         /// <param name="stakeEntries">List of POS block information to be examined and persists if unsaved.</param>
         public void PutStake(IEnumerable<StakeItem> stakeEntries)
         {
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.SynchronizeTables("Stake");
-                this.PutStakeInternal(transaction, stakeEntries);
+                PutStakeInternal(transaction, stakeEntries);
                 transaction.Commit();
             }
         }
@@ -325,7 +325,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
         /// <param name="blocklist">List of partially initialized POS block information that is to be fully initialized with the values from the database.</param>
         public void GetStake(IEnumerable<StakeItem> blocklist)
         {
-            using (DBreeze.Transactions.Transaction transaction = this.CreateTransaction())
+            using (DBreeze.Transactions.Transaction transaction = CreateTransaction())
             {
                 transaction.SynchronizeTables("Stake");
                 transaction.ValuesLazyLoadingIsOn = false;

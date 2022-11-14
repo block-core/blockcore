@@ -2,9 +2,6 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
-using Newtonsoft.Json;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
@@ -14,6 +11,9 @@ using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Blockcore.Features.WalletWatchOnly.Tests
@@ -33,7 +33,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         public void Given_AWalletIsPresent_When_GetWatchOnlyWalletIsCalled_ThenthewalletIsreturned()
         {
             DataFolder dataFolder = CreateDataFolder(this);
-            WatchOnlyWallet wallet = this.CreateAndPersistAWatchOnlyWallet(dataFolder);
+            WatchOnlyWallet wallet = CreateAndPersistAWatchOnlyWallet(dataFolder);
 
             var walletManager = new WatchOnlyWalletManager(DateTimeProvider.Default, this.LoggerFactory.Object, this.networkTestNet, dataFolder, this.signals);
             walletManager.Initialize();
@@ -49,7 +49,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         public void Given_AnAddressIsPassed_When_WatchAddressIsCalled_ThenAnAddressIsAddedToTheWatchList()
         {
             DataFolder dataFolder = CreateDataFolder(this);
-            WatchOnlyWallet wallet = this.CreateAndPersistAWatchOnlyWallet(dataFolder);
+            WatchOnlyWallet wallet = CreateAndPersistAWatchOnlyWallet(dataFolder);
 
             var walletManager = new WatchOnlyWalletManager(DateTimeProvider.Default, this.LoggerFactory.Object, this.networkTestNet, dataFolder, this.signals);
             walletManager.Initialize();
@@ -71,7 +71,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
             DataFolder dataFolder = CreateDataFolder(this);
 
             // Create the wallet to watch.
-            WatchOnlyWallet wallet = this.CreateAndPersistAWatchOnlyWallet(dataFolder);
+            WatchOnlyWallet wallet = CreateAndPersistAWatchOnlyWallet(dataFolder);
 
             // Create the address to watch.
             Script newScript = BitcoinAddress.Create("mnSmvy2q4dFNKQF18EBsrZrS7WEy6CieEE", this.networkTestNet).ScriptPubKey;
@@ -109,7 +109,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
             DataFolder dataFolder = CreateDataFolder(this);
 
             // Create the wallet to watch.
-            WatchOnlyWallet wallet = this.CreateAndPersistAWatchOnlyWallet(dataFolder);
+            WatchOnlyWallet wallet = CreateAndPersistAWatchOnlyWallet(dataFolder);
 
             // Create the address to watch.
             Script newScript = BitcoinAddress.Create("mnSmvy2q4dFNKQF18EBsrZrS7WEy6CieEE", this.networkTestNet).ScriptPubKey;
@@ -150,7 +150,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
             DataFolder dataFolder = CreateDataFolder(this);
 
             // Create the wallet to watch.
-            WatchOnlyWallet wallet = this.CreateAndPersistAWatchOnlyWallet(dataFolder);
+            WatchOnlyWallet wallet = CreateAndPersistAWatchOnlyWallet(dataFolder);
 
             // Create the address to watch.
             Script newScript = BitcoinAddress.Create("mnSmvy2q4dFNKQF18EBsrZrS7WEy6CieEE", this.networkTestNet).ScriptPubKey;
@@ -220,7 +220,7 @@ namespace Blockcore.Features.WalletWatchOnly.Tests
         public void Given_AWatchedAddress_And_A_WatchedTransaction_CanPopulateLookup()
         {
             DataFolder dataFolder = CreateDataFolder(this);
-            WatchOnlyWallet watchOnlyWallet = this.CreateAndPersistAWatchOnlyWallet(dataFolder);
+            WatchOnlyWallet watchOnlyWallet = CreateAndPersistAWatchOnlyWallet(dataFolder);
 
             // Only need to watch a single address/transaction
             Script newScript = BitcoinAddress.Create("mnSmvy2q4dFNKQF18EBsrZrS7WEy6CieEE", this.networkTestNet).ScriptPubKey;

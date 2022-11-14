@@ -50,7 +50,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
         {
             // Get the second transaction so that we can confirm whether it is a cold coin stake transaction.
             Block block = context.ValidationContext.BlockToValidate;
-            PosTransaction coinstakeTransaction = ((block.Transactions.Count >= 2)?block.Transactions[1]:null) as PosTransaction;
+            PosTransaction coinstakeTransaction = ((block.Transactions.Count >= 2) ? block.Transactions[1] : null) as PosTransaction;
 
             // If there is no coinstake transaction or it is not a cold coin stake transaction then this rule is not required.
             // The "IsColdCoinStake" flag will only be set in the OP_CHECKCOLDSTAKEVERIFY if ScriptFlags in DeploymentFlags has "CheckColdStakeVerify" set.

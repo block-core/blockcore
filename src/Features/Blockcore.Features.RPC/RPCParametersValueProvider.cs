@@ -15,7 +15,7 @@ namespace Blockcore.Features.RPC
 
     public class RPCParametersValueProvider : IRPCParametersValueProvider
     {
-        private ValueProviderFactoryContext context;
+        private readonly ValueProviderFactoryContext context;
 
         public RPCParametersValueProvider()
         {
@@ -32,7 +32,7 @@ namespace Blockcore.Features.RPC
         {
             Guard.NotNull(prefix, nameof(prefix));
 
-            return this.GetValueCore(prefix) != null;
+            return GetValueCore(prefix) != null;
         }
 
         public Task CreateValueProviderAsync(ValueProviderFactoryContext context)
@@ -50,7 +50,7 @@ namespace Blockcore.Features.RPC
             Guard.NotNull(key, nameof(key));
 
             //context.ActionContext.ActionDescriptor.Parameters.First().BindingInfo.
-            return new ValueProviderResult(new Microsoft.Extensions.Primitives.StringValues(this.GetValueCore(key)));
+            return new ValueProviderResult(new Microsoft.Extensions.Primitives.StringValues(GetValueCore(key)));
         }
 
         private string GetValueCore(string key)

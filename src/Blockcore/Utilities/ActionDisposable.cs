@@ -10,10 +10,10 @@ namespace Blockcore.Utilities
     internal class ActionDisposable : IDisposable
     {
         /// <summary>Method to call when an instance of the object is created.</summary>
-        private Action onEnter;
+        private readonly Action onEnter;
 
         /// <summary>Method to call when an instance of the object is disposed.</summary>
-        private Action onLeave;
+        private readonly Action onLeave;
 
         /// <summary>
         /// Initializes an instance of the object and executes the <paramref name="onEnter"/> method.

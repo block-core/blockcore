@@ -45,7 +45,7 @@ namespace Blockcore.Networks.XRC
             this.DefaultConfigFilename = "xrhodium.conf";
             this.MaxTimeOffsetSeconds = 25 * 60;
             this.CoinTicker = "XRC";
-            this.DefaultBanTimeSeconds = 16000; 
+            this.DefaultBanTimeSeconds = 16000;
 
             var consensusFactory = new XRCConsensusFactory();
 

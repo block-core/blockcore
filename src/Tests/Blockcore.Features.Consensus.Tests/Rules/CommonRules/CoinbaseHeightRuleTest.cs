@@ -5,7 +5,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
@@ -37,7 +36,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         public async Task RunAsync_BestBlockUnAvailable_BadCoinBaseHeight_ThrowsBadCoinbaseHeightConsensusErrorExceptionAsync()
         {
             Block blockToValidate = this.network.CreateBlock();
-            
+
             this.ruleContext.ValidationContext.BlockToValidate = blockToValidate;
             this.ruleContext.ValidationContext.ChainedHeaderToValidate = new ChainedHeader(blockToValidate.Header, blockToValidate.Header.GetHash(), 0);
 

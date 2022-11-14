@@ -184,7 +184,7 @@ namespace Blockcore.Features.PoA
 
             // No seed nodes.
             string[] seedNodes = { };
-            this.SeedNodes = this.ConvertToNetworkAddresses(seedNodes, this.DefaultPort).ToList();
+            this.SeedNodes = ConvertToNetworkAddresses(seedNodes, this.DefaultPort).ToList();
 
             this.StandardScriptsRegistry = new PoAStandardScriptsRegistry();
 
@@ -196,8 +196,8 @@ namespace Blockcore.Features.PoA
                 throw new Exception("No keys for initial federation are configured!");
             }
 
-            this.RegisterRules(this.Consensus);
-            this.RegisterMempoolRules(this.Consensus);
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
         }
 
         protected virtual void RegisterRules(IConsensus consensus)

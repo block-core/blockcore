@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Blockcore.Configuration;
+﻿using Blockcore.Configuration;
 using Blockcore.Connection;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore;
@@ -14,9 +12,7 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Moq;
-using NBitcoin;
 
 using Xunit;
 
@@ -24,11 +20,11 @@ namespace Blockcore.Features.RPC.Tests.Controller
 {
     public class WalletRPCControllerTests : LogsTestBase
     {
-        private WalletRPCController controller;
-        private ChainIndexer chain;
-        private Network network;
-        private NodeSettings nodeSettings;
-        private WalletSettings walletSettings;
+        private readonly WalletRPCController controller;
+        private readonly ChainIndexer chain;
+        private readonly Network network;
+        private readonly NodeSettings nodeSettings;
+        private readonly WalletSettings walletSettings;
         private readonly StoreSettings storeSettings;
 
         private readonly Mock<IBlockStore> blockStore;

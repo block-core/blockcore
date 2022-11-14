@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 
@@ -47,7 +46,7 @@ namespace Blockcore.IntegrationTests.Common.Runners
                     return false;
                 }
             }, cancellationToken: new CancellationTokenSource(duration).Token,
-                failureReason: $"Failed to kill {this.GetType()} process number:{this.process.Id} within {duration} seconds");
+                failureReason: $"Failed to kill {GetType()} process number:{this.process.Id} within {duration} seconds");
         }
 
         public override void Start()

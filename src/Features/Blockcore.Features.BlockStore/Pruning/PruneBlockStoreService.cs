@@ -7,7 +7,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore.Pruning
 {
@@ -39,7 +38,7 @@ namespace Blockcore.Features.BlockStore.Pruning
             this.blockRepository = blockRepository;
             this.prunedBlockRepository = prunedBlockRepository;
             this.chainState = chainState;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.nodeLifetime = nodeLifetime;
             this.storeSettings = storeSettings;
         }
@@ -49,9 +48,9 @@ namespace Blockcore.Features.BlockStore.Pruning
         {
             this.PrunedUpToHeaderTip = this.chainState.BlockStoreTip.GetAncestor(this.prunedBlockRepository.PrunedTip.Height);
 
-            this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{this.GetType().Name}.{nameof(this.PruneBlocks)}", token =>
+            this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{GetType().Name}.{nameof(this.PruneBlocks)}", token =>
            {
-               this.PruneBlocks();
+               PruneBlocks();
                return Task.CompletedTask;
            },
             this.nodeLifetime.ApplicationStopping,

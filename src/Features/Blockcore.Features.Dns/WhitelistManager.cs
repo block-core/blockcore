@@ -86,7 +86,7 @@ namespace Blockcore.Features.Dns
             Guard.NotNull(peerBanning, nameof(peerBanning));
 
             this.dateTimeProvider = dateTimeProvider;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.peerAddressManager = peerAddressManager;
             this.dnsServer = dnsServer;
             this.dnsSettings = dnsSettings;

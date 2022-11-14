@@ -167,6 +167,7 @@ namespace Blockcore.Consensus.ScriptInfo
     /// <summary>
     /// Signature hash types/flags
     /// </summary>
+    [Flags]
     public enum SigHash : uint
     {
         Undefined = 0,
@@ -615,34 +616,37 @@ namespace Blockcore.Consensus.ScriptInfo
             }
         }
 
-        public bool HasCanonicalPushes
+        public bool HasCanonicalPushes()
         {
-            get
+
+
+            using (ScriptReader reader = CreateReader())
             {
-                using (ScriptReader reader = CreateReader())
+
+                foreach (Op op in reader.ToEnumerable())
                 {
-                    foreach (Op op in reader.ToEnumerable())
+
+                    if (!op.IsInvalid)
                     {
-                        if (op.IsInvalid)
-                            return false;
-                        if (op.Code > OpcodeType.OP_16)
-                            continue;
-                        if (op.Code < OpcodeType.OP_PUSHDATA1 && op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16))
-                            // Could have used an OP_n code, rather than a 1-byte push.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA1 && op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1)
-                            // Could have used a normal n-byte push, rather than OP_PUSHDATA1.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA2 && op.PushData.Length <= 0xFF)
-                            // Could have used an OP_PUSHDATA1.
-                            return false;
-                        if (op.Code == OpcodeType.OP_PUSHDATA4 && op.PushData.Length <= 0xFFFF)
-                            // Could have used an OP_PUSHDATA2.
-                            return false;
+                        switch (op.Code)
+                        {
+
+                            case (> OpcodeType.OP_16): { continue; }
+                            case (< OpcodeType.OP_PUSHDATA1): { if (op.Code > OpcodeType.OP_0 && (op.PushData.Length == 1 && op.PushData[0] <= 16)) return false; continue; }
+                            case (OpcodeType.OP_PUSHDATA1): { if (op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1) return false; continue; }
+                            case (OpcodeType.OP_PUSHDATA2): { if (op.PushData.Length <= 0xFF) return false; continue; }
+                            case (OpcodeType.OP_PUSHDATA4): { if (op.PushData.Length <= 0xFFFF) return false; continue; }
+                            default: { return true; break; }
+
+                        }
+
                     }
-                    return true;
+
+
                 }
+
             }
+            return true;
         }
 
         //https://en.bitcoin.it/wiki/OP_CHECKSIG
@@ -1078,6 +1082,11 @@ namespace Blockcore.Consensus.ScriptInfo
             return ToBytes(false);
         }
 
+        public byte[] ToRawScript(bool @unsafe)
+        {
+            return @unsafe ? this._Script : this._Script.ToArray();
+        }
+
         /// <summary>
         /// Get script byte array
         /// </summary>
@@ -1087,16 +1096,15 @@ namespace Blockcore.Consensus.ScriptInfo
             return ToBytes(false);
         }
 
+
+
         /// <summary>
         /// Get script byte array
         /// </summary>
         /// <param name="unsafe">if false, returns a copy of the internal byte array</param>
         /// <returns></returns>
         [Obsolete("Use ToBytes instead")]
-        public byte[] ToRawScript(bool @unsafe)
-        {
-            return @unsafe ? this._Script : this._Script.ToArray();
-        }
+
 
         /// <summary>
         /// Get script byte array
@@ -1312,45 +1320,61 @@ namespace Blockcore.Consensus.ScriptInfo
         private static Script CombineSignatures(Network network, Script scriptPubKey, TransactionChecker checker, byte[][] sigs1, byte[][] sigs2, HashVersion hashVersion)
         {
             ScriptTemplate template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
-
-            if (template is PayToWitPubKeyHashTemplate)
+            switch (template)
             {
-                scriptPubKey = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(1, 20)).ScriptPubKey;
-                template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
+                case PayToWitPubKeyHashTemplate:
+                    {
+                        scriptPubKey = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(1, 20)).ScriptPubKey;
+                        template = StandardScripts.GetTemplateFromScriptPubKey(scriptPubKey);
+                        break;
+                    }
+                case null:
+                case TxNullDataTemplate:
+                    {
+                        return PushAll(Max(sigs1, sigs2));
+                        break;
+                    }
+
+
+                case PayToPubkeyTemplate:
+                case PayToPubkeyHashTemplate:
+                    {
+                        if (sigs1.Length == 0 || sigs1[0].Length == 0)
+                            return PushAll(sigs2);
+                        else
+                            return PushAll(sigs1);
+                        break;
+                    }
+
+                case PayToScriptHashTemplate:
+                case PayToWitTemplate:
+                    {
+                        if (sigs1.Length == 0 || sigs1[sigs1.Length - 1].Length == 0)
+                            return PushAll(sigs2);
+
+                        if (sigs2.Length == 0 || sigs2[sigs2.Length - 1].Length == 0)
+                            return PushAll(sigs1);
+
+                        byte[] redeemBytes = sigs1[sigs1.Length - 1];
+                        var redeem = new Script(redeemBytes);
+                        sigs1 = sigs1.Take(sigs1.Length - 1).ToArray();
+                        sigs2 = sigs2.Take(sigs2.Length - 1).ToArray();
+                        Script result = CombineSignatures(network, redeem, checker, sigs1, sigs2, hashVersion);
+                        result += Op.GetPushOp(redeemBytes);
+                        return result;
+                        break;
+                    }
+
+                case PayToMultiSigTemplate:
+                    {
+                        return CombineMultisig(network, scriptPubKey, checker, sigs1, sigs2, hashVersion);
+                        break;
+                    }
+
+                default: { return null; break; }
+
+
             }
-            if (template == null || template is TxNullDataTemplate)
-                return PushAll(Max(sigs1, sigs2));
-
-            if (template is PayToPubkeyTemplate || template is PayToPubkeyHashTemplate)
-            {
-                if (sigs1.Length == 0 || sigs1[0].Length == 0)
-                    return PushAll(sigs2);
-                else
-                    return PushAll(sigs1);
-            }
-
-            if (template is PayToScriptHashTemplate || template is PayToWitTemplate)
-            {
-                if (sigs1.Length == 0 || sigs1[sigs1.Length - 1].Length == 0)
-                    return PushAll(sigs2);
-
-                if (sigs2.Length == 0 || sigs2[sigs2.Length - 1].Length == 0)
-                    return PushAll(sigs1);
-
-                byte[] redeemBytes = sigs1[sigs1.Length - 1];
-                var redeem = new Script(redeemBytes);
-                sigs1 = sigs1.Take(sigs1.Length - 1).ToArray();
-                sigs2 = sigs2.Take(sigs2.Length - 1).ToArray();
-                Script result = CombineSignatures(network, redeem, checker, sigs1, sigs2, hashVersion);
-                result += Op.GetPushOp(redeemBytes);
-                return result;
-            }
-
-            if (template is PayToMultiSigTemplate)
-            {
-                return CombineMultisig(network, scriptPubKey, checker, sigs1, sigs2, hashVersion);
-            }
-
             return null;
         }
 

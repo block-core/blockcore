@@ -74,8 +74,8 @@ namespace Blockcore.Features.BlockStore.Tests
             List<ChainedHeader> headers = ChainedHeadersHelper.CreateConsecutiveHeaders(100, null, false, null, this.network);
             this.consensusManagerMock.Setup(x => x.Tip).Returns(() => headers.Last());
 
-            Script p2pk1 = this.GetRandomP2PKScript(out string address1);
-            Script p2pk2 = this.GetRandomP2PKScript(out string address2);
+            Script p2pk1 = GetRandomP2PKScript(out string address1);
+            Script p2pk2 = GetRandomP2PKScript(out string address2);
 
             var block1 = new Block()
             {

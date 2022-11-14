@@ -29,7 +29,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Tests.Common")]
@@ -94,7 +93,7 @@ namespace Blockcore.Base
         private readonly ITimeSyncBehaviorState timeSyncBehaviorState;
 
         /// <summary>Manager of node's network peers.</summary>
-        private IPeerAddressManager peerAddressManager;
+        private readonly IPeerAddressManager peerAddressManager;
 
         /// <summary>Periodic task to save list of peers to disk.</summary>
         private IAsyncLoop flushAddressManagerLoop;
@@ -259,7 +258,7 @@ namespace Blockcore.Base
         {
             if (!Directory.Exists(this.dataFolder.ChainPath))
             {
-                this.logger.LogInformation("Creating {0}.", this.dataFolder.ChainPath);
+                this.logger.LogInformation("Creating {this.dataFolder.ChainPath}.", this.dataFolder.ChainPath);
                 Directory.CreateDirectory(this.dataFolder.ChainPath);
             }
 

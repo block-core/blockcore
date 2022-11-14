@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Interfaces;
-using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Connection.Broadcasting
 {

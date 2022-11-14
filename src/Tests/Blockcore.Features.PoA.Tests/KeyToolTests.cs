@@ -13,7 +13,7 @@ namespace Blockcore.Features.PoA.Tests
 
         public KeyToolTests()
         {
-            string testRootPath = Path.Combine(Path.GetTempPath(), this.GetType().Name + "_" + nameof(this.CanSaveLoadKey));
+            string testRootPath = Path.Combine(Path.GetTempPath(), GetType().Name + "_" + nameof(this.CanSaveLoadKey));
             Directory.CreateDirectory(testRootPath);
 
             this.dataFolder = new DataFolder(testRootPath);

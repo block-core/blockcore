@@ -1,5 +1,3 @@
-using System;
-using Blockcore.Broadcasters;
 using Blockcore.EventBus;
 using Blockcore.Features.Miner.Api.Models;
 

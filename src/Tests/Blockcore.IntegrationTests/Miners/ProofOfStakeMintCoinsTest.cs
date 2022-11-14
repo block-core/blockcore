@@ -4,14 +4,10 @@ using System.Linq;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Database;
-using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
-using Blockcore.Networks;
-using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
@@ -50,7 +46,7 @@ namespace Blockcore.IntegrationTests.Miners
 
                 // Get set of transaction IDs present in wallet before staking is started.
                 this.transactionsBeforeStaking.Clear();
-                foreach (TransactionOutputData transactionData in this.GetTransactionsSnapshot(minerA))
+                foreach (TransactionOutputData transactionData in GetTransactionsSnapshot(minerA))
                 {
                     this.transactionsBeforeStaking.Add(transactionData.Id);
                 }
@@ -64,7 +60,7 @@ namespace Blockcore.IntegrationTests.Miners
                 // determine whether staking occurred.
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = GetTransactionsSnapshot(minerA);
 
                     foreach (TransactionOutputData transactionData in transactions)
                     {
@@ -78,14 +74,14 @@ namespace Blockcore.IntegrationTests.Miners
                 });
 
                 // build a dictionary of coinstake tx's indexed by tx id.
-                foreach (var tx in this.GetTransactionsSnapshot(minerA))
+                foreach (var tx in GetTransactionsSnapshot(minerA))
                 {
                     this.transactionLookup[tx.Id] = tx;
                 }
 
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = GetTransactionsSnapshot(minerA);
 
                     foreach (TransactionOutputData transactionData in transactions)
                     {

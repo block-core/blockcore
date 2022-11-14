@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
@@ -10,8 +11,14 @@ namespace Blockcore.Configuration
     /// <summary>
     /// Exception that is used when a problem in command line or configuration file configuration is found.
     /// </summary>
+    [Serializable]
     public class ConfigurationException : Exception
     {
+
+        protected ConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+
         public ConfigurationException(string message) : base(message)
         {
         }
@@ -160,7 +167,7 @@ namespace Blockcore.Configuration
 
             try
             {
-                var value = this.ConvertValue<T>(values[0]);
+                var value = TextFileConfiguration.ConvertValue<T>(values[0]);
                 logger?.LogDebug("Value '{0}' was loaded for the key '{1}'.", value, key);
                 return value;
             }
@@ -178,7 +185,7 @@ namespace Blockcore.Configuration
         /// <returns>Typed value.</returns>
         /// <exception cref="NotSupportedException">Thrown if <typeparamref name="T"/> is not supported type.</exception>
         /// <exception cref="FormatException">Thrown if the string does not represent a valid value of <typeparamref name="T"/>.</exception>
-        private T ConvertValue<T>(string str)
+        private static T ConvertValue<T>(string str)
         {
             if (typeof(T) == typeof(bool))
             {

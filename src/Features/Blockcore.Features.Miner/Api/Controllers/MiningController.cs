@@ -14,7 +14,6 @@ using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests.Controllers")]
 namespace Blockcore.Features.Miner.Api.Controllers
@@ -48,7 +47,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             Guard.NotNull(walletManager, nameof(walletManager));
 
             this.consensusManager = consensusManager;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.miningFeature = fullNode.NodeFeature<MiningFeature>();
             this.network = network;
             this.powMining = powMining;
@@ -64,7 +63,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
         /// tries all possible header nonces values.</remarks>
         [Route("generate")]
         [HttpPost]
-        public IActionResult Generate([FromBody]MiningRequest request)
+        public IActionResult Generate([FromBody] MiningRequest request)
         {
             Guard.NotNull(request, nameof(request));
 
@@ -86,7 +85,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                 this.logger.LogDebug("({0}:{1})", nameof(request.BlockCount), blockCount);
 
-                WalletAccountReference accountReference = this.GetAccount();
+                WalletAccountReference accountReference = GetAccount();
                 HdAddress address = this.walletManager.GetUnusedAddress(accountReference);
 
                 var generateBlocksModel = new GenerateBlocksModel
@@ -96,7 +95,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                 this.logger.LogTrace("(-):*.{0}={1}", "Generated block count", generateBlocksModel.Blocks.Count);
 
-                return this.Json(generateBlocksModel);
+                return Json(generateBlocksModel);
             }
             catch (Exception e)
             {
@@ -119,7 +118,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 this.miningFeature.StopMining();
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -136,7 +135,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
         {
             const string noWalletMessage = "No wallet found";
             const string noAccountMessage = "No account found on wallet";
-            
+
 
             string walletName = this.walletManager.GetWalletsNames().FirstOrDefault();
             if (walletName == null)

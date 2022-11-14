@@ -38,7 +38,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
             {
                 k = new BigInteger(qBitLength, this.random);
             }
-            while(k.SignValue < 1 || k.CompareTo(this.q) >= 0);
+            while (k.SignValue < 1 || k.CompareTo(this.q) >= 0);
 
             return k;
         }

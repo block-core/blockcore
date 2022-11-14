@@ -213,7 +213,7 @@ namespace Blockcore.Connection
                 catch (SocketException e)
                 {
                     this.logger.LogCritical("Unable to listen on port {0} (you can change the port using '-port=[number]'). Error message: {1}", listen.Endpoint.Port, e.Message);
-                    throw e;
+                    throw;
                 }
 
                 logs.Append(listen.Endpoint.Address + ":" + listen.Endpoint.Port);
@@ -253,7 +253,6 @@ namespace Blockcore.Connection
             void AddPeerInfo(StringBuilder peerBuilder, INetworkPeer peer)
             {
                 var chainHeadersBehavior = peer.Behavior<ConsensusManagerBehavior>();
-                var connectionManagerBehavior = peer.Behavior<ConnectionManagerBehavior>();
 
                 string peerHeights = $"(r/s/c):" +
                                      $"{(chainHeadersBehavior.BestReceivedTip != null ? chainHeadersBehavior.BestReceivedTip.Height.ToString() : peer.PeerVersion != null ? peer.PeerVersion.StartHeight + "*" : "-")}" +
@@ -330,7 +329,7 @@ namespace Blockcore.Connection
             if (addNodeBuilder.Length > 0)
             {
                 builder.AppendLine(">>> AddNode:");
-                builder.Append(addNodeBuilder.ToString());
+                builder.Append(addNodeBuilder);
                 builder.AppendLine("<<<");
             }
 
@@ -541,7 +540,11 @@ namespace Blockcore.Connection
             foreach (var endpoint in this.ConnectionSettings.RetrieveAddNodes().Where(a => a.Address == null))
             {
                 this.logger.LogTrace("(-)[IPENDPOINT_ADDRESS_NULL]:{0}", endpoint);
-                throw new ArgumentNullException("The addnode collection contains endpoints with null addresses.");
+            }
+
+            if (this.ConnectionSettings.RetrieveAddNodes().Where(a => a.Address == null).Any())
+            {
+                throw new ArgumentNullException(nameof(this.ConnectionSettings), "The addnode collection contains endpoints with null addresses.");
             }
 
             // Create a copy of the nodes to remove. This avoids errors due to both modifying the collection and iterating it.

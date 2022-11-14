@@ -121,7 +121,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                     }
                     if (!mutated)
                         mutated = subTreeHashes[level] == currentLeaveHash;
-                    
+
                     Buffer.BlockCopy(subTreeHashes[level].ToBytes(), 0, hash, 0, 32);
                     Buffer.BlockCopy(currentLeaveHash.ToBytes(), 0, hash, 32, 32);
                     currentLeaveHash = Hashes.Hash256(hash);
@@ -159,7 +159,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                         branch.Add(root);
 
                     // Line was added to allocate once and not twice
-                    var rootBytes = root.ToBytes(); 
+                    var rootBytes = root.ToBytes();
                     Buffer.BlockCopy(rootBytes, 0, hash, 0, 32);
                     Buffer.BlockCopy(rootBytes, 0, hash, 32, 32);
                     root = Hashes.Hash256(hash);

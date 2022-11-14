@@ -19,7 +19,7 @@ namespace Blockcore.IntegrationTests.RPC
         {
             this.Builder = NodeBuilder.Create(this);
             this.Node = this.Builder.CreateBitcoinCoreNode().Start();
-            this.InitializeTestWallet(this.Node.DataFolder);
+            InitializeTestWallet(this.Node.DataFolder);
 
             this.RpcClient = this.Node.CreateRPCClient();
 

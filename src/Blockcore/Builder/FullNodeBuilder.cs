@@ -240,7 +240,7 @@ namespace Blockcore.Builder
             // configure features
             foreach (Action<IFeatureCollection> configureFeature in this.featuresRegistrationDelegates)
                 configureFeature(this.Features);
-
+            //Proba
             // configure features startup
             foreach (IFeatureRegistration featureRegistration in this.Features.FeatureRegistrations)
             {

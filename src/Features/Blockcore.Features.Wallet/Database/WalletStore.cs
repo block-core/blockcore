@@ -95,7 +95,8 @@ namespace Blockcore.Features.Wallet.Database
                     // The reason the code base moved to use sqlite instead of litedb is because litedbv5 is not
                     // properly maintained anymore and has a critical hard to reproduce errors that happen randomly.
                     var dbBackupPath = Path.Combine(dataFolder.WalletFolderPath, $"{wallet.Name}.error.db");
-                    if (dbBackupPath.StartsWith(dataFolder.WalletFolderPath, StringComparison.Ordinal))
+                    if (dbBackupPath.StartsWith(dataFolder.WalletFolderPath, StringComparison.Ordinal) &&
+                        this.dbPath.StartsWith(dataFolder.WalletFolderPath, StringComparison.Ordinal))
                     {
 
                         // Move the problematic database file, which might be a V5 database.

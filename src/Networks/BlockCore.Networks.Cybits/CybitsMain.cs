@@ -1,33 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.Cybits.Deployments;
 using Blockcore.Networks.Cybits.Policies;
 using Blockcore.Networks.Cybits.Rules;
+using Blockcore.Networks.Cybits.Setup;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
-using System.Linq;
-using System.Net;
-using Blockcore.Networks.Cybits.Setup;
-using Blockcore.Base.Deployments;
-using Blockcore.Consensus.BlockInfo;
-using Blockcore.Consensus;
-using Blockcore.P2P;
-using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Consensus.ScriptInfo;
-using Blockcore.Networks.Cybits.Deployments;
 
 namespace Blockcore.Networks.Cybits
 {
-   public class CybitsMain : Network
-   {
-      public CybitsMain()
-      {
-         CoinSetup setup = CybitsSetup.Instance.Setup;
-         NetworkSetup network = CybitsSetup.Instance.Main;
+    public class CybitsMain : Network
+    {
+        public CybitsMain()
+        {
+            CoinSetup setup = CybitsSetup.Instance.Setup;
+            NetworkSetup network = CybitsSetup.Instance.Main;
 
             this.NetworkType = NetworkType.Mainnet;
             this.DefaultConfigFilename = setup.ConfigFileName; // The default name used for the Cybits configuration file.
@@ -50,7 +50,7 @@ namespace Blockcore.Networks.Cybits
             this.MaxTimeOffsetSeconds = 25 * 60;
             this.DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
-         var consensusFactory = new PosConsensusFactory();
+            var consensusFactory = new PosConsensusFactory();
 
             // Create the genesis block.
             this.GenesisTime = network.GenesisTime;
@@ -59,33 +59,33 @@ namespace Blockcore.Networks.Cybits
             this.GenesisVersion = network.GenesisVersion;
             this.GenesisReward = network.GenesisReward;
 
-         Block genesisBlock = CreateGenesisBlock(consensusFactory,
-            this.GenesisTime,
-            this.GenesisNonce,
-            this.GenesisBits,
-            this.GenesisVersion,
-            this.GenesisReward,
-            setup.GenesisText);
+            Block genesisBlock = CreateGenesisBlock(consensusFactory,
+               this.GenesisTime,
+               this.GenesisNonce,
+               this.GenesisBits,
+               this.GenesisVersion,
+               this.GenesisReward,
+               setup.GenesisText);
 
             this.Genesis = genesisBlock;
 
-         var consensusOptions = new PosConsensusOptions
-         {
-            MaxBlockBaseSize = 4_000_000,
-            MaxStandardVersion = 2,
-            MaxStandardTxWeight = 100_000,
-            MaxBlockSigopsCost = 20_000,
-            MaxStandardTxSigopsCost = 20_000 / 5,
-            WitnessScaleFactor = 4,
-            MinBlockFeeRate = Money.Zero
-         };
+            var consensusOptions = new PosConsensusOptions
+            {
+                MaxBlockBaseSize = 4_000_000,
+                MaxStandardVersion = 2,
+                MaxStandardTxWeight = 100_000,
+                MaxBlockSigopsCost = 20_000,
+                MaxStandardTxSigopsCost = 20_000 / 5,
+                WitnessScaleFactor = 4,
+                MinBlockFeeRate = Money.Zero
+            };
 
-         var buriedDeployments = new BuriedDeploymentsArray
-         {
-            [BuriedDeployments.BIP34] = 0,
-            [BuriedDeployments.BIP65] = 0,
-            [BuriedDeployments.BIP66] = 0
-         };
+            var buriedDeployments = new BuriedDeploymentsArray
+            {
+                [BuriedDeployments.BIP34] = 0,
+                [BuriedDeployments.BIP65] = 0,
+                [BuriedDeployments.BIP66] = 0
+            };
 
             var bip9Deployments = new CybitsBIP9Deployments()
             {
@@ -147,7 +147,7 @@ namespace Blockcore.Networks.Cybits
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
 
             this.Bech32Encoders = new Bech32Encoder[2];
-         var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
+            var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
             this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
             this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 
@@ -157,68 +157,68 @@ namespace Blockcore.Networks.Cybits
 
             this.StandardScriptsRegistry = new CybitsStandardScriptsRegistry();
 
-         // 64 below should be changed to TargetSpacingSeconds when we move that field.
-         Assert(this.DefaultBanTimeSeconds <= this.Consensus.MaxReorgLength * 64 / 2);
+            // 64 below should be changed to TargetSpacingSeconds when we move that field.
+            Assert(this.DefaultBanTimeSeconds <= this.Consensus.MaxReorgLength * 64 / 2);
 
-         Assert(this.Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
-         Assert(this.Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
+            Assert(this.Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
+            Assert(this.Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
 
-         RegisterRules(this.Consensus);
-         RegisterMempoolRules(this.Consensus);
-      }
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
+        }
 
-      protected void RegisterRules(IConsensus consensus)
-      {
-         consensus.ConsensusRules
-             .Register<HeaderTimeChecksRule>()
-             .Register<HeaderTimeChecksPosRule>()
-             .Register<PosFutureDriftRule>()
-             .Register<CheckDifficultyPosRule>()
-             .Register<CybitsHeaderVersionRule>()
-             .Register<ProvenHeaderSizeRule>()
-             .Register<ProvenHeaderCoinstakeRule>();
+        protected void RegisterRules(IConsensus consensus)
+        {
+            consensus.ConsensusRules
+                .Register<HeaderTimeChecksRule>()
+                .Register<HeaderTimeChecksPosRule>()
+                .Register<PosFutureDriftRule>()
+                .Register<CheckDifficultyPosRule>()
+                .Register<CybitsHeaderVersionRule>()
+                .Register<ProvenHeaderSizeRule>()
+                .Register<ProvenHeaderCoinstakeRule>();
 
-         consensus.ConsensusRules
-             .Register<BlockMerkleRootRule>()
-             .Register<PosBlockSignatureRepresentationRule>()
-             .Register<PosBlockSignatureRule>();
+            consensus.ConsensusRules
+                .Register<BlockMerkleRootRule>()
+                .Register<PosBlockSignatureRepresentationRule>()
+                .Register<PosBlockSignatureRule>();
 
-         consensus.ConsensusRules
-             .Register<SetActivationDeploymentsPartialValidationRule>()
-             .Register<PosTimeMaskRule>()
+            consensus.ConsensusRules
+                .Register<SetActivationDeploymentsPartialValidationRule>()
+                .Register<PosTimeMaskRule>()
 
-             // rules that are inside the method ContextualCheckBlock
-             .Register<TransactionLocktimeActivationRule>()
-             .Register<CoinbaseHeightActivationRule>()
-             .Register<WitnessCommitmentsRule>()
-             .Register<BlockSizeRule>()
+                // rules that are inside the method ContextualCheckBlock
+                .Register<TransactionLocktimeActivationRule>()
+                .Register<CoinbaseHeightActivationRule>()
+                .Register<WitnessCommitmentsRule>()
+                .Register<BlockSizeRule>()
 
-             // rules that are inside the method CheckBlock
-             .Register<EnsureCoinbaseRule>()
-             .Register<CheckPowTransactionRule>()
-             .Register<CheckPosTransactionRule>()
-             .Register<CheckSigOpsRule>()
-             .Register<PosCoinstakeRule>();
+                // rules that are inside the method CheckBlock
+                .Register<EnsureCoinbaseRule>()
+                .Register<CheckPowTransactionRule>()
+                .Register<CheckPosTransactionRule>()
+                .Register<CheckSigOpsRule>()
+                .Register<PosCoinstakeRule>();
 
-         consensus.ConsensusRules
-             .Register<SetActivationDeploymentsFullValidationRule>()
+            consensus.ConsensusRules
+                .Register<SetActivationDeploymentsFullValidationRule>()
 
-             .Register<CheckDifficultyHybridRule>()
+                .Register<CheckDifficultyHybridRule>()
 
-             // rules that require the store to be loaded (coinview)
-             .Register<FetchUtxosetRule>()
-             .Register<TransactionDuplicationActivationRule>()
-             .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
-                                              // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
-                                              // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
-             .Register<PosColdStakingRule>()
-             .Register<PushUtxosetRule>()
-             .Register<FlushUtxosetRule>();
-      }
+                // rules that require the store to be loaded (coinview)
+                .Register<FetchUtxosetRule>()
+                .Register<TransactionDuplicationActivationRule>()
+                .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
+                                                 // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
+                                                 // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
+                .Register<PosColdStakingRule>()
+                .Register<PushUtxosetRule>()
+                .Register<FlushUtxosetRule>();
+        }
 
-      protected void RegisterMempoolRules(IConsensus consensus)
-      {
-         consensus.MempoolRules = new List<Type>()
+        protected void RegisterMempoolRules(IConsensus consensus)
+        {
+            consensus.MempoolRules = new List<Type>()
             {
                 typeof(CheckConflictsMempoolRule),
                 typeof(CheckCoinViewMempoolRule),
@@ -231,42 +231,42 @@ namespace Blockcore.Networks.Cybits
                 typeof(CheckAllInputsMempoolRule),
                 typeof(CheckTxOutDustRule)
             };
-      }
+        }
 
-      protected static Block CreateGenesisBlock(ConsensusFactory consensusFactory, uint nTime, uint nNonce, uint nBits, int nVersion, Money genesisReward, string genesisText)
-      {
-         Transaction txNew = consensusFactory.CreateTransaction();
-         txNew.Version = 1;
+        protected static Block CreateGenesisBlock(ConsensusFactory consensusFactory, uint nTime, uint nNonce, uint nBits, int nVersion, Money genesisReward, string genesisText)
+        {
+            Transaction txNew = consensusFactory.CreateTransaction();
+            txNew.Version = 1;
 
-         if (txNew is IPosTransactionWithTime posTx)
-         {
-            posTx.Time = nTime;
-         }
-
-         txNew.AddInput(new TxIn()
-         {
-            ScriptSig = new Script(Op.GetPushOp(0), new Op()
+            if (txNew is IPosTransactionWithTime posTx)
             {
-               Code = (OpcodeType)0x1,
-               PushData = new[] { (byte)42 }
-            }, Op.GetPushOp(Encoders.ASCII.DecodeData(genesisText)))
-         });
+                posTx.Time = nTime;
+            }
 
-         txNew.AddOutput(new TxOut()
-         {
-            Value = genesisReward,
-         });
+            txNew.AddInput(new TxIn()
+            {
+                ScriptSig = new Script(Op.GetPushOp(0), new Op()
+                {
+                    Code = (OpcodeType)0x1,
+                    PushData = new[] { (byte)42 }
+                }, Op.GetPushOp(Encoders.ASCII.DecodeData(genesisText)))
+            });
 
-         Block genesis = consensusFactory.CreateBlock();
-         genesis.Header.BlockTime = Utils.UnixTimeToDateTime(nTime);
-         genesis.Header.Bits = nBits;
-         genesis.Header.Nonce = nNonce;
-         genesis.Header.Version = nVersion;
-         genesis.Transactions.Add(txNew);
-         genesis.Header.HashPrevBlock = uint256.Zero;
-         genesis.UpdateMerkleRoot();
+            txNew.AddOutput(new TxOut()
+            {
+                Value = genesisReward,
+            });
 
-         return genesis;
-      }
-   }
+            Block genesis = consensusFactory.CreateBlock();
+            genesis.Header.BlockTime = Utils.UnixTimeToDateTime(nTime);
+            genesis.Header.Bits = nBits;
+            genesis.Header.Nonce = nNonce;
+            genesis.Header.Version = nVersion;
+            genesis.Transactions.Add(txNew);
+            genesis.Header.HashPrevBlock = uint256.Zero;
+            genesis.UpdateMerkleRoot();
+
+            return genesis;
+        }
+    }
 }

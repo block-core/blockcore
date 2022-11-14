@@ -114,7 +114,7 @@ namespace Blockcore.Features.MemoryPool
             this.connectionManager = connectionManager;
             this.initialBlockDownloadState = initialBlockDownloadState;
             this.signals = signals;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.loggerFactory = loggerFactory;
             this.network = network;
 
@@ -133,7 +133,7 @@ namespace Blockcore.Features.MemoryPool
         /// <inheritdoc />
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
             this.isPeerWhitelistedForRelay = this.AttachedPeer.IsWhitelisted() && this.mempoolManager.mempoolSettings.WhiteListRelay;
             this.isBlocksOnlyMode = !this.connectionManager.ConnectionSettings.RelayTxes && !this.isPeerWhitelistedForRelay;
         }
@@ -141,7 +141,7 @@ namespace Blockcore.Features.MemoryPool
         /// <inheritdoc />
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
@@ -168,7 +168,7 @@ namespace Blockcore.Features.MemoryPool
                     return;
                 }
 
-                await this.ProcessMessageAsync(peer, message).ConfigureAwait(false);
+                await ProcessMessageAsync(peer, message).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -195,19 +195,19 @@ namespace Blockcore.Features.MemoryPool
                 switch (message.Message.Payload)
                 {
                     case TxPayload txPayload:
-                        await this.ProcessTxPayloadAsync(peer, txPayload).ConfigureAwait(false);
+                        await ProcessTxPayloadAsync(peer, txPayload).ConfigureAwait(false);
                         break;
 
                     case MempoolPayload mempoolPayload:
-                        await this.SendMempoolPayloadAsync(peer, mempoolPayload).ConfigureAwait(false);
+                        await SendMempoolPayloadAsync(peer, mempoolPayload).ConfigureAwait(false);
                         break;
 
                     case GetDataPayload getDataPayload:
-                        await this.ProcessGetDataAsync(peer, getDataPayload).ConfigureAwait(false);
+                        await ProcessGetDataAsync(peer, getDataPayload).ConfigureAwait(false);
                         break;
 
                     case InvPayload invPayload:
-                        await this.ProcessInvAsync(peer, invPayload).ConfigureAwait(false);
+                        await ProcessInvAsync(peer, invPayload).ConfigureAwait(false);
                         break;
                 }
             }
@@ -274,7 +274,7 @@ namespace Blockcore.Features.MemoryPool
             }
 
             this.logger.LogDebug("Sending transaction inventory to peer '{0}'.", peer.RemoteSocketEndpoint);
-            await this.SendAsTxInventoryAsync(peer, transactionsToSend);
+            await SendAsTxInventoryAsync(peer, transactionsToSend);
             this.LastMempoolReq = this.mempoolManager.DateTimeProvider.GetTime();
         }
 
@@ -389,7 +389,7 @@ namespace Blockcore.Features.MemoryPool
             if (!await this.orphans.AlreadyHaveAsync(trxHash) && await this.validator.AcceptToMemoryPool(state, trx))
             {
                 await this.validator.SanityCheck();
-                this.RelayTransaction(trxHash);
+                RelayTransaction(trxHash);
 
                 this.signals.Publish(new TransactionReceived(trx));
 
@@ -427,7 +427,7 @@ namespace Blockcore.Features.MemoryPool
                     if (!state.IsInvalid)
                     {
                         this.logger.LogDebug("Force relaying transaction ID '{0}' from whitelisted peer '{1}'.", trxHash, peer.RemoteSocketEndpoint);
-                        this.RelayTransaction(trxHash);
+                        RelayTransaction(trxHash);
                     }
                     else
                     {
@@ -588,7 +588,7 @@ namespace Blockcore.Features.MemoryPool
                 this.logger.LogDebug("Sending transaction inventory to peer '{0}'.", peer.RemoteSocketEndpoint);
                 try
                 {
-                    await this.SendAsTxInventoryAsync(peer, transactionsToSend).ConfigureAwait(false);
+                    await SendAsTxInventoryAsync(peer, transactionsToSend).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
                 {

@@ -126,9 +126,9 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletSyncManager.ProcessBlock(blockToProcess); //4th block in the list has same prevhash as which is loaded
 
-            uint256 expectedBlockHash = this.AssertTipBlockHash(walletSyncManager, 4);
+            uint256 expectedBlockHash = AssertTipBlockHash(walletSyncManager, 4);
 
-            this.AssertTipBlockHash(walletSyncManager, 4);
+            AssertTipBlockHash(walletSyncManager, 4);
 
             this.walletManager.Verify(w => w.ProcessBlock(It.Is<Block>(b => b.GetHash() == blockToProcess.GetHash()), It.Is<ChainedHeader>(c => c.Header.GetHash() == expectedBlockHash)));
         }
@@ -164,7 +164,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletSyncManager.ProcessBlock(blockToProcess);
 
-            this.AssertTipBlockHash(walletSyncManager, 5);
+            AssertTipBlockHash(walletSyncManager, 5);
 
             // walletmanager removes all blocks up to the fork.
             this.walletManager.Verify(w => w.RemoveBlocks(ExpectChainedBlock(this.chainIndexer.GetHeader(2))));
@@ -206,7 +206,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletSyncManager.ProcessBlock(blockToProcess);
 
-            this.AssertTipBlockHash(walletSyncManager, 4);
+            AssertTipBlockHash(walletSyncManager, 4);
 
             //verify manager processes each missing block until caught up.
             // height 3
@@ -256,7 +256,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             walletSyncManager.ProcessBlock(blockToProcess);
 
-            this.AssertTipBlockHash(walletSyncManager, 4);
+            AssertTipBlockHash(walletSyncManager, 4);
 
             //verify manager processes each missing block until caught up.
             // height 3

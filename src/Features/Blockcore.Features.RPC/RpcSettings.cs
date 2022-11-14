@@ -8,7 +8,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.RPC
 {
@@ -59,10 +58,10 @@ namespace Blockcore.Features.RPC
             this.AllowIp = new List<IPAddressBlock>();
 
             // Get values from config
-            this.LoadSettingsFromConfig(nodeSettings);
+            LoadSettingsFromConfig(nodeSettings);
 
             // Check validity of settings
-            this.CheckConfigurationValidity(nodeSettings.Logger);
+            CheckConfigurationValidity(nodeSettings.Logger);
         }
 
         /// <summary>

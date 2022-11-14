@@ -4,7 +4,6 @@ using Blockcore.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Networks.Stratis.Rules
 {

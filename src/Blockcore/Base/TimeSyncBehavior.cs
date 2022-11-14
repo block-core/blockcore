@@ -11,7 +11,6 @@ using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Base
 {
@@ -243,7 +242,7 @@ namespace Blockcore.Base
 
                         res = true;
                     }
-                    else this.logger.LogDebug("Sample from peer '{0}' is already included.", peerAddress);
+                    else this.logger.LogDebug("Sample from peer '{peerAddress}' is already included.", peerAddress);
                 }
                 else this.logger.LogDebug("Time sync feature is switched off.");
             }
@@ -360,10 +359,19 @@ namespace Blockcore.Base
             startAfter: TimeSpans.FiveSeconds);
         }
 
-        /// <inheritdoc />
         public void Dispose()
         {
-            this.warningLoop?.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.warningLoop?.Dispose();
+            }
         }
     }
 
@@ -444,7 +452,7 @@ namespace Blockcore.Base
                         TimeSpan? timeOffset = version.Timestamp - this.dateTimeProvider.GetTimeOffset();
                         if (timeOffset != null) this.state.AddTimeData(address, timeOffset.Value, peer.Inbound);
                     }
-                    else this.logger.LogDebug("Node '{0}' does not have an initialized time offset.", peer.RemoteSocketEndpoint);
+                    else this.logger.LogDebug("Node '{endpoint}' does not have an initialized time offset.", peer.RemoteSocketEndpoint);
                 }
                 else this.logger.LogDebug("Message received from unknown node's address.");
             }

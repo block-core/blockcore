@@ -271,7 +271,7 @@ namespace Blockcore.Features.MemoryPool.Fee
                 curFarBucket = bucket;
                 nConf += this.confAvg[confTarget - 1][bucket];
                 totalNum += this.txCtAvg[bucket];
-                for (int confct = confTarget; confct < this.GetMaxConfirms(); confct++)
+                for (int confct = confTarget; confct < GetMaxConfirms(); confct++)
                     extraNum += this.unconfTxs[(nBlockHeight - confct) % bins][bucket];
                 extraNum += this.oldUnconfTxs[bucket];
                 // If we have enough transaction data points in this range of buckets,

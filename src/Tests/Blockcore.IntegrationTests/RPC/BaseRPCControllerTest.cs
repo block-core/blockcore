@@ -4,7 +4,6 @@ using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.RPC;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 

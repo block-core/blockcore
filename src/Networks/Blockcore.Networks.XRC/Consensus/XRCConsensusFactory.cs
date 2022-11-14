@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Blockcore.Consensus;
+﻿using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 
 namespace Blockcore.Networks.XRC.Consensus

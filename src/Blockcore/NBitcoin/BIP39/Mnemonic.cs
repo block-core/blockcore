@@ -19,16 +19,16 @@ namespace NBitcoin
     {
         public Mnemonic(string mnemonic, Wordlist wordlist = null)
         {
-            if(mnemonic == null)
+            if (mnemonic == null)
                 throw new ArgumentNullException("mnemonic");
             this._Mnemonic = mnemonic.Trim();
 
-            if(wordlist == null)
+            if (wordlist == null)
                 wordlist = Wordlist.AutoDetect(mnemonic) ?? Wordlist.English;
 
             string[] words = mnemonic.Split(new char[] { ' ', '　' }, StringSplitOptions.RemoveEmptyEntries);
             //if the sentence is not at least 12 characters or cleanly divisible by 3, it is bad!
-            if(!CorrectWordCount(words.Length))
+            if (!CorrectWordCount(words.Length))
             {
                 throw new FormatException("Word count should be equals to 12,15,18,21 or 24");
             }
@@ -47,11 +47,11 @@ namespace NBitcoin
         {
             wordList = wordList ?? Wordlist.English;
             this._WordList = wordList;
-            if(entropy == null)
+            if (entropy == null)
                 entropy = RandomUtils.GetBytes(32);
 
             int i = Array.IndexOf(entArray, entropy.Length * 8);
-            if(i == -1)
+            if (i == -1)
                 throw new ArgumentException("The length for entropy should be : " + String.Join(",", entArray), "entropy");
 
             int cs = csArray[i];
@@ -74,7 +74,7 @@ namespace NBitcoin
         private static byte[] GenerateEntropy(WordCount wordCount)
         {
             int ms = (int)wordCount;
-            if(!CorrectWordCount(ms))
+            if (!CorrectWordCount(ms))
                 throw new ArgumentException("Word count should be equal to 12,15,18,21 or 24", "wordCount");
             int i = Array.IndexOf(msArray, (int)wordCount);
             return RandomUtils.GetBytes(entArray[i] / 8);
@@ -89,7 +89,7 @@ namespace NBitcoin
         {
             get
             {
-                if(this._IsValidChecksum == null)
+                if (this._IsValidChecksum == null)
                 {
                     int i = Array.IndexOf(msArray, this._Indices.Length);
                     int cs = csArray[i];

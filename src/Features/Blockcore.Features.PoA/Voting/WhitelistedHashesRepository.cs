@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -24,7 +23,7 @@ namespace Blockcore.Features.PoA.Voting
             this.kvRepository = kvRepository;
             this.locker = new object();
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         public void Initialize()
@@ -55,7 +54,7 @@ namespace Blockcore.Features.PoA.Voting
 
                 this.whitelistedHashes.Add(hash);
 
-                this.SaveHashes();
+                SaveHashes();
             }
         }
 
@@ -66,7 +65,7 @@ namespace Blockcore.Features.PoA.Voting
                 bool removed = this.whitelistedHashes.Remove(hash);
 
                 if (removed)
-                    this.SaveHashes();
+                    SaveHashes();
             }
         }
 

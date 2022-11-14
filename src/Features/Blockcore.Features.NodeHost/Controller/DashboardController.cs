@@ -31,7 +31,7 @@ namespace Blockcore.Controllers
         public IActionResult Stats()
         {
             string content = (this.fullNode as FullNode).LastLogOutput;
-            return this.Content(content);
+            return Content(content);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Blockcore.Controllers
         [Route("AsyncLoopsStats")]
         public IActionResult AsyncLoopsStats()
         {
-            return this.Content(this.asyncProvider.GetStatistics(false));
+            return Content(this.asyncProvider.GetStatistics(false));
         }
     }
 }

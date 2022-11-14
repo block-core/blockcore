@@ -72,7 +72,7 @@ namespace NBitcoin
 
         public KeyPath Derive(int index, bool hardened)
         {
-            if(index < 0)
+            if (index < 0)
                 throw new ArgumentOutOfRangeException("index", "the index can't be negative");
             uint realIndex = (uint)index;
             realIndex = hardened ? realIndex | 0x80000000u : realIndex;
@@ -95,7 +95,7 @@ namespace NBitcoin
         {
             get
             {
-                if(this._Indexes.Length == 0)
+                if (this._Indexes.Length == 0)
                     return null;
                 return new KeyPath(this._Indexes.Take(this._Indexes.Length - 1).ToArray());
             }
@@ -103,7 +103,7 @@ namespace NBitcoin
 
         public KeyPath Increment()
         {
-            if(this._Indexes.Length == 0)
+            if (this._Indexes.Length == 0)
                 return null;
             uint[] indices = this._Indexes.ToArray();
             indices[indices.Length - 1]++;
@@ -113,7 +113,7 @@ namespace NBitcoin
         public override bool Equals(object obj)
         {
             var item = obj as KeyPath;
-            if(item == null)
+            if (item == null)
                 return false;
             return ToString().Equals(item.ToString());
         }
@@ -154,7 +154,7 @@ namespace NBitcoin
         {
             get
             {
-                if(this._Indexes.Length == 0)
+                if (this._Indexes.Length == 0)
                     throw new InvalidOperationException("No indice found in this KeyPath");
                 return (this._Indexes[this._Indexes.Length - 1] & 0x80000000u) != 0;
             }

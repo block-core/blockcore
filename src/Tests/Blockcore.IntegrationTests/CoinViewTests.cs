@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
-using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
@@ -51,14 +49,14 @@ namespace Blockcore.IntegrationTests
             {
                 Block genesis = ctx.Network.GetGenesis();
                 var genesisChainedHeader = new ChainedHeader(genesis.Header, ctx.Network.GenesisHash, 0);
-                ChainedHeader chained = this.MakeNext(genesisChainedHeader, ctx.Network);
+                ChainedHeader chained = MakeNext(genesisChainedHeader, ctx.Network);
                 ctx.Coindb.SaveChanges(new UnspentOutput[] { new UnspentOutput(new OutPoint(genesis.Transactions[0], 0), new Coins(0, genesis.Transactions[0].Outputs.First(), true)) }, new HashHeightPair(genesisChainedHeader), new HashHeightPair(chained));
                 Assert.NotNull(ctx.Coindb.FetchCoins(new[] { new OutPoint(genesis.Transactions[0], 0) }).UnspentOutputs.Values.FirstOrDefault().Coins);
                 Assert.Null(ctx.Coindb.FetchCoins(new[] { new OutPoint() }).UnspentOutputs.Values.FirstOrDefault().Coins);
 
                 ChainedHeader previous = chained;
-                chained = this.MakeNext(this.MakeNext(genesisChainedHeader, ctx.Network), ctx.Network);
-                chained = this.MakeNext(this.MakeNext(genesisChainedHeader, ctx.Network), ctx.Network);
+                chained = MakeNext(MakeNext(genesisChainedHeader, ctx.Network), ctx.Network);
+                chained = MakeNext(MakeNext(genesisChainedHeader, ctx.Network), ctx.Network);
                 ctx.Coindb.SaveChanges(new List<UnspentOutput>(), new HashHeightPair(previous), new HashHeightPair(chained));
                 Assert.Equal(chained.HashBlock, ctx.Coindb.GetTipHash().Hash);
                 ctx.ReloadPersistentCoinView();
@@ -75,7 +73,7 @@ namespace Blockcore.IntegrationTests
             {
                 Block genesis = ctx.Network.GetGenesis();
                 var genesisChainedHeader = new ChainedHeader(genesis.Header, ctx.Network.GenesisHash, 0);
-                ChainedHeader chained = this.MakeNext(genesisChainedHeader, ctx.Network);
+                ChainedHeader chained = MakeNext(genesisChainedHeader, ctx.Network);
                 var dateTimeProvider = new DateTimeProvider();
 
                 var cacheCoinView = new CachedCoinView(this.network, new Checkpoints(), ctx.Coindb, dateTimeProvider, this.loggerFactory, new NodeStats(dateTimeProvider, this.loggerFactory), new ConsensusSettings(new NodeSettings(this.network)));
@@ -295,12 +293,12 @@ namespace Blockcore.IntegrationTests
                 chain.SetTip(repo.LoadAsync(chain.Genesis).GetAwaiter().GetResult());
                 Assert.True(chain.Tip == chain.Genesis);
                 chain = new ChainIndexer(this.regTest);
-                ChainedHeader tip = this.AppendBlock(chain);
+                ChainedHeader tip = AppendBlock(chain);
                 repo.SaveAsync(chain).GetAwaiter().GetResult();
                 var newChain = new ChainIndexer(this.regTest);
                 newChain.SetTip(repo.LoadAsync(chain.Genesis).GetAwaiter().GetResult());
                 Assert.Equal(tip, newChain.Tip);
-                tip = this.AppendBlock(chain);
+                tip = AppendBlock(chain);
                 repo.SaveAsync(chain).GetAwaiter().GetResult();
                 newChain = new ChainIndexer(this.regTest);
                 newChain.SetTip(repo.LoadAsync(chain.Genesis).GetAwaiter().GetResult());
@@ -328,7 +326,7 @@ namespace Blockcore.IntegrationTests
         private ChainedHeader AppendBlock(params ChainIndexer[] chainsIndexer)
         {
             ChainedHeader index = null;
-            return this.AppendBlock(index, chainsIndexer);
+            return AppendBlock(index, chainsIndexer);
         }
     }
 }

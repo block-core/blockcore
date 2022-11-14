@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Api.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +16,9 @@ namespace Blockcore.Features.RPC.Tests
 {
     public class RPCParametersValueProviderTest
     {
-        private ValueProviderFactoryContext context;
-        private RPCParametersValueProvider provider;
-        private ActionContext actionContext;
+        private readonly ValueProviderFactoryContext context;
+        private readonly RPCParametersValueProvider provider;
+        private readonly ActionContext actionContext;
 
         public RPCParametersValueProviderTest()
         {

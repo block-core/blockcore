@@ -87,8 +87,8 @@ namespace Blockcore.Features.Miner.Tests
                 .Returns(new AsyncLoop("PowMining.Mine2", this.FullNodeLogger.Object, token => { return Task.CompletedTask; }))
                 .Verifiable();
 
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
 
             miner.Mine(new Key().ScriptPubKey);
 
@@ -103,8 +103,8 @@ namespace Blockcore.Features.Miner.Tests
                 .Returns(new AsyncLoop("PowMining.Mine2", this.FullNodeLogger.Object, token => { return Task.CompletedTask; }))
                 .Verifiable();
 
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
 
             miner.Mine(new Key().ScriptPubKey);
             miner.Mine(new Key().ScriptPubKey);
@@ -139,8 +139,8 @@ namespace Blockcore.Features.Miner.Tests
                 })
                 .Verifiable();
 
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
 
             miner.Mine(new Key().ScriptPubKey);
             this.asyncProvider.Verify();
@@ -149,10 +149,10 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void IncrementExtraNonce_HashPrevBlockNotSameAsBlockHeaderHashPrevBlock_ResetsExtraNonceAndHashPrevBlock_UpdatesCoinBaseTransactionAndMerkleRoot()
         {
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
 
-            FieldInfo hashPrevBlockFieldSelector = this.GetHashPrevBlockFieldSelector();
+            FieldInfo hashPrevBlockFieldSelector = GetHashPrevBlockFieldSelector();
             hashPrevBlockFieldSelector.SetValue(miner, new uint256(15));
 
             var transaction = new Transaction();
@@ -175,10 +175,10 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void IncrementExtraNonce_HashPrevBlockNotSameAsBlockHeaderHashPrevBlock_IncrementsExtraNonce_UpdatesCoinBaseTransactionAndMerkleRoot()
         {
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
 
-            FieldInfo hashPrevBlockFieldSelector = this.GetHashPrevBlockFieldSelector();
+            FieldInfo hashPrevBlockFieldSelector = GetHashPrevBlockFieldSelector();
             hashPrevBlockFieldSelector.SetValue(miner, new uint256(15));
 
             var transaction = new Transaction();
@@ -200,7 +200,7 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void GenerateBlocks_SingleBlock_ReturnsGeneratedBlock()
         {
-            BlockTemplate blockTemplate = this.CreateBlockTemplate(this.fixture.Block1);
+            BlockTemplate blockTemplate = CreateBlockTemplate(this.fixture.Block1);
 
             Block callbackBlock = null;
             this.chainIndexer.SetTip(this.chainIndexer.GetHeader(0));
@@ -209,10 +209,10 @@ namespace Blockcore.Features.Miner.Tests
                 .Callback<Block, bool>((block, val) => { callbackBlock = block; })
                 .ReturnsAsync(new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip));
 
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
             blockBuilder.Setup(b => b.Build(It.IsAny<ChainedHeader>(), It.Is<Script>(r => r == this.fixture.ReserveScript.ReserveFullNodeScript))).Returns(blockTemplate);
 
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
             List<uint256> blockHashes = miner.GenerateBlocks(this.fixture.ReserveScript, 1, uint.MaxValue);
 
             Assert.NotEmpty(blockHashes);
@@ -223,7 +223,7 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void GenerateBlocks_SingleBlock_MaxTriesReached_StopsGeneratingBlocks_ReturnsEmptyList()
         {
-            BlockTemplate blockTemplate = this.CreateBlockTemplate(this.fixture.Block1);
+            BlockTemplate blockTemplate = CreateBlockTemplate(this.fixture.Block1);
             this.chainIndexer.SetTip(this.chainIndexer.GetHeader(0));
             var chainedHeader = new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip);
 
@@ -231,7 +231,7 @@ namespace Blockcore.Features.Miner.Tests
             blockTemplate.Block.Header.Nonce = 0;
             blockTemplate.Block.Header.Bits = KnownNetworks.TestNet.GetGenesis().Header.Bits; // make the difficulty harder.
 
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
             blockBuilder.Setup(b => b.Build(It.IsAny<ChainedHeader>(), It.Is<Script>(r => r == this.fixture.ReserveScript.ReserveFullNodeScript))).Returns(blockTemplate);
 
             PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
@@ -243,8 +243,8 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void GenerateBlocks_ZeroBlocks_ReturnsEmptyList()
         {
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
             List<uint256> blockHashes = miner.GenerateBlocks(this.fixture.ReserveScript, 0, int.MaxValue);
 
             Assert.Empty(blockHashes);
@@ -255,7 +255,7 @@ namespace Blockcore.Features.Miner.Tests
         {
             var blocksToValidate = new List<uint256>();
             ChainedHeader lastChainedHeader = null;
-            BlockTemplate blockTemplate = this.CreateBlockTemplate(this.fixture.Block1);
+            BlockTemplate blockTemplate = CreateBlockTemplate(this.fixture.Block1);
             var chainedHeader = new ChainedHeader(blockTemplate.Block.Header, blockTemplate.Block.GetHash(), this.chainIndexer.Tip);
 
             this.consensusManager.Setup(c => c.BlockMinedAsync(It.IsAny<Block>(), false))
@@ -275,13 +275,13 @@ namespace Blockcore.Features.Miner.Tests
                 })
                 .ReturnsAsync(chainedHeader);
 
-            BlockTemplate blockTemplate2 = this.CreateBlockTemplate(this.fixture.Block2);
+            BlockTemplate blockTemplate2 = CreateBlockTemplate(this.fixture.Block2);
 
             this.chainIndexer.SetTip(this.chainIndexer.GetHeader(0));
 
             int attempts = 0;
 
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
             blockBuilder.Setup(b => b.Build(It.IsAny<ChainedHeader>(), It.Is<Script>(r => r == this.fixture.ReserveScript.ReserveFullNodeScript)))
                 .Returns(() =>
                 {
@@ -307,7 +307,7 @@ namespace Blockcore.Features.Miner.Tests
                     return blockTemplate2;
                 });
 
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
             List<uint256> blockHashes = miner.GenerateBlocks(this.fixture.ReserveScript, 2, uint.MaxValue);
 
             Assert.NotEmpty(blockHashes);
@@ -319,7 +319,7 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void GenerateBlocks_MultipleBlocks_InvalidPreviousTip_ReturnsValidGeneratedBlocks()
         {
-            BlockTemplate block1 = this.CreateBlockTemplate(this.fixture.Block1);
+            BlockTemplate block1 = CreateBlockTemplate(this.fixture.Block1);
 
             this.chainIndexer.SetTip(this.chainIndexer.GetHeader(0));
 
@@ -340,9 +340,9 @@ namespace Blockcore.Features.Miner.Tests
                     return chainedHeader;
                 });
 
-            BlockTemplate block2 = this.CreateBlockTemplate(this.fixture.Block2);
+            BlockTemplate block2 = CreateBlockTemplate(this.fixture.Block2);
 
-            Mock<PowBlockDefinition> blockBuilder = this.CreateProofOfWorkBlockBuilder();
+            Mock<PowBlockDefinition> blockBuilder = CreateProofOfWorkBlockBuilder();
 
             // As block 2 will fail consensus we need to still return it as block 3 so that the previous block hash is set properly.
             blockBuilder.SetupSequence(b => b.Build(It.IsAny<ChainedHeader>(), It.Is<Script>(r => r == this.fixture.ReserveScript.ReserveFullNodeScript)))
@@ -350,7 +350,7 @@ namespace Blockcore.Features.Miner.Tests
                         .Returns(block2)
                         .Returns(block2);
 
-            PowMining miner = this.CreateProofOfWorkMiner(blockBuilder.Object);
+            PowMining miner = CreateProofOfWorkMiner(blockBuilder.Object);
 
             // We instruct pass GenerateBlocks to mine 2 valid blocks i.e. it will stop once it has
             // mined 2 blocks that pass consensus.
@@ -468,10 +468,10 @@ namespace Blockcore.Features.Miner.Tests
             this.Key = new Key();
             this.ReserveScript = new ReserveScript(this.Key.ScriptPubKey);
 
-            this.Block1 = this.PrepareValidBlock(this.ChainIndexer.Tip, 1, this.Key.ScriptPubKey);
+            this.Block1 = PrepareValidBlock(this.ChainIndexer.Tip, 1, this.Key.ScriptPubKey);
             this.ChainedHeader1 = new ChainedHeader(this.Block1.Header, this.Block1.GetHash(), this.ChainIndexer.Tip);
 
-            this.Block2 = this.PrepareValidBlock(this.ChainedHeader1, 2, this.Key.ScriptPubKey);
+            this.Block2 = PrepareValidBlock(this.ChainedHeader1, 2, this.Key.ScriptPubKey);
             this.ChainedHeader2 = new ChainedHeader(this.Block2.Header, this.Block2.GetHash(), this.ChainedHeader1);
         }
 

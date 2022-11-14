@@ -78,7 +78,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         {
             this.blockStore = blockStore;
             this.broadcasterManager = broadcasterManager;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.scriptAddressReader = scriptAddressReader;
             this.storeSettings = storeSettings;
             this.walletManager = walletManager;
@@ -101,7 +101,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         {
             Guard.NotEmpty(passphrase, nameof(passphrase));
 
-            WalletAccountReference account = this.GetWalletAccountReference();
+            WalletAccountReference account = GetWalletAccountReference();
 
             try
             {
@@ -118,7 +118,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         [ActionDescription("Removes the wallet encryption key from memory, locking the wallet. After calling this method, you will need to call walletpassphrase again before being able to call any methods which require the wallet to be unlocked.")]
         public bool LockWallet()
         {
-            WalletAccountReference account = this.GetWalletAccountReference();
+            WalletAccountReference account = GetWalletAccountReference();
             this.walletManager.LockWallet(account.WalletName);
             return true; // NOTE: Have to return a value or else RPC middleware doesn't serialize properly.
         }
@@ -131,7 +131,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             TransactionBuildContext context = new TransactionBuildContext(this.FullNode.Network)
             {
-                AccountReference = this.GetWalletAccountReference(),
+                AccountReference = GetWalletAccountReference(),
                 Recipients = new[] { new Recipient { Amount = Money.Coins(amount), ScriptPubKey = address.ScriptPubKey } }.ToList(),
                 CacheSecret = false,
                 TransactionFee = Money.Coins(transactionFee),
@@ -218,7 +218,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' and 'bech32' are currently supported.");
             }
 
-            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            WalletAccountReference accountReference = GetWalletAccountReference();
 
             HdAddress hdAddress = this.walletManager.GetUnusedAddresses(accountReference, 1, alwaysnew: true).Single();
 
@@ -247,7 +247,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 if (!addressType.Equals("legacy", StringComparison.InvariantCultureIgnoreCase) && !addressType.Equals("bech32", StringComparison.InvariantCultureIgnoreCase))
                     throw new RPCServerException(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Only address type 'legacy' and 'bech32' are currently supported.");
             }
-            HdAddress hdAddress = this.walletManager.GetUnusedAddress(this.GetWalletAccountReference());
+            HdAddress hdAddress = this.walletManager.GetUnusedAddress(GetWalletAccountReference());
 
             string address = hdAddress.Address;
 
@@ -270,7 +270,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             if (!string.IsNullOrEmpty(accountName) && !accountName.Equals("*"))
                 throw new RPCServerException(RPCErrorCode.RPC_METHOD_DEPRECATED, "Account has been deprecated, must be excluded or set to \"*\"");
 
-            WalletAccountReference account = this.GetWalletAccountReference();
+            WalletAccountReference account = GetWalletAccountReference();
 
             Money balance = this.walletManager.GetSpendableTransactionsInAccount(account, minConfirmations).Sum(x => x.Transaction.Amount);
             return balance?.ToUnit(MoneyUnit.BTC) ?? 0;
@@ -293,7 +293,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             if (targetConfirmations < 1)
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_PARAMETER, "Invalid parameter");
 
-            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            WalletAccountReference accountReference = GetWalletAccountReference();
             Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
 
             IEnumerable<TransactionOutputData> transactions = wallet.GetAllTransactions();
@@ -302,7 +302,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             foreach (TransactionOutputData transactionData in transactions)
             {
-                GetTransactionModel transaction = this.GetTransaction(transactionData.Id.ToString());
+                GetTransactionModel transaction = GetTransaction(transactionData.Id.ToString());
 
                 int blockHeight = transactionData.BlockHeight ?? 0;
 
@@ -363,7 +363,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             if (!uint256.TryParse(txid, out uint256 trxid))
                 throw new ArgumentException(nameof(txid));
 
-            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            WalletAccountReference accountReference = GetWalletAccountReference();
             Types.Wallet wallet = this.walletManager.GetWalletByName(accountReference.WalletName);
             HdAccount account = this.walletManager.GetAccounts(accountReference.WalletName).Single(a => a.Name == accountReference.AccountName);
 
@@ -518,8 +518,8 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             if (!this.storeSettings.TxIndex)
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_REQUEST, $"{nameof(ListAddressGroupings)} is incompatible with transaction indexing turned off (i.e. -txIndex=0).");
 
-            var walletReference = this.GetWalletAccountReference();
-            var addressGroupings = this.GetAddressGroupings(walletReference.WalletName);
+            var walletReference = GetWalletAccountReference();
+            var addressGroupings = GetAddressGroupings(walletReference.WalletName);
             var addressGroupingModels = new List<AddressGroupingModel>();
 
             foreach (var addressGrouping in addressGroupings)
@@ -723,7 +723,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 JsonConvert.DeserializeObject<List<string>>(addressesJson).ForEach(i => addresses.Add(BitcoinAddress.Create(i, this.FullNode.Network)));
             }
 
-            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            WalletAccountReference accountReference = GetWalletAccountReference();
             IEnumerable<UnspentOutputReference> spendableTransactions = this.walletManager.GetSpendableTransactionsInAccount(accountReference, minConfirmations);
 
             var unspentCoins = new List<UnspentCoinModel>();
@@ -806,7 +806,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 recipients.Add(recipient);
             }
 
-            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            WalletAccountReference accountReference = GetWalletAccountReference();
 
             var context = new TransactionBuildContext(this.FullNode.Network)
             {
@@ -860,7 +860,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
         [ActionDescription("Provides information about the wallet.")]
         public GetWalletInfoModel GetWalletInfo()
         {
-            var accountReference = this.GetWalletAccountReference();
+            var accountReference = GetWalletAccountReference();
             Types.Wallet wallet = this.walletManager.GetWalletByName(accountReference.WalletName);
 
             var account = this.walletManager.GetAccounts(accountReference.WalletName)

@@ -131,7 +131,7 @@ namespace Blockcore.Features.Miner
         {
             this.ConsensusManager = consensusManager;
             this.DateTimeProvider = dateTimeProvider;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.Mempool = mempool;
             this.MempoolLock = mempoolLock;
             this.Network = network;
@@ -143,7 +143,7 @@ namespace Blockcore.Features.Miner
             // Whether we need to account for byte usage (in addition to weight usage).
             this.NeedSizeAccounting = (this.Options.BlockMaxSize < network.Consensus.Options.MaxBlockSerializedSize);
 
-            this.Configure();
+            Configure();
         }
 
         /// <summary>
@@ -171,8 +171,8 @@ namespace Blockcore.Features.Miner
         protected virtual void CreateCoinbase()
         {
             this.coinbase = this.Network.CreateTransaction();
-            if(this.coinbase is IPosTransactionWithTime posTrx)
-                posTrx.Time =  (uint)this.DateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
+            if (this.coinbase is IPosTransactionWithTime posTrx)
+                posTrx.Time = (uint)this.DateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
             this.coinbase.AddInput(TxIn.CreateCoinbase(this.ChainTip.Height + 1));
             this.coinbase.AddOutput(new TxOut(Money.Zero, this.scriptPubKey));
 
@@ -203,15 +203,15 @@ namespace Blockcore.Features.Miner
         /// <returns>The contructed <see cref="Mining.BlockTemplate"/>.</returns>
         protected void OnBuild(ChainedHeader chainTip, Script scriptPubKey)
         {
-            this.Configure();
+            Configure();
 
             this.ChainTip = chainTip;
 
             this.block = this.BlockTemplate.Block;
             this.scriptPubKey = scriptPubKey;
 
-            this.CreateCoinbase();
-            this.ComputeBlockVersion();
+            CreateCoinbase();
+            ComputeBlockVersion();
 
             this.MedianTimePast = Utils.DateTimeToUnixTime(this.ChainTip.GetMedianTimePast());
             this.LockTimeCutoff = MempoolValidator.StandardLocktimeVerifyFlags.HasFlag(Transaction.LockTimeFlags.MedianTimePast)
@@ -219,10 +219,10 @@ namespace Blockcore.Features.Miner
                 : this.block.Header.Time;
 
             // Decide whether to include witness transactions
-            this.IncludeWitness = this.IsWitnessEnabled(chainTip);
+            this.IncludeWitness = IsWitnessEnabled(chainTip);
 
             // Add transactions from the mempool
-            this.AddTransactions(out int nPackagesSelected, out int nDescendantsUpdated);
+            AddTransactions(out int nPackagesSelected, out int nDescendantsUpdated);
 
             this.LastBlockTx = this.BlockTx;
             this.LastBlockSize = this.BlockSize;
@@ -237,13 +237,13 @@ namespace Blockcore.Features.Miner
 
             if (this.IncludeWitness)
             {
-                this.AddOrUpdateCoinbaseCommitmentToBlock(this.block);
+                AddOrUpdateCoinbaseCommitmentToBlock(this.block);
             }
 
             int nSerializeSize = this.block.GetSerializedSize();
             this.logger.LogDebug("Serialized size is {0} bytes, block weight is {1}, number of txs is {2}, tx fees are {3}, number of sigops is {4}.", nSerializeSize, this.block.GetBlockWeight(this.Network.Consensus), this.BlockTx, this.fees, this.BlockSigOpsCost);
 
-            this.UpdateHeaders();
+            UpdateHeaders();
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Blockcore.Features.Miner
         {
             if (this.IncludeWitness)
             {
-                this.AddOrUpdateCoinbaseCommitmentToBlock(block);
+                AddOrUpdateCoinbaseCommitmentToBlock(block);
             }
 
             block.UpdateMerkleRoot();
@@ -337,7 +337,7 @@ namespace Blockcore.Features.Miner
 
             // Start by adding all descendants of previously added txs to mapModifiedTx
             // and modifying them for their already included ancestors.
-            this.UpdatePackagesForAdded(this.inBlock, mapModifiedTx);
+            UpdatePackagesForAdded(this.inBlock, mapModifiedTx);
 
             List<TxMempoolEntry> ancestorScoreList = this.MempoolLock.ReadAsync(() => this.Mempool.MapTx.AncestorScore).ConfigureAwait(false).GetAwaiter().GetResult().ToList();
 
@@ -421,7 +421,7 @@ namespace Blockcore.Features.Miner
                     return;
                 }
 
-                if (!this.TestPackage(iter, packageSize, packageSigOpsCost))
+                if (!TestPackage(iter, packageSize, packageSigOpsCost))
                 {
                     if (fUsingModified)
                     {
@@ -448,11 +448,11 @@ namespace Blockcore.Features.Miner
 
                 this.MempoolLock.ReadAsync(() => this.Mempool.CalculateMemPoolAncestors(iter, ancestors, nNoLimit, nNoLimit, nNoLimit, nNoLimit, out dummy, false)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                this.OnlyUnconfirmed(ancestors);
+                OnlyUnconfirmed(ancestors);
                 ancestors.Add(iter);
 
                 // Test if all tx's are Final.
-                if (!this.TestPackageTransactions(ancestors))
+                if (!TestPackageTransactions(ancestors))
                 {
                     if (fUsingModified)
                     {
@@ -473,7 +473,7 @@ namespace Blockcore.Features.Miner
                 List<TxMempoolEntry> sortedEntries = ancestors.ToList().OrderBy(o => o, new CompareTxIterByAncestorCount()).ToList();
                 foreach (TxMempoolEntry sortedEntry in sortedEntries)
                 {
-                    this.AddToBlock(sortedEntry);
+                    AddToBlock(sortedEntry);
                     // Erase from the modified set, if present
                     mapModifiedTx.Remove(sortedEntry.TransactionHash);
                 }
@@ -481,7 +481,7 @@ namespace Blockcore.Features.Miner
                 nPackagesSelected++;
 
                 // Update transactions that depend on each of these
-                nDescendantsUpdated += this.UpdatePackagesForAdded(ancestors, mapModifiedTx);
+                nDescendantsUpdated += UpdatePackagesForAdded(ancestors, mapModifiedTx);
             }
         }
 

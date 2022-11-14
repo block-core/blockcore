@@ -15,7 +15,7 @@ namespace Blockcore.Tests.Base
     public class InvalidBlockHashStoreTest
     {
         /// <summary>Source of randomness.</summary>
-        private static Random rng = new Random();
+        private static readonly Random rng = new Random();
 
         /// <summary>
         /// Tests <see cref="InvalidBlockHashStore.MarkInvalid(uint256, DateTime?)"/> and <see cref="InvalidBlockHashStore.IsInvalid(uint256)"/>

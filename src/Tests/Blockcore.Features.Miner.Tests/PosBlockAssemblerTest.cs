@@ -60,7 +60,7 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void UpdateHeaders_UsingChainAndNetwork_PreparesStakeBlockHeaders()
         {
-            this.ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
             {
                 this.dateTimeProvider.Setup(d => d.GetTimeOffset()).Returns(new DateTimeOffset(new DateTime(2017, 1, 7, 0, 0, 0, DateTimeKind.Utc)));
 
@@ -85,10 +85,10 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void CreateNewBlock_WithScript_ReturnsBlockTemplate()
         {
-            this.ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.stratisTest, this.key);
-                this.SetupRulesEngine(chainIndexer);
+                SetupRulesEngine(chainIndexer);
                 var datetime = new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc);
                 this.dateTimeProvider.Setup(d => d.GetAdjustedTimeAsUnixTimestamp()).Returns(datetime.ToUnixTimestamp());
                 Transaction transaction = CreateTransaction(this.stratisTest, this.key, 5, new Money(400 * 1000 * 1000), new Key(), new uint256(124124));
@@ -141,10 +141,10 @@ namespace Blockcore.Features.Miner.Tests
         {
             var newOptions = new PosConsensusOptions();
 
-            this.ExecuteWithConsensusOptions(newOptions, () =>
+            ExecuteWithConsensusOptions(newOptions, () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.stratisTest, this.key);
-                this.SetupRulesEngine(chainIndexer);
+                SetupRulesEngine(chainIndexer);
                 this.dateTimeProvider.Setup(d => d.GetAdjustedTimeAsUnixTimestamp()).Returns(new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc).ToUnixTimestamp());
                 this.consensusManager.Setup(c => c.Tip).Returns(chainIndexer.GetHeader(5));
 
@@ -170,10 +170,10 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void ComputeBlockVersion_UsingChainTipAndConsensus_NoBip9DeploymentActive_UpdatesHeightAndVersion()
         {
-            this.ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.stratisTest, new Key());
-                this.SetupRulesEngine(chainIndexer);
+                SetupRulesEngine(chainIndexer);
 
                 var posBlockAssembler = new PosTestBlockAssembler(this.consensusManager.Object, this.stratisTest, new MempoolSchedulerLock(), this.mempool.Object, this.minerSettings,
                                                  this.dateTimeProvider.Object, this.stakeChain.Object, this.stakeValidator.Object, this.LoggerFactory.Object, new NodeDeployments(this.Network, chainIndexer));
@@ -203,7 +203,7 @@ namespace Blockcore.Features.Miner.Tests
                 this.stratisTest.Consensus.MinerConfirmationWindow = 2;
 
                 ChainIndexer chainIndexer = GenerateChainWithHeightAndActivatedBip9(5, this.stratisTest, new Key(), this.stratisTest.Consensus.BIP9Deployments[0]);
-                this.SetupRulesEngine(chainIndexer);
+                SetupRulesEngine(chainIndexer);
 
                 var posBlockAssembler = new PosTestBlockAssembler(this.consensusManager.Object, this.stratisTest, new MempoolSchedulerLock(), this.mempool.Object, this.minerSettings, this.dateTimeProvider.Object, this.stakeChain.Object, this.stakeValidator.Object, this.LoggerFactory.Object, new NodeDeployments(this.Network, chainIndexer));
 
@@ -226,7 +226,7 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void CreateCoinbase_CreatesCoinbaseTemplateTransaction_AddsToBlockTemplate()
         {
-            this.ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new PosConsensusOptions(), () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.stratisTest, this.key);
                 this.dateTimeProvider.Setup(d => d.GetAdjustedTimeAsUnixTimestamp())
@@ -258,7 +258,7 @@ namespace Blockcore.Features.Miner.Tests
         {
             var newOptions = new PosConsensusOptions();
 
-            this.ExecuteWithConsensusOptions(newOptions, () =>
+            ExecuteWithConsensusOptions(newOptions, () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.stratisTest, new Key());
                 this.consensusManager.Setup(c => c.Tip)
@@ -283,7 +283,7 @@ namespace Blockcore.Features.Miner.Tests
         {
             var newOptions = new PosConsensusOptions();
 
-            this.ExecuteWithConsensusOptions(newOptions, () =>
+            ExecuteWithConsensusOptions(newOptions, () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.stratisTest, this.key);
                 this.consensusManager.Setup(c => c.Tip)
@@ -321,7 +321,7 @@ namespace Blockcore.Features.Miner.Tests
         {
             var newOptions = new PosConsensusOptions();
 
-            this.ExecuteWithConsensusOptions(newOptions, () =>
+            ExecuteWithConsensusOptions(newOptions, () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.stratisTest, this.key);
                 this.consensusManager.Setup(c => c.Tip)
@@ -471,7 +471,7 @@ namespace Blockcore.Features.Miner.Tests
                 new InvalidBlockHashStore(dateTimeProvider),
                 new NodeStats(dateTimeProvider, this.LoggerFactory.Object),
                 new Mock<IRewindDataIndexCache>().Object,
-                this.CreateAsyncProvider(),
+                CreateAsyncProvider(),
                 consensusRulesContainer);
 
             posConsensusRules.SetupRulesEngineParent();

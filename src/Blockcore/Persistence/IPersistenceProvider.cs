@@ -1,5 +1,4 @@
 ﻿using System;
-using Blockcore.Builder.Feature;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blockcore.Persistence

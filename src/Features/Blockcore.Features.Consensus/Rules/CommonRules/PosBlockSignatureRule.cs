@@ -3,7 +3,6 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
@@ -25,7 +24,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
             }
 
             // Check proof-of-stake block signature.
-            if (!this.CheckBlockSignature(posBlock))
+            if (!CheckBlockSignature(posBlock))
             {
                 this.Logger.LogTrace("(-)[BAD_SIGNATURE]");
                 ConsensusErrors.BadBlockSignature.Throw();

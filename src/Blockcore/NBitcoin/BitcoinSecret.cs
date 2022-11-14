@@ -16,7 +16,7 @@ namespace NBitcoin
         private static byte[] ToBytes(Key key)
         {
             byte[] keyBytes = key.ToBytes();
-            if(!key.IsCompressed)
+            if (!key.IsCompressed)
                 return keyBytes;
             else
                 return keyBytes.Concat(new byte[] { 0x01 }).ToArray();
@@ -65,12 +65,12 @@ namespace NBitcoin
         {
             get
             {
-                if(this.vchData.Length != 33 && this.vchData.Length != 32)
+                if (this.vchData.Length != 33 && this.vchData.Length != 32)
                     return false;
 
-                if(this.vchData.Length == 33 && this.IsCompressed)
+                if (this.vchData.Length == 33 && this.IsCompressed)
                     return true;
-                if(this.vchData.Length == 32 && !this.IsCompressed)
+                if (this.vchData.Length == 32 && !this.IsCompressed)
                     return true;
                 return false;
             }
@@ -84,10 +84,10 @@ namespace NBitcoin
 
         public BitcoinSecret Copy(bool? compressed)
         {
-            if(compressed == null)
+            if (compressed == null)
                 compressed = this.IsCompressed;
 
-            if(compressed.Value && this.IsCompressed)
+            if (compressed.Value && this.IsCompressed)
             {
                 return new BitcoinSecret(this.wifData, this.Network);
             }
@@ -96,7 +96,7 @@ namespace NBitcoin
                 byte[] result = Encoders.Base58Check.DecodeData(this.wifData);
                 List<byte> resultList = result.ToList();
 
-                if(compressed.Value)
+                if (compressed.Value)
                 {
                     resultList.Insert(resultList.Count, 0x1);
                 }

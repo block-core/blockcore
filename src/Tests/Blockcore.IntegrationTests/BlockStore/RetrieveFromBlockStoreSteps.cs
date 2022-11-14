@@ -46,7 +46,7 @@ namespace Blockcore.IntegrationTests.BlockStore
 
         protected override void BeforeTest()
         {
-            this.builder = NodeBuilder.Create(Path.Combine(this.GetType().Name, this.CurrentTest.DisplayName));
+            this.builder = NodeBuilder.Create(Path.Combine(GetType().Name, this.CurrentTest.DisplayName));
         }
 
         protected override void AfterTest()
@@ -80,7 +80,7 @@ namespace Blockcore.IntegrationTests.BlockStore
 
         private void some_blocks_creating_reward()
         {
-            this.some_real_blocks_with_a_uint256_identifier();
+            some_real_blocks_with_a_uint256_identifier();
         }
 
         private void a_wrong_block_id()

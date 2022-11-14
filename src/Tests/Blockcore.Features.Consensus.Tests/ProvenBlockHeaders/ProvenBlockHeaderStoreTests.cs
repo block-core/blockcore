@@ -9,14 +9,12 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.Persistence.LevelDb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Interfaces;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
@@ -48,7 +46,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         [Fact]
         public async Task InitialiseStoreToGenesisChainHeaderAsync()
         {
-            var genesis = this.BuildProvenHeaderChain(1);
+            var genesis = BuildProvenHeaderChain(1);
 
             await this.provenBlockHeaderStore.InitializeAsync(genesis).ConfigureAwait(false);
 
@@ -59,10 +57,10 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         public async Task AddToPending_Adds_To_CacheAsync()
         {
             // Initialise store.
-            await this.provenBlockHeaderStore.InitializeAsync(this.BuildProvenHeaderChain(1)).ConfigureAwait(false);
+            await this.provenBlockHeaderStore.InitializeAsync(BuildProvenHeaderChain(1)).ConfigureAwait(false);
 
             // Add to pending (add to internal cache).
-            var inHeader = this.CreateNewProvenBlockHeaderMock();
+            var inHeader = CreateNewProvenBlockHeaderMock();
             this.provenBlockHeaderStore.AddToPendingBatch(inHeader, new HashHeightPair(inHeader.GetHash(), 1));
 
             // Check Item in cache.
@@ -85,7 +83,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             await this.provenBlockHeaderStore.InitializeAsync(BuildProvenHeaderChain(1)).ConfigureAwait(false);
 
             // Add to pending (add to internal cache).
-            var inHeader = this.CreateNewProvenBlockHeaderMock();
+            var inHeader = CreateNewProvenBlockHeaderMock();
             this.provenBlockHeaderStore.AddToPendingBatch(inHeader, new HashHeightPair(inHeader.GetHash(), 0));
 
             // Check Item in cache.
@@ -113,17 +111,17 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         public async Task Add_2k_ProvenHeaders_ToPending_CacheAsync()
         {
             // Initialise store.
-            await this.provenBlockHeaderStore.InitializeAsync(this.BuildProvenHeaderChain(1)).ConfigureAwait(false);
+            await this.provenBlockHeaderStore.InitializeAsync(BuildProvenHeaderChain(1)).ConfigureAwait(false);
 
             ProvenBlockHeader inHeader = null;
 
             // Add to pending (add to internal cache).
             for (int i = 0; i < 2_000; i++)
             {
-                var block = this.CreatePosBlock();
+                var block = CreatePosBlock();
                 if (inHeader != null)
                     block.Header.HashPrevBlock = inHeader.GetHash();
-                inHeader = this.CreateNewProvenBlockHeaderMock(block);
+                inHeader = CreateNewProvenBlockHeaderMock(block);
                 this.provenBlockHeaderStore.AddToPendingBatch(inHeader, new HashHeightPair(inHeader.GetHash(), i));
             }
 
@@ -140,17 +138,17 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         public async Task Add_2k_ProvenHeaders_To_PendingBatch_Then_Save_Then_PendingBatch_Should_Be_EmptyAsync()
         {
             // Initialise store.
-            await this.provenBlockHeaderStore.InitializeAsync(this.BuildProvenHeaderChain(1)).ConfigureAwait(false);
+            await this.provenBlockHeaderStore.InitializeAsync(BuildProvenHeaderChain(1)).ConfigureAwait(false);
 
             ProvenBlockHeader inHeader = null;
 
             // Add to pending (add to internal cache).
             for (int i = 0; i < 2_000; i++)
             {
-                var block = this.CreatePosBlock();
+                var block = CreatePosBlock();
                 if (inHeader != null)
                     block.Header.HashPrevBlock = inHeader.GetHash();
-                inHeader = this.CreateNewProvenBlockHeaderMock(block);
+                inHeader = CreateNewProvenBlockHeaderMock(block);
                 this.provenBlockHeaderStore.AddToPendingBatch(inHeader, new HashHeightPair(inHeader.GetHash(), i));
             }
 
@@ -272,7 +270,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         [Fact]
         public void AddToPending_Then_Reorg_New_Items_Consecutive_Not_Tip_Then_Save()
         {
-            var chainWithHeaders = this.BuildProvenHeaderChain(21);
+            var chainWithHeaders = BuildProvenHeaderChain(21);
 
             var chainedHeaders = chainWithHeaders.EnumerateToGenesis().Reverse().ToList();
 
@@ -283,9 +281,9 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             Assert.Equal(20, this.PendingBatch.Count);
-            this.CompareCollections(chainedHeaders.Skip(1).ToList(), this.PendingBatch);
+            CompareCollections(chainedHeaders.Skip(1).ToList(), this.PendingBatch);
 
-            var newChainWithHeaders = this.BuildProvenHeaderChain(20, chainedHeaders[10]);
+            var newChainWithHeaders = BuildProvenHeaderChain(20, chainedHeaders[10]);
 
             var newChainedHeaders = newChainWithHeaders.EnumerateToGenesis().Reverse().ToList();
 
@@ -296,7 +294,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             Assert.Equal(15, this.PendingBatch.Count);
-            this.CompareCollections(newChainedHeaders.Skip(1).Take(15).ToList(), this.PendingBatch);
+            CompareCollections(newChainedHeaders.Skip(1).Take(15).ToList(), this.PendingBatch);
 
             this.provenBlockHeaderStore.InvokeMethod("SaveAsync");
 
@@ -309,7 +307,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         [Fact]
         public void AddToPending_Then_Reorg_New_Items_Consecutive_Is_Tip_Then_Save()
         {
-            var chainWithHeaders = this.BuildProvenHeaderChain(21);
+            var chainWithHeaders = BuildProvenHeaderChain(21);
 
             var chainedHeaders = chainWithHeaders.EnumerateToGenesis().Reverse().ToList();
 
@@ -320,9 +318,9 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             Assert.Equal(20, this.PendingBatch.Count);
-            this.CompareCollections(chainedHeaders.Skip(1).ToList(), this.PendingBatch);
+            CompareCollections(chainedHeaders.Skip(1).ToList(), this.PendingBatch);
 
-            var newChainWithHeaders = this.BuildProvenHeaderChain(11, chainedHeaders[10]);
+            var newChainWithHeaders = BuildProvenHeaderChain(11, chainedHeaders[10]);
 
             var newChainedHeaders = newChainWithHeaders.EnumerateToGenesis().Reverse().ToList();
 
@@ -333,7 +331,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             Assert.Equal(20, this.PendingBatch.Count);
-            this.CompareCollections(newChainedHeaders.Skip(1).ToList(), this.PendingBatch);
+            CompareCollections(newChainedHeaders.Skip(1).ToList(), this.PendingBatch);
 
             this.provenBlockHeaderStore.InvokeMethod("SaveAsync");
 
@@ -346,7 +344,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         [Fact]
         public void AddToPending_Then_Reorg_New_Items_Not_Consecutive_Is_Not_Tip_Then_Save()
         {
-            var chainWithHeaders = this.BuildProvenHeaderChain(21);
+            var chainWithHeaders = BuildProvenHeaderChain(21);
 
             var chainedHeaders = chainWithHeaders.EnumerateToGenesis().Reverse().ToList();
 
@@ -357,7 +355,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             Assert.Equal(15, this.PendingBatch.Count);
-            this.CompareCollections(chainedHeaders.Skip(1).Take(15).ToList(), this.PendingBatch);
+            CompareCollections(chainedHeaders.Skip(1).Take(15).ToList(), this.PendingBatch);
 
             // Save items 1-15
             this.provenBlockHeaderStore.InvokeMethod("SaveAsync");
@@ -372,9 +370,9 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             Assert.Equal(5, this.PendingBatch.Count);
-            this.CompareCollections(chainedHeaders.Skip(16).Take(5).ToList(), this.PendingBatch);
+            CompareCollections(chainedHeaders.Skip(16).Take(5).ToList(), this.PendingBatch);
 
-            var newChainWithHeaders = this.BuildProvenHeaderChain(15, chainedHeaders[10]);
+            var newChainWithHeaders = BuildProvenHeaderChain(15, chainedHeaders[10]);
 
             var newChainedHeaders = newChainWithHeaders.EnumerateToGenesis().Reverse().ToList();
 
@@ -385,7 +383,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             Assert.Equal(3, this.PendingBatch.Count);
-            this.CompareCollections(newChainedHeaders.Skip(10).Take(3).ToList(), this.PendingBatch);
+            CompareCollections(newChainedHeaders.Skip(10).Take(3).ToList(), this.PendingBatch);
 
             this.provenBlockHeaderStore.InvokeMethod("SaveAsync");
 
@@ -398,7 +396,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         [Fact]
         public void AddToPending_Then_Save_Incorrect_Sequence_Push_To_Store()
         {
-            var inHeader = this.CreateNewProvenBlockHeaderMock();
+            var inHeader = CreateNewProvenBlockHeaderMock();
 
             // Add headers to pending batch in the wrong height order.
             for (int i = 1; i >= 0; i--)
@@ -415,17 +413,17 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
         [Fact]
         public async Task AddToPending_Store_TipHash_Is_The_Same_As_ChainHeaderTipAsync()
         {
-            var chainWithHeaders = this.BuildProvenHeaderChain(3);
-            SortedDictionary<int, ProvenBlockHeader> provenBlockheaders = this.ConvertToDictionaryOfProvenHeaders(chainWithHeaders);
+            var chainWithHeaders = BuildProvenHeaderChain(3);
+            SortedDictionary<int, ProvenBlockHeader> provenBlockheaders = ConvertToDictionaryOfProvenHeaders(chainWithHeaders);
 
             // Persist current chain.
             await this.provenBlockHeaderRepository.PutAsync(
                 provenBlockheaders,
                 new HashHeightPair(provenBlockheaders.Last().Value.GetHash(), provenBlockheaders.Count - 1)).ConfigureAwait(false);
 
-            using (IProvenBlockHeaderStore store = this.SetupStore())
+            using (IProvenBlockHeaderStore store = SetupStore())
             {
-                var header = this.CreateNewProvenBlockHeaderMock();
+                var header = CreateNewProvenBlockHeaderMock();
 
                 this.provenBlockHeaderStore.AddToPendingBatch(header, new HashHeightPair(header.GetHash(), chainWithHeaders.Height));
 

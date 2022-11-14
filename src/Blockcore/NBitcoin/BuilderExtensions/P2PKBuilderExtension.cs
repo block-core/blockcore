@@ -45,7 +45,7 @@ namespace NBitcoin.BuilderExtensions
         public override Script GenerateScriptSig(Network network, Script scriptPubKey, IKeyRepository keyRepo, ISigner signer)
         {
             Key key = keyRepo.FindKey(scriptPubKey);
-            if(key == null)
+            if (key == null)
                 return null;
             TransactionSignature sig = signer.Sign(key);
             return PayToPubkeyTemplate.Instance.GenerateScriptSig(sig);

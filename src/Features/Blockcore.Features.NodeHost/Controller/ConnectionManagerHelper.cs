@@ -4,15 +4,11 @@ using System.Linq;
 using System.Net;
 using Blockcore.Connection;
 using Blockcore.P2P.Peer;
-using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
-using Blockcore.Utilities.JsonErrors;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Blockcore.Controllers
 {
-    public class ConnectionManagerHelper 
+    public class ConnectionManagerHelper
     {
         public static bool AddNode(IConnectionManager connectionManager, IPeerBanning peerBanning, string endpointStr, string command)
         {

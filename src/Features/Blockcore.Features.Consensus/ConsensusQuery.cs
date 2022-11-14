@@ -30,7 +30,7 @@ namespace Blockcore.Features.Consensus
             this.coinView = coinView;
             this.chainState = chainState;
             this.network = network;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />

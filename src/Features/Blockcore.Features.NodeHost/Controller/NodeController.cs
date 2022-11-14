@@ -78,7 +78,7 @@ namespace Blockcore.Controllers
         private readonly IGetUnspentTransaction getUnspentTransaction;
 
         /// <summary>Specification of the network the node runs on.</summary>
-        private Network network; // Not readonly because of ValidateAddress
+        private readonly Network network; // Not readonly because of ValidateAddress
 
         /// <summary>An interface implementation for the blockstore.</summary>
         private readonly IBlockStore blockStore;
@@ -125,7 +125,7 @@ namespace Blockcore.Controllers
             this.connectionManager = connectionManager;
             this.dateTimeProvider = dateTimeProvider;
             this.fullNode = fullNode;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.network = network;
             this.nodeSettings = nodeSettings;
             this.asyncProvider = asyncProvider;
@@ -206,7 +206,7 @@ namespace Blockcore.Controllers
                 }
             }
 
-            return this.Json(model);
+            return Json(model);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Blockcore.Controllers
                     model = new BlockHeaderModel(blockHeader);
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -297,7 +297,7 @@ namespace Blockcore.Controllers
 
                     if (trx == null)
                     {
-                        return this.Json(null);
+                        return Json(null);
                     }
                 }
                 else
@@ -314,17 +314,17 @@ namespace Blockcore.Controllers
 
                     if (trx == null)
                     {
-                        return this.Json(null);
+                        return Json(null);
                     }
                 }
 
                 if (verbose)
                 {
-                    ChainedHeader block = chainedHeaderBlock != null ? chainedHeaderBlock.ChainedHeader : this.GetTransactionBlock(trxhash);
-                    return this.Json(new TransactionVerboseModel(trx, this.network, block, this.chainState?.ConsensusTip));
+                    ChainedHeader block = chainedHeaderBlock != null ? chainedHeaderBlock.ChainedHeader : GetTransactionBlock(trxhash);
+                    return Json(new TransactionVerboseModel(trx, this.network, block, this.chainState?.ConsensusTip));
                 }
                 else
-                    return this.Json(new TransactionBriefModel(trx));
+                    return Json(new TransactionBriefModel(trx));
             }
             catch (Exception e)
             {
@@ -349,7 +349,7 @@ namespace Blockcore.Controllers
                     return ModelStateErrors.BuildErrorResponse(this.ModelState);
                 }
 
-                return this.Json(new TransactionVerboseModel(this.network.CreateTransaction(request.RawHex), this.network));
+                return Json(new TransactionVerboseModel(this.network.CreateTransaction(request.RawHex), this.network));
             }
             catch (Exception e)
             {
@@ -417,7 +417,7 @@ namespace Blockcore.Controllers
                 result.IsWitness = scriptPubKey.IsWitness(this.network);
             }
 
-            return this.Json(result);
+            return Json(result);
         }
 
         /// <summary>
@@ -458,10 +458,10 @@ namespace Blockcore.Controllers
 
                 if (unspentOutput?.Coins == null)
                 {
-                    return this.Json(null);
+                    return Json(null);
                 }
 
-                return this.Json(new GetTxOutModel(unspentOutput, this.network, this.chainIndexer.Tip));
+                return Json(new GetTxOutModel(unspentOutput, this.network, this.chainIndexer.Tip));
             }
             catch (Exception e)
             {
@@ -490,7 +490,7 @@ namespace Blockcore.Controllers
             // the full node RunAsync to continue processing, which calls Dispose on the node.
             this.fullNode?.NodeLifetime.StopApplication();
 
-            return this.Ok();
+            return Ok();
         }
 
         /// <summary>
@@ -540,7 +540,7 @@ namespace Blockcore.Controllers
 
                 // Only update the loggers if the setting was successful.
                 LogManager.ReconfigExistingLoggers();
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -599,7 +599,7 @@ namespace Blockcore.Controllers
                     });
                 }
 
-                return this.Json(rules);
+                return Json(rules);
             }
             catch (Exception e)
             {
@@ -631,7 +631,7 @@ namespace Blockcore.Controllers
                     loops.Add(new AsyncLoopModel() { LoopName = loopName, Status = Enum.GetName(typeof(TaskStatus), status) });
                 }
 
-                return this.Json(loops);
+                return Json(loops);
             }
             catch (Exception e)
             {

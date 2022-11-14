@@ -31,21 +31,21 @@ namespace Blockcore.Features.PoA.Voting
             this.votingManager = votingManager;
             this.network = network;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         [Route("schedulevote-addfedmember")]
         [HttpPost]
-        public IActionResult VoteAddFedMember([FromBody]HexPubKeyModel request)
+        public IActionResult VoteAddFedMember([FromBody] HexPubKeyModel request)
         {
-            return this.VoteAddKickFedMember(request, true);
+            return VoteAddKickFedMember(request, true);
         }
 
         [Route("schedulevote-kickfedmember")]
         [HttpPost]
-        public IActionResult VoteKickFedMember([FromBody]HexPubKeyModel request)
+        public IActionResult VoteKickFedMember([FromBody] HexPubKeyModel request)
         {
-            return this.VoteAddKickFedMember(request, false);
+            return VoteAddKickFedMember(request, false);
         }
 
         private IActionResult VoteAddKickFedMember(HexPubKeyModel request, bool addMember)
@@ -71,7 +71,7 @@ namespace Blockcore.Features.PoA.Voting
                     Data = fedMemberBytes
                 });
 
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {

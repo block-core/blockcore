@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using NBitcoin.BouncyCastle.Crypto.Digests;
 using System.Security.Cryptography;
+using NBitcoin.BouncyCastle.Crypto.Digests;
 using NBitcoin.BouncyCastle.Crypto.Parameters;
 
 namespace NBitcoin.Crypto
@@ -232,7 +232,7 @@ namespace NBitcoin.Crypto
                         return val.Part4;
 
                     default:
-                        throw new ArgumentOutOfRangeException("position should be less than 4", "position");
+                        throw new ArgumentOutOfRangeException("position", "position should be less than 4");
                 }
             }
 

@@ -43,7 +43,7 @@ namespace Blockcore.IntegrationTests.Wallet
         protected override void BeforeTest()
         {
             this.network = new BitcoinRegTest();
-            this.nodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, this.CurrentTest.DisplayName));
+            this.nodeBuilder = NodeBuilder.Create(Path.Combine(GetType().Name, this.CurrentTest.DisplayName));
         }
 
         protected override void AfterTest()

@@ -59,14 +59,14 @@ namespace Blockcore.Consensus.TransactionInfo
             if (splitted.Length != 2)
                 return false;
 
-            uint256 hash;
-            if (!uint256.TryParse(splitted[0], out hash))
+            uint256 _hash;
+            if (!uint256.TryParse(splitted[0], out _hash))
                 return false;
 
             uint index;
             if (!uint.TryParse(splitted[1], out index))
                 return false;
-            result = new OutPoint(hash, index);
+            result = new OutPoint(_hash, index);
             return true;
         }
 
@@ -92,7 +92,8 @@ namespace Blockcore.Consensus.TransactionInfo
         public OutPoint(uint256 hashIn, int nIn)
         {
             this.hash = hashIn;
-            this.n = nIn == -1 ? this.n = uint.MaxValue : (uint)nIn;
+            uint v = this.n = uint.MaxValue;
+            this.n = nIn == -1 ? v : (uint)nIn;
         }
 
         public OutPoint(Transaction tx, uint i)
@@ -371,7 +372,7 @@ namespace Blockcore.Consensus.TransactionInfo
             return n;
         }
 
-        private TxOut _TxOut = new TxOut();
+        private readonly TxOut _TxOut = new TxOut();
 
         public TxOut TxOut
         {
@@ -916,11 +917,11 @@ namespace Blockcore.Consensus.TransactionInfo
         public WitScript(params Op[] ops)
         {
             var pushes = new List<byte[]>();
-            foreach (Op op in ops)
+            foreach (Byte[] op in ops.Select(op => op.PushData))
             {
-                if (op.PushData == null)
+                if (op == null)
                     throw new ArgumentException("Non push operation unsupported in WitScript", "ops");
-                pushes.Add(op.PushData);
+                pushes.Add(op);
             }
 
             this._Pushes = pushes.ToArray();
@@ -1661,13 +1662,6 @@ namespace Blockcore.Consensus.TransactionInfo
             Sign(network, key, coins.ToArray());
         }
 
-        /*
-        public TxPayload CreatePayload()
-        {
-            return new TxPayload(this.Clone());
-        }
-        */
-
         public static Transaction Parse(string tx, RawFormat format, Network network = null)
         {
             return GetFormatter(format, network).ParseJson(tx);
@@ -1910,13 +1904,7 @@ namespace Blockcore.Consensus.TransactionInfo
             }
         }
 
-        public bool HasWitness
-        {
-            get
-            {
-                return this.Inputs.Any(i => i.WitScriptEmpty == false);
-            }
-        }
+        public bool HasWitness => this.Inputs.Any(i => !i.WitScriptEmpty);
 
         private static readonly uint MAX_BLOCK_SIZE = 1000000;
         private static readonly ulong MAX_MONEY = long.MaxValue; // 21000000ul * Money.COIN;

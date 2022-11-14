@@ -17,7 +17,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         private static TimeSpan adjustedTimeOffset;
         private static DateTime startFrom;
 
-        private SubscriptionToken blockConnectedSubscription;
+        private readonly SubscriptionToken blockConnectedSubscription;
 
         static GenerateCoinsFastDateTimeProvider()
         {
@@ -27,7 +27,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public GenerateCoinsFastDateTimeProvider(ISignals signals)
         {
-            this.blockConnectedSubscription =  signals.Subscribe<BlockConnected>(this.OnBlockConnected);
+            this.blockConnectedSubscription = signals.Subscribe<BlockConnected>(OnBlockConnected);
         }
 
         public long GetTime()

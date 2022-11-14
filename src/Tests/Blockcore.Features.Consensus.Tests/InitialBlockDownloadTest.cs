@@ -2,7 +2,6 @@
 using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Settings;
-using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
@@ -61,7 +60,7 @@ namespace Blockcore.Features.Consensus.Tests
             blockHeader.Bits = new Target(new uint256(uint.MaxValue));
 
             // Block has a time sufficiently in the past that it can't be the tip.
-            blockHeader.Time = ((uint) DateTimeOffset.Now.ToUnixTimeSeconds()) - (uint) this.network.MaxTipAge - 1;
+            blockHeader.Time = ((uint)DateTimeOffset.Now.ToUnixTimeSeconds()) - (uint)this.network.MaxTipAge - 1;
 
             this.chainState.ConsensusTip = new ChainedHeader(blockHeader, blockHeader.GetHash(), this.checkpoints.GetLastCheckpointHeight() + 1);
             var blockDownloadState = new InitialBlockDownloadState(this.chainState, this.network, this.consensusSettings, this.checkpoints, this.loggerFactory.Object, DateTimeProvider.Default);

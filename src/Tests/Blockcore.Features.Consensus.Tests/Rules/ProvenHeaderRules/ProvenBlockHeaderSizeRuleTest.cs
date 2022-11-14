@@ -13,8 +13,8 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
 {
     public class ProvenBlockHeaderSizeRuleTest : TestPosConsensusRulesUnitTestBase
     {
-        private PosConsensusOptions options;
-        private int provenHeadersActivationHeight;
+        private readonly PosConsensusOptions options;
+        private readonly int provenHeadersActivationHeight;
 
         public ProvenBlockHeaderSizeRuleTest()
         {

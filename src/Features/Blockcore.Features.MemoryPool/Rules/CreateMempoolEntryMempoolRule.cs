@@ -6,7 +6,6 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Networks;
@@ -32,7 +31,7 @@ namespace Blockcore.Features.MemoryPool.Rules
         public const int MaxStandardP2wshStackItemSize = 80;
         public const int MaxP2SHSigOps = 15;
 
-        private IConsensusRuleEngine consensusRules;
+        private readonly IConsensusRuleEngine consensusRules;
 
         public CreateMempoolEntryMempoolRule(Network network,
             ITxMempool mempool,
@@ -58,14 +57,14 @@ namespace Blockcore.Features.MemoryPool.Rules
             }
 
             // Check for non-standard pay-to-script-hash in inputs
-            if (this.settings.RequireStandard && !this.AreInputsStandard(this.network, context.Transaction, context.View))
+            if (this.settings.RequireStandard && !AreInputsStandard(this.network, context.Transaction, context.View))
             {
                 this.logger.LogTrace("(-)[INVALID_NONSTANDARD_INPUTS]");
                 context.State.Invalid(MempoolErrors.NonstandardInputs).Throw();
             }
 
             // Check for non-standard witness in P2WSH
-            if (context.Transaction.HasWitness && this.settings.RequireStandard && !this.IsWitnessStandard(context.Transaction, context.View))
+            if (context.Transaction.HasWitness && this.settings.RequireStandard && !IsWitnessStandard(context.Transaction, context.View))
             {
                 this.logger.LogTrace("(-)[INVALID_NONSTANDARD_WITNESS]");
                 context.State.Invalid(MempoolErrors.NonstandardWitness).Throw();

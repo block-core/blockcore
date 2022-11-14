@@ -91,7 +91,7 @@ namespace NBitcoin.Crypto
 
             var buffer = new byte[count];
             int bytes = Read(buffer, 0, count);
-            if(bytes < count)
+            if (bytes < count)
             {
                 throw Exceptions.Argument("count", "Can only return {0} bytes.", bytes);
             }
@@ -116,7 +116,7 @@ namespace NBitcoin.Crypto
         {
             Internal.Check.Range("derivedKeyLength", derivedKeyLength, 0, int.MaxValue);
 
-            using(var kdf = new Pbkdf2(hmacAlgorithm, salt, iterations))
+            using (var kdf = new Pbkdf2(hmacAlgorithm, salt, iterations))
             {
                 return kdf.Read(derivedKeyLength);
             }
@@ -139,10 +139,10 @@ namespace NBitcoin.Crypto
             ComputeHmac(this._saltBuffer, this._digestT1);
             Array.Copy(this._digestT1, this._digest, this._digestT1.Length);
 
-            for(int i = 1; i < this._iterations; i++)
+            for (int i = 1; i < this._iterations; i++)
             {
                 ComputeHmac(this._digestT1, this._digestT1);
-                for(int j = 0; j < this._digest.Length; j++)
+                for (int j = 0; j < this._digest.Length; j++)
                 {
                     this._digest[j] ^= this._digestT1[j];
                 }
@@ -177,11 +177,11 @@ namespace NBitcoin.Crypto
             Internal.Check.Bounds("buffer", buffer, offset, count);
             int bytes = 0;
 
-            while(count > 0)
+            while (count > 0)
             {
-                if(this.Position < this._blockStart || this.Position >= this._blockEnd)
+                if (this.Position < this._blockStart || this.Position >= this._blockEnd)
                 {
-                    if(this.Position >= this.Length)
+                    if (this.Position >= this.Length)
                     {
                         break;
                     }
@@ -208,7 +208,7 @@ namespace NBitcoin.Crypto
         {
             long pos;
 
-            switch(origin)
+            switch (origin)
             {
                 case SeekOrigin.Begin:
                     pos = offset;
@@ -223,7 +223,7 @@ namespace NBitcoin.Crypto
                     throw Exceptions.ArgumentOutOfRange("origin", "Unknown seek type.");
             }
 
-            if(pos < 0)
+            if (pos < 0)
             {
                 throw Exceptions.Argument("offset", "Can't seek before the stream start.");
             }
@@ -278,7 +278,7 @@ namespace NBitcoin.Crypto
         {
             get
             {
-                return (long) this._digest.Length * uint.MaxValue;
+                return (long)this._digest.Length * uint.MaxValue;
             }
         }
 
@@ -293,7 +293,7 @@ namespace NBitcoin.Crypto
             }
             set
             {
-                if(this._pos < 0)
+                if (this._pos < 0)
                 {
                     throw Exceptions.Argument(null, "Can't seek before the stream start.");
                 }

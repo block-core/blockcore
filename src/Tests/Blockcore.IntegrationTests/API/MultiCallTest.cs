@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Blockcore.Features.NodeHost;
 using Blockcore.Features.Miner.Interfaces;
+using Blockcore.Features.NodeHost;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Xunit;
 
@@ -31,7 +31,7 @@ namespace Blockcore.IntegrationTests.API
             var options = new ParallelOptions { MaxDegreeOfParallelism = 16 };
             Parallel.ForEach(indexes, options, ndx =>
             {
-                success[ndx] = this.APICallGetsExpectedResult(ndx);
+                success[ndx] = APICallGetsExpectedResult(ndx);
             });
 
             // Check that none failed.

@@ -12,7 +12,7 @@ namespace Blockcore.Features.Consensus.CoinViews
     public class CachePerformanceCounter
     {
         /// <summary>UTC timestamp when the performance counter was created.</summary>
-        private DateTime start;
+        private readonly DateTime start;
 
         /// <summary>UTC timestamp when the performance counter was created.</summary>
         public DateTime Start

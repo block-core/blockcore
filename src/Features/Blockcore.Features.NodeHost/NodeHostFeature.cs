@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Blockcore.Broadcasters;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
-using Blockcore.EventBus;
 using Blockcore.Features.NodeHost.Events;
-using Blockcore.Features.NodeHost.Hubs;
 using Blockcore.Networks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.NodeHost
 {
@@ -56,7 +52,7 @@ namespace Blockcore.Features.NodeHost
             this.certificateStore = certificateStore;
             this.eventBroadcasters = eventBroadcasters;
             this.eventsSubscriptionService = eventsSubscriptionService;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.InitializeBeforeBase = true;
         }

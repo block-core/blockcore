@@ -27,7 +27,7 @@ namespace Blockcore.Utilities
         public int Index { get; private set; }
 
         /// <summary>Circular array of items, which holds <see cref="Count"/> valid items, and can store up to <see cref="Capacity"/> items.</summary>
-        private T[] items;
+        private readonly T[] items;
 
         /// <summary>
         /// Initializes a new instance of the object.

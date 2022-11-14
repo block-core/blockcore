@@ -51,18 +51,18 @@ namespace Blockcore.Features.RPC
             writer.WritePropertyName("params");
             writer.WriteStartArray();
 
-            if(this.Params != null)
+            if (this.Params != null)
             {
-                for(int i = 0; i < this.Params.Length; i++)
+                for (int i = 0; i < this.Params.Length; i++)
                 {
-                    if(this.Params[i] is JToken)
+                    if (this.Params[i] is JToken)
                     {
-                        ((JToken) this.Params[i]).WriteTo(writer);
+                        ((JToken)this.Params[i]).WriteTo(writer);
                     }
-                    else if(this.Params[i] is Array)
+                    else if (this.Params[i] is Array)
                     {
                         writer.WriteStartArray();
-                        foreach(object x in (Array) this.Params[i])
+                        foreach (object x in (Array)this.Params[i])
                         {
                             writer.WriteValue(x);
                         }

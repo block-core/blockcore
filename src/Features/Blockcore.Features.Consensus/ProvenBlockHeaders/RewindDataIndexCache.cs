@@ -30,7 +30,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
         /// </summary>
         private int numberOfBlocksToKeep;
 
-        private int lastCheckpoint;
+        private readonly int lastCheckpoint;
 
         /// <summary>
         /// Performance counter to measure performance of the save and get operations.
@@ -77,7 +77,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             {
                 RewindData rewindData = coinView.GetRewindData(rewindHeight);
 
-                this.AddRewindData(rewindHeight, rewindData);
+                AddRewindData(rewindHeight, rewindData);
             }
         }
 
@@ -111,12 +111,12 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             if (this.lastCheckpoint > tipHeight)
                 return;
 
-            this.SaveAndEvict(tipHeight, null);
+            SaveAndEvict(tipHeight, null);
 
             int bottomHeight = tipHeight > this.numberOfBlocksToKeep ? tipHeight - this.numberOfBlocksToKeep : 1;
 
             RewindData rewindData = coinView.GetRewindData(bottomHeight);
-            this.AddRewindData(bottomHeight, rewindData);
+            AddRewindData(bottomHeight, rewindData);
         }
 
         /// <inheritdoc />

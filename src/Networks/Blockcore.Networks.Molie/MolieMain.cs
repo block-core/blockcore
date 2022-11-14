@@ -32,7 +32,7 @@ namespace Blockcore.Networks.Molie
             this.DefaultPort = MolieSetup.Main.DefaultPort;
             this.DefaultRPCPort = MolieSetup.Main.DefaultRPCPort;
             this.DefaultAPIPort = MolieSetup.Main.DefaultAPIPort;
-            
+
             this.DefaultMaxOutboundConnections = 16;
             this.DefaultMaxInboundConnections = 109;
             this.MaxTipAge = 2 * 60 * 60;
@@ -54,7 +54,7 @@ namespace Blockcore.Networks.Molie
                MolieSetup.GenesisText);
 
             this.Genesis = genesisBlock;
-            
+
             // Taken from StratisX.
             var consensusOptions = new PosConsensusOptions()
             {

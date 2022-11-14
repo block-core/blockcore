@@ -21,7 +21,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
     public class ProvenBlockHeaderCoinstakeRuleTest : TestPosConsensusRulesUnitTestBase
     {
         private readonly PosConsensusOptions options;
-        private int provenHeadersActivationHeight;
+        private readonly int provenHeadersActivationHeight;
 
         public ProvenBlockHeaderCoinstakeRuleTest()
         {

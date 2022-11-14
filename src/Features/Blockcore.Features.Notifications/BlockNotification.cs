@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.AsyncWork;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.Signals;
 using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
 
 namespace Blockcore.Features.Notifications
 {
@@ -56,7 +56,7 @@ namespace Blockcore.Features.Notifications
             this.signals = signals;
             this.asyncProvider = asyncProvider;
             this.nodeLifetime = nodeLifetime;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         public ChainIndexer ChainIndexer { get; }
@@ -80,7 +80,7 @@ namespace Blockcore.Features.Notifications
                 {
                     // Sets the location of the puller to the block preceding the one we want to receive.
                     ChainedHeader previousBlock = this.ChainIndexer.GetHeader(startBlock.Height > 0 ? startBlock.Height - 1 : 0);
-                   // this.Puller.SetLocation(previousBlock);
+                    // this.Puller.SetLocation(previousBlock);
                     this.tip = previousBlock;
 
                     this.logger.LogDebug("Puller location set to block: {0}.", previousBlock);
@@ -95,7 +95,7 @@ namespace Blockcore.Features.Notifications
         {
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop("Notify", async token =>
             {
-                await this.Notify(this.nodeLifetime.ApplicationStopping);
+                await Notify(this.nodeLifetime.ApplicationStopping);
             },
             this.nodeLifetime.ApplicationStopping);
         }
@@ -120,7 +120,7 @@ namespace Blockcore.Features.Notifications
 
             // Sets the location of the puller to the block preceding the one we want to receive.
             ChainedHeader previousBlock = this.ChainIndexer.GetHeader(startBlock.Height > 0 ? startBlock.Height - 1 : 0);
-           // this.Puller.SetLocation(previousBlock);
+            // this.Puller.SetLocation(previousBlock);
             this.tip = previousBlock;
 
             this.logger.LogDebug("Puller location set to block: {0}.", previousBlock);

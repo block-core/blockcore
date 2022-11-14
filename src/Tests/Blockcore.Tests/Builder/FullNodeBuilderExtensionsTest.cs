@@ -11,11 +11,11 @@ namespace Blockcore.Tests.Builder
 {
     public class FullNodeBuilderExtensionsTest
     {
-        private FeatureCollection featureCollection;
-        private List<Action<IFeatureCollection>> featureCollectionDelegates;
-        private FullNodeBuilder fullNodeBuilder;
-        private List<Action<IServiceCollection>> serviceCollectionDelegates;
-        private List<Action<IServiceProvider>> serviceProviderDelegates;
+        private readonly FeatureCollection featureCollection;
+        private readonly List<Action<IFeatureCollection>> featureCollectionDelegates;
+        private readonly FullNodeBuilder fullNodeBuilder;
+        private readonly List<Action<IServiceCollection>> serviceCollectionDelegates;
+        private readonly List<Action<IServiceProvider>> serviceProviderDelegates;
 
         public FullNodeBuilderExtensionsTest()
         {

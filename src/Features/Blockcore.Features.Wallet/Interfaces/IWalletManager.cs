@@ -85,7 +85,7 @@ namespace Blockcore.Features.Wallet.Interfaces
         /// <param name="purpose">An optional BIP44 purpose (also used in BIP84 and BIP49), this means specifying BIP84 to create a segwit wallet.</param>
         /// <returns>A mnemonic defining the wallet's seed used to generate addresses.</returns>
         Mnemonic CreateWallet(string password, string name, string passphrase = null, Mnemonic mnemonic = null, int? coinType = null, int? purpose = null);
- 
+
 
         /// <summary>
         /// Gets the private key associated with an address in the wallet.

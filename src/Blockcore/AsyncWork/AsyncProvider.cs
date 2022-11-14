@@ -17,27 +17,26 @@ namespace Blockcore.AsyncWork
     {
         private const int DefaultLoopRepeatInterval = 1000;
 
-        private object lockAsyncDelegates;
-        private object lockRegisteredTasks;
+        private readonly object lockAsyncDelegates;
+        private readonly object lockRegisteredTasks;
 
         /// <summary>
         /// Holds a list of currently running async delegates or delegates that stopped because of unhandled exceptions.
         /// Protected by <see cref="lockAsyncDelegates"/> lock
         /// </summary>
-        private Dictionary<IAsyncDelegate, AsyncTaskInfo> asyncDelegates;
+        private readonly Dictionary<IAsyncDelegate, AsyncTaskInfo> asyncDelegates;
 
         /// <summary>
         /// Holds a list of currently registered tasks with their health status.
         /// Protected by <see cref="lockRegisteredTasks"/> lock
         /// </summary>
-        private Dictionary<Task, AsyncTaskInfo> registeredTasks;
+        private readonly Dictionary<Task, AsyncTaskInfo> registeredTasks;
 
-        private ILoggerFactory loggerFactory;
-        private ILogger logger;
-        private ISignals signals;
-        private readonly INodeLifetime nodeLifetime;
+        private readonly ILoggerFactory loggerFactory;
+        private readonly ILogger logger;
+        private readonly ISignals signals;
 
-        private (string Name, int Width)[] benchmarkColumnsDefinition = new[]
+        private readonly (string Name, int Width)[] benchmarkColumnsDefinition = new[]
         {
             (Name: "Name", Width: 80),
             (Name: "Type", Width: 15),
@@ -59,7 +58,7 @@ namespace Blockcore.AsyncWork
             this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.signals = Guard.NotNull(signals, nameof(signals));
-            this.nodeLifetime = Guard.NotNull(nodeLifetime, nameof(nodeLifetime));
+            nodeLifetime = Guard.NotNull(nodeLifetime, nameof(nodeLifetime));
         }
 
         /// <inheritdoc />
@@ -259,8 +258,8 @@ namespace Blockcore.AsyncWork
                 taskInformations.AddRange(this.registeredTasks.Values);
             }
 
-            int running = taskInformations.Where(info => info.IsRunning).Count();
-            int faulted = taskInformations.Where(info => !info.IsRunning).Count();
+            int running = taskInformations.Count(info => info.IsRunning);
+            int faulted = taskInformations.Count(info => !info.IsRunning);
 
             var sb = new StringBuilder();
             sb.AppendLine();
@@ -432,7 +431,7 @@ namespace Blockcore.AsyncWork
                 {
                     // When AsyncLoop fails with an uncaughtException, it handle it completing fine.
                     // I want instead to keep its failed status visible on console so I handle this scenario as faulted task.
-                    // TODO: discuss about this decision.
+
                     if (state is AsyncLoop asyncLoop && asyncLoop.UncaughtException != null)
                     {
                         // casted to IAsyncTaskInfoSetter to be able to set properties

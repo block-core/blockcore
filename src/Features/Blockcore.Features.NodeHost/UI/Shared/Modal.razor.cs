@@ -14,32 +14,32 @@ namespace BlazorModal
 
         protected override void OnInitialized()
         {
-            ModalService.OnShow += ShowModal;
-            ModalService.OnClose += CloseModal;
+            this.ModalService.OnShow += ShowModal;
+            this.ModalService.OnClose += CloseModal;
         }
 
         public void ShowModal(string title, RenderFragment content)
         {
-            Title = title;
-            Content = content;
-            IsVisible = true;
+            this.Title = title;
+            this.Content = content;
+            this.IsVisible = true;
 
             StateHasChanged();
         }
 
         public void CloseModal()
         {
-            IsVisible = false;
-            Title = "";
-            Content = null;
+            this.IsVisible = false;
+            this.Title = "";
+            this.Content = null;
 
             StateHasChanged();
         }
 
         public void Dispose()
         {
-            ModalService.OnShow -= ShowModal;
-            ModalService.OnClose -= CloseModal;
+            this.ModalService.OnShow -= ShowModal;
+            this.ModalService.OnClose -= CloseModal;
         }
     }
 }

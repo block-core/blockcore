@@ -6,7 +6,6 @@ using Blockcore.EventBus.CoreEvents;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Tests.Signals

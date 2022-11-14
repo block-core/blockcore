@@ -1,7 +1,6 @@
 ﻿using System;
 using Blockcore.Networks;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 
 
 namespace Blockcore.IntegrationTests.Common.Runners

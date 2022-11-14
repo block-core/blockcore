@@ -17,7 +17,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Features.MemoryPool
 {
@@ -120,7 +119,7 @@ namespace Blockcore.Features.MemoryPool
 
         private readonly NodeDeployments nodeDeployments;
 
-        private Network network;
+        private readonly Network network;
 
         private readonly List<IMempoolRule> mempoolRules;
 
@@ -144,7 +143,7 @@ namespace Blockcore.Features.MemoryPool
             this.chainIndexer = chainIndexer;
             this.network = chainIndexer.Network;
             this.coinView = coinView;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.PerformanceCounter = new MempoolPerformanceCounter(this.dateTimeProvider);
             this.minRelayTxFee = nodeSettings.MinRelayTxFeeRate;
             this.consensusRules = consensusRules;
@@ -164,7 +163,7 @@ namespace Blockcore.Features.MemoryPool
             try
             {
                 var vHashTxToUncache = new List<uint256>();
-                await this.AcceptToMemoryPoolWorkerAsync(state, tx, vHashTxToUncache);
+                await AcceptToMemoryPoolWorkerAsync(state, tx, vHashTxToUncache);
 
                 if (state.IsInvalid)
                 {
@@ -194,7 +193,7 @@ namespace Blockcore.Features.MemoryPool
         public Task<bool> AcceptToMemoryPool(MempoolValidationState state, Transaction tx)
         {
             state.AcceptTime = this.dateTimeProvider.GetTime();
-            return this.AcceptToMemoryPoolWithTime(state, tx);
+            return AcceptToMemoryPoolWithTime(state, tx);
         }
 
         /// <inheritdoc />
@@ -308,7 +307,7 @@ namespace Blockcore.Features.MemoryPool
             context.MinRelayTxFee = this.minRelayTxFee;
 
             // TODO: Convert these into rules too
-            this.PreMempoolChecks(context);
+            PreMempoolChecks(context);
 
             // Create the MemPoolCoinView and load relevant utxoset
             context.View = new MempoolCoinView(this.network, this.coinView, this.memPool, this.mempoolLock, this);
@@ -344,7 +343,7 @@ namespace Blockcore.Features.MemoryPool
                 // This transaction should only count for fee estimation if
                 // the node is not behind and it is not dependent on any other
                 // transactions in the mempool
-                bool validForFeeEstimation = this.IsCurrentForFeeEstimation() && this.memPool.HasNoInputsOf(tx);
+                bool validForFeeEstimation = IsCurrentForFeeEstimation() && this.memPool.HasNoInputsOf(tx);
 
                 // Store transaction in memory
                 this.memPool.AddUnchecked(context.TransactionHash, context.Entry, context.SetAncestors, validForFeeEstimation);
@@ -352,7 +351,7 @@ namespace Blockcore.Features.MemoryPool
                 // trim mempool and check if tx was trimmed
                 if (!state.OverrideMempoolLimit)
                 {
-                    this.LimitMempoolSize(this.mempoolSettings.MaxMempool * 1000000, this.mempoolSettings.MempoolExpiry * 60 * 60);
+                    LimitMempoolSize(this.mempoolSettings.MaxMempool * 1000000, this.mempoolSettings.MempoolExpiry * 60 * 60);
 
                     if (!this.memPool.Exists(context.TransactionHash))
                     {
@@ -421,7 +420,7 @@ namespace Blockcore.Features.MemoryPool
             // Rather not work on nonstandard transactions (unless -testnet/-regtest)
             if (this.mempoolSettings.RequireStandard)
             {
-                this.CheckStandardTransaction(context);
+                CheckStandardTransaction(context);
             }
 
             // Only accept nLockTime-using transactions that can be mined in the next block; we don't want our mempool filled up with transactions that

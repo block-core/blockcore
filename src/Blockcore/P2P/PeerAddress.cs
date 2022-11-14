@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Net;
 using Blockcore.Utilities.Extensions;
-using Blockcore.Utilities.JsonConverters;
-using Newtonsoft.Json;
 
 namespace Blockcore.P2P
 {
     /// <summary>
     /// A class which holds data on a peer's (IPEndPoint) attempts, connections and successful handshake events.
     /// </summary>
-    [JsonObject]
+
     public sealed class PeerAddress
     {
         /// <summary>
@@ -35,19 +33,18 @@ namespace Blockcore.P2P
         internal const int AttemptResetThresholdHours = 12;
 
         /// <summary>Endpoint of this peer.</summary>
-        [JsonProperty(PropertyName = "endpoint")]
-        [JsonConverter(typeof(IPEndPointConverter))]
+
         public IPEndPoint Endpoint { get; set; }
 
         /// <summary>Used to construct the <see cref="NetworkAddress"/> after deserializing this peer.</summary>
-        [JsonProperty(PropertyName = "addressTime", NullValueHandling = NullValueHandling.Ignore)]
+
         private DateTimeOffset? addressTime;
 
         /// <summary>The source address of this peer.</summary>
-        [JsonProperty(PropertyName = "loopback")]
+
         private string loopback;
 
-        [JsonIgnore]
+
         public IPAddress Loopback
         {
             get
@@ -63,7 +60,7 @@ namespace Blockcore.P2P
         /// <para>
         /// This gets reset when a connection was successful.</para>
         /// </summary>
-        [JsonProperty(PropertyName = "connectionAttempts")]
+
         public int ConnectionAttempts { get; private set; }
 
         /// <summary>
@@ -71,7 +68,7 @@ namespace Blockcore.P2P
         /// <para>
         /// This gets reset when a handshake was successful.</para>
         /// </summary>
-        [JsonIgnore]
+
         public int HandshakedAttempts { get; private set; }
 
         /// <summary>
@@ -80,13 +77,13 @@ namespace Blockcore.P2P
         /// This is set when the connection attempt was successful and a handshake was done.
         /// </para>
         /// </summary>
-        [JsonProperty(PropertyName = "lastConnectionHandshake", NullValueHandling = NullValueHandling.Ignore)]
+
         public DateTimeOffset? LastConnectionHandshake { get; private set; }
 
         /// <summary>
         /// The last handshake attempt.
         /// </summary>
-        [JsonIgnore]
+
         public DateTimeOffset? LastHandshakeAttempt { get; private set; }
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace Blockcore.P2P
         /// This is set via <see cref="Protocol.Behaviors.PingPongBehavior"/> to ensure that a peer is live.
         /// </para>
         /// </summary>
-        [JsonProperty(PropertyName = "lastSeen", NullValueHandling = NullValueHandling.Ignore)]
+
         public DateTime? LastSeen { get; private set; }
 
         /// <summary>
@@ -104,7 +101,7 @@ namespace Blockcore.P2P
         /// <remarks>
         /// This is set in <see cref="PeerBanning"/>.
         /// </remarks>
-        [JsonProperty(PropertyName = "bantimestamp", NullValueHandling = NullValueHandling.Ignore)]
+
         public DateTime? BanTimeStamp { get; set; }
 
         /// <summary>
@@ -113,7 +110,7 @@ namespace Blockcore.P2P
         /// <remarks>
         /// This is set in <see cref="PeerBanning"/>.
         /// </remarks>
-        [JsonProperty(PropertyName = "banuntil", NullValueHandling = NullValueHandling.Ignore)]
+
         public DateTime? BanUntil { get; set; }
 
         /// <summary>
@@ -121,7 +118,7 @@ namespace Blockcore.P2P
         /// <remarks>
         /// This is set in <see cref="PeerBanning"/>.
         /// </remarks>
-        [JsonProperty(PropertyName = "banreason", NullValueHandling = NullValueHandling.Ignore)]
+
         public string BanReason { get; set; }
 
         /// <summary>
@@ -134,13 +131,13 @@ namespace Blockcore.P2P
         /// The logic around this has not yet been implemented.
         /// This is set in <see cref="PeerBanning"/>.
         /// </remarks>
-        [JsonProperty(PropertyName = "banscore", NullValueHandling = NullValueHandling.Ignore)]
+
         public uint? BanScore { get; set; }
 
         /// <summary>
         /// <c>True</c> if the peer has had connection attempts but none successful.
         /// </summary>
-        [JsonIgnore]
+
         public bool Attempted
         {
             get
@@ -155,7 +152,6 @@ namespace Blockcore.P2P
         /// <summary>
         /// <c>True</c> if the peer has had a successful connection attempt.
         /// </summary>
-        [JsonIgnore]
         public bool Connected
         {
             get
@@ -170,7 +166,7 @@ namespace Blockcore.P2P
         /// <summary>
         /// <c>True</c> if the peer has never had connection attempts.
         /// </summary>
-        [JsonIgnore]
+
         public bool Fresh
         {
             get
@@ -185,7 +181,6 @@ namespace Blockcore.P2P
         /// <summary>
         /// <c>True</c> if the peer has had a successful connection attempt and handshaked.
         /// </summary>
-        [JsonIgnore]
         public bool Handshaked
         {
             get
@@ -203,7 +198,6 @@ namespace Blockcore.P2P
         /// This is set regardless of whether or not the connection attempt was successful or not.
         /// </para>
         /// </summary>
-        [JsonProperty(PropertyName = "lastConnectionAttempt", NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset? LastAttempt { get; private set; }
 
         /// <summary>
@@ -212,13 +206,13 @@ namespace Blockcore.P2P
         /// This is set when the connection attempt was successful (but not necessarily handshaked).
         /// </para>
         /// </summary>
-        [JsonProperty(PropertyName = "lastConnectionSuccess", NullValueHandling = NullValueHandling.Ignore)]
+
         public DateTimeOffset? LastConnectionSuccess { get; private set; }
 
         /// <summary>
         /// The last time this peer was discovered from.
         /// </summary>
-        [JsonIgnore]
+
         public DateTime? LastDiscoveredFrom { get; private set; }
 
         /// <summary>
@@ -233,7 +227,7 @@ namespace Blockcore.P2P
         /// </list>
         /// </para>
         /// </summary>
-        [JsonIgnore]
+
         public bool CanResetAttempts
         {
             get

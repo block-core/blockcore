@@ -8,7 +8,6 @@ using Blockcore.IntegrationTests.Common.TestNetworks;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

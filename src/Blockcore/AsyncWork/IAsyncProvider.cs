@@ -63,18 +63,6 @@ namespace Blockcore.AsyncWork
         Task RegisterTask(string name, Task taskToRegister);
 
         /// <summary>
-        /// Determines whether an <see cref="IAsyncDelegateDequeuer{T}" /> with the specified name is running.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>
-        ///   <c>true</c> if an <see cref="IAsyncDelegateDequeuer{T}" /> with the specified name is currently running, otherwise, <c>false</c>.
-        /// </returns>
-        /// <remarks>
-        /// Names are not unique, consider adding prefixes to names when <see cref="IAsyncDelegateDequeuer{T}" /> are transient and does not act like singletons. This method is mostly used for tests.
-        /// </remarks>
-        bool IsAsyncDelegateDequeuerRunning(string name);
-
-        /// <summary>
         /// Determines whether an <see cref="IAsyncLoop" /> with the specified name is running.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -85,6 +73,18 @@ namespace Blockcore.AsyncWork
         /// Names are not guaranteed to be unique, consider adding prefixes to names when <see cref="IAsyncLoop" /> are transient and does not act like singletons. This method is mostly used for tests.
         /// </remarks>
         bool IsAsyncLoopRunning(string name);
+
+        /// <summary>
+        /// Determines whether an <see cref="IAsyncDelegateDequeuer{T}" /> with the specified name is running.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>
+        ///   <c>true</c> if an <see cref="IAsyncDelegateDequeuer{T}" /> with the specified name is currently running, otherwise, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// Names are not unique, consider adding prefixes to names when <see cref="IAsyncDelegateDequeuer{T}" /> are transient and does not act like singletons. This method is mostly used for tests.
+        /// </remarks>
+        bool IsAsyncDelegateDequeuerRunning(string name);
 
         /// <summary>
         /// Determines whether a specified <see cref="IAsyncDelegate" /> is running.

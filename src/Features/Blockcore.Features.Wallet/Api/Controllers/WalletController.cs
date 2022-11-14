@@ -79,7 +79,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             this.network = network;
             this.coinType = network.Consensus.CoinType;
             this.chainIndexer = chainIndexer;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.broadcasterManager = broadcasterManager;
             this.dateTimeProvider = dateTimeProvider;
         }
@@ -98,7 +98,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 // generate the mnemonic
                 var mnemonic = WalletModelBuilder.GenerateMnemonic(language, wordCount);
-                return this.Json(mnemonic.ToString());
+                return Json(mnemonic.ToString());
             }
             catch (Exception e)
             {
@@ -133,7 +133,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                 // start syncing the wallet from the creation date
                 this.walletSyncManager.SyncFromDate(this.dateTimeProvider.GetUtcNow());
 
-                return this.Json(mnemonic.ToString());
+                return Json(mnemonic.ToString());
             }
             catch (WalletException e)
             {
@@ -168,7 +168,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 SignMessageResult signature = this.walletManager.SignMessage(request.Password, request.WalletName, request.AccountName, request.ExternalAddress, request.Message);
-                return this.Json(signature);
+                return Json(signature);
             }
             catch (Exception e)
             {
@@ -197,7 +197,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 bool result = this.walletManager.VerifySignedMessage(request.ExternalAddress, request.Message, request.Signature);
-                return this.Json(result.ToString());
+                return Json(result.ToString());
             }
             catch (Exception e)
             {
@@ -225,7 +225,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 Types.Wallet wallet = this.walletManager.LoadWallet(request.Password, request.Name);
-                return this.Ok();
+                return Ok();
             }
             catch (FileNotFoundException e)
             {
@@ -266,9 +266,9 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 Types.Wallet wallet = this.walletManager.RecoverWallet(request.Password, request.Name, request.Mnemonic, request.CreationDate, passphrase: request.Passphrase, purpose: request.Purpose, request.CoinType, request.IsColdStakingWallet);
 
-                this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
+                SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 
-                return this.Ok();
+                return Ok();
             }
             catch (WalletException e)
             {
@@ -316,9 +316,9 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 this.walletManager.RecoverWallet(request.Name, ExtPubKey.Parse(accountExtPubKey), request.AccountIndex, request.CreationDate, request.Purpose);
 
-                this.SyncFromBestHeightForRecoveredWallets(request.CreationDate);
+                SyncFromBestHeightForRecoveredWallets(request.CreationDate);
 
-                return this.Ok();
+                return Ok();
             }
             catch (WalletException e)
             {
@@ -382,7 +382,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     model.WalletFilePath = Path.Combine(folder, fileName);
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -412,7 +412,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 WalletHistoryModel model = WalletModelBuilder.GetHistory(this.walletManager, this.network, request);
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -441,7 +441,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 WalletHistoryModel model = WalletModelBuilder.GetHistorySlim(this.walletManager, this.network, request);
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -499,7 +499,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     });
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -531,7 +531,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 AddressBalance balanceResult = this.walletManager.GetAddressBalance(request.Address);
-                return this.Json(new AddressBalanceModel
+                return Json(new AddressBalanceModel
                 {
                     CoinType = this.coinType,
                     Address = balanceResult.Address,
@@ -569,7 +569,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 (Money maximumSpendableAmount, Money Fee) transactionResult = this.walletTransactionHandler.GetMaximumSpendableAmount(new WalletAccountReference(request.WalletName, request.AccountName), FeeParser.Parse(request.FeeType), request.AllowUnconfirmed);
-                return this.Json(new MaxSpendableAmountModel
+                return Json(new MaxSpendableAmountModel
                 {
                     MaxSpendableAmount = transactionResult.maximumSpendableAmount,
                     Fee = transactionResult.Fee
@@ -605,7 +605,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 IEnumerable<UnspentOutputReference> spendableTransactions = this.walletManager.GetSpendableTransactionsInAccount(new WalletAccountReference(request.WalletName, request.AccountName), request.MinConfirmations);
 
-                return this.Json(new SpendableTransactionsModel
+                return Json(new SpendableTransactionsModel
                 {
                     SpendableTransactions = spendableTransactions.Select(st => new SpendableTransactionModel
                     {
@@ -674,7 +674,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     Sign = false
                 };
 
-                return this.Json(this.walletTransactionHandler.EstimateFee(context));
+                return Json(this.walletTransactionHandler.EstimateFee(context));
             }
             catch (Exception e)
             {
@@ -766,7 +766,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     TransactionId = transactionResult.GetHash()
                 };
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -830,7 +830,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, transactionBroadCastEntry.ErrorMessage, "Transaction Exception");
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -886,7 +886,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     }
                 }
 
-                return this.Json(null);
+                return Json(null);
             }
             catch (Exception e)
             {
@@ -913,7 +913,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     WalletsFiles = result.filesNames
                 };
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -951,7 +951,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 HdAccount result = this.walletManager.GetUnusedAccount(request.WalletName, request.Password, request.Purpose);
-                return this.Json(result.Name);
+                return Json(result.Name);
             }
             catch (CannotAddAccountToXpubKeyWalletException e)
             {
@@ -985,7 +985,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 IEnumerable<HdAccount> result = this.walletManager.GetAccounts(request.WalletName);
-                return this.Json(result.Select(a => a.Name));
+                return Json(result.Select(a => a.Name));
             }
             catch (Exception e)
             {
@@ -1016,7 +1016,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 HdAddress result = this.walletManager.GetUnusedAddress(new WalletAccountReference(request.WalletName, request.AccountName));
-                return this.Json(result.Address);
+                return Json(result.Address);
             }
             catch (Exception e)
             {
@@ -1049,7 +1049,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 IEnumerable<HdAddress> result = this.walletManager.GetUnusedAddresses(new WalletAccountReference(request.WalletName, request.AccountName), count);
-                return this.Json(result.Select(x => x.Address).ToArray());
+                return Json(result.Select(x => x.Address).ToArray());
             }
             catch (Exception e)
             {
@@ -1100,7 +1100,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     })
                 };
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -1183,7 +1183,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     CreationTime = r.creationTime
                 });
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -1213,7 +1213,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 string result = this.walletManager.GetExtPubKey(new WalletAccountReference(request.WalletName, request.AccountName));
-                return this.Json(result);
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -1246,7 +1246,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 string result = this.walletManager.RetrievePrivateKey(request.Password, request.WalletName, request.AccountName, request.Address);
-                return this.Json(result);
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -1280,7 +1280,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             }
 
             this.walletSyncManager.SyncFromHeight(block.Height);
-            return this.Ok();
+            return Ok();
         }
 
         /// <summary>
@@ -1302,7 +1302,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
             this.walletSyncManager.SyncFromDate(request.Date);
 
-            return this.Ok();
+            return Ok();
         }
 
         [Route("wallet-stats")]
@@ -1353,7 +1353,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                                                .ToList();
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -1399,7 +1399,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 Transaction transactionResult = this.walletTransactionHandler.BuildTransaction(context);
 
-                return this.SendTransaction(new SendTransactionRequest(transactionResult.ToHex()));
+                return SendTransaction(new SendTransactionRequest(transactionResult.ToHex()));
             }
             catch (Exception e)
             {
@@ -1598,7 +1598,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     }
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -1619,9 +1619,9 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             try
             {
                 var responseModel = this.walletManager.Sweep(request.PrivateKeys, request.DestinationAddress, request.Broadcast);
-                return this.Json(responseModel);
+                return Json(responseModel);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.logger.LogError("Exception occurred: {0}", e.ToString());
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
@@ -1651,6 +1651,6 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             {
                 return (null, false);
             }
-        }        
+        }
     }
 }

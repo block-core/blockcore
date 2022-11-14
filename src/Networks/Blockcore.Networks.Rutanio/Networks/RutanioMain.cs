@@ -1,29 +1,27 @@
 using System;
 using System.Collections.Generic;
-using Blockcore.Features.Consensus.Rules.CommonRules;
-using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
-using Blockcore.Features.Consensus.Rules.UtxosetRules;
-using Blockcore.Features.MemoryPool.Rules;
-using Rutanio.Networks.Policies;
-using Rutanio.Networks.Rules;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
-using System.Collections;
 using System.Linq;
-using System.Collections.Specialized;
 using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Networks;
 using Blockcore.P2P;
-using Rutanio.Networks.Consensus;
-using Rutanio.Networks.Setup;
-using Rutanio.Networks.Deployments;
+using NBitcoin;
+using NBitcoin.BouncyCastle.Math;
+using NBitcoin.DataEncoders;
 using NBitcoin.Protocol;
+using Rutanio.Networks.Consensus;
+using Rutanio.Networks.Deployments;
+using Rutanio.Networks.Policies;
+using Rutanio.Networks.Rules;
+using Rutanio.Networks.Setup;
 
 namespace Rutanio.Networks
 {
@@ -46,44 +44,44 @@ namespace Rutanio.Networks
             CoinSetup setup = RutanioSetup.Instance.Setup;
             NetworkSetup network = RutanioSetup.Instance.Main;
 
-            NetworkType = NetworkType.Mainnet;
-            DefaultConfigFilename = setup.ConfigFileName; // The default name used for the Rutanio configuration file.
+            this.NetworkType = NetworkType.Mainnet;
+            this.DefaultConfigFilename = setup.ConfigFileName; // The default name used for the Rutanio configuration file.
 
-            Name = network.Name;
-            CoinTicker = network.CoinTicker;
-            Magic = ConversionTools.ConvertToUInt32(setup.Magic);
-            RootFolderName = network.RootFolderName;
-            DefaultPort = network.DefaultPort;
-            DefaultRPCPort = network.DefaultRPCPort;
-            DefaultAPIPort = network.DefaultAPIPort;
+            this.Name = network.Name;
+            this.CoinTicker = network.CoinTicker;
+            this.Magic = ConversionTools.ConvertToUInt32(setup.Magic);
+            this.RootFolderName = network.RootFolderName;
+            this.DefaultPort = network.DefaultPort;
+            this.DefaultRPCPort = network.DefaultRPCPort;
+            this.DefaultAPIPort = network.DefaultAPIPort;
 
-            DefaultMaxOutboundConnections = 16;
-            DefaultMaxInboundConnections = 109;
-            MaxTipAge = 2 * 60 * 60;
-            MinTxFee = 10000;
-            MaxTxFee = Money.Coins(1).Satoshi;
-            FallbackFee = 10000;
-            MinRelayTxFee = 10000;
-            MaxTimeOffsetSeconds = 25 * 60;
-            DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
+            this.DefaultMaxOutboundConnections = 16;
+            this.DefaultMaxInboundConnections = 109;
+            this.MaxTipAge = 2 * 60 * 60;
+            this.MinTxFee = 10000;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
+            this.FallbackFee = 10000;
+            this.MinRelayTxFee = 10000;
+            this.MaxTimeOffsetSeconds = 25 * 60;
+            this.DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
             var consensusFactory = new PosConsensusFactory();
 
-            GenesisTime = network.GenesisTime;
-            GenesisNonce = network.GenesisNonce;
-            GenesisBits = network.GenesisBits;
-            GenesisVersion = network.GenesisVersion;
-            GenesisReward = network.GenesisReward;
+            this.GenesisTime = network.GenesisTime;
+            this.GenesisNonce = network.GenesisNonce;
+            this.GenesisBits = network.GenesisBits;
+            this.GenesisVersion = network.GenesisVersion;
+            this.GenesisReward = network.GenesisReward;
 
             Block genesisBlock = CreateGenesisBlock(consensusFactory,
-               GenesisTime,
-               GenesisNonce,
-               GenesisBits,
-               GenesisVersion,
-               GenesisReward,
+               this.GenesisTime,
+               this.GenesisNonce,
+               this.GenesisBits,
+               this.GenesisVersion,
+               this.GenesisReward,
                setup.GenesisText);
 
-            Genesis = genesisBlock;
+            this.Genesis = genesisBlock;
 
             var buriedDeployments = new BuriedDeploymentsArray
             {
@@ -105,7 +103,7 @@ namespace Rutanio.Networks
                 MinProtocolVersion = ProtocolVersion.POS_PROTOCOL_VERSION,
             };
 
-            Consensus = new Blockcore.Consensus.Consensus(
+            this.Consensus = new Blockcore.Consensus.Consensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
                 coinType: setup.CoinType,
@@ -144,41 +142,41 @@ namespace Rutanio.Networks
             byte[] newHashkey = Encoders.ASCII.DecodeData("Rutanio seed");
             ExtKey.OverrideHashKey(newHashkey);
 
-            Consensus.PosEmptyCoinbase = RutanioSetup.Instance.IsPoSv3();
-            Consensus.PosUseTimeFieldInKernalHash = RutanioSetup.Instance.IsPoSv3();
+            this.Consensus.PosEmptyCoinbase = RutanioSetup.Instance.IsPoSv3();
+            this.Consensus.PosUseTimeFieldInKernalHash = RutanioSetup.Instance.IsPoSv3();
 
             // TODO: Set your Base58Prefixes
-            Base58Prefixes = new byte[12][];
-            Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
-            Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
-            Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (byte)network.SecretAddress };
-            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
-            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
-            Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
-            Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
-            Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
-            Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
+            this.Base58Prefixes = new byte[12][];
+            this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
+            this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
+            this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (byte)network.SecretAddress };
+            this.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
+            this.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
+            this.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
+            this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
+            this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
+            this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
+            this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
 
-            Bech32Encoders = new Bech32Encoder[2];
+            this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
-            Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
-            Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
+            this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
+            this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 
-            Checkpoints = network.Checkpoints;
-            DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-            SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(Dns.GetHostAddresses(node).GetValue(0).ToString()), network.DefaultPort)).ToList();
+            this.Checkpoints = network.Checkpoints;
+            this.DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
+            this.SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(Dns.GetHostAddresses(node).GetValue(0).ToString()), network.DefaultPort)).ToList();
 
-            StandardScriptsRegistry = new RutanioStandardScriptsRegistry();
+            this.StandardScriptsRegistry = new RutanioStandardScriptsRegistry();
 
             // 64 below should be changed to TargetSpacingSeconds when we move that field.
-            Assert(DefaultBanTimeSeconds <= Consensus.MaxReorgLength * 64 / 2);
+            Assert(this.DefaultBanTimeSeconds <= this.Consensus.MaxReorgLength * 64 / 2);
 
-            Assert(Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
-            Assert(Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
+            Assert(this.Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
+            Assert(this.Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
 
-            RegisterRules(Consensus);
-            RegisterMempoolRules(Consensus);
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
         }
 
         protected void RegisterRules(IConsensus consensus)

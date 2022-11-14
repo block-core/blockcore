@@ -17,7 +17,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
     public abstract class NetworkPeerBehavior : INetworkPeerBehavior
     {
-        private object cs = new object();
+        private readonly object cs = new object();
 
         public INetworkPeer AttachedPeer { get; private set; }
 

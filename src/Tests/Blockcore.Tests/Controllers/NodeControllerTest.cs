@@ -76,7 +76,7 @@ namespace Blockcore.Tests.Controllers
             this.selfEndpointTracker = new Mock<ISelfEndpointTracker>();
             this.consensusManager = new Mock<IConsensusManager>();
 
-            this.CreateNewController();
+            CreateNewController();
         }
 
         private void CreateNewController()
@@ -140,7 +140,7 @@ namespace Blockcore.Tests.Controllers
                 .Returns((Transaction)null)
                 .Verifiable();
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             bool verbose = false;
@@ -158,11 +158,11 @@ namespace Blockcore.Tests.Controllers
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync((Transaction)null);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns(transaction);
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             bool verbose = false;
@@ -179,7 +179,7 @@ namespace Blockcore.Tests.Controllers
         public async Task GetRawTransactionAsync_NullVerbose_ReturnsBriefModelAsync()
         {
             var txId = new uint256(12142124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns(transaction);
             string txid = txId.ToString();
@@ -196,11 +196,11 @@ namespace Blockcore.Tests.Controllers
         public async Task GetRawTransactionAsync_PooledTransactionServiceNotAvailable_ReturnsTransactionFromBlockStoreAsync()
         {
             var txId = new uint256(12142124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns(transaction);
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             bool verbose = false;
@@ -220,7 +220,7 @@ namespace Blockcore.Tests.Controllers
                 .Returns((Transaction)null)
                 .Verifiable();
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             bool verbose = false;
@@ -237,9 +237,9 @@ namespace Blockcore.Tests.Controllers
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync((Transaction)null);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
 
-            this.CreateNewController();
+            CreateNewController();
 
             var json = (JsonResult)this.controller.DecodeRawTransaction(new DecodeRawTransactionModel() { RawHex = transaction.ToHex() });
             var resultModel = (TransactionVerboseModel)json.Value;
@@ -255,7 +255,7 @@ namespace Blockcore.Tests.Controllers
             this.chainState.Setup(c => c.ConsensusTip)
                 .Returns(this.chainIndexer.Tip);
             ChainedHeader block = this.chainIndexer.GetHeader(1);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
@@ -300,7 +300,7 @@ namespace Blockcore.Tests.Controllers
         public async Task GetTaskAsync_Verbose_ChainStateTipNull_DoesNotCalulateConfirmationsAsync()
         {
             ChainedHeader block = this.chainIndexer.GetHeader(1);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
@@ -324,7 +324,7 @@ namespace Blockcore.Tests.Controllers
         [Fact]
         public async Task GetTaskAsync_Verbose_BlockNotFoundOnChain_ReturnsTransactionVerboseModelWithoutBlockInformationAsync()
         {
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
@@ -368,7 +368,7 @@ namespace Blockcore.Tests.Controllers
         public async Task GetTxOutAsync_NullVoutandInMempool_PooledUnspentTransactionFound_ReturnsModelVoutZeroAsync()
         {
             var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
@@ -408,7 +408,7 @@ namespace Blockcore.Tests.Controllers
         {
             var txId = new uint256(1243124);
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
 
@@ -428,7 +428,7 @@ namespace Blockcore.Tests.Controllers
                 .ReturnsAsync((UnspentOutput)null)
                 .Verifiable();
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             uint vout = 0;
@@ -445,7 +445,7 @@ namespace Blockcore.Tests.Controllers
         {
             var txId = new uint256(1243124);
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             uint vout = 0;
@@ -460,13 +460,13 @@ namespace Blockcore.Tests.Controllers
         public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionFound_ReturnsModelAsync()
         {
             var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
             this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             uint vout = 0;
@@ -487,13 +487,13 @@ namespace Blockcore.Tests.Controllers
         public async Task GetTxOutAsync_IncludeInMempool_UnspentTransactionFound_ReturnsModelAsync()
         {
             var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
                 .ReturnsAsync(unspentOutputs)
                 .Verifiable();
 
-            this.CreateNewController();
+            CreateNewController();
 
             string txid = txId.ToString();
             uint vout = 0;
@@ -653,7 +653,7 @@ namespace Blockcore.Tests.Controllers
 
         private string GetBlockHeaderBits(BlockHeader header)
         {
-            byte[] bytes = this.GetBytes(header.Bits.ToCompact());
+            byte[] bytes = GetBytes(header.Bits.ToCompact());
             return Encoders.Hex.EncodeData(bytes);
         }
 
@@ -674,19 +674,19 @@ namespace Blockcore.Tests.Controllers
 
             public event EventHandler<NetworkPeerEventArgs> Removed;
 
-            private List<INetworkPeer> networkPeers;
+            private readonly List<INetworkPeer> networkPeers;
 
             public TestReadOnlyNetworkPeerCollection()
             {
-                this.Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
-                this.Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
                 this.networkPeers = new List<INetworkPeer>();
             }
 
             public TestReadOnlyNetworkPeerCollection(List<INetworkPeer> peers)
             {
-                this.Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
-                this.Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
                 this.networkPeers = peers;
             }
 
@@ -712,7 +712,7 @@ namespace Blockcore.Tests.Controllers
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
-                return this.GetEnumerator();
+                return GetEnumerator();
             }
         }
     }

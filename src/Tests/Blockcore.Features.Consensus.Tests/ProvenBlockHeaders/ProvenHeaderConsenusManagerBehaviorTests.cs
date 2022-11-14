@@ -15,7 +15,6 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Features.Consensus.Behaviors;
 using Blockcore.Interfaces;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;

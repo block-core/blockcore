@@ -14,11 +14,8 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.MemoryPool.Tests")]
 
@@ -60,9 +57,9 @@ namespace Blockcore.Features.MemoryPool
             this.broadcasterManager = broadcasterManager;
             this.payloadProvider = payloadProvider;
             this.feeFilterBehavior = feeFilterBehavior;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
         }
 
         private void AddComponentStats(StringBuilder log)

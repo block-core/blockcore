@@ -10,7 +10,6 @@ using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.PoA.Tests.Rules
@@ -22,7 +21,7 @@ namespace Blockcore.Features.PoA.Tests.Rules
         public HeaderTimeChecksPoARuleTests()
         {
             this.timeChecksRule = new HeaderTimeChecksPoARule();
-            this.InitRule(this.timeChecksRule);
+            InitRule(this.timeChecksRule);
         }
 
         [Fact]
@@ -114,7 +113,7 @@ namespace Blockcore.Features.PoA.Tests.Rules
                 new NodeStats(timeProvider.Object, this.loggerFactory), this.slotsManager, this.poaHeaderValidator, this.votingManager, this.federationManager, this.asyncProvider, new ConsensusRulesContainer());
 
             var timeRule = new HeaderTimeChecksPoARule();
-            this.InitRule(timeRule);
+            InitRule(timeRule);
 
             ChainedHeader prevHeader = this.currentHeader.Previous;
 

@@ -3,7 +3,6 @@ using Blockcore.Configuration;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool
 {
@@ -91,19 +90,19 @@ namespace Blockcore.Features.MemoryPool
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine($"-maxmempool=<megabytes>   Maximal size of the transaction memory pool in megabytes. Defaults to { MempoolValidator.DefaultMaxMempoolSize }.");
-            builder.AppendLine($"-mempoolexpiry=<hours>    Maximum number of hours to keep transactions in the mempool. Defaults to { MempoolValidator.DefaultMempoolExpiry }.");
+            builder.AppendLine($"-maxmempool=<megabytes>   Maximal size of the transaction memory pool in megabytes. Defaults to {MempoolValidator.DefaultMaxMempoolSize}.");
+            builder.AppendLine($"-mempoolexpiry=<hours>    Maximum number of hours to keep transactions in the mempool. Defaults to {MempoolValidator.DefaultMempoolExpiry}.");
             builder.AppendLine($"-relaypriority=<0 or 1>   Enable high priority for relaying free or low-fee transactions.");
-            builder.AppendLine($"-limitancestorcount=<count>  Maximum number of ancestors of a transaction in mempool (including itself). Defaults to { MempoolValidator.DefaultAncestorLimit }.");
-            builder.AppendLine($"-limitancestorsize=<kB>   Maximal size in kB of ancestors of a transaction in mempool (including itself). Defaults to { MempoolValidator.DefaultAncestorSizeLimit }.");
-            builder.AppendLine($"-limitdescendantcount=<count>  Maximum number of descendants any ancestor can have in mempool (including itself). Defaults to { MempoolValidator.DefaultDescendantLimit }.");
-            builder.AppendLine($"-limitdescendantsize=<kB> Maximum size in kB of descendants any ancestor can have in mempool (including itself). Defaults to { MempoolValidator.DefaultDescendantSizeLimit }.");
+            builder.AppendLine($"-limitancestorcount=<count>  Maximum number of ancestors of a transaction in mempool (including itself). Defaults to {MempoolValidator.DefaultAncestorLimit}.");
+            builder.AppendLine($"-limitancestorsize=<kB>   Maximal size in kB of ancestors of a transaction in mempool (including itself). Defaults to {MempoolValidator.DefaultAncestorSizeLimit}.");
+            builder.AppendLine($"-limitdescendantcount=<count>  Maximum number of descendants any ancestor can have in mempool (including itself). Defaults to {MempoolValidator.DefaultDescendantLimit}.");
+            builder.AppendLine($"-limitdescendantsize=<kB> Maximum size in kB of descendants any ancestor can have in mempool (including itself). Defaults to {MempoolValidator.DefaultDescendantSizeLimit}.");
             builder.AppendLine($"-mempoolreplacement=<0 or 1>  Enable transaction replacement in the memory pool.");
-            builder.AppendLine($"-maxorphantx=<kB>         Maximum number of orphan transactions kept in memory. Defaults to { MempoolOrphans.DefaultMaxOrphanTransactions }.");
-            builder.AppendLine($"-whitelistrelay=<0 or 1>  Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to { DefaultWhiteListRelay }.");
+            builder.AppendLine($"-maxorphantx=<kB>         Maximum number of orphan transactions kept in memory. Defaults to {MempoolOrphans.DefaultMaxOrphanTransactions}.");
+            builder.AppendLine($"-whitelistrelay=<0 or 1>  Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to {DefaultWhiteListRelay}.");
             builder.AppendLine($"-acceptnonstdtxn=<0 or 1> Accept non-standard transactions. Default {(!(network.IsTest()) ? 1 : 0)}.");
-            builder.AppendLine($"-permitbaremultisig=<0 or 1> Relay non-P2SH multisig. Defaults to { MempoolValidator.DefaultPermitBareMultisig }.");
-            builder.AppendLine($"-feefilter=<0 or 1>       Tell other nodes to filter invs to us by our mempool min fee (default: { MempoolValidator.DefaultFeeFilter }).");
+            builder.AppendLine($"-permitbaremultisig=<0 or 1> Relay non-P2SH multisig. Defaults to {MempoolValidator.DefaultPermitBareMultisig}.");
+            builder.AppendLine($"-feefilter=<0 or 1>       Tell other nodes to filter invs to us by our mempool min fee (default: {MempoolValidator.DefaultFeeFilter}).");
 
             NodeSettings.Default(network).Logger.LogInformation(builder.ToString());
         }
@@ -116,30 +115,30 @@ namespace Blockcore.Features.MemoryPool
         public static void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
         {
             builder.AppendLine("####MemPool Settings####");
-            builder.AppendLine($"#Maximal size of the transaction memory pool in megabytes. Defaults to { MempoolValidator.DefaultMaxMempoolSize }.");
-            builder.AppendLine($"#maxmempool={ MempoolValidator.DefaultMaxMempoolSize }");
-            builder.AppendLine($"#Maximum number of hours to keep transactions in the mempool. Defaults to { MempoolValidator.DefaultMempoolExpiry }.");
-            builder.AppendLine($"#mempoolexpiry={ MempoolValidator.DefaultMempoolExpiry }");
-            builder.AppendLine($"#Enable high priority for relaying free or low-fee transactions. Defaults to { (MempoolValidator.DefaultRelaypriority ? 1 : 0) }.");
-            builder.AppendLine($"#relaypriority={ (MempoolValidator.DefaultRelaypriority ? 1 : 0) }");
-            builder.AppendLine($"#Maximum number of ancestors of a transaction in mempool (including itself). Defaults to { MempoolValidator.DefaultAncestorLimit }.");
-            builder.AppendLine($"#limitancestorcount={ MempoolValidator.DefaultAncestorLimit }");
-            builder.AppendLine($"#Maximal size in kB of ancestors of a transaction in mempool (including itself). Defaults to { MempoolValidator.DefaultAncestorSizeLimit }.");
-            builder.AppendLine($"#limitancestorsize={ MempoolValidator.DefaultAncestorSizeLimit }");
-            builder.AppendLine($"#Maximum number of descendants any ancestor can have in mempool (including itself). Defaults to { MempoolValidator.DefaultDescendantLimit }.");
-            builder.AppendLine($"#limitdescendantcount={ MempoolValidator.DefaultDescendantLimit }");
-            builder.AppendLine($"#Maximum size in kB of descendants any ancestor can have in mempool (including itself). Defaults to { MempoolValidator.DefaultDescendantSizeLimit }.");
-            builder.AppendLine($"#limitdescendantsize={ MempoolValidator.DefaultDescendantSizeLimit }.");
+            builder.AppendLine($"#Maximal size of the transaction memory pool in megabytes. Defaults to {MempoolValidator.DefaultMaxMempoolSize}.");
+            builder.AppendLine($"#maxmempool={MempoolValidator.DefaultMaxMempoolSize}");
+            builder.AppendLine($"#Maximum number of hours to keep transactions in the mempool. Defaults to {MempoolValidator.DefaultMempoolExpiry}.");
+            builder.AppendLine($"#mempoolexpiry={MempoolValidator.DefaultMempoolExpiry}");
+            builder.AppendLine($"#Enable high priority for relaying free or low-fee transactions. Defaults to {(MempoolValidator.DefaultRelaypriority ? 1 : 0)}.");
+            builder.AppendLine($"#relaypriority={(MempoolValidator.DefaultRelaypriority ? 1 : 0)}");
+            builder.AppendLine($"#Maximum number of ancestors of a transaction in mempool (including itself). Defaults to {MempoolValidator.DefaultAncestorLimit}.");
+            builder.AppendLine($"#limitancestorcount={MempoolValidator.DefaultAncestorLimit}");
+            builder.AppendLine($"#Maximal size in kB of ancestors of a transaction in mempool (including itself). Defaults to {MempoolValidator.DefaultAncestorSizeLimit}.");
+            builder.AppendLine($"#limitancestorsize={MempoolValidator.DefaultAncestorSizeLimit}");
+            builder.AppendLine($"#Maximum number of descendants any ancestor can have in mempool (including itself). Defaults to {MempoolValidator.DefaultDescendantLimit}.");
+            builder.AppendLine($"#limitdescendantcount={MempoolValidator.DefaultDescendantLimit}");
+            builder.AppendLine($"#Maximum size in kB of descendants any ancestor can have in mempool (including itself). Defaults to {MempoolValidator.DefaultDescendantSizeLimit}.");
+            builder.AppendLine($"#limitdescendantsize={MempoolValidator.DefaultDescendantSizeLimit}.");
             builder.AppendLine($"#Enable transaction replacement in the memory pool.");
             builder.AppendLine($"#mempoolreplacement=0");
-            builder.AppendLine($"#Maximum number of orphan transactions kept in memory. Defaults to { MempoolOrphans.DefaultMaxOrphanTransactions }.");
-            builder.AppendLine($"#maxorphantx={ MempoolOrphans.DefaultMaxOrphanTransactions }");
-            builder.AppendLine($"#Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to { (DefaultWhiteListRelay ? 1 : 0) }.");
-            builder.AppendLine($"#whitelistrelay={ (DefaultWhiteListRelay ? 1 : 0) }");
+            builder.AppendLine($"#Maximum number of orphan transactions kept in memory. Defaults to {MempoolOrphans.DefaultMaxOrphanTransactions}.");
+            builder.AppendLine($"#maxorphantx={MempoolOrphans.DefaultMaxOrphanTransactions}");
+            builder.AppendLine($"#Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to {(DefaultWhiteListRelay ? 1 : 0)}.");
+            builder.AppendLine($"#whitelistrelay={(DefaultWhiteListRelay ? 1 : 0)}");
             builder.AppendLine($"#Accept non-standard transactions. Default {(!(network.IsTest()) ? 1 : 0)}.");
             builder.AppendLine($"#acceptnonstdtxn={(!(network.IsTest()) ? 1 : 0)}");
-            builder.AppendLine($"#Relay non-P2SH multisig. Defaults to { MempoolValidator.DefaultPermitBareMultisig }.");
-            builder.AppendLine($"#permitbaremultisig={ MempoolValidator.DefaultPermitBareMultisig }");
+            builder.AppendLine($"#Relay non-P2SH multisig. Defaults to {MempoolValidator.DefaultPermitBareMultisig}.");
+            builder.AppendLine($"#permitbaremultisig={MempoolValidator.DefaultPermitBareMultisig}");
         }
     }
 }

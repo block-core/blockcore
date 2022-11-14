@@ -14,12 +14,12 @@ namespace Blockcore.Features.PoA.Tests.Rules
     {
         private readonly PoAHeaderSignatureRule signatureRule;
 
-        private static Key key = new KeyTool(new DataFolder(string.Empty)).GeneratePrivateKey();
+        private static readonly Key key = new KeyTool(new DataFolder(string.Empty)).GeneratePrivateKey();
 
         public PoAHeaderSignatureRuleTests() : base(new TestPoANetwork(new List<PubKey>() { key.PubKey }))
         {
             this.signatureRule = new PoAHeaderSignatureRule();
-            this.InitRule(this.signatureRule);
+            InitRule(this.signatureRule);
         }
 
         [Fact]

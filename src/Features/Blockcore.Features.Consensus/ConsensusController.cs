@@ -39,7 +39,7 @@ namespace Blockcore.Features.Consensus
             Guard.NotNull(chainIndexer, nameof(chainIndexer));
             Guard.NotNull(chainState, nameof(chainState));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Blockcore.Features.Consensus
 
                 List<ThresholdStateModel> metrics = ruleEngine.NodeDeployments.BIP9.GetThresholdStateMetrics(this.ChainState.ConsensusTip.Previous, thresholdStates);
 
-                return this.Json(metrics);
+                return Json(metrics);
             }
             catch (Exception e)
             {
@@ -82,7 +82,7 @@ namespace Blockcore.Features.Consensus
         {
             try
             {
-                return this.Json(this.ChainState.ConsensusTip?.HashBlock);
+                return Json(this.ChainState.ConsensusTip?.HashBlock);
             }
             catch (Exception e)
             {
@@ -115,7 +115,7 @@ namespace Blockcore.Features.Consensus
                 if (hash == null)
                     throw new BlockNotFoundException($"No block found at height {height}");
 
-                return this.Json(hash);
+                return Json(hash);
             }
             catch (Exception e)
             {

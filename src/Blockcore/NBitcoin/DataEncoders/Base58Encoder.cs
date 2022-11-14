@@ -24,7 +24,7 @@ namespace NBitcoin.DataEncoders
         public override byte[] DecodeData(string encoded)
         {
             byte[] vchRet = InternalEncoder.DecodeData(encoded);
-            if(vchRet.Length < 4)
+            if (vchRet.Length < 4)
             {
                 Array.Clear(vchRet, 0, vchRet.Length);
                 throw new FormatException("Invalid checked base 58 string");
@@ -32,7 +32,7 @@ namespace NBitcoin.DataEncoders
             byte[] calculatedHash = Hashes.Hash256(vchRet, 0, vchRet.Length - 4).ToBytes().SafeSubarray(0, 4);
             byte[] expectedHash = vchRet.SafeSubarray(vchRet.Length - 4, 4);
 
-            if(!Utils.ArrayEqual(calculatedHash, expectedHash))
+            if (!Utils.ArrayEqual(calculatedHash, expectedHash))
             {
                 Array.Clear(vchRet, 0, vchRet.Length);
                 throw new FormatException("Invalid hash of the base 58 string");
@@ -47,7 +47,7 @@ namespace NBitcoin.DataEncoders
         private static readonly BigInteger bn58 = BigInteger.ValueOf(58);
         public override string EncodeData(byte[] data, int offset, int count)
         {
-            
+
             BigInteger bn0 = BigInteger.Zero;
 
             // Convert big endian data to little endian
@@ -62,7 +62,7 @@ namespace NBitcoin.DataEncoders
             // Expected size increase from base58 conversion is approximately 137%
             // use 138% to be safe
 
-            while(bn.CompareTo(bn0) > 0)
+            while (bn.CompareTo(bn0) > 0)
             {
                 BigInteger[] r = bn.DivideAndRemainder(bn58);
                 BigInteger dv = r[0];
@@ -73,7 +73,7 @@ namespace NBitcoin.DataEncoders
             }
 
             // Leading zeroes encoded as base58 zeros
-            for(int i = offset; i < offset + count && data[i] == 0; i++)
+            for (int i = offset; i < offset + count && data[i] == 0; i++)
                 builder.Append(pszBase58[0]);
 
             // Convert little endian std::string to big endian
@@ -90,33 +90,33 @@ namespace NBitcoin.DataEncoders
 
         public override byte[] DecodeData(string encoded)
         {
-            if(encoded == null)
+            if (encoded == null)
                 throw new ArgumentNullException("encoded");
 
             var result = new byte[0];
-            if(encoded.Length == 0)
+            if (encoded.Length == 0)
                 return result;
             BigInteger bn = BigInteger.Zero;
             int i = 0;
-            while(IsSpace(encoded[i]))
+            while (IsSpace(encoded[i]))
             {
                 i++;
-                if(i >= encoded.Length)
+                if (i >= encoded.Length)
                     return result;
             }
 
-            for(int y = i; y < encoded.Length; y++)
+            for (int y = i; y < encoded.Length; y++)
             {
                 int p1 = pszBase58.IndexOf(encoded[y]);
-                if(p1 == -1)
+                if (p1 == -1)
                 {
-                    while(IsSpace(encoded[y]))
+                    while (IsSpace(encoded[y]))
                     {
                         y++;
-                        if(y >= encoded.Length)
+                        if (y >= encoded.Length)
                             break;
                     }
-                    if(y != encoded.Length)
+                    if (y != encoded.Length)
                         throw new FormatException("Invalid base 58 string");
                     break;
                 }
@@ -128,16 +128,16 @@ namespace NBitcoin.DataEncoders
             // Get bignum as little endian data
             byte[] vchTmp = bn.ToByteArrayUnsigned();
             Array.Reverse(vchTmp);
-            if(vchTmp.All(b => b == 0))
+            if (vchTmp.All(b => b == 0))
                 vchTmp = new byte[0];
 
             // Trim off sign byte if present
-            if(vchTmp.Length >= 2 && vchTmp[vchTmp.Length - 1] == 0 && vchTmp[vchTmp.Length - 2] >= 0x80)
+            if (vchTmp.Length >= 2 && vchTmp[vchTmp.Length - 1] == 0 && vchTmp[vchTmp.Length - 2] >= 0x80)
                 vchTmp = vchTmp.SafeSubarray(0, vchTmp.Length - 1);
 
             // Restore leading zeros
             int nLeadingZeros = 0;
-            for(int y = i; y < encoded.Length && encoded[y] == pszBase58[0]; y++)
+            for (int y = i; y < encoded.Length && encoded[y] == pszBase58[0]; y++)
                 nLeadingZeros++;
 
 

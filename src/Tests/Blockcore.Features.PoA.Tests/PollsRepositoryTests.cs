@@ -28,7 +28,7 @@ namespace Blockcore.Features.PoA.Tests
             this.repository.AddPolls(new Poll() { Id = 0 });
             this.repository.AddPolls(new Poll() { Id = 1 });
             this.repository.AddPolls(new Poll() { Id = 2 });
-            Assert.Throws<ArgumentException>(() => this.repository.AddPolls(new Poll() {Id = 5}));
+            Assert.Throws<ArgumentException>(() => this.repository.AddPolls(new Poll() { Id = 5 }));
             this.repository.AddPolls(new Poll() { Id = 3 });
 
             Assert.Equal(3, this.repository.GetHighestPollId());
@@ -74,7 +74,7 @@ namespace Blockcore.Features.PoA.Tests
         [Fact]
         public void CanUpdatePolls()
         {
-            var poll = new Poll() {Id = 0, VotingData = new VotingData() {Key = VoteKey.AddFederationMember}};
+            var poll = new Poll() { Id = 0, VotingData = new VotingData() { Key = VoteKey.AddFederationMember } };
             this.repository.AddPolls(poll);
 
             poll.VotingData.Key = VoteKey.KickFederationMember;

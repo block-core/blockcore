@@ -288,7 +288,7 @@ namespace Blockcore.Features.Dns.Tests
             bool startedListening = false;
             var udpClient = new Mock<IUdpClient>();
             udpClient.Setup(c => c.StartListening(It.IsAny<int>())).Callback(() => startedListening = true);
-            udpClient.Setup(c => c.ReceiveAsync()).ReturnsAsync(new Tuple<IPEndPoint, byte[]>(new IPEndPoint(IPAddress.Loopback, 80), this.GetBadDnsRequest()));
+            udpClient.Setup(c => c.ReceiveAsync()).ReturnsAsync(new Tuple<IPEndPoint, byte[]>(new IPEndPoint(IPAddress.Loopback, 80), GetBadDnsRequest()));
 
             var masterFile = new Mock<IMasterFile>();
             masterFile.Setup(m => m.Get(It.IsAny<Question>())).Returns(new List<IResourceRecord>() { new IPAddressResourceRecord(Domain.FromString("google.com"), IPAddress.Loopback) });
@@ -361,7 +361,7 @@ namespace Blockcore.Features.Dns.Tests
             bool sentResponse = false;
             var udpClient = new Mock<IUdpClient>();
             udpClient.Setup(c => c.StartListening(It.IsAny<int>())).Callback(() => startedListening = true);
-            udpClient.Setup(c => c.ReceiveAsync()).ReturnsAsync(new Tuple<IPEndPoint, byte[]>(new IPEndPoint(IPAddress.Loopback, 80), this.GetDnsRequest()));
+            udpClient.Setup(c => c.ReceiveAsync()).ReturnsAsync(new Tuple<IPEndPoint, byte[]>(new IPEndPoint(IPAddress.Loopback, 80), GetDnsRequest()));
             udpClient.Setup(c => c.SendAsync(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<IPEndPoint>())).Callback<byte[], int, IPEndPoint>((p, s, ip) => sentResponse = true).ReturnsAsync(1);
 
             var masterFile = new Mock<IMasterFile>();
@@ -613,7 +613,7 @@ namespace Blockcore.Features.Dns.Tests
             var sources = new Queue<CancellationTokenSource>();
             var responses = new Queue<byte[]>();
             var udpClient = new Mock<IUdpClient>();
-            udpClient.Setup(c => c.ReceiveAsync()).ReturnsAsync(new Tuple<IPEndPoint, byte[]>(new IPEndPoint(IPAddress.Loopback, 80), this.GetDnsRequest()));
+            udpClient.Setup(c => c.ReceiveAsync()).ReturnsAsync(new Tuple<IPEndPoint, byte[]>(new IPEndPoint(IPAddress.Loopback, 80), GetDnsRequest()));
             udpClient.Setup(c => c.SendAsync(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<IPEndPoint>())).Callback<byte[], int, IPEndPoint>((p, s, ip) =>
             {
                 // One response at a time.

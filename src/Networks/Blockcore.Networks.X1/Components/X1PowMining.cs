@@ -14,7 +14,6 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
-using Blockcore.Networks;
 using Blockcore.Networks.X1.Consensus;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
@@ -106,7 +105,7 @@ namespace Blockcore.Networks.X1.Components
             this.dateTimeProvider = dateTimeProvider;
             this.loggerFactory = loggerFactory;
             this.initialBlockDownloadState = initialBlockDownloadState;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.mempool = mempool;
             this.mempoolLock = mempoolLock;
             this.network = network;
@@ -131,7 +130,7 @@ namespace Blockcore.Networks.X1.Components
             {
                 try
                 {
-                    this.GenerateBlocks(new ReserveScript { ReserveFullNodeScript = reserveScript }, int.MaxValue, int.MaxValue);
+                    GenerateBlocks(new ReserveScript { ReserveFullNodeScript = reserveScript }, int.MaxValue, int.MaxValue);
                 }
                 catch (OperationCanceledException)
                 {
@@ -179,25 +178,25 @@ namespace Blockcore.Networks.X1.Components
 
             while (context.MiningCanContinue)
             {
-                if (!this.ConsensusIsAtTip(context))
+                if (!ConsensusIsAtTip(context))
                     continue;
 
-                if (!this.BuildBlock(context))
+                if (!BuildBlock(context))
                     continue;
 
-                if (!this.IsProofOfWorkAllowed(context))
+                if (!IsProofOfWorkAllowed(context))
                     continue;
 
-                if (!this.MineBlock(context))
+                if (!MineBlock(context))
                     break;
 
-                if (!this.ValidateMinedBlock(context))
+                if (!ValidateMinedBlock(context))
                     continue;
 
-                if (!this.ValidateAndConnectBlock(context))
+                if (!ValidateAndConnectBlock(context))
                     continue;
 
-                this.OnBlockMined(context);
+                OnBlockMined(context);
             }
 
             return context.Blocks;
@@ -274,7 +273,7 @@ namespace Blockcore.Networks.X1.Components
                     return true;
             }
 
-            this.LogMiningInformation(context.ExtraNonce, totalNonce, this.stopwatch.Elapsed.TotalSeconds, block.Header.Bits.Difficulty, $"{threads} threads");
+            LogMiningInformation(context.ExtraNonce, totalNonce, this.stopwatch.Elapsed.TotalSeconds, block.Header.Bits.Difficulty, $"{threads} threads");
 
             return false;
         }
@@ -283,7 +282,7 @@ namespace Blockcore.Networks.X1.Components
         {
             Block block = context.BlockTemplate.Block;
             block.Header.Nonce = 0;
-            context.ExtraNonce = this.IncrementExtraNonce(block, context.ChainTip, context.ExtraNonce);
+            context.ExtraNonce = IncrementExtraNonce(block, context.ChainTip, context.ExtraNonce);
 
             var iterations = uint.MaxValue / (uint)this.minerSettings.OpenCLWorksizeSplit;
             var nonceStart = ((uint)context.ExtraNonce - 1) * iterations;
@@ -305,7 +304,7 @@ namespace Blockcore.Networks.X1.Components
                 }
             }
 
-            this.LogMiningInformation(context.ExtraNonce, iterations, this.stopwatch.Elapsed.TotalSeconds, block.Header.Bits.Difficulty, $"{this.openCLMiner.GetDeviceName()}");
+            LogMiningInformation(context.ExtraNonce, iterations, this.stopwatch.Elapsed.TotalSeconds, block.Header.Bits.Difficulty, $"{this.openCLMiner.GetDeviceName()}");
 
             if (context.ExtraNonce >= this.minerSettings.OpenCLWorksizeSplit)
             {
@@ -411,7 +410,7 @@ namespace Blockcore.Networks.X1.Components
         /// </summary>
         private bool MineBlockRegTest(MineBlockContext context)
         {
-            context.ExtraNonce = this.IncrementExtraNonce(context.BlockTemplate.Block, context.ChainTip, context.ExtraNonce);
+            context.ExtraNonce = IncrementExtraNonce(context.BlockTemplate.Block, context.ChainTip, context.ExtraNonce);
 
             Block block = context.BlockTemplate.Block;
             while ((context.MaxTries > 0) && (block.Header.Nonce < InnerLoopCount) && !block.CheckProofOfWork())
@@ -550,7 +549,7 @@ namespace Blockcore.Networks.X1.Components
             {
                 this.m_value = n;
             }
-            private long m_value;
+            private readonly long m_value;
 
             public CScriptNum(byte[] vch, bool fRequireMinimal)
                 : this(vch, fRequireMinimal, 4)

@@ -1,25 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks;
+using Blockcore.P2P;
+using HomeCoin.Networks.Deployments;
 using HomeCoin.Networks.Policies;
 using HomeCoin.Networks.Rules;
+using HomeCoin.Networks.Setup;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
-using System.Linq;
-using System.Net;
-using HomeCoin.Networks.Setup;
-using Blockcore.Networks;
-using Blockcore.Base.Deployments;
-using Blockcore.Consensus.BlockInfo;
-using Blockcore.Consensus;
-using Blockcore.P2P;
-using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Consensus.ScriptInfo;
-using HomeCoin.Networks.Deployments;
 
 namespace HomeCoin.Networks
 {
@@ -211,7 +211,7 @@ namespace HomeCoin.Networks
                 .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
                                                  // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
                                                  // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
-                                                
+
                 .Register<PosColdStakingRule>()
                 .Register<PushUtxosetRule>()
                 .Register<FlushUtxosetRule>();

@@ -6,9 +6,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Tests.Base

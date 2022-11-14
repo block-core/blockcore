@@ -9,23 +9,23 @@ namespace Blockcore.Features.RPC
         public static RPCCredentialString Parse(string str)
         {
             RPCCredentialString r;
-            if(!TryParse(str, out r))
+            if (!TryParse(str, out r))
                 throw new FormatException("Invalid RPC Credential string");
             return r;
         }
 
         public static bool TryParse(string str, out RPCCredentialString connectionString)
         {
-            if(str == null)
+            if (str == null)
                 throw new ArgumentNullException(nameof(str));
             str = str.Trim();
-            if(str.Equals("default", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(str))
+            if (str.Equals("default", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(str))
             {
                 connectionString = new RPCCredentialString();
                 return true;
             }
 
-            if(str.StartsWith("cookiefile=", StringComparison.OrdinalIgnoreCase))
+            if (str.StartsWith("cookiefile=", StringComparison.OrdinalIgnoreCase))
             {
                 string path = str.Substring("cookiefile=".Length);
                 connectionString = new RPCCredentialString();
@@ -33,10 +33,10 @@ namespace Blockcore.Features.RPC
                 return true;
             }
 
-            if(str.IndexOf(':') != -1)
+            if (str.IndexOf(':') != -1)
             {
                 string[] parts = str.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                if(parts.Length >= 2)
+                if (parts.Length >= 2)
                 {
                     parts[1] = string.Join(":", parts.Skip(1).ToArray());
                     connectionString = new RPCCredentialString();
@@ -72,7 +72,7 @@ namespace Blockcore.Features.RPC
             }
             set
             {
-                if(value != null)
+                if (value != null)
                     Reset();
                 this._CookieFile = value;
             }
@@ -97,7 +97,7 @@ namespace Blockcore.Features.RPC
             }
             set
             {
-                if(value != null)
+                if (value != null)
                     Reset();
                 this._UsernamePassword = value;
             }

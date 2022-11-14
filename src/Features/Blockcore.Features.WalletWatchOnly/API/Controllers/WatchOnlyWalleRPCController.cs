@@ -86,7 +86,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
         public ListTransactionsModel[] ListTransactions(string account = "*", int count = 10, int skip = 0, bool include_watchonly = true)
         {
             List<ListTransactionsModel> result = new List<ListTransactionsModel>();
-            WalletAccountReference accountReference = this.GetWalletAccountReference();
+            WalletAccountReference accountReference = GetWalletAccountReference();
 
             if (include_watchonly)
             {
@@ -95,8 +95,8 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
                     .Take(count);
                 foreach (var transactionData in selectedWatchOnlyTransactions)
                 {
-                    var transactionInfo = this.GetTransactionInfo(transactionData.Id);
-                    var transactionResult = this.GetTransactionsModel(transactionInfo);
+                    var transactionInfo = GetTransactionInfo(transactionData.Id);
+                    var transactionResult = GetTransactionsModel(transactionInfo);
                     result.Add(transactionResult);
                 }
             }
@@ -116,8 +116,8 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
                 .Take(count);
             foreach (var transactionData in selectedTransactions)
             {
-                var transactionInfo = this.GetTransactionInfo(transactionData.Id);
-                var transactionResult = this.GetTransactionsModel(transactionInfo);
+                var transactionInfo = GetTransactionInfo(transactionData.Id);
+                var transactionResult = GetTransactionsModel(transactionInfo);
                 result.Add(transactionResult);
             }
 
@@ -141,7 +141,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
         internal TransactionVerboseModel GetTransactionInfo(uint256 transactionId)
         {
             Transaction transaction = this.blockStore?.GetTransactionById(transactionId);
-            ChainedHeader block = this.GetTransactionBlock(transactionId, this.fullNode, this.chainIndexer);
+            ChainedHeader block = GetTransactionBlock(transactionId, this.fullNode, this.chainIndexer);
             var transactionInfo = new TransactionVerboseModel(transaction, this.network, block, this.chainState?.ConsensusTip);
 
             return transactionInfo;

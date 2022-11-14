@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
@@ -46,7 +45,7 @@ namespace Blockcore.Features.ColdStaking
     /// </remarks>
     public class ColdStakingManager : WalletManager, IWalletManager
     {
-        private static Func<HdAccount, bool> coldStakingAccounts = a => a.Index >= Wallet.Types.Wallet.SpecialPurposeAccountIndexesStart;
+        private static readonly Func<HdAccount, bool> coldStakingAccounts = a => a.Index >= Wallet.Types.Wallet.SpecialPurposeAccountIndexesStart;
 
         /// <summary>The account index of the cold wallet account.</summary>
         internal const int ColdWalletAccountIndex = Wallet.Types.Wallet.SpecialPurposeAccountIndexesStart + 0;
@@ -111,7 +110,7 @@ namespace Blockcore.Features.ColdStaking
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(dateTimeProvider, nameof(dateTimeProvider));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.dateTimeProvider = dateTimeProvider;
         }
 
@@ -146,7 +145,7 @@ namespace Blockcore.Features.ColdStaking
         /// <returns>An enumeration of <see cref="UnspentOutputReference"/> objects.</returns>
         public override IEnumerable<UnspentOutputReference> GetSpendableTransactionsInWalletForStaking(string walletName, int confirmations = 0)
         {
-            return this.GetUnspentTransactionsInWallet(walletName, confirmations,
+            return GetUnspentTransactionsInWallet(walletName, confirmations,
                 a => (a.Index < Wallet.Types.Wallet.SpecialPurposeAccountIndexesStart) || (a.Index == ColdStakingManager.HotWalletAccountIndex));
         }
 
@@ -157,12 +156,12 @@ namespace Blockcore.Features.ColdStaking
         /// <returns>A <see cref="GetColdStakingInfoResponse"/> object containing the information.</returns>
         public GetColdStakingInfoResponse GetColdStakingInfo(string walletName)
         {
-            Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
+            Wallet.Types.Wallet wallet = GetWalletByName(walletName);
 
             var response = new GetColdStakingInfoResponse()
             {
-                ColdWalletAccountExists = this.GetColdStakingAccount(wallet, true) != null,
-                HotWalletAccountExists = this.GetColdStakingAccount(wallet, false) != null
+                ColdWalletAccountExists = GetColdStakingAccount(wallet, true) != null,
+                HotWalletAccountExists = GetColdStakingAccount(wallet, false) != null
             };
 
             this.logger.LogTrace("(-):'{0}'", response);
@@ -215,9 +214,9 @@ namespace Blockcore.Features.ColdStaking
         /// <returns>The new or existing cold staking account.</returns>
         public HdAccount GetOrCreateColdStakingAccount(string walletName, bool isColdWalletAccount, string walletPassword)
         {
-            Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
+            Wallet.Types.Wallet wallet = GetWalletByName(walletName);
 
-            HdAccount account = this.GetColdStakingAccount(wallet, isColdWalletAccount);
+            HdAccount account = GetColdStakingAccount(wallet, isColdWalletAccount);
             if (account != null)
             {
                 this.logger.LogTrace("(-)[ACCOUNT_ALREADY_EXIST]:'{0}'", account.Name);
@@ -240,17 +239,17 @@ namespace Blockcore.Features.ColdStaking
                 accountName = HotWalletAccountName;
             }
 
-            HdAccount defaultAccount =  wallet.GetAccount(0);
+            HdAccount defaultAccount = wallet.GetAccount(0);
             int purposeField = defaultAccount.Purpose;
 
             account = wallet.AddNewAccount(walletPassword, this.dateTimeProvider.GetTimeOffset(), purposeField, accountIndex, accountName);
 
             // Maintain at least one unused address at all times. This will ensure that wallet recovery will also work.
             IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1, false);
-            this.UpdateKeysLookup(wallet, newAddresses);
+            UpdateKeysLookup(wallet, newAddresses);
 
             // Save the changes to the file.
-            this.SaveWallet(wallet);
+            SaveWallet(wallet);
 
             this.logger.LogTrace("(-):'{0}'", account.Name);
             return account;
@@ -267,8 +266,8 @@ namespace Blockcore.Features.ColdStaking
 
             if (isColdStakingWallet.HasValue && isColdStakingWallet == true)
             {
-                this.GetOrCreateColdStakingAccount(wallet.Name, false, password);
-                this.GetOrCreateColdStakingAccount(wallet.Name, true, password);
+                GetOrCreateColdStakingAccount(wallet.Name, false, password);
+                GetOrCreateColdStakingAccount(wallet.Name, true, password);
             }
 
             return wallet;
@@ -284,8 +283,8 @@ namespace Blockcore.Features.ColdStaking
         {
             Guard.NotNull(walletName, nameof(walletName));
 
-            Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
-            HdAccount account = this.GetColdStakingAccount(wallet, isColdWalletAddress);
+            Wallet.Types.Wallet wallet = GetWalletByName(walletName);
+            HdAccount account = GetColdStakingAccount(wallet, isColdWalletAddress);
             if (account == null)
             {
                 this.logger.LogTrace("(-)[ACCOUNT_DOES_NOT_EXIST]:null");
@@ -297,7 +296,7 @@ namespace Blockcore.Features.ColdStaking
             {
                 this.logger.LogDebug("No unused address exists on account '{0}'. Adding new address.", account.Name);
                 IEnumerable<HdAddress> newAddresses = account.CreateAddresses(wallet.Network, 1);
-                this.UpdateKeysLookup(wallet, newAddresses);
+                UpdateKeysLookup(wallet, newAddresses);
                 address = newAddresses.First();
             }
 
@@ -344,19 +343,19 @@ namespace Blockcore.Features.ColdStaking
             Guard.NotNull(amount, nameof(amount));
             Guard.NotNull(feeAmount, nameof(feeAmount));
 
-            Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
+            Wallet.Types.Wallet wallet = GetWalletByName(walletName);
 
             // Get/create the cold staking accounts.
-            HdAccount coldAccount = this.GetOrCreateColdStakingAccount(walletName, true, walletPassword);
+            HdAccount coldAccount = GetOrCreateColdStakingAccount(walletName, true, walletPassword);
             HdAccount hotAccount;
 
             if (createHotAccount)
             {
-                hotAccount = this.GetOrCreateColdStakingAccount(walletName, false, walletPassword);
+                hotAccount = GetOrCreateColdStakingAccount(walletName, false, walletPassword);
             }
             else
             {
-                hotAccount = this.GetColdStakingAccount(this.GetWalletByName(walletName), false);
+                hotAccount = GetColdStakingAccount(GetWalletByName(walletName), false);
             }
 
             HdAddress coldAddress = coldAccount?.ExternalAddresses.FirstOrDefault(s => s.Address == coldWalletAddress);
@@ -394,7 +393,7 @@ namespace Blockcore.Features.ColdStaking
                 if (payToScript)
                 {
                     HdAddress address = coldAddress ?? hotAddress;
-                    if (address.RedeemScripts == null) 
+                    if (address.RedeemScripts == null)
                         address.RedeemScripts = new List<Script>();
                     address.RedeemScripts.Add(destination);
                     destination = destination.WitHash.ScriptPubKey;
@@ -417,7 +416,7 @@ namespace Blockcore.Features.ColdStaking
             }
 
             // Only normal accounts should be allowed.
-            if (this.GetAccounts(walletName).All(a => a.Name != walletAccount))
+            if (GetAccounts(walletName).All(a => a.Name != walletAccount))
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_ACCOUNT_NOT_FOUND]");
                 throw new WalletException($"Can't find wallet account '{walletAccount}'.");
@@ -490,10 +489,10 @@ namespace Blockcore.Features.ColdStaking
             Guard.NotNull(amount, nameof(amount));
             Guard.NotNull(feeAmount, nameof(feeAmount));
 
-            Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
+            Wallet.Types.Wallet wallet = GetWalletByName(walletName);
 
             // Get the cold staking account.
-            HdAccount coldAccount = this.GetColdStakingAccount(wallet, true);
+            HdAccount coldAccount = GetColdStakingAccount(wallet, true);
             if (coldAccount == null)
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_ACCOUNT_DOES_NOT_EXIST]");
@@ -501,13 +500,13 @@ namespace Blockcore.Features.ColdStaking
             }
 
             // Prevent reusing cold stake addresses as regular withdrawal addresses.
-            if (coldAccount.ExternalAddresses.Concat(coldAccount.InternalAddresses).Any(s => s.Address == receivingAddress ))
+            if (coldAccount.ExternalAddresses.Concat(coldAccount.InternalAddresses).Any(s => s.Address == receivingAddress))
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_INVALID_COLD_WALLET_ADDRESS_USAGE]");
                 throw new WalletException("You can't send the money to a cold staking cold wallet account.");
             }
 
-            HdAccount hotAccount = this.GetColdStakingAccount(wallet, false);
+            HdAccount hotAccount = GetColdStakingAccount(wallet, false);
             if (hotAccount != null && hotAccount.ExternalAddresses.Concat(hotAccount.InternalAddresses).Any(s => s.Address == receivingAddress))
             {
                 this.logger.LogTrace("(-)[COLDSTAKE_INVALID_HOT_WALLET_ADDRESS_USAGE]");
@@ -551,7 +550,7 @@ namespace Blockcore.Features.ColdStaking
             Transaction transaction = walletTransactionHandler.BuildTransaction(context);
 
             // Map OutPoint to UnspentOutputReference.
-            Dictionary<OutPoint, UnspentOutputReference> mapOutPointToUnspentOutput = this.GetSpendableTransactionsInAccount(accountReference)
+            Dictionary<OutPoint, UnspentOutputReference> mapOutPointToUnspentOutput = GetSpendableTransactionsInAccount(accountReference)
                 .ToDictionary(unspent => unspent.ToOutPoint(), unspent => unspent);
 
             // Set the cold staking scriptPubKey on the change output.
@@ -606,7 +605,7 @@ namespace Blockcore.Features.ColdStaking
         {
             Guard.NotEmpty(walletName, nameof(walletName));
 
-            Wallet.Types.Wallet wallet = this.GetWalletByName(walletName);
+            Wallet.Types.Wallet wallet = GetWalletByName(walletName);
             UnspentOutputReference[] res = null;
             lock (this.lockObject)
             {

@@ -10,7 +10,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class CheckSigOpsRuleTest : TestConsensusRulesUnitTestBase
     {
-        private ConsensusOptions options;
+        private readonly ConsensusOptions options;
 
         public CheckSigOpsRuleTest()
         {

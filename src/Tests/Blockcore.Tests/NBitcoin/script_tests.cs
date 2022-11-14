@@ -687,7 +687,7 @@ namespace NBitcoin.Tests
             {
                 var script = new Script(Op.GetPushOp(i).ToBytes());
                 Assert.True(script.IsPushOnly, "Number " + i + " is not pure push.");
-                Assert.True(script.HasCanonicalPushes, "Number " + i + " push is not canonical.");
+                Assert.True(script.HasCanonicalPushes(), "Number " + i + " push is not canonical.");
             }
 
             for (int i = 0; i < 1000; i++)
@@ -695,7 +695,7 @@ namespace NBitcoin.Tests
                 byte[] data = Enumerable.Range(0, i).Select(_ => (byte)0x49).ToArray();
                 var script = new Script(Op.GetPushOp(data).ToBytes());
                 Assert.True(script.IsPushOnly, "Length " + i + " is not pure push.");
-                Assert.True(script.HasCanonicalPushes, "Length " + i + " push is not canonical.");
+                Assert.True(script.HasCanonicalPushes(), "Length " + i + " push is not canonical.");
             }
         }
 
@@ -728,7 +728,7 @@ namespace NBitcoin.Tests
             return sign_multisig(scriptPubKey, new Key[] { key }, transaction);
         }
 
-        private ScriptVerify flags = ScriptVerify.P2SH | ScriptVerify.StrictEnc;
+        private readonly ScriptVerify flags = ScriptVerify.P2SH | ScriptVerify.StrictEnc;
 
         [Fact]
         public void Script_CHECKMULTISIG12()

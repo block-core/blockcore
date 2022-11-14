@@ -155,7 +155,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             sortedOrder.Insert(2, tx1.GetHash().ToString()); // 10000
             sortedOrder.Insert(3, tx4.GetHash().ToString()); // 15000
             sortedOrder.Insert(4, tx2.GetHash().ToString()); // 20000
-            this.CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
 
             /* low fee but with high fee child */
             /* tx6 -> tx7 -> tx8, tx9 -> tx10 */
@@ -168,7 +168,7 @@ namespace Blockcore.Features.MemoryPool.Tests
 
             // Check that at this point, tx6 is sorted low
             sortedOrder.Insert(0, tx6.GetHash().ToString());
-            this.CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
 
             var setAncestors = new TxMempool.SetEntries();
             setAncestors.Add(pool.MapTx.TryGet(tx6.GetHash()));
@@ -189,7 +189,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             sortedOrder.RemoveAt(0);
             sortedOrder.Add(tx6.GetHash().ToString());
             sortedOrder.Add(tx7.GetHash().ToString());
-            this.CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
 
             /* low fee child of tx7 */
             var tx8 = new Transaction();
@@ -200,7 +200,7 @@ namespace Blockcore.Features.MemoryPool.Tests
 
             // Now tx8 should be sorted low, but tx6/tx both high
             sortedOrder.Insert(0, tx8.GetHash().ToString());
-            this.CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
 
             /* low fee child of tx7 */
             var tx9 = new Transaction();
@@ -212,7 +212,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             Assert.Equal(9, pool.Size);
 
             sortedOrder.Insert(0, tx9.GetHash().ToString());
-            this.CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
 
             List<string> snapshotOrder = sortedOrder.ToList();
 
@@ -249,14 +249,14 @@ namespace Blockcore.Features.MemoryPool.Tests
             sortedOrder.Insert(5, tx9.GetHash().ToString());
             sortedOrder.Insert(6, tx8.GetHash().ToString());
             sortedOrder.Insert(7, tx10.GetHash().ToString()); // tx10 is just before tx6
-            this.CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.DescendantScore.ToList(), sortedOrder);
 
             // there should be 10 transactions in the mempool
             Assert.Equal(10, pool.Size);
 
             // Now try removing tx10 and verify the sort order returns to normal
             pool.RemoveRecursive(pool.MapTx.TryGet(tx10.GetHash()).Transaction);
-            this.CheckSort(pool, pool.MapTx.DescendantScore.ToList(), snapshotOrder);
+            CheckSort(pool, pool.MapTx.DescendantScore.ToList(), snapshotOrder);
 
             pool.RemoveRecursive(pool.MapTx.TryGet(tx9.GetHash()).Transaction);
             pool.RemoveRecursive(pool.MapTx.TryGet(tx8.GetHash()).Transaction);
@@ -294,7 +294,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                 sortedOrder.Add(tx3.GetHash().ToString());
                 sortedOrder.Add(tx6.GetHash().ToString());
             }
-            this.CheckSort(pool, pool.MapTx.MiningScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.MiningScore.ToList(), sortedOrder);
         }
 
         [Fact]
@@ -351,7 +351,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                 sortedOrder.Insert(3, tx1.GetHash().ToString());
             }
             sortedOrder.Insert(4, tx3.GetHash().ToString()); // 0
-            this.CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
 
             /* low fee parent with high fee child */
             /* tx6 (0) -> tx7 (high) */
@@ -365,7 +365,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                 sortedOrder.Add(tx6.GetHash().ToString());
             else
                 sortedOrder.Insert(sortedOrder.Count - 1, tx6.GetHash().ToString());
-            this.CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
 
             var tx7 = new Transaction();
             tx7.AddInput(new TxIn(new OutPoint(tx6.GetHash(), 0), new Script(OpcodeType.OP_11)));
@@ -375,7 +375,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             pool.AddUnchecked(tx7.GetHash(), entry.Fee(fee).FromTx(tx7));
             Assert.Equal(7, pool.Size);
             sortedOrder.Insert(1, tx7.GetHash().ToString());
-            this.CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
 
             /* after tx6 is mined, tx7 should move up in the sort */
             var vtx = new List<Transaction>(new[] { tx6 });
@@ -388,7 +388,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             else
                 sortedOrder.RemoveAt(sortedOrder.Count - 2);
             sortedOrder.Insert(0, tx7.GetHash().ToString());
-            this.CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
+            CheckSort(pool, pool.MapTx.AncestorScore.ToList(), sortedOrder);
         }
 
         [Fact]
@@ -568,7 +568,7 @@ namespace Blockcore.Features.MemoryPool.Tests
         private int nHeight = 1;
         private bool spendsCoinbase = false;
         private long sigOpCost = 4;
-        private LockPoints lp = new LockPoints();
+        private readonly LockPoints lp = new LockPoints();
 
         public TxMempoolEntry FromTx(Transaction tx, TxMempool pool = null)
         {

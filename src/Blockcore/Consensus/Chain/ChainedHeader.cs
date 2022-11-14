@@ -60,7 +60,7 @@ namespace Blockcore.Consensus.Chain
     public class ChainedHeader
     {
         /// <summary>Value of 2^256.</summary>
-        private static BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
+        private static readonly BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
 
         /// <summary>Window length for calculating median time span.</summary>
         private const int MedianTimeSpan = 11;
@@ -535,7 +535,7 @@ namespace Blockcore.Consensus.Chain
         }
 
         /// <summary>
-        /// Calculate the difficulty adjustment interval in blocks based on settings defined in <see cref="IConsensus"/>.
+
         /// </summary>
         /// <returns>The difficulty adjustment interval in blocks.</returns>
         private long GetDifficultyAdjustmentInterval(IConsensus consensus)

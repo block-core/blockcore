@@ -34,7 +34,7 @@ namespace Blockcore.P2P
             address = address.EnsureIPv6();
             byte[] bytes = address.GetAddressBytes();
             return address.IsIPv4() && (
-                bytes[15 - 3] == 192 && bytes[15 - 2]  == 31 && bytes[15 - 1] == 196);
+                bytes[15 - 3] == 192 && bytes[15 - 2] == 31 && bytes[15 - 1] == 196);
         }
 
         /// <summary>192.52.193.0/24 AMT. Globally reachable.</summary>
@@ -175,7 +175,7 @@ namespace Blockcore.P2P
             byte[] bytes = address.GetAddressBytes();
 
             // all local addresses belong to the same group
-            if(address.IsLocal())
+            if (address.IsLocal())
             {
                 nClass = 255;
                 nBits = 0;
@@ -183,54 +183,54 @@ namespace Blockcore.P2P
 
             // all unroutable addresses belong to the same group
             // RFC6598 is a special case that is not globally routable but still locally routable.
-            if(!address.IsRoutable(true) && !address.IsRFC6598())
+            if (!address.IsRoutable(true) && !address.IsRFC6598())
             {
                 nClass = 0;
                 nBits = 0;
             }
             // for IPv4 addresses, '1' + the 16 higher-order bits of the IP
             // includes mapped IPv4, SIIT translated IPv4, and the well-known prefix
-            else if(address.IsIPv4() || address.IsRFC6145() || address.IsRFC6052())
+            else if (address.IsIPv4() || address.IsRFC6145() || address.IsRFC6052())
             {
                 nClass = 1;
                 nStartByte = 12;
             }
             // for 6to4 tunnelled addresses, use the encapsulated IPv4 address
-            else if(address.IsRFC3964())
+            else if (address.IsRFC3964())
             {
                 nClass = 1;
                 nStartByte = 2;
             }
             // for Teredo-tunnelled IPv6 addresses, use the encapsulated IPv4 address
 
-            else if(address.IsRFC4380())
+            else if (address.IsRFC4380())
             {
                 vchRet.Add(1);
                 vchRet.Add((byte)(bytes[15 - 3] ^ 0xFF));
                 vchRet.Add((byte)(bytes[15 - 2] ^ 0xFF));
                 return vchRet.ToArray();
             }
-            else if(address.IsTor())
+            else if (address.IsTor())
             {
                 nClass = 3;
                 nStartByte = 6;
                 nBits = 4;
             }
             // for he.net, use /36 groups
-            else if(bytes[15 - 15] == 0x20 && bytes[15 - 14] == 0x01 && bytes[15 - 13] == 0x04 && bytes[15 - 12] == 0x70)
+            else if (bytes[15 - 15] == 0x20 && bytes[15 - 14] == 0x01 && bytes[15 - 13] == 0x04 && bytes[15 - 12] == 0x70)
                 nBits = 36;
             // for the rest of the IPv6 network, use /32 groups
             else
                 nBits = 32;
 
             vchRet.Add((byte)nClass);
-            while(nBits >= 8)
+            while (nBits >= 8)
             {
                 vchRet.Add(bytes[15 - (15 - nStartByte)]);
                 nStartByte++;
                 nBits -= 8;
             }
-            if(nBits > 0)
+            if (nBits > 0)
                 vchRet.Add((byte)(bytes[15 - (15 - nStartByte)] | ((1 << nBits) - 1)));
 
             return vchRet.ToArray();
@@ -244,7 +244,7 @@ namespace Blockcore.P2P
         }
         public static IPAddress EnsureIPv6(this IPAddress address)
         {
-            if(address.AddressFamily == AddressFamily.InterNetworkV6)
+            if (address.AddressFamily == AddressFamily.InterNetworkV6)
                 return address;
             return address.MapToIPv6Ex();
         }
@@ -252,7 +252,7 @@ namespace Blockcore.P2P
         private static bool? _IsRunningOnMono;
         public static bool IsRunningOnMono()
         {
-            if(_IsRunningOnMono == null)
+            if (_IsRunningOnMono == null)
                 _IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
             return _IsRunningOnMono.Value;
         }
@@ -272,12 +272,12 @@ namespace Blockcore.P2P
             address = address.EnsureIPv6();
             byte[] bytes = address.GetAddressBytes();
             // IPv4 loopback
-            if(address.IsIPv4() && (bytes[15 - 3] == 127 || bytes[15 - 3] == 0))
+            if (address.IsIPv4() && (bytes[15 - 3] == 127 || bytes[15 - 3] == 0))
                 return true;
 
             // IPv6 loopback (::1/128)
             var pchLocal = new byte[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
-            if((Utils.ArrayEqual(bytes, 0, pchLocal, 0, 16) ? 0 : 1) == 0)
+            if ((Utils.ArrayEqual(bytes, 0, pchLocal, 0, 16) ? 0 : 1) == 0)
                 return true;
 
             return false;
@@ -319,21 +319,21 @@ namespace Blockcore.P2P
             byte[] ip = address.GetAddressBytes();
             // unspecified IPv6 address (::/128)
             var ipNone = new byte[16];
-            if((Utils.ArrayEqual(ip, 0, ipNone, 0, 16) ? 0 : 1) == 0)
+            if ((Utils.ArrayEqual(ip, 0, ipNone, 0, 16) ? 0 : 1) == 0)
                 return false;
 
             // documentation IPv6 address
-            if(address.IsRFC3849())
+            if (address.IsRFC3849())
                 return false;
 
-            if(address.IsIPv4())
+            if (address.IsIPv4())
             {
                 //// INADDR_NONE
-                if(Utils.ArrayEqual(ip, 12, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF }, 0, 4))
+                if (Utils.ArrayEqual(ip, 12, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF }, 0, 4))
                     return false;
 
                 //// 0
-                if(Utils.ArrayEqual(ip, 12, new byte[] { 0x0, 0x0, 0x0, 0x0 }, 0, 4))
+                if (Utils.ArrayEqual(ip, 12, new byte[] { 0x0, 0x0, 0x0, 0x0 }, 0, 4))
                     return false;
             }
 

@@ -48,14 +48,14 @@ namespace Blockcore.Networks.Strax.ScriptTemplates
 
             byte[] federationId = ops[0].PushData;
             (PubKey[] pubKeys, int signatureCount) = ((StraxBaseNetwork)network).Federations.GetFederation(federationId).GetFederationDetails();
-            return new PayToMultiSigTemplateParameters() {PubKeys = pubKeys, SignatureCount = signatureCount};
+            return new PayToMultiSigTemplateParameters() { PubKeys = pubKeys, SignatureCount = signatureCount };
         }
 
         protected override bool FastCheckScriptSig(Script scriptSig, Script scriptPubKey, out bool needMoreCheck)
         {
             byte[] bytes = scriptSig.ToBytes(true);
             if (bytes.Length == 0 ||
-                bytes[0] != (byte) OpcodeType.OP_0)
+                bytes[0] != (byte)OpcodeType.OP_0)
             {
                 needMoreCheck = false;
                 return false;
@@ -115,7 +115,7 @@ namespace Blockcore.Networks.Strax.ScriptTemplates
 
         public Script GenerateScriptSig(TransactionSignature[] signatures)
         {
-            return GenerateScriptSig((IEnumerable<TransactionSignature>) signatures);
+            return GenerateScriptSig((IEnumerable<TransactionSignature>)signatures);
         }
 
         public Script GenerateScriptSig(IEnumerable<TransactionSignature> signatures)

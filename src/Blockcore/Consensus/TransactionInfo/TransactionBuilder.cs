@@ -48,7 +48,7 @@ namespace Blockcore.Consensus.TransactionInfo
         {
         }
 
-        private Random _Rand = new Random();
+        readonly private Random _Rand = new Random();
 
         public DefaultCoinSelector(int seed)
         {
@@ -275,7 +275,7 @@ namespace Blockcore.Consensus.TransactionInfo
 
         private class KnownSignatureSigner : ISigner, IKeyRepository
         {
-            private ICoin coin;
+            private readonly ICoin coin;
             private SigHash sigHash;
             private IndexedTxIn txIn;
             private List<Tuple<PubKey, ECDSASignature>> _KnownSignatures;
@@ -626,6 +626,7 @@ namespace Blockcore.Consensus.TransactionInfo
         /// <summary>
         /// This field should be mandatory in the constructor.
         /// </summary>
+        /// 
         public Network Network
         {
             get;
@@ -795,7 +796,7 @@ namespace Blockcore.Consensus.TransactionInfo
         private SendBuilder _LastSendBuilder;
         private SendBuilder _SubstractFeeBuilder;
 
-        private class SendBuilder
+        private sealed class SendBuilder
         {
             internal TxOut _TxOut;
 
@@ -941,7 +942,6 @@ namespace Blockcore.Consensus.TransactionInfo
 
             return this;
         }
-
         private Money GetDust()
         {
             return GetDust(new Script(new byte[25]));
@@ -1340,9 +1340,15 @@ namespace Blockcore.Consensus.TransactionInfo
         public ICoin FindSignableCoin(IndexedTxIn txIn)
         {
             ICoin coin = FindCoin(txIn.PrevOut);
+            coin = coin as IColoredCoin;
 
             if (coin is IColoredCoin)
-                coin = ((IColoredCoin)coin).Bearer;
+            {
+
+                IColoredCoin bearer = (IColoredCoin)coin;
+
+                coin = bearer.Bearer;
+            }
 
             if (coin == null || coin is ScriptCoin)
                 return coin;

@@ -11,9 +11,9 @@ namespace Blockcore.Features.NodeHost
 
         public CertificateStore(ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
-        
+
         /// <inheritdoc />
         public bool TryGet(string filePath, out X509Certificate2 certificate)
         {

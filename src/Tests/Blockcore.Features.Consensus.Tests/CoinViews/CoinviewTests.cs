@@ -78,8 +78,8 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             int currentHeight = 0;
 
             // Create a lot of new coins.
-            List<UnspentOutput> outputsList = this.CreateOutputsList(currentHeight + 1, 100);
-            this.SaveChanges(outputsList, currentHeight + 1);
+            List<UnspentOutput> outputsList = CreateOutputsList(currentHeight + 1, 100);
+            SaveChanges(outputsList, currentHeight + 1);
             currentHeight++;
 
             this.cachedCoinView.Flush(true);
@@ -87,7 +87,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             HashHeightPair tipAfterOriginalCoinsCreation = this.cachedCoinView.GetTipHash();
 
             // Collection that will be used as a coinview that we will update in parallel. Needed to verify that actual coinview is ok.
-            List<OutPoint> outPoints = this.ConvertToListOfOutputPoints(outputsList);
+            List<OutPoint> outPoints = ConvertToListOfOutputPoints(outputsList);
 
             // Copy of current state to later rewind and verify against it.
             List<OutPoint> copyOfOriginalOutPoints = new List<OutPoint>(outPoints);
@@ -101,7 +101,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             {
                 OutPoint txId = outPoints[this.random.Next(0, outPoints.Count)];
                 List<OutPoint> txPoints = outPoints.Where(x => x.Hash == txId.Hash).ToList();
-                this.Shuffle(txPoints);
+                Shuffle(txPoints);
                 List<OutPoint> txPointsToSpend = txPoints.Take(txPoints.Count / 2).ToList();
 
                 // First spend in cached coinview
@@ -118,7 +118,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
                 outPoints.RemoveAll(x => txPointsToSpend.Contains(x));
 
                 // Save coinview
-                this.SaveChanges(toSpend, currentHeight + 1);
+                SaveChanges(toSpend, currentHeight + 1);
 
                 currentHeight++;
 
@@ -129,7 +129,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
                 }
             }
 
-            await this.ValidateCoinviewIntegrityAsync(outPoints);
+            await ValidateCoinviewIntegrityAsync(outPoints);
 
             for (int i = 0; i < addChangesTimes; i++)
             {
@@ -138,12 +138,12 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
                 HashHeightPair currentTip = this.cachedCoinView.GetTipHash();
 
                 if (currentTip == coinviewTipAfterHalf)
-                    await this.ValidateCoinviewIntegrityAsync(copyAfterHalfOfAdditions);
+                    await ValidateCoinviewIntegrityAsync(copyAfterHalfOfAdditions);
             }
 
             Assert.Equal(tipAfterOriginalCoinsCreation, this.cachedCoinView.GetTipHash());
 
-            await this.ValidateCoinviewIntegrityAsync(copyOfOriginalOutPoints);
+            await ValidateCoinviewIntegrityAsync(copyOfOriginalOutPoints);
         }
 
         private List<OutPoint> ConvertToListOfOutputPoints(List<UnspentOutput> outputsList)
@@ -197,7 +197,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             // Verify that snapshot is equal to current state of coinview.
             OutPoint[] allTxIds = expectedAvailableOutPoints.Select(x => x).Distinct().ToArray();
             FetchCoinsResponse result2 = this.cachedCoinView.FetchCoins(allTxIds);
-            List<OutPoint> availableOutPoints = this.ConvertToListOfOutputPoints(result2.UnspentOutputs.Values.ToList());
+            List<OutPoint> availableOutPoints = ConvertToListOfOutputPoints(result2.UnspentOutputs.Values.ToList());
 
             Assert.Equal(expectedAvailableOutPoints.Count, availableOutPoints.Count);
 

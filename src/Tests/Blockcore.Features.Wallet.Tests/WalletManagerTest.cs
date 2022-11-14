@@ -26,9 +26,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using NBitcoin.Protocol;
 using Newtonsoft.Json;
-using NLog.Time;
 using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests
@@ -267,7 +265,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
 
-            var walletManager = this.CreateWalletManager(dataFolder, this.Network, "-walletaddressbuffer=100");
+            var walletManager = CreateWalletManager(dataFolder, this.Network, "-walletaddressbuffer=100");
 
             walletManager.CreateWallet("test", "mywallet", "this is my magic passphrase", new Mnemonic(Wordlist.English, WordCount.Eighteen));
 
@@ -352,7 +350,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             ChainIndexer chainIndexer = WalletTestsHelpers.PrepareChainWithBlock();
             // Prepare an existing wallet through this manager and delete the file from disk. Return the created wallet object and mnemonic.
-            (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, passphrase, walletName, chainIndexer);
+            (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = CreateWalletOnDiskAndDeleteWallet(dataFolder, password, passphrase, walletName, chainIndexer);
             Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             // create a fresh manager.
@@ -435,7 +433,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             ChainIndexer chainIndexer = WalletTestsHelpers.PrepareChainWithBlock();
             // prepare an existing wallet through this manager and delete the file from disk. Return the created wallet object and mnemonic.
-            (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = this.CreateWalletOnDiskAndDeleteWallet(dataFolder, password, password, walletName, chainIndexer);
+            (Mnemonic mnemonic, Types.Wallet wallet) deletedWallet = CreateWalletOnDiskAndDeleteWallet(dataFolder, password, password, walletName, chainIndexer);
             Assert.False(File.Exists(Path.Combine(dataFolder.WalletPath + $"/{walletName}.wallet.json")));
 
             // create a fresh manager.
@@ -3259,7 +3257,7 @@ namespace Blockcore.Features.Wallet.Tests
         {
             DataFolder dataFolder = CreateDataFolder(this);
 
-            WalletManager walletManager = this.CreateWalletManager(dataFolder, this.Network);
+            WalletManager walletManager = CreateWalletManager(dataFolder, this.Network);
             walletManager.CreateWallet("test", "mywallet", passphrase: new Mnemonic(Wordlist.English, WordCount.Eighteen).ToString());
 
             // Default of 20 addresses becuause walletaddressbuffer not set
@@ -3270,7 +3268,7 @@ namespace Blockcore.Features.Wallet.Tests
             walletManager.Stop();
 
             // Restart with walletaddressbuffer set
-            walletManager = this.CreateWalletManager(dataFolder, this.Network, "-walletaddressbuffer=30");
+            walletManager = CreateWalletManager(dataFolder, this.Network, "-walletaddressbuffer=30");
             walletManager.Start();
 
             // Addresses populated to fill the buffer set
@@ -3285,7 +3283,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
 
             const string stratisAccount0ExtPubKey = "xpub661MyMwAqRbcEgnsMFfhjdrwR52TgicebTrbnttywb9zn3orkrzn6MHJrgBmKrd7MNtS6LAim44a6V2gizt3jYVPHGYq1MzAN849WEyoedJ";
-            var walletManager = this.CreateWalletManager(dataFolder, this.Network);
+            var walletManager = CreateWalletManager(dataFolder, this.Network);
             walletManager.RecoverWallet("testWallet", ExtPubKey.Parse(stratisAccount0ExtPubKey), 0, DateTime.Now.AddHours(-2));
 
             var wallet = walletManager.LoadWallet("password", "testWallet");
@@ -3305,7 +3303,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             const string stratisAccount0ExtPubKey = "xpub661MyMwAqRbcEgnsMFfhjdrwR52TgicebTrbnttywb9zn3orkrzn6MHJrgBmKrd7MNtS6LAim44a6V2gizt3jYVPHGYq1MzAN849WEyoedJ";
             const string stratisAccount1ExtPubKey = "xpub6DGguHV1FQFPvZ5Xu7VfeENyiySv4R2bdd6VtvwxWGVTVNnHUmphMNgTRkLe8j2JdAv332ogZcyhqSuz1yUPnN4trJ49cFQXmEhwNQHUqk1";
-            var walletManager = this.CreateWalletManager(dataFolder, KnownNetworks.StratisMain);
+            var walletManager = CreateWalletManager(dataFolder, KnownNetworks.StratisMain);
             var wallet = walletManager.RecoverWallet("wallet1", ExtPubKey.Parse(stratisAccount0ExtPubKey), 0, DateTime.Now.AddHours(-2));
 
             try
@@ -3326,7 +3324,7 @@ namespace Blockcore.Features.Wallet.Tests
             DataFolder dataFolder = CreateDataFolder(this);
 
             const string stratisAccount0ExtPubKey = "xpub661MyMwAqRbcEgnsMFfhjdrwR52TgicebTrbnttywb9zn3orkrzn6MHJrgBmKrd7MNtS6LAim44a6V2gizt3jYVPHGYq1MzAN849WEyoedJ";
-            var walletManager = this.CreateWalletManager(dataFolder, KnownNetworks.StratisMain);
+            var walletManager = CreateWalletManager(dataFolder, KnownNetworks.StratisMain);
             var wallet = walletManager.RecoverWallet("wallet1", ExtPubKey.Parse(stratisAccount0ExtPubKey), 0, DateTime.Now.AddHours(-2));
 
             var addNewAccount = new Action(() => wallet.AddNewAccount(ExtPubKey.Parse(stratisAccount0ExtPubKey), 1, DateTime.Now.AddHours(-2), 44));
@@ -3339,7 +3337,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void CreateDefaultWalletAndVerifyTheDefaultPassword()
         {
             DataFolder dataFolder = CreateDataFolder(this);
-            var walletManager = this.CreateWalletManager(dataFolder, KnownNetworks.StratisMain, "-defaultwalletname=default");
+            var walletManager = CreateWalletManager(dataFolder, KnownNetworks.StratisMain, "-defaultwalletname=default");
             walletManager.Start();
             Assert.True(walletManager.ContainsWallets);
 
@@ -3357,7 +3355,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void CreateDefaultWalletAndVerifyWrongPassword()
         {
             DataFolder dataFolder = CreateDataFolder(this);
-            var walletManager = this.CreateWalletManager(dataFolder, KnownNetworks.StratisMain, "-defaultwalletname=default", "-defaultwalletpassword=default2");
+            var walletManager = CreateWalletManager(dataFolder, KnownNetworks.StratisMain, "-defaultwalletname=default", "-defaultwalletpassword=default2");
             walletManager.Start();
             Assert.True(walletManager.ContainsWallets);
 
@@ -3380,7 +3378,7 @@ namespace Blockcore.Features.Wallet.Tests
         public void CreateDefaultWalletAndVerifyUnlockAndLocking()
         {
             DataFolder dataFolder = CreateDataFolder(this);
-            var walletManager = this.CreateWalletManager(dataFolder, KnownNetworks.StratisMain, "-defaultwalletname=default", "-unlockdefaultwallet");
+            var walletManager = CreateWalletManager(dataFolder, KnownNetworks.StratisMain, "-defaultwalletname=default", "-unlockdefaultwallet");
             walletManager.Start();
             Assert.True(walletManager.ContainsWallets);
 

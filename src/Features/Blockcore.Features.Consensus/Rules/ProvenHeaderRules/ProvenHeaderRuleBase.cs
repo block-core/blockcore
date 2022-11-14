@@ -4,7 +4,6 @@ using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 {
@@ -60,7 +59,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 
             ChainedHeader chainedHeader = context.ValidationContext.ChainedHeaderToValidate;
 
-            if (!this.IsProvenHeaderActivated(chainedHeader.Height))
+            if (!IsProvenHeaderActivated(chainedHeader.Height))
             {
                 this.Logger.LogTrace("(-)[PH_NOT_ACTIVATED]");
                 return;
@@ -74,7 +73,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                 return;
             }
 
-            this.ProcessRule((PosRuleContext)context, chainedHeader, chainedHeader.ProvenBlockHeader);
+            ProcessRule((PosRuleContext)context, chainedHeader, chainedHeader.ProvenBlockHeader);
         }
 
         /// <summary>

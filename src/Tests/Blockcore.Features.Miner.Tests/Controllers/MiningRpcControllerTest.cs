@@ -9,7 +9,6 @@ using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.RPC.Exceptions;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
@@ -124,14 +123,14 @@ namespace Blockcore.Features.Miner.Tests.Controllers
                 .Throws(new WalletException("Wallet not found."));
 
                 this.stakingRpcController.StartStaking("myWallet", "password");
-            });  
+            });
         }
-   
+
         [Fact]
         public void StartStaking_InvalidWalletPassword_ThrowsSecurityException()
         {
             Assert.Throws<SecurityException>(() =>
-            {               
+            {
                 this.walletManager.Setup(w => w.GetWallet("myWallet"))
                   .Returns(this.fixture.wallet);
 
@@ -159,7 +158,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
 
         [Fact]
         public void StartStaking_ValidWalletAndPassword_StartsStaking_ReturnsTrue()
-        {            
+        {
             this.walletManager.Setup(w => w.GetWallet("myWallet"))
               .Returns(this.fixture.wallet);
 
@@ -193,7 +192,7 @@ namespace Blockcore.Features.Miner.Tests.Controllers
                 }).Verifiable();
 
             GetStakingInfoModel result = this.stakingRpcController.GetStakingInfo(true);
-            
+
             Assert.True(result.Enabled);
             Assert.Equal(150000, result.CurrentBlockSize);
             this.posMinting.Verify();
@@ -202,7 +201,8 @@ namespace Blockcore.Features.Miner.Tests.Controllers
         [Fact]
         public void GetStakingInfo_NotJsonFormat_ThrowsNotImplementedException()
         {
-            Assert.Throws<NotImplementedException>(() => {
+            Assert.Throws<NotImplementedException>(() =>
+            {
                 this.stakingRpcController.GetStakingInfo(false);
             });
         }

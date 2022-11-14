@@ -31,8 +31,8 @@ namespace Blockcore.Features.Wallet.Helpers
 
             bool propertiesAreEqual = (x.Id == y.Id &&
                 x.ConfirmedInBlock == y.ConfirmedInBlock &&
-                x.Type == y.Type && 
-                x.Amount == y.Amount && 
+                x.Type == y.Type &&
+                x.Amount == y.Amount &&
                 x.Payments.Count == y.Payments.Count);
 
             if (!propertiesAreEqual)

@@ -124,13 +124,13 @@ namespace Blockcore.Features.BlockStore
             this.blocksCacheLock = new object();
             this.blocksQueue = asyncProvider.CreateAsyncQueue<ChainedHeaderBlock>();
             this.pendingBlocksCache = new Dictionary<uint256, ChainedHeaderBlock>();
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.cancellation = new CancellationTokenSource();
             this.saveAsyncLoopException = null;
 
             this.BatchThresholdSizeBytes = storeSettings.MaxCacheSize * 1024 * 1024;
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
         }
 
         public void ReindexChain(IConsensusManager consensusManager, CancellationToken nodeCancellation)
@@ -198,10 +198,10 @@ namespace Blockcore.Features.BlockStore
             }
 
             ChainedHeader initializationTip = this.chainIndexer.GetHeader(this.blockRepository.TipHashAndHeight.Hash);
-            this.SetStoreTip(initializationTip);
+            SetStoreTip(initializationTip);
 
             if (this.storeTip == null)
-                this.RecoverStoreTip();
+                RecoverStoreTip();
 
             this.logger.LogDebug("Initialized block store tip at '{0}'.", this.storeTip);
 
@@ -231,7 +231,7 @@ namespace Blockcore.Features.BlockStore
 
             // Start dequeuing.
             this.currentBatchSizeBytes = 0;
-            this.dequeueLoopTask = this.DequeueBlocksContinuouslyAsync();
+            this.dequeueLoopTask = DequeueBlocksContinuouslyAsync();
 
             this.asyncProvider.RegisterTask($"{nameof(BlockStoreQueue)}.{nameof(this.dequeueLoopTask)}", this.dequeueLoopTask);
         }
@@ -428,7 +428,7 @@ namespace Blockcore.Features.BlockStore
             if (blockStoreResetList.Count != 0)
                 this.blockRepository.Delete(new HashHeightPair(newTip), blockStoreResetList);
 
-            this.SetStoreTip(newTip);
+            SetStoreTip(newTip);
 
             // TODO: this will be replaced with tips manager
             // TODO this thing should remove stuff from chain database. Otherwise we are leaving redundant data.
@@ -539,7 +539,7 @@ namespace Blockcore.Features.BlockStore
                     {
                         try
                         {
-                            this.SaveBatch();
+                            SaveBatch();
 
                             // If an error occurred during SaveBatchAsync then this code
                             // which clears the batch will not execute.
@@ -572,7 +572,7 @@ namespace Blockcore.Features.BlockStore
                 }
             }
 
-            this.FlushAllCollections();
+            FlushAllCollections();
         }
 
         /// <summary>
@@ -588,7 +588,7 @@ namespace Blockcore.Features.BlockStore
             }
 
             if (this.batch.Count != 0)
-                this.SaveBatch();
+                SaveBatch();
         }
 
         /// <summary>
@@ -598,13 +598,13 @@ namespace Blockcore.Features.BlockStore
         /// <exception cref="DBreeze.Exceptions.DBreezeException">Thrown if an error occurs during database operations.</exception>
         private void SaveBatch()
         {
-            List<ChainedHeaderBlock> clearedBatch = this.GetBatchWithoutReorgedBlocks();
+            List<ChainedHeaderBlock> clearedBatch = GetBatchWithoutReorgedBlocks();
 
             ChainedHeader expectedStoreTip = clearedBatch.First().ChainedHeader.Previous;
 
             // Check if block repository contains reorged blocks. If it does - delete them.
             if (expectedStoreTip.HashBlock != this.storeTip.HashBlock)
-                this.RemoveReorgedBlocksFromStore(expectedStoreTip);
+                RemoveReorgedBlocksFromStore(expectedStoreTip);
 
             // Save the batch.
             ChainedHeader newTip = clearedBatch.Last().ChainedHeader;
@@ -613,7 +613,7 @@ namespace Blockcore.Features.BlockStore
 
             this.blockRepository.PutBlocks(new HashHeightPair(newTip), clearedBatch.Select(b => b.Block).ToList());
 
-            this.SetStoreTip(newTip);
+            SetStoreTip(newTip);
             this.logger.LogDebug("Store tip set to '{0}'.", this.storeTip);
         }
 
@@ -670,7 +670,7 @@ namespace Blockcore.Features.BlockStore
 
             this.blockRepository.Delete(new HashHeightPair(currentHeader), blocksToDelete);
 
-            this.SetStoreTip(expectedStoreTip);
+            SetStoreTip(expectedStoreTip);
             this.logger.LogDebug("Store tip rewound to '{0}'.", this.storeTip);
         }
 

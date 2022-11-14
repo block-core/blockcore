@@ -1,9 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Blockcore.Broadcasters;
-using Blockcore.EventBus;
-using Blockcore.Features.NodeHost.Events;
-using Blockcore.Utilities;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
@@ -40,7 +37,7 @@ namespace Blockcore.Features.NodeHost.Hubs
         public Task Subscribe(params string[] events)
         {
             foreach (var @event in events)
-            { 
+            {
                 this.eventsSubscriptionService.Subscribe(this.Context.ConnectionId, @event);
             }
 

@@ -23,7 +23,7 @@ namespace Blockcore.Tests.Utilities
         public void Given_ConstructorIsCalled_TheSpecifiedFolderShouldBeCreated()
         {
             // Arrange
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
 
             // Act
             var fileStorage = new FileStorage<TestObject>(dir);
@@ -39,7 +39,7 @@ namespace Blockcore.Tests.Utilities
         public void Given_SaveToFileIsCalled_TheObjectIsSavedProperly()
         {
             // Arrange
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
 
             // Act
             var fileStorage = new FileStorage<TestObject>(dir);
@@ -56,7 +56,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject, "savedTestObject.json");
 
@@ -71,7 +71,7 @@ namespace Blockcore.Tests.Utilities
         public void GivenExistsIsCalled_WhenTheFileDoesntExist_ThenFalseIsreturned()
         {
             // Arrange
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
 
             // Act
@@ -87,7 +87,7 @@ namespace Blockcore.Tests.Utilities
             // Arrange
             var testObject1 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
             var testObject2 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject1, "savedTestObject1.json");
             fileStorage.SaveToFile(testObject2, "savedTestObject2.json");
@@ -107,7 +107,7 @@ namespace Blockcore.Tests.Utilities
             // Arrange
             var testObject1 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
             var testObject2 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject1, "savedTestObject1.json");
             fileStorage.SaveToFile(testObject2, "savedTestObject2.json");
@@ -127,7 +127,7 @@ namespace Blockcore.Tests.Utilities
             // Arrange
             var testObject1 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
             var testObject2 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject1, "savedTestObject1.json");
             fileStorage.SaveToFile(testObject2, "savedTestObject2.json");
@@ -147,7 +147,7 @@ namespace Blockcore.Tests.Utilities
             // Arrange
             var testObject1 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
             var testObject2 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject1, "savedTestObject1.json");
             fileStorage.SaveToFile(testObject2, "savedTestObject2.json");
@@ -165,7 +165,7 @@ namespace Blockcore.Tests.Utilities
         public void GivenLoadByFileNameIsCalled_WhenNoFileWithTheNameExist_ThenFileNotFoundExceptionIsThrown()
         {
             // Arrange
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
 
             // Act
@@ -177,7 +177,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject1 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject1, "savedTestObject1.json");
 
@@ -195,7 +195,7 @@ namespace Blockcore.Tests.Utilities
             // Arrange
             var testObject1 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
             var testObject2 = new TestObject { Property1 = "prop3", Property2 = "prop4" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject1, "savedTestObject1.json");
             fileStorage.SaveToFile(testObject2, "savedTestObject2.json");
@@ -215,7 +215,7 @@ namespace Blockcore.Tests.Utilities
             // Arrange
             var testObject1 = new TestObject { Property1 = "prop1", Property2 = "prop2" };
             var testObject2 = new TestObject { Property1 = "prop3", Property2 = "prop4" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject1, "savedTestObject1.txt");
             fileStorage.SaveToFile(testObject2, "savedTestObject2.txt");
@@ -232,7 +232,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject, "savedTestObject.json", new FileStorageOption { SaveBackupFile = true });
             testObject.Property1 = testObject.Property1 + "-changed";
@@ -260,7 +260,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject, "savedTestObject.json", new FileStorageOption { SaveBackupFile = true });
 
@@ -286,7 +286,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject, "savedTestObject.json", new FileStorageOption { SaveBackupFile = false });
             testObject.Property1 = testObject.Property1 + "-changed";
@@ -309,7 +309,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject, "savedTestObject.json", new FileStorageOption { SaveBackupFile = false });
 
@@ -327,7 +327,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject, "savedTestObject.json");
 
@@ -345,7 +345,7 @@ namespace Blockcore.Tests.Utilities
         {
             // Arrange
             var testObject = new TestObject { Property1 = "prop1", Property2 = "prop2" };
-            string dir = this.GetFolderPathForTestExecution();
+            string dir = GetFolderPathForTestExecution();
             var fileStorage = new FileStorage<TestObject>(dir);
             fileStorage.SaveToFile(testObject, "savedTestObject.json");
             testObject.Property1 = testObject.Property1 + "-changed";

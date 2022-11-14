@@ -12,9 +12,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class CheckPowTransactionRuleTest : TestConsensusRulesUnitTestBase
     {
-        private ConsensusOptions options;
+        private readonly ConsensusOptions options;
 
-        private IConsensus consensus;
+        private readonly IConsensus consensus;
 
         public CheckPowTransactionRuleTest()
         {
@@ -52,7 +52,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         {
             var transaction = new Transaction();
             transaction.Inputs.Add(new TxIn());
-            transaction = this.GenerateTransactionWithWeight(transaction,(int)this.options.MaxBlockBaseSize + 1, TransactionOptions.None);
+            transaction = GenerateTransactionWithWeight(transaction, (int)this.options.MaxBlockBaseSize + 1, TransactionOptions.None);
 
             var exception = Assert.Throws<ConsensusErrorException>(() => this.consensusRules.RegisterRule<CheckPowTransactionRule>().CheckTransaction(this.network, this.options, transaction));
 
@@ -242,7 +242,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         {
             transaction.Outputs.Add(new TxOut(new Money(10000000000), new Script()));
 
-            int transactionWeight = this.CalculateBlockWeight(transaction, options);
+            int transactionWeight = CalculateBlockWeight(transaction, options);
 
             int requiredScriptWeight = weight - transactionWeight - 4;
             transaction.Outputs.RemoveAt(transaction.Outputs.Count - 1);
@@ -250,7 +250,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             Script script = Script.FromBytesUnsafe(new string('A', requiredScriptWeight).Select(c => (byte)c).ToArray());
             transaction.Outputs.Add(new TxOut(new Money(10000000000), script));
 
-            transactionWeight = this.CalculateBlockWeight(transaction, options);
+            transactionWeight = CalculateBlockWeight(transaction, options);
 
             if (transactionWeight == weight)
             {

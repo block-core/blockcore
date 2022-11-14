@@ -19,7 +19,6 @@ using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.RPC;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.Runners;
@@ -263,7 +262,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
             else
                 network = this.FullNode?.Network ?? KnownNetworks.RegTest;
 
-            return new RPCClient(this.GetRPCAuth(), new Uri("http://127.0.0.1:" + this.RpcPort + "/"), network);
+            return new RPCClient(GetRPCAuth(), new Uri("http://127.0.0.1:" + this.RpcPort + "/"), network);
         }
 
         public INetworkPeer CreateNetworkPeerClient()
@@ -297,7 +296,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                 selfEndPointTracker,
                 ibdState.Object,
                 connectionManagerSettings,
-                this.GetOrCreateAsyncProvider(),
+                GetOrCreateAsyncProvider(),
                 peerAddressManager
                 );
 
@@ -321,7 +320,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                 this.runner.OverrideDateTimeProvider = this.builderOverrideDateTimeProvider;
 
                 if (this.builderNoValidation)
-                    this.DisableValidation();
+                    DisableValidation();
 
                 this.runner.BuildNode();
                 startAction?.Invoke();
@@ -417,8 +416,8 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public void Restart()
         {
-            this.Kill();
-            this.Start();
+            Kill();
+            Start();
         }
 
         /// <summary>
@@ -459,7 +458,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                 failureReason: $"Failed to achieve state = started within {timeToNodeStart}");
 
             if (this.builderWithDummyWallet)
-                this.SetMinerSecret(new BitcoinSecret(new Key(), this.FullNode.Network));
+                SetMinerSecret(new BitcoinSecret(new Key(), this.FullNode.Network));
 
             if (this.builderWithWallet)
             {
@@ -484,12 +483,12 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public void Broadcast(Transaction transaction)
         {
-            using (INetworkPeer peer = this.CreateNetworkPeerClient())
+            using (INetworkPeer peer = CreateNetworkPeerClient())
             {
                 peer.VersionHandshakeAsync().GetAwaiter().GetResult();
                 peer.SendMessageAsync(new InvPayload(transaction)).GetAwaiter().GetResult();
                 peer.SendMessageAsync(new TxPayload(transaction)).GetAwaiter().GetResult();
-                this.PingPongAsync(peer).GetAwaiter().GetResult();
+                PingPongAsync(peer).GetAwaiter().GetResult();
             }
         }
 
@@ -501,7 +500,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         /// <returns>Latency.</returns>
         public async Task<TimeSpan> PingPongAsync(INetworkPeer peer, CancellationToken cancellation = default(CancellationToken))
         {
-            using (var listener = new NetworkPeerListener(peer, this.GetOrCreateAsyncProvider()))
+            using (var listener = new NetworkPeerListener(peer, GetOrCreateAsyncProvider()))
             {
                 var ping = new PingPayload()
                 {
@@ -523,7 +522,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public void SelectMempoolTransactions()
         {
-            RPCClient rpc = this.CreateRPCClient();
+            RPCClient rpc = CreateRPCClient();
             uint256[] txs = rpc.GetRawMempool();
             Task<Transaction>[] tasks = txs.Select(t => rpc.GetRawTransactionAsync(t)).ToArray();
             Task.WaitAll(tasks);
@@ -554,17 +553,17 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public async Task<Block[]> GenerateAsync(int blockCount, bool includeUnbroadcasted = true, bool broadcast = true)
         {
-            RPCClient rpc = this.CreateRPCClient();
-            BitcoinSecret dest = this.GetFirstSecret(rpc);
+            RPCClient rpc = CreateRPCClient();
+            BitcoinSecret dest = GetFirstSecret(rpc);
             uint256 bestBlock = rpc.GetBestBlockHash();
             var blocks = new List<Block>();
             DateTimeOffset now = this.MockTime == null ? DateTimeOffset.UtcNow : this.MockTime.Value;
 
-            using (INetworkPeer peer = this.CreateNetworkPeerClient())
+            using (INetworkPeer peer = CreateNetworkPeerClient())
             {
                 await peer.VersionHandshakeAsync().ConfigureAwait(false);
 
-                var chain = bestBlock == this.runner.Network.GenesisHash ? new ChainIndexer(this.runner.Network) : this.GetChain(peer);
+                var chain = bestBlock == this.runner.Network.GenesisHash ? new ChainIndexer(this.runner.Network) : GetChain(peer);
 
                 for (int i = 0; i < blockCount; i++)
                 {
@@ -597,7 +596,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                 }
 
                 if (broadcast)
-                    await this.BroadcastBlocksAsync(blocks.ToArray(), peer);
+                    await BroadcastBlocksAsync(blocks.ToArray(), peer);
             }
 
             return blocks.ToArray();
@@ -613,7 +612,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         private ChainIndexer GetChain(INetworkPeer peer, uint256 hashStop = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var chain = new ChainIndexer(peer.Network);
-            this.SynchronizeChain(peer, chain, hashStop, cancellationToken);
+            SynchronizeChain(peer, chain, hashStop, cancellationToken);
             return chain;
         }
 
@@ -628,7 +627,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         private IEnumerable<ChainedHeader> SynchronizeChain(INetworkPeer peer, ChainIndexer chain, uint256 hashStop = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             ChainedHeader oldTip = chain.Tip;
-            List<ChainedHeader> headers = this.GetHeadersFromFork(peer, oldTip, hashStop, cancellationToken).ToList();
+            List<ChainedHeader> headers = GetHeadersFromFork(peer, oldTip, hashStop, cancellationToken).ToList();
             if (headers.Count == 0)
                 return new ChainedHeader[0];
 
@@ -661,9 +660,9 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public IEnumerable<ChainedHeader> GetHeadersFromFork(INetworkPeer peer, ChainedHeader currentTip, uint256 hashStop = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.AssertStateAsync(peer, NetworkPeerState.HandShaked, cancellationToken).GetAwaiter().GetResult();
+            AssertStateAsync(peer, NetworkPeerState.HandShaked, cancellationToken).GetAwaiter().GetResult();
 
-            using (var listener = new NetworkPeerListener(peer, this.GetOrCreateAsyncProvider()))
+            using (var listener = new NetworkPeerListener(peer, GetOrCreateAsyncProvider()))
             {
                 int acceptMaxReorgDepth = 0;
                 while (true)
@@ -760,13 +759,13 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                 await peer.SendMessageAsync(new InvPayload(block));
                 await peer.SendMessageAsync(new BlockPayload(block));
             }
-            await this.PingPongAsync(peer);
+            await PingPongAsync(peer);
         }
 
         public Block[] FindBlock(int blockCount = 1, bool includeMempool = true)
         {
-            this.SelectMempoolTransactions();
-            return this.GenerateAsync(blockCount, includeMempool).GetAwaiter().GetResult();
+            SelectMempoolTransactions();
+            return GenerateAsync(blockCount, includeMempool).GetAwaiter().GetResult();
         }
 
         private BitcoinSecret GetFirstSecret(RPCClient rpc)

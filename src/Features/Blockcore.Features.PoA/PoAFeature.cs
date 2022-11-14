@@ -21,7 +21,6 @@ using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA
 {
@@ -80,7 +79,7 @@ namespace Blockcore.Features.PoA
             this.chainState = chainState;
             this.blockStoreQueue = blockStoreQueue;
 
-            payloadProvider.DiscoverPayloads(this.GetType().Assembly);
+            payloadProvider.DiscoverPayloads(GetType().Assembly);
         }
 
         /// <inheritdoc />
@@ -88,9 +87,9 @@ namespace Blockcore.Features.PoA
         {
             NetworkPeerConnectionParameters connectionParameters = this.connectionManager.Parameters;
 
-            this.ReplaceConsensusManagerBehavior(connectionParameters);
+            ReplaceConsensusManagerBehavior(connectionParameters);
 
-            this.ReplaceBlockStoreBehavior(connectionParameters);
+            ReplaceBlockStoreBehavior(connectionParameters);
 
             this.federationManager.Initialize();
             this.whitelistedHashesRepository.Initialize();

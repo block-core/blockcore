@@ -36,18 +36,18 @@ namespace Blockcore.Features.MemoryPool
             this.mempoolValidator = mempoolValidator;
             this.mempoolLock = mempoolLock;
             this.signals = signals;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         public void Initialize()
         {
-            this.blockDisconnectedSubscription = this.signals.Subscribe<BlockDisconnected>(this.OnBlockDisconnected);
+            this.blockDisconnectedSubscription = this.signals.Subscribe<BlockDisconnected>(OnBlockDisconnected);
         }
 
         private void OnBlockDisconnected(BlockDisconnected blockDisconnected)
         {
-            this.RemoveInvalidTransactionsAsync(blockDisconnected.DisconnectedBlock.Block).ConfigureAwait(false).GetAwaiter().GetResult();
-            this.AddBackToMempoolAsync(blockDisconnected.DisconnectedBlock.Block).ConfigureAwait(false).GetAwaiter().GetResult();
+            RemoveInvalidTransactionsAsync(blockDisconnected.DisconnectedBlock.Block).ConfigureAwait(false).GetAwaiter().GetResult();
+            AddBackToMempoolAsync(blockDisconnected.DisconnectedBlock.Block).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>

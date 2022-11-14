@@ -4,7 +4,6 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.TransactionInfo;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
@@ -22,7 +21,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
             long nSigOps = 0;
             foreach (Transaction tx in block.Transactions)
-                nSigOps += this.GetLegacySigOpCount(tx);
+                nSigOps += GetLegacySigOpCount(tx);
 
             if ((nSigOps * options.WitnessScaleFactor) > options.MaxBlockSigopsCost)
             {

@@ -53,11 +53,11 @@ namespace Blockcore.Features.Dns
 
             if (resourceRecordType == typeof(IPAddressResourceRecord).Name)
             {
-                return this.ReadIPAddressResourceRecordJson(jObject);
+                return ReadIPAddressResourceRecordJson(jObject);
             }
             else if (resourceRecordType == typeof(CanonicalNameResourceRecord).Name)
             {
-                return this.ReadCanonicalNameResourceRecordJson(jObject);
+                return ReadCanonicalNameResourceRecordJson(jObject);
             }
             else if (resourceRecordType == typeof(MailExchangeResourceRecord).Name)
             {
@@ -69,11 +69,11 @@ namespace Blockcore.Features.Dns
             }
             else if (resourceRecordType == typeof(PointerResourceRecord).Name)
             {
-                return this.ReadPointerResourceRecordJson(jObject);
+                return ReadPointerResourceRecordJson(jObject);
             }
             else if (resourceRecordType == typeof(StartOfAuthorityResourceRecord).Name)
             {
-                return this.ReadStartOfAuthorityResourceRecordJson(jObject, serializer);
+                return ReadStartOfAuthorityResourceRecordJson(jObject, serializer);
             }
             else
             {
@@ -93,27 +93,27 @@ namespace Blockcore.Features.Dns
 
             if (value is IPAddressResourceRecord)
             {
-                jObject = this.WriteIPAddressResourceRecordJson((IPAddressResourceRecord)value);
+                jObject = WriteIPAddressResourceRecordJson((IPAddressResourceRecord)value);
             }
             else if (value is CanonicalNameResourceRecord)
             {
-                jObject = this.WriteCanonicalNameResourceRecordJson((CanonicalNameResourceRecord)value);
+                jObject = WriteCanonicalNameResourceRecordJson((CanonicalNameResourceRecord)value);
             }
             else if (value is MailExchangeResourceRecord)
             {
-                jObject = this.WriteMailExchangeResourceRecordJson((MailExchangeResourceRecord)value);
+                jObject = WriteMailExchangeResourceRecordJson((MailExchangeResourceRecord)value);
             }
             else if (value is NameServerResourceRecord)
             {
-                jObject = this.WriteNameServerResourceRecordJson((NameServerResourceRecord)value);
+                jObject = WriteNameServerResourceRecordJson((NameServerResourceRecord)value);
             }
             else if (value is PointerResourceRecord)
             {
-                jObject = this.WritePointerResourceRecordJson((PointerResourceRecord)value);
+                jObject = WritePointerResourceRecordJson((PointerResourceRecord)value);
             }
             else if (value is StartOfAuthorityResourceRecord)
             {
-                jObject = this.WriteStartOfAuthorityResourceRecordJson((StartOfAuthorityResourceRecord)value, serializer);
+                jObject = WriteStartOfAuthorityResourceRecordJson((StartOfAuthorityResourceRecord)value, serializer);
             }
             else
             {
@@ -130,7 +130,7 @@ namespace Blockcore.Features.Dns
         /// <returns>The read <see cref="IPAddressResourceRecord"/>.</returns>
         private IPAddressResourceRecord ReadIPAddressResourceRecordJson(JObject jObject)
         {
-            IPAddress ipaddress = this.ReadIPAddressJson(jObject);
+            IPAddress ipaddress = ReadIPAddressJson(jObject);
             Domain domain = ReadDomainJson(jObject, NameFieldName);
             return new IPAddressResourceRecord(domain, ipaddress);
         }
@@ -142,8 +142,8 @@ namespace Blockcore.Features.Dns
         /// <returns>The read <see cref="CanonicalNameResourceRecord"/>.</returns>
         private CanonicalNameResourceRecord ReadCanonicalNameResourceRecordJson(JObject jObject)
         {
-            Domain domain = this.ReadDomainJson(jObject, NameFieldName);
-            Domain cName = this.ReadDomainJson(jObject, CanonicalDomainNameFieldName);
+            Domain domain = ReadDomainJson(jObject, NameFieldName);
+            Domain cName = ReadDomainJson(jObject, CanonicalDomainNameFieldName);
 
             return new CanonicalNameResourceRecord(domain, cName);
         }
@@ -155,8 +155,8 @@ namespace Blockcore.Features.Dns
         /// <returns>The read <see cref="MailExchangeResourceRecord"/>.</returns>
         private MailExchangeResourceRecord ReadMailExchangeResourceRecordJson(JObject jObject)
         {
-            Domain domain = this.ReadDomainJson(jObject, NameFieldName);
-            Domain exchangeDomain = this.ReadDomainJson(jObject, ExchangeDomainNameFieldName);
+            Domain domain = ReadDomainJson(jObject, NameFieldName);
+            Domain exchangeDomain = ReadDomainJson(jObject, ExchangeDomainNameFieldName);
             int preference = jObject[PreferenceFieldName].Value<int>();
 
             return new MailExchangeResourceRecord(domain, preference, exchangeDomain);
@@ -169,8 +169,8 @@ namespace Blockcore.Features.Dns
         /// <returns>The read <see cref="NameServerResourceRecord"/>.</returns>
         private NameServerResourceRecord ReadNameServerResourceRecordJson(JObject jObject)
         {
-            Domain domain = this.ReadDomainJson(jObject, NameFieldName);
-            Domain nsDomain = this.ReadDomainJson(jObject, NSDomainNameFieldName);
+            Domain domain = ReadDomainJson(jObject, NameFieldName);
+            Domain nsDomain = ReadDomainJson(jObject, NSDomainNameFieldName);
             return new NameServerResourceRecord(domain, nsDomain);
         }
 
@@ -181,8 +181,8 @@ namespace Blockcore.Features.Dns
         /// <returns>The read <see cref="PointerResourceRecord"/>.</returns>
         private PointerResourceRecord ReadPointerResourceRecordJson(JObject jObject)
         {
-            Domain domain = this.ReadDomainJson(jObject, NameFieldName);
-            Domain pointerDomain = this.ReadDomainJson(jObject, PointerDomainNameFieldName);
+            Domain domain = ReadDomainJson(jObject, NameFieldName);
+            Domain pointerDomain = ReadDomainJson(jObject, PointerDomainNameFieldName);
             return new PointerResourceRecord(domain, pointerDomain);
         }
 
@@ -193,9 +193,9 @@ namespace Blockcore.Features.Dns
         /// <returns>The read <see cref="StartOfAuthorityResourceRecord"/>.</returns>
         private StartOfAuthorityResourceRecord ReadStartOfAuthorityResourceRecordJson(JObject jObject, JsonSerializer serializer)
         {
-            Domain domain = this.ReadDomainJson(jObject, NameFieldName);
-            Domain masterDomain = this.ReadDomainJson(jObject, MasterDomainNameFieldName);
-            Domain responsibleDomain = this.ReadDomainJson(jObject, ResponsibleDomainNameFieldName);
+            Domain domain = ReadDomainJson(jObject, NameFieldName);
+            Domain masterDomain = ReadDomainJson(jObject, MasterDomainNameFieldName);
+            Domain responsibleDomain = ReadDomainJson(jObject, ResponsibleDomainNameFieldName);
             long serialNumber = jObject[SerialNumberFieldName].Value<long>();
 
             var refreshInterval = jObject[RefreshIntervalFieldName].ToObject<TimeSpan>(serializer);

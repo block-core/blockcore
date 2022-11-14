@@ -12,7 +12,7 @@ namespace Blockcore.Tests.Utilities
     public class AsyncManualResetEventTest
     {
         /// <summary>Source of randomness.</summary>
-        private Random random = new Random();
+        private readonly Random random = new Random();
 
         [Fact]
         public async Task AsyncManualResetEvent_WaitAsync()
@@ -30,7 +30,7 @@ namespace Blockcore.Tests.Utilities
             Task mreAwaitingTask = manualResetEvent.WaitAsync();
             await mreAwaitingTask;
 
-            stopwatch.Stop(); 
+            stopwatch.Stop();
 
             Assert.True(stopwatch.ElapsedMilliseconds >= 500, $"Elapsed: {stopwatch.ElapsedMilliseconds}");
             Assert.True(mreAwaitingTask.IsCompletedSuccessfully, "Task was not completed successfully.");

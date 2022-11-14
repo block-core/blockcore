@@ -14,7 +14,6 @@ using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Utilities.JsonErrors;
-using DBreeze.Utils;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;
@@ -67,7 +66,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
 
                 // Make sure the wallet has two account.
                 string newAccountName = await $"http://localhost:{node.ApiPort}/api"
@@ -128,7 +127,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
 
                 // Make sure the wallet only has one account.
                 IEnumerable<string> accountsNames = await $"http://localhost:{node.ApiPort}/api"
@@ -186,7 +185,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
 
                 AddressesModel addressesModel = await $"http://localhost:{node.ApiPort}/api"
                     .AppendPathSegment("wallet/addresses")
@@ -214,7 +213,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
 
                 AddressesModel addressesModel = await $"http://localhost:{node.ApiPort}/api"
                 .AppendPathSegment("wallet/addresses")
@@ -249,7 +248,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
 
                 // Make sure the account is used, i.e, it has transactions.
                 WalletHistoryModel history = await $"http://localhost:{node.ApiPort}/api"
@@ -286,7 +285,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
 
                 // Make sure the account is used, i.e, it has transactions.
                 WalletHistoryModel history = await $"http://localhost:{node.ApiPort}/api"
@@ -325,7 +324,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
 
                 // Make sure the account is used, i.e, it has transactions.
                 WalletHistoryModel history = await $"http://localhost:{node.ApiPort}/api"
@@ -402,7 +401,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
                 CoreNode miningNode = builder.CreateStratisPosNode(this.network).WithReadyBlockchainData(ReadyBlockchain.StratisRegTest150Miner).Start();
 
-                this.AddAndLoadWalletFileToWalletFolder(node);
+                AddAndLoadWalletFileToWalletFolder(node);
                 TestHelper.ConnectAndSync(node, miningNode);
 
                 // Act.

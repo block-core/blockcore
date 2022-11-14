@@ -28,6 +28,7 @@ namespace Blockcore.Consensus
     /// <inheritdoc cref="IConsensusManager"/>
     public class ConsensusManager : IConsensusManager
     {
+
         /// <summary>
         /// Maximum memory in bytes that can be taken by the blocks that were downloaded but
         /// not yet validated or included to the consensus chain.
@@ -79,6 +80,11 @@ namespace Blockcore.Consensus
 
         /// <summary>Connection manager of all the currently connected peers.</summary>
         private readonly IConnectionManager connectionManager;
+
+        protected int freeSlots;
+        protected long avgSize;
+        protected int maxBlocksToAsk;
+
 
         /// <inheritdoc />
         public ChainedHeader Tip { get; private set; }
@@ -1303,6 +1309,8 @@ namespace Blockcore.Consensus
             return blockHashes.Select(h => chainedHeaderBlocks[h]).ToArray();
         }
 
+
+
         /// <summary>
         /// Processes items in the <see cref="toDownloadQueue"/> and ask the block puller for blocks to download.
         /// If the tree has too many unconsumed blocks we will not ask block puller for more until some blocks are consumed.
@@ -1318,65 +1326,30 @@ namespace Blockcore.Consensus
             {
                 int awaitingBlocksCount = this.expectedBlockSizes.Count;
 
-                int freeSlots = MaxBlocksToAskFromPuller - awaitingBlocksCount;
-                this.logger.LogDebug("{0} slots are available.", freeSlots);
+                this.freeSlots = MaxBlocksToAskFromPuller - awaitingBlocksCount;
 
-                if (freeSlots < ConsumptionThresholdSlots)
-                {
-                    this.logger.LogTrace("(-)[NOT_ENOUGH_SLOTS]");
+                this.logger.LogDebug("{0} slots are available.", this.freeSlots);
+
+                if (!this.ValidateConditions())
                     return;
-                }
-
-                if (this.chainedHeaderTree.UnconsumedBlocksCount > MaxUnconsumedBlocksCount)
-                {
-                    this.logger.LogTrace("(-)[MAX_UNCONSUMED_BLOCKS_REACHED]");
-                    return;
-                }
-
-                long freeBytes = this.maxUnconsumedBlocksDataBytes - this.chainedHeaderTree.UnconsumedBlocksDataBytes - this.expectedBlockDataBytes;
-                this.logger.LogDebug("{0} bytes worth of blocks is available for download.", freeBytes);
-
-                if (freeBytes <= this.ConsumptionThresholdBytes)
-                {
-                    this.logger.LogTrace("(-)[THRESHOLD_NOT_MET]");
-                    return;
-                }
-
-                // To fix issue https://github.com/stratisproject/StratisBitcoinFullNode/issues/2294#issue-364513736
-                // if there are no samples, assume the worst scenario (you are going to donwload full blocks).
-                long avgSize = (long)this.blockPuller.GetAverageBlockSizeBytes();
-                if (avgSize == 0)
-                {
-                    avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
-                }
-
-                int maxBlocksToAsk = Math.Min((int)(freeBytes / avgSize), freeSlots);
-
-                this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", avgSize, maxBlocksToAsk);
-
-                if (maxBlocksToAsk <= 0)
-                {
-                    this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
-                    return;
-                }
 
                 BlockDownloadRequest request = this.toDownloadQueue.Peek();
 
-                if (request.BlocksToDownload.Count <= maxBlocksToAsk)
+                if (request.BlocksToDownload.Count <= this.maxBlocksToAsk)
                 {
                     this.toDownloadQueue.Dequeue();
                 }
                 else
                 {
-                    this.logger.LogDebug("Splitting enqueued job of size {0} into 2 pieces of sizes {1} and {2}.", request.BlocksToDownload.Count, maxBlocksToAsk, request.BlocksToDownload.Count - maxBlocksToAsk);
+                    this.logger.LogDebug("Splitting enqueued job of size {0} into 2 pieces of sizes {1} and {2}.", request.BlocksToDownload.Count, this.maxBlocksToAsk, request.BlocksToDownload.Count - this.maxBlocksToAsk);
 
                     // Split queue item in 2 pieces: one of size blocksToAsk and second is the rest. Ask BP for first part, leave 2nd part in the queue.
                     var blockPullerRequest = new BlockDownloadRequest()
                     {
-                        BlocksToDownload = new List<ChainedHeader>(request.BlocksToDownload.GetRange(0, maxBlocksToAsk))
+                        BlocksToDownload = new List<ChainedHeader>(request.BlocksToDownload.GetRange(0, this.maxBlocksToAsk))
                     };
 
-                    request.BlocksToDownload.RemoveRange(0, maxBlocksToAsk);
+                    request.BlocksToDownload.RemoveRange(0, this.maxBlocksToAsk);
 
                     request = blockPullerRequest;
                 }
@@ -1384,12 +1357,60 @@ namespace Blockcore.Consensus
                 this.blockPuller.RequestBlocksDownload(request.BlocksToDownload);
 
                 foreach (ChainedHeader chainedHeader in request.BlocksToDownload)
-                    this.expectedBlockSizes.Add(chainedHeader.HashBlock, avgSize);
+                    this.expectedBlockSizes.Add(chainedHeader.HashBlock, this.avgSize);
 
-                this.expectedBlockDataBytes += request.BlocksToDownload.Count * avgSize;
+                this.expectedBlockDataBytes += request.BlocksToDownload.Count * this.avgSize;
 
                 this.logger.LogDebug("Expected block data bytes was set to {0} and we are expecting {1} blocks to be delivered.", this.expectedBlockDataBytes, this.expectedBlockSizes.Count);
             }
+        }
+
+        private bool ValidateConditions()
+        {
+
+            if (this.freeSlots < ConsumptionThresholdSlots)
+            {
+                this.logger.LogTrace("(-)[NOT_ENOUGH_SLOTS]");
+                return false;
+            }
+
+            if (this.chainedHeaderTree.UnconsumedBlocksCount > MaxUnconsumedBlocksCount)
+            {
+                this.logger.LogTrace("(-)[MAX_UNCONSUMED_BLOCKS_REACHED]");
+                return false;
+            }
+
+            long freeBytes = this.maxUnconsumedBlocksDataBytes - this.chainedHeaderTree.UnconsumedBlocksDataBytes - this.expectedBlockDataBytes;
+            this.logger.LogDebug("{0} bytes worth of blocks is available for download.", freeBytes);
+
+            if (freeBytes <= this.ConsumptionThresholdBytes)
+            {
+                this.logger.LogTrace("(-)[THRESHOLD_NOT_MET]");
+                return false;
+            }
+
+            // To fix issue https://github.com/stratisproject/StratisBitcoinFullNode/issues/2294#issue-364513736
+            // if there are no samples, assume the worst scenario (you are going to donwload full blocks).
+
+            this.avgSize = (long)this.blockPuller.GetAverageBlockSizeBytes();
+            if (this.avgSize == 0)
+            {
+                this.avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
+            }
+
+            this.maxBlocksToAsk = Math.Min((int)(freeBytes / this.avgSize), this.freeSlots);
+
+            this.logger.LogDebug("With {avgSize} average block size, we have {maxBlocksToAsk} download slots available.", this.avgSize, this.maxBlocksToAsk);
+
+            if (this.maxBlocksToAsk <= 0)
+            {
+                this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
+                return false;
+            }
+
+
+            return true;
+
         }
 
         /// <summary>
@@ -1456,10 +1477,10 @@ namespace Blockcore.Consensus
                 long tipAge = currentTime - this.chainState.ConsensusTip.Header.BlockTime.ToUnixTimeSeconds();
                 long maxTipAge = this.consensusSettings.MaxTipAge;
 
-                log.AppendLine($"Tip Age: { TimeSpan.FromSeconds(tipAge).ToString(@"dd\.hh\:mm\:ss") } (maximum is { TimeSpan.FromSeconds(maxTipAge).ToString(@"dd\.hh\:mm\:ss") })");
-                log.AppendLine($"In IBD Stage: { (this.isIbd ? "Yes" : "No") }");
+                log.AppendLine($"Tip Age: {TimeSpan.FromSeconds(tipAge).ToString(@"dd\.hh\:mm\:ss")} (maximum is {TimeSpan.FromSeconds(maxTipAge).ToString(@"dd\.hh\:mm\:ss")})");
+                log.AppendLine($"In IBD Stage: {(this.isIbd ? "Yes" : "No")}");
 
-                string unconsumedBlocks = this.FormatBigNumber(this.chainedHeaderTree.UnconsumedBlocksCount);
+                string unconsumedBlocks = FormatBigNumber(this.chainedHeaderTree.UnconsumedBlocksCount);
 
                 double filledPercentage = Math.Round((this.chainedHeaderTree.UnconsumedBlocksDataBytes / (double)this.maxUnconsumedBlocksDataBytes) * 100, 2);
 
@@ -1474,7 +1495,7 @@ namespace Blockcore.Consensus
 
         /// <summary>Formats the big number.</summary>
         /// <remarks><c>123456789</c> => <c>123,456,789</c>.</remarks>
-        private string FormatBigNumber(long number)
+        static private string FormatBigNumber(long number)
         {
             return $"{number:#,##0}";
         }

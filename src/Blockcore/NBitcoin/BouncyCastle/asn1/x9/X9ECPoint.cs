@@ -45,7 +45,7 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
         {
             get
             {
-                if(this.p == null)
+                if (this.p == null)
                 {
                     this.p = this.c.DecodePoint(this.encoding.GetOctets()).Normalize();
                 }

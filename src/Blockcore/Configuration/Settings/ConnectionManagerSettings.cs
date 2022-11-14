@@ -7,7 +7,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Configuration.Settings
 {
@@ -24,7 +23,7 @@ namespace Blockcore.Configuration.Settings
         private const bool DefaultBlocksOnly = false;
 
         /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
+        /// private readonly ILogger logger;
 
         /// <summary>List of end points that the node should try to connect to.</summary>
         /// <remarks>All access should be protected under <see cref="addNodeLock"/></remarks>
@@ -42,8 +41,8 @@ namespace Blockcore.Configuration.Settings
         public ConnectionManagerSettings(NodeSettings nodeSettings)
         {
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
-
-            this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConnectionManagerSettings).FullName);
+            ILogger logger;
+            logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConnectionManagerSettings).FullName);
 
             this.addNodeLock = new object();
 
@@ -61,7 +60,7 @@ namespace Blockcore.Configuration.Settings
 
             try
             {
-                this.Connect.AddRange(config.GetAll("connect", this.logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
+                this.Connect.AddRange(config.GetAll("connect", logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
             }
             catch (FormatException)
             {
@@ -70,7 +69,7 @@ namespace Blockcore.Configuration.Settings
 
             try
             {
-                foreach (IPEndPoint addNode in config.GetAll("addnode", this.logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)))
+                foreach (IPEndPoint addNode in config.GetAll("addnode", logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)))
                     this.AddAddNode(addNode);
             }
             catch (FormatException)
@@ -78,11 +77,11 @@ namespace Blockcore.Configuration.Settings
                 throw new ConfigurationException("Invalid 'addnode' parameter.");
             }
 
-            this.Port = config.GetOrDefault<int>("port", nodeSettings.Network.DefaultPort, this.logger);
+            this.Port = config.GetOrDefault<int>("port", nodeSettings.Network.DefaultPort, logger);
 
             try
             {
-                IEnumerable<IPEndPoint> whitebindEndpoints = config.GetAll("whitebind", this.logger).Select(s => s.ToIPEndPoint(this.Port));
+                IEnumerable<IPEndPoint> whitebindEndpoints = config.GetAll("whitebind", logger).Select(s => s.ToIPEndPoint(this.Port));
 
                 this.Bind = whitebindEndpoints.Where(x => x.Address.AnyIP()).Select(x => new NodeServerEndpoint(x, true)).ToList();
 
@@ -121,14 +120,14 @@ namespace Blockcore.Configuration.Settings
 
             try
             {
-                this.Whitelist.AddRange(config.GetAll("whitelist", this.logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
+                this.Whitelist.AddRange(config.GetAll("whitelist", logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)));
             }
             catch (FormatException)
             {
                 throw new ConfigurationException("Invalid 'whitelist' parameter.");
             }
 
-            string externalIp = config.GetOrDefault<string>("externalip", null, this.logger);
+            string externalIp = config.GetOrDefault<string>("externalip", null, logger);
             if (externalIp != null)
             {
                 try
@@ -146,33 +145,33 @@ namespace Blockcore.Configuration.Settings
                 this.ExternalEndpoint = new IPEndPoint(IPAddress.Loopback, this.Port);
             }
 
-            this.BanTimeSeconds = config.GetOrDefault<int>("bantime", nodeSettings.Network.DefaultBanTimeSeconds, this.logger);
+            this.BanTimeSeconds = config.GetOrDefault<int>("bantime", nodeSettings.Network.DefaultBanTimeSeconds, logger);
 
             // Listen option will default to true in case there are no connect option specified.
             // When running the node with connect option listen flag has to be explicitly passed to the node to enable listen flag.
-            this.Listen = config.GetOrDefault<bool>("listen", !this.Connect.Any(), this.logger);
+            this.Listen = config.GetOrDefault<bool>("listen", !this.Connect.Any(), logger);
 
-            this.MaxOutboundConnections = config.GetOrDefault<int>("maxoutboundconnections", nodeSettings.Network.DefaultMaxOutboundConnections, this.logger);
+            this.MaxOutboundConnections = config.GetOrDefault<int>("maxoutboundconnections", nodeSettings.Network.DefaultMaxOutboundConnections, logger);
             if (this.MaxOutboundConnections <= 0)
                 throw new ConfigurationException("The 'maxoutboundconnections' must be greater than zero.");
 
-            this.MaxInboundConnections = config.GetOrDefault<int>("maxinboundconnections", nodeSettings.Network.DefaultMaxInboundConnections, this.logger);
+            this.MaxInboundConnections = config.GetOrDefault<int>("maxinboundconnections", nodeSettings.Network.DefaultMaxInboundConnections, logger);
             if (this.MaxInboundConnections < 0)
                 throw new ConfigurationException("The 'maxinboundconnections' must be greater or equal to zero.");
 
-            this.InitialConnectionTarget = config.GetOrDefault("initialconnectiontarget", 1, this.logger);
-            this.SyncTimeEnabled = config.GetOrDefault<bool>("synctime", true, this.logger);
-            this.RelayTxes = !config.GetOrDefault("blocksonly", DefaultBlocksOnly, this.logger);
-            this.IpRangeFiltering = config.GetOrDefault<bool>("IpRangeFiltering", true, this.logger);
+            this.InitialConnectionTarget = config.GetOrDefault("initialconnectiontarget", 1, logger);
+            this.SyncTimeEnabled = config.GetOrDefault<bool>("synctime", true, logger);
+            this.RelayTxes = !config.GetOrDefault("blocksonly", DefaultBlocksOnly, logger);
+            this.IpRangeFiltering = config.GetOrDefault<bool>("IpRangeFiltering", true, logger);
 
-            var agentPrefix = config.GetOrDefault("agentprefix", string.Empty, this.logger).Replace("-", string.Empty);
+            var agentPrefix = config.GetOrDefault("agentprefix", string.Empty, logger).Replace("-", string.Empty);
             if (agentPrefix.Length > MaximumAgentPrefixLength)
                 agentPrefix = agentPrefix.Substring(0, MaximumAgentPrefixLength);
 
             this.Agent = string.IsNullOrEmpty(agentPrefix) ? nodeSettings.Agent : $"{agentPrefix}-{nodeSettings.Agent}";
-            this.logger.LogDebug("Agent set to '{0}'.", this.Agent);
+            logger.LogDebug("Agent set to '{0}'.", this.Agent);
 
-            this.IsGateway = config.GetOrDefault<bool>("gateway", false, this.logger);
+            this.IsGateway = config.GetOrDefault<bool>("gateway", false, logger);
         }
 
         public void AddAddNode(IPEndPoint addNode)
@@ -207,7 +206,7 @@ namespace Blockcore.Configuration.Settings
         public static void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
         {
             builder.AppendLine("####ConnectionManager Settings####");
-            builder.AppendLine($"#The default network port to connect to. Default { network.DefaultPort }.");
+            builder.AppendLine($"#The default network port to connect to. Default {network.DefaultPort}.");
             builder.AppendLine($"#port={network.DefaultPort}");
             builder.AppendLine($"#Accept connections from the outside.");
             builder.AppendLine($"#listen=<0 or 1>");
@@ -235,10 +234,10 @@ namespace Blockcore.Configuration.Settings
             builder.AppendLine($"#initialconnectiontarget=<number>");
             builder.AppendLine($"#Sync with peers. Default 1.");
             builder.AppendLine($"#synctime=1");
-            builder.AppendLine($"#An optional prefix for the node's user agent shared with peers. Truncated if over { MaximumAgentPrefixLength } characters.");
+            builder.AppendLine($"#An optional prefix for the node's user agent shared with peers. Truncated if over {MaximumAgentPrefixLength} characters.");
             builder.AppendLine($"#agentprefix=<string>");
-            builder.AppendLine($"#Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to { (DefaultBlocksOnly ? 1 : 0) }.");
-            builder.AppendLine($"#blocksonly={ (DefaultBlocksOnly ? 1 : 0) }");
+            builder.AppendLine($"#Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to {(DefaultBlocksOnly ? 1 : 0)}.");
+            builder.AppendLine($"#blocksonly={(DefaultBlocksOnly ? 1 : 0)}");
             builder.AppendLine($"#bantime=<number>");
             builder.AppendLine($"#Disallow connection to peers in same IP range. Default is 1 for remote hosts.");
             builder.AppendLine($"#iprangefiltering=<0 or 1>");
@@ -255,7 +254,7 @@ namespace Blockcore.Configuration.Settings
             var defaults = NodeSettings.Default(network: network);
 
             var builder = new StringBuilder();
-            builder.AppendLine($"-port=<port>              The default network port to connect to. Default { network.DefaultPort }.");
+            builder.AppendLine($"-port=<port>              The default network port to connect to. Default {network.DefaultPort}.");
             builder.AppendLine($"-listen=<0 or 1>          Accept connections from the outside (defaulted to 1 unless -connect args specified).");
             builder.AppendLine($"-connect=<ip:port>        Specified node to connect to. Can be specified multiple times.");
             builder.AppendLine($"-addnode=<ip:port>        Add a node to connect to and attempt to keep the connection open. Can be specified multiple times.");
@@ -269,7 +268,7 @@ namespace Blockcore.Configuration.Settings
             builder.AppendLine($"-initialconnectiontarget=<number> The number of connections to be reached before a 1 second connection interval (initally 100ms). Default 1.");
             builder.AppendLine($"-synctime=<0 or 1>        Sync with peers. Default 1.");
             builder.AppendLine($"-agentprefix=<string>     An optional prefix for the node's user agent that will be shared with peers in the version handshake.");
-            builder.AppendLine($"-blocksonly=<0 or 1>      Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to { DefaultBlocksOnly }.");
+            builder.AppendLine($"-blocksonly=<0 or 1>      Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to {DefaultBlocksOnly}.");
             builder.AppendLine($"-iprangefiltering=<0 or 1> Disallow connection to peers in same IP range. Default is 1 for remote hosts.");
 
             defaults.Logger.LogInformation(builder.ToString());

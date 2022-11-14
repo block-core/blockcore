@@ -5,6 +5,7 @@ namespace Blockcore.Builder.Feature
     /// <summary>
     /// Exception thrown when feature dependencies are missing.
     /// </summary>
+    [Serializable]
     public class MissingDependencyException : Exception
     {
         /// <inheritdoc />
@@ -22,6 +23,11 @@ namespace Blockcore.Builder.Feature
         /// <inheritdoc />
         public MissingDependencyException(string message, Exception innerException)
             : base(message, innerException)
+        {
+        }
+
+        protected MissingDependencyException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
         {
         }
     }

@@ -142,13 +142,12 @@ namespace Blockcore.Connection
         /// <inheritdoc />
         public void ClearBannedPeers()
         {
-            foreach (PeerAddress peer in this.peerAddressManager.Peers)
+            foreach (PeerAddress peer in this.peerAddressManager.Peers.Where(peer => this.IsBanned(peer.Endpoint)))
             {
-                if (this.IsBanned(peer.Endpoint))
-                {
-                    peer.UnBan();
-                    this.logger.LogDebug("Peer '{0}' was un-banned.", peer.Endpoint);
-                }
+
+                peer.UnBan();
+                this.logger.LogDebug("Peer '{0}' was un-banned.", peer.Endpoint);
+
             }
         }
 

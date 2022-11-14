@@ -34,27 +34,27 @@ namespace NBitcoin.BuilderExtensions
             PayToMultiSigTemplateParameters para = PayToMultiSigTemplate.Instance.ExtractScriptPubKeyParameters(scriptPubKey);
             // Combine all the signatures we've got:
             TransactionSignature[] aSigs = PayToMultiSigTemplate.Instance.ExtractScriptSigParameters(network, a);
-            if(aSigs == null)
+            if (aSigs == null)
                 return b;
             TransactionSignature[] bSigs = PayToMultiSigTemplate.Instance.ExtractScriptSigParameters(network, b);
-            if(bSigs == null)
+            if (bSigs == null)
                 return a;
             int sigCount = 0;
             var sigs = new TransactionSignature[para.PubKeys.Length];
-            for(int i = 0; i < para.PubKeys.Length; i++)
+            for (int i = 0; i < para.PubKeys.Length; i++)
             {
                 TransactionSignature aSig = i < aSigs.Length ? aSigs[i] : null;
                 TransactionSignature bSig = i < bSigs.Length ? bSigs[i] : null;
                 TransactionSignature sig = aSig ?? bSig;
-                if(sig != null)
+                if (sig != null)
                 {
                     sigs[i] = sig;
                     sigCount++;
                 }
-                if(sigCount == para.SignatureCount)
+                if (sigCount == para.SignatureCount)
                     break;
             }
-            if(sigCount == para.SignatureCount)
+            if (sigCount == para.SignatureCount)
                 sigs = sigs.Where(s => s != null && s != TransactionSignature.Empty).ToArray();
             return PayToMultiSigTemplate.Instance.GenerateScriptSig(sigs);
         }
@@ -81,11 +81,11 @@ namespace NBitcoin.BuilderExtensions
                 .ToArray();
 
             int sigCount = 0;
-            for(int i = 0; i < keys.Length; i++)
+            for (int i = 0; i < keys.Length; i++)
             {
-                if(sigCount == multiSigParams.SignatureCount)
+                if (sigCount == multiSigParams.SignatureCount)
                     break;
-                if(keys[i] != null)
+                if (keys[i] != null)
                 {
                     TransactionSignature sig = signer.Sign(keys[i]);
                     signatures[i] = sig;
@@ -94,7 +94,7 @@ namespace NBitcoin.BuilderExtensions
             }
 
             IEnumerable<TransactionSignature> sigs = signatures;
-            if(sigCount == multiSigParams.SignatureCount)
+            if (sigCount == multiSigParams.SignatureCount)
             {
                 sigs = sigs.Where(s => s != TransactionSignature.Empty && s != null);
             }

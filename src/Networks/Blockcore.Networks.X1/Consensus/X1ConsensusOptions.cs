@@ -96,7 +96,7 @@ namespace Blockcore.Networks.X1.Consensus
             return GetTargetSpacingTotalSeconds(height) * 338;
         }
 
-       
+
         double GetTargetSpacingTotalSeconds(int height)
         {
             if (this.currentNetwork.NetworkType != NetworkType.Mainnet)

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
-using OpenExo.Networks;
-using OpenExo.Networks.Setup;
 using NBitcoin;
+using OpenExo.Networks.Setup;
 
 namespace OpenExo
 {
@@ -150,12 +149,12 @@ namespace OpenExo
 
         public bool IsPoSv3()
         {
-            return Setup.PoSVersion == 3;
+            return this.Setup.PoSVersion == 3;
         }
 
         public bool IsPoSv4()
         {
-            return Setup.PoSVersion == 4;
+            return this.Setup.PoSVersion == 4;
         }
 
     }

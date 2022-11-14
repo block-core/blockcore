@@ -25,7 +25,7 @@ namespace Blockcore.Features.Dns
         /// <summary>
         /// The default time to live.
         /// </summary>
-        private TimeSpan ttl = DEFAULT_TTL;
+        private readonly TimeSpan ttl = DEFAULT_TTL;
 
         /// <summary>
         /// The resource record entries in the master file.
@@ -106,7 +106,7 @@ namespace Blockcore.Features.Dns
         /// <returns>The matching entries.</returns>
         public IList<IResourceRecord> Get(Question question)
         {
-            return this.Get(question.Name, question.Type);
+            return Get(question.Name, question.Type);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Blockcore.Features.Dns
 
             using (var textReader = new JsonTextReader(new StreamReader(stream)))
             {
-                JsonSerializer serializer = this.CreateSerializer();
+                JsonSerializer serializer = CreateSerializer();
                 this.entries = serializer.Deserialize<List<IResourceRecord>>(textReader);
             }
         }
@@ -133,7 +133,7 @@ namespace Blockcore.Features.Dns
             Guard.NotNull(stream, nameof(stream));
 
             var textWriter = new JsonTextWriter(new StreamWriter(stream));
-            JsonSerializer serializer = this.CreateSerializer();
+            JsonSerializer serializer = CreateSerializer();
 
             // Send a copy of the entries to the serializer because the collection can be modified during serialization.
             serializer.Serialize(textWriter, this.entries.ToList());
@@ -144,7 +144,7 @@ namespace Blockcore.Features.Dns
         public void Seed(DnsSettings dnsSettings)
         {
             // Check if SOA record exists for host.
-            int count = this.Get(new Question(new Domain(dnsSettings.DnsHostName), RecordType.SOA)).Count;
+            int count = Get(new Question(new Domain(dnsSettings.DnsHostName), RecordType.SOA)).Count;
             if (count == 0)
             {
                 // Add SOA record for host.
@@ -152,7 +152,7 @@ namespace Blockcore.Features.Dns
             }
 
             // Check if NS record exists for host.
-            count = this.Get(new Question(new Domain(dnsSettings.DnsHostName), RecordType.NS)).Count;
+            count = Get(new Question(new Domain(dnsSettings.DnsHostName), RecordType.NS)).Count;
             if (count == 0)
             {
                 // Add NS record for host.

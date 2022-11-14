@@ -24,7 +24,7 @@ namespace Blockcore.Networks.X1.Consensus
 
         public override ProvenBlockHeader CreateProvenBlockHeader(PosBlock block)
         {
-            var provenBlockHeader = new X1ProvenBlockHeader(block, (X1BlockHeader)this.CreateBlockHeader());
+            var provenBlockHeader = new X1ProvenBlockHeader(block, (X1BlockHeader)CreateBlockHeader());
 
             // Serialize the size.
             provenBlockHeader.ToBytes(this);

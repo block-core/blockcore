@@ -10,7 +10,6 @@ using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 {
@@ -70,10 +69,10 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
                 if (!inIBD || cachedCoinView.ShouldFlush())
                 {
                     // wait for blockstore to catch up
-                    this.WaitForBlockstore(this.PowParent.UtxoSet as CachedCoinView);
+                    WaitForBlockstore(this.PowParent.UtxoSet as CachedCoinView);
 
                     // flush chain repository
-                    this.FlushChainRepo();
+                    FlushChainRepo();
 
                     cachedCoinView.Flush(true);
                 }

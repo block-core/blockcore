@@ -3,7 +3,6 @@ using Blockcore.Configuration;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore
 {
@@ -64,8 +63,8 @@ namespace Blockcore.Features.BlockStore
             this.AmountOfBlocksToKeep = config.GetOrDefault<int>("prune", 0, this.logger);
             this.PruningEnabled = this.AmountOfBlocksToKeep != 0;
 
-            if (this.PruningEnabled && this.AmountOfBlocksToKeep < this.GetMinPruningAmount())
-                throw new ConfigurationException($"The minimum amount of blocks to keep can't be less than {this.GetMinPruningAmount()}.");
+            if (this.PruningEnabled && this.AmountOfBlocksToKeep < GetMinPruningAmount())
+                throw new ConfigurationException($"The minimum amount of blocks to keep can't be less than {GetMinPruningAmount()}.");
 
             // For now we reuse the same value as ConsensusSetting, when store moves to core this can be updated.
             this.MaxCacheSize = config.GetOrDefault("maxblkstoremem", 5, this.logger);

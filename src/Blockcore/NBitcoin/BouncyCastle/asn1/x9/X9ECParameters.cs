@@ -68,19 +68,19 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
             this.h = h;
             this.seed = seed;
 
-            if(ECAlgorithms.IsFpCurve(curve))
+            if (ECAlgorithms.IsFpCurve(curve))
             {
                 this.fieldID = new X9FieldID(curve.Field.Characteristic);
             }
-            else if(ECAlgorithms.IsF2mCurve(curve))
+            else if (ECAlgorithms.IsF2mCurve(curve))
             {
                 var field = (IPolynomialExtensionField)curve.Field;
                 int[] exponents = field.MinimalPolynomial.GetExponentsPresent();
-                if(exponents.Length == 3)
+                if (exponents.Length == 3)
                 {
                     this.fieldID = new X9FieldID(exponents[2], exponents[1]);
                 }
-                else if(exponents.Length == 5)
+                else if (exponents.Length == 5)
                 {
                     this.fieldID = new X9FieldID(exponents[4], exponents[1], exponents[2], exponents[3]);
                 }
@@ -191,7 +191,7 @@ namespace NBitcoin.BouncyCastle.Asn1.X9
                 new X9Curve(this.curve, this.seed), this.g,
                 new DerInteger(this.n));
 
-            if(this.h != null)
+            if (this.h != null)
             {
                 v.Add(new DerInteger(this.h));
             }

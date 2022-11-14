@@ -42,9 +42,9 @@ namespace Blockcore.Consensus.TransactionInfo
         /// <returns>True if valid</returns>
         public static bool IsValid(Network network, byte[] sig, ScriptVerify scriptVerify, out ScriptError error)
         {
-            if(sig == null)
+            if (sig == null)
                 throw new ArgumentNullException("sig");
-            if(sig.Length == 0)
+            if (sig.Length == 0)
             {
                 error = ScriptError.SigDer;
                 return false;
@@ -54,7 +54,7 @@ namespace Blockcore.Consensus.TransactionInfo
             {
                 ScriptVerify = scriptVerify
             };
-            if(!ctx.CheckSignatureEncoding(sig))
+            if (!ctx.CheckSignatureEncoding(sig))
             {
                 error = ctx.Error;
                 return false;
@@ -63,7 +63,7 @@ namespace Blockcore.Consensus.TransactionInfo
         }
         public TransactionSignature(ECDSASignature signature, SigHash sigHash)
         {
-            if(sigHash == SigHash.Undefined)
+            if (sigHash == SigHash.Undefined)
                 throw new ArgumentException("sigHash should not be Undefined");
             this._SigHash = sigHash;
             this._Signature = signature;
@@ -106,7 +106,7 @@ namespace Blockcore.Consensus.TransactionInfo
             byte[] sig = this._Signature.ToDER();
             var result = new byte[sig.Length + 1];
             Array.Copy(sig, 0, result, 0, sig.Length);
-            result[result.Length - 1] = (byte) this._SigHash;
+            result[result.Length - 1] = (byte)this._SigHash;
             return result;
         }
 
@@ -134,7 +134,7 @@ namespace Blockcore.Consensus.TransactionInfo
         {
             get
             {
-                if(this._Id == null) this._Id = Encoders.Hex.EncodeData(ToBytes());
+                if (this._Id == null) this._Id = Encoders.Hex.EncodeData(ToBytes());
                 return this._Id;
             }
         }
@@ -142,22 +142,9 @@ namespace Blockcore.Consensus.TransactionInfo
         public override bool Equals(object obj)
         {
             var item = obj as TransactionSignature;
-            if(item == null)
+            if (item == null)
                 return false;
             return this.Id.Equals(item.Id);
-        }
-        public static bool operator ==(TransactionSignature a, TransactionSignature b)
-        {
-            if(ReferenceEquals(a, b))
-                return true;
-            if(((object)a == null) || ((object)b == null))
-                return false;
-            return a.Id == b.Id;
-        }
-
-        public static bool operator !=(TransactionSignature a, TransactionSignature b)
-        {
-            return !(a == b);
         }
 
         public override int GetHashCode()
@@ -184,7 +171,7 @@ namespace Blockcore.Consensus.TransactionInfo
         /// </summary>
         public TransactionSignature MakeCanonical()
         {
-            if(this.IsLowS)
+            if (this.IsLowS)
                 return this;
             return new TransactionSignature(this.Signature.MakeCanonical(), this.SigHash);
         }

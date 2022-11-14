@@ -5,7 +5,6 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.ScriptInfo;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {
@@ -32,7 +31,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
             var expect = new Script(Op.GetPushOp(newHeight));
             Script actual = block.Transactions[0].Inputs[0].ScriptSig;
-            if (!this.StartWith(actual.ToBytes(true), expect.ToBytes(true)))
+            if (!StartWith(actual.ToBytes(true), expect.ToBytes(true)))
             {
                 this.Logger.LogTrace("(-)[BAD_COINBASE_HEIGHT]");
                 ConsensusErrors.BadCoinbaseHeight.Throw();

@@ -224,9 +224,9 @@ namespace Blockcore.Features.RPC
 
             HttpWebRequest request = WebRequest.CreateHttp(uriBuilder.Uri);
             request.Method = "GET";
-            #if !NETCORE
+#if !NETCORE
             request.KeepAlive = false;
-            #endif
+#endif
             return request;
         }
 
@@ -239,7 +239,7 @@ namespace Blockcore.Features.RPC
             {
                 response = await request.GetResponseAsync().ConfigureAwait(false);
             }
-            catch(WebException ex)
+            catch (WebException ex)
             {
                 // Even if the request "failed" we need to continue reading the response from the router
                 response = ex.Response as HttpWebResponse;

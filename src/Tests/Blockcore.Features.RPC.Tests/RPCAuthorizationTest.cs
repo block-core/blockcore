@@ -6,7 +6,7 @@ namespace Blockcore.Features.RPC.Tests
 {
     public class RPCAuthorizationTest
     {
-        private RPCAuthorization authorization;
+        private readonly RPCAuthorization authorization;
 
         public RPCAuthorizationTest()
         {

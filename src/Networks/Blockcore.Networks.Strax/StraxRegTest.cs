@@ -6,14 +6,14 @@ using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Checkpoints;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 using Blockcore.Networks.Strax.Deployments;
 using Blockcore.Networks.Strax.Federation;
 using Blockcore.Networks.Strax.Policies;
 using Blockcore.P2P;
+using NBitcoin;
+using NBitcoin.BouncyCastle.Math;
+using NBitcoin.DataEncoders;
+using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.Strax
 {

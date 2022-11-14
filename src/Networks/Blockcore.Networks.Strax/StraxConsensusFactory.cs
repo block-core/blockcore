@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Blockcore.Consensus;
+﻿using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
 using NBitcoin;
@@ -48,14 +47,14 @@ namespace Blockcore.Networks.Strax
         /// </summary>
         private uint256 hashStateRoot;
         public uint256 HashStateRoot { get { return this.hashStateRoot; } set { this.hashStateRoot = value; } }
-        private static int hashStateRootSize = 32;
+        private static readonly int hashStateRootSize = 32;
 
         /// <summary>
         /// Root of the receipt trie after execution of this block.
         /// </summary>
         private uint256 receiptRoot;
         public uint256 ReceiptRoot { get { return this.receiptRoot; } set { this.receiptRoot = value; } }
-        private static int receiptRootSize = 32;
+        private static readonly int receiptRootSize = 32;
 
         /// <summary>
         /// Bitwise-OR of all the blooms generated from all of the smart contract transactions in the block.
@@ -107,8 +106,8 @@ namespace Blockcore.Networks.Strax
         /// <inheritdoc />
         public override T TryCreateNew<T>()
         {
-            if (this.IsProvenBlockHeader<T>())
-                return (T)(object)this.CreateProvenBlockHeader();
+            if (IsProvenBlockHeader<T>())
+                return (T)(object)CreateProvenBlockHeader();
 
             return base.TryCreateNew<T>();
         }
@@ -117,7 +116,7 @@ namespace Blockcore.Networks.Strax
         public override Block CreateBlock()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return new PosBlock(this.CreateBlockHeader());
+            return new PosBlock(CreateBlockHeader());
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

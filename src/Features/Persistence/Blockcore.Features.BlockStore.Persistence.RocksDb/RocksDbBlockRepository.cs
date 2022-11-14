@@ -64,7 +64,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
             this.rocksdb = DB.Open(options, folder);
             this.Locker = new object();
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.network = network;
             this.dataStoreSerializer = dataStoreSerializer;
             this.genesisTransactions = network.GetGenesis().Transactions.ToDictionary(k => k.GetHash());
@@ -77,14 +77,14 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
 
             lock (this.Locker)
             {
-                if (this.LoadTipHashAndHeight() == null)
+                if (LoadTipHashAndHeight() == null)
                 {
-                    this.SaveTipHashAndHeight(new HashHeightPair(genesis.GetHash(), 0));
+                    SaveTipHashAndHeight(new HashHeightPair(genesis.GetHash(), 0));
                 }
 
-                if (this.LoadTxIndex() == null)
+                if (LoadTxIndex() == null)
                 {
-                    this.SaveTxIndex(false);
+                    SaveTxIndex(false);
                 }
             }
         }
@@ -251,7 +251,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
             }
 
             if (this.TxIndex)
-                this.OnInsertTransactions(transactions);
+                OnInsertTransactions(transactions);
         }
 
         protected virtual void OnInsertTransactions(List<(Transaction, Block)> transactions)
@@ -353,10 +353,10 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
             // however we need to find how byte arrays are sorted in DBreeze.
             lock (this.Locker)
             {
-                this.OnInsertBlocks(blocks);
+                OnInsertBlocks(blocks);
 
                 // Commit additions
-                this.SaveTipHashAndHeight(newTip);
+                SaveTipHashAndHeight(newTip);
             }
         }
 
@@ -384,7 +384,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
         {
             lock (this.Locker)
             {
-                this.SaveTxIndex(txIndex);
+                SaveTxIndex(txIndex);
             }
         }
 
@@ -414,7 +414,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
             Block res = null;
             lock (this.Locker)
             {
-                var results = this.GetBlocksFromHashes(new List<uint256> { hash });
+                var results = GetBlocksFromHashes(new List<uint256> { hash });
 
                 if (results.FirstOrDefault() != null)
                     res = results.FirstOrDefault();
@@ -432,7 +432,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
 
             lock (this.Locker)
             {
-                blocks = this.GetBlocksFromHashes(hashes);
+                blocks = GetBlocksFromHashes(hashes);
             }
 
             return blocks;
@@ -472,7 +472,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
                     foreach (Transaction transaction in block.Transactions)
                         transactions.Add((transaction, block));
 
-                this.OnDeleteTransactions(transactions);
+                OnDeleteTransactions(transactions);
             }
 
             foreach (Block block in blocks)
@@ -525,9 +525,9 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
 
             lock (this.Locker)
             {
-                List<Block> blocks = this.GetBlocksFromHashes(hashes);
-                this.OnDeleteBlocks(blocks.Where(b => b != null).ToList());
-                this.SaveTipHashAndHeight(newTip);
+                List<Block> blocks = GetBlocksFromHashes(hashes);
+                OnDeleteBlocks(blocks.Where(b => b != null).ToList());
+                SaveTipHashAndHeight(newTip);
             }
         }
 
@@ -538,9 +538,9 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
 
             lock (this.Locker)
             {
-                List<Block> blocks = this.GetBlocksFromHashes(hashes);
+                List<Block> blocks = GetBlocksFromHashes(hashes);
 
-                this.OnDeleteBlocks(blocks.Where(b => b != null).ToList());
+                OnDeleteBlocks(blocks.Where(b => b != null).ToList());
             }
         }
 

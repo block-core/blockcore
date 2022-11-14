@@ -1,10 +1,12 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
+using System.Text.Json.Serialization;
 using Blockcore.Broadcasters;
-using Blockcore.Features.NodeHost.Events;
+using Blockcore.Features.NodeHost.Authentication;
+using Blockcore.Features.NodeHost.Authorization;
 using Blockcore.Features.NodeHost.Hubs;
+using Blockcore.Features.NodeHost.Settings;
 using Blockcore.Utilities.JsonConverters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,14 +17,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using BlazorModal;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Blockcore.Features.NodeHost.Authentication;
-using Blockcore.Features.NodeHost.Authorization;
-using Blockcore.Features.NodeHost.Settings;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using System.Text.Json.Serialization;
 
 namespace Blockcore.Features.NodeHost
 {
@@ -41,14 +35,14 @@ namespace Blockcore.Features.NodeHost
             this.Configuration = builder.Build();
         }
 
-        private IFullNode fullNode;
+        private readonly IFullNode fullNode;
 
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
+            NodeHostSettings hostSettings = this.fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             // Make the configuration available to custom features.
             services.AddSingleton(this.Configuration);
@@ -144,7 +138,8 @@ namespace Blockcore.Features.NodeHost
                     Serializer.RegisterFrontConverters(options.SerializerSettings);
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 })
-                .AddControllers(this.fullNode.Services.Features, services).AddJsonOptions(x => {
+                .AddControllers(this.fullNode.Services.Features, services).AddJsonOptions(x =>
+                {
                     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
@@ -201,9 +196,9 @@ namespace Blockcore.Features.NodeHost
 
                     SwaggerApiDocumentationScaffolder.Scaffold(options);
 
-//#pragma warning disable CS0618 // Type or member is obsolete
-//                    options.DescribeAllEnumsAsStrings();
-//#pragma warning restore CS0618 // Type or member is obsolete
+                    //#pragma warning disable CS0618 // Type or member is obsolete
+                    //                    options.DescribeAllEnumsAsStrings();
+                    //#pragma warning restore CS0618 // Type or member is obsolete
 
                     // options.DescribeStringEnumsInCamelCase();
                 });
@@ -215,7 +210,7 @@ namespace Blockcore.Features.NodeHost
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
+            NodeHostSettings hostSettings = this.fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             app.UseStaticFiles();
 
@@ -247,7 +242,7 @@ namespace Blockcore.Features.NodeHost
                 if (hostSettings.EnableWS)
                 {
                     IHubContext<EventsHub> hubContext = app.ApplicationServices.GetService<IHubContext<EventsHub>>();
-                    IEventsSubscriptionService eventsSubscriptionService = fullNode.Services.ServiceProvider.GetService<IEventsSubscriptionService>();
+                    IEventsSubscriptionService eventsSubscriptionService = this.fullNode.Services.ServiceProvider.GetService<IEventsSubscriptionService>();
                     eventsSubscriptionService.SetHub(hubContext);
 
                     endpoints.MapHub<EventsHub>("/ws-events");

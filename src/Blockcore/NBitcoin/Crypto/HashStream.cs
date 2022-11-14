@@ -78,7 +78,7 @@ namespace NBitcoin.Crypto
         {
             int copied = 0;
             int toCopy = 0;
-            while(copied != count)
+            while (copied != count)
             {
                 toCopy = Math.Min(this._Buffer.Length - this._Pos, count - copied);
                 Buffer.BlockCopy(buffer, offset + copied, this._Buffer, this._Pos, toCopy);
@@ -99,7 +99,7 @@ namespace NBitcoin.Crypto
 
         private void ProcessBlockIfNeeded()
         {
-            if(this._Pos == this._Buffer.Length)
+            if (this._Pos == this._Buffer.Length)
                 ProcessBlock();
         }
 

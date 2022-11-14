@@ -96,7 +96,7 @@ namespace Blockcore.Networks.X1
                 bip34Hash: this.Genesis.GetHash(),
                 minerConfirmationWindow: 2016,
                 maxReorgLength: 125,
-                defaultAssumeValid: null, 
+                defaultAssumeValid: null,
                 maxMoney: long.MaxValue,
                 coinbaseMaturity: 50,
                 premineHeight: 1,
@@ -137,7 +137,7 @@ namespace Blockcore.Networks.X1
             this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 
             this.Checkpoints = new Dictionary<int, CheckpointInfo>();
-            
+
             this.DNSSeeds = new List<DNSSeedData>();
             this.SeedNodes = new List<NetworkAddress>
             {

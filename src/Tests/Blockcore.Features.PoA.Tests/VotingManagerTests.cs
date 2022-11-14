@@ -58,7 +58,7 @@ namespace Blockcore.Features.PoA.Tests
 
             for (int i = 0; i < votesRequired; i++)
             {
-                this.TriggerOnBlockConnected(this.CreateBlockWithVotingData(new List<VotingData>() { votingData }, i + 1));
+                TriggerOnBlockConnected(CreateBlockWithVotingData(new List<VotingData>() { votingData }, i + 1));
             }
 
             Assert.Single(this.votingManager.GetFinishedPolls());
@@ -79,22 +79,22 @@ namespace Blockcore.Features.PoA.Tests
 
             for (int i = 0; i < votesRequired; i++)
             {
-                this.TriggerOnBlockConnected(this.CreateBlockWithVotingData(new List<VotingData>() { votingData }, i + 1));
+                TriggerOnBlockConnected(CreateBlockWithVotingData(new List<VotingData>() { votingData }, i + 1));
             }
 
             Assert.Single(this.votingManager.GetFinishedPolls());
             Assert.Empty(this.votingManager.GetPendingPolls());
 
             // Now that poll is complete, add another vote for it.
-            ChainedHeaderBlock blockToDisconnect = this.CreateBlockWithVotingData(new List<VotingData>() { votingData }, votesRequired + 1);
-            this.TriggerOnBlockConnected(blockToDisconnect);
+            ChainedHeaderBlock blockToDisconnect = CreateBlockWithVotingData(new List<VotingData>() { votingData }, votesRequired + 1);
+            TriggerOnBlockConnected(blockToDisconnect);
 
             // Now we have 1 finished and 1 pending for the same data.
             Assert.Single(this.votingManager.GetFinishedPolls());
             Assert.Single(this.votingManager.GetPendingPolls());
 
             // This previously caused an error because of Single() being used.
-            this.TriggerOnBlockDisconnected(blockToDisconnect);
+            TriggerOnBlockDisconnected(blockToDisconnect);
 
             // VotingManager cleverly removed the pending poll but kept the finished poll.
             Assert.Single(this.votingManager.GetFinishedPolls());

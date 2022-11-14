@@ -11,7 +11,7 @@ namespace NBitcoin
             var builder = new StringBuilder(str.Length);
             foreach(char c in str)
             {
-                if(!Supported(c))
+                if (!Supported(c))
                 {
                     throw new PlatformNotSupportedException("the input string can't be normalized on this plateform");
                 }
@@ -22,17 +22,17 @@ namespace NBitcoin
 
         private static void Substitute(char c, StringBuilder builder)
         {
-            for(int i = 0 ; i < _SubstitutionTable.Length ; i++)
+            for (int i = 0; i < _SubstitutionTable.Length; i++)
             {
                 char substituedChar = _SubstitutionTable[i];
-                if(substituedChar == c)
+                if (substituedChar == c)
                 {
                     Substitute(i, builder);
                     return;
                 }
-                if(substituedChar > c)
+                if (substituedChar > c)
                     break;
-                while(_SubstitutionTable[i] != '\n')
+                while (_SubstitutionTable[i] != '\n')
                     i++;
             }
             builder.Append(c);
@@ -40,9 +40,9 @@ namespace NBitcoin
 
         private static void Substitute(int pos, StringBuilder builder)
         {
-            for(int i = pos + 1 ; i < _SubstitutionTable.Length ; i++)
+            for (int i = pos + 1; i < _SubstitutionTable.Length; i++)
             {
-                if(_SubstitutionTable[i] == '\n')
+                if (_SubstitutionTable[i] == '\n')
                     break;
                 builder.Append(_SubstitutionTable[i]);
             }

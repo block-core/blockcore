@@ -146,8 +146,8 @@ namespace Blockcore.Networks.Stratis
             Assert(this.DefaultBanTimeSeconds <= this.Consensus.MaxReorgLength * 64 / 2);
             Assert(this.Consensus.HashGenesisBlock == uint256.Parse("0x93925104d664314f581bc7ecb7b4bad07bcfabd1cfce4256dbd2faddcf53bd1f"));
 
-            this.RegisterRules(this.Consensus);
-            this.RegisterMempoolRules(this.Consensus);
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
         }
     }
 }

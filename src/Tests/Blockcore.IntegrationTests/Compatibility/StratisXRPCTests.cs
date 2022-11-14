@@ -40,9 +40,10 @@ namespace Blockcore.IntegrationTests.Compatibility
             // TODO: Disable staking
         }
 
-        public override void Dispose()
+        public new void Dispose()
         {
             this.Builder.Dispose();
+            Dispose(true);
         }
     }
 

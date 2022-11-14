@@ -84,13 +84,13 @@ namespace Blockcore.Tests.Utilities
             for (int i = 0; i < taskCount; i += 2)
             {
                 // Start one task that will use the lock in async environment.
-                tasks[i] = Task.Run(async () => { await this.LockAndLockAsync_PreventConcurrentExecution_TaskProcAsync(context); });
+                tasks[i] = Task.Run(async () => { await LockAndLockAsync_PreventConcurrentExecution_TaskProcAsync(context); });
 
                 int delay = context.Rng.Next(500);
                 Thread.Sleep(delay);
 
                 // Start one task that will use the lock in non-async environment.
-                tasks[i + 1] = Task.Run(() => this.LockAndLockAsync_PreventConcurrentExecution_TaskProc(context));
+                tasks[i + 1] = Task.Run(() => LockAndLockAsync_PreventConcurrentExecution_TaskProc(context));
 
                 delay = context.Rng.Next(200);
                 Thread.Sleep(delay);
@@ -109,7 +109,7 @@ namespace Blockcore.Tests.Utilities
         {
             using (await workerContext.Lock.LockAsync())
             {
-                await this.CriticalSectionLockedAsync(workerContext);
+                await CriticalSectionLockedAsync(workerContext);
             }
         }
 
@@ -126,7 +126,7 @@ namespace Blockcore.Tests.Utilities
         {
             using (workerContext.Lock.Lock())
             {
-                this.CriticalSectionLocked(workerContext);
+                CriticalSectionLocked(workerContext);
             }
         }
 
@@ -144,13 +144,13 @@ namespace Blockcore.Tests.Utilities
             for (int i = 0; i < taskCount; i += 2)
             {
                 // Start one task that will use the lock in async environment.
-                tasks[i] = Task.Run(async () => { await this.LockAndLockAsync_WithCancellationToken_PreventConcurrentExecution_TaskProcAsync(context); });
+                tasks[i] = Task.Run(async () => { await LockAndLockAsync_WithCancellationToken_PreventConcurrentExecution_TaskProcAsync(context); });
 
                 int delay = context.Rng.Next(500);
                 Thread.Sleep(delay);
 
                 // Start one task that will use the lock in non-async environment.
-                tasks[i + 1] = Task.Run(() => this.LockAndLockAsync_WithCancellationToken_PreventConcurrentExecution_TaskProc(context));
+                tasks[i + 1] = Task.Run(() => LockAndLockAsync_WithCancellationToken_PreventConcurrentExecution_TaskProc(context));
 
                 delay = context.Rng.Next(200);
                 Thread.Sleep(delay);
@@ -171,7 +171,7 @@ namespace Blockcore.Tests.Utilities
             {
                 using (await workerContext.Lock.LockAsync(workerContext.Cancellation.Token))
                 {
-                    await this.CriticalSectionLockedAsync(workerContext);
+                    await CriticalSectionLockedAsync(workerContext);
                 }
             }
             catch (OperationCanceledException)
@@ -194,7 +194,7 @@ namespace Blockcore.Tests.Utilities
             {
                 using (workerContext.Lock.Lock(workerContext.Cancellation.Token))
                 {
-                    this.CriticalSectionLocked(workerContext);
+                    CriticalSectionLocked(workerContext);
                 }
             }
             catch (OperationCanceledException)

@@ -100,7 +100,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             Guard.NotNull(provenBlockHeaderRepository, nameof(provenBlockHeaderRepository));
             Guard.NotNull(nodeStats, nameof(nodeStats));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.provenBlockHeaderRepository = provenBlockHeaderRepository;
             this.initialBlockDownloadState = initialBlockDownloadState;
 
@@ -109,8 +109,8 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
             this.Cache = new MemorySizeCache<int, ProvenBlockHeader>(this.MemoryCacheSizeLimitInBytes);
 
             this.performanceCounter = new BackendPerformanceCounter(dateTimeProvider);
-            nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name);
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
+            nodeStats.RegisterStats(AddBenchStats, StatsType.Benchmark, GetType().Name);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
         }
 
         /// <inheritdoc />
@@ -272,7 +272,7 @@ namespace Blockcore.Features.Consensus.ProvenBlockHeaders
                     return;
                 }
 
-                this.CheckItemsAreInConsecutiveSequence(pendingBatchInsert.Keys.ToList());
+                CheckItemsAreInConsecutiveSequence(pendingBatchInsert.Keys.ToList());
 
                 // Save the items to disk.
                 using (new StopwatchDisposable(o => this.performanceCounter.AddInsertTime(o)))

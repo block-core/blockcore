@@ -43,7 +43,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <summary>Compute and store the stake proofs.</summary>
         public override async Task RunAsync(RuleContext context)
         {
-            this.CheckAndComputeStake(context);
+            CheckAndComputeStake(context);
 
             await base.RunAsync(context).ConfigureAwait(false);
             var posRuleContext = context as PosRuleContext;
@@ -57,7 +57,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
             {
                 var posRuleContext = context as PosRuleContext;
                 Money stakeReward = block.Transactions[1].TotalOut - posRuleContext.TotalCoinStakeValueIn;
-                Money calcStakeReward = fees + this.GetProofOfStakeReward(height);
+                Money calcStakeReward = fees + GetProofOfStakeReward(height);
 
                 this.Logger.LogDebug("Block stake reward is {0}, calculated reward is {1}.", stakeReward, calcStakeReward);
                 if (stakeReward > calcStakeReward)
@@ -68,7 +68,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
             }
             else
             {
-                Money blockReward = fees + this.GetProofOfWorkReward(height);
+                Money blockReward = fees + GetProofOfWorkReward(height);
                 this.Logger.LogDebug("Block reward is {0}, calculated reward is {1}.", block.Transactions[0].TotalOut, blockReward);
                 if (block.Transactions[0].TotalOut > blockReward)
                 {
@@ -196,7 +196,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <inheritdoc />
         public override Money GetProofOfWorkReward(int height)
         {
-            if (this.IsPremine(height))
+            if (IsPremine(height))
                 return this.consensus.PremineReward;
 
             return this.consensus.ProofOfWorkReward;
@@ -209,7 +209,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <returns>Miner's coin stake reward.</returns>
         public virtual Money GetProofOfStakeReward(int height)
         {
-            if (this.IsPremine(height))
+            if (IsPremine(height))
                 return this.consensus.PremineReward;
 
             return this.consensus.ProofOfStakeReward;

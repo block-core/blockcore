@@ -14,7 +14,7 @@ namespace Blockcore.Features.PoA.Tests
 
         public PoAHeaderSignatureTests()
         {
-            string testRootPath = Path.Combine(Path.GetTempPath(), this.GetType().Name);
+            string testRootPath = Path.Combine(Path.GetTempPath(), GetType().Name);
             var dataFolder = new DataFolder(testRootPath);
             this.tool = new KeyTool(dataFolder);
 
@@ -25,7 +25,7 @@ namespace Blockcore.Features.PoA.Tests
         public void VerifyHeaderSignature_SignatureIsValid()
         {
             Key key = this.tool.GeneratePrivateKey();
-            PoABlockHeader header = this.CreateHeader();
+            PoABlockHeader header = CreateHeader();
 
             this.validator.Sign(key, header);
 
@@ -37,7 +37,7 @@ namespace Blockcore.Features.PoA.Tests
         [Fact]
         public void VerifyHeaderSignature_SignatureIsInvalid()
         {
-            PoABlockHeader header = this.CreateHeader();
+            PoABlockHeader header = CreateHeader();
             this.validator.Sign(this.tool.GeneratePrivateKey(), header);
 
             bool validSig = this.validator.VerifySignature(this.tool.GeneratePrivateKey().PubKey, header);
@@ -57,7 +57,7 @@ namespace Blockcore.Features.PoA.Tests
         public void SignatureDoesntAffectHeaderHash()
         {
             Key key = this.tool.GeneratePrivateKey();
-            PoABlockHeader header = this.CreateHeader();
+            PoABlockHeader header = CreateHeader();
 
             uint256 hashBefore = header.GetHash();
 

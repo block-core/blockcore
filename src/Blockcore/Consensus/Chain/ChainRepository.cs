@@ -24,11 +24,9 @@ namespace Blockcore.Consensus.Chain
         private readonly IChainStore chainStore;
 
         /// <summary>Instance logger.</summary>
-        private readonly ILogger logger;
-
         private BlockLocator locator;
 
-        private object lockObj;
+        private readonly object lockObj;
 
         public Network Network { get; }
 
@@ -39,8 +37,6 @@ namespace Blockcore.Consensus.Chain
             this.chainStore = chainStore;
             this.Network = network;
             this.lockObj = new object();
-
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />

@@ -36,7 +36,7 @@ namespace NBitcoin
 
         public static Transaction Get(this ITransactionRepository repo, uint256 txId)
         {
-        return repo.GetAsync(txId).GetAwaiter().GetResult();
+            return repo.GetAsync(txId).GetAwaiter().GetResult();
         }
 
         public static void Put(this ITransactionRepository repo, uint256 txId, Transaction tx)

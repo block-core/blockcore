@@ -9,7 +9,7 @@ namespace Blockcore.UI.BlazorModal
 
         public event Action OnClose;
 
-        public  object Parameter { get; set; }
+        public object Parameter { get; set; }
 
         public void Show(string title, Type contentType)
         {
@@ -20,20 +20,20 @@ namespace Blockcore.UI.BlazorModal
 
             var content = new RenderFragment(x => { x.OpenComponent(1, contentType); x.CloseComponent(); });
 
-            this.OnShow?.Invoke(title, content);
+            OnShow?.Invoke(title, content);
         }
 
         public void Show(string title, Type contentType, object _parameter)
         {
-            this.Parameter =_parameter;
-            this.Show(title, contentType);
+            this.Parameter = _parameter;
+            Show(title, contentType);
 
         }
 
 
         public void Close()
         {
-            this.OnClose?.Invoke();
+            OnClose?.Invoke();
         }
     }
 }

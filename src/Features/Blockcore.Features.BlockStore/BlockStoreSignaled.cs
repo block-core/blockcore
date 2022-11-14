@@ -13,7 +13,6 @@ using Blockcore.P2P.Peer;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore
 {
@@ -64,21 +63,21 @@ namespace Blockcore.Features.BlockStore
             this.chainState = chainState;
             this.connection = connection;
             this.nodeLifetime = nodeLifetime;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.storeSettings = storeSettings;
             this.initialBlockDownloadState = initialBlockDownloadState;
             this.signals = signals;
             this.asyncProvider = asyncProvider;
 
             this.blocksToAnnounce = asyncProvider.CreateAsyncQueue<ChainedHeader>();
-            this.dequeueLoopTask = this.DequeueContinuouslyAsync();
+            this.dequeueLoopTask = DequeueContinuouslyAsync();
 
             this.asyncProvider.RegisterTask($"{nameof(BlockStoreSignaled)}.{nameof(this.dequeueLoopTask)}", this.dequeueLoopTask);
         }
 
         public void Initialize()
         {
-            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(this.OnBlockConnected);
+            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(OnBlockConnected);
         }
 
         private void OnBlockConnected(BlockConnected blockConnected)
@@ -97,7 +96,7 @@ namespace Blockcore.Features.BlockStore
             bool isIBD = this.initialBlockDownloadState.IsInitialBlockDownload();
 
             // Ensure the block is written to disk before relaying.
-            this.AddBlockToQueue(blockPair, isIBD);
+            AddBlockToQueue(blockPair, isIBD);
 
             if (isIBD)
             {
@@ -166,7 +165,7 @@ namespace Blockcore.Features.BlockStore
                     {
                         this.nodeLifetime.ApplicationStopping.ThrowIfCancellationRequested();
 
-                        await this.SendBatchAsync(batch).ConfigureAwait(false);
+                        await SendBatchAsync(batch).ConfigureAwait(false);
                         batch.Clear();
 
                         timerTask = null;

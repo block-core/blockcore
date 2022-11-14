@@ -28,7 +28,7 @@ namespace Blockcore.Features.Dns.Tests
     {
         private readonly IPeerBanning peerBanning;
 
-        private Network Network;
+        private readonly Network Network;
 
         public GivenAWhitelistManager()
         {
@@ -179,7 +179,7 @@ namespace Blockcore.Features.Dns.Tests
             };
 
             // PeerAddressManager does not support IPv4 addresses that are not represented as embedded IPv4 addresses in an IPv6 address.
-            IPeerAddressManager peerAddressManager = this.CreateTestPeerAddressManager(testDataSet);
+            IPeerAddressManager peerAddressManager = CreateTestPeerAddressManager(testDataSet);
 
             IMasterFile spiedMasterFile = null;
             var mockDnsServer = new Mock<IDnsServer>();
@@ -274,7 +274,7 @@ namespace Blockcore.Features.Dns.Tests
                 new Tuple<IPEndPoint, DateTimeOffset> (externalEndpoint,  dateTimeProvider.GetTimeOffset().AddSeconds(-inactiveTimePeriod).AddSeconds(40)),
             };
 
-            IPeerAddressManager peerAddressManager = this.CreateTestPeerAddressManager(activeTestDataSet.Union(externalIPTestDataSet).ToList());
+            IPeerAddressManager peerAddressManager = CreateTestPeerAddressManager(activeTestDataSet.Union(externalIPTestDataSet).ToList());
 
             var args = new string[] {
                 $"-dnspeeractivethreshold={inactiveTimePeriod.ToString()}",
@@ -360,7 +360,7 @@ namespace Blockcore.Features.Dns.Tests
                 new Tuple<IPEndPoint, DateTimeOffset> (externalEndpoint,  dateTimeProvider.GetTimeOffset().AddSeconds(-inactiveTimePeriod).AddSeconds(40))
             };
 
-            IPeerAddressManager peerAddressManager = this.CreateTestPeerAddressManager(activeTestDataSet);
+            IPeerAddressManager peerAddressManager = CreateTestPeerAddressManager(activeTestDataSet);
 
             var args = new string[] {
                 $"-dnspeeractivethreshold={inactiveTimePeriod.ToString()}",
@@ -458,7 +458,7 @@ namespace Blockcore.Features.Dns.Tests
                 new Tuple<IPEndPoint, DateTimeOffset>(inactiveEndpointThree, dateTimeProvider.GetTimeOffset().AddSeconds(-inactiveTimePeriod).AddSeconds(-30))
             };
 
-            IPeerAddressManager peerAddressManager = this.CreateTestPeerAddressManager(activeTestDataSet.Concat(inactiveTestDataSet).ToList());
+            IPeerAddressManager peerAddressManager = CreateTestPeerAddressManager(activeTestDataSet.Concat(inactiveTestDataSet).ToList());
 
             IMasterFile spiedMasterFile = null;
             var mockDnsServer = new Mock<IDnsServer>();
@@ -518,7 +518,7 @@ namespace Blockcore.Features.Dns.Tests
             var notBannedEndpoint = new IPEndPoint(IPAddress.Parse(nonBannedIp), 80);
 
             IPeerAddressManager peerAddressManager =
-                this.CreateTestPeerAddressManager(new[] { bannedEndpoint, notBannedEndpoint });
+                CreateTestPeerAddressManager(new[] { bannedEndpoint, notBannedEndpoint });
 
             var dnsServer = Substitute.For<IDnsServer>();
             IMasterFile masterFile = null;

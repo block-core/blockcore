@@ -9,7 +9,6 @@ using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Connection.Broadcasting
 {
@@ -59,16 +58,16 @@ namespace Blockcore.Connection.Broadcasting
             {
                 await this.ProcessMessageAsync(peer, message).ConfigureAwait(false);
             }
-            catch (OperationCanceledException)
-            {
-            }
             catch (Exception ex)
             {
-                this.logger.LogError(ex.ToString());
+                if (ex is not OperationCanceledException)
+                {
+                    this.logger.LogError(ex.ToString());
 
-                // while in dev catch any unhandled exceptions
-                Debugger.Break();
-                throw;
+                    // while in dev catch any unhandled exceptions
+                    Debugger.Break();
+                    throw;
+                }
             }
         }
 

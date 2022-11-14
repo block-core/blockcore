@@ -270,3 +270,5 @@ src/.idea/.idea.Stratis.Bitcoin.FullNode/.idea/
 .vscode/tasks.json
 .gitignore
 src.backup
+src/Libs/Bitcoin Core/0.13.1/OSX/
+src/Libs/Bitcoin Core/0.13.1/Windows/

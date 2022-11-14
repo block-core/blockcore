@@ -8,7 +8,6 @@ using Blockcore.Builder.Feature;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Connection;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.MemoryPool;
@@ -23,7 +22,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.ColdStaking
 {
@@ -102,7 +100,7 @@ namespace Blockcore.Features.ColdStaking
             this.coldStakingManager = walletManager as ColdStakingManager;
             Guard.NotNull(this.coldStakingManager, nameof(this.coldStakingManager));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.loggerFactory = loggerFactory;
 
             this.walletSyncManager = walletSyncManager;
@@ -114,8 +112,8 @@ namespace Blockcore.Features.ColdStaking
             nodeStats.RemoveStats(StatsType.Component, typeof(WalletFeature).Name);
             nodeStats.RemoveStats(StatsType.Inline, typeof(WalletFeature).Name);
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
-            nodeStats.RegisterStats(this.AddInlineStats, StatsType.Inline, this.GetType().Name, 800);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
+            nodeStats.RegisterStats(AddInlineStats, StatsType.Inline, GetType().Name, 800);
         }
 
         /// <summary>
@@ -202,6 +200,7 @@ namespace Blockcore.Features.ColdStaking
         /// <inheritdoc />
         public override void Dispose()
         {
+            // Ova metoda je virtuelna,zato mora ostati prazna
         }
     }
 

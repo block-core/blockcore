@@ -5,6 +5,7 @@ namespace Blockcore.Builder.Feature
     /// <summary>
     /// Exception thrown when a required service has not been registered into <see cref="IFullNodeServiceProvider"/>.
     /// </summary>
+    [Serializable]
     public class MissingServiceException : Exception
     {
         /// <summary>
@@ -44,5 +45,9 @@ namespace Blockcore.Builder.Feature
         {
             this.MissingServiceType = missingServiceType;
         }
+
+        protected MissingServiceException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        : base(serializationInfo, streamingContext)
+        { }
     }
 }

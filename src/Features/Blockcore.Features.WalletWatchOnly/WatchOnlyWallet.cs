@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
+using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
 using Newtonsoft.Json;
-using Blockcore.Utilities.JsonConverters;
 
 namespace Blockcore.Features.WalletWatchOnly
 {

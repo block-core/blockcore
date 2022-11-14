@@ -1,7 +1,6 @@
 using System;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities.JsonConverters;
 using LiteDB;
 using NBitcoin;
@@ -160,7 +159,7 @@ namespace Blockcore.Features.Wallet.Database
         public Money GetUnspentAmount(bool confirmedOnly)
         {
             // The spendable balance is 0 if the output is spent or it needs to be confirmed to be considered.
-            if (this.IsSpent() || (confirmedOnly && !this.IsConfirmed()))
+            if (IsSpent() || (confirmedOnly && !IsConfirmed()))
             {
                 return Money.Zero;
             }

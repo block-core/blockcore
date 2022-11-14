@@ -64,7 +64,7 @@ namespace Blockcore.Networks.XRC
                 MaxStandardVersion = 2,
                 MaxStandardTxWeight = (4 * 1000 * 1000) / 10,
                 MaxBlockSigopsCost = 160000,
-                MaxStandardTxSigopsCost = 160000 / 5, 
+                MaxStandardTxSigopsCost = 160000 / 5,
                 WitnessScaleFactor = 1,
             };
 
@@ -91,23 +91,23 @@ namespace Blockcore.Networks.XRC
             this.Consensus = new XRCConsensus(
                 consensusFactory: consensusFactory,
                 consensusOptions: consensusOptions,
-                coinType: (int)XRCCoinType.CoinTypes.XRCMain, 
-                hashGenesisBlock: genesisBlock.GetHash(), 
-                subsidyHalvingInterval: 210000, 
-                majorityEnforceBlockUpgrade: 750, 
-                majorityRejectBlockOutdated: 950, 
-                majorityWindow: 1000, 
+                coinType: (int)XRCCoinType.CoinTypes.XRCMain,
+                hashGenesisBlock: genesisBlock.GetHash(),
+                subsidyHalvingInterval: 210000,
+                majorityEnforceBlockUpgrade: 750,
+                majorityRejectBlockOutdated: 950,
+                majorityWindow: 1000,
                 buriedDeployments: buriedDeployments,
                 bip9Deployments: new XRCBIP9Deployments(),
-                bip34Hash: new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"),  
-                minerConfirmationWindow: 2016,  
-                maxReorgLength: 0, 
+                bip34Hash: new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"),
+                minerConfirmationWindow: 2016,
+                maxReorgLength: 0,
                 defaultAssumeValid: null,
-                maxMoney: 2100000 * Money.COIN, 
-                coinbaseMaturity: 10, 
-                premineHeight: 1, 
-                premineReward: new Money(1050000 * Money.COIN), 
-                proofOfWorkReward: Money.Coins((decimal)2.5), 
+                maxMoney: 2100000 * Money.COIN,
+                coinbaseMaturity: 10,
+                premineHeight: 1,
+                premineReward: new Money(1050000 * Money.COIN),
+                proofOfWorkReward: Money.Coins((decimal)2.5),
                 targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
                 targetSpacing: TimeSpan.FromSeconds(10 * 60),
                 powAllowMinDifficultyBlocks: false,
@@ -177,11 +177,11 @@ namespace Blockcore.Networks.XRC
                 new DNSSeedData("dns2.btrmine.com", "dns2.btrmine.com"),
             };
 
-            this.SeedNodes = new List<NetworkAddress>(); 
+            this.SeedNodes = new List<NetworkAddress>();
             this.StandardScriptsRegistry = new XRCStandardScriptsRegistry();
 
-            this.RegisterRules(this.Consensus);
-            this.RegisterMempoolRules(this.Consensus);
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
         }
     }
 }

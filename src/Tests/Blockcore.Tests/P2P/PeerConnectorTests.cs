@@ -17,7 +17,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Tests.P2P
@@ -487,7 +486,7 @@ namespace Blockcore.Tests.P2P
             var networkPeerFactory = new Mock<INetworkPeerFactory>();
             var peerConnector = new Mock<IPeerConnector>();
             var selfEndpointTracker = new Mock<ISelfEndpointTracker>();
-            IConnectionManager connectionManager = this.CreateConnectionManager(nodeSettings, connectionManagerSettings, peerAddressManager, peerConnector.Object, selfEndpointTracker.Object);
+            IConnectionManager connectionManager = CreateConnectionManager(nodeSettings, connectionManagerSettings, peerAddressManager, peerConnector.Object, selfEndpointTracker.Object);
 
             connectionManager.Initialize(new Mock<IConsensusManager>().Object);
 

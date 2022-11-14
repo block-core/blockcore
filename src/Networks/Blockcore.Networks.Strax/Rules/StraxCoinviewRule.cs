@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Base.Deployments;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
@@ -10,6 +8,8 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
 
 namespace Blockcore.Networks.Strax.Rules
 {
@@ -31,7 +31,7 @@ namespace Blockcore.Networks.Strax.Rules
                 var posRuleContext = context as PosRuleContext;
                 Transaction coinstake = block.Transactions[1];
                 Money stakeReward = coinstake.TotalOut - posRuleContext.TotalCoinStakeValueIn;
-                Money calcStakeReward = fees + this.GetProofOfStakeReward(height);
+                Money calcStakeReward = fees + GetProofOfStakeReward(height);
 
                 this.Logger.LogDebug("Block stake reward is {0}, calculated reward is {1}.", stakeReward, calcStakeReward);
                 if (stakeReward > calcStakeReward)
@@ -62,7 +62,7 @@ namespace Blockcore.Networks.Strax.Rules
             }
             else
             {
-                Money blockReward = fees + this.GetProofOfWorkReward(height);
+                Money blockReward = fees + GetProofOfWorkReward(height);
                 this.Logger.LogDebug("Block reward is {0}, calculated reward is {1}.", block.Transactions[0].TotalOut, blockReward);
                 if (block.Transactions[0].TotalOut > blockReward)
                 {
@@ -100,7 +100,7 @@ namespace Blockcore.Networks.Strax.Rules
                 }
             }
 
-            this.AllowSpend(txout, tx);
+            AllowSpend(txout, tx);
 
             return base.CheckInput(tx, inputIndexCopy, txout, txData, input, flags);
         }
@@ -150,7 +150,7 @@ namespace Blockcore.Networks.Strax.Rules
             {
                 TxOut prevout = inputs.GetOutputFor(transaction.Inputs[i]);
                 if (prevout.ScriptPubKey.IsScriptType(ScriptType.P2SH))
-                    sigOps += this.GetSigOpCount(prevout.ScriptPubKey, this.Parent.Network, transaction.Inputs[i].ScriptSig);
+                    sigOps += GetSigOpCount(prevout.ScriptPubKey, this.Parent.Network, transaction.Inputs[i].ScriptSig);
             }
 
             return sigOps;
@@ -164,7 +164,7 @@ namespace Blockcore.Networks.Strax.Rules
             // get the last item that the scriptSig
             // pushes onto the stack:
             bool validSig = new PayToScriptHashTemplate().CheckScriptSig(network, scriptSig, script);
-            return !validSig ? 0 : this.GetSigOpCount(new Script(scriptSig.ToOps().Last().PushData), true, network);
+            return !validSig ? 0 : GetSigOpCount(new Script(scriptSig.ToOps().Last().PushData), true, network);
             // ... and return its opcount:
         }
 

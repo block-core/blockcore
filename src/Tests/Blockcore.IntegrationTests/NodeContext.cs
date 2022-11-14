@@ -7,7 +7,6 @@ using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.IntegrationTests
 {
@@ -49,15 +48,26 @@ namespace Blockcore.IntegrationTests
 
         public string FolderName { get; }
 
-        public static NodeContext Create(object caller, [CallerMemberName]string name = null, Network network = null, bool clean = true)
+        public static NodeContext Create(object caller, [CallerMemberName] string name = null, Network network = null, bool clean = true)
         {
             return new NodeContext(caller, name, network, clean);
         }
 
         public void Dispose()
         {
-            foreach (IDisposable item in this.cleanList)
-                item.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (IDisposable item in this.cleanList)
+                    item.Dispose();
+                this.loggerFactory.Dispose();
+            }
         }
 
         public void ReloadPersistentCoinView()

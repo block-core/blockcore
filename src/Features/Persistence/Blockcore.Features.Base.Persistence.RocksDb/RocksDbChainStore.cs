@@ -36,7 +36,7 @@ namespace Blockcore.Features.Base.Persistence.RocksDb
 
         private readonly DB rocksdb;
 
-        private object locker;
+        private readonly object locker;
 
         public RocksDbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
         {

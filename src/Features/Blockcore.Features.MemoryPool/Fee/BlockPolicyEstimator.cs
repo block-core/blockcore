@@ -135,7 +135,7 @@ namespace Blockcore.Features.MemoryPool.Fee
             this.nBestSeenHeight = 0;
             this.trackedTxs = 0;
             this.untrackedTxs = 0;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.minTrackedFee = nodeSettings.MinRelayTxFeeRate < new FeeRate(new Money(MinFeeRate))
                 ? new FeeRate(new Money(MinFeeRate))
@@ -172,7 +172,7 @@ namespace Blockcore.Features.MemoryPool.Fee
             // Repopulate the current block states
             for (int i = 0; i < entries.Count; i++)
             {
-                if (this.ProcessBlockTx(nBlockHeight, entries[i]))
+                if (ProcessBlockTx(nBlockHeight, entries[i]))
                     countedTxs++;
             }
 
@@ -195,7 +195,7 @@ namespace Blockcore.Features.MemoryPool.Fee
         /// <returns>Whether it was able to successfully process the transaction.</returns>
         private bool ProcessBlockTx(int nBlockHeight, TxMempoolEntry entry)
         {
-            if (!this.RemoveTx(entry.TransactionHash))
+            if (!RemoveTx(entry.TransactionHash))
                 return false;
 
             // How many blocks did it take for miners to include this transaction?

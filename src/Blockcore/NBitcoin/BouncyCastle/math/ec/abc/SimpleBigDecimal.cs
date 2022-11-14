@@ -46,7 +46,7 @@ namespace NBitcoin.BouncyCastle.Math.EC.Abc
         */
         public SimpleBigDecimal(BigInteger bigInt, int scale)
         {
-            if(scale < 0)
+            if (scale < 0)
                 throw new ArgumentException("scale may not be negative");
 
             this.bigInt = bigInt;
@@ -61,16 +61,16 @@ namespace NBitcoin.BouncyCastle.Math.EC.Abc
 
         private void CheckScale(SimpleBigDecimal b)
         {
-            if(this.scale != b.scale)
+            if (this.scale != b.scale)
                 throw new ArgumentException("Only SimpleBigDecimal of same scale allowed in arithmetic operations");
         }
 
         public SimpleBigDecimal AdjustScale(int newScale)
         {
-            if(newScale < 0)
+            if (newScale < 0)
                 throw new ArgumentException("scale may not be negative");
 
-            if(newScale == this.scale)
+            if (newScale == this.scale)
                 return this;
 
             return new SimpleBigDecimal(this.bigInt.ShiftLeft(newScale - this.scale), newScale);
@@ -188,18 +188,18 @@ namespace NBitcoin.BouncyCastle.Math.EC.Abc
 
         public override string ToString()
         {
-            if(this.scale == 0)
+            if (this.scale == 0)
                 return this.bigInt.ToString();
 
             BigInteger floorBigInt = Floor();
 
             BigInteger fract = this.bigInt.Subtract(floorBigInt.ShiftLeft(this.scale));
-            if(this.bigInt.SignValue < 0)
+            if (this.bigInt.SignValue < 0)
             {
                 fract = BigInteger.One.ShiftLeft(this.scale).Subtract(fract);
             }
 
-            if((floorBigInt.SignValue == -1) && (!(fract.Equals(BigInteger.Zero))))
+            if ((floorBigInt.SignValue == -1) && (!(fract.Equals(BigInteger.Zero))))
             {
                 floorBigInt = floorBigInt.Add(BigInteger.One);
             }
@@ -209,11 +209,11 @@ namespace NBitcoin.BouncyCastle.Math.EC.Abc
             string fractStr = fract.ToString(2);
             int fractLen = fractStr.Length;
             int zeroes = this.scale - fractLen;
-            for(int i = 0; i < zeroes; i++)
+            for (int i = 0; i < zeroes; i++)
             {
                 fractCharArr[i] = '0';
             }
-            for(int j = 0; j < fractLen; j++)
+            for (int j = 0; j < fractLen; j++)
             {
                 fractCharArr[zeroes + j] = fractStr[j];
             }
@@ -229,12 +229,12 @@ namespace NBitcoin.BouncyCastle.Math.EC.Abc
         public override bool Equals(
             object obj)
         {
-            if(this == obj)
+            if (this == obj)
                 return true;
 
             var other = obj as SimpleBigDecimal;
 
-            if(other == null)
+            if (other == null)
                 return false;
 
             return this.bigInt.Equals(other.bigInt)

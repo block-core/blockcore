@@ -117,7 +117,7 @@ namespace Blockcore.Tests.Common
         /// <param name="value">Value to set.</param>
         public static void SetPrivateVariableValue<T>(this object obj, string variableName, T value)
         {
-            FieldInfo variable = obj.GetType().GetField(variableName, BindingFlags.NonPublic| BindingFlags.Instance);
+            FieldInfo variable = obj.GetType().GetField(variableName, BindingFlags.NonPublic | BindingFlags.Instance);
             variable.SetValue(obj, value);
         }
 

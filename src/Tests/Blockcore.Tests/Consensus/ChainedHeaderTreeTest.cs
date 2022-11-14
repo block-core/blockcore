@@ -1862,7 +1862,7 @@ namespace Blockcore.Tests.Consensus
             // Checking that 8a, 9a are not presented in chained tree anymore.
             chainedHeadersAfterPeerAChanged.Should().NotContainValues(last2HeadersPeerA);
 
-            this.CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 0, 1, 2, 3 });
+            CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 0, 1, 2, 3 });
         }
 
         /// <summary>
@@ -1894,7 +1894,7 @@ namespace Blockcore.Tests.Consensus
 
             chainedHeadersWithoutPeerK.Should().BeEquivalentTo(chainedHeadersWithPeerK);
 
-            this.CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 0, 1, 2, 3 });
+            CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 0, 1, 2, 3 });
         }
 
         /// <summary>
@@ -1932,7 +1932,7 @@ namespace Blockcore.Tests.Consensus
 
             chainedHeadersBeforePeerKConnected.Should().BeEquivalentTo(chainedHeadersAfterPeerKDisconnected);
 
-            this.CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 0, 1, 2, 3 });
+            CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 0, 1, 2, 3 });
         }
 
         /// <summary>
@@ -2097,7 +2097,7 @@ namespace Blockcore.Tests.Consensus
 
             peerIdsByHashAfterFail.Should().NotContain(dictionaryAffectedPeers.Select(x => x.Value).ToList()); // Check that Peers A, D, E, F have been disconected.
 
-            this.CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 1, 2 });
+            CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 1, 2 });
         }
 
         /// <summary>
@@ -2926,7 +2926,7 @@ namespace Blockcore.Tests.Consensus
 
             Assert.Equal(cht.GetPeerTipChainedHeaderByPeerId(1).HashBlock, result.Consumed.HashBlock);
 
-            this.CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 1 });
+            CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { 1 });
         }
 
         [Fact]
@@ -2945,7 +2945,7 @@ namespace Blockcore.Tests.Consensus
             cht.ConnectNewHeaders(1, peerHeaders);
             cht.PeerDisconnected(1);
 
-            this.CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { });
+            CheckChainedHeaderTreeConsistency(cht, ctx, consensusTip, new HashSet<int>() { });
         }
     }
 }

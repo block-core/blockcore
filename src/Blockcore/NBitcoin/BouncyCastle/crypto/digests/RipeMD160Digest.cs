@@ -68,7 +68,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             this.X[this.xOff++] = (input[inOff] & 0xff) | ((input[inOff + 1] & 0xff) << 8)
                 | ((input[inOff + 2] & 0xff) << 16) | ((input[inOff + 3] & 0xff) << 24);
 
-            if(this.xOff == 16)
+            if (this.xOff == 16)
             {
                 ProcessBlock();
             }
@@ -77,7 +77,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
         internal override void ProcessLength(
             long bitLength)
         {
-            if(this.xOff > 14)
+            if (this.xOff > 14)
             {
                 ProcessBlock();
             }
@@ -129,7 +129,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
 
             this.xOff = 0;
 
-            for(int i = 0; i != this.X.Length; i++)
+            for (int i = 0; i != this.X.Length; i++)
             {
                 this.X[i] = 0;
             }
@@ -258,7 +258,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             // right
             aa = RL(aa + F5(bb, cc, dd) + this.X[5] + unchecked((int)0x50a28be6), 8) + ee;
             cc = RL(cc, 10);
-            ee = RL(ee + F5(aa, bb, cc) + this.X[14] + unchecked((int)0x50a28be6), 9) + dd;
+            ee = RL(ee + F5(aa, bb, cc) + this.X[14] + unchecked(0x50a28be6), 9) + dd;
             bb = RL(bb, 10);
             dd = RL(dd + F5(ee, aa, bb) + this.X[7] + unchecked((int)0x50a28be6), 9) + cc;
             aa = RL(aa, 10);
@@ -584,7 +584,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             // reset the offset and clean out the word buffer.
             //
             this.xOff = 0;
-            for(int i = 0; i != this.X.Length; i++)
+            for (int i = 0; i != this.X.Length; i++)
             {
                 this.X[i] = 0;
             }

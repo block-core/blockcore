@@ -171,13 +171,13 @@ namespace Blockcore.Features.MemoryPool
         private double rollingMinimumFeeRate;
 
         /// <summary>Collection of transaction links.</summary>
-        private TxlinksMap mapLinks;
+        private readonly TxlinksMap mapLinks;
 
         /// <summary>Dictionary of <see cref="DeltaPair"/> indexed by transaction hash.</summary>
-        private Dictionary<uint256, DeltaPair> mapDeltas;
+        private readonly Dictionary<uint256, DeltaPair> mapDeltas;
 
         /// <summary>All tx witness hashes/entries in mapTx, in random order.</summary>
-        private Dictionary<TxMempoolEntry, uint256> vTxHashes;
+        private readonly Dictionary<TxMempoolEntry, uint256> vTxHashes;
 
         /// <summary>Instance logger for the memory pool.</summary>
         private readonly ILogger logger;
@@ -196,9 +196,9 @@ namespace Blockcore.Features.MemoryPool
             this.MapNextTx = new List<NextTxPair>();
             this.mapDeltas = new Dictionary<uint256, DeltaPair>();
             this.vTxHashes = new Dictionary<TxMempoolEntry, uint256>(); // All tx witness hashes/entries in mapTx, in random order.
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.TimeProvider = dateTimeProvider;
-            this.InnerClear(); //lock free clear
+            InnerClear(); //lock free clear
 
             // Sanity checks off by default for performance, because otherwise
             // accepting transactions becomes O(N^2) where N is the number
@@ -242,7 +242,7 @@ namespace Blockcore.Features.MemoryPool
         public void Clear()
         {
             //LOCK(cs);
-            this.InnerClear();
+            InnerClear();
         }
 
         /// <summary>
@@ -318,8 +318,8 @@ namespace Blockcore.Features.MemoryPool
             var setAncestors = new SetEntries();
             long nNoLimit = long.MaxValue;
             string dummy;
-            this.CalculateMemPoolAncestors(entry, setAncestors, nNoLimit, nNoLimit, nNoLimit, nNoLimit, out dummy);
-            bool returnVal = this.AddUnchecked(hash, entry, setAncestors, validFeeEstimate);
+            CalculateMemPoolAncestors(entry, setAncestors, nNoLimit, nNoLimit, nNoLimit, nNoLimit, out dummy);
+            bool returnVal = AddUnchecked(hash, entry, setAncestors, validFeeEstimate);
 
             return returnVal;
         }
@@ -367,11 +367,11 @@ namespace Blockcore.Features.MemoryPool
             {
                 TxMempoolEntry pit = this.MapTx.TryGet(phash);
                 if (pit != null)
-                    this.UpdateParent(entry, pit, true);
+                    UpdateParent(entry, pit, true);
             }
 
-            this.UpdateAncestorsOf(true, entry, setAncestors);
-            this.UpdateEntryForAncestors(entry, setAncestors);
+            UpdateAncestorsOf(true, entry, setAncestors);
+            UpdateEntryForAncestors(entry, setAncestors);
 
             this.nTransactionsUpdated++;
             this.totalTxSize += entry.GetTxSize();
@@ -412,10 +412,10 @@ namespace Blockcore.Features.MemoryPool
         /// <param name="setAncestors">Transaction ancestors.</param>
         private void UpdateAncestorsOf(bool add, TxMempoolEntry entry, SetEntries setAncestors)
         {
-            SetEntries parentIters = this.GetMemPoolParents(entry);
+            SetEntries parentIters = GetMemPoolParents(entry);
             // add or remove this tx as a child of each parent
             foreach (TxMempoolEntry piter in parentIters)
-                this.UpdateChild(piter, entry, add);
+                UpdateChild(piter, entry, add);
 
             long updateCount = (add ? 1 : -1);
             long updateSize = updateCount * entry.GetTxSize();
@@ -534,7 +534,7 @@ namespace Blockcore.Features.MemoryPool
                     // If we're not searching for parents, we require this to be an
                     // entry in the mempool already.
                     //var it = mapTx.Txids.TryGet(entry.TransactionHash);
-                    SetEntries memPoolParents = this.GetMemPoolParents(entry);
+                    SetEntries memPoolParents = GetMemPoolParents(entry);
                     foreach (TxMempoolEntry item in memPoolParents)
                         parentHashes.Add(item);
                 }
@@ -569,7 +569,7 @@ namespace Blockcore.Features.MemoryPool
                     return false;
                 }
 
-                SetEntries setMemPoolParents = this.GetMemPoolParents(stageit);
+                SetEntries setMemPoolParents = GetMemPoolParents(stageit);
                 foreach (TxMempoolEntry phash in setMemPoolParents)
                 {
                     // If this is a new ancestor, add it.
@@ -594,7 +594,7 @@ namespace Blockcore.Features.MemoryPool
         {
             foreach (TxIn txInput in tx.Inputs)
             {
-                if (this.Exists(txInput.PrevOut.Hash))
+                if (Exists(txInput.PrevOut.Hash))
                 {
                     return false;
                 }
@@ -643,20 +643,20 @@ namespace Blockcore.Features.MemoryPool
 
             foreach (TxMempoolEntry item in txToRemove)
             {
-                this.CalculateDescendants(item, setAllRemoves);
+                CalculateDescendants(item, setAllRemoves);
             }
 
-            this.RemoveStaged(setAllRemoves, false);
+            RemoveStaged(setAllRemoves, false);
         }
 
         /// <inheritdoc />
         public void RemoveStaged(SetEntries stage, bool updateDescendants)
         {
             //AssertLockHeld(cs);
-            this.UpdateForRemoveFromMempool(stage, updateDescendants);
+            UpdateForRemoveFromMempool(stage, updateDescendants);
             foreach (TxMempoolEntry it in stage)
             {
-                this.RemoveUnchecked(it);
+                RemoveUnchecked(it);
             }
         }
 
@@ -667,16 +667,16 @@ namespace Blockcore.Features.MemoryPool
             var toremove = new SetEntries();
             foreach (TxMempoolEntry entry in this.MapTx.EntryTime)
             {
-                if (!(entry.Time < time)) break;
+                if ((entry.Time >= time)) break;
                 toremove.Add(entry);
             }
 
             var stage = new SetEntries();
             foreach (TxMempoolEntry removeit in toremove)
             {
-                this.CalculateDescendants(removeit, stage);
+                CalculateDescendants(removeit, stage);
             }
-            this.RemoveStaged(stage, false);
+            RemoveStaged(stage, false);
 
             return stage.Count;
         }
@@ -732,7 +732,7 @@ namespace Blockcore.Features.MemoryPool
                 setDescendants.Add(it);
                 stage.Remove(it);
 
-                SetEntries setChildren = this.GetMemPoolChildren(it);
+                SetEntries setChildren = GetMemPoolChildren(it);
                 foreach (TxMempoolEntry childiter in setChildren)
                 {
                     if (!setDescendants.Contains(childiter))
@@ -765,7 +765,7 @@ namespace Blockcore.Features.MemoryPool
                 foreach (TxMempoolEntry removeIt in entriesToRemove)
                 {
                     var setDescendants = new SetEntries();
-                    this.CalculateDescendants(removeIt, setDescendants);
+                    CalculateDescendants(removeIt, setDescendants);
                     setDescendants.Remove(removeIt); // don't update state for self
                     long modifySize = -removeIt.GetTxSize();
                     long modifyFee = -removeIt.ModifiedFee;
@@ -797,10 +797,10 @@ namespace Blockcore.Features.MemoryPool
                 // differ from the set of mempool parents we'd calculate by searching,
                 // and it's important that we use the mapLinks[] notion of ancestor
                 // transactions as the set of things to update for removal.
-                this.CalculateMemPoolAncestors(entry, setAncestors, nNoLimit, nNoLimit, nNoLimit, nNoLimit, out dummy, false);
+                CalculateMemPoolAncestors(entry, setAncestors, nNoLimit, nNoLimit, nNoLimit, nNoLimit, out dummy, false);
                 // Note that UpdateAncestorsOf severs the child links that point to
                 // removeIt in the entries for the parents of removeIt.
-                this.UpdateAncestorsOf(false, entry, setAncestors);
+                UpdateAncestorsOf(false, entry, setAncestors);
             }
 
             // After updating all the ancestor sizes, we can now sever the link between each
@@ -808,7 +808,7 @@ namespace Blockcore.Features.MemoryPool
             // for each direct child of a transaction being removed).
             foreach (TxMempoolEntry removeIt in entriesToRemove)
             {
-                this.UpdateChildrenForRemoval(removeIt);
+                UpdateChildrenForRemoval(removeIt);
             }
         }
 
@@ -818,9 +818,9 @@ namespace Blockcore.Features.MemoryPool
         /// <param name="entry">Memory pool entry.</param>
         private void UpdateChildrenForRemoval(TxMempoolEntry entry)
         {
-            SetEntries setMemPoolChildren = this.GetMemPoolChildren(entry);
+            SetEntries setMemPoolChildren = GetMemPoolChildren(entry);
             foreach (TxMempoolEntry updateIt in setMemPoolChildren)
-                this.UpdateParent(updateIt, entry, false);
+                UpdateParent(updateIt, entry, false);
         }
 
         /// <inheritdoc />
@@ -846,11 +846,11 @@ namespace Blockcore.Features.MemoryPool
                 {
                     var stage = new SetEntries();
                     stage.Add(entry);
-                    this.RemoveStaged(stage, true);
+                    RemoveStaged(stage, true);
                 }
 
-                this.RemoveConflicts(tx);
-                this.ClearPrioritisation(tx.GetHash());
+                RemoveConflicts(tx);
+                ClearPrioritisation(tx.GetHash());
             }
             this.lastRollingFeeUpdate = this.TimeProvider.GetTime();
             this.blockSinceLastRollingFeeBump = true;
@@ -872,8 +872,8 @@ namespace Blockcore.Features.MemoryPool
                     Transaction txConflict = it.Transaction;
                     if (txConflict != tx)
                     {
-                        this.ClearPrioritisation(txConflict.GetHash());
-                        this.RemoveRecursive(txConflict);
+                        ClearPrioritisation(txConflict.GetHash());
+                        RemoveRecursive(txConflict);
                     }
                 }
             }
@@ -923,7 +923,7 @@ namespace Blockcore.Features.MemoryPool
 
             int nTxnRemoved = 0;
             var maxFeeRateRemoved = new FeeRate(0);
-            while (this.MapTx.Any() && this.DynamicMemoryUsage() > sizelimit)
+            while (this.MapTx.Any() && DynamicMemoryUsage() > sizelimit)
             {
                 TxMempoolEntry it = this.MapTx.DescendantScore.First();
 
@@ -934,11 +934,11 @@ namespace Blockcore.Features.MemoryPool
                 var removed = new FeeRate(it.ModFeesWithDescendants, (int)it.SizeWithDescendants);
                 removed = new FeeRate(new Money(removed.FeePerK + this.minReasonableRelayFee.FeePerK));
 
-                this.trackPackageRemoved(removed);
+                trackPackageRemoved(removed);
                 maxFeeRateRemoved = new FeeRate(Math.Max(maxFeeRateRemoved.FeePerK, removed.FeePerK));
 
                 var stage = new SetEntries();
-                this.CalculateDescendants(it, stage);
+                CalculateDescendants(it, stage);
                 nTxnRemoved += stage.Count;
 
                 var txn = new List<Transaction>();
@@ -948,14 +948,14 @@ namespace Blockcore.Features.MemoryPool
                         txn.Add(setEntry.Transaction);
                 }
 
-                this.RemoveStaged(stage, false);
+                RemoveStaged(stage, false);
                 if (pvNoSpendsRemaining != null)
                 {
                     foreach (Transaction tx in txn)
                     {
                         foreach (TxIn txin in tx.Inputs)
                         {
-                            if (this.Exists(txin.PrevOut.Hash))
+                            if (Exists(txin.PrevOut.Hash))
                                 continue;
                             NextTxPair iter = this.MapNextTx.FirstOrDefault(p => p.OutPoint == new OutPoint(txin.PrevOut.Hash, 0));
                             if (iter == null || iter.OutPoint.Hash != txin.PrevOut.Hash)
@@ -983,9 +983,9 @@ namespace Blockcore.Features.MemoryPool
             if (time > this.lastRollingFeeUpdate + 10)
             {
                 double halflife = RollingFeeHalflife;
-                if (this.DynamicMemoryUsage() < sizelimit / 4)
+                if (DynamicMemoryUsage() < sizelimit / 4)
                     halflife /= 4;
-                else if (this.DynamicMemoryUsage() < sizelimit / 2)
+                else if (DynamicMemoryUsage() < sizelimit / 2)
                     halflife /= 2;
 
                 this.rollingMinimumFeeRate = this.rollingMinimumFeeRate / Math.Pow(2.0, (time - this.lastRollingFeeUpdate) / halflife);
@@ -1019,7 +1019,7 @@ namespace Blockcore.Features.MemoryPool
         /// <inheritdoc />
         public static double AllowFreeThreshold()
         {
-            return Money.COIN * 144 / 250;
+            return (double)Money.COIN * 144 / 250;
         }
 
         /// <inheritdoc />
@@ -1100,7 +1100,7 @@ namespace Blockcore.Features.MemoryPool
             /// <param name="entry">Entry to add.</param>
             public void Add(TxMempoolEntry entry)
             {
-                this.Add(entry.TransactionHash, entry);
+                Add(entry.TransactionHash, entry);
             }
 
             /// <summary>
@@ -1109,7 +1109,7 @@ namespace Blockcore.Features.MemoryPool
             /// <param name="entry">Transaction to remove.</param>
             public void Remove(TxMempoolEntry entry)
             {
-                this.Remove(entry.TransactionHash);
+                Remove(entry.TransactionHash);
             }
 
             /// <summary>
@@ -1148,8 +1148,8 @@ namespace Blockcore.Features.MemoryPool
                 /// <inheritdoc />
                 public int Compare(TxMempoolEntry a, TxMempoolEntry b)
                 {
-                    bool fUseADescendants = this.UseDescendantScore(a);
-                    bool fUseBDescendants = this.UseDescendantScore(b);
+                    bool fUseADescendants = UseDescendantScore(a);
+                    bool fUseBDescendants = UseDescendantScore(b);
 
                     double aModFee = fUseADescendants ? a.ModFeesWithDescendants.Satoshi : a.ModifiedFee;
                     double aSize = fUseADescendants ? a.SizeWithDescendants : a.GetTxSize();
@@ -1327,10 +1327,13 @@ namespace Blockcore.Features.MemoryPool
         public class NextTxPair
         {
             /// <summary>The outpoint of the transaction.</summary>
-            public OutPoint OutPoint;
+            private readonly OutPoint outPoint;
+            public OutPoint OutPoint { get; set; }
 
             /// <summary>The next transaction.</summary>
-            public Transaction Transaction;
+
+            private readonly Transaction transaction;
+            public Transaction Transaction { get; set; }
         }
     }
 }

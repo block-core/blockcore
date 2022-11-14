@@ -190,7 +190,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             this.controller.ControllerContext.HttpContext = new DefaultHttpContext();
             this.controller.ControllerContext.HttpContext.Request.Query = new QueryCollection(values);
 
-            var body = JObject.FromObject(new {methodName = "getblockheader"});
+            var body = JObject.FromObject(new { methodName = "getblockheader" });
             IActionResult controllerResult = this.controller.CallByName(body);
 
             var errorResult = Assert.IsType<ErrorResult>(controllerResult);

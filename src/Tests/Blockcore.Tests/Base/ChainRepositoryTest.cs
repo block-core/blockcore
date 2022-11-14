@@ -28,7 +28,7 @@ namespace Blockcore.Tests.Base
         {
             string dir = CreateTestDir(this);
             var chain = new ChainIndexer(KnownNetworks.StratisRegTest);
-            this.AppendBlock(chain);
+            AppendBlock(chain);
 
             using (var repo = new ChainRepository(new LoggerFactory(), new LevelDbChainStore(chain.Network, new DataFolder(dir), chain), chain.Network))
             {
@@ -60,7 +60,7 @@ namespace Blockcore.Tests.Base
         {
             string dir = CreateTestDir(this);
             var chain = new ChainIndexer(KnownNetworks.StratisRegTest);
-            ChainedHeader tip = this.AppendBlock(chain);
+            ChainedHeader tip = AppendBlock(chain);
 
             using (var engine = new DB(new Options { CreateIfMissing = true }, new DataFolder(dir).ChainPath))
             {
@@ -113,7 +113,7 @@ namespace Blockcore.Tests.Base
         private ChainedHeader AppendBlock(params ChainIndexer[] chainsIndexer)
         {
             ChainedHeader index = null;
-            return this.AppendBlock(index, chainsIndexer);
+            return AppendBlock(index, chainsIndexer);
         }
     }
 }

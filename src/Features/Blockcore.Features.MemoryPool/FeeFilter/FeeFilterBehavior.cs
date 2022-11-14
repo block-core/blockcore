@@ -49,7 +49,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
             this.nodeLifetime = nodeLifetime;
             this.asyncProvider = asyncProvider;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         private Task ProcessFeeFilterAsync(INetworkPeer peer, FeeFilterPayload feeFilter)
@@ -103,7 +103,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
                                 {
                                     this.logger.LogDebug("Sending for transaction data from peer '{0}'.", peer.RemoteSocketEndpoint);
                                     var filterPayload = new FeeFilterPayload() { NewFeeFilter = filterToSend };
-                                    await peer.SendMessageAsync(filterPayload).ConfigureAwait(false);
+                                    await peer.SendMessageAsync(filterPayload, System.Threading.CancellationToken.None).ConfigureAwait(false);
                                     this.lastSendFilter = filterToSend;
                                 }
                             }
@@ -123,7 +123,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
                 switch (message.Message.Payload)
                 {
                     case FeeFilterPayload feeFilter:
-                        await this.ProcessFeeFilterAsync(peer, feeFilter).ConfigureAwait(false);
+                        await ProcessFeeFilterAsync(peer, feeFilter).ConfigureAwait(false);
                         break;
                 }
             }
@@ -138,7 +138,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
         {
             try
             {
-                await this.ProcessMessageAsync(peer, message).ConfigureAwait(false);
+                await ProcessMessageAsync(peer, message).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -166,15 +166,15 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.StateChanged.Register(OnStateChangedAsync);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
         }
 
         private Task OnStateChangedAsync(INetworkPeer sender, NetworkPeerState arg)
         {
             if (arg == NetworkPeerState.HandShaked)
             {
-                this.StartFeeFilterBroadcast(sender);
+                StartFeeFilterBroadcast(sender);
             }
 
             if (arg == NetworkPeerState.Disconnecting)
@@ -191,8 +191,8 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
 
         protected override void DetachCore()
         {
-            this.AttachedPeer.StateChanged.Unregister(this.OnStateChangedAsync);
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.StateChanged.Unregister(OnStateChangedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace NBitcoin.Tests
             this.networkMain = KnownNetworks.Main;
         }
 
-        private static Random rand = new Random();
+        private static readonly Random rand = new Random();
 
         private static Script RandomScript()
         {

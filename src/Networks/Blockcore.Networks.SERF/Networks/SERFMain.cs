@@ -1,27 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Blockcore.Base.Deployments;
+using Blockcore.Consensus;
+using Blockcore.Consensus.BlockInfo;
+using Blockcore.Consensus.ScriptInfo;
+using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.Networks.SERF.Deployments;
 using Blockcore.Networks.SERF.Policies;
 using Blockcore.Networks.SERF.Rules;
+using Blockcore.Networks.SERF.Setup;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
-using System.Collections;
-using System.Linq;
-using System.Collections.Specialized;
-using System.Net;
-using Blockcore.Networks.SERF.Setup;
-using Blockcore.Networks;
-using Blockcore.Base.Deployments;
-using Blockcore.Consensus.BlockInfo;
-using Blockcore.Consensus;
-using Blockcore.P2P;
-using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Consensus.ScriptInfo;
-using Blockcore.Networks.SERF.Deployments;
 
 namespace Blockcore.Networks.SERF
 {
@@ -47,12 +44,12 @@ namespace Blockcore.Networks.SERF
 
             this.DefaultMaxOutboundConnections = 16;
             this.DefaultMaxInboundConnections = 109;
-            
+
             this.MinTxFee = 10000;
             this.MaxTxFee = Money.Coins(1).Satoshi;
             this.FallbackFee = 1000000;
             this.MinRelayTxFee = 10000;
-            
+
             this.DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
             var consensusFactory = new PosConsensusFactory();
@@ -150,7 +147,7 @@ namespace Blockcore.Networks.SERF
             this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
 
             this.Bech32Encoders = new Bech32Encoder[2];
-         
+
             var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
             this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
             this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
@@ -173,51 +170,51 @@ namespace Blockcore.Networks.SERF
 
         protected void RegisterRules(IConsensus consensus)
         {
-             consensus.ConsensusRules
-                 .Register<HeaderTimeChecksRule>()
-                 .Register<HeaderTimeChecksPosRule>()
-                 .Register<PosFutureDriftRule>()
-                 .Register<CheckDifficultyPosRule>()
-                 .Register<SERFHeaderVersionRule>()
-                 .Register<ProvenHeaderSizeRule>()
-                 .Register<ProvenHeaderCoinstakeRule>();
+            consensus.ConsensusRules
+                .Register<HeaderTimeChecksRule>()
+                .Register<HeaderTimeChecksPosRule>()
+                .Register<PosFutureDriftRule>()
+                .Register<CheckDifficultyPosRule>()
+                .Register<SERFHeaderVersionRule>()
+                .Register<ProvenHeaderSizeRule>()
+                .Register<ProvenHeaderCoinstakeRule>();
 
-             consensus.ConsensusRules
-                 .Register<BlockMerkleRootRule>()
-                 .Register<PosBlockSignatureRepresentationRule>()
-                 .Register<PosBlockSignatureRule>();
+            consensus.ConsensusRules
+                .Register<BlockMerkleRootRule>()
+                .Register<PosBlockSignatureRepresentationRule>()
+                .Register<PosBlockSignatureRule>();
 
-             consensus.ConsensusRules
-                 .Register<SetActivationDeploymentsPartialValidationRule>()
-                 .Register<PosTimeMaskRule>()
+            consensus.ConsensusRules
+                .Register<SetActivationDeploymentsPartialValidationRule>()
+                .Register<PosTimeMaskRule>()
 
-                 // rules that are inside the method ContextualCheckBlock
-                 .Register<TransactionLocktimeActivationRule>()
-                 .Register<CoinbaseHeightActivationRule>()
-                 .Register<WitnessCommitmentsRule>()
-                 .Register<BlockSizeRule>()
+                // rules that are inside the method ContextualCheckBlock
+                .Register<TransactionLocktimeActivationRule>()
+                .Register<CoinbaseHeightActivationRule>()
+                .Register<WitnessCommitmentsRule>()
+                .Register<BlockSizeRule>()
 
-                 // rules that are inside the method CheckBlock
-                 .Register<EnsureCoinbaseRule>()
-                 .Register<CheckPowTransactionRule>()
-                 .Register<CheckPosTransactionRule>()
-                 .Register<CheckSigOpsRule>()
-                 .Register<PosCoinstakeRule>();
+                // rules that are inside the method CheckBlock
+                .Register<EnsureCoinbaseRule>()
+                .Register<CheckPowTransactionRule>()
+                .Register<CheckPosTransactionRule>()
+                .Register<CheckSigOpsRule>()
+                .Register<PosCoinstakeRule>();
 
-             consensus.ConsensusRules
-                 .Register<SetActivationDeploymentsFullValidationRule>()
+            consensus.ConsensusRules
+                .Register<SetActivationDeploymentsFullValidationRule>()
 
-                 .Register<CheckDifficultyHybridRule>()
+                .Register<CheckDifficultyHybridRule>()
 
-                 // rules that require the store to be loaded (coinview)
-                 .Register<FetchUtxosetRule>()
-                 .Register<TransactionDuplicationActivationRule>()
-                 .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
-                                                  // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
-                                                  // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
-                 .Register<PosColdStakingRule>()
-                 .Register<PushUtxosetRule>()
-                 .Register<FlushUtxosetRule>();
+                // rules that require the store to be loaded (coinview)
+                .Register<FetchUtxosetRule>()
+                .Register<TransactionDuplicationActivationRule>()
+                .Register<CheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
+                                                 // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
+                                                 // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
+                .Register<PosColdStakingRule>()
+                .Register<PushUtxosetRule>()
+                .Register<FlushUtxosetRule>();
         }
 
         protected void RegisterMempoolRules(IConsensus consensus)

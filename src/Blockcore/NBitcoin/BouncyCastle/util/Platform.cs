@@ -1,6 +1,6 @@
 using System;
-using System.Globalization;
 using System.Collections;
+using System.Globalization;
 
 namespace NBitcoin.BouncyCastle.Utilities
 {
@@ -85,7 +85,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         internal static readonly string NewLine = GetNewLine();
 
-        internal static void Dispose(IDisposable d)
+        internal static void DisposePlatform(IDisposable d)
         {
             d.Dispose();
         }

@@ -30,7 +30,7 @@ namespace Blockcore.Features.NodeHost.Tests
         public void Initialize_WhenCertificateRetrieved_UsesCertificateOnHttpsWithKestrel()
         {
             this.apiSettings.UseHttps = true;
-            this.SetCertificateInStore(true);
+            SetCertificateInStore(true);
 
             this.certificateRetrieved.Should().BeNull();
 
@@ -45,9 +45,9 @@ namespace Blockcore.Features.NodeHost.Tests
         public void Initialize_WhenNotUsing_Https_ShouldNotLookForCertificates()
         {
             this.apiSettings.UseHttps = false;
-            this.SetCertificateInStore(true);
+            SetCertificateInStore(true);
 
-             Program.Initialize(null, new FullNode(), this.apiSettings, this.certificateStore, this.webHostBuilder);
+            Program.Initialize(null, new FullNode(), this.apiSettings, this.certificateStore, this.webHostBuilder);
 
             this.certificateStore.DidNotReceiveWithAnyArgs().TryGet(null, out _);
         }

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using Blockcore.Consensus;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using NBitcoin;
@@ -26,6 +25,6 @@ namespace Blockcore.IntegrationTests.Common.Extensions
 
             return Enumerable.Range(startBlock, numberOfBlocks)
                 .Sum(p => coinviewRule.GetProofOfWorkReward(p));
-        }       
+        }
     }
 }

@@ -24,17 +24,14 @@ namespace Blockcore.Base.Deployments
         // Represents bits 001 of the VersionBitsTopMask to indicate that this is a BIP9 version.
         public const uint VersionbitsTopBits = 0x20000000;
 
-        // Total bits available for versionbits.
-        private const int VersionbitsNumBits = 29;
-
         // Array size required to hold all BIP9 deployment activation states.
         public int ArraySize => this.consensus.BIP9Deployments.Length;
 
         // Used to access the deployments, confirmation window and activation threshold.
-        private IConsensus consensus;
+        private readonly IConsensus consensus;
 
         // Cache of BIP9 deployment states keyed by block hash.
-        private Dictionary<uint256, ThresholdState?[]> cache = new Dictionary<uint256, ThresholdState?[]>();
+        private readonly Dictionary<uint256, ThresholdState?[]> cache = new Dictionary<uint256, ThresholdState?[]>();
 
         /// <summary>
         /// Constructs this object containing the BIP9 deployment states cache.
@@ -268,7 +265,8 @@ namespace Blockcore.Base.Deployments
                         }
                 }
 
-                this.Set(indexPrev?.HashBlock, deployment, state = stateNext);
+                ThresholdState stateN = state = stateNext;
+                this.Set(indexPrev?.HashBlock, deployment, stateN);
             }
 
             return state;
@@ -356,7 +354,7 @@ namespace Blockcore.Base.Deployments
         private static void Assert(bool v)
         {
             if (!v)
-                throw new Exception("Assertion failed");
+                throw new ArgumentNullException(nameof(v), "Assertion failed");
         }
     }
 }

@@ -144,7 +144,7 @@ namespace Blockcore.Benchmark.Uint256.Old
         public static bool TryParse(string hex, out uint256 result)
         {
             if (hex == null)
-                throw new ArgumentNullException("hex");
+                throw new ArgumentNullException(nameof(hex));
             if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                 hex = hex.Substring(2);
             result = null;
@@ -207,7 +207,7 @@ namespace Blockcore.Benchmark.Uint256.Old
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("index");
+                    throw new ArgumentOutOfRangeException(nameof(index));
             }
             return (byte)(value >> (byteIndex * 8));
         }

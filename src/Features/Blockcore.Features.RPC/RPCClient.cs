@@ -424,7 +424,7 @@ namespace Blockcore.Features.RPC
         public static string GetDefaultCookieFilePath(Network network)
         {
             return TryGetDefaultCookieFilePath(network) ?? throw new ArgumentException(
-                "This network has no default cookie file path registered, use RPCClient.RegisterDefaultCookiePath to register", "network");
+                "This network has no default cookie file path registered, use RPCClient.RegisterDefaultCookiePath to register", nameof(network));
         }
 
         public static string TryGetDefaultCookieFilePath(Network network)
@@ -930,7 +930,7 @@ namespace Blockcore.Features.RPC
         public void AddNode(EndPoint nodeEndPoint, bool onetry = false)
         {
             if (nodeEndPoint == null)
-                throw new ArgumentNullException("nodeEndPoint");
+                throw new ArgumentNullException(nameof(nodeEndPoint));
 
             SendCommand(RPCOperations.addnode, nodeEndPoint.ToString(), onetry ? "onetry" : "add");
         }
@@ -938,7 +938,7 @@ namespace Blockcore.Features.RPC
         public async Task AddNodeAsync(EndPoint nodeEndPoint, bool onetry = false)
         {
             if (nodeEndPoint == null)
-                throw new ArgumentNullException("nodeEndPoint");
+                throw new ArgumentNullException(nameof(nodeEndPoint));
 
             await SendCommandAsync(RPCOperations.addnode, nodeEndPoint.ToString(), onetry ? "onetry" : "add").ConfigureAwait(false);
         }
@@ -946,7 +946,7 @@ namespace Blockcore.Features.RPC
         public void RemoveNode(EndPoint nodeEndPoint)
         {
             if (nodeEndPoint == null)
-                throw new ArgumentNullException("nodeEndPoint");
+                throw new ArgumentNullException(nameof(nodeEndPoint));
 
             SendCommand(RPCOperations.addnode, nodeEndPoint.ToString(), "remove");
         }
@@ -954,7 +954,7 @@ namespace Blockcore.Features.RPC
         public async Task RemoveNodeAsync(EndPoint nodeEndPoint)
         {
             if (nodeEndPoint == null)
-                throw new ArgumentNullException("nodeEndPoint");
+                throw new ArgumentNullException(nameof(nodeEndPoint));
 
             await SendCommandAsync(RPCOperations.addnode, nodeEndPoint.ToString(), "remove").ConfigureAwait(false);
         }
@@ -996,7 +996,7 @@ namespace Blockcore.Features.RPC
         public async Task<AddedNodeInfo> GetAddedNodeInfoAsync(bool detailed, EndPoint nodeEndPoint)
         {
             if (nodeEndPoint == null)
-                throw new ArgumentNullException("nodeEndPoint");
+                throw new ArgumentNullException(nameof(nodeEndPoint));
 
             try
             {
@@ -1177,7 +1177,7 @@ namespace Blockcore.Features.RPC
         public IEnumerable<Transaction> GetTransactions(uint256 blockHash)
         {
             if (blockHash == null)
-                throw new ArgumentNullException("blockHash");
+                throw new ArgumentNullException(nameof(blockHash));
 
             RPCResponse resp = SendCommand(RPCOperations.getblock, blockHash.ToString());
 
@@ -1389,7 +1389,7 @@ namespace Blockcore.Features.RPC
         public async Task<decimal> EstimatePriorityAsync(int nblock)
         {
             if (nblock < 0)
-                throw new ArgumentOutOfRangeException("nblock", "nblock must be greater or equal to zero");
+                throw new ArgumentOutOfRangeException(nameof(nblock), "nblock must be greater or equal to zero");
 
             RPCResponse response = await SendCommandAsync("estimatepriority", nblock).ConfigureAwait(false);
             return response.Result.Value<decimal>();
@@ -1448,7 +1448,7 @@ namespace Blockcore.Features.RPC
         public async Task<uint256[]> GenerateAsync(int nBlocks)
         {
             if (nBlocks < 0)
-                throw new ArgumentOutOfRangeException("nBlocks");
+                throw new ArgumentOutOfRangeException(nameof(nBlocks));
 
             var result = (JArray)(await SendCommandAsync(RPCOperations.generate, nBlocks).ConfigureAwait(false)).Result;
 

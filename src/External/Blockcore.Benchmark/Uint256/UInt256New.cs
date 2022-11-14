@@ -296,7 +296,7 @@ namespace Blockcore.Benchmark.Uint256.New
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("index");
+                    throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             return (byte)(value >> (byteIndex * 8));

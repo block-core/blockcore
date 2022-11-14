@@ -10,7 +10,7 @@ namespace Blockcore.P2P.Protocol.Payloads
     [Payload("addr")]
     public class AddrPayload : Payload, IBitcoinSerializable
     {
-        private NetworkAddress[] addresses = new Array.Empty<NetworkAddress>();
+        private NetworkAddress[] addresses = new NetworkAddress[0];
 
         public NetworkAddress[] Addresses { get { return this.addresses; } }
 

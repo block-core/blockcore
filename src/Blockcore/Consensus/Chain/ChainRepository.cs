@@ -132,8 +132,8 @@ namespace Blockcore.Consensus.Chain
 
         public class ChainRepositoryData : IBitcoinSerializable
         {
-            private uint256 Hash;
-            private byte[] Work;
+            public uint256 Hash;
+            public byte[] Work;
 
             public ChainRepositoryData()
             {

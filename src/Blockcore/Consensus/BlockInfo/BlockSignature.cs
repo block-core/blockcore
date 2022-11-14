@@ -49,7 +49,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         internal void SetNull()
         {
-            this.signature = new Array.Empty<byte>();
+            this.signature = new byte[0];
         }
 
         public bool IsEmpty()

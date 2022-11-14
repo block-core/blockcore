@@ -196,7 +196,7 @@ namespace Blockcore.Base.Deployments
             }
 
             // At this point, cache[pindexPrev] is known.
-            this.Assert(this.ContainsKey(indexPrev?.HashBlock, deployment));
+            ThresholdConditionCache.Assert(this.ContainsKey(indexPrev?.HashBlock, deployment));
             ThresholdState state = this.Get(indexPrev?.HashBlock, deployment);
 
             // Now walk forward and compute the state of descendants of pindexPrev.

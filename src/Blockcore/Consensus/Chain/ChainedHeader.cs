@@ -734,7 +734,7 @@ namespace Blockcore.Consensus.Chain
             // but the following expression was taken from bitcoin core. There it was tested in simulations
             // and performed well.
             // Skip steps are exponential - Using skip, max 110 steps to go back up to 2^18 blocks.
-            return (height & 1) != 0 ? this.InvertLowestOne(this.InvertLowestOne(height - 1)) + 1 : this.InvertLowestOne(height);
+            return (height & 1) != 0 ? ChainedHeader.InvertLowestOne(ChainedHeader.InvertLowestOne(height - 1)) + 1 : ChainedHeader.InvertLowestOne(height);
         }
 
         /// <summary>

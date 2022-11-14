@@ -274,17 +274,17 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             bool needMoreCheck;
             if (!FastCheckScriptSig(scriptSig, null, out needMoreCheck))
-                return null;
+                return new TransactionSignature[0];
             Op[] ops = scriptSig.ToOps().ToArray();
             if (!CheckScriptSigCore(network, scriptSig, ops, null, null))
-                return null;
+                return new TransactionSignature[0];
             try
             {
                 return ops.Skip(1).Select(i => i.Code == OpcodeType.OP_0 ? null : new TransactionSignature(i.PushData)).ToArray();
             }
             catch (FormatException)
             {
-                return null;
+                return new TransactionSignature[0];
             }
         }
 
@@ -376,12 +376,6 @@ namespace Blockcore.Consensus.ScriptInfo
         protected override bool CheckScriptPubKeyCore(Script scriptPubKey, Op[] scriptPubKeyOps)
         {
             return true;
-        }
-
-        public Script GenerateScriptSig(Op[] ops, Script redeemScript)
-        {
-            Op pushScript = Op.GetPushOp(redeemScript._Script);
-            return new Script(ops.Concat(new[] { pushScript }));
         }
 
         public PayToScriptHashSigParameters ExtractScriptSigParameters(Network network, Script scriptSig)
@@ -818,6 +812,12 @@ namespace Blockcore.Consensus.ScriptInfo
         }
 
         protected abstract bool CheckScriptSigCore(Network network, Script scriptSig, Op[] scriptSigOps, Script scriptPubKey, Op[] scriptPubKeyOps);
+
+        public Script GenerateScriptSig(Op[] ops, Script redeemScript)
+        {
+            Op pushScript = Op.GetPushOp(redeemScript._Script);
+            return new Script(ops.Concat(new[] { pushScript }));
+        }
 
         public abstract TxOutType Type
         {

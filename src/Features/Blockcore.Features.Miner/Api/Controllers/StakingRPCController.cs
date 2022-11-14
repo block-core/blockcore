@@ -42,7 +42,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             Guard.NotNull(walletManager, nameof(walletManager));
 
             this.fullNode = fullNode;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.walletManager = walletManager;
             this.posMinting = posMinting;
         }

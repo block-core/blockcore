@@ -72,7 +72,7 @@ namespace Blockcore.Features.Consensus.Tests
             samples.Add(TestSample.Outbound(true, false, false, maliciousOffset * 1000, TimeSpan.FromSeconds(maliciousOffset), new IPAddress(14)));
 
             var dateTimeProvider = new DateTimeProvider();
-            TimeSyncBehaviorState state = this.CreateTimeSyncBehaviorState(dateTimeProvider);
+            TimeSyncBehaviorState state = CreateTimeSyncBehaviorState(dateTimeProvider);
 
             for (int i = 0; i < samples.Count; i++)
             {
@@ -136,7 +136,7 @@ namespace Blockcore.Features.Consensus.Tests
             };
 
             var dateTimeProvider = new DateTimeProvider();
-            TimeSyncBehaviorState state = this.CreateTimeSyncBehaviorState(dateTimeProvider);
+            TimeSyncBehaviorState state = CreateTimeSyncBehaviorState(dateTimeProvider);
 
             for (int i = 0; i < samples.Count; i++)
             {
@@ -160,7 +160,7 @@ namespace Blockcore.Features.Consensus.Tests
         public void AddTimeData_WithLargeOutboundSampleSet_ForgetsOldSamples()
         {
             var dateTimeProvider = new DateTimeProvider();
-            TimeSyncBehaviorState state = this.CreateTimeSyncBehaviorState(dateTimeProvider);
+            TimeSyncBehaviorState state = CreateTimeSyncBehaviorState(dateTimeProvider);
 
             // Add max outbound.
             for (int i = 0; i < TimeSyncBehaviorState.MaxOutboundSamples; i++)
@@ -193,7 +193,7 @@ namespace Blockcore.Features.Consensus.Tests
         public void AddTimeData_WithLargeInboundSampleSet_ForgetsOldSamples()
         {
             var dateTimeProvider = new DateTimeProvider();
-            TimeSyncBehaviorState state = this.CreateTimeSyncBehaviorState(dateTimeProvider);
+            TimeSyncBehaviorState state = CreateTimeSyncBehaviorState(dateTimeProvider);
 
             // Add max inbound samples.
             for (int i = 0; i < TimeSyncBehaviorState.MaxInboundSamples; i++)

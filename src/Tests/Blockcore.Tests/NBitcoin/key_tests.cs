@@ -19,14 +19,14 @@ namespace NBitcoin.Tests
         private const string strSecret2C = ("L3Hq7a8FEQwJkW1M2GNKDW28546Vp5miewcCzSqUD9kCAXrJdS3g");
         private const string strAddressBad = ("1HV9Lc3sNHZxwj4Zk6fB38tEmBryq2cBiF");
 
-        private BitcoinPubKeyAddress addr1;
-        private BitcoinPubKeyAddress addr2;
-        private BitcoinPubKeyAddress addr1C;
-        private BitcoinPubKeyAddress addr2C;
+        private readonly BitcoinPubKeyAddress addr1;
+        private readonly BitcoinPubKeyAddress addr2;
+        private readonly BitcoinPubKeyAddress addr1C;
+        private readonly BitcoinPubKeyAddress addr2C;
 
-        private BitcoinAddress addrLocal;
-        private uint256 msgLocal = Hashes.Hash256(TestUtils.ToBytes("Localbitcoins.com will change the world"));
-        private byte[] signatureLocal = Convert.FromBase64String("IJ/17TjGGUqmEppAliYBUesKHoHzfY4gR4DW0Yg7QzrHUB5FwX1uTJ/H21CF8ncY8HHNB5/lh8kPAOeD5QxV8Xc=");
+        private readonly BitcoinAddress addrLocal;
+        private readonly uint256 msgLocal = Hashes.Hash256(TestUtils.ToBytes("Localbitcoins.com will change the world"));
+        private readonly byte[] signatureLocal = Convert.FromBase64String("IJ/17TjGGUqmEppAliYBUesKHoHzfY4gR4DW0Yg7QzrHUB5FwX1uTJ/H21CF8ncY8HHNB5/lh8kPAOeD5QxV8Xc=");
 
         private readonly Network networkMain;
 

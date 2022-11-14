@@ -28,7 +28,7 @@ namespace Blockcore.Consensus.Chain
 
         private BlockLocator locator;
 
-        private object lockObj;
+        private readonly object lockObj;
 
         public Network Network { get; }
 
@@ -40,7 +40,7 @@ namespace Blockcore.Consensus.Chain
             this.Network = network;
             this.lockObj = new object();
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />

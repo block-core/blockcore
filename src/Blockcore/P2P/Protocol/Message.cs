@@ -99,7 +99,7 @@ namespace Blockcore.P2P.Protocol
             int length = 0;
             uint checksum = 0;
             bool hasChecksum = false;
-            byte[] payloadBytes = stream.Serializing ? this.GetPayloadBytes(stream.ConsensusFactory, out length) : null;
+            byte[] payloadBytes = stream.Serializing ? GetPayloadBytes(stream.ConsensusFactory, out length) : null;
             length = payloadBytes == null ? 0 : length;
             stream.ReadWrite(ref length);
 

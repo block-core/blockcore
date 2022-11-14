@@ -28,11 +28,11 @@ namespace NBitcoin.Tests
         {
             var chain = new ChainIndexer(this.network);
 
-            this.AppendBlock(chain);
-            this.AppendBlock(chain);
+            AppendBlock(chain);
+            AppendBlock(chain);
 
-            ChainedHeader fork = this.AppendBlock(chain);
-            this.AppendBlock(chain);
+            ChainedHeader fork = AppendBlock(chain);
+            AppendBlock(chain);
 
             var chain2 = new ChainIndexer(this.network).Load(chain.ToBytes());
             Assert.True(chain.Tip.HashBlock == chain2.Tip.HashBlock);
@@ -60,9 +60,9 @@ namespace NBitcoin.Tests
             var cchain = new ChainIndexer(this.network);
             var chain = new ChainIndexer(this.network);
 
-            this.AddBlock(chain);
-            this.AddBlock(chain);
-            this.AddBlock(chain);
+            AddBlock(chain);
+            AddBlock(chain);
+            AddBlock(chain);
 
             cchain.SetTip(chain.Tip);
 
@@ -87,11 +87,11 @@ namespace NBitcoin.Tests
             ChainedHeader b0 = cchain.Tip;
             Assert.Equal(cchain.Tip, chain.Tip);
 
-            ChainedHeader b1 = this.AddBlock(chain);
-            ChainedHeader b2 = this.AddBlock(chain);
-            this.AddBlock(chain);
-            this.AddBlock(chain);
-            ChainedHeader b5 = this.AddBlock(chain);
+            ChainedHeader b1 = AddBlock(chain);
+            ChainedHeader b2 = AddBlock(chain);
+            AddBlock(chain);
+            AddBlock(chain);
+            ChainedHeader b5 = AddBlock(chain);
 
             Assert.Equal(cchain.SetTip(chain.Tip), b0);
             Assert.Equal(cchain.Tip, chain.Tip);
@@ -107,10 +107,10 @@ namespace NBitcoin.Tests
             Assert.Equal(cchain.GetHeader(b5.HashBlock), chain.Tip);
 
             chain.SetTip(b2);
-            this.AddBlock(chain);
-            this.AddBlock(chain);
-            ChainedHeader b5b = this.AddBlock(chain);
-            ChainedHeader b6b = this.AddBlock(chain);
+            AddBlock(chain);
+            AddBlock(chain);
+            ChainedHeader b5b = AddBlock(chain);
+            ChainedHeader b6b = AddBlock(chain);
 
             Assert.Equal(cchain.SetTip(b6b), b2);
 
@@ -134,10 +134,10 @@ namespace NBitcoin.Tests
         {
             var chain = new ChainIndexer(this.network);
 
-            this.AppendBlock(chain);
-            this.AppendBlock(chain);
-            this.AppendBlock(chain);
-            ChainedHeader b = this.AppendBlock(chain);
+            AppendBlock(chain);
+            AppendBlock(chain);
+            AppendBlock(chain);
+            ChainedHeader b = AppendBlock(chain);
             Assert.Equal(4, chain.Height);
             Assert.Equal(4, b.Height);
             Assert.Equal(b.HashBlock, chain.Tip.HashBlock);
@@ -146,7 +146,7 @@ namespace NBitcoin.Tests
         [Fact]
         public void CanCalculateDifficulty()
         {
-            var main = new ChainIndexer(this.network).Load(this.LoadMainChain());
+            var main = new ChainIndexer(this.network).Load(LoadMainChain());
             // The state of the line separators may be affected by copy operations - so do an environment independent line split...
             string[] histories = File.ReadAllText(TestDataLocations.GetFileFromDataFolder("targethistory.csv")).Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -158,7 +158,7 @@ namespace NBitcoin.Tests
                 BlockHeader block = main.GetHeader(height).Header;
 
                 Assert.Equal(expectedTarget, block.Bits);
-                Target target = main.GetHeader(height).GetWorkRequired(network);
+                Target target = main.GetHeader(height).GetWorkRequired(this.network);
                 Assert.Equal(expectedTarget, target);
             }
         }
@@ -166,7 +166,7 @@ namespace NBitcoin.Tests
         [Fact]
         public void CanValidateChain()
         {
-            var main = new ChainIndexer(this.network).Load(this.LoadMainChain());
+            var main = new ChainIndexer(this.network).Load(LoadMainChain());
             foreach (ChainedHeader h in main.EnumerateToTip(main.Genesis))
             {
                 Assert.True(h.Validate(this.network));
@@ -189,22 +189,22 @@ namespace NBitcoin.Tests
         {
             var chain = new ChainIndexer(this.network);
 
-            this.AppendBlock(chain);
-            ChainedHeader a = this.AppendBlock(chain);
-            ChainedHeader b = this.AppendBlock(chain);
-            ChainedHeader c = this.AppendBlock(chain);
+            AppendBlock(chain);
+            ChainedHeader a = AppendBlock(chain);
+            ChainedHeader b = AppendBlock(chain);
+            ChainedHeader c = AppendBlock(chain);
 
             Assert.True(chain.EnumerateAfter(a).SequenceEqual(new[] { b, c }));
 
-            ChainedHeader d = this.AppendBlock(chain);
+            ChainedHeader d = AppendBlock(chain);
 
             IEnumerator<ChainedHeader> enumerator = chain.EnumerateAfter(b).GetEnumerator();
             enumerator.MoveNext();
             Assert.True(enumerator.Current == c);
 
             chain.Initialize(b);
-            ChainedHeader cc = this.AppendBlock(chain);
-            ChainedHeader dd = this.AppendBlock(chain);
+            ChainedHeader cc = AppendBlock(chain);
+            ChainedHeader dd = AppendBlock(chain);
 
             Assert.False(enumerator.MoveNext());
         }
@@ -212,11 +212,11 @@ namespace NBitcoin.Tests
         [Fact]
         public void CanBuildChain2()
         {
-            ChainIndexer chainIndexer = this.CreateChain(10);
-            this.AppendBlock(chainIndexer);
-            this.AppendBlock(chainIndexer);
-            this.AppendBlock(chainIndexer);
-            ChainedHeader b = this.AppendBlock(chainIndexer);
+            ChainIndexer chainIndexer = CreateChain(10);
+            AppendBlock(chainIndexer);
+            AppendBlock(chainIndexer);
+            AppendBlock(chainIndexer);
+            ChainedHeader b = AppendBlock(chainIndexer);
             Assert.Equal(14, chainIndexer.Height);
             Assert.Equal(14, b.Height);
             Assert.Equal(b.HashBlock, chainIndexer.Tip.HashBlock);
@@ -232,7 +232,7 @@ namespace NBitcoin.Tests
             int skipListLength = 300000;
 
             // Want a chain of exact length so subtract the genesis block.
-            ChainIndexer chainIndexer = this.CreateChain(skipListLength - 1);
+            ChainIndexer chainIndexer = CreateChain(skipListLength - 1);
 
             // Also want a copy in array form so can quickly verify indexing.
             var chainArray = new ChainedHeader[skipListLength];
@@ -272,7 +272,7 @@ namespace NBitcoin.Tests
             int branchLength = 50000;
 
             // Make a main chain 100000 blocks long.
-            ChainIndexer chainIndexer = this.CreateChain(mainLength - 1);
+            ChainIndexer chainIndexer = CreateChain(mainLength - 1);
 
             // Make a branch that splits off at block 49999, 50000 blocks long.
             ChainedHeader mainTip = chainIndexer.Tip;
@@ -325,7 +325,7 @@ namespace NBitcoin.Tests
 
         private ChainIndexer CreateChain(int height)
         {
-            return this.CreateChain(TestUtils.CreateFakeBlock(this.network).Header, height);
+            return CreateChain(TestUtils.CreateFakeBlock(this.network).Header, height);
         }
 
         private ChainIndexer CreateChain(BlockHeader genesis, int height)
@@ -365,7 +365,7 @@ namespace NBitcoin.Tests
         private ChainedHeader AppendBlock(params ChainIndexer[] chainsIndexer)
         {
             ChainedHeader index = null;
-            return this.AppendBlock(index, chainsIndexer);
+            return AppendBlock(index, chainsIndexer);
         }
 
         /// <summary>

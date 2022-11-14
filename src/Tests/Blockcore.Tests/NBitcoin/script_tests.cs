@@ -728,7 +728,7 @@ namespace NBitcoin.Tests
             return sign_multisig(scriptPubKey, new Key[] { key }, transaction);
         }
 
-        private ScriptVerify flags = ScriptVerify.P2SH | ScriptVerify.StrictEnc;
+        private readonly ScriptVerify flags = ScriptVerify.P2SH | ScriptVerify.StrictEnc;
 
         [Fact]
         public void Script_CHECKMULTISIG12()

@@ -20,7 +20,7 @@ namespace Blockcore.Features.PoA.Tests.Rules
         public PoAVotingCoinbaseOutputFormatRuleTests()
         {
             this.votingFormatRule = new PoAVotingCoinbaseOutputFormatRule();
-            this.InitRule(this.votingFormatRule);
+            InitRule(this.votingFormatRule);
         }
 
         [Fact]

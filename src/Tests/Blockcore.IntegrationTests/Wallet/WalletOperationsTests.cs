@@ -84,7 +84,17 @@ namespace Blockcore.IntegrationTests.Wallet
 
         public void Dispose()
         {
-            this.builder.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.builder.Dispose();
+            }
         }
     }
 

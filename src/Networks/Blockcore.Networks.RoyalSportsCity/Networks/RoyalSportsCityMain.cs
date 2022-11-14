@@ -29,45 +29,45 @@ namespace Blockcore.Networks.RoyalSportsCity.Networks
             CoinSetup setup = RoyalSportsCitySetup.Instance.Setup;
             NetworkSetup network = RoyalSportsCitySetup.Instance.Main;
 
-            NetworkType = NetworkType.Mainnet;
-            DefaultConfigFilename = setup.ConfigFileName; // The default name used for the RoyalSportsCity configuration file.
+            this.NetworkType = NetworkType.Mainnet;
+            this.DefaultConfigFilename = setup.ConfigFileName; // The default name used for the RoyalSportsCity configuration file.
 
-            Name = network.Name;
-            CoinTicker = network.CoinTicker;
-            Magic = ConversionTools.ConvertToUInt32(setup.Magic);
-            RootFolderName = network.RootFolderName;
-            DefaultPort = network.DefaultPort;
-            DefaultRPCPort = network.DefaultRPCPort;
-            DefaultAPIPort = network.DefaultAPIPort;
+            this.Name = network.Name;
+            this.CoinTicker = network.CoinTicker;
+            this.Magic = ConversionTools.ConvertToUInt32(setup.Magic);
+            this.RootFolderName = network.RootFolderName;
+            this.DefaultPort = network.DefaultPort;
+            this.DefaultRPCPort = network.DefaultRPCPort;
+            this.DefaultAPIPort = network.DefaultAPIPort;
 
-            DefaultMaxOutboundConnections = 16;
-            DefaultMaxInboundConnections = 109;
-            MaxTipAge = 2 * 60 * 60;
-            MinTxFee = 1000000;
-            MaxTxFee = Money.Coins(1).Satoshi;
-            FallbackFee = 250000;
-            MinRelayTxFee = 1000000;
-            MaxTimeOffsetSeconds = 25 * 60;
-            DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
+            this.DefaultMaxOutboundConnections = 16;
+            this.DefaultMaxInboundConnections = 109;
+            this.MaxTipAge = 2 * 60 * 60;
+            this.MinTxFee = 1000000;
+            this.MaxTxFee = Money.Coins(1).Satoshi;
+            this.FallbackFee = 250000;
+            this.MinRelayTxFee = 1000000;
+            this.MaxTimeOffsetSeconds = 25 * 60;
+            this.DefaultBanTimeSeconds = 16000; // 500 (MaxReorg) * 64 (TargetSpacing) / 2 = 4 hours, 26 minutes and 40 seconds
 
             var consensusFactory = new PosConsensusFactory();
 
             // Create the genesis block.
-            GenesisTime = network.GenesisTime;
-            GenesisNonce = network.GenesisNonce;
-            GenesisBits = network.GenesisBits;
-            GenesisVersion = network.GenesisVersion;
-            GenesisReward = network.GenesisReward;
+            this.GenesisTime = network.GenesisTime;
+            this.GenesisNonce = network.GenesisNonce;
+            this.GenesisBits = network.GenesisBits;
+            this.GenesisVersion = network.GenesisVersion;
+            this.GenesisReward = network.GenesisReward;
 
             Block genesisBlock = CreateGenesisBlock(consensusFactory,
-               GenesisTime,
-               GenesisNonce,
-               GenesisBits,
-               GenesisVersion,
-               GenesisReward,
+               this.GenesisTime,
+               this.GenesisNonce,
+               this.GenesisBits,
+               this.GenesisVersion,
+               this.GenesisReward,
                setup.GenesisText);
 
-            Genesis = genesisBlock;
+            this.Genesis = genesisBlock;
 
             var consensusOptions = new PosConsensusOptions
             {
@@ -93,77 +93,77 @@ namespace Blockcore.Networks.RoyalSportsCity.Networks
                 [RoyalSportsCityBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters("ColdStaking", 2, BIP9DeploymentsParameters.AlwaysActive, 999999999, BIP9DeploymentsParameters.AlwaysActive),
             };
 
-            Consensus = new Blockcore.Consensus.Consensus(
-                consensusFactory: consensusFactory,
-                consensusOptions: consensusOptions,
-                coinType: setup.CoinType,
-                hashGenesisBlock: genesisBlock.GetHash(),
-                subsidyHalvingInterval: 70312500,
-                majorityEnforceBlockUpgrade: 750,
-                majorityRejectBlockOutdated: 950,
-                majorityWindow: 1000,
-                buriedDeployments: buriedDeployments,
-                bip9Deployments: bip9Deployments,
-                bip34Hash: null,
-                minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
-                maxReorgLength: 500,
-                defaultAssumeValid: null,
-                maxMoney: Money.Coins(setup.MaxSupply),
-                coinbaseMaturity: 50,
-                premineHeight: 2,
-                premineReward: Money.Coins(setup.PremineReward),
-                proofOfWorkReward: Money.Coins(setup.PoWBlockReward),
-                targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
-                targetSpacing: setup.TargetSpacing,
-                powAllowMinDifficultyBlocks: false,
-                posNoRetargeting: false,
-                powNoRetargeting: false,
-                powLimit: new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
-                minimumChainWork: null,
-                isProofOfStake: true,
-                lastPowBlock: setup.LastPowBlock,
-                proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-                proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-                proofOfStakeReward: Money.Coins(setup.PoSBlockReward),
-                proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
-            );
+            this.Consensus = new Blockcore.Consensus.Consensus(
+             consensusFactory: consensusFactory,
+             consensusOptions: consensusOptions,
+             coinType: setup.CoinType,
+             hashGenesisBlock: genesisBlock.GetHash(),
+             subsidyHalvingInterval: 70312500,
+             majorityEnforceBlockUpgrade: 750,
+             majorityRejectBlockOutdated: 950,
+             majorityWindow: 1000,
+             buriedDeployments: buriedDeployments,
+             bip9Deployments: bip9Deployments,
+             bip34Hash: null,
+             minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
+             maxReorgLength: 500,
+             defaultAssumeValid: null,
+             maxMoney: Money.Coins(setup.MaxSupply),
+             coinbaseMaturity: 50,
+             premineHeight: 2,
+             premineReward: Money.Coins(setup.PremineReward),
+             proofOfWorkReward: Money.Coins(setup.PoWBlockReward),
+             targetTimespan: TimeSpan.FromSeconds(14 * 24 * 60 * 60), // two weeks
+             targetSpacing: setup.TargetSpacing,
+             powAllowMinDifficultyBlocks: false,
+             posNoRetargeting: false,
+             powNoRetargeting: false,
+             powLimit: new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
+             minimumChainWork: null,
+             isProofOfStake: true,
+             lastPowBlock: setup.LastPowBlock,
+             proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+             proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+             proofOfStakeReward: Money.Coins(setup.PoSBlockReward),
+             proofOfStakeTimestampMask: setup.ProofOfStakeTimestampMask
+         );
 
-            Consensus.PosEmptyCoinbase = RoyalSportsCitySetup.Instance.IsPoSv3();
-            Consensus.PosUseTimeFieldInKernalHash = RoyalSportsCitySetup.Instance.IsPoSv3();
+            this.Consensus.PosEmptyCoinbase = RoyalSportsCitySetup.Instance.IsPoSv3();
+            this.Consensus.PosUseTimeFieldInKernalHash = RoyalSportsCitySetup.Instance.IsPoSv3();
 
             // TODO: Set your Base58Prefixes
-            Base58Prefixes = new byte[12][];
-            Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
-            Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
-            Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (byte)network.SecretAddress };
+            this.Base58Prefixes = new byte[12][];
+            this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (byte)network.PubKeyAddress };
+            this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (byte)network.ScriptAddress };
+            this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (byte)network.SecretAddress };
 
-            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
-            Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
-            Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
-            Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
-            Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
-            Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
-            Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
+            this.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
+            this.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
+            this.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
+            this.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
+            this.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
+            this.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
+            this.Base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 23 };
 
-            Bech32Encoders = new Bech32Encoder[2];
+            this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(network.CoinTicker.ToLowerInvariant());
-            Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
-            Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
+            this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
+            this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
 
-            Checkpoints = network.Checkpoints;
-            DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-            SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
+            this.Checkpoints = network.Checkpoints;
+            this.DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
+            this.SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
 
-            StandardScriptsRegistry = new RoyalSportsCityStandardScriptsRegistry();
+            this.StandardScriptsRegistry = new RoyalSportsCityStandardScriptsRegistry();
 
             // 64 below should be changed to TargetSpacingSeconds when we move that field.
-            Assert(DefaultBanTimeSeconds <= Consensus.MaxReorgLength * 64 / 2);
+            Assert(this.DefaultBanTimeSeconds <= this.Consensus.MaxReorgLength * 64 / 2);
 
-            Assert(Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
-            Assert(Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
+            Assert(this.Consensus.HashGenesisBlock == uint256.Parse(network.HashGenesisBlock));
+            Assert(this.Genesis.Header.HashMerkleRoot == uint256.Parse(network.HashMerkleRoot));
 
-            RegisterRules(Consensus);
-            RegisterMempoolRules(Consensus);
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
         }
 
         protected void RegisterRules(IConsensus consensus)

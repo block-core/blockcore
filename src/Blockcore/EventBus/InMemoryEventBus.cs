@@ -35,7 +35,7 @@ namespace Blockcore.EventBus
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.subscriptionErrorHandler = subscriptionErrorHandler ?? new DefaultSubscriptionErrorHandler(loggerFactory);
             this.subscriptions = new Dictionary<Type, List<ISubscription>>();
         }

@@ -29,7 +29,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
             this.blockRepository = blockRepository;
 
             this.dataStoreSerializer = dataStoreSerializer;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.storeSettings = storeSettings;
             this.network = network;
@@ -38,7 +38,7 @@ namespace Blockcore.Features.BlockStore.Persistence.RocksDb
         /// <inheritdoc />
         public void Initialize()
         {
-            this.LoadPrunedTip((DB)this.blockRepository.DbInstance);
+            LoadPrunedTip((DB)this.blockRepository.DbInstance);
         }
 
         /// <inheritdoc />

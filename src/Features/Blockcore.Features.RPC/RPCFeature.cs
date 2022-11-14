@@ -40,7 +40,7 @@ namespace Blockcore.Features.RPC
             this.fullNodeBuilder = fullNodeBuilder;
             this.fullNode = fullNode;
             this.nodeSettings = nodeSettings;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.rpcSettings = rpcSettings;
         }
 

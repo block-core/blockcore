@@ -74,7 +74,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             this.chainIndexer = chainIndexer;
             this.utxoIndexer = utxoIndexer;
             this.stakeChain = stakeChain;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
             try
             {
                 ChainedHeader addressIndexerTip = this.addressIndexer.IndexerTip;
-                return this.Json(new AddressIndexerTipModel() { TipHash = addressIndexerTip?.HashBlock, TipHeight = addressIndexerTip?.Height });
+                return Json(new AddressIndexerTipModel() { TipHash = addressIndexerTip?.HashBlock, TipHeight = addressIndexerTip?.Height });
             }
             catch (Exception e)
             {
@@ -116,18 +116,18 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                 ChainedHeader chainedHeader = this.chainIndexer.GetHeader(blockId);
 
                 if (chainedHeader == null)
-                    return this.Ok("Block not found");
+                    return Ok("Block not found");
 
                 Block block = chainedHeader.Block ?? this.blockStore.GetBlock(blockId);
 
                 // In rare occasions a block that is found in the
                 // indexer may not have been pushed to the store yet.
                 if (block == null)
-                    return this.Ok("Block not found");
+                    return Ok("Block not found");
 
                 if (!query.OutputJson)
                 {
-                    return this.Json(block);
+                    return Json(block);
                 }
 
                 BlockModel blockModel = query.ShowTransactionDetails
@@ -152,7 +152,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                     }
                 }
 
-                return this.Json(blockModel);
+                return Json(blockModel);
             }
             catch (Exception e)
             {
@@ -172,7 +172,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
         {
             try
             {
-                return this.Json(this.chainState.ConsensusTip.Height);
+                return Json(this.chainState.ConsensusTip.Height);
             }
             catch (Exception e)
             {
@@ -199,7 +199,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
 
                 this.logger.LogDebug("Sending data for {0} addresses.", result.Balances.Count);
 
-                return this.Json(result);
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -223,7 +223,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
 
                 VerboseAddressBalancesResult result = this.addressIndexer.GetAddressIndexerState(addressesArray);
 
-                return this.Json(result);
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -257,7 +257,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                     outputs.Add(utxo);
                 }
 
-                return this.Json(outputs);
+                return Json(outputs);
             }
             catch (Exception e)
             {

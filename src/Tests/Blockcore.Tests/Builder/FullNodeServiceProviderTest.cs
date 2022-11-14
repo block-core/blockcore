@@ -11,7 +11,7 @@ namespace Blockcore.Tests.Builder
 {
     public class FullNodeServiceProviderTest
     {
-        private Mock<IServiceProvider> serviceProvider;
+        private readonly Mock<IServiceProvider> serviceProvider;
 
         public FullNodeServiceProviderTest()
         {

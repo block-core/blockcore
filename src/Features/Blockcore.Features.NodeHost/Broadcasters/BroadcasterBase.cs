@@ -29,20 +29,20 @@ namespace Blockcore.Broadcasters
             this.eventsHub = subscriptionService;
             this.nodeLifetime = nodeLifetime;
             this.asyncProvider = asyncProvider;
-            this.log = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.log = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         public void Init(ClientEventBroadcasterSettings broadcasterSettings)
         {
-            this.log.LogDebug($"Initialising Web Socket Broadcaster {this.GetType().Name}");
+            this.log.LogDebug($"Initialising Web Socket Broadcaster {GetType().Name}");
 
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop(
-                $"Broadcast {this.GetType().Name}",
+                $"Broadcast {GetType().Name}",
                 token =>
                 {
                     if (this.eventsHub.HasConsumers)
                     {
-                        foreach (EventBase clientEvent in this.GetMessages())
+                        foreach (EventBase clientEvent in GetMessages())
                         {
                             this.eventsHub.OnEvent(clientEvent);
                         }

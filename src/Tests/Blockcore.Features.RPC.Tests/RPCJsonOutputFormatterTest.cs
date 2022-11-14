@@ -13,7 +13,7 @@ namespace Blockcore.Features.RPC.Tests
 {
     public class RPCJsonOutputFormatterTest
     {
-        private JsonSerializerSettings settings;
+        private readonly JsonSerializerSettings settings;
 
         public RPCJsonOutputFormatterTest()
         {

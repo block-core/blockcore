@@ -51,7 +51,7 @@ namespace Blockcore.Tests.P2P
 
             var endpointAddNode = new IPEndPoint(IPAddress.Parse("::ffff:192.168.0.1"), 80);
 
-            var asyncProvider = this.CreateAsyncProvider();
+            var asyncProvider = CreateAsyncProvider();
 
             var peerAddressManager = new Mock<IPeerAddressManager>();
             peerAddressManager.Setup(pam => pam.FindPeersByIp(It.IsAny<IPEndPoint>())).Returns(new List<PeerAddress>());

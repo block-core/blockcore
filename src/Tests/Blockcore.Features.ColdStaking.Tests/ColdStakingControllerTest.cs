@@ -174,9 +174,9 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             this.nodeDeployments = new NodeDeploymentsWitnessMock(this.Network, this.chainIndexer);
 
-            this.MockCoinView();
-            this.MockStakeChain();
-            this.MockStakeValidator();
+            MockCoinView();
+            MockStakeChain();
+            MockStakeValidator();
 
             // Create POS consensus rules engine.
             var checkpoints = new Mock<ICheckpoints>();
@@ -294,7 +294,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void ColdStakingVerifyWalletAddresses()
         {
-            this.Initialize();
+            Initialize();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
@@ -325,7 +325,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void GetColdStakingAddressForMissingAccountThrowsWalletException()
         {
-            this.Initialize();
+            Initialize();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
@@ -367,7 +367,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void GetColdStakingAddressForExistingAccountReturnsAddress()
         {
-            this.Initialize();
+            Initialize();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
@@ -406,7 +406,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupColdStakingWithSameWalletThrowsWalletException()
         {
-            this.Initialize();
+            Initialize();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
@@ -438,7 +438,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupColdStakingWithBothAddressesUnknownThrowsWalletException()
         {
-            this.Initialize();
+            Initialize();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
@@ -470,7 +470,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupColdStakingWithInvalidAccountThrowsWalletException()
         {
-            this.Initialize();
+            Initialize();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
@@ -528,14 +528,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupColdStakingWithHotWalletSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
             Wallet.Types.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
 
-            Transaction prevTran = this.AddSpendableTransactionToWallet(wallet1);
+            Transaction prevTran = AddSpendableTransactionToWallet(wallet1);
 
             IActionResult result = this.coldStakingController.SetupColdStaking(new SetupColdStakingRequest
             {
@@ -575,14 +575,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupColdStakingWithHotWalletSegwitSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1), purpose: 84);
 
             Wallet.Types.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
 
-            Transaction prevTran = this.AddSpendableTransactionToWallet(wallet1);
+            Transaction prevTran = AddSpendableTransactionToWallet(wallet1);
 
             IActionResult result = this.coldStakingController.SetupColdStaking(new SetupColdStakingRequest
             {
@@ -619,21 +619,21 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void VerifyThatColdStakeTransactionCanBeFiltered()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
             Wallet.Types.Wallet wallet1 = this.coldStakingManager.GetWalletByName(walletName1);
 
             // This will add a normal account to our wallet.
-            Transaction trx1 = this.AddSpendableTransactionToWallet(wallet1);
+            Transaction trx1 = AddSpendableTransactionToWallet(wallet1);
 
             // This will add a secondary account to our wallet.
-            Transaction trx2 = this.AddSpendableColdstakingTransactionToWallet(wallet1);
+            Transaction trx2 = AddSpendableColdstakingTransactionToWallet(wallet1);
 
             // THis will add a cold staking transaction to the secondary normal account address. This simulates activation of cold staking onto any normal address.
-            Transaction trx3 = this.AddSpendableColdstakingTransactionToNormalWallet(wallet1);
+            Transaction trx3 = AddSpendableColdstakingTransactionToNormalWallet(wallet1);
 
             var accounts = wallet1.GetAccounts(Wallet.Types.Wallet.AllAccounts).ToArray();
 
@@ -678,14 +678,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupColdStakingWithColdWalletSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
             Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
-            Transaction prevTran = this.AddSpendableTransactionToWallet(wallet2);
+            Transaction prevTran = AddSpendableTransactionToWallet(wallet2);
 
             // Create the cold staking setup transaction.
             IActionResult result = this.coldStakingController.SetupColdStaking(new SetupColdStakingRequest
@@ -726,14 +726,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupColdStakingWithColdWalletSegwitSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2), purpose: 84);
 
             Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
-            Transaction prevTran = this.AddSpendableTransactionToWallet(wallet2);
+            Transaction prevTran = AddSpendableTransactionToWallet(wallet2);
 
             // Create the cold staking setup transaction.
             IActionResult result = this.coldStakingController.SetupColdStaking(new SetupColdStakingRequest
@@ -771,14 +771,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void SetupScriptColdStakingWithColdWalletSegwitSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2), purpose: 84);
 
             Wallet.Types.Wallet wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
-            Transaction prevTran = this.AddSpendableTransactionToWallet(wallet2);
+            Transaction prevTran = AddSpendableTransactionToWallet(wallet2);
 
             // Create the cold staking setup transaction.
             IActionResult result = this.coldStakingController.SetupColdStaking(new SetupColdStakingRequest
@@ -821,7 +821,7 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void GetColdStakingInfoOnlyConfirmAccountExistenceOnceCreated()
         {
-            this.Initialize();
+            Initialize();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName1, walletPassphrase, new Mnemonic(walletMnemonic1));
 
@@ -956,14 +956,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void ColdStakingWithdrawalWithColdWalletSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
             var wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
-            Transaction prevTran = this.AddSpendableColdstakingTransactionToWallet(wallet2);
+            Transaction prevTran = AddSpendableColdstakingTransactionToWallet(wallet2);
 
             BitcoinPubKeyAddress receivingAddress = new Key().PubKey.GetAddress(this.Network);
 
@@ -1003,14 +1003,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void ColdStakingWithdrawalToSegwitWithColdWalletSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
             var wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
-            Transaction prevTran = this.AddSpendableColdstakingTransactionToWallet(wallet2);
+            Transaction prevTran = AddSpendableColdstakingTransactionToWallet(wallet2);
 
             BitcoinWitPubKeyAddress receivingAddress = new Key().PubKey.GetSegwitAddress(this.Network);
 
@@ -1047,14 +1047,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void ColdStakingScriptWithdrawalToSegwitWithColdWalletSucceeds()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
             var wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
-            Transaction prevTran = this.AddSpendableColdstakingTransactionToWallet(wallet2, true);
+            Transaction prevTran = AddSpendableColdstakingTransactionToWallet(wallet2, true);
 
             BitcoinWitPubKeyAddress receivingAddress = new Key().PubKey.GetSegwitAddress(this.Network);
 
@@ -1106,14 +1106,14 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void ColdStakingWithdrawalToColdWalletAccountThrowsWalletException()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 
             var wallet2 = this.coldStakingManager.GetWalletByName(walletName2);
 
-            Transaction prevTran = this.AddSpendableColdstakingTransactionToWallet(wallet2);
+            Transaction prevTran = AddSpendableColdstakingTransactionToWallet(wallet2);
 
             HdAddress receivingAddress = this.coldStakingManager.GetOrCreateColdStakingAccount(walletName2, true, walletPassword).ExternalAddresses.First();
 
@@ -1142,8 +1142,8 @@ namespace Blockcore.Features.ColdStaking.Tests
         [Fact]
         public void ColdStakingWithdrawalFromNonExistingColdWalletAccountThrowsWalletException()
         {
-            this.Initialize();
-            this.CreateMempoolManager();
+            Initialize();
+            CreateMempoolManager();
 
             this.coldStakingManager.CreateWallet(walletPassword, walletName2, walletPassphrase, new Mnemonic(walletMnemonic2));
 

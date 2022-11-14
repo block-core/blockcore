@@ -45,7 +45,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
         /// <summary>Access to dBreeze database.</summary>
         private readonly DB leveldb;
 
-        private DataStoreSerializer dataStoreSerializer;
+        private readonly DataStoreSerializer dataStoreSerializer;
 
         public LevelDbCoindb(Network network, DataFolder dataFolder, IDateTimeProvider dateTimeProvider,
             ILoggerFactory loggerFactory, INodeStats nodeStats, DataStoreSerializer dataStoreSerializer)
@@ -61,7 +61,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
 
             this.dataStoreSerializer = dataStoreSerializer;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             // Open a connection to a new DB and create if not found
             var options = new Options { CreateIfMissing = true };
@@ -70,16 +70,16 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
             this.network = network;
             this.performanceCounter = new BackendPerformanceCounter(dateTimeProvider);
 
-            nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 400);
+            nodeStats.RegisterStats(AddBenchStats, StatsType.Benchmark, GetType().Name, 400);
         }
 
         public void Initialize()
         {
             Block genesis = this.network.GetGenesis();
 
-            if (this.GetTipHash() == null)
+            if (GetTipHash() == null)
             {
-                this.SetBlockHash(new HashHeightPair(genesis.GetHash(), 0));
+                SetBlockHash(new HashHeightPair(genesis.GetHash(), 0));
             }
         }
 
@@ -134,7 +134,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
             {
                 using (new StopwatchDisposable(o => this.performanceCounter.AddInsertTime(o)))
                 {
-                    HashHeightPair current = this.GetTipHash();
+                    HashHeightPair current = GetTipHash();
                     if (current != oldBlockHash)
                     {
                         this.logger.LogTrace("(-)[BLOCKHASH_MISMATCH]");
@@ -182,7 +182,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
                     insertedEntities += unspentOutputs.Count;
                     this.leveldb.Write(batch);
 
-                    this.SetBlockHash(nextBlockHash);
+                    SetBlockHash(nextBlockHash);
                 }
             }
 
@@ -195,7 +195,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
             HashHeightPair res = null;
             using (var batch = new WriteBatch())
             {
-                HashHeightPair current = this.GetTipHash();
+                HashHeightPair current = GetTipHash();
 
                 byte[] row = this.leveldb.Get(new byte[] { rewindTable }.Concat(BitConverter.GetBytes(current.Height)).ToArray());
 
@@ -224,7 +224,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
 
                 this.leveldb.Write(batch);
 
-                this.SetBlockHash(rewindData.PreviousBlockHash);
+                SetBlockHash(rewindData.PreviousBlockHash);
             }
 
             return res;

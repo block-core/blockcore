@@ -16,9 +16,9 @@ namespace Blockcore.Features.RPC
 
     public class RPCRouteHandler : IRPCRouteHandler
     {
-        private IRouter inner;
+        private readonly IRouter inner;
 
-        private IActionDescriptorCollectionProvider actionDescriptor;
+        private readonly IActionDescriptorCollectionProvider actionDescriptor;
 
         public RPCRouteHandler(IRouter inner, IActionDescriptorCollectionProvider actionDescriptor)
         {

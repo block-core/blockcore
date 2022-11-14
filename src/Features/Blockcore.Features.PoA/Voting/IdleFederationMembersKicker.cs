@@ -63,15 +63,15 @@ namespace Blockcore.Features.PoA.Voting
             this.timeProvider = timeProvider;
 
             this.consensusFactory = this.network.Consensus.ConsensusFactory as PoAConsensusFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.federationMemberMaxIdleTimeSeconds = ((PoAConsensusOptions)network.Consensus.Options).FederationMemberMaxIdleTimeSeconds;
         }
 
         public void Initialize()
         {
-            this.blockConnectedToken = this.signals.Subscribe<BlockConnected>(this.OnBlockConnected);
-            this.fedMemberAddedToken = this.signals.Subscribe<FedMemberAdded>(this.OnFedMemberAdded);
-            this.fedMemberKickedToken = this.signals.Subscribe<FedMemberKicked>(this.OnFedMemberKicked);
+            this.blockConnectedToken = this.signals.Subscribe<BlockConnected>(OnBlockConnected);
+            this.fedMemberAddedToken = this.signals.Subscribe<FedMemberAdded>(OnFedMemberAdded);
+            this.fedMemberKickedToken = this.signals.Subscribe<FedMemberKicked>(OnFedMemberKicked);
 
             Dictionary<string, uint> loaded = this.keyValueRepository.LoadValueJson<Dictionary<string, uint>>(fedMembersByLastActiveTimeKey);
 
@@ -94,7 +94,7 @@ namespace Blockcore.Features.PoA.Voting
                 foreach (IFederationMember federationMember in this.federationManager.GetFederationMembers())
                     this.fedPubKeysByLastActiveTime.Add(federationMember.PubKey, 0);
 
-                this.SaveMembersByLastActiveTime();
+                SaveMembersByLastActiveTime();
             }
         }
 
@@ -102,7 +102,7 @@ namespace Blockcore.Features.PoA.Voting
         {
             this.fedPubKeysByLastActiveTime.Remove(fedMemberKickedData.KickedMember.PubKey);
 
-            this.SaveMembersByLastActiveTime();
+            SaveMembersByLastActiveTime();
         }
 
         private void OnFedMemberAdded(FedMemberAdded fedMemberAddedData)
@@ -111,7 +111,7 @@ namespace Blockcore.Features.PoA.Voting
             {
                 this.fedPubKeysByLastActiveTime.Add(fedMemberAddedData.AddedMember.PubKey, this.consensusManager.Tip.Header.Time);
 
-                this.SaveMembersByLastActiveTime();
+                SaveMembersByLastActiveTime();
             }
         }
 
@@ -122,7 +122,7 @@ namespace Blockcore.Features.PoA.Voting
             PubKey key = this.slotsManager.GetFederationMemberForTimestamp(timestamp).PubKey;
             this.fedPubKeysByLastActiveTime.AddOrReplace(key, timestamp);
 
-            this.SaveMembersByLastActiveTime();
+            SaveMembersByLastActiveTime();
 
             // Check if any fed member was idle for too long.
             ChainedHeader tip = this.consensusManager.Tip;

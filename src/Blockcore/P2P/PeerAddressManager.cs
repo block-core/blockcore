@@ -25,7 +25,7 @@ namespace Blockcore.P2P
         private readonly ILogger logger;
 
         /// <summary>Key value store that indexes all discovered peers by their end point.</summary>
-        private ConcurrentDictionary<IPEndPoint, PeerAddress> peerInfoByPeerAddress;
+        private readonly ConcurrentDictionary<IPEndPoint, PeerAddress> peerInfoByPeerAddress;
 
         /// <inheritdoc />
         public ICollection<PeerAddress> Peers => this.peerInfoByPeerAddress.Values;
@@ -48,7 +48,7 @@ namespace Blockcore.P2P
         public PeerAddressManager(IDateTimeProvider dateTimeProvider, DataFolder peerFilePath, ILoggerFactory loggerFactory, ISelfEndpointTracker selfEndpointTracker)
         {
             this.dateTimeProvider = dateTimeProvider;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.peerInfoByPeerAddress = new ConcurrentDictionary<IPEndPoint, PeerAddress>();
             this.PeerFilePath = peerFilePath;
             this.PeerSelector = new PeerSelector(this.dateTimeProvider, loggerFactory, this.peerInfoByPeerAddress, selfEndpointTracker);
@@ -110,9 +110,9 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public PeerAddress AddPeer(IPEndPoint endPoint, IPAddress source)
         {
-            PeerAddress peerAddress = this.AddPeerWithoutCleanup(endPoint, source);
+            PeerAddress peerAddress = AddPeerWithoutCleanup(endPoint, source);
 
-            this.EnsureMaxItemsPerSource(source);
+            EnsureMaxItemsPerSource(source);
 
             return peerAddress;
         }
@@ -143,9 +143,9 @@ namespace Blockcore.P2P
         public void AddPeers(IEnumerable<IPEndPoint> endPoints, IPAddress source)
         {
             foreach (IPEndPoint endPoint in endPoints)
-                this.AddPeerWithoutCleanup(endPoint, source);
+                AddPeerWithoutCleanup(endPoint, source);
 
-            this.EnsureMaxItemsPerSource(source);
+            EnsureMaxItemsPerSource(source);
         }
 
         private void EnsureMaxItemsPerSource(IPAddress source)
@@ -156,7 +156,7 @@ namespace Blockcore.P2P
             if (itemsToRemove.Count > 0)
             {
                 foreach (IPEndPoint toRemove in itemsToRemove)
-                    this.RemovePeer(toRemove);
+                    RemovePeer(toRemove);
             }
         }
 
@@ -169,7 +169,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public void PeerAttempted(IPEndPoint endpoint, DateTime peerAttemptedAt)
         {
-            PeerAddress peer = this.FindPeer(endpoint);
+            PeerAddress peer = FindPeer(endpoint);
             if (peer == null)
                 return;
 
@@ -182,7 +182,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public void PeerConnected(IPEndPoint endpoint, DateTimeOffset peerConnectedAt)
         {
-            PeerAddress peer = this.FindPeer(endpoint);
+            PeerAddress peer = FindPeer(endpoint);
 
             peer?.SetConnected(peerConnectedAt);
         }
@@ -190,7 +190,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public void PeerDiscoveredFrom(IPEndPoint endpoint, DateTime peerDiscoveredFrom)
         {
-            PeerAddress peer = this.FindPeer(endpoint);
+            PeerAddress peer = FindPeer(endpoint);
 
             peer?.SetDiscoveredFrom(peerDiscoveredFrom);
         }
@@ -198,7 +198,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public void PeerHandshaked(IPEndPoint endpoint, DateTimeOffset peerHandshakedAt)
         {
-            PeerAddress peer = this.FindPeer(endpoint);
+            PeerAddress peer = FindPeer(endpoint);
 
             peer?.SetHandshaked(peerHandshakedAt);
         }
@@ -206,7 +206,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public void PeerSeen(IPEndPoint endpoint, DateTime peerSeenAt)
         {
-            PeerAddress peer = this.FindPeer(endpoint);
+            PeerAddress peer = FindPeer(endpoint);
 
             peer?.SetLastSeen(peerSeenAt);
         }
@@ -228,7 +228,7 @@ namespace Blockcore.P2P
         /// <inheritdoc />
         public void Dispose()
         {
-            this.SavePeers();
+            SavePeers();
         }
     }
 }

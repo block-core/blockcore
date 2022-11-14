@@ -55,8 +55,19 @@ namespace Blockcore.IntegrationTests
 
         public void Dispose()
         {
-            foreach (IDisposable item in this.cleanList)
-                item.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (IDisposable item in this.cleanList)
+                    item.Dispose();
+                this.loggerFactory.Dispose();
+            }
         }
 
         public void ReloadPersistentCoinView()

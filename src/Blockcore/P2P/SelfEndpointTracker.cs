@@ -41,7 +41,7 @@ namespace Blockcore.P2P
             this.IsMyExternalAddressFinal = false;
             this.MyExternalAddress = connectionManagerSettings.ExternalEndpoint;
             this.MyExternalPort = connectionManagerSettings.Port;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc/>

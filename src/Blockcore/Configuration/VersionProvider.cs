@@ -7,7 +7,7 @@ namespace Blockcore.Configuration
     {
         public string GetVersion()
         {
-            Match match = Regex.Match(this.GetType().AssemblyQualifiedName, "Version=([0-9]+)(\\.([0-9]+)|)(\\.([0-9]+)|)(\\.([0-9]+)|)");
+            Match match = Regex.Match(GetType().AssemblyQualifiedName, "Version=([0-9]+)(\\.([0-9]+)|)(\\.([0-9]+)|)(\\.([0-9]+)|)");
             string major = match.Groups[1].Value;
             string minor = match.Groups[3].Value;
             string build = match.Groups[5].Value;

@@ -37,7 +37,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             string folder = CreateTestDir(this);
 
             // Initialise the repository - this will set-up the genesis blockHash (blockId).
-            using (IProvenBlockHeaderRepository repository = this.SetupRepository(this.Network, folder))
+            using (IProvenBlockHeaderRepository repository = SetupRepository(this.Network, folder))
             {
                 // Check the BlockHash (blockId) exists.
                 repository.TipHashHeight.Height.Should().Be(0);
@@ -55,7 +55,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             var blockHashHeightPair = new HashHeightPair(provenBlockHeaderIn.GetHash(), 0);
             var items = new SortedDictionary<int, ProvenBlockHeader>() { { 0, provenBlockHeaderIn } };
 
-            using (IProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (IProvenBlockHeaderRepository repo = SetupRepository(this.Network, folder))
             {
                 await repo.PutAsync(items, blockHashHeightPair);
             }
@@ -85,7 +85,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             var items = new SortedDictionary<int, ProvenBlockHeader>() { { 0, header1 }, { 1, header2 } };
 
             // Put the items in the repository.
-            using (IProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (IProvenBlockHeaderRepository repo = SetupRepository(this.Network, folder))
             {
                 await repo.PutAsync(items, new HashHeightPair(header2.GetHash(), items.Count - 1));
             }
@@ -120,7 +120,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             // Query the repository for the item that was inserted in the above code.
-            using (LevelDbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (LevelDbProvenBlockHeaderRepository repo = SetupRepository(this.Network, folder))
             {
                 var headerOut = await repo.GetAsync(blockHeight).ConfigureAwait(false);
 
@@ -140,7 +140,7 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
                 engine.Put(DBH.Key(BlockHashHeightTable, new byte[0]), this.DataStoreSerializer.Serialize(new HashHeightPair(new uint256(), 1)));
             }
 
-            using (LevelDbProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (LevelDbProvenBlockHeaderRepository repo = SetupRepository(this.Network, folder))
             {
                 // Select a different block height.
                 ProvenBlockHeader outHeader = await repo.GetAsync(2).ConfigureAwait(false);
@@ -166,12 +166,12 @@ namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders
             }
 
             // Put the items in the repository.
-            using (IProvenBlockHeaderRepository repo = this.SetupRepository(this.Network, folder))
+            using (IProvenBlockHeaderRepository repo = SetupRepository(this.Network, folder))
             {
                 await repo.PutAsync(headers, new HashHeightPair(headers.Last().Value.GetHash(), headers.Count - 1));
             }
 
-            using (IProvenBlockHeaderRepository newRepo = this.SetupRepository(this.Network, folder))
+            using (IProvenBlockHeaderRepository newRepo = SetupRepository(this.Network, folder))
             {
                 newRepo.TipHashHeight.Hash.Should().Be(headers.Last().Value.GetHash());
                 newRepo.TipHashHeight.Height.Should().Be(headers.Count - 1);

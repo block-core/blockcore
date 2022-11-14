@@ -542,7 +542,7 @@ namespace Blockcore.IntegrationTests
             context.hash = tx.GetHash();
             context.mempool.AddUnchecked(context.hash, context.entry.Fee(context.HIGHFEE).Time(context.DateTimeProvider.GetTime()).SpendsCoinbase(true).FromTx(tx));
             Assert.True(MempoolValidator.CheckFinalTransaction(context.ChainIndexer, context.DateTimeProvider, tx, flags)); // Locktime passes
-            Assert.True(!this.TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks fail
+            Assert.True(!TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks fail
 
             BlockHeader blockHeader = context.network.Consensus.ConsensusFactory.CreateBlockHeader();
             blockHeader.HashPrevBlock = context.ChainIndexer.Tip.HashBlock;
@@ -590,7 +590,7 @@ namespace Blockcore.IntegrationTests
             context.hash = tx.GetHash();
             context.mempool.AddUnchecked(context.hash, context.entry.Time(context.DateTimeProvider.GetTime()).FromTx(tx));
             Assert.True(MempoolValidator.CheckFinalTransaction(context.ChainIndexer, context.DateTimeProvider, tx, flags)); // Locktime passes
-            Assert.True(!this.TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks fail
+            Assert.True(!TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks fail
         }
 
         [Fact]
@@ -638,7 +638,7 @@ namespace Blockcore.IntegrationTests
             context.hash = tx.GetHash();
             context.mempool.AddUnchecked(context.hash, context.entry.Time(context.DateTimeProvider.GetTime()).FromTx(tx));
             Assert.True(!MempoolValidator.CheckFinalTransaction(context.ChainIndexer, context.DateTimeProvider, tx, flags)); // Locktime fails
-            Assert.True(this.TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks pass
+            Assert.True(TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks pass
 
             BlockHeader blockHeader = context.network.Consensus.ConsensusFactory.CreateBlockHeader();
             blockHeader.HashPrevBlock = context.ChainIndexer.Tip.HashBlock;
@@ -679,7 +679,7 @@ namespace Blockcore.IntegrationTests
             context.hash = tx.GetHash();
             context.mempool.AddUnchecked(context.hash, context.entry.Time(context.DateTimeProvider.GetTime()).FromTx(tx));
             Assert.True(!MempoolValidator.CheckFinalTransaction(context.ChainIndexer, context.DateTimeProvider, tx, flags)); // Locktime fails
-            Assert.True(this.TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks pass
+            Assert.True(TestSequenceLocks(context, context.ChainIndexer.Tip, tx, flags)); // Sequence locks pass
 
             BlockHeader blockHeader = context.network.Consensus.ConsensusFactory.CreateBlockHeader();
             blockHeader.HashPrevBlock = context.ChainIndexer.Tip.HashBlock;

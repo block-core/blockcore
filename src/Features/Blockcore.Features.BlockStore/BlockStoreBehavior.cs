@@ -81,7 +81,7 @@ namespace Blockcore.Features.BlockStore
 
             this.ChainIndexer = chainIndexer;
             this.chainState = chainState;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.loggerFactory = loggerFactory;
             this.consensusManager = consensusManager;
             this.blockStoreQueue = blockStoreQueue;
@@ -95,20 +95,20 @@ namespace Blockcore.Features.BlockStore
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
             this.consensusManagerBehavior = this.AttachedPeer.Behavior<ConsensusManagerBehavior>();
         }
 
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
         }
 
         private async Task OnMessageReceivedAsync(INetworkPeer peer, IncomingMessage message)
         {
             try
             {
-                await this.ProcessMessageAsync(peer, message).ConfigureAwait(false);
+                await ProcessMessageAsync(peer, message).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -134,7 +134,7 @@ namespace Blockcore.Features.BlockStore
                         break;
                     }
 
-                    await this.ProcessGetDataAsync(peer, getDataPayload).ConfigureAwait(false);
+                    await ProcessGetDataAsync(peer, getDataPayload).ConfigureAwait(false);
                     break;
 
                 case GetBlocksPayload getBlocksPayload:
@@ -147,7 +147,7 @@ namespace Blockcore.Features.BlockStore
                         break;
                     }
 
-                    await this.ProcessGetBlocksAsync(peer, getBlocksPayload).ConfigureAwait(false);
+                    await ProcessGetBlocksAsync(peer, getBlocksPayload).ConfigureAwait(false);
                     break;
 
                 case SendHeadersPayload sendHeadersPayload:
@@ -373,7 +373,7 @@ namespace Blockcore.Features.BlockStore
                     // We expect peer to answer with getheaders message.
                     if (bestSentHeader == null)
                     {
-                        await peer.SendMessageAsync(this.BuildHeadersAnnouncePayload(new[] { blocksToAnnounce.Last() })).ConfigureAwait(false);
+                        await peer.SendMessageAsync(BuildHeadersAnnouncePayload(new[] { blocksToAnnounce.Last() })).ConfigureAwait(false);
 
                         this.logger.LogTrace("(-)[SENT_SINGLE_HEADER]");
                         return;
@@ -427,7 +427,7 @@ namespace Blockcore.Features.BlockStore
                         this.lastSentHeader = bestIndex;
                         this.consensusManagerBehavior.UpdateBestSentHeader(this.lastSentHeader);
 
-                        await peer.SendMessageAsync(this.BuildHeadersAnnouncePayload(headers)).ConfigureAwait(false);
+                        await peer.SendMessageAsync(BuildHeadersAnnouncePayload(headers)).ConfigureAwait(false);
                         this.logger.LogTrace("(-)[SEND_HEADERS_PAYLOAD]");
                         return;
                     }
@@ -460,7 +460,7 @@ namespace Blockcore.Features.BlockStore
                     this.lastSentHeader = inventoryBlockToSend.Last();
                     this.consensusManagerBehavior.UpdateBestSentHeader(this.lastSentHeader);
 
-                    await this.SendAsBlockInventoryAsync(peer, inventoryBlockToSend).ConfigureAwait(false);
+                    await SendAsBlockInventoryAsync(peer, inventoryBlockToSend).ConfigureAwait(false);
                     this.logger.LogTrace("(-)[SEND_INVENTORY]");
                     return;
                 }

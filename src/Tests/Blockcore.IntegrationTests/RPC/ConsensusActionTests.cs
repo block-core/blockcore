@@ -16,7 +16,7 @@ namespace Blockcore.IntegrationTests.RPC
         {
             string dir = CreateTestDir(this);
 
-            IFullNode fullNode = this.BuildServicedNode(dir);
+            IFullNode fullNode = BuildServicedNode(dir);
             var controller = fullNode.NodeController<ConsensusRPCController>();
 
             uint256 result = controller.GetBestBlockHash();
@@ -29,7 +29,7 @@ namespace Blockcore.IntegrationTests.RPC
         {
             string dir = CreateTestDir(this);
 
-            IFullNode fullNode = this.BuildServicedNode(dir);
+            IFullNode fullNode = BuildServicedNode(dir);
             var controller = fullNode.NodeController<ConsensusRPCController>();
 
             uint256 result = controller.GetBlockHash(0);
@@ -42,7 +42,7 @@ namespace Blockcore.IntegrationTests.RPC
         {
             string dir = CreateTestDir(this);
 
-            IFullNode fullNode = this.BuildServicedNode(dir);
+            IFullNode fullNode = BuildServicedNode(dir);
             var isIBDProvider = fullNode.NodeService<IInitialBlockDownloadState>(true);
             var chainState = fullNode.NodeService<IChainState>(true);
             chainState.ConsensusTip = new ChainedHeader(fullNode.Network.GetGenesis().Header, fullNode.Network.GenesisHash, 0);

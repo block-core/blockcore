@@ -31,7 +31,7 @@ namespace Blockcore.Consensus.ScriptInfo
         public ColdStakingScriptSigParameters ExtractScriptSigParameters(Network network, Script scriptSig)
         {
             Op[] ops = scriptSig.ToOps().ToArray();
-            if (!this.CheckScriptSigCore(network, scriptSig, ops, null, null))
+            if (!CheckScriptSigCore(network, scriptSig, ops, null, null))
                 return null;
 
             try
@@ -56,7 +56,7 @@ namespace Blockcore.Consensus.ScriptInfo
         /// <returns>The scriptSig.</returns>
         public Script GenerateScriptSig(ColdStakingScriptSigParameters parameters)
         {
-            return this.GenerateScriptSig(parameters.TransactionSignature, parameters.IsColdPublicKey, parameters.PublicKey);
+            return GenerateScriptSig(parameters.TransactionSignature, parameters.IsColdPublicKey, parameters.PublicKey);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Blockcore.Consensus.ScriptInfo
         /// <returns>Returns <c>true</c> if this is a cold staking script and the keys have been extracted.</returns>
         public bool ExtractScriptPubKeyParameters(Script scriptPubKey, out KeyId hotPubKeyHash, out KeyId coldPubKeyHash)
         {
-            if (!this.FastCheckScriptPubKey(scriptPubKey, out bool needMoreCheck))
+            if (!FastCheckScriptPubKey(scriptPubKey, out bool needMoreCheck))
             {
                 hotPubKeyHash = null;
                 coldPubKeyHash = null;

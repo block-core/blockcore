@@ -102,7 +102,7 @@ namespace Blockcore.Features.Miner
             this.dateTimeProvider = dateTimeProvider;
             this.loggerFactory = loggerFactory;
             this.initialBlockDownloadState = initialBlockDownloadState;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.mempool = mempool;
             this.mempoolLock = mempoolLock;
             this.network = network;
@@ -122,7 +122,7 @@ namespace Blockcore.Features.Miner
             {
                 try
                 {
-                    this.GenerateBlocks(new ReserveScript { ReserveFullNodeScript = reserveScript }, int.MaxValue, int.MaxValue);
+                    GenerateBlocks(new ReserveScript { ReserveFullNodeScript = reserveScript }, int.MaxValue, int.MaxValue);
                 }
                 catch (OperationCanceledException)
                 {
@@ -179,22 +179,22 @@ namespace Blockcore.Features.Miner
 
             while (context.MiningCanContinue)
             {
-                if (!this.ConsensusIsAtTip(context))
+                if (!ConsensusIsAtTip(context))
                     continue;
 
-                if (!this.BuildBlock(context))
+                if (!BuildBlock(context))
                     continue;
 
-                if (!this.MineBlock(context))
+                if (!MineBlock(context))
                     break;
 
-                if (!this.ValidateMinedBlock(context))
+                if (!ValidateMinedBlock(context))
                     continue;
 
-                if (!this.ValidateAndConnectBlock(context))
+                if (!ValidateAndConnectBlock(context))
                     continue;
 
-                this.OnBlockMined(context);
+                OnBlockMined(context);
             }
 
             return context.Blocks;
@@ -255,7 +255,7 @@ namespace Blockcore.Features.Miner
         /// </summary>
         private bool MineBlock(MineBlockContext context)
         {
-            context.ExtraNonce = this.IncrementExtraNonce(context.BlockTemplate.Block, context.ChainTip, context.ExtraNonce);
+            context.ExtraNonce = IncrementExtraNonce(context.BlockTemplate.Block, context.ChainTip, context.ExtraNonce);
 
             Block block = context.BlockTemplate.Block;
             while ((context.MaxTries > 0) && (block.Header.Nonce < InnerLoopCount) && !block.CheckProofOfWork())

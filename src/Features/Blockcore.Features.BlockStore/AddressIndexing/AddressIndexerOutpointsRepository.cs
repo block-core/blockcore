@@ -32,7 +32,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
         public AddressIndexerOutpointsRepository(LiteDatabase db, ILoggerFactory loggerFactory, int maxItems = 60_000)
         {
             this.db = db;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.addressIndexerOutPointData = db.GetCollection<OutPointData>(DbOutputsDataKey);
             this.addressIndexerRewindData = db.GetCollection<AddressIndexerRewindData>(DbOutputsRewindDataKey);
             this.maxCacheItems = maxItems;
@@ -45,7 +45,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         public void AddOutPointData(OutPointData outPointData)
         {
-            this.AddOrUpdate(new CacheItem(outPointData.Outpoint, outPointData, 1));
+            AddOrUpdate(new CacheItem(outPointData.Outpoint, outPointData, 1));
         }
 
         public void RemoveOutPointData(OutPoint outPoint)
@@ -76,7 +76,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
         public bool TryGetOutPointData(OutPoint outPoint, out OutPointData outPointData)
         {
-            if (this.TryGetValue(outPoint.ToString(), out outPointData))
+            if (TryGetValue(outPoint.ToString(), out outPointData))
             {
                 this.logger.LogTrace("(-)[FOUND_IN_CACHE]:true");
                 return true;
@@ -87,7 +87,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
             if (outPointData != null)
             {
-                this.AddOutPointData(outPointData);
+                AddOutPointData(outPointData);
                 this.logger.LogTrace("(-)[FOUND_IN_DATABASE]:true");
                 return true;
             }
@@ -137,7 +137,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 // Put the spent outputs back into the cache.
                 foreach (OutPointData outPointData in rewindData.SpentOutputs)
                 {
-                    this.AddOutPointData(outPointData);
+                    AddOutPointData(outPointData);
                 }
 
                 // This rewind data item should now be removed from the collection.

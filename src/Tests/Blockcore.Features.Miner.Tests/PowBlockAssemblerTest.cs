@@ -59,16 +59,16 @@ namespace Blockcore.Features.Miner.Tests
             this.minerSettings = new MinerSettings(NodeSettings.Default(this.Network));
             this.key = new Key();
 
-            this.SetupConsensusManager();
+            SetupConsensusManager();
         }
 
         [Fact]
         public void CreateNewBlock_WithScript_ReturnsBlockTemplate()
         {
-            this.ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.testNet, this.key);
-                this.SetupRulesEngine(chainIndexer);
+                SetupRulesEngine(chainIndexer);
                 this.consensusManager.Setup(s => s.Tip).Returns(chainIndexer.Tip);
                 this.dateTimeProvider.Setup(d => d.GetAdjustedTimeAsUnixTimestamp())
                     .Returns(new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc).ToUnixTimestamp());
@@ -117,10 +117,10 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void ComputeBlockVersion_UsingChainTipAndConsensus_NoBip9DeploymentActive_UpdatesHeightAndVersion()
         {
-            this.ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.testNet, new Key());
-                this.SetupRulesEngine(chainIndexer);
+                SetupRulesEngine(chainIndexer);
 
                 var blockDefinition = new PowTestBlockDefinition(this.consensusManager.Object, this.dateTimeProvider.Object, this.LoggerFactory.Object, this.txMempool.Object, new MempoolSchedulerLock(), this.minerSettings, this.testNet, this.consensusRules.Object, new NodeDeployments(this.testNet, chainIndexer));
 
@@ -153,7 +153,7 @@ namespace Blockcore.Features.Miner.Tests
                 this.testNet.Consensus.MinerConfirmationWindow = 2;
 
                 ChainIndexer chainIndexer = GenerateChainWithHeightAndActivatedBip9(5, this.testNet, new Key(), this.testNet.Consensus.BIP9Deployments[0]);
-                this.SetupRulesEngine(chainIndexer);
+                SetupRulesEngine(chainIndexer);
 
                 var blockDefinition = new PowTestBlockDefinition(this.consensusManager.Object, this.dateTimeProvider.Object, this.LoggerFactory.Object, this.txMempool.Object, new MempoolSchedulerLock(), this.minerSettings, this.testNet, this.consensusRules.Object, new NodeDeployments(this.testNet, chainIndexer));
 
@@ -176,7 +176,7 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void CreateCoinbase_CreatesCoinbaseTemplateTransaction_AddsToBlockTemplate()
         {
-            this.ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.testNet, this.key);
                 this.dateTimeProvider.Setup(d => d.GetAdjustedTimeAsUnixTimestamp())
@@ -206,7 +206,7 @@ namespace Blockcore.Features.Miner.Tests
         [Fact]
         public void UpdateHeaders_UsingChainAndNetwork_PreparesBlockHeaders()
         {
-            this.ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
+            ExecuteWithConsensusOptions(new ConsensusOptions(), () =>
             {
                 this.dateTimeProvider.Setup(d => d.GetTimeOffset()).Returns(new DateTimeOffset(new DateTime(2017, 1, 7, 0, 0, 0, DateTimeKind.Utc)));
 
@@ -227,7 +227,7 @@ namespace Blockcore.Features.Miner.Tests
         {
             var newOptions = new ConsensusOptions();
 
-            this.ExecuteWithConsensusOptions(newOptions, () =>
+            ExecuteWithConsensusOptions(newOptions, () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.testNet, new Key());
                 this.consensusManager.Setup(c => c.Tip)
@@ -252,7 +252,7 @@ namespace Blockcore.Features.Miner.Tests
         {
             var newOptions = new ConsensusOptions();
 
-            this.ExecuteWithConsensusOptions(newOptions, () =>
+            ExecuteWithConsensusOptions(newOptions, () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.testNet, this.key);
                 this.consensusManager.Setup(c => c.Tip).Returns(chainIndexer.GetHeader(5));
@@ -278,7 +278,7 @@ namespace Blockcore.Features.Miner.Tests
         {
             var newOptions = new ConsensusOptions();
 
-            this.ExecuteWithConsensusOptions(newOptions, () =>
+            ExecuteWithConsensusOptions(newOptions, () =>
             {
                 ChainIndexer chainIndexer = GenerateChainWithHeight(5, this.testNet, this.key);
                 this.consensusManager.Setup(c => c.Tip)

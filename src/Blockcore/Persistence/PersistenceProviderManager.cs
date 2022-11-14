@@ -59,7 +59,7 @@ namespace Blockcore.Persistence
 
             foreach (string unloadedPersistenceAssembly in unloadedPersistenceAssemblies)
             {
-                this.FindPersistenceAssembly(Assembly.LoadFrom(unloadedPersistenceAssembly));
+                FindPersistenceAssembly(Assembly.LoadFrom(unloadedPersistenceAssembly));
             }
         }
 
@@ -97,7 +97,7 @@ namespace Blockcore.Persistence
         {
             if (persistenceProviderImplementation == null)
             {
-                persistenceProviderImplementation = this.nodeSettings.DbType ?? this.GetDefaultProvider();
+                persistenceProviderImplementation = this.nodeSettings.DbType ?? GetDefaultProvider();
             }
 
             IPersistenceProvider provider = null;

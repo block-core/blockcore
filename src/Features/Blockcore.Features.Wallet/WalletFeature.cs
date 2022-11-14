@@ -62,8 +62,8 @@ namespace Blockcore.Features.Wallet
             this.walletManager = walletManager;
             this.addressBookManager = addressBookManager;
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
-            nodeStats.RegisterStats(this.AddInlineStats, StatsType.Inline, this.GetType().Name, 800);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
+            nodeStats.RegisterStats(AddInlineStats, StatsType.Inline, GetType().Name, 800);
         }
 
         /// <summary>

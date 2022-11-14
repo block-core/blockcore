@@ -81,7 +81,7 @@ namespace Blockcore.Features.Consensus
         /// <param name="loggerFactory">Factory for creating loggers.</param>
         public StakeValidator(Network network, IStakeChain stakeChain, ChainIndexer chainIndexer, ICoinView coinView, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.stakeChain = stakeChain;
             this.chainIndexer = chainIndexer;
             this.coinView = coinView;
@@ -154,7 +154,7 @@ namespace Blockcore.Features.Consensus
                 : consensus.PowLimit.ToBigInteger();
 
             // First block.
-            ChainedHeader lastPowPosBlock = this.GetLastPowPosChainedBlock(stakeChain, chainedHeader, proofOfStake);
+            ChainedHeader lastPowPosBlock = GetLastPowPosChainedBlock(stakeChain, chainedHeader, proofOfStake);
             if (lastPowPosBlock.Previous == null)
             {
                 var res = new Target(targetLimit);
@@ -163,7 +163,7 @@ namespace Blockcore.Features.Consensus
             }
 
             // Second block.
-            ChainedHeader prevLastPowPosBlock = this.GetLastPowPosChainedBlock(stakeChain, lastPowPosBlock.Previous, proofOfStake);
+            ChainedHeader prevLastPowPosBlock = GetLastPowPosChainedBlock(stakeChain, lastPowPosBlock.Previous, proofOfStake);
             if (prevLastPowPosBlock.Previous == null)
             {
                 var res = new Target(targetLimit);
@@ -184,7 +184,7 @@ namespace Blockcore.Features.Consensus
                 return lastPowPosBlock.Header.Bits;
             }
 
-            Target finalTarget = this.CalculateRetarget(lastPowPosBlock.Header.Time, lastPowPosBlock.Header.Bits, prevLastPowPosBlock.Header.Time, targetLimit);
+            Target finalTarget = CalculateRetarget(lastPowPosBlock.Header.Time, lastPowPosBlock.Header.Bits, prevLastPowPosBlock.Header.Time, targetLimit);
 
             return finalTarget;
         }
@@ -213,20 +213,20 @@ namespace Blockcore.Features.Consensus
             }
 
             // Verify signature.
-            if (!this.VerifySignature(prevUtxo, transaction, 0, ScriptVerify.None))
+            if (!VerifySignature(prevUtxo, transaction, 0, ScriptVerify.None))
             {
                 this.logger.LogTrace("(-)[BAD_SIGNATURE]");
                 ConsensusErrors.CoinstakeVerifySignatureFailed.Throw();
             }
 
             // Min age requirement.
-            if (this.IsConfirmedInNPrevBlocks(prevUtxo, prevChainedHeader, this.GetTargetDepthRequired(prevChainedHeader)))
+            if (IsConfirmedInNPrevBlocks(prevUtxo, prevChainedHeader, GetTargetDepthRequired(prevChainedHeader)))
             {
                 this.logger.LogTrace("(-)[BAD_STAKE_DEPTH]");
                 ConsensusErrors.InvalidStakeDepth.Throw();
             }
 
-            if (!this.CheckStakeKernelHash(context, headerBits, prevBlockStake.StakeModifierV2, prevUtxo, txIn.PrevOut, context.ValidationContext.ChainedHeaderToValidate.Header.Time))
+            if (!CheckStakeKernelHash(context, headerBits, prevBlockStake.StakeModifierV2, prevUtxo, txIn.PrevOut, context.ValidationContext.ChainedHeaderToValidate.Header.Time))
             {
                 this.logger.LogTrace("(-)[INVALID_STAKE_HASH_TARGET]");
                 ConsensusErrors.StakeHashInvalidTarget.Throw();
@@ -280,7 +280,7 @@ namespace Blockcore.Features.Consensus
                 ConsensusErrors.ReadTxPrevFailed.Throw();
             }
 
-            if (this.IsConfirmedInNPrevBlocks(prevUtxo, prevChainedHeader, this.GetTargetDepthRequired(prevChainedHeader)))
+            if (IsConfirmedInNPrevBlocks(prevUtxo, prevChainedHeader, GetTargetDepthRequired(prevChainedHeader)))
             {
                 this.logger.LogTrace("(-)[LOW_COIN_AGE]");
                 ConsensusErrors.InvalidStakeDepth.Throw();
@@ -293,7 +293,7 @@ namespace Blockcore.Features.Consensus
                 ConsensusErrors.BadStakeBlock.Throw();
             }
 
-            return this.CheckStakeKernelHash(context, headerBits, prevBlockStake.StakeModifierV2, prevUtxo, prevout, (uint)transactionTime);
+            return CheckStakeKernelHash(context, headerBits, prevBlockStake.StakeModifierV2, prevUtxo, prevout, (uint)transactionTime);
         }
 
         /// <inheritdoc/>
@@ -318,8 +318,8 @@ namespace Blockcore.Features.Consensus
             BigInteger weight = BigInteger.ValueOf(valueIn);
             BigInteger weightedTarget = target.Multiply(weight);
 
-            context.TargetProofOfStake = this.ToUInt256(weightedTarget);
-            this.logger.LogDebug("POS target is '{0}', weighted target for {1} coins is '{2}'.", this.ToUInt256(target), valueIn, context.TargetProofOfStake);
+            context.TargetProofOfStake = ToUInt256(weightedTarget);
+            this.logger.LogDebug("POS target is '{0}', weighted target for {1} coins is '{2}'.", ToUInt256(target), valueIn, context.TargetProofOfStake);
 
             // Calculate hash.
             using (var ms = new MemoryStream())

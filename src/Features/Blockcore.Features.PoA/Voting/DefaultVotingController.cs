@@ -41,7 +41,7 @@ namespace Blockcore.Features.PoA.Voting
             this.network = network;
             this.pollExecutor = pollExecutor;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         [Route("fedmembers")]
@@ -52,7 +52,7 @@ namespace Blockcore.Features.PoA.Voting
             {
                 List<IFederationMember> federationMembers = this.fedManager.GetFederationMembers();
 
-                return this.Json(federationMembers);
+                return Json(federationMembers);
             }
             catch (Exception e)
             {
@@ -71,7 +71,7 @@ namespace Blockcore.Features.PoA.Voting
 
                 IEnumerable<PollViewModel> models = polls.Select(x => new PollViewModel(x, this.pollExecutor));
 
-                return this.Json(models);
+                return Json(models);
             }
             catch (Exception e)
             {
@@ -90,7 +90,7 @@ namespace Blockcore.Features.PoA.Voting
 
                 IEnumerable<PollViewModel> models = polls.Select(x => new PollViewModel(x, this.pollExecutor));
 
-                return this.Json(models);
+                return Json(models);
             }
             catch (Exception e)
             {
@@ -107,7 +107,7 @@ namespace Blockcore.Features.PoA.Voting
             {
                 IEnumerable<HashModel> hashes = this.whitelistedHashesRepository.GetHashes().Select(x => new HashModel() { Hash = x.ToString() });
 
-                return this.Json(hashes);
+                return Json(hashes);
             }
             catch (Exception e)
             {
@@ -120,14 +120,14 @@ namespace Blockcore.Features.PoA.Voting
         [HttpPost]
         public IActionResult VoteWhitelistHash([FromBody] HashModel request)
         {
-            return this.VoteWhitelistRemoveHashMember(request, true);
+            return VoteWhitelistRemoveHashMember(request, true);
         }
 
         [Route("schedulevote-removehash")]
         [HttpPost]
         public IActionResult VoteRemoveHash([FromBody] HashModel request)
         {
-            return this.VoteWhitelistRemoveHashMember(request, false);
+            return VoteWhitelistRemoveHashMember(request, false);
         }
 
         private IActionResult VoteWhitelistRemoveHashMember(HashModel request, bool whitelist)
@@ -150,7 +150,7 @@ namespace Blockcore.Features.PoA.Voting
                     Data = hash.ToBytes()
                 });
 
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -169,7 +169,7 @@ namespace Blockcore.Features.PoA.Voting
 
                 IEnumerable<VotingDataModel> models = votes.Select(x => new VotingDataModel(x));
 
-                return this.Json(models);
+                return Json(models);
             }
             catch (Exception e)
             {

@@ -36,7 +36,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
         protected override void BeforeTest()
         {
-            this.nodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, this.CurrentTest.DisplayName));
+            this.nodeBuilder = NodeBuilder.Create(Path.Combine(GetType().Name, this.CurrentTest.DisplayName));
             this.network = new BitcoinRegTestOverrideCoinbaseMaturity(1, "regtest1");
         }
 
@@ -63,7 +63,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
             TestHelper.ConnectAndSync(this.sendingStratisBitcoinNode, this.receivingStratisBitcoinNode);
 
-            this.MineSpendableCoins();
+            MineSpendableCoins();
         }
 
         private void a_gap_limit_of_21()
@@ -75,12 +75,12 @@ namespace Blockcore.IntegrationTests.Wallet
             this.receivingStratisBitcoinNode = this.nodeBuilder.CreateStratisCustomPowNode(this.network, configParameters).WithWallet().Start();
 
             TestHelper.ConnectAndSync(this.sendingStratisBitcoinNode, this.receivingStratisBitcoinNode);
-            this.MineSpendableCoins();
+            MineSpendableCoins();
         }
 
         private void a_wallet_with_funds_at_index_20_which_is_beyond_default_gap_limit()
         {
-            ExtPubKey xPublicKey = this.GetExtendedPublicKey(this.receivingStratisBitcoinNode);
+            ExtPubKey xPublicKey = GetExtendedPublicKey(this.receivingStratisBitcoinNode);
             var recipientAddressBeyondGapLimit = xPublicKey.Derive(new KeyPath("0/20")).PubKey.GetAddress(KnownNetworks.RegTest);
 
             TransactionBuildContext transactionBuildContext = TestHelper.CreateTransactionBuildContext(

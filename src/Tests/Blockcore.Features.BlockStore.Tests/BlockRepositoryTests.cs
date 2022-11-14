@@ -20,7 +20,7 @@ namespace Blockcore.Features.BlockStore.Tests
         public void InitializesGenesisBlockAndTxIndexOnFirstLoad()
         {
             string dir = CreateTestDir(this);
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
             }
 
@@ -45,7 +45,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
             }
 
@@ -70,7 +70,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Equal(default(Transaction), repository.GetTransactionById(uint256.Zero));
             }
@@ -88,7 +88,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Null(repository.GetTransactionById(new uint256(65)));
             }
@@ -113,7 +113,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Equal((uint)125, repository.GetTransactionById(trans.GetHash()).Version);
             }
@@ -130,7 +130,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(false));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Equal(default(uint256), repository.GetBlockIdByTransactionId(new uint256(26)));
             }
@@ -147,7 +147,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Null(repository.GetBlockIdByTransactionId(new uint256(26)));
             }
@@ -165,7 +165,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Equal(new uint256(42), repository.GetBlockIdByTransactionId(new uint256(26)));
             }
@@ -202,7 +202,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.PutBlocks(new HashHeightPair(nextBlockHash, 100), blocks);
             }
@@ -241,7 +241,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.CommonTableName, new byte[1]), BitConverter.GetBytes(true));
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.SetTxIndex(false);
             }
@@ -264,7 +264,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Equal(block.GetHash(), repository.GetBlock(block.GetHash()).GetHash());
             }
@@ -289,7 +289,7 @@ namespace Blockcore.Features.BlockStore.Tests
                     engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, blocks[i].GetHash().ToBytes()), blocks[i].ToBytes());
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 List<Block> result = repository.GetBlocks(blocks.Select(b => b.GetHash()).ToList());
 
@@ -304,7 +304,7 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.Null(repository.GetBlock(new uint256()));
             }
@@ -321,7 +321,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 engine.Put(DBH.Key(LevelDbBlockRepository.BlockTableName, block.GetHash().ToBytes()), block.ToBytes());
             }
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.True(repository.Exist(block.GetHash()));
             }
@@ -332,7 +332,7 @@ namespace Blockcore.Features.BlockStore.Tests
         {
             string dir = CreateTestDir(this);
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Assert.False(repository.Exist(new uint256()));
             }
@@ -354,7 +354,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             var tip = new HashHeightPair(new uint256(45), 100);
 
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.Delete(tip, new List<uint256> { block.GetHash() });
             }
@@ -386,7 +386,7 @@ namespace Blockcore.Features.BlockStore.Tests
             }
 
             // Turn TxIndex on and then reindex database, as would happen on node startup if -txindex and -reindex are set.
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.SetTxIndex(true);
                 repository.ReIndex();
@@ -426,7 +426,7 @@ namespace Blockcore.Features.BlockStore.Tests
             }
 
             // Turn TxIndex off and then reindex database, as would happen on node startup if -txindex=0 and -reindex are set.
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.SetTxIndex(false);
                 repository.ReIndex();
@@ -451,7 +451,7 @@ namespace Blockcore.Features.BlockStore.Tests
         public void GetBlockByHashReturnsGenesisBlock()
         {
             string dir = CreateTestDir(this);
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 Block genesis = repository.GetBlock(this.Network.GetGenesis().GetHash());
 
@@ -463,7 +463,7 @@ namespace Blockcore.Features.BlockStore.Tests
         public void GetBlocksByHashReturnsGenesisBlock()
         {
             string dir = CreateTestDir(this);
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 List<Block> results = repository.GetBlocks(new List<uint256> { this.Network.GetGenesis().GetHash() });
 
@@ -480,7 +480,7 @@ namespace Blockcore.Features.BlockStore.Tests
             var genesisTransactions = genesis.Transactions;
 
             string dir = CreateTestDir(this);
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.SetTxIndex(true);
 
@@ -501,7 +501,7 @@ namespace Blockcore.Features.BlockStore.Tests
             var genesisTransactions = genesis.Transactions;
 
             string dir = CreateTestDir(this);
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.SetTxIndex(true);
 
@@ -523,7 +523,7 @@ namespace Blockcore.Features.BlockStore.Tests
             var genesisTransactions = genesis.Transactions;
 
             string dir = CreateTestDir(this);
-            using (IBlockRepository repository = this.SetupRepository(this.Network, dir))
+            using (IBlockRepository repository = SetupRepository(this.Network, dir))
             {
                 repository.SetTxIndex(true);
 

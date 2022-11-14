@@ -7,7 +7,7 @@ namespace Blockcore.Features.RPC
 {
     public class RPCTransactionRepository : ITransactionRepository
     {
-        private RPCClient _Client;
+        private readonly RPCClient _Client;
         public RPCTransactionRepository(RPCClient client)
         {
             if (client == null)

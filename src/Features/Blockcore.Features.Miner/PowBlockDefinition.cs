@@ -30,14 +30,14 @@ namespace Blockcore.Features.Miner
             : base(consensusManager, dateTimeProvider, loggerFactory, mempool, mempoolLock, minerSettings, network, nodeDeployments)
         {
             this.consensusRules = consensusRules;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         public override void AddToBlock(TxMempoolEntry mempoolEntry)
         {
-            this.AddTransactionToBlock(mempoolEntry.Transaction);
-            this.UpdateBlockStatistics(mempoolEntry);
-            this.UpdateTotalFees(mempoolEntry.Fee);
+            AddTransactionToBlock(mempoolEntry.Transaction);
+            UpdateBlockStatistics(mempoolEntry);
+            UpdateTotalFees(mempoolEntry.Fee);
         }
 
         /// <inheritdoc/>

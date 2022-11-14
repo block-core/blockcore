@@ -159,7 +159,7 @@ namespace Blockcore.IntegrationTests
         [Fact]
         public void Pow_MiningNodeWithOneConnection_AlwaysSynced()
         {
-            string testFolderPath = Path.Combine(this.GetType().Name, nameof(Pow_MiningNodeWithOneConnection_AlwaysSynced));
+            string testFolderPath = Path.Combine(GetType().Name, nameof(Pow_MiningNodeWithOneConnection_AlwaysSynced));
 
             using (NodeBuilder nodeBuilder = NodeBuilder.Create(testFolderPath))
             {

@@ -58,10 +58,10 @@ namespace Blockcore.Features.RPC
             this.AllowIp = new List<IPAddressBlock>();
 
             // Get values from config
-            this.LoadSettingsFromConfig(nodeSettings);
+            LoadSettingsFromConfig(nodeSettings);
 
             // Check validity of settings
-            this.CheckConfigurationValidity(nodeSettings.Logger);
+            CheckConfigurationValidity(nodeSettings.Logger);
         }
 
         /// <summary>

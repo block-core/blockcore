@@ -183,7 +183,7 @@ namespace Blockcore.Base
         /// <param name="network">The network the node is running on.</param>
         public TimeSyncBehaviorState(IDateTimeProvider dateTimeProvider, INodeLifetime nodeLifetime, IAsyncProvider asyncProvider, ILoggerFactory loggerFactory, Network network)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.dateTimeProvider = dateTimeProvider;
             this.nodeLifetime = nodeLifetime;
             this.asyncProvider = asyncProvider;
@@ -205,7 +205,7 @@ namespace Blockcore.Base
             bool startWarningLoopNow = false;
             lock (this.lockObject)
             {
-                if (this.SwitchedOff == null)
+                if (!this.SwitchedOff)
                 {
                     HashSet<IPAddress> sources = isInboundConnection ? this.inboundSampleSources : this.outboundSampleSources;
                     bool alreadyIncluded = sources.Contains(peerAddress);
@@ -229,7 +229,7 @@ namespace Blockcore.Base
                             this.logger.LogDebug("Oldest sample {0} from peer '{1}' removed.", oldSample.TimeOffset, oldSample.Source);
                         }
 
-                        this.RecalculateTimeOffsetLocked();
+                        RecalculateTimeOffsetLocked();
 
                         // If SwitchedOffLimitReached is set, timeOffset is set to zero,
                         // so we need to check both conditions here.
@@ -248,12 +248,10 @@ namespace Blockcore.Base
             }
 
             if (startWarningLoopNow)
-                this.StartWarningLoop();
+                StartWarningLoop();
 
             return res;
         }
-
-
 
         /// <summary>
         /// Calculates a new value for <see cref="timeOffset"/> based on existing samples.
@@ -361,10 +359,19 @@ namespace Blockcore.Base
             startAfter: TimeSpans.FiveSeconds);
         }
 
-        /// <inheritdoc />
         public void Dispose()
         {
-            this.warningLoop?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.warningLoop?.Dispose();
+            }
         }
     }
 
@@ -395,7 +402,7 @@ namespace Blockcore.Base
         public TimeSyncBehavior(ITimeSyncBehaviorState state, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory)
         {
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.dateTimeProvider = dateTimeProvider;
             this.state = state;
         }
@@ -403,13 +410,13 @@ namespace Blockcore.Base
         /// <inheritdoc />
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
@@ -445,7 +452,7 @@ namespace Blockcore.Base
                         TimeSpan? timeOffset = version.Timestamp - this.dateTimeProvider.GetTimeOffset();
                         if (timeOffset != null) this.state.AddTimeData(address, timeOffset.Value, peer.Inbound);
                     }
-                    else this.logger.LogDebug("Node '{0}' does not have an initialized time offset.", peer.RemoteSocketEndpoint);
+                    else this.logger.LogDebug("Node '{endpoint}' does not have an initialized time offset.", peer.RemoteSocketEndpoint);
                 }
                 else this.logger.LogDebug("Message received from unknown node's address.");
             }

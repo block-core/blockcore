@@ -21,7 +21,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         public void Add(IEnumerable<TransactionOutputData> transactions)
         {
-            transactions.ToList().ForEach(this.InsertOrUpdate);
+            transactions.ToList().ForEach(InsertOrUpdate);
         }
     }
 }

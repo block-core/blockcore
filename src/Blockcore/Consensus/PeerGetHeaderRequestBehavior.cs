@@ -60,7 +60,7 @@ namespace Blockcore.Consensus
         {
             this.dateTimeProvider = dateTimeProvider;
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.peerBanning = peerBanning;
         }
 
@@ -71,12 +71,12 @@ namespace Blockcore.Consensus
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceived, true);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceived, true);
         }
 
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceived);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceived);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Blockcore.Consensus
             switch (message.Message.Payload)
             {
                 case GetHeadersPayload getHeaders:
-                    this.HandleGetHeaders(getHeaders);
+                    HandleGetHeaders(getHeaders);
                     break;
 
                 default:

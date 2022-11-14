@@ -27,7 +27,7 @@ namespace Blockcore.Features.Wallet.Types
             var item = obj as WalletAccountReference;
             if (item == null)
                 return false;
-            return this.GetId().Equals(item.GetId());
+            return GetId().Equals(item.GetId());
         }
 
         public static bool operator ==(WalletAccountReference a, WalletAccountReference b)
@@ -46,7 +46,7 @@ namespace Blockcore.Features.Wallet.Types
 
         public override int GetHashCode()
         {
-            return this.GetId().GetHashCode();
+            return GetId().GetHashCode();
         }
 
         internal Tuple<string, string> GetId()

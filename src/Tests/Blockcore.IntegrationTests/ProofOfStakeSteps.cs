@@ -42,7 +42,7 @@ namespace Blockcore.IntegrationTests
 
         public ProofOfStakeSteps(string displayName)
         {
-            this.nodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, displayName));
+            this.nodeBuilder = NodeBuilder.Create(Path.Combine(GetType().Name, displayName));
         }
 
         public void PremineNodeWithWallet(string testId)
@@ -103,7 +103,7 @@ namespace Blockcore.IntegrationTests
         {
             // Get set of transaction IDs present in wallet before staking is started.
             this.transactionsBeforeStaking.Clear();
-            foreach (TransactionOutputData transactionData in this.GetTransactionsSnapshot())
+            foreach (TransactionOutputData transactionData in GetTransactionsSnapshot())
             {
                 this.transactionsBeforeStaking.Add(transactionData.Id);
             }
@@ -119,7 +119,7 @@ namespace Blockcore.IntegrationTests
             // determine whether staking occurred.
             TestBase.WaitLoop(() =>
             {
-                List<TransactionOutputData> transactions = this.GetTransactionsSnapshot();
+                List<TransactionOutputData> transactions = GetTransactionsSnapshot();
 
                 foreach (TransactionOutputData transactionData in transactions)
                 {
@@ -136,14 +136,14 @@ namespace Blockcore.IntegrationTests
         public void PosRewardForAllCoinstakeTransactionsIsCorrect()
         {
             // build a dictionary of coinstake tx's indexed by tx id.
-            foreach (var tx in this.GetTransactionsSnapshot())
+            foreach (var tx in GetTransactionsSnapshot())
             {
                 this.txLookup[tx.Id] = tx;
             }
 
             TestBase.WaitLoop(() =>
             {
-                List<TransactionOutputData> transactions = this.GetTransactionsSnapshot();
+                List<TransactionOutputData> transactions = GetTransactionsSnapshot();
 
                 foreach (TransactionOutputData transactionData in transactions)
                 {

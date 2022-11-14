@@ -15,9 +15,9 @@ namespace Blockcore.Features.RPC.Tests
 {
     public class RPCRouteHandlerTest
     {
-        private Mock<IRouter> inner;
-        private Mock<IActionDescriptorCollectionProvider> actionDescriptor;
-        private RPCRouteHandler handler;
+        private readonly Mock<IRouter> inner;
+        private readonly Mock<IActionDescriptorCollectionProvider> actionDescriptor;
+        private readonly RPCRouteHandler handler;
 
         public RPCRouteHandlerTest()
         {
@@ -44,7 +44,7 @@ namespace Blockcore.Features.RPC.Tests
         {
             var request = new HttpRequestFeature();
             SetupRequestBody(request, "{\"method\": \"GET\"}");
-            var context = new RouteContext(this.PrepareDefaultHttpContext(request));
+            var context = new RouteContext(PrepareDefaultHttpContext(request));
             RouteContext callback = null;
             this.inner.Setup(i => i.RouteAsync(It.IsAny<RouteContext>()))
                 .Callback<RouteContext>((r) => { callback = r; })
@@ -73,7 +73,7 @@ namespace Blockcore.Features.RPC.Tests
         {
             var request = new HttpRequestFeature();
             SetupRequestBody(request, "{\"method\": \"GET\"}");
-            var context = new RouteContext(this.PrepareDefaultHttpContext(request));
+            var context = new RouteContext(PrepareDefaultHttpContext(request));
             RouteContext callback = null;
             this.inner.Setup(i => i.RouteAsync(It.IsAny<RouteContext>()))
                 .Callback<RouteContext>((r) => { callback = r; })

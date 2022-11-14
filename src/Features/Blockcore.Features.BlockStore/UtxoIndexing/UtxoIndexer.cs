@@ -39,7 +39,7 @@ namespace Blockcore.Features.BlockStore
             this.network = network;
             this.chainIndexer = chainIndexer;
             this.blockStore = blockStore;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         public ReconstructedCoinviewContext GetCoinviewAtHeight(int blockHeight)
@@ -62,7 +62,7 @@ namespace Blockcore.Features.BlockStore
 
                 foreach (Block block in blocks)
                 {
-                    this.AdjustCoinviewForBlock(block, coinView);
+                    AdjustCoinviewForBlock(block, coinView);
                     totalBlocksCounted += 1;
 
                     // We have reached the block height asked for.

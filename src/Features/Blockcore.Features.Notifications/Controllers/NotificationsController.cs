@@ -76,7 +76,7 @@ namespace Blockcore.Features.Notifications.Controllers
                 this.blockNotification.SyncFrom(hashToSyncFrom);
             }
 
-            return this.Ok();
+            return Ok();
         }
     }
 }

@@ -38,7 +38,17 @@ namespace Blockcore.IntegrationTests
 
         public void Dispose()
         {
-            LogManager.Configuration.LoggingRules.Clear();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                LogManager.Configuration.LoggingRules.Clear();
+            }
         }
 
         /// <summary>
@@ -62,7 +72,7 @@ namespace Blockcore.IntegrationTests
             {
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
-                this.ConfigLogManager();
+                ConfigLogManager();
 
                 // Act.
                 var request = new LogRulesRequest { LogRules = new List<LogRuleRequest> { new LogRuleRequest { RuleName = ruleName, LogLevel = logLevel } } };
@@ -95,7 +105,7 @@ namespace Blockcore.IntegrationTests
             {
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
-                this.ConfigLogManager();
+                ConfigLogManager();
 
                 // Act.
                 var request = new LogRulesRequest { LogRules = new List<LogRuleRequest> { new LogRuleRequest { RuleName = ruleName, LogLevel = logLevel } } };
@@ -128,7 +138,7 @@ namespace Blockcore.IntegrationTests
             {
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
-                this.ConfigLogManager();
+                ConfigLogManager();
 
                 // Act.
                 var request = new LogRulesRequest { LogRules = new List<LogRuleRequest> { new LogRuleRequest { RuleName = ruleName, LogLevel = logLevel } } };
@@ -154,7 +164,7 @@ namespace Blockcore.IntegrationTests
             {
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
-                this.ConfigLogManager();
+                ConfigLogManager();
 
                 // Act.
                 var request = new LogRulesRequest { LogRules = new List<LogRuleRequest> { new LogRuleRequest { RuleName = ruleName, LogLevel = logLevel } } };
@@ -186,7 +196,7 @@ namespace Blockcore.IntegrationTests
 
                 TestHelper.Connect(node1, node2);
 
-                this.ConfigLogManager();
+                ConfigLogManager();
 
                 // Act.
                 var request = new LogRulesRequest
@@ -223,7 +233,7 @@ namespace Blockcore.IntegrationTests
             {
                 // Arrange.
                 CoreNode node = builder.CreateStratisPosNode(this.network).Start();
-                this.ConfigLogManager();
+                ConfigLogManager();
 
                 // Act.
                 List<LogRuleModel> rules = await $"http://localhost:{node.ApiPort}/api"

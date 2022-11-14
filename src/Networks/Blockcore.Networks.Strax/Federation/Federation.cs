@@ -39,7 +39,7 @@ namespace Blockcore.Networks.Strax.Federation
 
         public bool Equals(byte[] first, byte[] second)
         {
-            return this.Compare(first, second) == 0;
+            return Compare(first, second) == 0;
         }
 
         public int GetHashCode(byte[] obj)
@@ -58,7 +58,7 @@ namespace Blockcore.Networks.Strax.Federation
     public class FederationId : IBitcoinSerializable
     {
         byte[] federationId;
-        ByteArrayComparer comparer;
+        readonly ByteArrayComparer comparer;
 
         public FederationId()
         {
@@ -88,9 +88,9 @@ namespace Blockcore.Networks.Strax.Federation
 
     public class Federation : IFederation
     {
-        private PubKey[] transactionSigningKeys;
+        private readonly PubKey[] transactionSigningKeys;
 
-        private int signaturesRequired;
+        private readonly int signaturesRequired;
 
         public Script MultisigScript { get; private set; }
 

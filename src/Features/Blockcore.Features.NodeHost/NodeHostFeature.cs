@@ -52,7 +52,7 @@ namespace Blockcore.Features.NodeHost
             this.certificateStore = certificateStore;
             this.eventBroadcasters = eventBroadcasters;
             this.eventsSubscriptionService = eventsSubscriptionService;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.InitializeBeforeBase = true;
         }

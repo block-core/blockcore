@@ -29,12 +29,12 @@ namespace Blockcore.Tests.Common.TestFramework
             this.Output = output;
             this.startOfTestTime = DateTime.UtcNow;
 
-            this.BeforeTest();
+            BeforeTest();
         }
 
         public void Dispose()
         {
-            this.AfterTest();
+            AfterTest();
 
             DateTime endOfTestTime = DateTime.UtcNow;
             this.Output?.WriteLine($"({DateTime.UtcNow.ToLongTimeString()}) [End of test - {(endOfTestTime - this.startOfTestTime).TotalSeconds} seconds.]");
@@ -45,52 +45,52 @@ namespace Blockcore.Tests.Common.TestFramework
 
         public void Given(Action step)
         {
-            this.RunStep(step);
+            RunStep(step);
         }
 
         public void Given(Func<Task> step, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.RunStep(step, cancellationToken);
+            RunStep(step, cancellationToken);
         }
 
         public void When(Action step)
         {
-            this.RunStep(step);
+            RunStep(step);
         }
 
         public void When(Func<Task> step, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.RunStep(step, cancellationToken);
+            RunStep(step, cancellationToken);
         }
 
         public void Then(Action step)
         {
-            this.RunStep(step);
+            RunStep(step);
         }
 
         public void Then(Func<Task> step, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.RunStep(step, cancellationToken);
+            RunStep(step, cancellationToken);
         }
 
         public void And(Action step)
         {
-            this.RunStep(step);
+            RunStep(step);
         }
 
         public void And(Func<Task> step, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.RunStep(step, cancellationToken);
+            RunStep(step, cancellationToken);
         }
 
         public void But(Action step)
         {
-            this.RunStep(step);
+            RunStep(step);
         }
 
         public void But(Func<Task> step, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.RunStep(step, cancellationToken);
+            RunStep(step, cancellationToken);
         }
 
         private void RunStep(Action step, [CallerMemberName] string stepType = null)

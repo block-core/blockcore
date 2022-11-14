@@ -49,24 +49,24 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         [Fact]
         public void RunAsync_ValidatingATransactionThatIsNotCoinBaseButStillHasUnspentOutputsWithoutInput_ThrowsBadTransactionMissingInput()
         {
-            this.GivenACoinbaseTransactionFromAPreviousBlock();
-            this.AndARuleContext();
-            this.AndSomeUnspentOutputs();
-            this.AndATransactionWithNoUnspentOutputsAsInput();
-            this.WhenExecutingTheRule(this.rule, this.ruleContext);
-            this.ThenExceptionThrownIs(ConsensusErrors.BadTransactionMissingInput);
+            GivenACoinbaseTransactionFromAPreviousBlock();
+            AndARuleContext();
+            AndSomeUnspentOutputs();
+            AndATransactionWithNoUnspentOutputsAsInput();
+            WhenExecutingTheRule(this.rule, this.ruleContext);
+            ThenExceptionThrownIs(ConsensusErrors.BadTransactionMissingInput);
         }
 
         [Fact]
         //NOTE: This is not full coverage of BIP68 bad transaction non final as a block earlier than allowable timestamp is also not allowable under BIP68.
         public void RunAsync_ValidatingABlockHeightLowerThanBIP86Allows_ThrowsBadTransactionNonFinal()
         {
-            this.GivenACoinbaseTransactionFromAPreviousBlock();
-            this.AndARuleContext();
-            this.AndSomeUnspentOutputs();
-            this.AndATransactionBlockHeightLowerThanBip68Allows();
-            this.WhenExecutingTheRule(this.rule, this.ruleContext);
-            this.ThenExceptionThrownIs(ConsensusErrors.BadTransactionNonFinal);
+            GivenACoinbaseTransactionFromAPreviousBlock();
+            AndARuleContext();
+            AndSomeUnspentOutputs();
+            AndATransactionBlockHeightLowerThanBip68Allows();
+            WhenExecutingTheRule(this.rule, this.ruleContext);
+            ThenExceptionThrownIs(ConsensusErrors.BadTransactionNonFinal);
         }
 
         private void AndSomeUnspentOutputs()

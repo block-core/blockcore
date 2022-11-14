@@ -57,7 +57,7 @@ namespace Blockcore.Features.WalletWatchOnly
 
         public WatchOnlyWalletManager(IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory, Network network, DataFolder dataFolder, ISignals signals)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.network = network;
             this.coinType = network.Consensus.CoinType;
             this.fileStorage = new FileStorage<WatchOnlyWallet>(dataFolder.WalletPath);
@@ -71,29 +71,29 @@ namespace Blockcore.Features.WalletWatchOnly
             this.signals.Unsubscribe(this.blockConnectedSubscription);
             this.signals.Unsubscribe(this.transactionReceivedSubscription);
 
-            this.SaveWatchOnlyWallet();
+            SaveWatchOnlyWallet();
         }
 
         /// <inheritdoc />
         public void Initialize()
         {
             // load the watch only wallet into memory
-            this.Wallet = this.LoadWatchOnlyWallet();
+            this.Wallet = LoadWatchOnlyWallet();
 
-            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(this.OnBlockConnected);
-            this.transactionReceivedSubscription = this.signals.Subscribe<TransactionReceived>(this.OnTransactionAvailable);
+            this.blockConnectedSubscription = this.signals.Subscribe<BlockConnected>(OnBlockConnected);
+            this.transactionReceivedSubscription = this.signals.Subscribe<TransactionReceived>(OnTransactionAvailable);
 
-            this.LoadTransactionLookup();
+            LoadTransactionLookup();
         }
 
         private void OnTransactionAvailable(TransactionReceived transactionReceived)
         {
-            this.ProcessTransaction(transactionReceived.ReceivedTransaction);
+            ProcessTransaction(transactionReceived.ReceivedTransaction);
         }
 
         private void OnBlockConnected(BlockConnected blockConnected)
         {
-            this.ProcessBlock(blockConnected.ConnectedBlock.Block);
+            ProcessBlock(blockConnected.ConnectedBlock.Block);
         }
 
         /// <inheritdoc />
@@ -114,7 +114,7 @@ namespace Blockcore.Features.WalletWatchOnly
                 Address = address
             });
 
-            this.SaveWatchOnlyWallet();
+            SaveWatchOnlyWallet();
         }
 
         /// <inheritdoc />
@@ -135,7 +135,7 @@ namespace Blockcore.Features.WalletWatchOnly
                 MerkleProof = transactionData.MerkleProof
             });
 
-            this.SaveWatchOnlyWallet();
+            SaveWatchOnlyWallet();
         }
 
         /// <inheritdoc />
@@ -145,7 +145,7 @@ namespace Blockcore.Features.WalletWatchOnly
 
             foreach (Transaction transaction in block.Transactions)
             {
-                this.ProcessTransaction(transaction, block);
+                ProcessTransaction(transaction, block);
             }
         }
 
@@ -219,7 +219,7 @@ namespace Blockcore.Features.WalletWatchOnly
                             this.txLookup.AddOrUpdate(existingTransaction.Id, existingTransaction, (key, oldValue) => existingTransaction);
                         }
 
-                        this.SaveWatchOnlyWallet();
+                        SaveWatchOnlyWallet();
                     }
                 }
             }
@@ -277,7 +277,7 @@ namespace Blockcore.Features.WalletWatchOnly
                         this.txLookup.AddOrUpdate(existingTransaction.Id, existingTransaction, (key, oldValue) => existingTransaction);
                     }
 
-                    this.SaveWatchOnlyWallet();
+                    SaveWatchOnlyWallet();
                 }
             }
 
@@ -294,7 +294,7 @@ namespace Blockcore.Features.WalletWatchOnly
                 // Update the lookup cache with the new transaction information.
                 this.txLookup.AddOrUpdate(existingWatchedTransaction.Id, existingWatchedTransaction, (key, oldValue) => existingWatchedTransaction);
 
-                this.SaveWatchOnlyWallet();
+                SaveWatchOnlyWallet();
             }
         }
 
@@ -369,7 +369,7 @@ namespace Blockcore.Features.WalletWatchOnly
                 Address = scriptPubKey.Hash.ToString()
             });
 
-            this.SaveWatchOnlyWallet();
+            SaveWatchOnlyWallet();
         }
 
         /// <summary>

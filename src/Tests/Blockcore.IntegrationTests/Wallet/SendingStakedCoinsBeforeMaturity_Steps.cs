@@ -52,9 +52,9 @@ namespace Blockcore.IntegrationTests.Wallet
 
         private void a_wallet_sends_coins_before_maturity()
         {
-            this.the_wallet_history_does_not_include_the_transaction();
+            the_wallet_history_does_not_include_the_transaction();
 
-            IActionResult buildTransactionResult = this.BuildTransaction();
+            IActionResult buildTransactionResult = BuildTransaction();
 
             buildTransactionResult.Should().BeOfType<ErrorResult>();
 
@@ -65,7 +65,7 @@ namespace Blockcore.IntegrationTests.Wallet
             errorResponse?.Errors.Count.Should().Be(1);
             errorResponse?.Errors[0].Message.Should().Be("No spendable transactions found.");
 
-            IActionResult sendTransactionResult = this.SendTransaction(buildTransactionResult);
+            IActionResult sendTransactionResult = SendTransaction(buildTransactionResult);
             sendTransactionResult.Should().BeNull();
         }
 
@@ -85,7 +85,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 {
                     AccountName = this.proofOfStakeSteps.PremineWalletAccount,
                     AllowUnconfirmed = true,
-                    Recipients = new List<RecipientModel> { new RecipientModel { DestinationAddress = this.GetReceiverUnusedAddressFromWallet(), Amount = Money.Coins(OneMillion + 40).ToString() } },
+                    Recipients = new List<RecipientModel> { new RecipientModel { DestinationAddress = GetReceiverUnusedAddressFromWallet(), Amount = Money.Coins(OneMillion + 40).ToString() } },
                     FeeType = FeeType.Medium.ToString("D"),
                     Password = this.proofOfStakeSteps.PremineWalletPassword,
                     WalletName = this.proofOfStakeSteps.PremineWallet,
@@ -97,7 +97,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
         private void the_wallet_history_does_not_include_the_transaction()
         {
-            WalletHistoryModel walletHistory = this.GetWalletHistory(this.proofOfStakeSteps.PremineNodeWithCoins, this.proofOfStakeSteps.PremineWallet);
+            WalletHistoryModel walletHistory = GetWalletHistory(this.proofOfStakeSteps.PremineNodeWithCoins, this.proofOfStakeSteps.PremineWallet);
             AccountHistoryModel accountHistory = walletHistory.AccountsHistoryModel.FirstOrDefault();
 
             accountHistory?.TransactionsHistory?.Where(txn => txn.Type == TransactionItemType.Send).Count().Should().Be(0);

@@ -46,7 +46,7 @@ namespace Blockcore.IntegrationTests.Miners
 
                 // Get set of transaction IDs present in wallet before staking is started.
                 this.transactionsBeforeStaking.Clear();
-                foreach (TransactionOutputData transactionData in this.GetTransactionsSnapshot(minerA))
+                foreach (TransactionOutputData transactionData in GetTransactionsSnapshot(minerA))
                 {
                     this.transactionsBeforeStaking.Add(transactionData.Id);
                 }
@@ -60,7 +60,7 @@ namespace Blockcore.IntegrationTests.Miners
                 // determine whether staking occurred.
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = GetTransactionsSnapshot(minerA);
 
                     foreach (TransactionOutputData transactionData in transactions)
                     {
@@ -74,14 +74,14 @@ namespace Blockcore.IntegrationTests.Miners
                 });
 
                 // build a dictionary of coinstake tx's indexed by tx id.
-                foreach (var tx in this.GetTransactionsSnapshot(minerA))
+                foreach (var tx in GetTransactionsSnapshot(minerA))
                 {
                     this.transactionLookup[tx.Id] = tx;
                 }
 
                 TestBase.WaitLoop(() =>
                 {
-                    List<TransactionOutputData> transactions = this.GetTransactionsSnapshot(minerA);
+                    List<TransactionOutputData> transactions = GetTransactionsSnapshot(minerA);
 
                     foreach (TransactionOutputData transactionData in transactions)
                     {

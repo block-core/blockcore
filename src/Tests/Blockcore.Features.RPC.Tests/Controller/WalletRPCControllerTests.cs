@@ -20,11 +20,11 @@ namespace Blockcore.Features.RPC.Tests.Controller
 {
     public class WalletRPCControllerTests : LogsTestBase
     {
-        private WalletRPCController controller;
-        private ChainIndexer chain;
-        private Network network;
-        private NodeSettings nodeSettings;
-        private WalletSettings walletSettings;
+        private readonly WalletRPCController controller;
+        private readonly ChainIndexer chain;
+        private readonly Network network;
+        private readonly NodeSettings nodeSettings;
+        private readonly WalletSettings walletSettings;
         private readonly StoreSettings storeSettings;
 
         private readonly Mock<IBlockStore> blockStore;

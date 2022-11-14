@@ -84,13 +84,13 @@ namespace Blockcore.Tests.P2P
             // Set the initial block height to 1.
             for (int i = 0; i < 4; i++)
             {
-                this.AppendBlock(chain);
+                AppendBlock(chain);
                 behavior.TestOnMessageReceivedAsync(remotePeer, null);
                 Assert.Equal(NetworkPeerState.Connected, localPeer.State);
             }
 
             // Nodes should disconnect when reaching the EnforceMinProtocolVersionAtBlockHeight height.
-            this.AppendBlock(chain);
+            AppendBlock(chain);
             behavior.TestOnMessageReceivedAsync(remotePeer, null);
             Assert.Equal(NetworkPeerState.Offline, localPeer.State);
 
@@ -127,7 +127,7 @@ namespace Blockcore.Tests.P2P
             // Set the initial block height to 1.
             for (int i = 0; i < 4; i++)
             {
-                this.AppendBlock(chain);
+                AppendBlock(chain);
                 behavior.TestOnMessageReceivedAsync(remotePeer, null);
                 Assert.Equal(NetworkPeerState.Connected, localPeer.State);
             }
@@ -135,7 +135,7 @@ namespace Blockcore.Tests.P2P
             // Nodes shouldn't disconnect when reaching and exceeding the EnforceMinProtocolVersionAtBlockHeight height.
             for (int i = 0; i < 5; i++)
             {
-                this.AppendBlock(chain);
+                AppendBlock(chain);
                 behavior.TestOnMessageReceivedAsync(remotePeer, null);
                 Assert.Equal(NetworkPeerState.Connected, localPeer.State);
             }
@@ -166,7 +166,7 @@ namespace Blockcore.Tests.P2P
         private ChainedHeader AppendBlock(params ChainIndexer[] chainsIndexer)
         {
             ChainedHeader index = null;
-            return this.AppendBlock(index, chainsIndexer);
+            return AppendBlock(index, chainsIndexer);
         }
     }
 }

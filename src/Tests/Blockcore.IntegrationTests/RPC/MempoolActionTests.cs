@@ -14,7 +14,7 @@ namespace Blockcore.IntegrationTests.RPC
         public async Task CanCall_GetRawMempoolAsync()
         {
             string dir = CreateTestDir(this);
-            IFullNode fullNode = this.BuildServicedNode(dir);
+            IFullNode fullNode = BuildServicedNode(dir);
             var controller = fullNode.NodeController<MempoolController>();
 
             List<uint256> result = await controller.GetRawMempool();

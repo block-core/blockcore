@@ -37,7 +37,7 @@ namespace Blockcore.Features.Dns.Tests
             var question = new Question(domain, RecordType.A);
 
             // Act.
-            IList<IResourceRecord> resourceRecords = this.WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
+            IList<IResourceRecord> resourceRecords = WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
 
             // Assert.
             resourceRecords.Should().NotBeNull();
@@ -59,7 +59,7 @@ namespace Blockcore.Features.Dns.Tests
             var question = new Question(domain, RecordType.AAAA);
 
             // Act.
-            IList<IResourceRecord> resourceRecords = this.WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
+            IList<IResourceRecord> resourceRecords = WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
 
             // Assert.
             resourceRecords.Should().NotBeNull();
@@ -82,7 +82,7 @@ namespace Blockcore.Features.Dns.Tests
             var question = new Question(domain, RecordType.CNAME);
 
             // Act.
-            IList<IResourceRecord> resourceRecords = this.WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
+            IList<IResourceRecord> resourceRecords = WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
 
             // Assert.
             resourceRecords.Should().NotBeNull();
@@ -107,7 +107,7 @@ namespace Blockcore.Features.Dns.Tests
             var question = new Question(domain, RecordType.MX);
 
             // Act.
-            IList<IResourceRecord> resourceRecords = this.WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
+            IList<IResourceRecord> resourceRecords = WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
 
             // Assert.
             resourceRecords.Should().NotBeNull();
@@ -132,7 +132,7 @@ namespace Blockcore.Features.Dns.Tests
             var question = new Question(domain, RecordType.NS);
 
             // Act.
-            IList<IResourceRecord> resourceRecords = this.WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
+            IList<IResourceRecord> resourceRecords = WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
 
             // Assert.
             resourceRecords.Should().NotBeNull();
@@ -156,7 +156,7 @@ namespace Blockcore.Features.Dns.Tests
             var question = new Question(domain, RecordType.PTR);
 
             // Act.
-            IList<IResourceRecord> resourceRecords = this.WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
+            IList<IResourceRecord> resourceRecords = WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
 
             // Assert.
             resourceRecords.Should().NotBeNull();
@@ -195,7 +195,7 @@ namespace Blockcore.Features.Dns.Tests
             var question = new Question(domain, RecordType.SOA);
 
             // Act.
-            IList<IResourceRecord> resourceRecords = this.WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
+            IList<IResourceRecord> resourceRecords = WhenLoad_AndStreamContainsEntry_ThenEntryIsPopulated(testResourceRecord, question);
 
             // Assert.
             resourceRecords.Should().NotBeNull();
@@ -230,7 +230,7 @@ namespace Blockcore.Features.Dns.Tests
                     new IPAddressResourceRecord(new Domain(domainName), IPAddress.Parse("192.168.0.4"))
                 };
 
-                JsonSerializer serializer = this.CreateSerializer();
+                JsonSerializer serializer = CreateSerializer();
 
                 using (var streamWriter = new StreamWriter(stream))
                 {
@@ -279,7 +279,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
 
                 resourceRecords.Should().NotBeNull();
                 resourceRecords.Should().NotBeNullOrEmpty();
@@ -307,7 +307,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
 
                 resourceRecords.Should().NotBeNull();
                 resourceRecords.Should().NotBeNullOrEmpty();
@@ -336,7 +336,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
 
                 resourceRecords.Should().NotBeNull();
                 resourceRecords.Should().NotBeNullOrEmpty();
@@ -366,7 +366,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
 
                 resourceRecords.Should().NotBeNull();
                 resourceRecords.Should().NotBeNullOrEmpty();
@@ -396,7 +396,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
 
                 resourceRecords.Should().NotBeNull();
                 resourceRecords.Should().NotBeNullOrEmpty();
@@ -425,7 +425,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
 
                 resourceRecords.Should().NotBeNull();
                 resourceRecords.Should().NotBeNullOrEmpty();
@@ -470,7 +470,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
                 resourceRecords.Should().NotBeNull();
                 resourceRecords.Should().NotBeNullOrEmpty();
 
@@ -510,7 +510,7 @@ namespace Blockcore.Features.Dns.Tests
 
                 // Assert.
                 stream.Should().NotBeNull();
-                IList<IResourceRecord> resourceRecords = this.ReadResourceRecords(stream);
+                IList<IResourceRecord> resourceRecords = ReadResourceRecords(stream);
                 resourceRecords.Should().NotBeNullOrEmpty();
 
                 IList<IPAddressResourceRecord> ipAddressResourceRecords = resourceRecords.OfType<IPAddressResourceRecord>().ToList();
@@ -546,7 +546,7 @@ namespace Blockcore.Features.Dns.Tests
                     testResourceRecord
                 };
 
-                JsonSerializer serializer = this.CreateSerializer();
+                JsonSerializer serializer = CreateSerializer();
 
                 using (var streamWriter = new StreamWriter(stream))
                 {
@@ -583,7 +583,7 @@ namespace Blockcore.Features.Dns.Tests
 
             using (var textReader = new JsonTextReader(new StreamReader(stream)))
             {
-                JsonSerializer serializer = this.CreateSerializer();
+                JsonSerializer serializer = CreateSerializer();
                 resourceRecords = serializer.Deserialize<List<IResourceRecord>>(textReader);
             }
             return resourceRecords;

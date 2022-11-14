@@ -50,9 +50,9 @@ namespace Blockcore.Features.Consensus
             this.chainIndexer = chainIndexer;
             this.asyncProvider = asyncProvider;
             this.checkpoints = checkpoints;
-            this.headersQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<ChainedHeader>($"{nameof(CoinviewPrefetcher)}-{nameof(this.headersQueue)}", this.OnHeaderEnqueued);
+            this.headersQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<ChainedHeader>($"{nameof(CoinviewPrefetcher)}-{nameof(this.headersQueue)}", OnHeaderEnqueued);
             this.coinviewHelper = new CoinviewHelper();
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>

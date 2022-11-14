@@ -45,19 +45,19 @@ namespace Blockcore.Features.PoA
             this.federationManager = Guard.NotNull(federationManager, nameof(federationManager));
             this.chainIndexer = chainIndexer;
             this.consensusOptions = (network as PoANetwork).ConsensusOptions;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />
         public IFederationMember GetFederationMemberForTimestamp(uint headerUnixTimestamp, List<IFederationMember> federationMembers = null)
         {
-            if (!this.IsValidTimestamp(headerUnixTimestamp))
+            if (!IsValidTimestamp(headerUnixTimestamp))
                 PoAConsensusErrors.InvalidHeaderTimestamp.Throw();
 
             if (federationMembers == null)
                 federationMembers = this.federationManager.GetFederationMembers();
 
-            uint roundTime = this.GetRoundLengthSeconds(federationMembers.Count);
+            uint roundTime = GetRoundLengthSeconds(federationMembers.Count);
 
             // Time when current round started.
             uint roundStartTimestamp = (headerUnixTimestamp / roundTime) * roundTime;
@@ -77,7 +77,7 @@ namespace Blockcore.Features.PoA
             List<IFederationMember> federationMembers = this.federationManager.GetFederationMembers();
 
             // Round length in seconds.
-            uint roundTime = this.GetRoundLengthSeconds(federationMembers.Count);
+            uint roundTime = GetRoundLengthSeconds(federationMembers.Count);
 
             // Index of a slot that current node can take in each round.
             uint slotIndex = (uint)federationMembers.FindIndex(x => x.PubKey == this.federationManager.CurrentFederationKey.PubKey);

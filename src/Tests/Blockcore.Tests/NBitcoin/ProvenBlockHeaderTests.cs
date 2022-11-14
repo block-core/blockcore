@@ -76,7 +76,7 @@ namespace NBitcoin.Tests
         [Fact]
         public void WhenCreatingNewProvenHeaderMerkleProofIsCorrectlyCreated()
         {
-            PosBlock block = this.CreatePosBlock();
+            PosBlock block = CreatePosBlock();
 
             // Add 20 more transactions.
             for (int i = 0; i < 20; i++)

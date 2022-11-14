@@ -87,7 +87,7 @@ namespace Blockcore.Features.RPC.Controllers
                   connectionManager: connectionManager,
                   consensusManager: consensusManager)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.pooledTransaction = pooledTransaction;
             this.pooledGetUnspentTransaction = pooledGetUnspentTransaction;
             this.getUnspentTransaction = getUnspentTransaction;
@@ -181,7 +181,7 @@ namespace Blockcore.Features.RPC.Controllers
 
             if (verbose)
             {
-                ChainedHeader block = chainedHeaderBlock != null ? chainedHeaderBlock.ChainedHeader : this.GetTransactionBlock(trxid);
+                ChainedHeader block = chainedHeaderBlock != null ? chainedHeaderBlock.ChainedHeader : GetTransactionBlock(trxid);
                 return new TransactionVerboseModel(trx, this.Network, block, this.ChainState?.ConsensusTip);
             }
             else
@@ -273,7 +273,7 @@ namespace Blockcore.Features.RPC.Controllers
                 TimeOffset = this.ConnectionManager?.ConnectedPeers?.GetMedianTimeOffset() ?? 0,
                 Connections = this.ConnectionManager?.ConnectedPeers?.Count(),
                 Proxy = string.Empty,
-                Difficulty = this.GetNetworkDifficulty()?.Difficulty ?? 0,
+                Difficulty = GetNetworkDifficulty()?.Difficulty ?? 0,
                 Testnet = this.Network.IsTest(),
                 RelayFee = this.Settings?.MinRelayTxFeeRate?.FeePerK?.ToUnit(MoneyUnit.BTC) ?? 0,
                 Errors = string.Empty,
@@ -466,8 +466,8 @@ namespace Blockcore.Features.RPC.Controllers
                 Blocks = (uint)(this.ChainState?.ConsensusTip?.Height ?? 0),
                 Headers = (uint)(this.ChainIndexer?.Height ?? 0),
                 BestBlockHash = this.ChainState?.ConsensusTip?.HashBlock,
-                Difficulty = this.GetNetworkDifficulty()?.Difficulty ?? 0.0,
-                NetworkWeight = (long)this.GetPosNetworkWeight(),
+                Difficulty = GetNetworkDifficulty()?.Difficulty ?? 0.0,
+                NetworkWeight = (long)GetPosNetworkWeight(),
                 MedianTime = this.ChainState?.ConsensusTip?.GetMedianTimePast().ToUnixTimeSeconds() ?? 0,
                 VerificationProgress = 0.0,
                 IsInitialBlockDownload = this.ibdState?.IsInitialBlockDownload() ?? true,
@@ -509,7 +509,7 @@ namespace Blockcore.Features.RPC.Controllers
                 // A timeout value of 0 guarantees a softfork will never be activated.
                 // This is used when softfork codes are merged without specifying the deployment schedule.
                 if (metric.TimeTimeOut?.Ticks > 0)
-                    blockchainInfo.SoftForksBip9.Add(metric.DeploymentName, this.CreateSoftForksBip9(metric, thresholdStates[metric.DeploymentIndex]));
+                    blockchainInfo.SoftForksBip9.Add(metric.DeploymentName, CreateSoftForksBip9(metric, thresholdStates[metric.DeploymentIndex]));
             }
 
             // TODO: Implement blockchainInfo.warnings

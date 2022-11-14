@@ -39,7 +39,7 @@ namespace Blockcore.IntegrationTests.BlockStore
         protected override void BeforeTest()
         {
             this.network = new BitcoinRegTest();
-            this.nodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, this.CurrentTest.DisplayName));
+            this.nodeBuilder = NodeBuilder.Create(Path.Combine(GetType().Name, this.CurrentTest.DisplayName));
         }
 
         protected override void AfterTest()
@@ -85,7 +85,7 @@ namespace Blockcore.IntegrationTests.BlockStore
 
         private void bob_creates_a_transaction_and_broadcasts()
         {
-            HdAddress charlieAddress = this.GetSecondUnusedAddressToAvoidClashWithMiningAddress(this.charlieNode);
+            HdAddress charlieAddress = GetSecondUnusedAddressToAvoidClashWithMiningAddress(this.charlieNode);
 
             TransactionBuildContext transactionBuildContext = TestHelper.CreateTransactionBuildContext(
                 this.bobNode.FullNode.Network,

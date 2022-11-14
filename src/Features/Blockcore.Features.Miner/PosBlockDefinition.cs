@@ -45,7 +45,7 @@ namespace Blockcore.Features.Miner
             NodeDeployments nodeDeployments)
             : base(consensusManager, dateTimeProvider, loggerFactory, mempool, mempoolLock, minerSettings, network, nodeDeployments)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.stakeChain = stakeChain;
             this.stakeValidator = stakeValidator;
         }
@@ -53,15 +53,15 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc/>
         public override void AddToBlock(TxMempoolEntry mempoolEntry)
         {
-            this.AddTransactionToBlock(mempoolEntry.Transaction);
-            this.UpdateBlockStatistics(mempoolEntry);
-            this.UpdateTotalFees(mempoolEntry.Fee);
+            AddTransactionToBlock(mempoolEntry.Transaction);
+            UpdateBlockStatistics(mempoolEntry);
+            UpdateTotalFees(mempoolEntry.Fee);
         }
 
         /// <inheritdoc/>
         public override BlockTemplate Build(ChainedHeader chainTip, Script scriptPubKey)
         {
-            this.OnBuild(chainTip, scriptPubKey);
+            OnBuild(chainTip, scriptPubKey);
 
             this.coinbase.Outputs[0].ScriptPubKey = new Script();
             this.coinbase.Outputs[0].Value = Money.Zero;

@@ -24,7 +24,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
             }
 
             // Check proof-of-stake block signature.
-            if (!this.CheckBlockSignature(posBlock))
+            if (!CheckBlockSignature(posBlock))
             {
                 this.Logger.LogTrace("(-)[BAD_SIGNATURE]");
                 ConsensusErrors.BadBlockSignature.Throw();

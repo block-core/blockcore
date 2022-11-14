@@ -57,7 +57,7 @@ namespace Blockcore.Features.ColdStaking
             get
             {
                 // Use our special TryGetValue that also works with cold staking scripts to get the value.
-                if (this.TryGetValue(script, out HdAddress address))
+                if (TryGetValue(script, out HdAddress address))
                     return address;
 
                 // This method should throw an exception if the value is not found.

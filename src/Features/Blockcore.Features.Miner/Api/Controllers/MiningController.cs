@@ -47,7 +47,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             Guard.NotNull(walletManager, nameof(walletManager));
 
             this.consensusManager = consensusManager;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.miningFeature = fullNode.NodeFeature<MiningFeature>();
             this.network = network;
             this.powMining = powMining;
@@ -85,7 +85,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                 this.logger.LogDebug("({0}:{1})", nameof(request.BlockCount), blockCount);
 
-                WalletAccountReference accountReference = this.GetAccount();
+                WalletAccountReference accountReference = GetAccount();
                 HdAddress address = this.walletManager.GetUnusedAddress(accountReference);
 
                 var generateBlocksModel = new GenerateBlocksModel
@@ -95,7 +95,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                 this.logger.LogTrace("(-):*.{0}={1}", "Generated block count", generateBlocksModel.Blocks.Count);
 
-                return this.Json(generateBlocksModel);
+                return Json(generateBlocksModel);
             }
             catch (Exception e)
             {
@@ -118,7 +118,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             try
             {
                 this.miningFeature.StopMining();
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {

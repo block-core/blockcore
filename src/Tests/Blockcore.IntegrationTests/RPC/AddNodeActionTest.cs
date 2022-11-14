@@ -15,7 +15,7 @@ namespace Blockcore.IntegrationTests.RPC
         {
             string testDirectory = CreateTestDir(this);
 
-            IFullNode fullNode = this.BuildServicedNode(testDirectory);
+            IFullNode fullNode = BuildServicedNode(testDirectory);
             fullNode.Start();
 
             var controller = fullNode.NodeController<ConnectionManagerRPCController>();
@@ -31,7 +31,7 @@ namespace Blockcore.IntegrationTests.RPC
         {
             string testDirectory = CreateTestDir(this);
 
-            IFullNode fullNode = this.BuildServicedNode(testDirectory);
+            IFullNode fullNode = BuildServicedNode(testDirectory);
 
             var controller = fullNode.NodeController<ConnectionManagerRPCController>();
 

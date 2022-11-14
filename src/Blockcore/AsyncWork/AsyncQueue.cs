@@ -92,7 +92,7 @@ namespace Blockcore.AsyncWork
             this.onEnqueueAsync = onEnqueueAsync;
             this.cancellationTokenSource = new CancellationTokenSource();
             this.asyncContext = new AsyncLocal<AsyncContext>();
-            this.ConsumerTask = this.callbackMode ? this.ConsumerAsync() : null;
+            this.ConsumerTask = this.callbackMode ? ConsumerAsync() : null;
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Blockcore.AsyncWork
 
                     // Dequeue all items and execute the callback.
                     T item;
-                    while (this.TryDequeue(out item) && !cancellationToken.IsCancellationRequested)
+                    while (TryDequeue(out item) && !cancellationToken.IsCancellationRequested)
                     {
                         await this.onEnqueueAsync(item, cancellationToken).ConfigureAwait(false);
 
@@ -163,7 +163,7 @@ namespace Blockcore.AsyncWork
                 }
             }
 
-            if (callDispose) this.DisposeInternal(true);
+            if (callDispose) DisposeInternal(true);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Blockcore.AsyncWork
 
                 // First check if an item is available. If it is, just return it.
                 T item;
-                if (this.TryDequeue(out item))
+                if (TryDequeue(out item))
                     return item;
 
                 // If the queue is empty, we need to wait until there is an item available.
@@ -201,7 +201,7 @@ namespace Blockcore.AsyncWork
 
                         // Note that another thread could consume the message before us,
                         // so dequeue safely and loop if nothing is available.
-                        if (this.TryDequeue(out item))
+                        if (TryDequeue(out item))
                             return item;
                     }
                 }
@@ -247,7 +247,7 @@ namespace Blockcore.AsyncWork
                 return;
             }
 
-            this.DisposeInternal(false);
+            DisposeInternal(false);
         }
 
         /// <summary>

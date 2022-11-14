@@ -64,7 +64,7 @@ namespace Blockcore.Features.BlockStore
                 {
                     this.logger.LogDebug("Proven Header at height {0} NOT found.", blockHeight);
 
-                    this.CreateAndStoreProvenHeader(blockHeight, blockPair, isIBD);
+                    CreateAndStoreProvenHeader(blockHeight, blockPair, isIBD);
                 }
                 else
                 {
@@ -81,7 +81,7 @@ namespace Blockcore.Features.BlockStore
                         this.logger.LogDebug("Found a proven header with a different hash, recreating PH. Expected Hash: {0}, found Hash: {1}.", signaledHeaderHash, provenHeaderHash);
 
                         // A reorg happened so we recreate a new Proven Header to replace the wrong one.
-                        this.CreateAndStoreProvenHeader(blockHeight, blockPair, isIBD);
+                        CreateAndStoreProvenHeader(blockHeight, blockPair, isIBD);
                     }
                 }
             }

@@ -243,7 +243,7 @@ namespace Blockcore.Tests.Consensus
                 header.HashPrevBlock = previousHeader.HashBlock;
                 header.Bits = difficultyAdjustmentDivisor == 1
                                     ? previousHeader.Header.Bits
-                                    : this.ChangeDifficulty(previousHeader, difficultyAdjustmentDivisor);
+                                    : ChangeDifficulty(previousHeader, difficultyAdjustmentDivisor);
                 header.Nonce = (uint)Interlocked.Increment(ref nonceValue);
 
                 var newHeader = new ChainedHeader(header, header.GetHash(), previousHeader);
@@ -274,7 +274,7 @@ namespace Blockcore.Tests.Consensus
                         Script script = Script.FromBytesUnsafe(new string('A', requiredScriptWeight).Select(c => (byte)c).ToArray());
                         transaction.Outputs.Add(new TxOut(new Money(10000000000), script));
 
-                        this.ResetBlockSize(block);
+                        ResetBlockSize(block);
                         block.GetSerializedSize();
 
                         if (block.BlockSize != avgBlockSize.Value)
@@ -412,15 +412,15 @@ namespace Blockcore.Tests.Consensus
             int peerCExtension = 3;
             int peerDExtension = 3;
 
-            ChainedHeader chainATip = this.ExtendAChain(peerAExtension, initialChainTip); // i.e. (h1=h2=h3=h4=h5)=6a=7a=8a=9a
-            ChainedHeader chainBTip = this.ExtendAChain(peerBExtension, initialChainTip); // i.e. (h1=h2=h3=h4=h5)=6b=7b=8b=9b
-            ChainedHeader chainCTip = this.ExtendAChain(peerCExtension, initialChainTip.GetAncestor(2)); // i.e. (h1=h2)=3c=4c=5c
-            ChainedHeader chainDTip = this.ExtendAChain(peerDExtension, chainATip.GetAncestor(7)); // i.e. ((h1=h2=h3=h4=h5)=6a=7a)=8d=9d=10d
+            ChainedHeader chainATip = ExtendAChain(peerAExtension, initialChainTip); // i.e. (h1=h2=h3=h4=h5)=6a=7a=8a=9a
+            ChainedHeader chainBTip = ExtendAChain(peerBExtension, initialChainTip); // i.e. (h1=h2=h3=h4=h5)=6b=7b=8b=9b
+            ChainedHeader chainCTip = ExtendAChain(peerCExtension, initialChainTip.GetAncestor(2)); // i.e. (h1=h2)=3c=4c=5c
+            ChainedHeader chainDTip = ExtendAChain(peerDExtension, chainATip.GetAncestor(7)); // i.e. ((h1=h2=h3=h4=h5)=6a=7a)=8d=9d=10d
 
-            List<BlockHeader> peerABlockHeaders = this.ChainedHeaderToList(chainATip, chainATip.Height);
-            List<BlockHeader> peerBBlockHeaders = this.ChainedHeaderToList(chainBTip, chainBTip.Height);
-            List<BlockHeader> peerCBlockHeaders = this.ChainedHeaderToList(chainCTip, chainCTip.Height);
-            List<BlockHeader> peerDBlockHeaders = this.ChainedHeaderToList(chainDTip, chainDTip.Height);
+            List<BlockHeader> peerABlockHeaders = ChainedHeaderToList(chainATip, chainATip.Height);
+            List<BlockHeader> peerBBlockHeaders = ChainedHeaderToList(chainBTip, chainBTip.Height);
+            List<BlockHeader> peerCBlockHeaders = ChainedHeaderToList(chainCTip, chainCTip.Height);
+            List<BlockHeader> peerDBlockHeaders = ChainedHeaderToList(chainDTip, chainDTip.Height);
 
             cht.ConnectNewHeaders(0, peerABlockHeaders);
             cht.ConnectNewHeaders(1, peerBBlockHeaders);

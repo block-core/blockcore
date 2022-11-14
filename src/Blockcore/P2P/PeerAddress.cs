@@ -312,7 +312,7 @@ namespace Blockcore.P2P
         /// <summary>Sets the <see cref="LastConnectionHandshake"/> date.</summary>
         internal void SetHandshaked(DateTimeOffset peerHandshakedAt)
         {
-            this.ResetHandshakeAttempts();
+            ResetHandshakeAttempts();
             this.LastConnectionHandshake = peerHandshakedAt;
             this.LastHandshakeAttempt = null;
         }

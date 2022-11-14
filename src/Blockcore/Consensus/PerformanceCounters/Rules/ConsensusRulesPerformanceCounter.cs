@@ -20,10 +20,10 @@ namespace Blockcore.Consensus.PerformanceCounters.Rules
         {
             this.registeredRules = new List<RuleItem>();
 
-            this.RegisterRulesCollection(consensusRules.HeaderValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Header);
-            this.RegisterRulesCollection(consensusRules.IntegrityValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Integrity);
-            this.RegisterRulesCollection(consensusRules.PartialValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Partial);
-            this.RegisterRulesCollection(consensusRules.FullValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Full);
+            RegisterRulesCollection(consensusRules.HeaderValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Header);
+            RegisterRulesCollection(consensusRules.IntegrityValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Integrity);
+            RegisterRulesCollection(consensusRules.PartialValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Partial);
+            RegisterRulesCollection(consensusRules.FullValidationRules.Select(x => x as IConsensusRuleBase), RuleType.Full);
 
             this.currentSnapshot = new ConsensusRulesPerformanceSnapshot(this.registeredRules);
         }

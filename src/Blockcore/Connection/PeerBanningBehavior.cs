@@ -24,7 +24,7 @@ namespace Blockcore.Connection
 
         public PeerBanningBehavior(ILoggerFactory loggerFactory, IPeerBanning peerBanning, NodeSettings nodeSettings)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.loggerFactory = loggerFactory;
             this.peerBanning = peerBanning;
             this.nodeSettings = nodeSettings;
@@ -48,8 +48,6 @@ namespace Blockcore.Connection
             var peerBehavior = peer.Behavior<IConnectionManagerBehavior>();
             if (peer.State == NetworkPeerState.Connected && !peerBehavior.Whitelisted && this.peerBanning.IsBanned(peer.RemoteSocketEndpoint))
             {
-
-
                 this.logger.LogDebug("Peer '{0}' was previously banned.", peer.RemoteSocketEndpoint);
                 peer.Disconnect("A banned node tried to connect.");
                 this.logger.LogTrace("(-)[PEER_BANNED]");

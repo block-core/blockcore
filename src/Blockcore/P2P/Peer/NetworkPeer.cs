@@ -319,7 +319,7 @@ namespace Blockcore.P2P.Peer
             this.onDisconnected = onDisconnected;
             this.onSendingMessage = onSendingMessage;
 
-            string dequeuerName = $"{nameof(NetworkPeer)}-{nameof(this.asyncPayloadsQueue)}-{this.PeerEndPoint.ToString()}";
+            string dequeuerName = $"{nameof(NetworkPeer)}-{nameof(this.asyncPayloadsQueue)}-{this.PeerEndPoint}";
             this.asyncPayloadsQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<Payload>(dequeuerName, this.SendMessageHandledAsync);
         }
 

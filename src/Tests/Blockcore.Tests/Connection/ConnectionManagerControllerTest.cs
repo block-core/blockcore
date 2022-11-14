@@ -14,7 +14,7 @@ namespace Blockcore.Tests.Connection
     public class ConnectionManagerControllerTest : LogsTestBase
     {
         private readonly Mock<IConnectionManager> connectionManager;
-        private ConnectionManagerController controller;
+        private readonly ConnectionManagerController controller;
         private readonly Mock<ILoggerFactory> mockLoggerFactory;
         private readonly Mock<IPeerBanning> peerBanning;
 

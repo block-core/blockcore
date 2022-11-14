@@ -17,10 +17,10 @@ namespace Blockcore.Tests.Utilities
     public class AsyncProviderTest
     {
         /// <summary>Source of randomness.</summary>
-        private Random random = new Random();
+        private readonly Random random = new Random();
 
-        private AsyncProvider asyncProvider;
-        private Mock<ILogger> mockLogger;
+        private readonly AsyncProvider asyncProvider;
+        private readonly Mock<ILogger> mockLogger;
 
         public AsyncProviderTest()
         {
@@ -42,7 +42,7 @@ namespace Blockcore.Tests.Utilities
         {
             bool signal = false;
 
-            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(this.GetType().Name, async (item, cancellation) =>
+            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(GetType().Name, async (item, cancellation) =>
             {
                 // We set the signal and wait and if the wait is finished, we reset the signal, but that should not happen.
                 signal = true;
@@ -69,7 +69,7 @@ namespace Blockcore.Tests.Utilities
         {
             bool signal = true;
 
-            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(this.GetType().Name, async (item, cancellation) =>
+            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(GetType().Name, async (item, cancellation) =>
             {
                 // We only set the signal if the wait is finished.
                 await Task.Delay(250);
@@ -99,7 +99,7 @@ namespace Blockcore.Tests.Utilities
             int itemsProcessed = 0;
             var allItemsProcessed = new ManualResetEventSlim();
 
-            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(this.GetType().Name, async (item, cancellation) =>
+            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(GetType().Name, async (item, cancellation) =>
             {
                 // Mark the callback as executing and wait a bit to make sure other callback operations can happen in the meantime.
                 Assert.False(executingCallback);
@@ -142,7 +142,7 @@ namespace Blockcore.Tests.Utilities
             int itemPrevious = -1;
             var signal = new ManualResetEventSlim();
 
-            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(this.GetType().Name, async (item, cancellation) =>
+            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(GetType().Name, async (item, cancellation) =>
             {
                 // Wait a bit to make sure other enqueue operations can happen in the meantime.
                 await Task.Delay(this.random.Next(50));
@@ -172,7 +172,7 @@ namespace Blockcore.Tests.Utilities
             int itemsToProcess = 100;
             int itemsProcessed = 0;
 
-            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(this.GetType().Name, async (item, cancellation) =>
+            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<int>(GetType().Name, async (item, cancellation) =>
             {
                 // Wait a bit to make sure other enqueue operations can happen in the meantime.
                 await Task.Delay(this.random.Next(30));
@@ -347,8 +347,8 @@ namespace Blockcore.Tests.Utilities
             using (var cts = new CancellationTokenSource())
             {
                 // We create two consumer tasks that compete for getting items from the queue.
-                Task consumer1 = Task.Run(async () => await this.AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list1, itemsToProcess - 1, cts));
-                Task consumer2 = Task.Run(async () => await this.AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list2, itemsToProcess - 1, cts));
+                Task consumer1 = Task.Run(async () => await AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list1, itemsToProcess - 1, cts));
+                Task consumer2 = Task.Run(async () => await AsyncQueue_DequeueParallelAsync_WorkerAsync(asyncQueue, list2, itemsToProcess - 1, cts));
 
                 // Start adding the items.
                 for (int i = 0; i < itemsToProcess; i++)
@@ -424,7 +424,7 @@ namespace Blockcore.Tests.Utilities
             bool firstRun = true;
             bool shouldBeFalse = false;
 
-            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<IDisposable>(this.GetType().Name, (item, cancellation) =>
+            var asyncQueue = this.asyncProvider.CreateAndRunAsyncDelegateDequeuer<IDisposable>(GetType().Name, (item, cancellation) =>
             {
                 if (firstRun)
                 {
@@ -462,7 +462,7 @@ namespace Blockcore.Tests.Utilities
 
             await asyncLoop.RunningTask;
 
-            this.AssertLog<Exception>(this.mockLogger, LogLevel.Critical, "Exception Test.", "TestLoop threw an unhandled exception");
+            AssertLog<Exception>(this.mockLogger, LogLevel.Critical, "Exception Test.", "TestLoop threw an unhandled exception");
         }
 
         protected void AssertLog<T>(Mock<ILogger> logger, LogLevel logLevel, string exceptionMessage, string message) where T : Exception

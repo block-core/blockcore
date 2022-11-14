@@ -50,7 +50,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
             try
             {
                 this.watchOnlyWalletManager.WatchAddress(address);
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -104,7 +104,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
                     model.WatchedTransactions.Add(watchedTransactionModel);
                 }
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {

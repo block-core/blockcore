@@ -7,7 +7,7 @@ namespace NBitcoin.Tests
 {
     public class Bech32Test
     {
-        private static string[] VALID_CHECKSUM =
+        private static readonly string[] VALID_CHECKSUM =
         {
             "A12UEL5L",
             "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1tt5tgs",
@@ -16,7 +16,7 @@ namespace NBitcoin.Tests
             "split1checkupstagehandshakeupstreamerranterredcaperred2y9e3w"
         };
 
-        private static string[][] VALID_ADDRESS = {
+        private static readonly string[][] VALID_ADDRESS = {
             new [] { "BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4", "0014751e76e8199196d454941c45d1b3a323f1433bd6"},
             new [] { "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7","00201863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262"},
             new [] { "bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx", "5128751e76e8199196d454941c45d1b3a323f1433bd6751e76e8199196d454941c45d1b3a323f1433bd6"},
@@ -25,7 +25,7 @@ namespace NBitcoin.Tests
             new [] { "tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy", "0020000000c4a5cad46221b2a187905e5266362b99d5e91c6ce24d165dab93e86433"},
         };
 
-        private static string[] INVALID_ADDRESS = {
+        private static readonly string[] INVALID_ADDRESS = {
             "tc1qw508d6qejxtdg4y5r3zarvary0c5xw7kg3g4ty",
             "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t5",
             "BC13W508D6QEJXTDG4Y5R3ZARVARY0C5XW7KN40WF2",
@@ -64,8 +64,8 @@ namespace NBitcoin.Tests
             }
         }
 
-        private Bech32Encoder bech32 = Encoders.Bech32("bc");
-        private Bech32Encoder tbech32 = Encoders.Bech32("tb");
+        private readonly Bech32Encoder bech32 = Encoders.Bech32("bc");
+        private readonly Bech32Encoder tbech32 = Encoders.Bech32("tb");
 
         [Fact]
         public void ValidAddress()

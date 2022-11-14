@@ -210,7 +210,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             hotWalletManager.LoadKeysLookup();
 
             // Create a cold staking setup transaction.
-            Transaction transaction = this.CreateColdStakingSetupTransaction(wallet, "password", spendingAddress, destinationColdKeys.PubKey, destinationHotKeys.PubKey,
+            Transaction transaction = CreateColdStakingSetupTransaction(wallet, "password", spendingAddress, destinationColdKeys.PubKey, destinationHotKeys.PubKey,
                 changeAddress, new Money(7500), new Money(5000));
 
             coldWalletManager.ProcessTransaction(transaction);
@@ -270,7 +270,7 @@ namespace Blockcore.Features.ColdStaking.Tests
 
             // Will spend from the cold stake address and send the change back to the same address.
             var coldStakeAddress = coldWallet.AccountsRoot.ElementAt(0).Accounts.ElementAt(0).ExternalAddresses.ElementAt(0);
-            Transaction withdrawalTransaction = this.CreateColdStakingWithdrawalTransaction(coldWallet, "password", coldStakeAddress,
+            Transaction withdrawalTransaction = CreateColdStakingWithdrawalTransaction(coldWallet, "password", coldStakeAddress,
                 withdrawalKeys.PubKey, ColdStakingScriptTemplate.Instance.GenerateScriptPubKey(destinationColdKeys.PubKey.Hash, destinationHotKeys.PubKey.Hash),
                 new Money(750), new Money(262));
 

@@ -33,7 +33,7 @@ namespace Blockcore.Features.PoA.Voting
             this.whitelistedHashesRepository = whitelistedHashesRepository;
             this.consensusFactory = network.Consensus.ConsensusFactory as PoAConsensusFactory;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -42,19 +42,19 @@ namespace Blockcore.Features.PoA.Voting
             switch (data.Key)
             {
                 case VoteKey.AddFederationMember:
-                    this.AddFederationMember(data.Data);
+                    AddFederationMember(data.Data);
                     break;
 
                 case VoteKey.KickFederationMember:
-                    this.RemoveFederationMember(data.Data);
+                    RemoveFederationMember(data.Data);
                     break;
 
                 case VoteKey.WhitelistHash:
-                    this.AddHash(data.Data);
+                    AddHash(data.Data);
                     break;
 
                 case VoteKey.RemoveHash:
-                    this.RemoveHash(data.Data);
+                    RemoveHash(data.Data);
                     break;
             }
         }
@@ -65,19 +65,19 @@ namespace Blockcore.Features.PoA.Voting
             switch (data.Key)
             {
                 case VoteKey.AddFederationMember:
-                    this.RemoveFederationMember(data.Data);
+                    RemoveFederationMember(data.Data);
                     break;
 
                 case VoteKey.KickFederationMember:
-                    this.AddFederationMember(data.Data);
+                    AddFederationMember(data.Data);
                     break;
 
                 case VoteKey.WhitelistHash:
-                    this.RemoveHash(data.Data);
+                    RemoveHash(data.Data);
                     break;
 
                 case VoteKey.RemoveHash:
-                    this.AddHash(data.Data);
+                    AddHash(data.Data);
                     break;
             }
         }

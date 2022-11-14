@@ -56,7 +56,7 @@ namespace Blockcore.Features.Dns
         /// <summary>
         /// Defines a lock object for the masterfile to use during swapping.
         /// </summary>
-        private object masterFileLock = new object();
+        private readonly object masterFileLock = new object();
 
         /// <summary>
         /// Defines the client used to listen for incoming DNS requests.
@@ -106,7 +106,7 @@ namespace Blockcore.Features.Dns
         /// <summary>
         /// Defines an entity that holds the metrics for the DNS server.
         /// </summary>
-        private DnsMetric metrics;
+        private readonly DnsMetric metrics;
 
         /// <summary>
         /// Defines the pointer to the record number of the results, used to control round-robin so the same peer
@@ -138,7 +138,7 @@ namespace Blockcore.Features.Dns
             this.masterFile = masterFile;
             this.asyncProvider = asyncProvider;
             this.nodeLifetime = nodeLifetime;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.dateTimeProvider = dateTimeProvider;
             this.dnsSettings = dnsSettings;
             this.dataFolders = dataFolders;
@@ -182,15 +182,15 @@ namespace Blockcore.Features.Dns
                 else
                 {
                     // Seed with SOA and NS resource records when this is a new masterfile.
-                    this.SeedMasterFile(this.MasterFile);
+                    SeedMasterFile(this.MasterFile);
                 }
             }
 
             // Create async loop for outputting metrics.
-            this.metricsLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.LogMetrics), async (token) => await Task.Run(() => this.LogMetrics()), this.nodeLifetime.ApplicationStopping, repeatEvery: TimeSpan.FromSeconds(MetricsLogRate));
+            this.metricsLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.LogMetrics), async (token) => await Task.Run(() => LogMetrics()), this.nodeLifetime.ApplicationStopping, repeatEvery: TimeSpan.FromSeconds(MetricsLogRate));
 
             // Create async loop for saving the master file.
-            this.StartSaveMasterfileLoop();
+            StartSaveMasterfileLoop();
         }
 
         /// <summary>
@@ -215,19 +215,19 @@ namespace Blockcore.Features.Dns
                         this.logger.LogDebug("DNS request received of size {0} from endpoint {1}.", request.Item2.Length, request.Item1);
 
                         // Received a request, now handle it. (measured)
-                        using (new StopwatchDisposable((elapsed) => { this.metrics.CaptureRequestMetrics(this.GetPeerCount(), elapsed, false); }))
+                        using (new StopwatchDisposable((elapsed) => { this.metrics.CaptureRequestMetrics(GetPeerCount(), elapsed, false); }))
                         {
-                            await this.HandleRequestAsync(request);
+                            await HandleRequestAsync(request);
                         }
                     }
                     catch (ArgumentException e)
                     {
-                        this.metrics.CaptureRequestMetrics(this.GetPeerCount(), 0, true);
+                        this.metrics.CaptureRequestMetrics(GetPeerCount(), 0, true);
                         this.logger.LogWarning(e, "Failed to process DNS request.");
                     }
                     catch (SocketException e)
                     {
-                        this.metrics.CaptureRequestMetrics(this.GetPeerCount(), 0, true);
+                        this.metrics.CaptureRequestMetrics(GetPeerCount(), 0, true);
                         this.logger.LogError(e, "Socket exception {0} whilst receiving UDP request.", e.ErrorCode);
                     }
                 }
@@ -262,7 +262,7 @@ namespace Blockcore.Features.Dns
             Guard.NotNull(newMasterFile, nameof(newMasterFile));
 
             // Seed the new masterfile with SOA and NS resource records.
-            this.SeedMasterFile(newMasterFile);
+            SeedMasterFile(newMasterFile);
 
             lock (this.masterFileLock)
             {
@@ -276,7 +276,7 @@ namespace Blockcore.Features.Dns
         /// </summary>
         public void NotThatDispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -389,7 +389,7 @@ namespace Blockcore.Features.Dns
 
                 // Resolve request against masterfile.
                 request = new Request(header, Question.GetAllFromArray(udpRequest.Item2, header.Size, header.QuestionCount));
-                IResponse response = this.Resolve(request);
+                IResponse response = Resolve(request);
 
                 // Send response.
                 await this.udpClient.SendAsync(response.ToArray(), response.Size, udpRequest.Item1).WithCancellationTimeout(UdpTimeout);

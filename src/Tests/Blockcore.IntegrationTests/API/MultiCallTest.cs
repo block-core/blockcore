@@ -31,7 +31,7 @@ namespace Blockcore.IntegrationTests.API
             var options = new ParallelOptions { MaxDegreeOfParallelism = 16 };
             Parallel.ForEach(indexes, options, ndx =>
             {
-                success[ndx] = this.APICallGetsExpectedResult(ndx);
+                success[ndx] = APICallGetsExpectedResult(ndx);
             });
 
             // Check that none failed.

@@ -23,12 +23,12 @@ namespace Blockcore.Tests.Utilities
         {
             var asyncLoop = new AsyncLoop("TestLoop", this.FullNodeLogger.Object, async token =>
             {
-                await this.DoOperationCanceledExceptionTask(token);
+                await DoOperationCanceledExceptionTask(token);
             });
 
             await asyncLoop.Run(new CancellationTokenSource(800).Token, TimeSpan.FromMilliseconds(300)).RunningTask;
 
-            this.AssertLog<OperationCanceledException>(this.FullNodeLogger, LogLevel.Critical, "This should not block the task from continuing.", "TestLoop threw an unhandled exception");
+            AssertLog<OperationCanceledException>(this.FullNodeLogger, LogLevel.Critical, "This should not block the task from continuing.", "TestLoop threw an unhandled exception");
             Assert.Equal(1, this.iterationCount);
         }
 
@@ -37,12 +37,12 @@ namespace Blockcore.Tests.Utilities
         {
             var asyncLoop = new AsyncLoop("TestLoop", this.FullNodeLogger.Object, async token =>
             {
-                await this.DoExceptionalTask(token);
+                await DoExceptionalTask(token);
             });
 
             await asyncLoop.Run(TimeSpan.FromMilliseconds(330)).RunningTask;
 
-            this.AssertLog<InvalidOperationException>(this.FullNodeLogger, LogLevel.Critical, "Cannot run more than 3 times.", "TestLoop threw an unhandled exception");
+            AssertLog<InvalidOperationException>(this.FullNodeLogger, LogLevel.Critical, "Cannot run more than 3 times.", "TestLoop threw an unhandled exception");
             Assert.Equal(3, this.iterationCount);
         }
 
@@ -51,12 +51,12 @@ namespace Blockcore.Tests.Utilities
         {
             var asyncLoop = new AsyncLoop("TestLoop", this.FullNodeLogger.Object, async token =>
             {
-                await this.DoExceptionalTask(token);
+                await DoExceptionalTask(token);
             });
 
             await asyncLoop.Run(new CancellationTokenSource(1500).Token, TimeSpan.FromMilliseconds(330)).RunningTask;
 
-            this.AssertLog<InvalidOperationException>(this.FullNodeLogger, LogLevel.Critical, "Cannot run more than 3 times.", "TestLoop threw an unhandled exception");
+            AssertLog<InvalidOperationException>(this.FullNodeLogger, LogLevel.Critical, "Cannot run more than 3 times.", "TestLoop threw an unhandled exception");
             Assert.Equal(3, this.iterationCount);
         }
 
@@ -65,7 +65,7 @@ namespace Blockcore.Tests.Utilities
         {
             var asyncLoop = new AsyncLoop("TestLoop", this.FullNodeLogger.Object, async token =>
             {
-                await this.DoTask(token);
+                await DoTask(token);
             });
 
             await asyncLoop.Run(new CancellationTokenSource(1000).Token, TimeSpan.FromMilliseconds(330)).RunningTask;
@@ -90,7 +90,7 @@ namespace Blockcore.Tests.Utilities
         {
             var asyncLoop = new AsyncLoop("TestLoop", NullLogger.Instance, async token =>
             {
-                await this.DoTask(token);
+                await DoTask(token);
             });
 
             await asyncLoop.Run(new CancellationTokenSource(1000).Token, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(100)).RunningTask;

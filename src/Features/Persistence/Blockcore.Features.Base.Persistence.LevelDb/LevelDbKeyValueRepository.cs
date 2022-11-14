@@ -40,7 +40,7 @@ namespace Blockcore.Features.Base.Persistence.LevelDb
         /// <inheritdoc />
         public void SaveValue<T>(string key, T value)
         {
-            this.SaveBytes(key, this.dataStoreSerializer.Serialize(value));
+            SaveBytes(key, this.dataStoreSerializer.Serialize(value));
         }
 
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace Blockcore.Features.Base.Persistence.LevelDb
             string json = Serializer.ToString(value);
             byte[] jsonBytes = Encoding.ASCII.GetBytes(json);
 
-            this.SaveBytes(key, jsonBytes);
+            SaveBytes(key, jsonBytes);
         }
 
         /// <inheritdoc />
@@ -68,7 +68,7 @@ namespace Blockcore.Features.Base.Persistence.LevelDb
         /// <inheritdoc />
         public T LoadValue<T>(string key)
         {
-            byte[] bytes = this.LoadBytes(key);
+            byte[] bytes = LoadBytes(key);
 
             if (bytes == null)
                 return default(T);
@@ -80,7 +80,7 @@ namespace Blockcore.Features.Base.Persistence.LevelDb
         /// <inheritdoc />
         public T LoadValueJson<T>(string key)
         {
-            byte[] bytes = this.LoadBytes(key);
+            byte[] bytes = LoadBytes(key);
 
             if (bytes == null)
                 return default(T);

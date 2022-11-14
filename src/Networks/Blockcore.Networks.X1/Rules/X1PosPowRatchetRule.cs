@@ -60,7 +60,7 @@ namespace Blockcore.Networks.X1.Rules
 
             var expect = new Script(Op.GetPushOp(newHeight));
             Script actual = block.Transactions[0].Inputs[0].ScriptSig;
-            if (!this.StartWith(actual.ToBytes(true), expect.ToBytes(true)))
+            if (!StartWith(actual.ToBytes(true), expect.ToBytes(true)))
             {
                 this.Logger.LogTrace("(-)[BAD_COINBASE_HEIGHT]");
                 ConsensusErrors.BadCoinbaseHeight.Throw();

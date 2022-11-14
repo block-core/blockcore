@@ -13,12 +13,12 @@ namespace Blockcore.Features.BlockStore.Tests
 {
     public class BlockStoreBehaviorTest
     {
-        private BlockStoreBehavior behavior;
-        private Mock<IChainState> chainState;
-        private ChainIndexer chainIndexer;
+        private readonly BlockStoreBehavior behavior;
+        private readonly Mock<IChainState> chainState;
+        private readonly ChainIndexer chainIndexer;
         private readonly ILoggerFactory loggerFactory;
-        private Mock<IConsensusManager> consensusManager;
-        private Mock<IBlockStoreQueue> blockStore;
+        private readonly Mock<IConsensusManager> consensusManager;
+        private readonly Mock<IBlockStoreQueue> blockStore;
 
         public BlockStoreBehaviorTest()
         {

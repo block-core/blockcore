@@ -20,7 +20,7 @@ namespace Blockcore.Features.PoA.Voting
 
         public VotingDataEncoder(ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>Decodes raw voting data.</summary>

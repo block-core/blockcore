@@ -51,8 +51,8 @@ namespace Blockcore.Features.Dns.Tests
                 this.dnsSettings = new DnsSettings(this.nodeSettings);
                 this.dataFolder = CreateDataFolder(this);
                 this.asyncProvider = new Mock<IAsyncProvider>().Object;
-                this.connectionManager = this.BuildConnectionManager();
-                this.unreliablePeerBehavior = this.BuildUnreliablePeerBehavior();
+                this.connectionManager = BuildConnectionManager();
+                this.unreliablePeerBehavior = BuildUnreliablePeerBehavior();
                 this.signals = new Signals.Signals(this.loggerFactory.Object, null);
             }
 
@@ -106,7 +106,7 @@ namespace Blockcore.Features.Dns.Tests
         {
             // Arrange.
             this.defaultConstructorParameters.dnsServer = null;
-            Action a = () => this.BuildDefaultDnsFeature();
+            Action a = () => BuildDefaultDnsFeature();
 
             // Act and Assert.
             a.Should().Throw<ArgumentNullException>().Which.Message.Should().Contain("dnsServer");
@@ -117,7 +117,7 @@ namespace Blockcore.Features.Dns.Tests
         {
             // Arrange.
             this.defaultConstructorParameters.whitelistManager = null;
-            Action a = () => this.BuildDefaultDnsFeature();
+            Action a = () => BuildDefaultDnsFeature();
 
             // Act and Assert.
             a.Should().Throw<ArgumentNullException>().Which.Message.Should().Contain("whitelistManager");
@@ -128,7 +128,7 @@ namespace Blockcore.Features.Dns.Tests
         {
             // Arrange.
             this.defaultConstructorParameters.loggerFactory = null;
-            Action a = () => this.BuildDefaultDnsFeature();
+            Action a = () => BuildDefaultDnsFeature();
 
             // Act and Assert.
             a.Should().Throw<ArgumentNullException>().Which.Message.Should().Contain("loggerFactory");
@@ -139,7 +139,7 @@ namespace Blockcore.Features.Dns.Tests
         {
             // Arrange.
             this.defaultConstructorParameters.nodeLifetime = null;
-            Action a = () => this.BuildDefaultDnsFeature();
+            Action a = () => BuildDefaultDnsFeature();
 
             // Act and Assert.
             a.Should().Throw<ArgumentNullException>().Which.Message.Should().Contain("nodeLifetime");
@@ -150,7 +150,7 @@ namespace Blockcore.Features.Dns.Tests
         {
             // Arrange.
             this.defaultConstructorParameters.nodeSettings = null;
-            Action a = () => this.BuildDefaultDnsFeature();
+            Action a = () => BuildDefaultDnsFeature();
 
             // Act and Assert.
             a.Should().Throw<ArgumentNullException>().Which.Message.Should().Contain("nodeSettings");
@@ -161,7 +161,7 @@ namespace Blockcore.Features.Dns.Tests
         {
             // Arrange.
             this.defaultConstructorParameters.dataFolder = null;
-            Action a = () => this.BuildDefaultDnsFeature();
+            Action a = () => BuildDefaultDnsFeature();
 
             // Act and Assert.
             a.Should().Throw<ArgumentNullException>().Which.Message.Should().Contain("dataFolder");
@@ -171,7 +171,7 @@ namespace Blockcore.Features.Dns.Tests
         public void WhenConstructorCalled_AndAllParametersValid_ThenTypeCreated()
         {
             // Arrange.
-            var feature = this.BuildDefaultDnsFeature();
+            var feature = BuildDefaultDnsFeature();
 
             // Assert.
             feature.Should().NotBeNull();
@@ -190,7 +190,7 @@ namespace Blockcore.Features.Dns.Tests
             this.defaultConstructorParameters.dnsServer.Setup(s => s.ListenAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).Callback(action);
 
             // Act.
-            var feature = this.BuildDefaultDnsFeature();
+            var feature = BuildDefaultDnsFeature();
             feature.InitializeAsync().GetAwaiter().GetResult();
             bool waited = waitObject.Wait(5000);
 
@@ -219,7 +219,7 @@ namespace Blockcore.Features.Dns.Tests
             this.defaultConstructorParameters.nodeLifetime.Setup(n => n.ApplicationStopping).Returns(source.Token);
 
             // Act.
-            var feature = this.BuildDefaultDnsFeature();
+            var feature = BuildDefaultDnsFeature();
             feature.InitializeAsync().GetAwaiter().GetResult();
             this.defaultConstructorParameters.nodeLifetime.Object.StopApplication();
             bool waited = source.Token.WaitHandle.WaitOne(5000);
@@ -259,7 +259,7 @@ namespace Blockcore.Features.Dns.Tests
             this.defaultConstructorParameters.loggerFactory.Setup<ILogger>(f => f.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
             // Act.
-            var feature = this.BuildDefaultDnsFeature();
+            var feature = BuildDefaultDnsFeature();
             feature.InitializeAsync().GetAwaiter().GetResult();
             bool waited = source.Token.WaitHandle.WaitOne(5000);
 
@@ -282,7 +282,7 @@ namespace Blockcore.Features.Dns.Tests
 
             this.defaultConstructorParameters.asyncProvider = new AsyncProvider(this.defaultConstructorParameters.loggerFactory.Object, this.defaultConstructorParameters.signals, this.defaultConstructorParameters.nodeLifetime.Object);
 
-            using (var feature = this.BuildDefaultDnsFeature())
+            using (var feature = BuildDefaultDnsFeature())
             {
                 // Act.
                 feature.InitializeAsync().GetAwaiter().GetResult();

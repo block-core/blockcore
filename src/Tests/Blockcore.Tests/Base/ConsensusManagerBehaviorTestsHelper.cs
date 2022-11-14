@@ -99,7 +99,7 @@ namespace Blockcore.Tests.Base
             var cmBehavior = new ConsensusManagerBehavior(chain, ibdState.Object, cmMock.Object, this.testPeerBanning, this.loggerFactory);
 
             // Peer and behavior
-            this.PeerMock = this.CreatePeerMock();
+            this.PeerMock = CreatePeerMock();
 
             cmBehavior.Attach(this.PeerMock.Object);
 

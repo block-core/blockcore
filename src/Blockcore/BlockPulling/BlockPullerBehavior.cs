@@ -118,7 +118,7 @@ namespace Blockcore.BlockPulling
 
             this.blockPuller = blockPuller;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.loggerFactory = loggerFactory;
         }
 
@@ -159,7 +159,7 @@ namespace Blockcore.BlockPulling
             this.logger.LogDebug("Peer will be penalized {0} times.", penalizeTimes);
 
             for (int i = 0; i < penalizeTimes; i++)
-                this.AddSample(0, delaySeconds);
+                AddSample(0, delaySeconds);
         }
 
         /// <inheritdoc/>
@@ -243,13 +243,13 @@ namespace Blockcore.BlockPulling
         /// <inheritdoc />
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
         }
     }
 }

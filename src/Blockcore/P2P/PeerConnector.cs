@@ -117,17 +117,17 @@ namespace Blockcore.P2P
             this.ConnectorPeers = new NetworkPeerCollection();
             this.dateTimeProvider = dateTimeProvider;
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.network = network;
             this.networkPeerFactory = networkPeerFactory;
             this.NodeLifetime = nodeLifetime;
             this.ConnectionSettings = connectionSettings;
             this.PeerAddressManager = peerAddressManager;
-            this.networkPeerDisposer = new NetworkPeerDisposer(this.loggerFactory, this.asyncProvider, this.OnPeerDisposed);
+            this.networkPeerDisposer = new NetworkPeerDisposer(this.loggerFactory, this.asyncProvider, OnPeerDisposed);
             this.selfEndpointTracker = selfEndpointTracker;
             this.Requirements = new NetworkPeerRequirement { MinVersion = nodeSettings.MinProtocolVersion ?? nodeSettings.Network.Consensus.ConsensusFactory.Protocol.MinProtocolVersion };
 
-            this.connectionInterval = this.CalculateConnectionInterval();
+            this.connectionInterval = CalculateConnectionInterval();
         }
 
         /// <inheritdoc/>
@@ -137,7 +137,7 @@ namespace Blockcore.P2P
 
             this.CurrentParameters = connectionManager.Parameters.Clone();
 
-            this.OnInitialize();
+            OnInitialize();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Blockcore.P2P
             this.ConnectorPeers.Add(peer);
 
             if (this.asyncLoop != null)
-                this.asyncLoop.RepeatEvery = this.CalculateConnectionInterval();
+                this.asyncLoop.RepeatEvery = CalculateConnectionInterval();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Blockcore.P2P
             this.ConnectorPeers.Remove(peer);
 
             if (this.asyncLoop != null)
-                this.asyncLoop.RepeatEvery = this.CalculateConnectionInterval();
+                this.asyncLoop.RepeatEvery = CalculateConnectionInterval();
         }
 
         /// <summary>Determines whether or not a connector can be started.</summary>
@@ -199,14 +199,14 @@ namespace Blockcore.P2P
             if (!this.CanStartConnect)
                 return;
 
-            this.OnStartConnect();
+            OnStartConnect();
 
-            this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{this.GetType().Name}.{nameof(this.ConnectAsync)}", async token =>
+            this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop($"{GetType().Name}.{nameof(this.ConnectAsync)}", async token =>
             {
                 if (!this.PeerAddressManager.Peers.Any() || (this.ConnectorPeers.Count >= this.MaxOutboundConnections))
                     return;
 
-                await this.OnConnectAsync().ConfigureAwait(false);
+                await OnConnectAsync().ConfigureAwait(false);
             },
             this.NodeLifetime.ApplicationStopping,
             repeatEvery: this.connectionInterval);
@@ -221,7 +221,7 @@ namespace Blockcore.P2P
                 return;
             }
 
-            if (this.IsPeerConnected(peerAddress.Endpoint))
+            if (IsPeerConnected(peerAddress.Endpoint))
             {
                 this.logger.LogDebug("Connect aborted: {0} is already connected.", peerAddress.Endpoint);
                 return;
@@ -248,7 +248,7 @@ namespace Blockcore.P2P
                     peer = await this.networkPeerFactory.CreateConnectedNetworkPeerAsync(peerAddress.Endpoint, clonedConnectParameters, this.networkPeerDisposer).ConfigureAwait(false);
 
                     await peer.VersionHandshakeAsync(this.Requirements, timeoutTokenSource.Token).ConfigureAwait(false);
-                    this.AddPeer(peer);
+                    AddPeer(peer);
                 }
             }
             catch (OperationCanceledException)
@@ -293,7 +293,7 @@ namespace Blockcore.P2P
         /// <param name="peer">Peer that is being disposed.</param>
         private void OnPeerDisposed(INetworkPeer peer)
         {
-            this.RemovePeer(peer);
+            RemovePeer(peer);
         }
 
         /// <inheritdoc/>

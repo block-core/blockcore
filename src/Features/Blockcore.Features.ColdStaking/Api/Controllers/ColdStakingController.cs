@@ -42,7 +42,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
             this.ColdStakingManager = walletManager as ColdStakingManager;
             Guard.NotNull(this.ColdStakingManager, nameof(this.ColdStakingManager));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.walletTransactionHandler = walletTransactionHandler;
         }
 
@@ -72,7 +72,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
                 GetColdStakingInfoResponse model = this.ColdStakingManager.GetColdStakingInfo(request.WalletName);
 
                 this.logger.LogTrace("(-):'{0}'", model);
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -111,7 +111,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
                 };
 
                 this.logger.LogTrace("(-):'{0}'", model);
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -155,7 +155,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
                     throw new WalletException("The cold staking account does not exist.");
 
                 this.logger.LogTrace("(-):'{0}'", model);
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -177,7 +177,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
         [HttpPost]
         public IActionResult SetupColdStaking([FromBody] SetupColdStakingRequest request)
         {
-            return this.SetupColdStakingInternal(request, true);
+            return SetupColdStakingInternal(request, true);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
         [HttpPost]
         public IActionResult SetupOfflineStaking([FromBody] SetupColdStakingRequest request)
         {
-            return this.SetupColdStakingInternal(request, false);
+            return SetupColdStakingInternal(request, false);
         }
 
         private IActionResult SetupColdStakingInternal(SetupColdStakingRequest request, bool createHotAccount)
@@ -221,7 +221,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
                 };
 
                 this.logger.LogTrace("(-):'{0}'", model);
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {
@@ -266,7 +266,7 @@ namespace Blockcore.Features.ColdStaking.Api.Controllers
 
                 this.logger.LogTrace("(-):'{0}'", model);
 
-                return this.Json(model);
+                return Json(model);
             }
             catch (Exception e)
             {

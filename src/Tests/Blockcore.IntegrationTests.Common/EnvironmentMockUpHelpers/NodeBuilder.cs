@@ -106,13 +106,13 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         public CoreNode CreateBitcoinCoreNode(string version = "0.13.1", bool useCookieAuth = false, bool useNewConfigStyle = false)
         {
             string bitcoinDPath = GetBitcoinCorePath(version);
-            return this.CreateNode(new BitcoinCoreRunner(this.GetNextDataFolderName(), bitcoinDPath, useNewConfigStyle), useCookieAuth: useCookieAuth);
+            return CreateNode(new BitcoinCoreRunner(GetNextDataFolderName(), bitcoinDPath, useNewConfigStyle), useCookieAuth: useCookieAuth);
         }
 
         public CoreNode CreateStratisXNode(string version = "2.0.0.5", bool useCookieAuth = false, NodeConfigParameters configParameters = null)
         {
             string stratisDPath = GetStratisXPath(version);
-            return this.CreateNode(new StratisXRunner(this.GetNextDataFolderName(), stratisDPath), "stratis.conf", useCookieAuth, configParameters);
+            return CreateNode(new StratisXRunner(GetNextDataFolderName(), stratisDPath), "stratis.conf", useCookieAuth, configParameters);
         }
 
         public CoreNode CreateMainnetStratisXNode(string version = "2.0.0.5", bool useCookieAuth = false)
@@ -122,7 +122,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
             parameters.Add("server", "0");
 
             string stratisDPath = GetStratisXPath(version);
-            return this.CreateNode(new StratisXRunner(this.GetNextDataFolderName(), stratisDPath), "stratis.conf", useCookieAuth, parameters);
+            return CreateNode(new StratisXRunner(GetNextDataFolderName(), stratisDPath), "stratis.conf", useCookieAuth, parameters);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         /// <returns>The constructed PoW node.</returns>
         public CoreNode CreateStratisPowNode(Network network, string agent = null, NodeConfigParameters configParameters = null)
         {
-            return CreateNode(new StratisBitcoinPowRunner(this.GetNextDataFolderName(), network, agent), configParameters: configParameters);
+            return CreateNode(new StratisBitcoinPowRunner(GetNextDataFolderName(), network, agent), configParameters: configParameters);
         }
 
         public CoreNode CreateStratisCustomPowNode(Network network, NodeConfigParameters configParameters)
@@ -169,7 +169,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
         /// <returns>The constructed PoS node.</returns>
         public CoreNode CreateStratisPosNode(Network network, string agent = "StratisBitcoin", NodeConfigParameters configParameters = null, bool isGateway = false)
         {
-            return CreateNode(new StratisBitcoinPosRunner(this.GetNextDataFolderName(), network, agent, isGateway), "stratis.conf", configParameters: configParameters);
+            return CreateNode(new StratisBitcoinPosRunner(GetNextDataFolderName(), network, agent, isGateway), "stratis.conf", configParameters: configParameters);
         }
 
         public CoreNode CloneStratisNode(CoreNode cloneNode, string agent = "StratisBitcoin")
@@ -193,7 +193,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
             configParameters.SetDefaultValueIfUndefined("conf", "custom.conf");
             string configFileName = configParameters["conf"];
 
-            configParameters.SetDefaultValueIfUndefined("datadir", this.GetNextDataFolderName(agent));
+            configParameters.SetDefaultValueIfUndefined("datadir", GetNextDataFolderName(agent));
             string dataDir = configParameters["datadir"];
 
             configParameters.ToList().ForEach(p => this.ConfigParameters[p.Key] = p.Value);

@@ -60,7 +60,7 @@ namespace Blockcore.Tests.BlockPulling
             this.behavior.AddSample(100, 1);
             this.behavior.RecalculateQualityScore(100 * 2);
 
-            Assert.True(this.DoubleEqual(0.5, this.behavior.QualityScore));
+            Assert.True(DoubleEqual(0.5, this.behavior.QualityScore));
         }
 
         [Fact]

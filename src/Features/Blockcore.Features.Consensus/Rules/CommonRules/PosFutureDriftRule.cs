@@ -35,10 +35,10 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
             long adjustedTime = this.Parent.DateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
 
             // Check timestamp.
-            if (header.Time > adjustedTime + this.GetFutureDrift(adjustedTime))
+            if (header.Time > adjustedTime + GetFutureDrift(adjustedTime))
             {
                 // The block can be valid only after its time minus the future drift.
-                context.ValidationContext.RejectUntil = Utils.UnixTimeToDateTime(header.Time - this.GetFutureDrift(header.Time)).UtcDateTime;
+                context.ValidationContext.RejectUntil = Utils.UnixTimeToDateTime(header.Time - GetFutureDrift(header.Time)).UtcDateTime;
                 this.Logger.LogTrace("(-)[TIME_TOO_FAR]");
                 ConsensusErrors.BlockTimestampTooFar.Throw();
             }

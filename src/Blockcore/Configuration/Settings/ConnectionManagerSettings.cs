@@ -70,7 +70,7 @@ namespace Blockcore.Configuration.Settings
             try
             {
                 foreach (IPEndPoint addNode in config.GetAll("addnode", logger).Select(c => c.ToIPEndPoint(nodeSettings.Network.DefaultPort)))
-                    this.AddAddNode(addNode);
+                    AddAddNode(addNode);
             }
             catch (FormatException)
             {

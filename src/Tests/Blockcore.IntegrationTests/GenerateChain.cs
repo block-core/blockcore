@@ -39,37 +39,37 @@ namespace Blockcore.IntegrationTests
         [Fact(Skip = SkipTestMessage)]
         public void CreateStratisBlockchainDataWith10Blocks()
         {
-            this.GenerateStratisBlockchainData(new StratisRegTest(), 10, true, true, true);
+            GenerateStratisBlockchainData(new StratisRegTest(), 10, true, true, true);
         }
 
         [Fact(Skip = SkipTestMessage)]
         public void CreateStratisBlockchainDataWith100Blocks()
         {
-            this.GenerateStratisBlockchainData(new StratisRegTest(), 100, true, true, true);
+            GenerateStratisBlockchainData(new StratisRegTest(), 100, true, true, true);
         }
 
         [Fact(Skip = SkipTestMessage)]
         public void CreateStratisBlockchainDataWith150Blocks()
         {
-            this.GenerateStratisBlockchainData(new StratisRegTest(), 150, true, true, true);
+            GenerateStratisBlockchainData(new StratisRegTest(), 150, true, true, true);
         }
 
         [Fact(Skip = SkipTestMessage)]
         public void CreateBitcoinBlockchainDataWith10Blocks()
         {
-            this.GenerateBitcoinBlockchainData(new BitcoinRegTest(), 10, true, true, true);
+            GenerateBitcoinBlockchainData(new BitcoinRegTest(), 10, true, true, true);
         }
 
         [Fact(Skip = SkipTestMessage)]
         public void CreateBitcoinBlockchainDataWith100Blocks()
         {
-            this.GenerateBitcoinBlockchainData(new BitcoinRegTest(), 100, true, true, true);
+            GenerateBitcoinBlockchainData(new BitcoinRegTest(), 100, true, true, true);
         }
 
         [Fact(Skip = SkipTestMessage)]
         public void CreateBitcoinBlockchainDataWith150Blocks()
         {
-            this.GenerateBitcoinBlockchainData(new BitcoinRegTest(), 150, true, true, true);
+            GenerateBitcoinBlockchainData(new BitcoinRegTest(), 150, true, true, true);
         }
 
         [Fact(Skip = SkipTestMessage)]

@@ -9,7 +9,7 @@ namespace Blockcore.P2P.Protocol.Payloads
         {
             get
             {
-                return this.GetType().GetCustomAttribute<PayloadAttribute>().Name;
+                return GetType().GetCustomAttribute<PayloadAttribute>().Name;
             }
         }
 
@@ -17,7 +17,7 @@ namespace Blockcore.P2P.Protocol.Payloads
         {
             using (stream.SerializationTypeScope(SerializationType.Network))
             {
-                this.ReadWriteCore(stream);
+                ReadWriteCore(stream);
             }
         }
 
@@ -27,7 +27,7 @@ namespace Blockcore.P2P.Protocol.Payloads
 
         public override string ToString()
         {
-            return this.GetType().Name;
+            return GetType().Name;
         }
     }
 }

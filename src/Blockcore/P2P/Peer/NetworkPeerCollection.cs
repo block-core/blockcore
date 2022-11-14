@@ -87,7 +87,7 @@ namespace Blockcore.P2P.Peer
 
         public INetworkPeer FindLocal()
         {
-            return this.FindByIp(IPAddress.Loopback).FirstOrDefault();
+            return FindByIp(IPAddress.Loopback).FirstOrDefault();
         }
 
         public INetworkPeer FindById(int peerId)
@@ -115,7 +115,7 @@ namespace Blockcore.P2P.Peer
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

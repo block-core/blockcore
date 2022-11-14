@@ -173,7 +173,7 @@ namespace Blockcore.Features.RPC.Controllers
                 var listMethods = new List<Models.RpcCommandModel>();
                 foreach (ControllerActionDescriptor descriptor in this.GetActionDescriptors().Values.Where(desc => desc.ActionName == desc.ActionName.ToLower()))
                 {
-                    CustomAttributeData attr = descriptor.MethodInfo.CustomAttributes.Where(x => x.AttributeType == typeof(ActionDescription)).FirstOrDefault();
+                    CustomAttributeData attr = descriptor.MethodInfo.CustomAttributes.Where(x => x.AttributeType == typeof(ActionDescriptionAttribute)).FirstOrDefault();
                     string description = attr?.ConstructorArguments.FirstOrDefault().Value as string ?? "";
 
                     var parameters = new List<string>();

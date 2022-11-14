@@ -319,8 +319,8 @@ namespace Blockcore.Features.Consensus
             BigInteger weightedTarget = target.Multiply(weight);
 
             StakeValidator stakeValidator = this;
-            context.TargetProofOfStake = stakeValidator.ToUInt256(weightedTarget);
-            this.logger.LogDebug("POS target is '{0}', weighted target for {1} coins is '{2}'.", this.ToUInt256(target), valueIn, context.TargetProofOfStake);
+            context.TargetProofOfStake = StakeValidator.ToUInt256(weightedTarget);
+            this.logger.LogDebug("POS target is '{0}', weighted target for {1} coins is '{2}'.", StakeValidator.ToUInt256(target), valueIn, context.TargetProofOfStake);
 
             // Calculate hash.
             using (var ms = new MemoryStream())

@@ -10,6 +10,8 @@ namespace NBitcoin.BitcoinCore
     {
         private uint nHeight;
         private uint nVersion;
+        private bool fCoinStake;
+        private uint nTime;
 
         // Determines whether transaction is a coinbase.
         public bool CoinBase { get; set; }

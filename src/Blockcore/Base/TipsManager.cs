@@ -177,7 +177,7 @@ namespace Blockcore.Base
                 if (!tipsOnSameChain)
                 {
                     this.logger.LogDebug("Tips are not on the same chain, finding last common fork between them.");
-                    lowestTip = this.FindCommonFork(this.tipsByProvider.Values.ToList());
+                    lowestTip = TipsManager.FindCommonFork(this.tipsByProvider.Values.ToList());
                 }
 
                 this.lastCommonTip = lowestTip;

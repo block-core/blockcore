@@ -180,7 +180,7 @@ namespace Blockcore.P2P.Peer
                 ConnectCancellation = cancellation,
                 IsRelay = isRelay,
                 Version = myVersion,
-                Services = NetworkPeerServices.Nothing,
+                Services = NetworkPeerServices.None,
             };
 
             return await this.CreateConnectedNetworkPeerAsync(ipEndPoint, parameters, networkPeerDisposer).ConfigureAwait(false);

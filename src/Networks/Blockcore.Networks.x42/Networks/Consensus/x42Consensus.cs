@@ -50,7 +50,7 @@ namespace Blockcore.Networks.x42.Networks.Consensus
 
         public BuriedDeploymentsArray BuriedDeployments { get; }
 
-        public IBIP9DeploymentsArray BIP9Deployments { get; }
+        public IBip9DeploymentsArray BIP9Deployments { get; }
 
         public int SubsidyHalvingInterval { get; }
 
@@ -168,7 +168,7 @@ namespace Blockcore.Networks.x42.Networks.Consensus
             int majorityRejectBlockOutdated,
             int majorityWindow,
             BuriedDeploymentsArray buriedDeployments,
-            IBIP9DeploymentsArray bip9Deployments,
+            IBip9DeploymentsArray bip9Deployments,
             uint256 bip34Hash,
             int minerConfirmationWindow,
             uint maxReorgLength,

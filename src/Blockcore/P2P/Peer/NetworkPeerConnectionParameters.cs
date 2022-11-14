@@ -44,7 +44,7 @@ namespace Blockcore.P2P.Peer
         {
             this.Version = ProtocolVersion.SENDHEADERS_VERSION;
             this.IsRelay = true;
-            this.Services = NetworkPeerServices.Nothing;
+            this.Services = NetworkPeerServices.None;
             this.ConnectCancellation = default(CancellationToken);
             this.TemplateBehaviors = new List<INetworkPeerBehavior>();
 

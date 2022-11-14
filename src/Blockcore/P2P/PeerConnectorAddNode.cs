@@ -37,7 +37,7 @@ namespace Blockcore.P2P
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
-            this.Requirements.RequiredServices = NetworkPeerServices.Nothing;
+            this.Requirements.RequiredServices = NetworkPeerServices.None;
         }
 
         /// <inheritdoc/>

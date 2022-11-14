@@ -13,6 +13,11 @@ namespace Blockcore.Consensus
         public ConsensusException(string messsage) : base(messsage)
         {
         }
+
+        public ConsensusException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext): base(serializationInfo, streamingContext)
+        {
+
+        }
     }
 
     public class MaxReorgViolationException : ConsensusException

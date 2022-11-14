@@ -74,7 +74,7 @@ namespace Blockcore.Base
             this.newCommonTipSetEvent = new AsyncManualResetEvent(false);
             this.cancellation = new CancellationTokenSource();
 
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -93,7 +93,7 @@ namespace Blockcore.Base
 
             this.logger.LogDebug("Tips manager initialized at '{0}'.", this.lastCommonTip);
 
-            this.commonTipPersistingTask = PersistCommonTipContinuouslyAsync();
+            this.commonTipPersistingTask = this.PersistCommonTipContinuouslyAsync();
         }
 
         /// <summary>Continuously persists <see cref="lastCommonTip"/> to hard drive.</summary>
@@ -205,7 +205,7 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 

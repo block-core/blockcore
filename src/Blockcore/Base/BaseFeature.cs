@@ -189,7 +189,7 @@ namespace Blockcore.Base
             this.asyncProvider = asyncProvider;
             this.timeSyncBehaviorState = timeSyncBehaviorState;
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -197,7 +197,7 @@ namespace Blockcore.Base
         {
             // TODO rewrite chain starting logic. Tips manager should be used.
 
-            await StartChainAsync().ConfigureAwait(false);
+            await this.StartChainAsync().ConfigureAwait(false);
 
             if (this.provenBlockHeaderStore != null)
             {
@@ -224,7 +224,7 @@ namespace Blockcore.Base
             connectionParameters.TemplateBehaviors.Add(new ConnectionManagerBehavior(this.connectionManager, this.loggerFactory));
             connectionParameters.TemplateBehaviors.Add(new BroadcasterBehavior(this.network, this.broadcasterManager, this.loggerFactory));
 
-            StartAddressManager(connectionParameters);
+            this.StartAddressManager(connectionParameters);
 
             if (this.connectionManager.ConnectionSettings.SyncTimeEnabled)
             {
@@ -245,7 +245,7 @@ namespace Blockcore.Base
 
             this.chainState.ConsensusTip = this.consensusManager.Tip;
 
-            this.nodeStats.RegisterStats(sb => sb.Append(this.asyncProvider.GetStatistics(!this.nodeSettings.Log.DebugArgs.Any(a => a == "tasks"))), StatsType.Component, GetType().Name, 100);
+            this.nodeStats.RegisterStats(sb => sb.Append(this.asyncProvider.GetStatistics(!this.nodeSettings.Log.DebugArgs.Any(a => a == "tasks"))), StatsType.Component, this.GetType().Name, 100);
 
             ((IBlockStoreQueue)this.blockStore).ReindexChain(this.consensusManager, this.nodeLifetime.ApplicationStopping);
         }

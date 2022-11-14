@@ -51,7 +51,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
             this.NodeSettings = nodeSettings;
             this.Network = network;
             this.LoggerFactory = loggerFactory;
-            this.Logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.Logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         protected Task OnMessageReceivedAsync(INetworkPeer peer, IncomingMessage message)
@@ -80,7 +80,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
             this.callbacksRegistered = true;
         }
 
@@ -88,7 +88,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
         {
             if (this.callbacksRegistered)
             {
-                this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
+                this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
             }
         }
 

@@ -109,7 +109,7 @@ namespace Blockcore.Utilities
         /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         /// <inheritdoc />

@@ -96,16 +96,16 @@ namespace Blockcore.Consensus
             this.invalidBlockHashStore = invalidBlockHashStore;
             this.consensusRules = consensusRules;
             this.LoggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.NodeDeployments = nodeDeployments;
 
-            nodeStats.RegisterStats(AddBenchStats, StatsType.Benchmark, GetType().Name, 500);
+            nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 500);
         }
 
         /// <inheritdoc />
         public virtual void Initialize(ChainedHeader chainTip)
         {
-            SetupRulesEngineParent();
+            this.SetupRulesEngineParent();
         }
 
         /// <inheritdoc />
@@ -117,10 +117,10 @@ namespace Blockcore.Consensus
         /// <inheritdoc />
         public ConsensusRuleEngine SetupRulesEngineParent()
         {
-            SetupConsensusRules(this.consensusRules.HeaderValidationRules.Select(x => x as ConsensusRuleBase));
-            SetupConsensusRules(this.consensusRules.IntegrityValidationRules.Select(x => x as ConsensusRuleBase));
-            SetupConsensusRules(this.consensusRules.PartialValidationRules.Select(x => x as ConsensusRuleBase));
-            SetupConsensusRules(this.consensusRules.FullValidationRules.Select(x => x as ConsensusRuleBase));
+            this.SetupConsensusRules(this.consensusRules.HeaderValidationRules.Select(x => x as ConsensusRuleBase));
+            this.SetupConsensusRules(this.consensusRules.IntegrityValidationRules.Select(x => x as ConsensusRuleBase));
+            this.SetupConsensusRules(this.consensusRules.PartialValidationRules.Select(x => x as ConsensusRuleBase));
+            this.SetupConsensusRules(this.consensusRules.FullValidationRules.Select(x => x as ConsensusRuleBase));
 
             // Registers all rules that might be executed to the performance counter.
             this.performanceCounter = new ConsensusRulesPerformanceCounter(this.consensusRules);
@@ -154,9 +154,9 @@ namespace Blockcore.Consensus
             Guard.NotNull(header, nameof(header));
 
             var validationContext = new ValidationContext { ChainedHeaderToValidate = header };
-            RuleContext ruleContext = CreateRuleContext(validationContext);
+            RuleContext ruleContext = this.CreateRuleContext(validationContext);
 
-            ExecuteRules(this.consensusRules.HeaderValidationRules, ruleContext);
+            this.ExecuteRules(this.consensusRules.HeaderValidationRules, ruleContext);
 
             return validationContext;
         }
@@ -168,9 +168,9 @@ namespace Blockcore.Consensus
             Guard.NotNull(block, nameof(block));
 
             var validationContext = new ValidationContext { BlockToValidate = block, ChainedHeaderToValidate = header };
-            RuleContext ruleContext = CreateRuleContext(validationContext);
+            RuleContext ruleContext = this.CreateRuleContext(validationContext);
 
-            ExecuteRules(this.consensusRules.IntegrityValidationRules, ruleContext);
+            this.ExecuteRules(this.consensusRules.IntegrityValidationRules, ruleContext);
 
             return validationContext;
         }
@@ -182,14 +182,14 @@ namespace Blockcore.Consensus
             Guard.NotNull(block, nameof(block));
 
             var validationContext = new ValidationContext { BlockToValidate = block, ChainedHeaderToValidate = header };
-            RuleContext ruleContext = CreateRuleContext(validationContext);
+            RuleContext ruleContext = this.CreateRuleContext(validationContext);
 
-            await ExecuteRulesAsync(this.consensusRules.FullValidationRules, ruleContext).ConfigureAwait(false);
+            await this.ExecuteRulesAsync(this.consensusRules.FullValidationRules, ruleContext).ConfigureAwait(false);
 
             if (validationContext.Error != null)
             {
                 this.logger.LogWarning("Block '{0}' failed full validation with error: '{1}'.", header, validationContext.Error);
-                HandleConsensusError(validationContext);
+                this.HandleConsensusError(validationContext);
             }
 
             return validationContext;
@@ -202,14 +202,14 @@ namespace Blockcore.Consensus
             Guard.NotNull(block, nameof(block));
 
             var validationContext = new ValidationContext { BlockToValidate = block, ChainedHeaderToValidate = header };
-            RuleContext ruleContext = CreateRuleContext(validationContext);
+            RuleContext ruleContext = this.CreateRuleContext(validationContext);
 
-            await ExecuteRulesAsync(this.consensusRules.PartialValidationRules, ruleContext).ConfigureAwait(false);
+            await this.ExecuteRulesAsync(this.consensusRules.PartialValidationRules, ruleContext).ConfigureAwait(false);
 
             if (validationContext.Error != null)
             {
                 this.logger.LogWarning("Block '{0}' failed partial validation with error: '{1}'.", header, validationContext.Error);
-                HandleConsensusError(validationContext);
+                this.HandleConsensusError(validationContext);
             }
 
             return validationContext;

@@ -88,13 +88,13 @@ namespace Blockcore.Utilities
         /// <inheritdoc />
         public DateTime GetAdjustedTime()
         {
-            return GetUtcNow().Add(this.adjustedTimeOffset);
+            return this.GetUtcNow().Add(this.adjustedTimeOffset);
         }
 
         /// <inheritdoc />
         public long GetAdjustedTimeAsUnixTimestamp()
         {
-            return new DateTimeOffset(GetAdjustedTime()).ToUnixTimeSeconds();
+            return new DateTimeOffset(this.GetAdjustedTime()).ToUnixTimeSeconds();
         }
 
         /// <inheritdoc />

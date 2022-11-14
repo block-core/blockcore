@@ -71,7 +71,7 @@ namespace Blockcore.Consensus.BlockInfo
             stream.ReadWrite(ref this.StakeModifier);
             stream.ReadWrite(ref this.StakeModifierV2);
 
-            if (IsProofOfStake())
+            if (this.IsProofOfStake())
             {
                 stream.ReadWrite(ref this.PrevoutStake);
                 stream.ReadWrite(ref this.StakeTime);
@@ -339,8 +339,8 @@ namespace Blockcore.Consensus.BlockInfo
         /// <inheritdoc />
         public override T TryCreateNew<T>()
         {
-            if (IsProvenBlockHeader<T>())
-                return (T)(object)CreateProvenBlockHeader();
+            if (this.IsProvenBlockHeader<T>())
+                return (T)(object)this.CreateProvenBlockHeader();
 
             return base.TryCreateNew<T>();
         }
@@ -349,7 +349,7 @@ namespace Blockcore.Consensus.BlockInfo
         public override Block CreateBlock()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return new PosBlock(CreateBlockHeader());
+            return new PosBlock(this.CreateBlockHeader());
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -366,7 +366,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public virtual ProvenBlockHeader CreateProvenBlockHeader(PosBlock block)
         {
-            var provenBlockHeader = new ProvenBlockHeader(block, (PosBlockHeader)CreateBlockHeader());
+            var provenBlockHeader = new ProvenBlockHeader(block, (PosBlockHeader)this.CreateBlockHeader());
 
             // Serialize the size.
             provenBlockHeader.ToBytes(this);
@@ -420,13 +420,13 @@ namespace Blockcore.Consensus.BlockInfo
             {
                 using (var hs = new HashStream())
                 {
-                    ReadWriteHashingStream(new BitcoinStream(hs, true));
+                    this.ReadWriteHashingStream(new BitcoinStream(hs, true));
                     hash = hs.GetHash();
                 }
             }
             else
             {
-                hash = GetPoWHash();
+                hash = this.GetPoWHash();
             }
 
             innerHashes = this.hashes;
@@ -443,7 +443,7 @@ namespace Blockcore.Consensus.BlockInfo
         {
             using (var ms = new MemoryStream())
             {
-                ReadWriteHashingStream(new BitcoinStream(ms, true));
+                this.ReadWriteHashingStream(new BitcoinStream(ms, true));
                 return HashX13.Instance.Hash(ms.ToArray());
             }
         }

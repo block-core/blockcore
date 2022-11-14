@@ -134,7 +134,7 @@ namespace Blockcore.Consensus.BlockInfo
 
             using (var hs = new HashStream())
             {
-                ReadWriteHashingStream(new BitcoinStream(hs, true));
+                this.ReadWriteHashingStream(new BitcoinStream(hs, true));
                 hash = hs.GetHash();
             }
 
@@ -153,13 +153,13 @@ namespace Blockcore.Consensus.BlockInfo
         /// <returns>A hash.</returns>
         public virtual uint256 GetPoWHash()
         {
-            return GetHash();
+            return this.GetHash();
         }
 
         [Obsolete("Call PrecomputeHash(true, true) instead")]
         public void CacheHashes()
         {
-            PrecomputeHash(true, true);
+            this.PrecomputeHash(true, true);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Blockcore.Consensus.BlockInfo
                 this.hashes = new uint256[1];
 
             if (!lazily && this.hashes[0] == null)
-                this.hashes[0] = GetHash();
+                this.hashes[0] = this.GetHash();
         }
 
         public bool CheckProofOfWork()
@@ -182,13 +182,13 @@ namespace Blockcore.Consensus.BlockInfo
             if ((bitse.CompareTo(BigInteger.Zero) <= 0) || (bitse.CompareTo(pow256) >= 0))
                 return false;
 
-            return GetPoWHash() <= this.Bits.ToUInt256();
+            return this.GetPoWHash() <= this.Bits.ToUInt256();
         }
 
         /// <inheritdoc />
         public override string ToString()
         {
-            return GetHash().ToString();
+            return this.GetHash().ToString();
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Blockcore.Consensus.BlockInfo
 
             // Updating time can change work required on testnet.
             if (consensus.PowAllowMinDifficultyBlocks)
-                this.Bits = GetWorkRequired(consensus, prev);
+                this.Bits = this.GetWorkRequired(consensus, prev);
         }
 
         /// <summary>
@@ -219,17 +219,17 @@ namespace Blockcore.Consensus.BlockInfo
         /// <param name="prev">Previous block.</param>
         public void UpdateTime(DateTimeOffset now, Network network, ChainedHeader prev)
         {
-            UpdateTime(now, network.Consensus, prev);
+            this.UpdateTime(now, network.Consensus, prev);
         }
 
         public Target GetWorkRequired(Network network, ChainedHeader prev)
         {
-            return GetWorkRequired(network.Consensus, prev);
+            return this.GetWorkRequired(network.Consensus, prev);
         }
 
         public Target GetWorkRequired(IConsensus consensus, ChainedHeader prev)
         {
-            return new ChainedHeader(this, GetHash(), prev).GetWorkRequired(consensus);
+            return new ChainedHeader(this, this.GetHash(), prev).GetWorkRequired(consensus);
         }
     }
 }

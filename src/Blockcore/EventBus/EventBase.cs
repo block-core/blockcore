@@ -14,9 +14,9 @@ namespace Blockcore.EventBus
 
         public override string ToString()
         {
-            return $"{this.CorrelationId.ToString()} - {GetType().Name}";
+            return $"{this.CorrelationId.ToString()} - {this.GetType().Name}";
         }
 
-        public string EventName { get { return GetType().Name.ToLowerInvariant(); } }
+        public string EventName { get { return this.GetType().Name.ToLowerInvariant(); } }
     }
 }

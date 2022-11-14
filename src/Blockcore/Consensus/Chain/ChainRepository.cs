@@ -40,7 +40,7 @@ namespace Blockcore.Consensus.Chain
             this.Network = network;
             this.lockObj = new object();
 
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />

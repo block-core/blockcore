@@ -100,7 +100,7 @@ namespace Blockcore.P2P.Peer
             this.loggerFactory = loggerFactory;
             this.payloadProvider = payloadProvider;
             this.asyncProvider = Guard.NotNull(asyncProvider, nameof(asyncProvider));
-            this.logger = this.loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.network = network;
             this.dateTimeProvider = dateTimeProvider;
@@ -125,7 +125,7 @@ namespace Blockcore.P2P.Peer
         /// </summary>
         public void StartReceiveMessages()
         {
-            this.receiveMessageTask = ReceiveMessagesAsync();
+            this.receiveMessageTask = this.ReceiveMessagesAsync();
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Blockcore.P2P.Peer
             {
                 while (!this.CancellationSource.Token.IsCancellationRequested)
                 {
-                    (Message message, int rawMessageSize) = await ReadAndParseMessageAsync(this.peer.Version, this.CancellationSource.Token).ConfigureAwait(false);
+                    (Message message, int rawMessageSize) = await this.ReadAndParseMessageAsync(this.peer.Version, this.CancellationSource.Token).ConfigureAwait(false);
 
                     this.asyncProvider.Signals.Publish(new PeerMessageReceived(this.peer.PeerEndPoint, message, rawMessageSize));
                     this.logger.LogDebug("Received message: '{0}'", message);
@@ -173,7 +173,7 @@ namespace Blockcore.P2P.Peer
         /// <exception cref="OperationCanceledException">Thrown when the connection attempt was aborted.</exception>
         public async Task ConnectAsync(IPEndPoint endPoint, CancellationToken cancellation)
         {
-            this.logger = this.loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
 
             try
             {
@@ -258,7 +258,7 @@ namespace Blockcore.P2P.Peer
 
                     byte[] bytes = ms.ToArray();
 
-                    await SendAsync(bytes, cancellation).ConfigureAwait(false);
+                    await this.SendAsync(bytes, cancellation).ConfigureAwait(false);
                     this.asyncProvider.Signals.Publish(new PeerMessageSent(this.peer.PeerEndPoint, message, bytes.Length));
                     this.peer.Counter.AddWritten(bytes.Length);
                 }
@@ -339,14 +339,14 @@ namespace Blockcore.P2P.Peer
         private async Task<byte[]> ReadMessageAsync(uint protocolVersion, CancellationToken cancellation = default(CancellationToken))
         {
             // First find and read the magic.
-            await ReadMagicAsync(this.network.MagicBytes, cancellation).ConfigureAwait(false);
+            await this.ReadMagicAsync(this.network.MagicBytes, cancellation).ConfigureAwait(false);
 
             // Then read the header, which is formed of command, length, and possibly also a checksum.
             int checksumSize = Message.ChecksumSize;
             int headerSize = Message.CommandSize + Message.LengthSize + checksumSize;
 
             var messageHeader = new byte[headerSize];
-            await ReadBytesAsync(messageHeader, 0, headerSize, cancellation).ConfigureAwait(false);
+            await this.ReadBytesAsync(messageHeader, 0, headerSize, cancellation).ConfigureAwait(false);
 
             // Then extract the length, which is the message payload size.
             int lengthOffset = Message.CommandSize;
@@ -362,7 +362,7 @@ namespace Blockcore.P2P.Peer
             int magicLength = this.network.MagicBytes.Length;
             var message = new byte[magicLength + headerSize + length];
 
-            await ReadBytesAsync(message, magicLength + headerSize, (int)length, cancellation).ConfigureAwait(false);
+            await this.ReadBytesAsync(message, magicLength + headerSize, (int)length, cancellation).ConfigureAwait(false);
 
             // And copy the magic and the header to form a complete message.
             Array.Copy(this.network.MagicBytes, 0, message, 0, this.network.MagicBytes.Length);
@@ -388,7 +388,7 @@ namespace Blockcore.P2P.Peer
             {
                 byte expectedByte = magic[i];
 
-                await ReadBytesAsync(bytes, 0, bytes.Length, cancellation).ConfigureAwait(false);
+                await this.ReadBytesAsync(bytes, 0, bytes.Length, cancellation).ConfigureAwait(false);
 
                 byte receivedByte = bytes[0];
                 if (expectedByte != receivedByte)
@@ -458,7 +458,7 @@ namespace Blockcore.P2P.Peer
         {
             Message message = null;
 
-            byte[] rawMessage = await ReadMessageAsync(protocolVersion, cancellation).ConfigureAwait(false);
+            byte[] rawMessage = await this.ReadMessageAsync(protocolVersion, cancellation).ConfigureAwait(false);
             using (var memoryStream = new MemoryStream(rawMessage))
             {
                 message = Message.ReadNext(memoryStream, this.network, protocolVersion, cancellation, this.payloadProvider, out PerformanceCounter counter);
@@ -476,7 +476,7 @@ namespace Blockcore.P2P.Peer
                 return;
             }
 
-            Disconnect();
+            this.Disconnect();
 
             this.CancellationSource.Cancel();
 

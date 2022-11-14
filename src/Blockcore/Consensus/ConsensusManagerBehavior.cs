@@ -86,7 +86,7 @@ namespace Blockcore.Consensus
             this.asyncLock = new AsyncLock();
             this.bestSentHeaderLock = new object();
 
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <summary>Presents cached headers to <see cref="Consensus.ConsensusManager"/> from the cache if any and removes consumed from the cache.</summary>
@@ -97,9 +97,9 @@ namespace Blockcore.Consensus
 
             using (await this.asyncLock.LockAsync().ConfigureAwait(false))
             {
-                if (this.cachedHeaders.Count != 0 && CanConsumeCache())
+                if (this.cachedHeaders.Count != 0 && this.CanConsumeCache())
                 {
-                    result = await PresentHeadersLockedAsync(this.cachedHeaders, false).ConfigureAwait(false);
+                    result = await this.PresentHeadersLockedAsync(this.cachedHeaders, false).ConfigureAwait(false);
 
                     if ((result == null) || (result.Consumed == null))
                     {
@@ -111,9 +111,9 @@ namespace Blockcore.Consensus
                     }
 
                     this.BestReceivedTip = result.Consumed;
-                    UpdateBestSentHeader(this.BestReceivedTip);
+                    this.UpdateBestSentHeader(this.BestReceivedTip);
 
-                    int consumedCount = GetConsumedHeadersCount(this.cachedHeaders, result.Consumed.Header);
+                    int consumedCount = this.GetConsumedHeadersCount(this.cachedHeaders, result.Consumed.Header);
 
                     this.cachedHeaders.RemoveRange(0, consumedCount);
                     int cacheSize = this.cachedHeaders.Count;
@@ -124,7 +124,7 @@ namespace Blockcore.Consensus
             }
 
             if (syncRequired)
-                await ResyncAsync().ConfigureAwait(false);
+                await this.ResyncAsync().ConfigureAwait(false);
 
             return result;
         }
@@ -145,15 +145,15 @@ namespace Blockcore.Consensus
             switch (message.Message.Payload)
             {
                 case GetHeadersPayload getHeaders:
-                    await ProcessGetHeadersAsync(peer, getHeaders).ConfigureAwait(false);
+                    await this.ProcessGetHeadersAsync(peer, getHeaders).ConfigureAwait(false);
                     break;
 
                 case HeadersPayload headers:
-                    await ProcessHeadersAsync(peer, headers.Headers).ConfigureAwait(false);
+                    await this.ProcessHeadersAsync(peer, headers.Headers).ConfigureAwait(false);
                     break;
 
                 case InvPayload inv:
-                    await ProcessInvAsync(peer, inv.Inventory).ConfigureAwait(false);
+                    await this.ProcessInvAsync(peer, inv.Inventory).ConfigureAwait(false);
                     break;
             }
         }
@@ -194,7 +194,7 @@ namespace Blockcore.Consensus
                 return;
             }
 
-            Payload headersPayload = ConstructHeadersPayload(getHeadersPayload, out ChainedHeader lastHeader);
+            Payload headersPayload = this.ConstructHeadersPayload(getHeadersPayload, out ChainedHeader lastHeader);
 
             if (headersPayload != null)
             {
@@ -256,7 +256,7 @@ namespace Blockcore.Consensus
 
             var headersPayload = new HeadersPayload();
 
-            ChainedHeader header = GetLastHeaderToSend(fork, getHeadersPayload.HashStop);
+            ChainedHeader header = this.GetLastHeaderToSend(fork, getHeadersPayload.HashStop);
 
             for (int heightIndex = header.Height; heightIndex > fork.Height; heightIndex--)
             {
@@ -300,7 +300,7 @@ namespace Blockcore.Consensus
                 return;
             }
 
-            if (!ValidateHeadersFromPayload(peer, headers, out string validationError))
+            if (!this.ValidateHeadersFromPayload(peer, headers, out string validationError))
             {
                 this.PeerBanning.BanAndDisconnectPeer(peer.PeerEndPoint, validationError);
 
@@ -339,7 +339,7 @@ namespace Blockcore.Consensus
                     // For example, we are busy syncing and have D E F in the cache (assume A B C are already in the
                     // CHT). The peer now advertises new block M because we haven't completed IBD yet.
                     // We do not want to clear the currently useful cache unnecessarily.
-                    if (CheckIfUnsolicitedFutureHeader(headers))
+                    if (this.CheckIfUnsolicitedFutureHeader(headers))
                     {
                         this.logger.LogTrace("(-)[HEADER_FUTURE_CANT_CONNECT]");
                         return;
@@ -347,14 +347,14 @@ namespace Blockcore.Consensus
 
                     // The header(s) could not be connected and were not an unsolicited block advertisement.
                     this.cachedHeaders.Clear();
-                    await ResyncAsync().ConfigureAwait(false);
+                    await this.ResyncAsync().ConfigureAwait(false);
 
                     this.logger.LogDebug("Header {0} could not be connected to last cached header {1}, clear cache and resync.", headers[0].GetHash(), cachedHeader);
                     this.logger.LogTrace("(-)[FAILED_TO_ATTACH_TO_CACHE]");
                     return;
                 }
 
-                ConnectNewHeadersResult result = await PresentHeadersLockedAsync(headers).ConfigureAwait(false);
+                ConnectNewHeadersResult result = await this.PresentHeadersLockedAsync(headers).ConfigureAwait(false);
 
                 if (result == null)
                 {
@@ -383,19 +383,19 @@ namespace Blockcore.Consensus
                 this.logger.LogDebug("{0} is {1} and {2} is {3}", nameof(this.BestReceivedTip), this.BestReceivedTip, nameof(result.Consumed), result.Consumed);
 
                 this.BestReceivedTip = result.Consumed;
-                UpdateBestSentHeader(this.BestReceivedTip);
+                this.UpdateBestSentHeader(this.BestReceivedTip);
 
                 if (result.Consumed.HashBlock != headers.Last().GetHash())
                 {
                     // Some headers were not consumed, add to cache.
-                    int consumedCount = GetConsumedHeadersCount(headers, result.Consumed.Header);
+                    int consumedCount = this.GetConsumedHeadersCount(headers, result.Consumed.Header);
                     this.cachedHeaders.AddRange(headers.Skip(consumedCount));
 
                     this.logger.LogDebug("{0} out of {1} items were not consumed and added to cache.", headers.Count - consumedCount, headers.Count);
                 }
 
                 if (this.cachedHeaders.Count == 0)
-                    await ResyncAsync().ConfigureAwait(false);
+                    await this.ResyncAsync().ConfigureAwait(false);
             }
         }
 
@@ -467,7 +467,7 @@ namespace Blockcore.Consensus
                 // the header tree currently. This is not regarded as bannable, as it could be a legitimate reorg.
                 this.logger.LogDebug("Unable to connect headers.");
 
-                if (CheckIfUnsolicitedFutureHeader(headers))
+                if (this.CheckIfUnsolicitedFutureHeader(headers))
                 {
                     // However, during IBD it is much more likely that the unconnectable header is an unsolicited
                     // block advertisement. In that case we just ignore the failed header and don't modify the cache.
@@ -479,7 +479,7 @@ namespace Blockcore.Consensus
                 {
                     // Resync in case we can't connect the header.
                     this.cachedHeaders.Clear();
-                    await ResyncAsync().ConfigureAwait(false);
+                    await this.ResyncAsync().ConfigureAwait(false);
                 }
             }
             catch (ConsensusRuleException exception)
@@ -531,7 +531,7 @@ namespace Blockcore.Consensus
         private async Task OnStateChangedAsync(INetworkPeer peer, NetworkPeerState oldState)
         {
             if (peer.State == NetworkPeerState.HandShaked)
-                await ResyncAsync().ConfigureAwait(false);
+                await this.ResyncAsync().ConfigureAwait(false);
         }
 
         /// <summary>Resets the expected peer tip and last sent tip and triggers synchronization.</summary>
@@ -541,7 +541,7 @@ namespace Blockcore.Consensus
             this.BestSentHeader = null;
 
             this.cachedHeaders.Clear();
-            await ResyncAsync().ConfigureAwait(false);
+            await this.ResyncAsync().ConfigureAwait(false);
         }
 
         /// <summary>Updates the best sent header but only if the new value is better or is on a different chain.</summary>
@@ -585,7 +585,7 @@ namespace Blockcore.Consensus
 
             if ((peer != null) && (peer.State == NetworkPeerState.HandShaked))
             {
-                GetHeadersPayload getHeadersPayload = BuildGetHeadersPayload();
+                GetHeadersPayload getHeadersPayload = this.BuildGetHeadersPayload();
                 if (getHeadersPayload == null)
                 {
                     this.logger.LogDebug("Ignoring sync request, headersPayload is null.");
@@ -672,7 +672,7 @@ namespace Blockcore.Consensus
                 if (this.cachedHeaders.Count == 0)
                 {
                     this.logger.LogDebug("An 'Inv' was received, requesting new headers.");
-                    await ResyncAsync().ConfigureAwait(false);
+                    await this.ResyncAsync().ConfigureAwait(false);
                 }
             }
         }
@@ -685,21 +685,21 @@ namespace Blockcore.Consensus
             this.autosyncTimer = new Timer(async (o) =>
             {
                 if (this.cachedHeaders.Count == 0)
-                    await ResyncAsync().ConfigureAwait(false);
+                    await this.ResyncAsync().ConfigureAwait(false);
             }, null, interval, interval);
 
             if (this.AttachedPeer.State == NetworkPeerState.Connected)
                 this.AttachedPeer.MyVersion.StartHeight = this.ConsensusManager.Tip.Height;
 
-            this.AttachedPeer.StateChanged.Register(OnStateChangedAsync);
-            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync, true);
+            this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
+            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync, true);
         }
 
         /// <inheritdoc />
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
-            this.AttachedPeer.StateChanged.Unregister(OnStateChangedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.StateChanged.Unregister(this.OnStateChangedAsync);
         }
 
         /// <inheritdoc />

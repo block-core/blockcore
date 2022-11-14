@@ -37,7 +37,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
             set
             {
-                AssertNotAttached();
+                this.AssertNotAttached();
                 this.mode = value;
             }
         }
@@ -56,7 +56,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
             set
             {
-                AssertNotAttached();
+                this.AssertNotAttached();
                 this.timeoutInterval = value;
             }
         }
@@ -75,7 +75,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
             set
             {
-                AssertNotAttached();
+                this.AssertNotAttached();
                 this.pingInterval = value;
             }
         }
@@ -95,14 +95,14 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
         protected override void AttachCore()
         {
-            if ((this.AttachedPeer.PeerVersion != null) && !PingVersion()) // If not handshaked, still attach (the callback will also check version).
+            if ((this.AttachedPeer.PeerVersion != null) && !this.PingVersion()) // If not handshaked, still attach (the callback will also check version).
                 return;
 
-            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
-            this.AttachedPeer.StateChanged.Register(OnStateChangedAsync);
+            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
             this.callbacksRegistered = true;
 
-            this.timer = new Timer(Ping, null, 0, (int)this.PingInterval.TotalMilliseconds);
+            this.timer = new Timer(this.Ping, null, 0, (int)this.PingInterval.TotalMilliseconds);
         }
 
         private bool PingVersion()
@@ -114,7 +114,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
         private Task OnStateChangedAsync(INetworkPeer peer, NetworkPeerState oldState)
         {
             if (peer.State == NetworkPeerState.HandShaked)
-                Ping(null);
+                this.Ping(null);
 
             return Task.CompletedTask;
         }
@@ -128,14 +128,14 @@ namespace Blockcore.P2P.Protocol.Behaviors
                     INetworkPeer peer = this.AttachedPeer;
 
                     if (peer == null) return;
-                    if (!PingVersion()) return;
+                    if (!this.PingVersion()) return;
                     if (peer.State != NetworkPeerState.HandShaked) return;
                     if (this.currentPing != null) return;
 
                     this.currentPing = new PingPayload();
                     this.dateSent = DateTimeOffset.UtcNow;
                     peer.SendMessage(this.currentPing);
-                    this.pingTimeoutTimer = new Timer(PingTimeout, this.currentPing, (int)this.TimeoutInterval.TotalMilliseconds, Timeout.Infinite);
+                    this.pingTimeoutTimer = new Timer(this.PingTimeout, this.currentPing, (int)this.TimeoutInterval.TotalMilliseconds, Timeout.Infinite);
                 }
                 catch (OperationCanceledException)
                 {
@@ -152,7 +152,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
         /// </summary>
         public void Probe()
         {
-            Ping(null);
+            this.Ping(null);
         }
 
         private void PingTimeout(object ping)
@@ -170,7 +170,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
         private async Task OnMessageReceivedAsync(INetworkPeer peer, IncomingMessage message)
         {
-            if (!PingVersion())
+            if (!this.PingVersion())
                 return;
 
             if ((message.Message.Payload is PingPayload ping) && this.Mode.HasFlag(PingPongMode.RespondPong))
@@ -193,7 +193,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
                 && (this.currentPing.Nonce == pong.Nonce))
             {
                 this.Latency = DateTimeOffset.UtcNow - this.dateSent;
-                ClearCurrentPing();
+                this.ClearCurrentPing();
             }
         }
 
@@ -216,11 +216,11 @@ namespace Blockcore.P2P.Protocol.Behaviors
         {
             if (this.callbacksRegistered)
             {
-                this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
-                this.AttachedPeer.StateChanged.Unregister(OnStateChangedAsync);
+                this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+                this.AttachedPeer.StateChanged.Unregister(this.OnStateChangedAsync);
             }
 
-            ClearCurrentPing();
+            this.ClearCurrentPing();
         }
 
         /// <inheritdoc />

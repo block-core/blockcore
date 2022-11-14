@@ -73,12 +73,12 @@ namespace Blockcore.Consensus
         {
             object result = null;
 
-            if (IsBlock<T>())
-                result = (T)(object)CreateBlock();
-            else if (IsBlockHeader<T>())
-                result = (T)(object)CreateBlockHeader();
-            else if (IsTransaction<T>())
-                result = (T)(object)CreateTransaction();
+            if (this.IsBlock<T>())
+                result = (T)(object)this.CreateBlock();
+            else if (this.IsBlockHeader<T>())
+                result = (T)(object)this.CreateBlockHeader();
+            else if (this.IsTransaction<T>())
+                result = (T)(object)this.CreateTransaction();
 
             return (T)result;
         }
@@ -89,7 +89,7 @@ namespace Blockcore.Consensus
         public virtual Block CreateBlock()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return new Block(CreateBlockHeader());
+            return new Block(this.CreateBlockHeader());
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

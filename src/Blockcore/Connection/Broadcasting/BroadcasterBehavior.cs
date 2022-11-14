@@ -56,7 +56,7 @@ namespace Blockcore.Connection.Broadcasting
         {
             try
             {
-                await ProcessMessageAsync(peer, message).ConfigureAwait(false);
+                await this.ProcessMessageAsync(peer, message).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -82,11 +82,11 @@ namespace Blockcore.Connection.Broadcasting
             switch (message.Message.Payload)
             {
                 case GetDataPayload getDataPayload:
-                    await ProcessGetDataPayloadAsync(peer, getDataPayload).ConfigureAwait(false);
+                    await this.ProcessGetDataPayloadAsync(peer, getDataPayload).ConfigureAwait(false);
                     break;
 
                 case InvPayload invPayload:
-                    ProcessInvPayload(invPayload);
+                    this.ProcessInvPayload(invPayload);
                     break;
             }
         }
@@ -129,13 +129,13 @@ namespace Blockcore.Connection.Broadcasting
         /// <inheritdoc />
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
         }
     }
 }

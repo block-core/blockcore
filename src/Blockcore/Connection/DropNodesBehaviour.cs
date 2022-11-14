@@ -33,7 +33,7 @@ namespace Blockcore.Connection
 
         public DropNodesBehaviour(ChainIndexer chainIndexer, IConnectionManager connectionManager, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
 
             this.chainIndexer = chainIndexer;
@@ -69,12 +69,12 @@ namespace Blockcore.Connection
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
         }
 
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
         }
 
         public override object Clone()

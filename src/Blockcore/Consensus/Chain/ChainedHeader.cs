@@ -168,7 +168,7 @@ namespace Blockcore.Consensus.Chain
             else
             {
                 // Calculates the location of the skip block for this block.
-                this.Skip = this.Previous.GetAncestor(GetSkipHeight(this.Height));
+                this.Skip = this.Previous.GetAncestor(this.GetSkipHeight(this.Height));
 
                 if (this.Previous.ChainStore == null)
                     throw new ArgumentException("ChainedHeader.Previous.HeaderStore was not found");
@@ -208,7 +208,7 @@ namespace Blockcore.Consensus.Chain
                     throw new ArgumentException("The previous block does not have the expected hash");
 
                 // Calculates the location of the skip block for this block.
-                this.Skip = this.Previous.GetAncestor(GetSkipHeight(this.Height));
+                this.Skip = this.Previous.GetAncestor(this.GetSkipHeight(this.Height));
             }
 
             if (this.Height == 0)
@@ -225,7 +225,7 @@ namespace Blockcore.Consensus.Chain
                 this.ChainStore.PutHeader(header);
             }
 
-            CalculateChainWork();
+            this.CalculateChainWork();
 
             if (header is PosBlockHeader posBlockHeader)
             {
@@ -247,7 +247,7 @@ namespace Blockcore.Consensus.Chain
             this.ChainStore = this.Previous?.ChainStore ?? new ChainStore();
             this.ChainStore.PutHeader(header);
 
-            CalculateChainWork();
+            this.CalculateChainWork();
 
             if (header is PosBlockHeader posBlockHeader)
             {
@@ -274,7 +274,7 @@ namespace Blockcore.Consensus.Chain
         private void CalculateChainWork()
         {
             BigInteger previousWork = this.Previous == null ? BigInteger.Zero : new BigInteger(this.Previous.ChainWorkBytes);
-            this.ChainWorkBytes = previousWork.Add(GetBlockTarget()).ToByteArray();
+            this.ChainWorkBytes = previousWork.Add(this.GetBlockTarget()).ToByteArray();
         }
 
         /// <summary>Calculates the amount of work that this block contributes to the total chain work.</summary>
@@ -306,7 +306,7 @@ namespace Blockcore.Consensus.Chain
 
                 // Exponentially larger steps back, plus the genesis block.
                 int height = Math.Max(pindex.Height - nStep, 0);
-                pindex = GetAncestor(height);
+                pindex = this.GetAncestor(height);
 
                 if (blockHashes.Count > 10)
                     nStep *= 2;
@@ -380,7 +380,7 @@ namespace Blockcore.Consensus.Chain
         /// to verify the correct chained block header has been found.</remarks>
         public ChainedHeader FindAncestorOrSelf(ChainedHeader chainedHeader)
         {
-            ChainedHeader found = GetAncestor(chainedHeader.Height);
+            ChainedHeader found = this.GetAncestor(chainedHeader.Height);
             if ((found != null) && (found.HashBlock == chainedHeader.HashBlock))
                 return found;
 
@@ -415,7 +415,7 @@ namespace Blockcore.Consensus.Chain
         /// <returns>The target proof of work.</returns>
         public Target GetNextWorkRequired(Network network)
         {
-            return GetNextWorkRequired(network.Consensus);
+            return this.GetNextWorkRequired(network.Consensus);
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace Blockcore.Consensus.Chain
             BlockHeader dummy = consensus.ConsensusFactory.CreateBlockHeader();
             dummy.HashPrevBlock = this.HashBlock;
             dummy.BlockTime = DateTimeOffset.UtcNow;
-            return GetNextWorkRequired(dummy, consensus);
+            return this.GetNextWorkRequired(dummy, consensus);
         }
 
         /// <summary>
@@ -439,7 +439,7 @@ namespace Blockcore.Consensus.Chain
         /// <returns>The target proof of work.</returns>
         public Target GetNextWorkRequired(BlockHeader block, Network network)
         {
-            return GetNextWorkRequired(block, network.Consensus);
+            return this.GetNextWorkRequired(block, network.Consensus);
         }
 
         /// <summary>
@@ -460,7 +460,7 @@ namespace Blockcore.Consensus.Chain
         /// <returns>The target proof of work.</returns>
         public Target GetWorkRequired(Network network)
         {
-            return GetWorkRequired(network.Consensus);
+            return this.GetWorkRequired(network.Consensus);
         }
 
         /// <summary>
@@ -481,7 +481,7 @@ namespace Blockcore.Consensus.Chain
             if (lastBlock == null)
                 return proofOfWorkLimit;
 
-            long difficultyAdjustmentInterval = GetDifficultyAdjustmentInterval(consensus);
+            long difficultyAdjustmentInterval = this.GetDifficultyAdjustmentInterval(consensus);
 
             // Only change once per interval.
             if ((height) % difficultyAdjustmentInterval != 0)
@@ -508,7 +508,7 @@ namespace Blockcore.Consensus.Chain
             // Go back by what we want to be 14 days worth of blocks.
             long pastHeight = lastBlock.Height - (difficultyAdjustmentInterval - 1);
 
-            ChainedHeader firstChainedHeader = GetAncestor((int)pastHeight);
+            ChainedHeader firstChainedHeader = this.GetAncestor((int)pastHeight);
             if (firstChainedHeader == null)
                 throw new NotSupportedException("Can only calculate work of a full chain");
 
@@ -575,7 +575,7 @@ namespace Blockcore.Consensus.Chain
                 return BlockStake.Validate(network, this);
 
             bool genesisCorrect = (this.Height != 0) || this.HashBlock == network.GetGenesis().GetHash();
-            return genesisCorrect && Validate(network.Consensus);
+            return genesisCorrect && this.Validate(network.Consensus);
         }
 
         /// <summary>
@@ -594,7 +594,7 @@ namespace Blockcore.Consensus.Chain
             bool heightCorrect = (this.Height == 0) || (this.Height == this.Previous.Height + 1);
             bool hashPrevCorrect = (this.Height == 0) || (this.Header.HashPrevBlock == this.Previous.HashBlock);
             bool hashCorrect = this.HashBlock == this.Header.GetHash();
-            bool workCorrect = CheckProofOfWorkAndTarget(consensus);
+            bool workCorrect = this.CheckProofOfWorkAndTarget(consensus);
 
             return heightCorrect && hashPrevCorrect && hashCorrect && workCorrect;
         }
@@ -606,7 +606,7 @@ namespace Blockcore.Consensus.Chain
         /// <returns>Whether proof of work is valid.</returns>
         public bool CheckProofOfWorkAndTarget(Network network)
         {
-            return CheckProofOfWorkAndTarget(network.Consensus);
+            return this.CheckProofOfWorkAndTarget(network.Consensus);
         }
 
         /// <summary>
@@ -616,7 +616,7 @@ namespace Blockcore.Consensus.Chain
         /// <returns>Whether proof of work is valid.</returns>
         public bool CheckProofOfWorkAndTarget(IConsensus consensus)
         {
-            return (this.Height == 0) || (this.Header.CheckProofOfWork() && (this.Header.Bits == GetWorkRequired(consensus)));
+            return (this.Height == 0) || (this.Header.CheckProofOfWork() && (this.Header.Bits == this.GetWorkRequired(consensus)));
         }
 
         /// <summary>
@@ -681,7 +681,7 @@ namespace Blockcore.Consensus.Chain
 
                 // Only follow skip if Previous.skip isn't better than skip.Previous.
                 int heightSkip = walk.Skip.Height;
-                int heightSkipPrev = GetSkipHeight(walk.Height - 1);
+                int heightSkipPrev = this.GetSkipHeight(walk.Height - 1);
                 bool skipAboveTarget = heightSkip > ancestorHeight;
                 bool skipPreviousBetterThanPreviousSkip = !((heightSkipPrev < (heightSkip - 2)) && (heightSkipPrev >= ancestorHeight));
                 if (skipAboveTarget && skipPreviousBetterThanPreviousSkip)
@@ -734,7 +734,7 @@ namespace Blockcore.Consensus.Chain
             // but the following expression was taken from bitcoin core. There it was tested in simulations
             // and performed well.
             // Skip steps are exponential - Using skip, max 110 steps to go back up to 2^18 blocks.
-            return (height & 1) != 0 ? InvertLowestOne(InvertLowestOne(height - 1)) + 1 : InvertLowestOne(height);
+            return (height & 1) != 0 ? this.InvertLowestOne(this.InvertLowestOne(height - 1)) + 1 : this.InvertLowestOne(height);
         }
 
         /// <summary>

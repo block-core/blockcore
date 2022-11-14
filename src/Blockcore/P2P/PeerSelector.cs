@@ -120,7 +120,7 @@ namespace Blockcore.P2P
             this.selfEndpointTracker = selfEndpointTracker;
             this.dateTimeProvider = dateTimeProvider;
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.peerAddresses = peerAddresses;
             this.random = new Random();
         }
@@ -130,12 +130,12 @@ namespace Blockcore.P2P
         {
             PeerAddress peerAddress = null;
 
-            List<PeerAddress> peers = SelectPreferredPeers()
+            List<PeerAddress> peers = this.SelectPreferredPeers()
                 .Where(p => !this.selfEndpointTracker.IsSelf(p.Endpoint))
                 .ToList();
 
             if (peers.Any())
-                peerAddress = Random(peers);
+                peerAddress = this.Random(peers);
 
             return peerAddress;
         }
@@ -147,7 +147,7 @@ namespace Blockcore.P2P
         {
             // First check to see if there are handshaked peers. If so,
             // give them a 50% chance to be picked over all the other peers.
-            List<PeerAddress> handshaked = Handshaked().ToList();
+            List<PeerAddress> handshaked = this.Handshaked().ToList();
             if (handshaked.Any())
             {
                 int chance = this.random.Next(100);
@@ -160,10 +160,10 @@ namespace Blockcore.P2P
 
             // If there are peers that have recently connected, give them
             // a 50% chance to be picked over fresh and/or attempted peers.
-            List<PeerAddress> connected = Connected().ToList();
+            List<PeerAddress> connected = this.Connected().ToList();
             if (connected.Any())
             {
-                connected = FilterBadHandshakedPeers(connected).ToList();
+                connected = this.FilterBadHandshakedPeers(connected).ToList();
                 int chance = this.random.Next(100);
                 if (chance <= 50)
                 {
@@ -176,8 +176,8 @@ namespace Blockcore.P2P
             // was successful, we will select from fresh or attempted.
             //
             // If both sets exist, pick 50/50 between the two.
-            List<PeerAddress> attempted = Attempted().ToList();
-            List<PeerAddress> fresh = Fresh().ToList();
+            List<PeerAddress> attempted = this.Attempted().ToList();
+            List<PeerAddress> fresh = this.Fresh().ToList();
             if (attempted.Any() && fresh.Any())
             {
                 if (this.random.Next(2) == 0)
@@ -206,8 +206,8 @@ namespace Blockcore.P2P
                 return attempted;
             }
 
-            if (HasAllPeersReachedConnectionThreshold())
-                ResetConnectionAttemptsOnNotBannedPeers();
+            if (this.HasAllPeersReachedConnectionThreshold())
+                this.ResetConnectionAttemptsOnNotBannedPeers();
 
             // If all the selection criteria failed to return a set of peers, then let the caller try again.
             this.logger.LogTrace("(-)[RETURN_NO_PEERS]");
@@ -217,7 +217,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public bool HasAllPeersReachedConnectionThreshold()
         {
-            IEnumerable<PeerAddress> notBanned = NotBanned();
+            IEnumerable<PeerAddress> notBanned = this.NotBanned();
 
             int attemptedReachedThresholdCount = notBanned.Count(p => p.ConnectionAttempts >= PeerAddress.AttemptThreshold);
             bool areAllPeersReachedThreshold = attemptedReachedThresholdCount == notBanned.Count();
@@ -228,7 +228,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public void ResetConnectionAttemptsOnNotBannedPeers()
         {
-            List<PeerAddress> notBanned = NotBanned().ToList();
+            List<PeerAddress> notBanned = this.NotBanned().ToList();
             this.logger.LogDebug("Resetting attempts for {0} addresses.", notBanned.Count);
 
             // Reset attempts for all the peers since we've ran out of options.
@@ -248,7 +248,7 @@ namespace Blockcore.P2P
 
             discoverable = discoverable
                             .Where(p => !this.selfEndpointTracker.IsSelf(p.Endpoint))
-                            .Where(p => !IsBanned(p))
+                            .Where(p => !this.IsBanned(p))
                             .ToList();
 
             return discoverable.OrderBy(p => this.random.Next()).Take(1000).ToList();
@@ -267,8 +267,8 @@ namespace Blockcore.P2P
 
             var peersToReturn = new List<PeerAddress>();
 
-            List<PeerAddress> connectedAndHandshaked = Connected(0).Concat(Handshaked(0)).OrderBy(p => this.random.Next()).ToList();
-            List<PeerAddress> freshAndAttempted = Attempted().Concat(Fresh()).OrderBy(p => this.random.Next()).ToList();
+            List<PeerAddress> connectedAndHandshaked = this.Connected(0).Concat(this.Handshaked(0)).OrderBy(p => this.random.Next()).ToList();
+            List<PeerAddress> freshAndAttempted = this.Attempted().Concat(this.Fresh()).OrderBy(p => this.random.Next()).ToList();
 
             // If there are connected and/or handshaked peers in the address list,
             // we need to split the list 50 / 50 between them and
@@ -318,7 +318,7 @@ namespace Blockcore.P2P
                 p.Attempted &&
                 p.ConnectionAttempts <= PeerAddress.AttemptThreshold &&
                 p.LastAttempt < this.dateTimeProvider.GetUtcNow().AddHours(-PeerAddress.AttempThresholdHours) &&
-                !IsBanned(p));
+                !this.IsBanned(p));
         }
 
         /// <inheritdoc/>
@@ -338,14 +338,14 @@ namespace Blockcore.P2P
 
         public IEnumerable<PeerAddress> NotBanned()
         {
-            return this.peerAddresses.Values.Where(p => !IsBanned(p));
+            return this.peerAddresses.Values.Where(p => !this.IsBanned(p));
         }
 
         /// <inheritdoc/>
         public IEnumerable<PeerAddress> Connected(int throttlePeriodSeconds = 60)
         {
             var result = this.peerAddresses.Values
-                .Where(p => p.Connected && !IsBanned(p))
+                .Where(p => p.Connected && !this.IsBanned(p))
                 .Where(p => p.LastConnectionSuccess < this.dateTimeProvider.GetUtcNow().AddSeconds(-throttlePeriodSeconds));
             return result;
         }
@@ -353,14 +353,14 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public IEnumerable<PeerAddress> Fresh()
         {
-            return this.peerAddresses.Values.Where(p => p.Fresh && !IsBanned(p));
+            return this.peerAddresses.Values.Where(p => p.Fresh && !this.IsBanned(p));
         }
 
         /// <inheritdoc/>
         public IEnumerable<PeerAddress> Handshaked(int throttlePeriodSeconds = 60)
         {
             var result = this.peerAddresses.Values
-                .Where(p => p.Handshaked && !IsBanned(p))
+                .Where(p => p.Handshaked && !this.IsBanned(p))
                 .Where(p => p.LastConnectionHandshake < this.dateTimeProvider.GetUtcNow().AddSeconds(-throttlePeriodSeconds));
             return result;
         }

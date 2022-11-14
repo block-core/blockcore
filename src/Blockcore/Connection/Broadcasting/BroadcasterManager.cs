@@ -131,16 +131,9 @@ namespace Blockcore.Connection.Broadcasting
 
             foreach (INetworkPeer peer in peers)
             {
-                try
+                if (peer.IsConnected)
                 {
-                    if (peer.IsConnected)
-                    {
-                        await peer.SendMessageAsync(invPayload).ConfigureAwait(false);
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    throw;
+                    await peer.SendMessageAsync(invPayload).ConfigureAwait(false);
                 }
             }
         }

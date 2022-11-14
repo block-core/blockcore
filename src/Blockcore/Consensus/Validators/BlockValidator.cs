@@ -88,7 +88,7 @@ namespace Blockcore.Consensus.Validators
         public HeaderValidator(IConsensusRuleEngine consensusRules, ILoggerFactory loggerFactory)
         {
             this.consensusRules = consensusRules;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -109,7 +109,7 @@ namespace Blockcore.Consensus.Validators
         public IntegrityValidator(IConsensusRuleEngine consensusRules, ILoggerFactory loggerFactory)
         {
             this.consensusRules = consensusRules;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -134,9 +134,9 @@ namespace Blockcore.Consensus.Validators
         {
             this.asyncProvider = Guard.NotNull(asyncProvider, nameof(asyncProvider));
             this.consensusRules = consensusRules;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
-            this.asyncQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<PartialValidationItem>(GetType().Name, OnEnqueueAsync);
+            this.asyncQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<PartialValidationItem>(this.GetType().Name, this.OnEnqueueAsync);
         }
 
         /// <inheritdoc />
@@ -210,7 +210,7 @@ namespace Blockcore.Consensus.Validators
         public FullValidator(IConsensusRuleEngine consensusRules, ILoggerFactory loggerFactory)
         {
             this.consensusRules = consensusRules;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />

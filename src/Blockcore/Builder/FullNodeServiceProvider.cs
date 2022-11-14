@@ -80,7 +80,7 @@ namespace Blockcore.Builder
         /// <inheritdoc />
         public void EnsureServiceIsRegistered<T>()
         {
-            if (!IsServiceRegistered<T>())
+            if (!this.IsServiceRegistered<T>())
                 throw new MissingServiceException(typeof(T));
         }
     }

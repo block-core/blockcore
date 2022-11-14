@@ -235,7 +235,7 @@ namespace NBitcoin
         public IEnumerable<MoneyBag> Split(int parts)
         {
             if (parts <= 0)
-                throw new ArgumentOutOfRangeException("Parts should be more than 0", "parts");
+                throw new ArgumentOutOfRangeException("parts", "Parts should be more than 0");
             var splits = new List<List<IMoney>>();
             foreach (IMoney money in this)
             {
@@ -264,7 +264,7 @@ namespace NBitcoin
         #endregion
     }
 
-    public class Money : IComparable, IComparable<Money>, IEquatable<Money>, IMoney
+    public sealed class Money : IComparable, IComparable<Money>, IEquatable<Money>, IMoney
     {
 
         // for decimal.TryParse. None of the NumberStyles' composed values is useful for bitcoin style
@@ -387,7 +387,7 @@ namespace NBitcoin
         public IEnumerable<Money> Split(int parts)
         {
             if (parts <= 0)
-                throw new ArgumentOutOfRangeException("Parts should be more than 0", "parts");
+                throw new ArgumentOutOfRangeException("parts", "Parts should be more than 0");
             long remain;
             long result = DivRem(this._Satoshis, parts, out remain);
 

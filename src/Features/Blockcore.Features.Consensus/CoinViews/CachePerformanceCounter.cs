@@ -266,9 +266,9 @@ namespace Blockcore.Features.Consensus.CoinViews
             builder.AppendLine("====Cache Stats(%)====");
             if (total != 0)
             {
-                if (totalCache > 0) builder.AppendLine("Prefetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + ((decimal)this.TotalHitCountCache * 100m / totalCache).ToString("0.00") + "% miss:" + ((decimal)this.TotalMissCountCache * 100m / totalCache).ToString("0.00") + "%");
-                if (total > 0) builder.AppendLine("Fetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + ((decimal)this.TotalHitCount * 100m / total).ToString("0.00") + "% miss:" + ((decimal)this.TotalMissCount * 100m / total).ToString("0.00") + "%");
-                if (totalInsert > 0) builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoSkipDisk).ToString() + "(" + ((decimal)this.TotalUtxoSkipDisk * 100m / totalInsert).ToString("0.00") + "%)");
+                if (totalCache > 0) builder.AppendLine("Prefetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + (this.TotalHitCountCache * 100m / totalCache).ToString("0.00") + "% miss:" + (this.TotalMissCountCache * 100m / totalCache).ToString("0.00") + "%");
+                if (total > 0) builder.AppendLine("Fetch cache:".PadRight(LoggingConfiguration.ColumnLength) + "hit: " + (this.TotalHitCount * 100m / total).ToString("0.00") + "% miss:" + (this.TotalMissCount * 100m / total).ToString("0.00") + "%");
+                if (totalInsert > 0) builder.AppendLine("Utxo skip disk:".PadRight(LoggingConfiguration.ColumnLength) + ((decimal)this.TotalUtxoSkipDisk).ToString() + "(" + (this.TotalUtxoSkipDisk * 100m / totalInsert).ToString("0.00") + "%)");
             }
 
             builder.AppendLine("========================");

@@ -53,7 +53,7 @@ namespace Blockcore.Features.RPC
         public async Task<Block> GetBlockAsync(uint256 blockId)
         {
             if (blockId == null)
-                throw new ArgumentNullException("blockId");
+                throw new ArgumentNullException(nameof(blockId));
 
             byte[] result = await SendRequestAsync("block", RestResponseFormat.Bin, blockId.ToString()).ConfigureAwait(false);
             return Block.Load(result, this.network.Consensus.ConsensusFactory);
@@ -79,7 +79,7 @@ namespace Blockcore.Features.RPC
         public async Task<Transaction> GetTransactionAsync(uint256 txId)
         {
             if (txId == null)
-                throw new ArgumentNullException("txId");
+                throw new ArgumentNullException(nameof(txId));
 
             byte[] result = await SendRequestAsync("tx", RestResponseFormat.Bin, txId.ToString()).ConfigureAwait(false);
             return this.network.CreateTransaction(result);
@@ -107,10 +107,10 @@ namespace Blockcore.Features.RPC
         public async Task<IEnumerable<BlockHeader>> GetBlockHeadersAsync(uint256 blockId, int count)
         {
             if (blockId == null)
-                throw new ArgumentNullException("blockId");
+                throw new ArgumentNullException(nameof(blockId));
 
             if (count < 1)
-                throw new ArgumentOutOfRangeException("count", "count must be greater or equal to one.");
+                throw new ArgumentOutOfRangeException(nameof(count), "count must be greater or equal to one.");
 
             byte[] result = await SendRequestAsync("headers", RestResponseFormat.Bin, count.ToString(CultureInfo.InvariantCulture), blockId.ToString()).ConfigureAwait(false);
 
@@ -166,7 +166,7 @@ namespace Blockcore.Features.RPC
         public async Task<UTxOutputs> GetUnspentOutputsAsync(IEnumerable<OutPoint> outPoints, bool checkMempool)
         {
             if (outPoints == null)
-                throw new ArgumentNullException("outPoints");
+                throw new ArgumentNullException(nameof(outPoints));
 
             IEnumerable<string> ids = from op in outPoints select op.ToString();
 

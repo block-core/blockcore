@@ -117,7 +117,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
         /// <inheritdoc />
         public Task<ProvenBlockHeader> GetAsync(int blockHeight)
         {
-            var task = Task.Run((Func<ProvenBlockHeader>)(() =>
+            var task = Task.Run(() =>
             {
                 byte[] row = null;
 
@@ -130,7 +130,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
                     return this.dataStoreSerializer.Deserialize<ProvenBlockHeader>(row);
 
                 return null;
-            }));
+            });
 
             return task;
         }

@@ -1276,9 +1276,9 @@ namespace Blockcore.Features.Wallet
                     Address = address.Address,
                     AccountIndex = HdOperations.GetAccountIndex(address.HdPath),
                     Amount = amount,
-                    IsCoinBase = transaction.IsCoinBase == false ? (bool?)null : true,
-                    IsCoinStake = transaction.IsCoinStake == false ? (bool?)null : true,
-                    IsColdCoinStake = (coldStakingTemplate != null && coldStakingTemplate.CheckScriptPubKey(script)) == false ? (bool?)null : true,
+                    IsCoinBase = transaction.IsCoinBase == false ? null : true,
+                    IsCoinStake = transaction.IsCoinStake == false ? null : true,
+                    IsColdCoinStake = (coldStakingTemplate != null && coldStakingTemplate.CheckScriptPubKey(script)) == false ? null : true,
                     BlockHeight = blockHeight,
                     BlockHash = block?.GetHash(),
                     BlockIndex = block?.Transactions.FindIndex(t => t.GetHash() == transactionHash),
@@ -1429,7 +1429,7 @@ namespace Blockcore.Features.Wallet
                     BlockHeight = blockHeight,
                     BlockIndex = block?.Transactions.FindIndex(t => t.GetHash() == transactionHash),
                     Hex = this.walletSettings.SaveTransactionHex ? transaction.ToHex() : null,
-                    IsCoinStake = transaction.IsCoinStake == false ? (bool?)null : true
+                    IsCoinStake = transaction.IsCoinStake == false ? null : true
                 };
 
                 spentTransaction.SpendingDetails = spendingDetails;

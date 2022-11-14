@@ -2860,7 +2860,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void CreateBip44PathWithChangeAddressReturnsPath()
         {
-            string result = HdOperations.CreateHdPath(44, (int)KnownCoinTypes.Stratis, 4, true, 3);
+            string result = HdOperations.CreateHdPath(44, KnownCoinTypes.Stratis, 4, true, 3);
 
             Assert.Equal("m/44'/105'/4'/1/3", result);
         }
@@ -2868,7 +2868,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void CreateBip44PathWithoutChangeAddressReturnsPath()
         {
-            string result = HdOperations.CreateHdPath(44, (int)KnownCoinTypes.Stratis, 4, false, 3);
+            string result = HdOperations.CreateHdPath(44, KnownCoinTypes.Stratis, 4, false, 3);
 
             Assert.Equal("m/44'/105'/4'/0/3", result);
         }
@@ -2876,7 +2876,7 @@ namespace Blockcore.Features.Wallet.Tests
         [Fact]
         public void CreateBip84PathWithoutChangeAddressReturnsPath()
         {
-            string result = HdOperations.CreateHdPath(84, (int)KnownCoinTypes.Stratis, 4, false, 3);
+            string result = HdOperations.CreateHdPath(84, KnownCoinTypes.Stratis, 4, false, 3);
 
             Assert.Equal("m/84'/105'/4'/0/3", result);
         }

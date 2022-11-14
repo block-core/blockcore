@@ -132,7 +132,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
                 BlockHash = transactionInfo.BlockHash ?? string.Empty,
                 BlockTime = transactionInfo.BlockTime ?? 0,
                 TransactionId = transactionInfo.TxId,
-                TransactionTime = (long)(transactionInfo.Time ?? 0),
+                TransactionTime = transactionInfo.Time ?? 0,
                 Amount = transactionInfo.VOut.Sum(a => a.Value)
             };
             return transactionResult;

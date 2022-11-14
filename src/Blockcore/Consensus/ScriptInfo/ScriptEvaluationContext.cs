@@ -170,7 +170,6 @@ namespace Blockcore.Consensus.ScriptInfo
 
         private sealed class CScriptNum
         {
-            private const long nMaxNumSize = 4;
             /**
              * Numeric opcodes (OP_1ADD, etc) are restricted to operating on 4-byte integers.
              * The semantics are subtle, though: operands must be in the range [-2^31 +1...2^31 -1],
@@ -186,8 +185,6 @@ namespace Blockcore.Consensus.ScriptInfo
             }
 
             private readonly long m_value;
-
-            public static long NMaxNumSize => nMaxNumSize;
 
             public CScriptNum(byte[] vch, bool fRequireMinimal)
                 : this(vch, fRequireMinimal, 4)

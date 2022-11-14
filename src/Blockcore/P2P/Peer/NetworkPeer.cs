@@ -187,7 +187,7 @@ namespace Blockcore.P2P.Peer
             {
                 uint peerVersion = this.PeerVersion == null ? this.MyVersion.Version : this.PeerVersion.Version;
                 uint myVersion = this.MyVersion.Version;
-                uint min = Math.Min((uint)peerVersion, (uint)myVersion);
+                uint min = Math.Min(peerVersion, myVersion);
                 return min;
             }
         }

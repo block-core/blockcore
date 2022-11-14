@@ -377,7 +377,7 @@ namespace NBitcoin.Tests
         private ChainedHeader FindFork(ChainIndexer chainSrc, ChainIndexer otherChain)
         {
             if (otherChain == null)
-                throw new ArgumentNullException("otherChain");
+                throw new ArgumentNullException(nameof(otherChain));
 
             return chainSrc.FindFork(otherChain.Tip.EnumerateToGenesis().Select(o => o.HashBlock));
         }

@@ -17,7 +17,7 @@ namespace Blockcore.Features.Diagnostic.Utils
             Type type = obj.GetType();
 
             if (type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance) == null)
-                throw new ArgumentOutOfRangeException("propertyName", string.Format("Property {0} was not found in Type {1}", propertyName, obj.GetType().FullName));
+                throw new ArgumentOutOfRangeException(nameof(propertyName), string.Format("Property {0} was not found in Type {1}", propertyName, obj.GetType().FullName));
 
             return (T)type.InvokeMember(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.Instance, null, obj, null);
         }
@@ -34,7 +34,7 @@ namespace Blockcore.Features.Diagnostic.Utils
             Type type = obj.GetType();
 
             if (type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance) == null)
-                throw new ArgumentOutOfRangeException("propertyName", string.Format("Property {0} was not found in Type {1}", propertyName, obj.GetType().FullName));
+                throw new ArgumentOutOfRangeException(nameof(propertyName), string.Format("Property {0} was not found in Type {1}", propertyName, obj.GetType().FullName));
 
             type.InvokeMember(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.SetProperty | BindingFlags.Instance, null, obj, new object[] { value });
         }

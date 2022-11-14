@@ -10,9 +10,7 @@ namespace Blockcore.Features.RPC
         private readonly RPCClient _Client;
         public RPCTransactionRepository(RPCClient client)
         {
-            if (client == null)
-                throw new ArgumentNullException("client");
-            this._Client = client;
+            this._Client = client ?? throw new ArgumentNullException(nameof(client));
         }
         #region ITransactionRepository Members
 

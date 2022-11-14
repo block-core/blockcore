@@ -49,7 +49,7 @@ namespace Blockcore.Features.PoA.Voting
             if (((object)a == null) || ((object)b == null))
                 return false;
 
-            if (((object)a.Data == null) || ((object)b.Data == null))
+            if ((a.Data == null) || (b.Data == null))
                 return false;
 
             return a.Key == b.Key && a.Data.SequenceEqual(b.Data);

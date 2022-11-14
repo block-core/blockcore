@@ -59,7 +59,7 @@ namespace Blockcore.Features.RPC
         public static IPAddressBlock Parse(string value)
         {
             string[] parts = value.Split('/');
-            return new IPAddressBlock(IPAddress.Parse(parts[0]), (parts.Length < 2) ? (int?)null : int.Parse(parts[1]));
+            return new IPAddressBlock(IPAddress.Parse(parts[0]), (parts.Length < 2) ? null : int.Parse(parts[1]));
         }
 
         /// <summary>

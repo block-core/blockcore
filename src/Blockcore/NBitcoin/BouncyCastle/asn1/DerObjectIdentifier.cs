@@ -16,9 +16,9 @@ namespace NBitcoin.BouncyCastle.Asn1
         public DerObjectIdentifier(
             string identifier)
         {
-            if(identifier == null)
+            if (identifier == null)
                 throw new ArgumentNullException("identifier");
-            if(!IsValidIdentifier(identifier))
+            if (!IsValidIdentifier(identifier))
                 throw new FormatException("string " + identifier + " not an OID");
 
             this.identifier = identifier;
@@ -26,7 +26,7 @@ namespace NBitcoin.BouncyCastle.Asn1
 
         internal DerObjectIdentifier(DerObjectIdentifier oid, string branchID)
         {
-            if(!IsValidBranchID(branchID, 0))
+            if (!IsValidBranchID(branchID, 0))
                 throw new ArgumentException("string " + branchID + " not a valid OID branch", "branchID");
 
             this.identifier = oid.Id + "." + branchID;
@@ -70,7 +70,7 @@ namespace NBitcoin.BouncyCastle.Asn1
             var result = new byte[9];
             int pos = 8;
             result[pos] = (byte)(fieldValue & 0x7f);
-            while(fieldValue >= (1L << 7))
+            while (fieldValue >= (1L << 7))
             {
                 fieldValue >>= 7;
                 result[--pos] = (byte)((fieldValue & 0x7f) | 0x80);
@@ -83,7 +83,7 @@ namespace NBitcoin.BouncyCastle.Asn1
             BigInteger fieldValue)
         {
             int byteCount = (fieldValue.BitLength + 6) / 7;
-            if(byteCount == 0)
+            if (byteCount == 0)
             {
                 outputStream.WriteByte(0);
             }
@@ -91,7 +91,7 @@ namespace NBitcoin.BouncyCastle.Asn1
             {
                 BigInteger tmpValue = fieldValue;
                 var tmp = new byte[byteCount];
-                for(int i = byteCount - 1; i >= 0; i--)
+                for (int i = byteCount - 1; i >= 0; i--)
                 {
                     tmp[i] = (byte)((tmpValue.IntValue & 0x7f) | 0x80);
                     tmpValue = tmpValue.ShiftRight(7);
@@ -111,7 +111,7 @@ namespace NBitcoin.BouncyCastle.Asn1
         {
             var other = asn1Object as DerObjectIdentifier;
 
-            if(other == null)
+            if (other == null)
                 return false;
 
             return this.identifier.Equals(other.identifier);
@@ -128,20 +128,20 @@ namespace NBitcoin.BouncyCastle.Asn1
             bool periodAllowed = false;
 
             int pos = branchID.Length;
-            while(--pos >= start)
+            while (--pos >= start)
             {
                 char ch = branchID[pos];
 
                 // TODO Leading zeroes?
-                if('0' <= ch && ch <= '9')
+                if ('0' <= ch && ch <= '9')
                 {
                     periodAllowed = true;
                     continue;
                 }
 
-                if(ch == '.')
+                if (ch == '.')
                 {
-                    if(!periodAllowed)
+                    if (!periodAllowed)
                         return false;
 
                     periodAllowed = false;
@@ -156,11 +156,11 @@ namespace NBitcoin.BouncyCastle.Asn1
 
         private static bool IsValidIdentifier(string identifier)
         {
-            if(identifier.Length < 3 || identifier[1] != '.')
+            if (identifier.Length < 3 || identifier[1] != '.')
                 return false;
 
             char first = identifier[0];
-            if(first < '0' || first > '2')
+            if (first < '0' || first > '2')
                 return false;
 
             return IsValidBranchID(identifier, 2);
@@ -176,22 +176,22 @@ namespace NBitcoin.BouncyCastle.Asn1
             BigInteger bigValue = null;
             bool first = true;
 
-            for(int i = 0; i != bytes.Length; i++)
+            for (int i = 0; i != bytes.Length; i++)
             {
                 int b = bytes[i];
 
-                if(value <= LONG_LIMIT)
+                if (value <= LONG_LIMIT)
                 {
                     value += (b & 0x7f);
-                    if((b & 0x80) == 0)             // end of number reached
+                    if ((b & 0x80) == 0)             // end of number reached
                     {
-                        if(first)
+                        if (first)
                         {
-                            if(value < 40)
+                            if (value < 40)
                             {
                                 objId.Append('0');
                             }
-                            else if(value < 80)
+                            else if (value < 80)
                             {
                                 objId.Append('1');
                                 value -= 40;
@@ -215,14 +215,14 @@ namespace NBitcoin.BouncyCastle.Asn1
                 }
                 else
                 {
-                    if(bigValue == null)
+                    if (bigValue == null)
                     {
                         bigValue = BigInteger.ValueOf(value);
                     }
                     bigValue = bigValue.Or(BigInteger.ValueOf(b & 0x7f));
-                    if((b & 0x80) == 0)
+                    if ((b & 0x80) == 0)
                     {
-                        if(first)
+                        if (first)
                         {
                             objId.Append('2');
                             bigValue = bigValue.Subtract(BigInteger.ValueOf(80));

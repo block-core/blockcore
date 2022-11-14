@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Net;
 using Blockcore.Utilities.Extensions;
-using Blockcore.Utilities.JsonConverters;
-using Newtonsoft.Json;
 
 namespace Blockcore.P2P
 {
@@ -35,7 +33,7 @@ namespace Blockcore.P2P
         internal const int AttemptResetThresholdHours = 12;
 
         /// <summary>Endpoint of this peer.</summary>
-      
+
         public IPEndPoint Endpoint { get; set; }
 
         /// <summary>Used to construct the <see cref="NetworkAddress"/> after deserializing this peer.</summary>
@@ -46,7 +44,7 @@ namespace Blockcore.P2P
 
         private string loopback;
 
-    
+
         public IPAddress Loopback
         {
             get
@@ -62,7 +60,7 @@ namespace Blockcore.P2P
         /// <para>
         /// This gets reset when a connection was successful.</para>
         /// </summary>
-    
+
         public int ConnectionAttempts { get; private set; }
 
         /// <summary>
@@ -70,7 +68,7 @@ namespace Blockcore.P2P
         /// <para>
         /// This gets reset when a handshake was successful.</para>
         /// </summary>
-     
+
         public int HandshakedAttempts { get; private set; }
 
         /// <summary>
@@ -79,13 +77,13 @@ namespace Blockcore.P2P
         /// This is set when the connection attempt was successful and a handshake was done.
         /// </para>
         /// </summary>
-        
+
         public DateTimeOffset? LastConnectionHandshake { get; private set; }
 
         /// <summary>
         /// The last handshake attempt.
         /// </summary>
-     
+
         public DateTimeOffset? LastHandshakeAttempt { get; private set; }
 
         /// <summary>
@@ -94,7 +92,7 @@ namespace Blockcore.P2P
         /// This is set via <see cref="Protocol.Behaviors.PingPongBehavior"/> to ensure that a peer is live.
         /// </para>
         /// </summary>
-       
+
         public DateTime? LastSeen { get; private set; }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace Blockcore.P2P
         /// <remarks>
         /// This is set in <see cref="PeerBanning"/>.
         /// </remarks>
-      
+
         public DateTime? BanTimeStamp { get; set; }
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace Blockcore.P2P
         /// <remarks>
         /// This is set in <see cref="PeerBanning"/>.
         /// </remarks>
-      
+
         public DateTime? BanUntil { get; set; }
 
         /// <summary>
@@ -133,13 +131,13 @@ namespace Blockcore.P2P
         /// The logic around this has not yet been implemented.
         /// This is set in <see cref="PeerBanning"/>.
         /// </remarks>
-      
+
         public uint? BanScore { get; set; }
 
         /// <summary>
         /// <c>True</c> if the peer has had connection attempts but none successful.
         /// </summary>
-      
+
         public bool Attempted
         {
             get
@@ -208,7 +206,7 @@ namespace Blockcore.P2P
         /// This is set when the connection attempt was successful (but not necessarily handshaked).
         /// </para>
         /// </summary>
-        
+
         public DateTimeOffset? LastConnectionSuccess { get; private set; }
 
         /// <summary>

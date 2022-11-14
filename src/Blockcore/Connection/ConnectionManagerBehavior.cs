@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
-using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 

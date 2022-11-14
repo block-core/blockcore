@@ -10,15 +10,15 @@ namespace NBitcoin
         private readonly Dictionary<string, byte[]> table = new Dictionary<string, byte[]>();
 
         public InMemoryNoSqlRepository(Network network)
-            :base(network)
+            : base(network)
         {
         }
 
         protected override Task PutBytesBatch(IEnumerable<Tuple<string, byte[]>> enumerable)
         {
-            foreach(Tuple<string, byte[]> data in enumerable)
+            foreach (Tuple<string, byte[]> data in enumerable)
             {
-                if(data.Item2 == null)
+                if (data.Item2 == null)
                 {
                     this.table.Remove(data.Item1);
                 }

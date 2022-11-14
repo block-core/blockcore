@@ -49,16 +49,16 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
         {
             SecureRandom providedRandom = null;
 
-            if(forSigning)
+            if (forSigning)
             {
-                if(!(parameters is ECPrivateKeyParameters))
+                if (!(parameters is ECPrivateKeyParameters))
                     throw new InvalidKeyException("EC private key required for signing");
 
                 this.key = (ECPrivateKeyParameters)parameters;
             }
             else
             {
-                if(!(parameters is ECPublicKeyParameters))
+                if (!(parameters is ECPublicKeyParameters))
                     throw new InvalidKeyException("EC public key required for verification");
 
                 this.key = (ECPublicKeyParameters)parameters;
@@ -80,9 +80,9 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
             ECDomainParameters ec = this.key.Parameters;
             BigInteger n = ec.N;
             BigInteger e = CalculateE(n, message);
-            BigInteger d = ((ECPrivateKeyParameters) this.key).D;
+            BigInteger d = ((ECPrivateKeyParameters)this.key).D;
 
-            if(this.kCalculator.IsDeterministic)
+            if (this.kCalculator.IsDeterministic)
             {
                 this.kCalculator.Init(n, d, message);
             }
@@ -108,11 +108,11 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
                     // 5.3.3
                     r = p.AffineXCoord.ToBigInteger().Mod(n);
                 }
-                while(r.SignValue == 0);
+                while (r.SignValue == 0);
 
                 s = k.ModInverse(n).Multiply(e.Add(d.Multiply(r))).Mod(n);
             }
-            while(s.SignValue == 0);
+            while (s.SignValue == 0);
 
             return new BigInteger[] { r, s };
         }
@@ -128,7 +128,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
             BigInteger n = this.key.Parameters.N;
 
             // r and s should both in the range [1,n-1]
-            if(r.SignValue < 1 || s.SignValue < 1
+            if (r.SignValue < 1 || s.SignValue < 1
                 || r.CompareTo(n) >= 0 || s.CompareTo(n) >= 0)
             {
                 return false;
@@ -141,11 +141,11 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
             BigInteger u2 = r.Multiply(c).Mod(n);
 
             ECPoint G = this.key.Parameters.G;
-            ECPoint Q = ((ECPublicKeyParameters) this.key).Q;
+            ECPoint Q = ((ECPublicKeyParameters)this.key).Q;
 
             ECPoint point = ECAlgorithms.SumOfTwoMultiplies(G, u1, Q, u2);
 
-            if(point.IsInfinity)
+            if (point.IsInfinity)
                 return false;
 
             /*
@@ -162,19 +162,19 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
              * the libsecp256k1 project (https://github.com/bitcoin/secp256k1).
              */
             ECCurve curve = point.Curve;
-            if(curve != null)
+            if (curve != null)
             {
                 BigInteger cofactor = curve.Cofactor;
-                if(cofactor != null && cofactor.CompareTo(Eight) <= 0)
+                if (cofactor != null && cofactor.CompareTo(Eight) <= 0)
                 {
                     ECFieldElement D = GetDenominator(curve.CoordinateSystem, point);
-                    if(D != null && !D.IsZero)
+                    if (D != null && !D.IsZero)
                     {
                         ECFieldElement X = point.XCoord;
-                        while(curve.IsValidFieldElement(r))
+                        while (curve.IsValidFieldElement(r))
                         {
                             ECFieldElement R = curve.FromBigInteger(r).Multiply(D);
-                            if(R.Equals(X))
+                            if (R.Equals(X))
                             {
                                 return true;
                             }
@@ -194,7 +194,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
             int messageBitLength = message.Length * 8;
             var trunc = new BigInteger(1, message);
 
-            if(n.BitLength < messageBitLength)
+            if (n.BitLength < messageBitLength)
             {
                 trunc = trunc.ShiftRight(messageBitLength - n.BitLength);
             }
@@ -209,7 +209,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Signers
 
         protected virtual ECFieldElement GetDenominator(int coordinateSystem, ECPoint p)
         {
-            switch(coordinateSystem)
+            switch (coordinateSystem)
             {
                 case ECCurve.COORD_HOMOGENEOUS:
                 case ECCurve.COORD_LAMBDA_PROJECTIVE:

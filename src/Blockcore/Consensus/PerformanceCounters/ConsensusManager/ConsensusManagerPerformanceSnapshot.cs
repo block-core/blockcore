@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading;
 using Blockcore.Consensus.Chain;
-using NBitcoin;
 
 namespace Blockcore.Consensus.PerformanceCounters.ConsensusManager
 {

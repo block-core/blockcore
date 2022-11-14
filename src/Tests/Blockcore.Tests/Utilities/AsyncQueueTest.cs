@@ -440,7 +440,7 @@ namespace Blockcore.Tests.Utilities
 
             // We wait until the queue callback calling consumer is finished.
             asyncQueue.ConsumerTask.Wait();
-            
+
             // Now enqueuing another item should not invoke the callback because the queue should be disposed.
             asyncQueue.Enqueue(asyncQueue);
 

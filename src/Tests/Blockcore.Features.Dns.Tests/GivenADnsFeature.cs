@@ -5,7 +5,6 @@ using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Connection;
-using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
@@ -15,7 +14,6 @@ using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Dns.Tests

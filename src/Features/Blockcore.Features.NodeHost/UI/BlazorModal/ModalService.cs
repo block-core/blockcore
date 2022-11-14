@@ -9,7 +9,7 @@ namespace Blockcore.UI.BlazorModal
 
         public event Action OnClose;
 
-        public  object Parameter { get; set; }
+        public object Parameter { get; set; }
 
         public void Show(string title, Type contentType)
         {
@@ -25,7 +25,7 @@ namespace Blockcore.UI.BlazorModal
 
         public void Show(string title, Type contentType, object _parameter)
         {
-            this.Parameter =_parameter;
+            this.Parameter = _parameter;
             this.Show(title, contentType);
 
         }

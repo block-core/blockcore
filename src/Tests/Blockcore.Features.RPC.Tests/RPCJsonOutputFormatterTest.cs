@@ -46,7 +46,7 @@ namespace Blockcore.Features.RPC.Tests
             var formatter = new RPCJsonOutputFormatter(this.settings);
             Task task = formatter.WriteResponseBodyAsync(context, Encoding.UTF8);
             task.Wait();
-            
+
             using (var reader = new StreamReader(bodyStream))
             {
                 bodyStream.Position = 0;

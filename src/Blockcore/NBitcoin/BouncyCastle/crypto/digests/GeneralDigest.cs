@@ -40,7 +40,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
         {
             this.xBuf[this.xBufOff++] = input;
 
-            if(this.xBufOff == this.xBuf.Length)
+            if (this.xBufOff == this.xBuf.Length)
             {
                 ProcessWord(this.xBuf, 0);
                 this.xBufOff = 0;
@@ -60,12 +60,12 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             // fill the current word
             //
             int i = 0;
-            if(this.xBufOff != 0)
+            if (this.xBufOff != 0)
             {
-                while(i < length)
+                while (i < length)
                 {
                     this.xBuf[this.xBufOff++] = input[inOff + i++];
-                    if(this.xBufOff == 4)
+                    if (this.xBufOff == 4)
                     {
                         ProcessWord(this.xBuf, 0);
                         this.xBufOff = 0;
@@ -78,7 +78,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             // process whole words.
             //
             int limit = ((length - i) & ~3) + i;
-            for(; i < limit; i += 4)
+            for (; i < limit; i += 4)
             {
                 ProcessWord(input, inOff + i);
             }
@@ -86,7 +86,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             //
             // load in the remainder.
             //
-            while(i < length)
+            while (i < length)
             {
                 this.xBuf[this.xBufOff++] = input[inOff + i++];
             }
@@ -103,7 +103,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             //
             Update((byte)128);
 
-            while(this.xBufOff != 0)
+            while (this.xBufOff != 0)
                 Update((byte)0);
             ProcessLength(bitLength);
             ProcessBlock();

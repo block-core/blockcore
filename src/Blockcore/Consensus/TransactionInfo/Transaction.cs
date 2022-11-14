@@ -919,7 +919,7 @@ namespace Blockcore.Consensus.TransactionInfo
             var pushes = new List<byte[]>();
             foreach (Byte[] op in ops.Select(op => op.PushData))
             {
-                if (op==null)
+                if (op == null)
                     throw new ArgumentException("Non push operation unsupported in WitScript", "ops");
                 pushes.Add(op);
             }

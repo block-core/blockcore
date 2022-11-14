@@ -76,22 +76,22 @@ namespace NBitcoin
 
         public ExtPubKey(byte[] bytes)
         {
-            if(bytes == null)
+            if (bytes == null)
                 throw new ArgumentNullException("bytes");
             this.ReadWrite(bytes);
         }
 
         public ExtPubKey(PubKey pubkey, byte[] chainCode, byte depth, byte[] fingerprint, uint child)
         {
-            if(pubkey == null)
+            if (pubkey == null)
                 throw new ArgumentNullException("pubkey");
-            if(chainCode == null)
+            if (chainCode == null)
                 throw new ArgumentNullException("chainCode");
-            if(fingerprint == null)
+            if (fingerprint == null)
                 throw new ArgumentNullException("fingerprint");
-            if(fingerprint.Length != FingerprintLength)
+            if (fingerprint.Length != FingerprintLength)
                 throw new ArgumentException(string.Format("The fingerprint must be {0} bytes.", FingerprintLength), "fingerprint");
-            if(chainCode.Length != ChainCodeLength)
+            if (chainCode.Length != ChainCodeLength)
                 throw new ArgumentException(string.Format("The chain code must be {0} bytes.", ChainCodeLength), "chainCode");
             this.pubkey = pubkey;
             this.nDepth = depth;
@@ -102,11 +102,11 @@ namespace NBitcoin
 
         public ExtPubKey(PubKey masterKey, byte[] chainCode)
         {
-            if(masterKey == null)
+            if (masterKey == null)
                 throw new ArgumentNullException("masterKey");
-            if(chainCode == null)
+            if (chainCode == null)
                 throw new ArgumentNullException("chainCode");
-            if(chainCode.Length != ChainCodeLength)
+            if (chainCode.Length != ChainCodeLength)
                 throw new ArgumentException(string.Format("The chain code must be {0} bytes.", ChainCodeLength), "chainCode");
             this.pubkey = masterKey;
             Buffer.BlockCopy(chainCode, 0, this.vchChainCode, 0, ChainCodeLength);
@@ -115,7 +115,7 @@ namespace NBitcoin
 
         public bool IsChildOf(ExtPubKey parentKey)
         {
-            if(this.Depth != parentKey.Depth + 1)
+            if (this.Depth != parentKey.Depth + 1)
                 return false;
             return parentKey.CalculateChildFingerprint().SequenceEqual(this.Fingerprint);
         }
@@ -156,7 +156,7 @@ namespace NBitcoin
 
         public ExtPubKey Derive(int index, bool hardened)
         {
-            if(index < 0)
+            if (index < 0)
                 throw new ArgumentOutOfRangeException("index", "the index can't be negative");
             uint realIndex = (uint)index;
             realIndex = hardened ? realIndex | 0x80000000u : realIndex;
@@ -172,7 +172,7 @@ namespace NBitcoin
 
         public void ReadWrite(BitcoinStream stream)
         {
-            using(stream.BigEndianScope())
+            using (stream.BigEndianScope())
             {
                 stream.ReadWrite(ref this.nDepth);
                 stream.ReadWrite(ref this.vchFingerprint);
@@ -194,7 +194,7 @@ namespace NBitcoin
         public override bool Equals(object obj)
         {
             var item = obj as ExtPubKey;
-            if(item == null)
+            if (item == null)
                 return false;
             return this.Hash.Equals(item.Hash);
         }

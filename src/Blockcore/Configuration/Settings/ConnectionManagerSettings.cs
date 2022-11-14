@@ -7,7 +7,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Configuration.Settings
 {
@@ -24,7 +23,7 @@ namespace Blockcore.Configuration.Settings
         private const bool DefaultBlocksOnly = false;
 
         /// <summary>Instance logger.</summary>
-       /// private readonly ILogger logger;
+        /// private readonly ILogger logger;
 
         /// <summary>List of end points that the node should try to connect to.</summary>
         /// <remarks>All access should be protected under <see cref="addNodeLock"/></remarks>
@@ -42,8 +41,8 @@ namespace Blockcore.Configuration.Settings
         public ConnectionManagerSettings(NodeSettings nodeSettings)
         {
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
-                ILogger logger;
-                logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConnectionManagerSettings).FullName);
+            ILogger logger;
+            logger = nodeSettings.LoggerFactory.CreateLogger(typeof(ConnectionManagerSettings).FullName);
 
             this.addNodeLock = new object();
 
@@ -207,7 +206,7 @@ namespace Blockcore.Configuration.Settings
         public static void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
         {
             builder.AppendLine("####ConnectionManager Settings####");
-            builder.AppendLine($"#The default network port to connect to. Default { network.DefaultPort }.");
+            builder.AppendLine($"#The default network port to connect to. Default {network.DefaultPort}.");
             builder.AppendLine($"#port={network.DefaultPort}");
             builder.AppendLine($"#Accept connections from the outside.");
             builder.AppendLine($"#listen=<0 or 1>");
@@ -235,10 +234,10 @@ namespace Blockcore.Configuration.Settings
             builder.AppendLine($"#initialconnectiontarget=<number>");
             builder.AppendLine($"#Sync with peers. Default 1.");
             builder.AppendLine($"#synctime=1");
-            builder.AppendLine($"#An optional prefix for the node's user agent shared with peers. Truncated if over { MaximumAgentPrefixLength } characters.");
+            builder.AppendLine($"#An optional prefix for the node's user agent shared with peers. Truncated if over {MaximumAgentPrefixLength} characters.");
             builder.AppendLine($"#agentprefix=<string>");
-            builder.AppendLine($"#Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to { (DefaultBlocksOnly ? 1 : 0) }.");
-            builder.AppendLine($"#blocksonly={ (DefaultBlocksOnly ? 1 : 0) }");
+            builder.AppendLine($"#Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to {(DefaultBlocksOnly ? 1 : 0)}.");
+            builder.AppendLine($"#blocksonly={(DefaultBlocksOnly ? 1 : 0)}");
             builder.AppendLine($"#bantime=<number>");
             builder.AppendLine($"#Disallow connection to peers in same IP range. Default is 1 for remote hosts.");
             builder.AppendLine($"#iprangefiltering=<0 or 1>");
@@ -255,7 +254,7 @@ namespace Blockcore.Configuration.Settings
             var defaults = NodeSettings.Default(network: network);
 
             var builder = new StringBuilder();
-            builder.AppendLine($"-port=<port>              The default network port to connect to. Default { network.DefaultPort }.");
+            builder.AppendLine($"-port=<port>              The default network port to connect to. Default {network.DefaultPort}.");
             builder.AppendLine($"-listen=<0 or 1>          Accept connections from the outside (defaulted to 1 unless -connect args specified).");
             builder.AppendLine($"-connect=<ip:port>        Specified node to connect to. Can be specified multiple times.");
             builder.AppendLine($"-addnode=<ip:port>        Add a node to connect to and attempt to keep the connection open. Can be specified multiple times.");
@@ -269,7 +268,7 @@ namespace Blockcore.Configuration.Settings
             builder.AppendLine($"-initialconnectiontarget=<number> The number of connections to be reached before a 1 second connection interval (initally 100ms). Default 1.");
             builder.AppendLine($"-synctime=<0 or 1>        Sync with peers. Default 1.");
             builder.AppendLine($"-agentprefix=<string>     An optional prefix for the node's user agent that will be shared with peers in the version handshake.");
-            builder.AppendLine($"-blocksonly=<0 or 1>      Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to { DefaultBlocksOnly }.");
+            builder.AppendLine($"-blocksonly=<0 or 1>      Enable bandwidth saving setting to send and received confirmed blocks only. Defaults to {DefaultBlocksOnly}.");
             builder.AppendLine($"-iprangefiltering=<0 or 1> Disallow connection to peers in same IP range. Default is 1 for remote hosts.");
 
             defaults.Logger.LogInformation(builder.ToString());

@@ -8,7 +8,6 @@ using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Utilities;
-using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
@@ -112,9 +111,9 @@ namespace Blockcore.Connection.Broadcasting
             if (this.Broadcasts.TryGetValue(trxHash, out BroadcastTransactionStateChanedEntry entry) && (entry.TransactionBroadcastState == TransactionBroadcastState.ReadyToBroadcast ||
                     entry.TransactionBroadcastState == TransactionBroadcastState.Broadcasted))
             {
-                    // broadacste
-                    await this.PropagateTransactionToPeersAsync(entry.Transaction).ConfigureAwait(false);
-                    return true;
+                // broadacste
+                await this.PropagateTransactionToPeersAsync(entry.Transaction).ConfigureAwait(false);
+                return true;
 
             }
 

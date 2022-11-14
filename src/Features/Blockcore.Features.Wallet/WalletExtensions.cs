@@ -1,6 +1,5 @@
 ﻿using System;
 using Blockcore.Consensus.Chain;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet
 {

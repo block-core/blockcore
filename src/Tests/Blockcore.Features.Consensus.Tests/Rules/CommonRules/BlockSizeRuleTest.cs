@@ -53,7 +53,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             int blockWeight = this.CalculateBlockWeight(this.ruleContext.ValidationContext.BlockToValidate, TransactionOptions.All);
 
             // increase max block weight to be able to hit this if statement
-            this.options.MaxBlockWeight = (uint) (blockWeight * 4) + 100;
+            this.options.MaxBlockWeight = (uint)(blockWeight * 4) + 100;
 
             ConsensusErrorException exception = await Assert.ThrowsAsync<ConsensusErrorException>(() => this.consensusRules.RegisterRule<BlockSizeRule>().RunAsync(this.ruleContext));
 
@@ -67,7 +67,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             int blockWeight = this.CalculateBlockWeight(this.ruleContext.ValidationContext.BlockToValidate, TransactionOptions.All);
 
             // increase max block weight to be able to hit this if statement
-            this.options.MaxBlockWeight = (uint) (blockWeight * 4) + 1;
+            this.options.MaxBlockWeight = (uint)(blockWeight * 4) + 1;
 
             ConsensusErrorException exception = await Assert.ThrowsAsync<ConsensusErrorException>(() => this.consensusRules.RegisterRule<BlockSizeRule>().RunAsync(this.ruleContext));
 

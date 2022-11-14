@@ -23,6 +23,6 @@ namespace Blockcore.Networks.Strax.Policies
             new PayToWitTemplate()
         };
 
-        public override List<ScriptTemplate> GetScriptTemplates => standardTemplates;        
+        public override List<ScriptTemplate> GetScriptTemplates => standardTemplates;
     }
 }

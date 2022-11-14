@@ -61,11 +61,11 @@ namespace Blockcore.Features.Consensus
                 var coinbase = transaction.IsCoinBase;
                 var coinstake = network.Consensus.IsProofOfStake ? transaction.IsCoinStake : false;
                 var time = (transaction is IPosTransactionWithTime posTx) ? posTx.Time : 0;
-               
+
                 var coins = new Coins((uint)height, output.TxOut, coinbase, coinstake, time);
-                var unspentOutput = new UnspentOutput(outpoint, coins) 
-                { 
-                    CreatedFromBlock = true 
+                var unspentOutput = new UnspentOutput(outpoint, coins)
+                {
+                    CreatedFromBlock = true
                 };
 
                 // If the output is an opreturn just ignore it
@@ -97,7 +97,7 @@ namespace Blockcore.Features.Consensus
             {
                 if (coin != null)
                 {
-                    this.unspents.TryAdd(coin.OutPoint, coin); 
+                    this.unspents.TryAdd(coin.OutPoint, coin);
                 }
             }
         }

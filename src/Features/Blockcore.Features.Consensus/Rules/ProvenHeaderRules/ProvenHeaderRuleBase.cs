@@ -4,7 +4,6 @@ using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Rules;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 {

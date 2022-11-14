@@ -48,7 +48,7 @@ namespace Blockcore.Features.RPC
                 textReader.FloatParseHandling = FloatParseHandling.Decimal;
                 request = await JObject.LoadAsync(textReader);
             }
-            
+
             string method = (string)request["method"];
             string controllerName = this.actionDescriptor.ActionDescriptors.Items.OfType<ControllerActionDescriptor>()
                     .FirstOrDefault(w => w.ActionName == method)?.ControllerName ?? string.Empty;

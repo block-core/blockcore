@@ -3,7 +3,6 @@ using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
-using NBitcoin;
 using NBitcoin.BitcoinCore;
 
 namespace Rutanio.Networks.Policies

@@ -12,7 +12,6 @@ using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Utilities.Store;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]

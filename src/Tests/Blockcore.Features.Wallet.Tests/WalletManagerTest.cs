@@ -26,9 +26,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using NBitcoin.Protocol;
 using Newtonsoft.Json;
-using NLog.Time;
 using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests

@@ -26,7 +26,6 @@ using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Stratis;
 using Blockcore.Networks.Stratis.Deployments;

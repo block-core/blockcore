@@ -5,13 +5,13 @@ using Blockcore.Base.Deployments;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Networks;
 using Blockcore.P2P;
+using NBitcoin;
+using NBitcoin.BouncyCastle.Math;
+using NBitcoin.DataEncoders;
 using Rutanio.Networks.Consensus;
 using Rutanio.Networks.Deployments;
 using Rutanio.Networks.Policies;
 using Rutanio.Networks.Setup;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 
 
 namespace Rutanio.Networks

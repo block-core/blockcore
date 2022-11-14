@@ -35,7 +35,7 @@ namespace NBitcoin.BouncyCastle.Crypto
         public BufferedBlockCipher(
             IBlockCipher cipher)
         {
-            if(cipher == null)
+            if (cipher == null)
                 throw new ArgumentNullException("cipher");
 
             this.cipher = cipher;
@@ -130,9 +130,9 @@ namespace NBitcoin.BouncyCastle.Crypto
         {
             this.buf[this.bufOff++] = input;
 
-            if(this.bufOff == this.buf.Length)
+            if (this.bufOff == this.buf.Length)
             {
-                if((outOff + this.buf.Length) > output.Length)
+                if ((outOff + this.buf.Length) > output.Length)
                     throw new DataLengthException("output buffer too short");
 
                 this.bufOff = 0;
@@ -151,7 +151,7 @@ namespace NBitcoin.BouncyCastle.Crypto
 
             int pos = ProcessByte(input, outBytes, 0);
 
-            if(outLength > 0 && pos < outLength)
+            if (outLength > 0 && pos < outLength)
             {
                 var tmp = new byte[pos];
                 Array.Copy(outBytes, 0, tmp, 0, pos);
@@ -166,9 +166,9 @@ namespace NBitcoin.BouncyCastle.Crypto
             int inOff,
             int length)
         {
-            if(input == null)
+            if (input == null)
                 throw new ArgumentNullException("input");
-            if(length < 1)
+            if (length < 1)
                 return null;
 
             int outLength = GetUpdateOutputSize(length);
@@ -177,7 +177,7 @@ namespace NBitcoin.BouncyCastle.Crypto
 
             int pos = ProcessBytes(input, inOff, length, outBytes, 0);
 
-            if(outLength > 0 && pos < outLength)
+            if (outLength > 0 && pos < outLength)
             {
                 var tmp = new byte[pos];
                 Array.Copy(outBytes, 0, tmp, 0, pos);
@@ -206,9 +206,9 @@ namespace NBitcoin.BouncyCastle.Crypto
             byte[] output,
             int outOff)
         {
-            if(length < 1)
+            if (length < 1)
             {
-                if(length < 0)
+                if (length < 0)
                     throw new ArgumentException("Can't have a negative input length!");
 
                 return 0;
@@ -217,21 +217,21 @@ namespace NBitcoin.BouncyCastle.Crypto
             int blockSize = GetBlockSize();
             int outLength = GetUpdateOutputSize(length);
 
-            if(outLength > 0)
+            if (outLength > 0)
             {
                 Check.OutputLength(output, outOff, outLength, "output buffer too short");
             }
 
             int resultLen = 0;
             int gapLen = this.buf.Length - this.bufOff;
-            if(length > gapLen)
+            if (length > gapLen)
             {
                 Array.Copy(input, inOff, this.buf, this.bufOff, gapLen);
                 resultLen += this.cipher.ProcessBlock(this.buf, 0, output, outOff);
                 this.bufOff = 0;
                 length -= gapLen;
                 inOff += gapLen;
-                while(length > this.buf.Length)
+                while (length > this.buf.Length)
                 {
                     resultLen += this.cipher.ProcessBlock(input, inOff, output, outOff + resultLen);
                     length -= blockSize;
@@ -240,7 +240,7 @@ namespace NBitcoin.BouncyCastle.Crypto
             }
             Array.Copy(input, inOff, this.buf, this.bufOff, length);
             this.bufOff += length;
-            if(this.bufOff == this.buf.Length)
+            if (this.bufOff == this.buf.Length)
             {
                 resultLen += this.cipher.ProcessBlock(this.buf, 0, output, outOff + resultLen);
                 this.bufOff = 0;
@@ -253,12 +253,12 @@ namespace NBitcoin.BouncyCastle.Crypto
             byte[] outBytes = EmptyBuffer;
 
             int length = GetOutputSize(0);
-            if(length > 0)
+            if (length > 0)
             {
                 outBytes = new byte[length];
 
                 int pos = DoFinal(outBytes, 0);
-                if(pos < outBytes.Length)
+                if (pos < outBytes.Length)
                 {
                     var tmp = new byte[pos];
                     Array.Copy(outBytes, 0, tmp, 0, pos);
@@ -278,14 +278,14 @@ namespace NBitcoin.BouncyCastle.Crypto
             int inOff,
             int inLen)
         {
-            if(input == null)
+            if (input == null)
                 throw new ArgumentNullException("input");
 
             int length = GetOutputSize(inLen);
 
             byte[] outBytes = EmptyBuffer;
 
-            if(length > 0)
+            if (length > 0)
             {
                 outBytes = new byte[length];
 
@@ -295,7 +295,7 @@ namespace NBitcoin.BouncyCastle.Crypto
 
                 pos += DoFinal(outBytes, pos);
 
-                if(pos < outBytes.Length)
+                if (pos < outBytes.Length)
                 {
                     var tmp = new byte[pos];
                     Array.Copy(outBytes, 0, tmp, 0, pos);
@@ -330,7 +330,7 @@ namespace NBitcoin.BouncyCastle.Crypto
         {
             try
             {
-                if(this.bufOff != 0)
+                if (this.bufOff != 0)
                 {
                     Check.DataLength(!this.cipher.IsPartialBlockOkay, "data not block size aligned");
                     Check.OutputLength(output, outOff, this.bufOff, "output buffer too short for DoFinal()");

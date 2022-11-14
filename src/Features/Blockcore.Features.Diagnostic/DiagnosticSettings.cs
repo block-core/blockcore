@@ -4,7 +4,6 @@ using Blockcore.Features.Diagnostic.PeerDiagnostic;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Diagnostic
 {
@@ -15,7 +14,7 @@ namespace Blockcore.Features.Diagnostic
     {
         /// <summary>The default value for peers statistics collector.</summary>
         public const bool DefaultPeersStatisticsCollectorEnabled = false;
-        
+
         /// <summary>The default value for maximum peers logged events.</summary>
         public const int DefaultMaxPeerLoggedEvents = 10;
 

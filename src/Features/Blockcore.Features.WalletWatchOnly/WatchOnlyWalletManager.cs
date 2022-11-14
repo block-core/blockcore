@@ -1,6 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
@@ -11,6 +9,8 @@ using Blockcore.Features.WalletWatchOnly.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
 
 namespace Blockcore.Features.WalletWatchOnly
 {

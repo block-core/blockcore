@@ -16,7 +16,7 @@ namespace Blockcore.Features.Wallet.Api.Models
         {
             this.Addresses = new List<AddressModel>();
         }
-        
+
         /// <summary>
         /// A list of addresses.
         /// </summary>

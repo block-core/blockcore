@@ -95,8 +95,8 @@ namespace Blockcore.Features.Miner
                 this.WalletPassword = config.GetOrDefault<string>("walletpassword", null); // No logging!
             }
 
-            uint blockMaxSize = (uint) config.GetOrDefault<int>("blockmaxsize", (int) nodeSettings.Network.Consensus.Options.MaxBlockSerializedSize, this.logger);
-            uint blockMaxWeight = (uint) config.GetOrDefault<int>("blockmaxweight", (int) nodeSettings.Network.Consensus.Options.MaxBlockWeight, this.logger);
+            uint blockMaxSize = (uint)config.GetOrDefault<int>("blockmaxsize", (int)nodeSettings.Network.Consensus.Options.MaxBlockSerializedSize, this.logger);
+            uint blockMaxWeight = (uint)config.GetOrDefault<int>("blockmaxweight", (int)nodeSettings.Network.Consensus.Options.MaxBlockWeight, this.logger);
             int blockmintxfee = config.GetOrDefault<int>("blockmintxfee", (int)nodeSettings.Network.Consensus.Options.MinBlockFeeRate, this.logger);
 
             this.BlockDefinitionOptions = new BlockDefinitionOptions(blockMaxWeight, blockMaxSize, blockmintxfee).RestrictForNetwork(nodeSettings.Network);

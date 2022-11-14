@@ -13,7 +13,6 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
@@ -21,19 +20,16 @@ using Blockcore.Features.Miner;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Miner.Staking;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
-using Blockcore.Networks;
 using Blockcore.Networks.X1.Consensus;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
 using NBitcoin.Crypto;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.X1.Components
 {

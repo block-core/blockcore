@@ -30,7 +30,7 @@ namespace NBitcoin
         public Task<Wordlist> Load(string name)
         {
             string list = _WordLists.TryGet(name);
-            if(list == null)
+            if (list == null)
                 return Task.FromResult<Wordlist>(null);
             return Task.FromResult(new Wordlist(list.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries),
                 name == "japanese" ? '　' : ' ', name

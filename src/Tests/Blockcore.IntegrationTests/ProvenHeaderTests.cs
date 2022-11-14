@@ -1,15 +1,14 @@
 ﻿using System;
 using Blockcore.Builder;
 using Blockcore.Configuration;
-using Blockcore.Features.NodeHost;
 using Blockcore.Features.BlockStore;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.MemoryPool;
+using Blockcore.Features.NodeHost;
 using Blockcore.Features.RPC;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using NBitcoin.Protocol;
 using Xunit;

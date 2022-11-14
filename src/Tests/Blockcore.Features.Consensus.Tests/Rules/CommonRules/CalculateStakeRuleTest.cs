@@ -110,7 +110,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         private static Transaction CreateCoinStakeTransaction(Network network, Key key, int height, uint256 prevout)
         {
             var coinStake = network.CreateTransaction();
-            if(coinStake is IPosTransactionWithTime posTrx)
+            if (coinStake is IPosTransactionWithTime posTrx)
                 posTrx.Time = (uint)18276127;
             coinStake.AddInput(new TxIn(new OutPoint(prevout, 1)));
             coinStake.AddOutput(new TxOut(0, new Script()));

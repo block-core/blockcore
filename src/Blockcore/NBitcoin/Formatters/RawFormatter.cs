@@ -45,7 +45,7 @@ namespace NBitcoin.Formatters
             writer.WritePropertyName(name);
             writer.WriteValue(value);
         }
-        
+
         public string ToString(Transaction transaction)
         {
             var strWriter = new StringWriter();
@@ -58,6 +58,6 @@ namespace NBitcoin.Formatters
 
             jsonWriter.Flush();
             return strWriter.ToString();
-        }     
+        }
     }
 }

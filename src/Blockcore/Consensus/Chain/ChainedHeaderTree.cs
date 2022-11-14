@@ -1006,7 +1006,7 @@ namespace Blockcore.Consensus.Chain
             if (!this.TryFindNewHeaderIndex(headers, out int newHeaderIndex))
             {
                 this.logger.LogTrace("(-)[NO_NEW_HEADERS_FOUND]:null");
-                return (List<ChainedHeader>)Enumerable.Empty<ChainedHeader>() ;
+                return (List<ChainedHeader>)Enumerable.Empty<ChainedHeader>();
             }
 
             ChainedHeader previousChainedHeader;

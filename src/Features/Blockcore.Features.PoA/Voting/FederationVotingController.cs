@@ -36,14 +36,14 @@ namespace Blockcore.Features.PoA.Voting
 
         [Route("schedulevote-addfedmember")]
         [HttpPost]
-        public IActionResult VoteAddFedMember([FromBody]HexPubKeyModel request)
+        public IActionResult VoteAddFedMember([FromBody] HexPubKeyModel request)
         {
             return this.VoteAddKickFedMember(request, true);
         }
 
         [Route("schedulevote-kickfedmember")]
         [HttpPost]
-        public IActionResult VoteKickFedMember([FromBody]HexPubKeyModel request)
+        public IActionResult VoteKickFedMember([FromBody] HexPubKeyModel request)
         {
             return this.VoteAddKickFedMember(request, false);
         }

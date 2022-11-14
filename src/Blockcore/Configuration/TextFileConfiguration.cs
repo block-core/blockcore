@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
 
 namespace Blockcore.Configuration
@@ -14,9 +14,9 @@ namespace Blockcore.Configuration
     [Serializable]
     public class ConfigurationException : Exception
     {
-      
+
         protected ConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
-        { 
+        {
         }
         public ConfigurationException(string message) : base(message)
         {

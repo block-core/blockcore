@@ -13,7 +13,7 @@ namespace NBitcoin.BouncyCastle.Asn1
             IEnumerable e)
         {
             var v = new Asn1EncodableVector();
-            foreach(Asn1Encodable obj in e)
+            foreach (Asn1Encodable obj in e)
             {
                 v.Add(obj);
             }
@@ -39,7 +39,7 @@ namespace NBitcoin.BouncyCastle.Asn1
         public void Add(
             params Asn1Encodable[] objs)
         {
-            foreach(Asn1Encodable obj in objs)
+            foreach (Asn1Encodable obj in objs)
             {
                 this.v.Add(obj);
             }
@@ -48,11 +48,11 @@ namespace NBitcoin.BouncyCastle.Asn1
         public void AddOptional(
             params Asn1Encodable[] objs)
         {
-            if(objs != null)
+            if (objs != null)
             {
-                foreach(Asn1Encodable obj in objs)
+                foreach (Asn1Encodable obj in objs)
                 {
-                    if(obj != null)
+                    if (obj != null)
                     {
                         this.v.Add(obj);
                     }
@@ -65,7 +65,7 @@ namespace NBitcoin.BouncyCastle.Asn1
         {
             get
             {
-                return (Asn1Encodable) this.v[index];
+                return (Asn1Encodable)this.v[index];
             }
         }
 

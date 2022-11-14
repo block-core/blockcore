@@ -1,11 +1,11 @@
 ﻿using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.Features.BlockStore.Pruning;
 using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using DB = RocksDbSharp.RocksDb;
-using Blockcore.Features.BlockStore.Pruning;
 
 namespace Blockcore.Features.BlockStore.Persistence.RocksDb
 

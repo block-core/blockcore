@@ -4,14 +4,13 @@ using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
-using Blockcore.Networks;
-using Blockcore.P2P;
+using Blockcore.Networks.SeniorBlockCoin.Networks.Deployments;
 using Blockcore.Networks.SeniorBlockCoin.Networks.Policies;
 using Blockcore.Networks.SeniorBlockCoin.Networks.Setup;
+using Blockcore.P2P;
 using NBitcoin;
 using NBitcoin.BouncyCastle.Math;
 using NBitcoin.DataEncoders;
-using Blockcore.Networks.SeniorBlockCoin.Networks.Deployments;
 
 namespace Blockcore.Networks.SeniorBlockCoin.Networks
 {

@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using Blockcore.Consensus.Chain;
-using Microsoft.Extensions.Logging;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;
+using Microsoft.Extensions.Logging;
 
 namespace Blockcore.Networks.Strax.Rules
 {

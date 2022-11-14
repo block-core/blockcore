@@ -118,14 +118,14 @@ namespace Blockcore.Features.PoA.Voting
 
         [Route("schedulevote-whitelisthash")]
         [HttpPost]
-        public IActionResult VoteWhitelistHash([FromBody]HashModel request)
+        public IActionResult VoteWhitelistHash([FromBody] HashModel request)
         {
             return this.VoteWhitelistRemoveHashMember(request, true);
         }
 
         [Route("schedulevote-removehash")]
         [HttpPost]
-        public IActionResult VoteRemoveHash([FromBody]HashModel request)
+        public IActionResult VoteRemoveHash([FromBody] HashModel request)
         {
             return this.VoteWhitelistRemoveHashMember(request, false);
         }

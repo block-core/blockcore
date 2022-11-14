@@ -31,10 +31,10 @@ namespace Blockcore.Features.RPC
         public readonly string ContentType;
 
         public RPCMiddleware(
-            RequestDelegate next, 
-            IRPCAuthorization authorization, 
-            ILoggerFactory loggerFactory, 
-            IHttpContextFactory httpContextFactory, 
+            RequestDelegate next,
+            IRPCAuthorization authorization,
+            ILoggerFactory loggerFactory,
+            IHttpContextFactory httpContextFactory,
             DataFolder dataFolder,
             string contentType = "application/json; charset=utf-8")
         {

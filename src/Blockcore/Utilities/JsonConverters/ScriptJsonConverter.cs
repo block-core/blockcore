@@ -2,7 +2,6 @@
 using System.Reflection;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 

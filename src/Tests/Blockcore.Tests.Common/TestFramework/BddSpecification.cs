@@ -13,7 +13,7 @@ namespace Blockcore.Tests.Common.TestFramework
     {
         protected readonly ITestOutputHelper Output;
         private readonly DateTime startOfTestTime;
-        
+
         private ITest currentTest;
 
         /// <summary>

@@ -189,7 +189,7 @@ namespace Blockcore.Features.NodeHost.Events
             {
                 List<string> consumersToInform = this.consumers.Where(c => c.Value.Events.Contains(@event.EventName))
                          .Select(c => c.Key).ToList();
-                  
+
 
                 if (consumersToInform.Count > 0)
                 {

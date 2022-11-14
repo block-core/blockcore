@@ -17,7 +17,6 @@ using Blockcore.P2P.Peer;
 using Blockcore.Signals;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Features.Consensus.Tests")]

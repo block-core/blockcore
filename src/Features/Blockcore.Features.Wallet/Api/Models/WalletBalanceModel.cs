@@ -34,7 +34,7 @@ namespace Blockcore.Features.Wallet.Api.Models
 
         [JsonProperty(PropertyName = "spendableAmount")]
         public Money SpendableAmount { get; set; }
-        
+
         [JsonProperty(PropertyName = "addresses")]
         public IEnumerable<AddressModel> Addresses { get; set; }
     }

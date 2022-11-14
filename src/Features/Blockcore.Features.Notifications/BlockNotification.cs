@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.AsyncWork;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.Signals;
 using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
 
 namespace Blockcore.Features.Notifications
 {
@@ -80,7 +80,7 @@ namespace Blockcore.Features.Notifications
                 {
                     // Sets the location of the puller to the block preceding the one we want to receive.
                     ChainedHeader previousBlock = this.ChainIndexer.GetHeader(startBlock.Height > 0 ? startBlock.Height - 1 : 0);
-                   // this.Puller.SetLocation(previousBlock);
+                    // this.Puller.SetLocation(previousBlock);
                     this.tip = previousBlock;
 
                     this.logger.LogDebug("Puller location set to block: {0}.", previousBlock);
@@ -120,7 +120,7 @@ namespace Blockcore.Features.Notifications
 
             // Sets the location of the puller to the block preceding the one we want to receive.
             ChainedHeader previousBlock = this.ChainIndexer.GetHeader(startBlock.Height > 0 ? startBlock.Height - 1 : 0);
-           // this.Puller.SetLocation(previousBlock);
+            // this.Puller.SetLocation(previousBlock);
             this.tip = previousBlock;
 
             this.logger.LogDebug("Puller location set to block: {0}.", previousBlock);

@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Blockcore.Base;
 using Blockcore.Configuration.Settings;
-using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
@@ -14,7 +11,6 @@ using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.CoinViews
 {

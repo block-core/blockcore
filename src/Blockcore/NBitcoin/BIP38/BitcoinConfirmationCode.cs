@@ -51,9 +51,9 @@ namespace NBitcoin
             get
             {
                 bool hasLotSequence = (this.vchData[0] & 0x04) != 0;
-                if(!hasLotSequence)
+                if (!hasLotSequence)
                     return null;
-                if(this._LotSequence == null)
+                if (this._LotSequence == null)
                 {
                     this._LotSequence = new LotSequence(this.OwnerEntropy.SafeSubarray(4, 4));
                 }
@@ -101,7 +101,7 @@ namespace NBitcoin
             pointbprefix = (byte)(pointbprefix ^ (byte)(derived[63] & (byte)0x01));
 
             //Optional since ArithmeticException will catch it, but it saves some times
-            if(pointbprefix != 0x02 && pointbprefix != 0x03)
+            if (pointbprefix != 0x02 && pointbprefix != 0x03)
                 return false;
             byte[] pointb = BitcoinEncryptedSecret.DecryptKey(this.EncryptedPointB.Skip(1).ToArray(), derived);
             pointb = new byte[] { pointbprefix }.Concat(pointb).ToArray();
@@ -113,11 +113,11 @@ namespace NBitcoin
             {
                 pointbec = curve.Curve.DecodePoint(pointb);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 return false;
             }
-            catch(ArithmeticException)
+            catch (ArithmeticException)
             {
                 return false;
             }

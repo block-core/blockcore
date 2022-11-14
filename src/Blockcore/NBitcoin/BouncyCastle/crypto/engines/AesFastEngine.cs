@@ -626,19 +626,19 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
         private uint[][] GenerateWorkingKey(byte[] key, bool forEncryption)
         {
             int keyLen = key.Length;
-            if(keyLen < 16 || keyLen > 32 || (keyLen & 7) != 0)
+            if (keyLen < 16 || keyLen > 32 || (keyLen & 7) != 0)
                 throw new ArgumentException("Key length not 128/192/256 bits.");
 
             int KC = keyLen >> 2;
             this.ROUNDS = KC + 6;  // This is not always true for the generalized Rijndael that allows larger block sizes
 
             var W = new uint[this.ROUNDS + 1][]; // 4 words in a block
-            for(int i = 0; i <= this.ROUNDS; ++i)
+            for (int i = 0; i <= this.ROUNDS; ++i)
             {
                 W[i] = new uint[4];
             }
 
-            switch(KC)
+            switch (KC)
             {
                 case 4:
                     {
@@ -651,7 +651,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
                         uint t3 = Pack.LE_To_UInt32(key, 12);
                         W[0][3] = t3;
 
-                        for(int i = 1; i <= 10; ++i)
+                        for (int i = 1; i <= 10; ++i)
                         {
                             uint u = SubWord(Shift(t3, 8)) ^ rcon[i - 1];
                             t0 ^= u;
@@ -697,7 +697,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
                         t5 ^= t4;
                         W[2][3] = t5;
 
-                        for(int i = 3; i < 12; i += 3)
+                        for (int i = 3; i < 12; i += 3)
                         {
                             u = SubWord(Shift(t5, 8)) ^ rcon;
                             rcon <<= 1;
@@ -762,7 +762,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
 
                         uint u, rcon = 1;
 
-                        for(int i = 2; i < 14; i += 2)
+                        for (int i = 2; i < 14; i += 2)
                         {
                             u = SubWord(Shift(t7, 8)) ^ rcon;
                             rcon <<= 1;
@@ -803,12 +803,12 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
                     }
             }
 
-            if(!forEncryption)
+            if (!forEncryption)
             {
-                for(int j = 1; j < this.ROUNDS; j++)
+                for (int j = 1; j < this.ROUNDS; j++)
                 {
                     uint[] w = W[j];
-                    for(int i = 0; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
                         w[i] = Inv_Mcol(w[i]);
                     }
@@ -846,7 +846,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
         {
             var keyParameter = parameters as KeyParameter;
 
-            if(keyParameter == null)
+            if (keyParameter == null)
             {
                 throw new ArgumentException("invalid parameter passed to AES init - "
                                             + Platform.GetTypeName(parameters));
@@ -884,7 +884,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
             byte[] output,
             int outOff)
         {
-            if(this.WorkingKey == null)
+            if (this.WorkingKey == null)
                 throw new InvalidOperationException("AES engine not initialised");
 
             Check.DataLength(input, inOff, 16, "input buffer too short");
@@ -892,7 +892,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
 
             UnPackBlock(input, inOff);
 
-            if(this.forEncryption)
+            if (this.forEncryption)
             {
                 EncryptBlock(this.WorkingKey);
             }
@@ -939,7 +939,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
 
             uint r0, r1, r2, r3 = this.C3 ^ kw[3];
             int r = 1;
-            while(r < this.ROUNDS - 1)
+            while (r < this.ROUNDS - 1)
             {
                 kw = KW[r++];
                 r0 = T0[t0 & 255] ^ T1[(t1 >> 8) & 255] ^ T2[(t2 >> 16) & 255] ^ T3[r3 >> 24] ^ kw[0];
@@ -977,7 +977,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Engines
 
             uint r0, r1, r2, r3 = this.C3 ^ kw[3];
             int r = this.ROUNDS - 1;
-            while(r > 1)
+            while (r > 1)
             {
                 kw = KW[r--];
                 r0 = Tinv0[t0 & 255] ^ Tinv1[(r3 >> 8) & 255] ^ Tinv2[(t2 >> 16) & 255] ^ Tinv3[t1 >> 24] ^ kw[0];

@@ -15,16 +15,13 @@ using Blockcore.Features.Miner.Staking;
 using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Database;
-using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
-using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using NBitcoin;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

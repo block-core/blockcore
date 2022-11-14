@@ -100,7 +100,7 @@ namespace Blockcore.Features.RPC.Controllers
         /// <returns>A JSON result that varies depending on the RPC method.</returns>
         [Route("callbyname")]
         [HttpPost]
-        public IActionResult CallByName([FromBody]JObject body)
+        public IActionResult CallByName([FromBody] JObject body)
         {
             Guard.NotNull(body, nameof(body));
 
@@ -116,7 +116,7 @@ namespace Blockcore.Features.RPC.Controllers
 
                 ControllerActionDescriptor actionDescriptor = null;
                 if (!this.GetActionDescriptors()?.TryGetValue(methodName, out actionDescriptor) ?? false)
-                    throw new Exception($"RPC method '{ methodName }' not found.");
+                    throw new Exception($"RPC method '{methodName}' not found.");
 
                 // Prepare the named parameters that were passed via the query string in the order that they are expected by SendCommand.
                 List<ControllerParameterDescriptor> paramInfos = actionDescriptor.Parameters.OfType<ControllerParameterDescriptor>().ToList();

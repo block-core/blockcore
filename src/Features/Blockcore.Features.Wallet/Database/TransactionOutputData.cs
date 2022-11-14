@@ -1,7 +1,6 @@
 using System;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using Blockcore.Features.Wallet.Types;
 using Blockcore.Utilities.JsonConverters;
 using LiteDB;
 using NBitcoin;

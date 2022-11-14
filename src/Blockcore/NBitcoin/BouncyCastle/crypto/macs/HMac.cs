@@ -53,7 +53,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Macs
             byte[] key = ((KeyParameter)parameters).GetKey();
             int keyLength = key.Length;
 
-            if(keyLength > this.blockLength)
+            if (keyLength > this.blockLength)
             {
                 this.digest.BlockUpdate(key, 0, keyLength);
                 this.digest.DoFinal(this.inputPad, 0);
@@ -71,18 +71,18 @@ namespace NBitcoin.BouncyCastle.Crypto.Macs
             XorPad(this.inputPad, this.blockLength, IPAD);
             XorPad(this.outputBuf, this.blockLength, OPAD);
 
-            if(this.digest is IMemoable)
+            if (this.digest is IMemoable)
             {
-                this.opadState = ((IMemoable) this.digest).Copy();
+                this.opadState = ((IMemoable)this.digest).Copy();
 
-                ((IDigest) this.opadState).BlockUpdate(this.outputBuf, 0, this.blockLength);
+                ((IDigest)this.opadState).BlockUpdate(this.outputBuf, 0, this.blockLength);
             }
 
             this.digest.BlockUpdate(this.inputPad, 0, this.inputPad.Length);
 
-            if(this.digest is IMemoable)
+            if (this.digest is IMemoable)
             {
-                this.ipadState = ((IMemoable) this.digest).Copy();
+                this.ipadState = ((IMemoable)this.digest).Copy();
             }
         }
 
@@ -105,9 +105,9 @@ namespace NBitcoin.BouncyCastle.Crypto.Macs
         {
             this.digest.DoFinal(this.outputBuf, this.blockLength);
 
-            if(this.opadState != null)
+            if (this.opadState != null)
             {
-                ((IMemoable) this.digest).Reset(this.opadState);
+                ((IMemoable)this.digest).Reset(this.opadState);
                 this.digest.BlockUpdate(this.outputBuf, this.blockLength, this.digest.GetDigestSize());
             }
             else
@@ -119,9 +119,9 @@ namespace NBitcoin.BouncyCastle.Crypto.Macs
 
             Array.Clear(this.outputBuf, this.blockLength, this.digestSize);
 
-            if(this.ipadState != null)
+            if (this.ipadState != null)
             {
-                ((IMemoable) this.digest).Reset(this.ipadState);
+                ((IMemoable)this.digest).Reset(this.ipadState);
             }
             else
             {
@@ -145,7 +145,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Macs
 
         private static void XorPad(byte[] pad, int len, byte n)
         {
-            for(int i = 0; i < len; ++i)
+            for (int i = 0; i < len; ++i)
             {
                 pad[i] ^= n;
             }

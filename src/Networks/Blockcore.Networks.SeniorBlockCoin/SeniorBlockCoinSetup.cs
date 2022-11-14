@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
-using NBitcoin;
 using Blockcore.Networks.SeniorBlockCoin.Networks.Setup;
+using NBitcoin;
 
 namespace Blockcore.Networks.SeniorBlockCoin
 {

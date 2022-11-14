@@ -3,7 +3,6 @@ using Blockcore.Configuration;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Dns
 {
@@ -47,7 +46,7 @@ namespace Blockcore.Features.Dns
         {
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
 
-            this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(DnsSettings).FullName);            
+            this.logger = nodeSettings.LoggerFactory.CreateLogger(typeof(DnsSettings).FullName);
 
             TextFileConfiguration config = nodeSettings.ConfigReader;
 

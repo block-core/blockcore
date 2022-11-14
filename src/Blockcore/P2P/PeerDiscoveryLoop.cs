@@ -74,7 +74,7 @@ namespace Blockcore.P2P
             NodeSettings nodeSettings,
             IPeerAddressManager peerAddressManager)
         {
-             ILoggerFactory loggerFactory;
+            ILoggerFactory loggerFactory;
 
             this.asyncProvider = asyncProvider;
             loggerFactory = loggerFactory1;

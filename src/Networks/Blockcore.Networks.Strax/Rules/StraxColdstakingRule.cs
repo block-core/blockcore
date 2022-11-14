@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Base.Deployments;
-using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Microsoft.Extensions.Logging;
+using NBitcoin;
 
 namespace Blockcore.Networks.Strax.Rules
 {
@@ -116,7 +116,7 @@ namespace Blockcore.Networks.Strax.Rules
                     ConsensusErrors.BadColdstakeOutputs.Throw();
                 }
             }
-            
+
             // Check that the sum of values of all inputs is smaller or equal to the sum of values of all outputs. If this does
             // not hold, the script fails. This prevents the hot balance from being reduced.
             if (posRuleContext.TotalCoinStakeValueIn > coinstakeTransaction.TotalOut)

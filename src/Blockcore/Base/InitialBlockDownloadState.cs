@@ -1,5 +1,4 @@
 ﻿using Blockcore.Configuration.Settings;
-using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Interfaces;
 using Blockcore.Networks;

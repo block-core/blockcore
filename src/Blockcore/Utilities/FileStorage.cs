@@ -138,7 +138,7 @@ namespace Blockcore.Utilities
             catch (IOException)
             {
                 // Marking the file for deletion in the future.
-                File.Move(tempFilePath, $"{ filePath}.{ uniqueId}.del");
+                File.Move(tempFilePath, $"{filePath}.{uniqueId}.del");
             }
         }
 

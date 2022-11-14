@@ -1,10 +1,10 @@
 ﻿using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
-using Microsoft.Extensions.Logging;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Utilities;
+using Microsoft.Extensions.Logging;
 
 namespace Blockcore.Networks.Strax.Rules
 {

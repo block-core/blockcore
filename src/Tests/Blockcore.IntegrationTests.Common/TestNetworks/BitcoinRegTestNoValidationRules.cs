@@ -1,5 +1,4 @@
 ﻿using System;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 
 namespace Blockcore.IntegrationTests.Common.TestNetworks

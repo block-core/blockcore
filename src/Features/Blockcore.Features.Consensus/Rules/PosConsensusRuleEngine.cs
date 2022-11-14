@@ -12,7 +12,6 @@ using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules
 {

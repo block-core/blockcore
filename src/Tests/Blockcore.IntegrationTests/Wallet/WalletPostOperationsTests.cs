@@ -14,7 +14,6 @@ using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Utilities.JsonErrors;
-using DBreeze.Utils;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;

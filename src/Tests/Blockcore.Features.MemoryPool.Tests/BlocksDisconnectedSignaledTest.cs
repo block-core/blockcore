@@ -7,7 +7,6 @@ using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.MemoryPool.Tests

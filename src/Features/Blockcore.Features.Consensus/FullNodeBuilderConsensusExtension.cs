@@ -8,7 +8,6 @@ using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Interfaces;
-using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blockcore.Features.Consensus

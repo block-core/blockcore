@@ -1,5 +1,5 @@
-﻿using Blockcore.Interfaces.UI;
-using Blockcore.Features.Wallet.Interfaces;
+﻿using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.Interfaces.UI;
 using Blockcore.Networks;
 
 namespace Blockcore.Features.Miner.UI

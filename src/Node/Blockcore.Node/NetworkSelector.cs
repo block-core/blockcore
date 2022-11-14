@@ -51,10 +51,10 @@ namespace Blockcore.Node
                 case "IMPLX":
                     nodeSettings = new NodeSettings(networksSelector: Networks.Impleum.Networks.Impleum, args: args);
                     break;
-                
+
                 case "MOL":
                     nodeSettings = new NodeSettings(networksSelector: Networks.Molie.Networks.Molie, args: args);
-                    break;   
+                    break;
 
                 case "X1":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.X1.Networks.X1, args: args);
@@ -75,11 +75,11 @@ namespace Blockcore.Node
                 case "CYBITS":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.Cybits.Networks.Cybits, args: args);
                     break;
-               
+
                 case "SBC":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.SeniorBlockCoin.Networks.Networks.SeniorBlockCoin, args: args);
                     break;
-               
+
                 case "RSC":
                     nodeSettings = new NodeSettings(networksSelector: Blockcore.Networks.RoyalSportsCity.Networks.Networks.RoyalSportsCity, args: args);
                     break;

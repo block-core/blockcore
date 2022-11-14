@@ -32,7 +32,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
         /// Validation of the witness commitment if its found.
         /// </summary>
         public Task ValidateWitnessCommitment(RuleContext context, Network network)
-        { 
+        {
             if (context.SkipValidation)
                 return Task.CompletedTask;
 

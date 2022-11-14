@@ -19,7 +19,7 @@ namespace Blockcore.Networks.X1.Rules
         public override void Initialize()
         {
             this.posConsensusOptions = (this.Parent as PosConsensusRuleEngine)?.Network.Consensus.Options as X1ConsensusOptions;
-            if(this.posConsensusOptions == null)
+            if (this.posConsensusOptions == null)
                 throw new ArgumentNullException(nameof(this.posConsensusOptions));
         }
 
@@ -30,7 +30,7 @@ namespace Blockcore.Networks.X1.Rules
 
             // Check consistency of ChainedHeader height and the height written in the coinbase tx
             var newHeight = GetHeightOfBlockToValidateSafe(context);
-            
+
             // Get the algorithm of the block we are looking at
             bool isProofOfStake = BlockStake.IsProofOfStake(context.ValidationContext.BlockToValidate);
 
@@ -40,7 +40,7 @@ namespace Blockcore.Networks.X1.Rules
                 // yes, rule passed
                 return Task.CompletedTask;
             }
-               
+
             // no, this block is not acceptable
             this.Logger.LogTrace("(-)[BAD-POS-POW-RATCHET-SEQUENCE]");
             X1ConsensusErrors.BadPosPowRatchetSequence.Throw();

@@ -561,9 +561,9 @@ namespace NBitcoin
         public static bool operator <(Money left, Money right)
         {
             if (left == null)
-               // throw new ArgumentNullException("left");
-            if (right == null)
-                throw new ArgumentNullException("right");
+                // throw new ArgumentNullException("left");
+                if (right == null)
+                    throw new ArgumentNullException("right");
             return left._Satoshis < right._Satoshis;
         }
         public static bool operator >(Money left, Money right)

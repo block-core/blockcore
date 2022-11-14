@@ -218,8 +218,8 @@ namespace Blockcore.Networks.City.Networks
                 .Register<FetchUtxosetRule>()
                 .Register<TransactionDuplicationActivationRule>()
                 .Register<CityCheckPosUtxosetRule>() // implements BIP68, MaxSigOps and BlockReward calculation
-                                                 // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
-                                                 // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
+                                                     // Place the PosColdStakingRule after the PosCoinviewRule to ensure that all input scripts have been evaluated
+                                                     // and that the "IsColdCoinStake" flag would have been set by the OP_CHECKCOLDSTAKEVERIFY opcode if applicable.
                 .Register<PosColdStakingRule>()
                 .Register<PushUtxosetRule>()
                 .Register<FlushUtxosetRule>();

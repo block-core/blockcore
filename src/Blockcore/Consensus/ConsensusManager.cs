@@ -28,7 +28,7 @@ namespace Blockcore.Consensus
     /// <inheritdoc cref="IConsensusManager"/>
     public class ConsensusManager : IConsensusManager
     {
-      
+
         /// <summary>
         /// Maximum memory in bytes that can be taken by the blocks that were downloaded but
         /// not yet validated or included to the consensus chain.
@@ -1309,7 +1309,7 @@ namespace Blockcore.Consensus
             return blockHashes.Select(h => chainedHeaderBlocks[h]).ToArray();
         }
 
-      
+
 
         /// <summary>
         /// Processes items in the <see cref="toDownloadQueue"/> and ask the block puller for blocks to download.
@@ -1330,9 +1330,9 @@ namespace Blockcore.Consensus
 
                 this.logger.LogDebug("{0} slots are available.", this.freeSlots);
 
-           if  (!this.ValidateConditions())
-                return; 
-                
+                if (!this.ValidateConditions())
+                    return;
+
                 BlockDownloadRequest request = this.toDownloadQueue.Peek();
 
                 if (request.BlocksToDownload.Count <= this.maxBlocksToAsk)
@@ -1370,44 +1370,44 @@ namespace Blockcore.Consensus
 
             if (this.freeSlots < ConsumptionThresholdSlots)
             {
-                    this.logger.LogTrace("(-)[NOT_ENOUGH_SLOTS]");
-                    return false;
+                this.logger.LogTrace("(-)[NOT_ENOUGH_SLOTS]");
+                return false;
             }
 
             if (this.chainedHeaderTree.UnconsumedBlocksCount > MaxUnconsumedBlocksCount)
             {
-                    this.logger.LogTrace("(-)[MAX_UNCONSUMED_BLOCKS_REACHED]");
-                    return false;
+                this.logger.LogTrace("(-)[MAX_UNCONSUMED_BLOCKS_REACHED]");
+                return false;
             }
 
             long freeBytes = this.maxUnconsumedBlocksDataBytes - this.chainedHeaderTree.UnconsumedBlocksDataBytes - this.expectedBlockDataBytes;
-                this.logger.LogDebug("{0} bytes worth of blocks is available for download.", freeBytes);
+            this.logger.LogDebug("{0} bytes worth of blocks is available for download.", freeBytes);
 
-                if (freeBytes <= this.ConsumptionThresholdBytes)
-                {
-                    this.logger.LogTrace("(-)[THRESHOLD_NOT_MET]");
-                    return false;
+            if (freeBytes <= this.ConsumptionThresholdBytes)
+            {
+                this.logger.LogTrace("(-)[THRESHOLD_NOT_MET]");
+                return false;
             }
 
             // To fix issue https://github.com/stratisproject/StratisBitcoinFullNode/issues/2294#issue-364513736
             // if there are no samples, assume the worst scenario (you are going to donwload full blocks).
 
-          this.avgSize = (long)this.blockPuller.GetAverageBlockSizeBytes();
+            this.avgSize = (long)this.blockPuller.GetAverageBlockSizeBytes();
 
             if (avgSize == 0)
-                {
-                    avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
-                }
+            {
+                avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
+            }
 
-                 this.maxBlocksToAsk = Math.Min((int)(freeBytes / this.avgSize), this.freeSlots);
+            this.maxBlocksToAsk = Math.Min((int)(freeBytes / this.avgSize), this.freeSlots);
 
-                this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", this.avgSize, maxBlocksToAsk);
+            this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", this.avgSize, maxBlocksToAsk);
 
-                if (this.maxBlocksToAsk <= 0)
-                {
-                    this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
-                    return false;
-                }
+            if (this.maxBlocksToAsk <= 0)
+            {
+                this.logger.LogTrace("(-)[NOT_ENOUGH_FREE_BYTES]");
+                return false;
+            }
 
 
             return true;
@@ -1478,8 +1478,8 @@ namespace Blockcore.Consensus
                 long tipAge = currentTime - this.chainState.ConsensusTip.Header.BlockTime.ToUnixTimeSeconds();
                 long maxTipAge = this.consensusSettings.MaxTipAge;
 
-                log.AppendLine($"Tip Age: { TimeSpan.FromSeconds(tipAge).ToString(@"dd\.hh\:mm\:ss") } (maximum is { TimeSpan.FromSeconds(maxTipAge).ToString(@"dd\.hh\:mm\:ss") })");
-                log.AppendLine($"In IBD Stage: { (this.isIbd ? "Yes" : "No") }");
+                log.AppendLine($"Tip Age: {TimeSpan.FromSeconds(tipAge).ToString(@"dd\.hh\:mm\:ss")} (maximum is {TimeSpan.FromSeconds(maxTipAge).ToString(@"dd\.hh\:mm\:ss")})");
+                log.AppendLine($"In IBD Stage: {(this.isIbd ? "Yes" : "No")}");
 
                 string unconsumedBlocks = FormatBigNumber(this.chainedHeaderTree.UnconsumedBlocksCount);
 
@@ -1496,7 +1496,7 @@ namespace Blockcore.Consensus
 
         /// <summary>Formats the big number.</summary>
         /// <remarks><c>123456789</c> => <c>123,456,789</c>.</remarks>
-       static private string FormatBigNumber(long number)
+        static private string FormatBigNumber(long number)
         {
             return $"{number:#,##0}";
         }

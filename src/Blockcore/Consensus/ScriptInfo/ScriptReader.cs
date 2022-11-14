@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using NBitcoin;
 using NBitcoin.DataEncoders;
@@ -15,9 +14,9 @@ namespace Blockcore.Consensus.ScriptInfo
         //Copied from satoshi's code
         public static string GetOpName(OpcodeType opcode)
         {
-            if(!_ValidOpCode[(byte)opcode])
+            if (!_ValidOpCode[(byte)opcode])
                 return "OP_UNKNOWN";
-            switch(opcode)
+            switch (opcode)
             {
                 // push value
                 case OpcodeType.OP_0:
@@ -271,10 +270,10 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             _ValidOpCode = GetValidOpCode();
             _OpcodeByName = new Dictionary<string, OpcodeType>();
-            foreach(OpcodeType code in Enum.GetValues(typeof(OpcodeType)).Cast<OpcodeType>().Distinct())
+            foreach (OpcodeType code in Enum.GetValues(typeof(OpcodeType)).Cast<OpcodeType>().Distinct())
             {
                 string name = GetOpName(code);
-                if(name != "OP_UNKNOWN")
+                if (name != "OP_UNKNOWN")
                     _OpcodeByName.AddOrReplace(name, code);
             }
             _OpcodeByName.AddOrReplace("OP_TRUE", OpcodeType.OP_1);
@@ -287,7 +286,7 @@ namespace Blockcore.Consensus.ScriptInfo
             _OpcodeByName.AddOrReplace("OP_CHECKCOLDSTAKEVERIFY", OpcodeType.OP_CHECKCOLDSTAKEVERIFY);
             _OpcodeByName.AddOrReplace("OP_NOP10", OpcodeType.OP_CHECKCOLDSTAKEVERIFY);
 
-            foreach(object[] op in new[]
+            foreach (object[] op in new[]
             {
                 new object[]{"OP_0", OpcodeType.OP_0},
                 new object[]{"OP_1", OpcodeType.OP_1},
@@ -317,20 +316,20 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             var op = new Op();
             op.PushData = data;
-            if(data.Length == 0)
+            if (data.Length == 0)
                 op.Code = OpcodeType.OP_0;
-            else if(data.Length == 1 && (byte)1 <= data[0] && data[0] <= (byte)16)
+            else if (data.Length == 1 && (byte)1 <= data[0] && data[0] <= (byte)16)
                 op.Code = (OpcodeType)(data[0] + (byte)OpcodeType.OP_1 - 1);
-            else if(data.Length == 1 && (byte)0x81 == data[0])
+            else if (data.Length == 1 && (byte)0x81 == data[0])
                 op.Code = OpcodeType.OP_1NEGATE;
-            else if(0x01 <= data.Length && data.Length <= 0x4b)
+            else if (0x01 <= data.Length && data.Length <= 0x4b)
                 op.Code = (OpcodeType)(byte)data.Length;
-            else if(data.Length <= 0xFF)
+            else if (data.Length <= 0xFF)
                 op.Code = OpcodeType.OP_PUSHDATA1;
 #if !NETCORE
-            else if(data.LongLength <= 0xFFFF)
+            else if (data.LongLength <= 0xFFFF)
                 op.Code = OpcodeType.OP_PUSHDATA2;
-            else if(data.LongLength <= 0xFFFFFFFF)
+            else if (data.LongLength <= 0xFFFFFFFF)
                 op.Code = OpcodeType.OP_PUSHDATA4;
 #else
             else if(data.Length <= 0xFFFF)
@@ -351,7 +350,7 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             get
             {
-                if(this._Name == null) this._Name = GetOpName(this.Code);
+                if (this._Name == null) this._Name = GetOpName(this.Code);
                 return this._Name;
             }
         }
@@ -362,15 +361,15 @@ namespace Blockcore.Consensus.ScriptInfo
         private static bool[] GetValidOpCode()
         {
             var valid = new bool[256];
-            foreach(object val in Enum.GetValues(typeof(OpcodeType)))
+            foreach (object val in Enum.GetValues(typeof(OpcodeType)))
             {
                 valid[(byte)val] = true;
             }
-            for(byte i = 0; ; i++)
+            for (byte i = 0; ; i++)
             {
-                if(IsPushCode((OpcodeType)i))
+                if (IsPushCode((OpcodeType)i))
                     valid[i] = true;
-                if(i == 255)
+                if (i == 255)
                     break;
             }
             return valid;
@@ -398,36 +397,36 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             var bitStream = new BitcoinStream(result, true);
 
-            if(this.Code == OpcodeType.OP_0)
+            if (this.Code == OpcodeType.OP_0)
             {
                 //OP_0 already pushed
                 return;
             }
 
-            if(OpcodeType.OP_1 <= this.Code && this.Code <= OpcodeType.OP_16)
+            if (OpcodeType.OP_1 <= this.Code && this.Code <= OpcodeType.OP_16)
             {
                 //OP_1 to OP_16 already pushed
                 return;
             }
-            if(this.Code == OpcodeType.OP_1NEGATE)
+            if (this.Code == OpcodeType.OP_1NEGATE)
             {
                 //OP_1Negate already pushed
                 return;
             }
 
-            if(0x01 <= (byte) this.Code && (byte) this.Code <= 0x4b)
+            if (0x01 <= (byte)this.Code && (byte)this.Code <= 0x4b)
             {
                 //Data length already pushed
             }
-            else if(this.Code == OpcodeType.OP_PUSHDATA1)
+            else if (this.Code == OpcodeType.OP_PUSHDATA1)
             {
                 bitStream.ReadWrite((byte)data.Length);
             }
-            else if(this.Code == OpcodeType.OP_PUSHDATA2)
+            else if (this.Code == OpcodeType.OP_PUSHDATA2)
             {
                 bitStream.ReadWrite((ushort)data.Length);
             }
-            else if(this.Code == OpcodeType.OP_PUSHDATA4)
+            else if (this.Code == OpcodeType.OP_PUSHDATA4)
             {
                 bitStream.ReadWrite((uint)data.Length);
             }
@@ -439,28 +438,28 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             uint len = 0;
             var bitStream = new BitcoinStream(stream, false);
-            if(this.Code == 0)
+            if (this.Code == 0)
                 return new byte[0];
 
-            if((byte)OpcodeType.OP_1 <= (byte) this.Code && (byte) this.Code <= (byte)OpcodeType.OP_16)
+            if ((byte)OpcodeType.OP_1 <= (byte)this.Code && (byte)this.Code <= (byte)OpcodeType.OP_16)
             {
                 return new byte[] { (byte)(this.Code - OpcodeType.OP_1 + 1) };
             }
 
-            if(this.Code == OpcodeType.OP_1NEGATE)
+            if (this.Code == OpcodeType.OP_1NEGATE)
             {
                 return new byte[] { 0x81 };
             }
 
             try
             {
-                if(0x01 <= (byte) this.Code && (byte) this.Code <= 0x4b)
-                    len = (uint) this.Code;
-                else if(this.Code == OpcodeType.OP_PUSHDATA1)
+                if (0x01 <= (byte)this.Code && (byte)this.Code <= 0x4b)
+                    len = (uint)this.Code;
+                else if (this.Code == OpcodeType.OP_PUSHDATA1)
                     len = bitStream.ReadWrite((byte)0);
-                else if(this.Code == OpcodeType.OP_PUSHDATA2)
+                else if (this.Code == OpcodeType.OP_PUSHDATA2)
                     len = bitStream.ReadWrite((ushort)0);
-                else if(this.Code == OpcodeType.OP_PUSHDATA4)
+                else if (this.Code == OpcodeType.OP_PUSHDATA4)
                     len = bitStream.ReadWrite((uint)0);
                 else
                 {
@@ -471,11 +470,11 @@ namespace Blockcore.Consensus.ScriptInfo
 
                 byte[] data = null;
 
-                if(len <= MAX_SCRIPT_ELEMENT_SIZE) //Most of the time
+                if (len <= MAX_SCRIPT_ELEMENT_SIZE) //Most of the time
                 {
                     data = new byte[len];
                     int readen = stream.Read(data, 0, data.Length);
-                    if(readen != data.Length)
+                    if (readen != data.Length)
                     {
                         this.IsInvalid = true;
                         return new byte[0];
@@ -484,10 +483,10 @@ namespace Blockcore.Consensus.ScriptInfo
                 else //Mitigate against a big array allocation
                 {
                     var bytes = new List<byte>();
-                    for(int i = 0; i < len; i++)
+                    for (int i = 0; i < len; i++)
                     {
                         int b = stream.ReadByte();
-                        if(b < 0)
+                        if (b < 0)
                         {
                             this.IsInvalid = true;
                             return new byte[0];
@@ -499,7 +498,7 @@ namespace Blockcore.Consensus.ScriptInfo
                 return data;
 
             }
-            catch(EndOfStreamException)
+            catch (EndOfStreamException)
             {
                 this.IsInvalid = true;
                 return new byte[0];
@@ -517,16 +516,16 @@ namespace Blockcore.Consensus.ScriptInfo
 
         public override string ToString()
         {
-            if(this.PushData != null)
+            if (this.PushData != null)
             {
-                if(this.PushData.Length == 0)
+                if (this.PushData.Length == 0)
                     return "0";
                 string result = Encoders.Hex.EncodeData(this.PushData);
                 return result.Length == 2 && result[0] == '0' ? result.Substring(1) : result;
             }
-            else if(this.Name == "OP_UNKNOWN")
+            else if (this.Name == "OP_UNKNOWN")
             {
-                return this.Name + "(" + string.Format("0x{0:x2}", (byte) this.Code) + ")";
+                return this.Name + "(" + string.Format("0x{0:x2}", (byte)this.Code) + ")";
             }
             else
             {
@@ -536,8 +535,8 @@ namespace Blockcore.Consensus.ScriptInfo
 
         public void WriteTo(Stream stream)
         {
-            stream.WriteByte((byte) this.Code);
-            if(this.PushData != null)
+            stream.WriteByte((byte)this.Code);
+            if (this.PushData != null)
             {
                 PushDataToStream(this.PushData, stream);
             }
@@ -552,29 +551,29 @@ namespace Blockcore.Consensus.ScriptInfo
 
             bool isOpCode = GetOpCode(opname, out opcode);
 
-            if(
+            if (
                 (!isOpCode || IsPushCode(opcode))
                 && !opname.StartsWith(unknown))
             {
-                if(isOpCode && opcode == OpcodeType.OP_0)
+                if (isOpCode && opcode == OpcodeType.OP_0)
                     return GetPushOp(new byte[0]);
                 opname = opname.Replace("OP_", "");
-                if(opname.Equals("TRUE", StringComparison.OrdinalIgnoreCase))
+                if (opname.Equals("TRUE", StringComparison.OrdinalIgnoreCase))
                     opname = "1";
-                if(opname.Equals("FALSE", StringComparison.OrdinalIgnoreCase))
+                if (opname.Equals("FALSE", StringComparison.OrdinalIgnoreCase))
                     opname = "0";
                 return GetPushOp(Encoders.Hex.DecodeData(opname.Length == 1 ? "0" + opname : opname));
             }
-            else if(opname.StartsWith(unknown))
+            else if (opname.StartsWith(unknown))
             {
                 try
                 {
-                    if(opname.StartsWith(unknown))
+                    if (opname.StartsWith(unknown))
                     {
                         opcode = (OpcodeType)(Encoders.Hex.DecodeData(opname.Substring(unknown.Length, 2))[0]);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw new FormatException("Invalid unknown opcode", ex);
                 }
@@ -624,18 +623,19 @@ namespace Blockcore.Consensus.ScriptInfo
                             Code = codeType,
                             PushData = new byte[] { 0x81 }
                         };
-                    } else
+                    }
+                    else
                     {
                         return new Op();
                     }
-             
-                    
+
+
                 }
             }
 
             catch (InvalidOperationException ioe)
             {
-                throw new InvalidOperationException( ioe+ " Push OP without any data provided detected, Op.PushData instead");
+                throw new InvalidOperationException(ioe + " Push OP without any data provided detected, Op.PushData instead");
             }
 
         }
@@ -644,13 +644,13 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             var builder = new StringBuilder();
             int r;
-            while((r = textReader.Read()) != -1)
+            while ((r = textReader.Read()) != -1)
             {
                 char ch = (char)r;
                 bool isSpace = DataEncoder.IsSpace(ch);
-                if(isSpace && builder.Length == 0)
+                if (isSpace && builder.Length == 0)
                     continue;
-                if(isSpace && builder.Length != 0)
+                if (isSpace && builder.Length != 0)
                     break;
                 builder.Append((char)r);
             }
@@ -683,30 +683,30 @@ namespace Blockcore.Consensus.ScriptInfo
         public int? GetInt()
         {
             long? l = GetLong();
-            if(l == null)
+            if (l == null)
                 return null;
-            if(l.Value > int.MaxValue)
+            if (l.Value > int.MaxValue)
                 return int.MaxValue;
-            else if(l.Value < int.MinValue)
+            else if (l.Value < int.MinValue)
                 return int.MinValue;
             return (int)l.Value;
         }
 
         public long? GetLong()
         {
-            if(this.PushData == null)
+            if (this.PushData == null)
                 return null;
             byte[] vch = this.PushData;
-            if(vch.Length == 0)
+            if (vch.Length == 0)
                 return 0;
 
             long result = 0;
-            for(int i = 0; i != vch.Length; ++i)
+            for (int i = 0; i != vch.Length; ++i)
                 result |= ((long)(vch[i])) << 8 * i;
 
             // If the input vector's most significant byte is 0x80, remove it from
             // the result's msb and return a negative.
-            if((vch[vch.Length - 1] & 0x80) != 0)
+            if ((vch[vch.Length - 1] & 0x80) != 0)
             {
                 ulong temp = ~(0x80UL << (8 * (vch.Length - 1)));
                 return -((long)((ulong)result & temp));
@@ -740,12 +740,12 @@ namespace Blockcore.Consensus.ScriptInfo
         public Op Read()
         {
             int b = this.Inner.ReadByte();
-            if(b == -1)
+            if (b == -1)
                 return null;
 
             var opcode = (OpcodeType)b;
 
-            if(Op.IsPushCode(opcode))
+            if (Op.IsPushCode(opcode))
             {
                 var op = new Op();
                 op.Code = opcode;
@@ -765,7 +765,7 @@ namespace Blockcore.Consensus.ScriptInfo
         public IEnumerable<Op> ToEnumerable()
         {
             Op code;
-            while((code = Read()) != null)
+            while ((code = Read()) != null)
                 yield return code;
         }
 

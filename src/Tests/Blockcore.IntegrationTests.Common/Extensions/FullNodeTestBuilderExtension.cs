@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Blockcore.Builder;
 using Blockcore.Builder.Feature;
-using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.Interfaces;

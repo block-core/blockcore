@@ -11,7 +11,6 @@ using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Base
 {
@@ -206,7 +205,7 @@ namespace Blockcore.Base
             bool startWarningLoopNow = false;
             lock (this.lockObject)
             {
-                if (this.SwitchedOff==null)
+                if (this.SwitchedOff == null)
                 {
                     HashSet<IPAddress> sources = isInboundConnection ? this.inboundSampleSources : this.outboundSampleSources;
                     bool alreadyIncluded = sources.Contains(peerAddress);

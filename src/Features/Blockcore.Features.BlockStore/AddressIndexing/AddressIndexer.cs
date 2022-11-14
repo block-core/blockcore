@@ -19,9 +19,9 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LiteDB;
-using FileMode = LiteDB.FileMode;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
+using FileMode = LiteDB.FileMode;
 using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
@@ -367,7 +367,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 AddressIndexerTipData tipData = this.tipDataStore.FindAll().FirstOrDefault();
 
                 if (tipData == null)
-                { 
+                {
                     tipData = new AddressIndexerTipData();
                 }
 
@@ -512,7 +512,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
 
                 // Remove outpoints that were consumed.
                 foreach (OutPoint consumedOutPoint in inputs.Select(x => x.PrevOut))
-                { 
+                {
                     this.outpointsRepository.RemoveOutPointData(consumedOutPoint);
                 }
             }

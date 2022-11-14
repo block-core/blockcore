@@ -11,7 +11,7 @@ namespace NBitcoin.BouncyCastle.Math.EC.Multiplier
 
         public GlvMultiplier(ECCurve curve, GlvEndomorphism glvEndomorphism)
         {
-            if(curve == null || curve.Order == null)
+            if (curve == null || curve.Order == null)
                 throw new ArgumentException("Need curve with known group order", "curve");
 
             this.curve = curve;
@@ -20,7 +20,7 @@ namespace NBitcoin.BouncyCastle.Math.EC.Multiplier
 
         protected override ECPoint MultiplyPositive(ECPoint p, BigInteger k)
         {
-            if(!this.curve.Equals(p.Curve))
+            if (!this.curve.Equals(p.Curve))
                 throw new InvalidOperationException();
 
             BigInteger n = p.Curve.Order;
@@ -28,7 +28,7 @@ namespace NBitcoin.BouncyCastle.Math.EC.Multiplier
             BigInteger a = ab[0], b = ab[1];
 
             ECPointMap pointMap = this.glvEndomorphism.PointMap;
-            if(this.glvEndomorphism.HasEfficientPointMap)
+            if (this.glvEndomorphism.HasEfficientPointMap)
             {
                 return ECAlgorithms.ImplShamirsTrickWNaf(p, a, pointMap, b);
             }

@@ -47,7 +47,7 @@ namespace Blockcore.Features.NodeHost.Tests
             this.apiSettings.UseHttps = false;
             this.SetCertificateInStore(true);
 
-             Program.Initialize(null, new FullNode(), this.apiSettings, this.certificateStore, this.webHostBuilder);
+            Program.Initialize(null, new FullNode(), this.apiSettings, this.certificateStore, this.webHostBuilder);
 
             this.certificateStore.DidNotReceiveWithAnyArgs().TryGet(null, out _);
         }

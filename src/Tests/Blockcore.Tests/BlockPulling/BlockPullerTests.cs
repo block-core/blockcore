@@ -342,7 +342,7 @@ namespace Blockcore.Tests.BlockPulling
             this.puller.NewPeerTipClaimed(peer1, peer1Headers.Last());
             this.puller.NewPeerTipClaimed(peer2, peer2Headers.Last());
 
-            var job = new DownloadJob(1, new List<ChainedHeader>(peer1Headers)); 
+            var job = new DownloadJob(1, new List<ChainedHeader>(peer1Headers));
             var failedHashes = new List<uint256>();
 
             List<AssignedDownload> assignedDownloads = this.puller.DistributeHeadersLocked(job, failedHashes, int.MaxValue);

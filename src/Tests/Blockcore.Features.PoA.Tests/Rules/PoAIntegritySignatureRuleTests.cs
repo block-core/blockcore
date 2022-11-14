@@ -24,7 +24,7 @@ namespace Blockcore.Features.PoA.Tests.Rules
         {
             Block block = this.network.Consensus.ConsensusFactory.CreateBlock();
 
-            var validationContext = new ValidationContext() { ChainedHeaderToValidate = this.currentHeader, BlockToValidate = block};
+            var validationContext = new ValidationContext() { ChainedHeaderToValidate = this.currentHeader, BlockToValidate = block };
             var ruleContext = new RuleContext(validationContext, DateTimeOffset.Now);
 
             var tool = new KeyTool(new DataFolder(string.Empty));

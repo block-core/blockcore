@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Net;
 using Blockcore.Consensus.TransactionInfo;
-using Microsoft.AspNetCore.Mvc;
-using NBitcoin;
 using Blockcore.Controllers.Models;
-using Blockcore.Features.WalletWatchOnly.Models;
 using Blockcore.Features.WalletWatchOnly.Interfaces;
+using Blockcore.Features.WalletWatchOnly.Models;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 {
@@ -40,7 +39,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
         /// <param name="address">The base58 address to add to the watch list.</param>
         [Route("watch")]
         [HttpPost]
-        public IActionResult Watch([FromBody]string address)
+        public IActionResult Watch([FromBody] string address)
         {
             // Checks the request is valid.
             if (string.IsNullOrEmpty(address))

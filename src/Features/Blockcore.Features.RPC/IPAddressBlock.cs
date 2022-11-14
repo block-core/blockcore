@@ -122,7 +122,7 @@ namespace Blockcore.Features.RPC
             if (this.CIDRSuffix == this.CIDRMaxSuffix)
                 return this.BlockAddress.ToString();
 
-            return $"{ this.BlockAddress }/{ this.CIDRSuffix }";
+            return $"{this.BlockAddress}/{this.CIDRSuffix}";
         }
     }
 }

@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Blockcore.Configuration;
+﻿using Blockcore.Configuration;
 using Blockcore.Connection;
-using Blockcore.Connection.Broadcasting;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.BlockStore;
@@ -14,9 +12,7 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Moq;
-using NBitcoin;
 
 using Xunit;
 

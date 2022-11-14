@@ -64,7 +64,7 @@ namespace Blockcore.Features.Miner.Tests
                 .ToArray();
 
             var shouldStakeSplitForThe2000Coin = this.posMinting.ShouldSplitStake(
-                 stakedUtxosCount: amounts.Length, 
+                 stakedUtxosCount: amounts.Length,
                  amountStaked: amounts.Sum(u => u.Satoshi),
                  coinValue: amounts.First(),
                  chainHeight: ChainHeight);
@@ -112,7 +112,7 @@ namespace Blockcore.Features.Miner.Tests
             var coinStakeContext = BuildNewCoinstakeContext();
 
             var expectToSplit = false;
-            (long coinstakeInputValue, Transaction transaction) = 
+            (long coinstakeInputValue, Transaction transaction) =
                 GetCoinstakeTransaction(amounts, coinStakeContext, expectToSplit);
 
             var nonZeroOutputs = transaction.Outputs.Skip(1).ToList();
@@ -156,7 +156,7 @@ namespace Blockcore.Features.Miner.Tests
 
             //only a rough calculation to prevent infinite loop later in the test
             var targetSplitCoinValue = amounts.Sum(u => u.Satoshi) / (500 + 1) * 3;
-            var maxIterations = Math.Ceiling((Math.Log(amounts.Last().Satoshi, PosMinting.SplitFactor) 
+            var maxIterations = Math.Ceiling((Math.Log(amounts.Last().Satoshi, PosMinting.SplitFactor)
                                        - Math.Log(targetSplitCoinValue, PosMinting.SplitFactor))) + 1;
 
             var iterations = 0;

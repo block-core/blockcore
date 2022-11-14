@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using Blockcore.AsyncWork;
 using Blockcore.Base;
-using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;

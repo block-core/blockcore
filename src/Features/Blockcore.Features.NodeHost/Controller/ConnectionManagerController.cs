@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using Blockcore.Connection;
-using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
-using Blockcore.Utilities.Extensions;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

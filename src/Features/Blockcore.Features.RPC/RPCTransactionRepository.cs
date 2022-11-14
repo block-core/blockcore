@@ -10,11 +10,11 @@ namespace Blockcore.Features.RPC
         private RPCClient _Client;
         public RPCTransactionRepository(RPCClient client)
         {
-            if(client == null)
+            if (client == null)
                 throw new ArgumentNullException("client");
             this._Client = client;
         }
-#region ITransactionRepository Members
+        #region ITransactionRepository Members
 
         public Task<Transaction> GetAsync(uint256 txId)
         {
@@ -31,6 +31,6 @@ namespace Blockcore.Features.RPC
             return Task.FromResult(false);
         }
 
-#endregion
+        #endregion
     }
 }

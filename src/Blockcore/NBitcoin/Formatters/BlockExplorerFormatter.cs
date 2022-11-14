@@ -20,7 +20,7 @@ namespace NBitcoin.Formatters
 
             var vin = (JArray)json.GetValue("in");
             int vinCount = (int)json.GetValue("vin_sz");
-            for(int i = 0; i < vinCount; i++)
+            for (int i = 0; i < vinCount; i++)
             {
                 var jsonIn = (JObject)vin[i];
                 var txin = new TxIn();
@@ -32,7 +32,7 @@ namespace NBitcoin.Formatters
 
 
                 string script = (string)jsonIn.GetValue("scriptSig");
-                if(script != null)
+                if (script != null)
                 {
                     txin.ScriptSig = new Script(script);
                 }
@@ -43,7 +43,7 @@ namespace NBitcoin.Formatters
                 }
 
                 JToken seq = jsonIn.GetValue("sequence");
-                if(seq != null)
+                if (seq != null)
                 {
                     txin.Sequence = (uint)seq;
                 }
@@ -51,7 +51,7 @@ namespace NBitcoin.Formatters
 
             var vout = (JArray)json.GetValue("out");
             int voutCount = (int)json.GetValue("vout_sz");
-            for(int i = 0; i < voutCount; i++)
+            for (int i = 0; i < voutCount; i++)
             {
                 var jsonOut = (JObject)vout[i];
                 var txout = new TxOut();
@@ -76,7 +76,7 @@ namespace NBitcoin.Formatters
 
             writer.WritePropertyName("in");
             writer.WriteStartArray();
-            foreach(IndexedTxIn input in tx.Inputs.AsIndexedInputs())
+            foreach (IndexedTxIn input in tx.Inputs.AsIndexedInputs())
             {
                 TxIn txin = input.TxIn;
                 writer.WriteStartObject();
@@ -86,7 +86,7 @@ namespace NBitcoin.Formatters
                 WritePropertyValue(writer, "n", txin.PrevOut.N);
                 writer.WriteEndObject();
 
-                if(txin.PrevOut.Hash == uint256.Zero)
+                if (txin.PrevOut.Hash == uint256.Zero)
                 {
                     WritePropertyValue(writer, "coinbase", Encoders.Hex.EncodeData(txin.ScriptSig.ToBytes()));
                 }
@@ -94,11 +94,11 @@ namespace NBitcoin.Formatters
                 {
                     WritePropertyValue(writer, "scriptSig", txin.ScriptSig.ToString());
                 }
-                if(input.WitScript != WitScript.Empty)
+                if (input.WitScript != WitScript.Empty)
                 {
                     WritePropertyValue(writer, "witness", input.WitScript.ToString());
                 }
-                if(txin.Sequence != uint.MaxValue)
+                if (txin.Sequence != uint.MaxValue)
                 {
                     WritePropertyValue(writer, "sequence", (uint)txin.Sequence);
                 }
@@ -108,7 +108,7 @@ namespace NBitcoin.Formatters
             writer.WritePropertyName("out");
             writer.WriteStartArray();
 
-            foreach(TxOut txout in tx.Outputs)
+            foreach (TxOut txout in tx.Outputs)
             {
                 writer.WriteStartObject();
                 WritePropertyValue(writer, "value", txout.Value.ToString(false, false));

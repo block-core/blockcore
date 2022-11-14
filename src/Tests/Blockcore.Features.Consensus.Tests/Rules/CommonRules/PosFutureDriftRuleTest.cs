@@ -2,7 +2,6 @@
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Networks.Stratis.Rules;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules

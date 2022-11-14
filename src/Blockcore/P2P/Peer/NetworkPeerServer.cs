@@ -14,7 +14,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
-using NBitcoin.Protocol;
 
 namespace Blockcore.P2P.Peer
 {

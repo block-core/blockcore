@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Blockcore.Interfaces.UI
+﻿namespace Blockcore.Interfaces.UI
 {
     public interface INavigationItem
     {

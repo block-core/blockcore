@@ -27,7 +27,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 
         public GenerateCoinsFastDateTimeProvider(ISignals signals)
         {
-            this.blockConnectedSubscription =  signals.Subscribe<BlockConnected>(this.OnBlockConnected);
+            this.blockConnectedSubscription = signals.Subscribe<BlockConnected>(this.OnBlockConnected);
         }
 
         public long GetTime()

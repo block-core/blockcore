@@ -13,13 +13,11 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
-using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
@@ -30,7 +28,6 @@ using Microsoft.Extensions.Logging;
 using NBitcoin;
 using NBitcoin.BuilderExtensions;
 using NBitcoin.Crypto;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Features.Miner.Staking
 {
@@ -969,7 +966,7 @@ namespace Blockcore.Features.Miner.Staking
                     if (redeemScript == null)
                         throw new MinerException($"RedeemScript was not found for address {input.Address.Address} with output {input.TxOut.ScriptPubKey}");
 
-                     var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, redeemScript);
+                    var scriptCoin = ScriptCoin.Create(this.network, input.OutPoint, input.TxOut, redeemScript);
 
                     transactionBuilder.AddCoins(scriptCoin);
                 }

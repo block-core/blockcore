@@ -11,10 +11,10 @@ namespace NBitcoin.BouncyCastle.Utilities
             bool[] a,
             bool[] b)
         {
-            if(a == b)
+            if (a == b)
                 return true;
 
-            if(a == null || b == null)
+            if (a == null || b == null)
                 return false;
 
             return HaveSameContents(a, b);
@@ -24,10 +24,10 @@ namespace NBitcoin.BouncyCastle.Utilities
             char[] a,
             char[] b)
         {
-            if(a == b)
+            if (a == b)
                 return true;
 
-            if(a == null || b == null)
+            if (a == null || b == null)
                 return false;
 
             return HaveSameContents(a, b);
@@ -43,10 +43,10 @@ namespace NBitcoin.BouncyCastle.Utilities
             byte[] a,
             byte[] b)
         {
-            if(a == b)
+            if (a == b)
                 return true;
 
-            if(a == null || b == null)
+            if (a == null || b == null)
                 return false;
 
             return HaveSameContents(a, b);
@@ -72,10 +72,10 @@ namespace NBitcoin.BouncyCastle.Utilities
             byte[] b)
         {
             int i = a.Length;
-            if(i != b.Length)
+            if (i != b.Length)
                 return false;
             int cmp = 0;
-            while(i != 0)
+            while (i != 0)
             {
                 --i;
                 cmp |= (a[i] ^ b[i]);
@@ -87,22 +87,22 @@ namespace NBitcoin.BouncyCastle.Utilities
             int[] a,
             int[] b)
         {
-            if(a == b)
+            if (a == b)
                 return true;
 
-            if(a == null || b == null)
+            if (a == null || b == null)
                 return false;
 
             return HaveSameContents(a, b);
         }
 
-        
+
         public static bool AreEqual(uint[] a, uint[] b)
         {
-            if(a == b)
+            if (a == b)
                 return true;
 
-            if(a == null || b == null)
+            if (a == null || b == null)
                 return false;
 
             return HaveSameContents(a, b);
@@ -113,12 +113,12 @@ namespace NBitcoin.BouncyCastle.Utilities
             bool[] b)
         {
             int i = a.Length;
-            if(i != b.Length)
+            if (i != b.Length)
                 return false;
-            while(i != 0)
+            while (i != 0)
             {
                 --i;
-                if(a[i] != b[i])
+                if (a[i] != b[i])
                     return false;
             }
             return true;
@@ -129,12 +129,12 @@ namespace NBitcoin.BouncyCastle.Utilities
             char[] b)
         {
             int i = a.Length;
-            if(i != b.Length)
+            if (i != b.Length)
                 return false;
-            while(i != 0)
+            while (i != 0)
             {
                 --i;
-                if(a[i] != b[i])
+                if (a[i] != b[i])
                     return false;
             }
             return true;
@@ -145,12 +145,12 @@ namespace NBitcoin.BouncyCastle.Utilities
             byte[] b)
         {
             int i = a.Length;
-            if(i != b.Length)
+            if (i != b.Length)
                 return false;
-            while(i != 0)
+            while (i != 0)
             {
                 --i;
-                if(a[i] != b[i])
+                if (a[i] != b[i])
                     return false;
             }
             return true;
@@ -161,12 +161,12 @@ namespace NBitcoin.BouncyCastle.Utilities
             int[] b)
         {
             int i = a.Length;
-            if(i != b.Length)
+            if (i != b.Length)
                 return false;
-            while(i != 0)
+            while (i != 0)
             {
                 --i;
-                if(a[i] != b[i])
+                if (a[i] != b[i])
                     return false;
             }
             return true;
@@ -175,12 +175,12 @@ namespace NBitcoin.BouncyCastle.Utilities
         private static bool HaveSameContents(uint[] a, uint[] b)
         {
             int i = a.Length;
-            if(i != b.Length)
+            if (i != b.Length)
                 return false;
-            while(i != 0)
+            while (i != 0)
             {
                 --i;
-                if(a[i] != b[i])
+                if (a[i] != b[i])
                     return false;
             }
             return true;
@@ -190,10 +190,10 @@ namespace NBitcoin.BouncyCastle.Utilities
             object[] a)
         {
             var sb = new StringBuilder('[');
-            if(a.Length > 0)
+            if (a.Length > 0)
             {
                 sb.Append(a[0]);
-                for(int index = 1; index < a.Length; ++index)
+                for (int index = 1; index < a.Length; ++index)
                 {
                     sb.Append(", ").Append(a[index]);
                 }
@@ -204,7 +204,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int GetHashCode(byte[] data)
         {
-            if(data == null)
+            if (data == null)
             {
                 return 0;
             }
@@ -212,7 +212,7 @@ namespace NBitcoin.BouncyCastle.Utilities
             int i = data.Length;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 hc *= 257;
                 hc ^= data[i];
@@ -223,7 +223,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int GetHashCode(byte[] data, int off, int len)
         {
-            if(data == null)
+            if (data == null)
             {
                 return 0;
             }
@@ -231,7 +231,7 @@ namespace NBitcoin.BouncyCastle.Utilities
             int i = len;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 hc *= 257;
                 hc ^= data[off + i];
@@ -242,13 +242,13 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int GetHashCode(int[] data)
         {
-            if(data == null)
+            if (data == null)
                 return 0;
 
             int i = data.Length;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 hc *= 257;
                 hc ^= data[i];
@@ -259,13 +259,13 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int GetHashCode(int[] data, int off, int len)
         {
-            if(data == null)
+            if (data == null)
                 return 0;
 
             int i = len;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 hc *= 257;
                 hc ^= data[off + i];
@@ -274,16 +274,16 @@ namespace NBitcoin.BouncyCastle.Utilities
             return hc;
         }
 
-        
+
         public static int GetHashCode(uint[] data)
         {
-            if(data == null)
+            if (data == null)
                 return 0;
 
             int i = data.Length;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 hc *= 257;
                 hc ^= (int)data[i];
@@ -292,16 +292,16 @@ namespace NBitcoin.BouncyCastle.Utilities
             return hc;
         }
 
-        
+
         public static int GetHashCode(uint[] data, int off, int len)
         {
-            if(data == null)
+            if (data == null)
                 return 0;
 
             int i = len;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 hc *= 257;
                 hc ^= (int)data[off + i];
@@ -310,16 +310,16 @@ namespace NBitcoin.BouncyCastle.Utilities
             return hc;
         }
 
-        
+
         public static int GetHashCode(ulong[] data)
         {
-            if(data == null)
+            if (data == null)
                 return 0;
 
             int i = data.Length;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 ulong di = data[i];
                 hc *= 257;
@@ -331,16 +331,16 @@ namespace NBitcoin.BouncyCastle.Utilities
             return hc;
         }
 
-        
+
         public static int GetHashCode(ulong[] data, int off, int len)
         {
-            if(data == null)
+            if (data == null)
                 return 0;
 
             int i = len;
             int hc = i + 1;
 
-            while(--i >= 0)
+            while (--i >= 0)
             {
                 ulong di = data[off + i];
                 hc *= 257;
@@ -362,11 +362,11 @@ namespace NBitcoin.BouncyCastle.Utilities
             byte[] data,
             byte[] existing)
         {
-            if(data == null)
+            if (data == null)
             {
                 return null;
             }
-            if((existing == null) || (existing.Length != data.Length))
+            if ((existing == null) || (existing.Length != data.Length))
             {
                 return Clone(data);
             }
@@ -390,23 +390,23 @@ namespace NBitcoin.BouncyCastle.Utilities
             return data == null ? null : (long[])data.Clone();
         }
 
-        
+
         public static ulong[] Clone(
             ulong[] data)
         {
             return data == null ? null : (ulong[])data.Clone();
         }
 
-        
+
         public static ulong[] Clone(
             ulong[] data,
             ulong[] existing)
         {
-            if(data == null)
+            if (data == null)
             {
                 return null;
             }
-            if((existing == null) || (existing.Length != data.Length))
+            if ((existing == null) || (existing.Length != data.Length))
             {
                 return Clone(data);
             }
@@ -416,9 +416,9 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static bool Contains(byte[] a, byte n)
         {
-            for(int i = 0; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
-                if(a[i] == n)
+                if (a[i] == n)
                     return true;
             }
             return false;
@@ -426,9 +426,9 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static bool Contains(short[] a, short n)
         {
-            for(int i = 0; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
-                if(a[i] == n)
+                if (a[i] == n)
                     return true;
             }
             return false;
@@ -436,9 +436,9 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static bool Contains(int[] a, int n)
         {
-            for(int i = 0; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
-                if(a[i] == n)
+                if (a[i] == n)
                     return true;
             }
             return false;
@@ -449,7 +449,7 @@ namespace NBitcoin.BouncyCastle.Utilities
             byte b)
         {
             int i = buf.Length;
-            while(i > 0)
+            while (i > 0)
             {
                 buf[--i] = b;
             }
@@ -536,14 +536,14 @@ namespace NBitcoin.BouncyCastle.Utilities
         private static int GetLength(int from, int to)
         {
             int newLength = to - from;
-            if(newLength < 0)
+            if (newLength < 0)
                 throw new ArgumentException(from + " > " + to);
             return newLength;
         }
 
         public static byte[] Append(byte[] a, byte b)
         {
-            if(a == null)
+            if (a == null)
                 return new byte[] { b };
 
             int length = a.Length;
@@ -555,7 +555,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static short[] Append(short[] a, short b)
         {
-            if(a == null)
+            if (a == null)
                 return new short[] { b };
 
             int length = a.Length;
@@ -567,7 +567,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int[] Append(int[] a, int b)
         {
-            if(a == null)
+            if (a == null)
                 return new int[] { b };
 
             int length = a.Length;
@@ -579,9 +579,9 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static byte[] Concatenate(byte[] a, byte[] b)
         {
-            if(a == null)
+            if (a == null)
                 return Clone(b);
-            if(b == null)
+            if (b == null)
                 return Clone(a);
 
             var rv = new byte[a.Length + b.Length];
@@ -596,10 +596,10 @@ namespace NBitcoin.BouncyCastle.Utilities
             int count = 0;
             int totalLength = 0;
 
-            for(int i = 0; i < vs.Length; ++i)
+            for (int i = 0; i < vs.Length; ++i)
             {
                 byte[] v = vs[i];
-                if(v != null)
+                if (v != null)
                 {
                     nonNull[count++] = v;
                     totalLength += v.Length;
@@ -609,7 +609,7 @@ namespace NBitcoin.BouncyCastle.Utilities
             var result = new byte[totalLength];
             int pos = 0;
 
-            for(int j = 0; j < count; ++j)
+            for (int j = 0; j < count; ++j)
             {
                 byte[] v = nonNull[j];
                 Array.Copy(v, 0, result, pos, v.Length);
@@ -621,9 +621,9 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int[] Concatenate(int[] a, int[] b)
         {
-            if(a == null)
+            if (a == null)
                 return Clone(b);
-            if(b == null)
+            if (b == null)
                 return Clone(a);
 
             var rv = new int[a.Length + b.Length];
@@ -634,7 +634,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static byte[] Prepend(byte[] a, byte b)
         {
-            if(a == null)
+            if (a == null)
                 return new byte[] { b };
 
             int length = a.Length;
@@ -646,7 +646,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static short[] Prepend(short[] a, short b)
         {
-            if(a == null)
+            if (a == null)
                 return new short[] { b };
 
             int length = a.Length;
@@ -658,7 +658,7 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int[] Prepend(int[] a, int b)
         {
-            if(a == null)
+            if (a == null)
                 return new int[] { b };
 
             int length = a.Length;
@@ -670,13 +670,13 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static byte[] Reverse(byte[] a)
         {
-            if(a == null)
+            if (a == null)
                 return null;
 
             int p1 = 0, p2 = a.Length;
             var result = new byte[p2];
 
-            while(--p2 >= 0)
+            while (--p2 >= 0)
             {
                 result[p2] = a[p1++];
             }
@@ -686,13 +686,13 @@ namespace NBitcoin.BouncyCastle.Utilities
 
         public static int[] Reverse(int[] a)
         {
-            if(a == null)
+            if (a == null)
                 return null;
 
             int p1 = 0, p2 = a.Length;
             var result = new int[p2];
 
-            while(--p2 >= 0)
+            while (--p2 >= 0)
             {
                 result[p2] = a[p1++];
             }

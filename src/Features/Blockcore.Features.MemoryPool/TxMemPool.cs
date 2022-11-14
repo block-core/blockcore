@@ -1019,7 +1019,7 @@ namespace Blockcore.Features.MemoryPool
         /// <inheritdoc />
         public static double AllowFreeThreshold()
         {
-            return (double) Money.COIN * 144 / 250;
+            return (double)Money.COIN * 144 / 250;
         }
 
         /// <inheritdoc />

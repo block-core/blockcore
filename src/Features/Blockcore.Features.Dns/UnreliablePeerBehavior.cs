@@ -2,7 +2,6 @@
 using Blockcore.Base;
 using Blockcore.Configuration;
 using Blockcore.Connection;
-using Blockcore.Consensus;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
@@ -11,7 +10,6 @@ using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Dns
 {

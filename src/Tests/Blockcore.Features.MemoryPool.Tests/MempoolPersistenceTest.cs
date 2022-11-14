@@ -16,7 +16,6 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules;
-using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.MemoryPool.Rules;
@@ -207,7 +206,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             int expectedLinesPerTransaction = 3;
             int expectedHeaderLines = 2;
             int expectedLines = numTx * expectedLinesPerTransaction + expectedHeaderLines;
-            var settings = new NodeSettings(this.network, args: new string[] { $"-datadir={ Path.Combine(this.dir, "SaveStreamTest") }" });
+            var settings = new NodeSettings(this.network, args: new string[] { $"-datadir={Path.Combine(this.dir, "SaveStreamTest")}" });
             var persistence = new MempoolPersistence(settings, new LoggerFactory());
             IEnumerable<MempoolPersistenceEntry> toSave = this.CreateTestEntries(numTx);
             List<MempoolPersistenceEntry> loaded;
@@ -242,7 +241,7 @@ namespace Blockcore.Features.MemoryPool.Tests
 
         private NodeSettings CreateSettings(string subDirName)
         {
-            return new NodeSettings(this.network, args: new string[] { $"-datadir={ Directory.CreateDirectory(Path.Combine(this.dir, subDirName)).FullName }" });
+            return new NodeSettings(this.network, args: new string[] { $"-datadir={Directory.CreateDirectory(Path.Combine(this.dir, subDirName)).FullName}" });
         }
 
         private IEnumerable<MempoolPersistenceEntry> CreateTestEntries(int numTx)

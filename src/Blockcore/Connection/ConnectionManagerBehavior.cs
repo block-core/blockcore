@@ -37,8 +37,8 @@ namespace Blockcore.Connection
 
         public ConnectionManagerBehavior(IConnectionManager connectionManager, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
-            this.infoLogger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.infoLogger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
 
             this.connectionManager = connectionManager;
@@ -55,7 +55,7 @@ namespace Blockcore.Connection
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.StateChanged.Register(OnStateChangedAsync);
+            this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
 
             INetworkPeer peer = this.AttachedPeer;
             if (peer != null && this.connectionManager.ConnectionSettings.Whitelist.Exists(e => e.MatchIpOnly(peer.PeerEndPoint)))
@@ -93,7 +93,7 @@ namespace Blockcore.Connection
 
         protected override void DetachCore()
         {
-            this.AttachedPeer.StateChanged.Unregister(OnStateChangedAsync);
+            this.AttachedPeer.StateChanged.Unregister(this.OnStateChangedAsync);
 
             if (this.AttachedPeer.Connection != null)
                 this.connectionManager.PeerDisconnected(this.AttachedPeer.Connection.Id);

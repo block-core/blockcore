@@ -177,11 +177,11 @@ namespace Blockcore.Utilities
                 // We are currently in the middle of executing callbacks, we can't dispose the async lock now.
                 // We need to create a separate task that will attempt to acquire the lock,
                 // which can only succeed after the execution of the callbacks is finished.
-                Task.Run(() => DisposeInternal());
+                Task.Run(() => this.DisposeInternal());
             }
             else
             {
-                DisposeInternal();
+                this.DisposeInternal();
             }
         }
 

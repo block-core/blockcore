@@ -60,7 +60,7 @@ namespace Blockcore.P2P.Protocol.Payloads
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
     }
 }

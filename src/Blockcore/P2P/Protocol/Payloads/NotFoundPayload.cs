@@ -61,6 +61,6 @@ namespace Blockcore.P2P.Protocol.Payloads
             return this.Inventory.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

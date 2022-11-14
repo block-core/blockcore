@@ -182,7 +182,7 @@ namespace Blockcore.P2P.Peer
                 Services = NetworkPeerServices.Nothing,
             };
 
-            return await CreateConnectedNetworkPeerAsync(ipEndPoint, parameters, networkPeerDisposer).ConfigureAwait(false);
+            return await this.CreateConnectedNetworkPeerAsync(ipEndPoint, parameters, networkPeerDisposer).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

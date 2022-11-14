@@ -24,7 +24,7 @@ namespace Blockcore.Connection
 
         public PeerBanningBehavior(ILoggerFactory loggerFactory, IPeerBanning peerBanning, NodeSettings nodeSettings)
         {
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.loggerFactory = loggerFactory;
             this.peerBanning = peerBanning;
             this.nodeSettings = nodeSettings;

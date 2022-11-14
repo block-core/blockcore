@@ -78,7 +78,7 @@ namespace Blockcore.P2P
 
             this.asyncProvider = asyncProvider;
             loggerFactory = loggerFactory1;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.peerAddressManager = peerAddressManager;
             this.network = network;
             this.networkPeerFactory = networkPeerFactory;
@@ -101,7 +101,7 @@ namespace Blockcore.P2P
             this.discoverFromDnsSeedsLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.DiscoverFromDnsSeedsAsync), async token =>
             {
                 if (this.peerAddressManager.Peers.Count < TargetAmountOfPeersToDiscover)
-                    await DiscoverFromDnsSeedsAsync();
+                    await this.DiscoverFromDnsSeedsAsync();
             },
             this.nodeLifetime.ApplicationStopping,
             TimeSpan.FromHours(1));
@@ -109,7 +109,7 @@ namespace Blockcore.P2P
             this.discoverFromPeersLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.DiscoverPeersAsync), async token =>
             {
                 if (this.peerAddressManager.Peers.Count < TargetAmountOfPeersToDiscover)
-                    await DiscoverPeersAsync();
+                    await this.DiscoverPeersAsync();
             },
             this.nodeLifetime.ApplicationStopping,
             TimeSpans.TenSeconds);
@@ -130,8 +130,8 @@ namespace Blockcore.P2P
             }
 
             // At this point there are either no peers that we know of, or all the ones we do know of have been attempted & failed.
-            AddDNSSeedNodes(peersToDiscover);
-            AddSeedNodes(peersToDiscover);
+            this.AddDNSSeedNodes(peersToDiscover);
+            this.AddSeedNodes(peersToDiscover);
 
             if (peersToDiscover.Count == 0)
             {
@@ -142,7 +142,7 @@ namespace Blockcore.P2P
             // Randomise the order prior to attempting connections.
             peersToDiscover = peersToDiscover.OrderBy(a => RandomUtils.GetInt32()).ToList();
 
-            await ConnectToDiscoveryCandidatesAsync(peersToDiscover).ConfigureAwait(false);
+            await this.ConnectToDiscoveryCandidatesAsync(peersToDiscover).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Blockcore.P2P
                 return;
             }
 
-            await ConnectToDiscoveryCandidatesAsync(peersToDiscover).ConfigureAwait(false);
+            await this.ConnectToDiscoveryCandidatesAsync(peersToDiscover).ConfigureAwait(false);
         }
 
         private async Task ConnectToDiscoveryCandidatesAsync(List<IPEndPoint> peersToDiscover)

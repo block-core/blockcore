@@ -18,8 +18,8 @@ namespace Blockcore.Consensus.BlockInfo
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((BlockSignature)obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return this.Equals((BlockSignature)obj);
         }
 
         public override int GetHashCode()

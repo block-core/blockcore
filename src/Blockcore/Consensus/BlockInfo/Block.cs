@@ -101,7 +101,7 @@ namespace Blockcore.Consensus.BlockInfo
                         TransactionOptions = options,
                     };
 
-                    ReadWrite(bms);
+                    this.ReadWrite(bms);
                     ms.Position = 0;
                     bms = new BitcoinStream(ms, false, consensusFactory)
                     {
@@ -121,7 +121,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public void UpdateMerkleRoot()
         {
-            this.Header.HashMerkleRoot = GetMerkleRoot().Hash;
+            this.Header.HashMerkleRoot = this.GetMerkleRoot().Hash;
         }
 
         public bool CheckProofOfWork()
@@ -131,7 +131,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public bool CheckMerkleRoot()
         {
-            return this.Header.HashMerkleRoot == GetMerkleRoot().Hash;
+            return this.Header.HashMerkleRoot == this.GetMerkleRoot().Hash;
         }
 
         public static Block ParseJson(Network network, string json)

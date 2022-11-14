@@ -55,9 +55,9 @@ namespace Blockcore.Configuration
                     key = "-" + key;
 
                 if (splitted.Length > 1)
-                    Add(key, string.Join("=", splitted.Skip(1)));
+                    this.Add(key, string.Join("=", splitted.Skip(1)));
                 else
-                    Add(key, "1");
+                    this.Add(key, "1");
             }
         }
 
@@ -91,7 +91,7 @@ namespace Blockcore.Configuration
                 if (!key.StartsWith("-"))
                     key = "-" + key;
 
-                Add(key, string.Join("=", split.Skip(1)).Trim());
+                this.Add(key, string.Join("=", split.Skip(1)).Trim());
             }
         }
 

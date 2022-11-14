@@ -53,7 +53,7 @@ namespace Blockcore.Utilities
         public AsyncManualResetEvent(bool set)
         {
             this.mutex = new object();
-            this.tcs = CreateAsyncTaskSource<object>();
+            this.tcs = this.CreateAsyncTaskSource<object>();
             if (set)
                 this.tcs.TrySetResult(null);
         }
@@ -97,7 +97,7 @@ namespace Blockcore.Utilities
         /// <param name="cancellationToken">The cancellation token used to cancel the wait. If this token is already canceled, this method will first check whether the event is set.</param>
         public async Task WaitAsync(CancellationToken cancellationToken)
         {
-            Task waitTask = WaitAsync();
+            Task waitTask = this.WaitAsync();
             if (waitTask.IsCompleted)
                 return;
 
@@ -135,7 +135,7 @@ namespace Blockcore.Utilities
             lock (this.mutex)
             {
                 if (this.tcs.Task.IsCompleted)
-                    this.tcs = CreateAsyncTaskSource<object>();
+                    this.tcs = this.CreateAsyncTaskSource<object>();
             }
         }
 

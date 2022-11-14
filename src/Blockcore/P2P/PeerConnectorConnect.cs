@@ -34,7 +34,7 @@ namespace Blockcore.P2P
             ISelfEndpointTracker selfEndpointTracker) :
             base(asyncProvider, dateTimeProvider, loggerFactory, network, networkPeerFactory, nodeLifetime, nodeSettings, connectionSettings, peerAddressManager, selfEndpointTracker)
         {
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.Requirements.RequiredServices = NetworkPeerServices.Nothing;
         }
@@ -85,7 +85,7 @@ namespace Blockcore.P2P
                     {
                         this.logger.LogDebug("Attempting connection to {0}.", peerAddress.Endpoint);
 
-                        await ConnectAsync(peerAddress).ConfigureAwait(false);
+                        await this.ConnectAsync(peerAddress).ConfigureAwait(false);
                     }
                 }).ConfigureAwait(false);
         }

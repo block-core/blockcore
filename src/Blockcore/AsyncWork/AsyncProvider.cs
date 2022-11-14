@@ -55,7 +55,7 @@ namespace Blockcore.AsyncWork
             this.registeredTasks = new Dictionary<Task, AsyncTaskInfo>();
 
             this.loggerFactory = Guard.NotNull(loggerFactory, nameof(loggerFactory));
-            this.logger = this.loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = this.loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.signals = Guard.NotNull(signals, nameof(signals));
             nodeLifetime = Guard.NotNull(nodeLifetime, nameof(nodeLifetime));
@@ -75,7 +75,7 @@ namespace Blockcore.AsyncWork
 
             // task will continue with onAsyncDelegateUnhandledException if @delegate had unhandled exceptions
             newDelegate.ConsumerTask.ContinueWith(
-                OnAsyncDelegateUnhandledException,
+                this.OnAsyncDelegateUnhandledException,
                 newDelegate,
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
@@ -84,7 +84,7 @@ namespace Blockcore.AsyncWork
 
             // task will continue with onAsyncDelegateCompleted if @delegate completed or was canceled
             newDelegate.ConsumerTask.ContinueWith(
-                OnAsyncDelegateCompleted,
+                this.OnAsyncDelegateCompleted,
                 newDelegate,
                 CancellationToken.None,
                 TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
@@ -114,7 +114,7 @@ namespace Blockcore.AsyncWork
 
             // task will continue with onAsyncDelegateUnhandledException if @delegate had unhandled exceptions
             loopTask.ContinueWith(
-                OnAsyncDelegateUnhandledException,
+                this.OnAsyncDelegateUnhandledException,
                 loopInstance,
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
@@ -123,7 +123,7 @@ namespace Blockcore.AsyncWork
 
             // task will continue with onAsyncDelegateCompleted if @delegate completed or was canceled
             loopTask.ContinueWith(
-                OnAsyncDelegateCompleted,
+                this.OnAsyncDelegateCompleted,
                 loopInstance,
                 CancellationToken.None,
                 TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
@@ -137,7 +137,7 @@ namespace Blockcore.AsyncWork
         public IAsyncLoop CreateAndRunAsyncLoopUntil(string name, CancellationToken cancellation, Func<bool> condition, Action action, Action<Exception> onException, TimeSpan? repeatEvery = null, TimeSpan? startAfter = null)
         {
             CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
-            return CreateAndRunAsyncLoop(name, token =>
+            return this.CreateAndRunAsyncLoop(name, token =>
             {
                 try
                 {
@@ -182,7 +182,7 @@ namespace Blockcore.AsyncWork
 
             // task will continue with OnRegisteredTaskUnhandledException if @delegate had unhandled exceptions
             taskToRegister.ContinueWith(
-                OnRegisteredTaskUnhandledException,
+                this.OnRegisteredTaskUnhandledException,
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
                 TaskScheduler.Default
@@ -190,7 +190,7 @@ namespace Blockcore.AsyncWork
 
             // task will continue with OnRegisteredTaskCompleted if @delegate completed or was canceled
             taskToRegister.ContinueWith(
-                OnRegisteredTaskCompleted,
+                this.OnRegisteredTaskCompleted,
                 CancellationToken.None,
                 TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
                 TaskScheduler.Default

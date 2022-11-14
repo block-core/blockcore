@@ -175,7 +175,7 @@ namespace Blockcore.Utilities
         {
             Guard.NotEmpty(fileExtension, nameof(fileExtension));
 
-            IEnumerable<string> filesPaths = GetFilesPaths(fileExtension);
+            IEnumerable<string> filesPaths = this.GetFilesPaths(fileExtension);
             return filesPaths.Select(p => Path.GetFileName(p));
         }
 
@@ -207,7 +207,7 @@ namespace Blockcore.Utilities
             Guard.NotEmpty(fileExtension, nameof(fileExtension));
 
             // Get the paths of files with the extension
-            IEnumerable<string> filesPaths = GetFilesPaths(fileExtension);
+            IEnumerable<string> filesPaths = this.GetFilesPaths(fileExtension);
 
             var files = new List<T>();
             foreach (string filePath in filesPaths)
@@ -220,13 +220,13 @@ namespace Blockcore.Utilities
                     string newFileName = fileName.Replace(fileExtension, $"{fileExtension}.backup");
                     string newFilePath = Path.Combine(this.FolderPath, newFileName);
 
-                    if (!Exists(newFilePath))
+                    if (!this.Exists(newFilePath))
                     {
                         File.Copy(filePath, newFilePath);
 
                         // Upgrade the wallet
-                        T loadedFile = LoadByFileName(fileName);
-                        SaveToFile(loadedFile, fileName);
+                        T loadedFile = this.LoadByFileName(fileName);
+                        this.SaveToFile(loadedFile, fileName);
                     }
                 }
             }
@@ -244,7 +244,7 @@ namespace Blockcore.Utilities
             Guard.NotEmpty(fileExtension, nameof(fileExtension));
 
             // Get the paths of files with the extension
-            IEnumerable<string> filesPaths = GetFilesPaths(fileExtension);
+            IEnumerable<string> filesPaths = this.GetFilesPaths(fileExtension);
 
             var files = new List<T>();
             foreach (string filePath in filesPaths)
@@ -252,7 +252,7 @@ namespace Blockcore.Utilities
                 string fileName = Path.GetFileName(filePath);
 
                 // Load the file into the object of type T.
-                T loadedFile = LoadByFileName(fileName);
+                T loadedFile = this.LoadByFileName(fileName);
                 files.Add(loadedFile);
             }
 

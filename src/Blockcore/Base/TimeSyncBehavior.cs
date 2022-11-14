@@ -183,7 +183,7 @@ namespace Blockcore.Base
         /// <param name="network">The network the node is running on.</param>
         public TimeSyncBehaviorState(IDateTimeProvider dateTimeProvider, INodeLifetime nodeLifetime, IAsyncProvider asyncProvider, ILoggerFactory loggerFactory, Network network)
         {
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.dateTimeProvider = dateTimeProvider;
             this.nodeLifetime = nodeLifetime;
             this.asyncProvider = asyncProvider;
@@ -229,7 +229,7 @@ namespace Blockcore.Base
                             this.logger.LogDebug("Oldest sample {0} from peer '{1}' removed.", oldSample.TimeOffset, oldSample.Source);
                         }
 
-                        RecalculateTimeOffsetLocked();
+                        this.RecalculateTimeOffsetLocked();
 
                         // If SwitchedOffLimitReached is set, timeOffset is set to zero,
                         // so we need to check both conditions here.
@@ -248,7 +248,7 @@ namespace Blockcore.Base
             }
 
             if (startWarningLoopNow)
-                StartWarningLoop();
+                this.StartWarningLoop();
 
             return res;
         }
@@ -361,7 +361,7 @@ namespace Blockcore.Base
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -402,7 +402,7 @@ namespace Blockcore.Base
         public TimeSyncBehavior(ITimeSyncBehaviorState state, IDateTimeProvider dateTimeProvider, ILoggerFactory loggerFactory)
         {
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.dateTimeProvider = dateTimeProvider;
             this.state = state;
         }
@@ -410,13 +410,13 @@ namespace Blockcore.Base
         /// <inheritdoc />
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />

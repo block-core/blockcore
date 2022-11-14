@@ -41,7 +41,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
                 this.AttachedPeer = peer;
 
-                AttachCore();
+                this.AttachCore();
             }
         }
 
@@ -64,7 +64,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
                 if (this.AttachedPeer == null)
                     return;
 
-                DetachCore();
+                this.DetachCore();
             }
         }
 
@@ -76,7 +76,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
         INetworkPeerBehavior INetworkPeerBehavior.Clone()
         {
-            return (INetworkPeerBehavior)Clone();
+            return (INetworkPeerBehavior)this.Clone();
         }
     }
 }

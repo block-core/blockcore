@@ -40,7 +40,7 @@ namespace Blockcore.Builder
             Guard.NotNull(fullNode, nameof(fullNode));
 
             this.node = fullNode;
-            this.logger = loggerFactory.CreateLogger(GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -48,9 +48,9 @@ namespace Blockcore.Builder
         {
             try
             {
-                Execute(service => service.ValidateDependencies(this.node.Services));
+                this.Execute(service => service.ValidateDependencies(this.node.Services));
 
-                Execute(service =>
+                this.Execute(service =>
                 {
                     service.State = "Initializing";
                     service.InitializeAsync().GetAwaiter().GetResult();
@@ -70,7 +70,7 @@ namespace Blockcore.Builder
         {
             try
             {
-                Execute(feature =>
+                this.Execute(feature =>
                 {
                     feature.State = "Disposing";
                     feature.Dispose();
@@ -115,7 +115,7 @@ namespace Blockcore.Builder
                         if (exceptions == null)
                             exceptions = new List<Exception>();
 
-                        LogAndAddException(exceptions, exception);
+                        this.LogAndAddException(exceptions, exception);
                     }
                 }
             }
@@ -135,7 +135,7 @@ namespace Blockcore.Builder
                     if (exceptions == null)
                         exceptions = new List<Exception>();
 
-                    LogAndAddException(exceptions, exception);
+                    this.LogAndAddException(exceptions, exception);
                 }
             }
 

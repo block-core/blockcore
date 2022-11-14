@@ -62,7 +62,7 @@ namespace Blockcore.AsyncWork
         /// <inheritdoc />
         public IAsyncLoop Run(TimeSpan? repeatEvery = null, TimeSpan? startAfter = null)
         {
-            return Run(CancellationToken.None, repeatEvery, startAfter);
+            return this.Run(CancellationToken.None, repeatEvery, startAfter);
         }
 
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace Blockcore.AsyncWork
             if (repeatEvery != null)
                 this.RepeatEvery = repeatEvery.Value;
 
-            this.RunningTask = Task.Run(async () => await StartAsync(cancellation, startAfter), cancellation);
+            this.RunningTask = Task.Run(async () => await this.StartAsync(cancellation, startAfter), cancellation);
 
             return this;
         }

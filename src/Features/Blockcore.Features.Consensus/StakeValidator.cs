@@ -125,7 +125,7 @@ namespace Blockcore.Features.Consensus
             long divideBy = (interval + 1) * targetSpacing;
             target = target.Divide(BigInteger.ValueOf(divideBy));
 
-            this.logger.LogDebug("The next target difficulty will be {0} times higher (easier to satisfy) than the previous target.", (double)multiplyBy / (double)divideBy);
+            this.logger.LogDebug("The next target difficulty will be {0} times higher (easier to satisfy) than the previous target.", multiplyBy / (double)divideBy);
 
             if ((target.CompareTo(BigInteger.Zero) <= 0) || (target.CompareTo(targetLimit) >= 1))
                 target = targetLimit;

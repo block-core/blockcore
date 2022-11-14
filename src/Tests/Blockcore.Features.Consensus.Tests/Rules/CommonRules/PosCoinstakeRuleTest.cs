@@ -104,8 +104,8 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             transaction.Outputs.Add(new TxOut(Money.Zero, (IDestination)null));
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(transaction);
 
-            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = (uint)1483747200;
-            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[1]).Time = (uint)1483747201;
+            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = 1483747200;
+            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[1]).Time = 1483747201;
 
             Assert.True(BlockStake.IsProofOfStake(this.ruleContext.ValidationContext.BlockToValidate));
 
@@ -121,8 +121,8 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             transaction.Outputs.Add(new TxOut(Money.Zero, (IDestination)null));
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(transaction);
 
-            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = (uint)1483747200;
-            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[0]).Time = (uint)1483747201;
+            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = 1483747200;
+            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[0]).Time = 1483747201;
 
             Assert.True(BlockStake.IsProofOfWork(this.ruleContext.ValidationContext.BlockToValidate));
 
@@ -148,9 +148,9 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             transaction.Outputs.Add(new TxOut(Money.Zero, (IDestination)null));
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(transaction);
 
-            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = (uint)1483747200;
-            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[0]).Time = (uint)1483747200;
-            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[1]).Time = (uint)1483747200;
+            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = 1483747200;
+            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[0]).Time = 1483747200;
+            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[1]).Time = 1483747200;
 
             Assert.True(BlockStake.IsProofOfStake(this.ruleContext.ValidationContext.BlockToValidate));
 
@@ -163,8 +163,8 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             var transaction = this.network.CreateTransaction();
             transaction.Outputs.Add(new TxOut(Money.Zero, (IDestination)null));
             this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(transaction);
-            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = (uint)1483747200;
-            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[0]).Time = (uint)1483747200;
+            this.ruleContext.ValidationContext.BlockToValidate.Header.Time = 1483747200;
+            ((PosTransaction)this.ruleContext.ValidationContext.BlockToValidate.Transactions[0]).Time = 1483747200;
 
             Assert.True(BlockStake.IsProofOfWork(this.ruleContext.ValidationContext.BlockToValidate));
 

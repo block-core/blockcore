@@ -1330,7 +1330,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(2, model.AccountsBalances.Count);
 
             AccountBalanceModel resultingBalance = model.AccountsBalances[0];
-            Assert.Equal(this.Network.Consensus.CoinType, (int)resultingBalance.CoinType);
+            Assert.Equal(this.Network.Consensus.CoinType, resultingBalance.CoinType);
             Assert.Equal(account.Name, resultingBalance.Name);
             Assert.Equal(account.HdPath, resultingBalance.HdPath);
             Assert.Equal(new Money(130000), resultingBalance.AmountConfirmed);
@@ -1338,7 +1338,7 @@ namespace Blockcore.Features.Wallet.Tests
             Assert.Equal(new Money(130000), resultingBalance.SpendableAmount);
 
             resultingBalance = model.AccountsBalances[1];
-            Assert.Equal(this.Network.Consensus.CoinType, (int)resultingBalance.CoinType);
+            Assert.Equal(this.Network.Consensus.CoinType, resultingBalance.CoinType);
             Assert.Equal(account2.Name, resultingBalance.Name);
             Assert.Equal(account2.HdPath, resultingBalance.HdPath);
             Assert.Equal(new Money(108000), resultingBalance.AmountConfirmed);
@@ -1435,7 +1435,7 @@ namespace Blockcore.Features.Wallet.Tests
             var model = viewResult.Value as AddressBalanceModel;
 
             Assert.NotNull(model);
-            Assert.Equal(this.Network.Consensus.CoinType, (int)model.CoinType);
+            Assert.Equal(this.Network.Consensus.CoinType, model.CoinType);
             Assert.Equal(accountAddress.Address, model.Address);
             Assert.Equal(addressBalance.AmountConfirmed, model.AmountConfirmed);
             Assert.Equal(addressBalance.SpendableAmount, model.SpendableAmount);

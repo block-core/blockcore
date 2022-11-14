@@ -85,7 +85,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 
             // Finalize the block and add it to the chain.
             block.Header.HashPrevBlock = this.ChainIndexer.Tip.HashBlock;
-            block.Header.Time = (uint)1483747200;
+            block.Header.Time = 1483747200;
             block.UpdateMerkleRoot();
 
             Assert.True(BlockStake.IsProofOfStake(block));

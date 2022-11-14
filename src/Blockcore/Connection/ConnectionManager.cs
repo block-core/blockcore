@@ -352,7 +352,7 @@ namespace Blockcore.Connection
 
         private string ToKBSec(ulong bytesPerSec)
         {
-            double speed = ((double)bytesPerSec / 1024.0);
+            double speed = (bytesPerSec / 1024.0);
             return speed.ToString("0.00") + " KB/S";
         }
 

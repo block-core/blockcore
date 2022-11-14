@@ -187,8 +187,6 @@ namespace Blockcore.Consensus.ScriptInfo
 
             private readonly long m_value;
 
-            public static long NMaxNumSize => nMaxNumSize;
-
             public CScriptNum(byte[] vch, bool fRequireMinimal)
                 : this(vch, fRequireMinimal, 4)
             {

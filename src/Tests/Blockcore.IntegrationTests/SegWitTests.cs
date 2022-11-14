@@ -141,10 +141,10 @@ namespace Blockcore.IntegrationTests
                     ThresholdState[] segwitActiveState = consensusLoop.NodeDeployments.BIP9.GetStates(stratisNode.FullNode.ChainIndexer.GetHeader(431));
 
                     // Check that segwit got activated at block 431.
-                    Assert.Equal(ThresholdState.Defined, segwitDefinedState.GetValue((int)BitcoinBIP9Deployments.Segwit));
-                    Assert.Equal(ThresholdState.Started, segwitStartedState.GetValue((int)BitcoinBIP9Deployments.Segwit));
-                    Assert.Equal(ThresholdState.LockedIn, segwitLockedInState.GetValue((int)BitcoinBIP9Deployments.Segwit));
-                    Assert.Equal(ThresholdState.Active, segwitActiveState.GetValue((int)BitcoinBIP9Deployments.Segwit));
+                    Assert.Equal(ThresholdState.Defined, segwitDefinedState.GetValue(BitcoinBIP9Deployments.Segwit));
+                    Assert.Equal(ThresholdState.Started, segwitStartedState.GetValue(BitcoinBIP9Deployments.Segwit));
+                    Assert.Equal(ThresholdState.LockedIn, segwitLockedInState.GetValue(BitcoinBIP9Deployments.Segwit));
+                    Assert.Equal(ThresholdState.Active, segwitActiveState.GetValue(BitcoinBIP9Deployments.Segwit));
                 }
                 finally
                 {
@@ -289,7 +289,7 @@ namespace Blockcore.IntegrationTests
                 ThresholdState[] segwitActiveState = consensusLoop.NodeDeployments.BIP9.GetStates(stratisNode.FullNode.ChainIndexer.GetHeader(1));
 
                 // Check that segwit got activated at genesis.
-                Assert.Equal(ThresholdState.Active, segwitActiveState.GetValue((int)BitcoinBIP9Deployments.Segwit));
+                Assert.Equal(ThresholdState.Active, segwitActiveState.GetValue(BitcoinBIP9Deployments.Segwit));
             }
         }
 

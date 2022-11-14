@@ -91,14 +91,14 @@ namespace Blockcore.Features.MemoryPool
         /// <summary>Gets or sets the memory pools time for the transaction for persistence.</summary>
         public long Time
         {
-            get { return (long)this.time; }
+            get { return this.time; }
             set { this.time = (uint)value; }
         }
 
         /// <summary>Gets or sets the transaction fee difference for persistence.</summary>
         public long FeeDelta
         {
-            get { return (long)this.feeDelta; }
+            get { return this.feeDelta; }
             set { this.feeDelta = (uint)value; }
         }
 

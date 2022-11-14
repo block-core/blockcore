@@ -437,7 +437,7 @@ namespace Blockcore.IntegrationTests.Wallet
                 Recipients = recipients.ToList()
             };
 
-            Transaction trx = (node.FullNode.NodeService<IWalletTransactionHandler>() as IWalletTransactionHandler).BuildTransaction(txBuildContext);
+            Transaction trx = node.FullNode.NodeService<IWalletTransactionHandler>().BuildTransaction(txBuildContext);
 
             // Broadcast to the other node.
 

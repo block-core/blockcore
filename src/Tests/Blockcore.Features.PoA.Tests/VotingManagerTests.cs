@@ -115,7 +115,7 @@ namespace Blockcore.Features.PoA.Tests
             Block block = new Block();
             block.Transactions.Add(tx);
 
-            block.Header.Time = (uint)(height * (this.network.ConsensusOptions as PoAConsensusOptions).TargetSpacingSeconds);
+            block.Header.Time = (uint)(height * this.network.ConsensusOptions.TargetSpacingSeconds);
 
             block.UpdateMerkleRoot();
             block.GetHash();

@@ -63,7 +63,7 @@ namespace Blockcore.P2P.Protocol.Payloads
                 if (value == 10300)
                     value = 300;
 
-                this.version = (uint)value;
+                this.version = value;
             }
         }
 

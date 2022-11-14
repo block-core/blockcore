@@ -168,7 +168,7 @@ namespace Blockcore.Networks.XRC.Rules
             BigInteger newTarget = lastBlock.Header.Bits.ToBigInteger();
 
             newTarget = newTarget.Multiply(BigInteger.ValueOf((long)nActualTimespan.TotalSeconds));
-            newTarget = newTarget.Divide(BigInteger.ValueOf((long)nAveragingTargetTimespanV4));
+            newTarget = newTarget.Divide(BigInteger.ValueOf(nAveragingTargetTimespanV4));
 
             var finalTarget = new Target(newTarget);
             if (finalTarget > proofOfWorkLimit)

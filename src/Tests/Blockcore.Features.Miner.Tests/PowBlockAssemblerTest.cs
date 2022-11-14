@@ -74,7 +74,7 @@ namespace Blockcore.Features.Miner.Tests
                     .Returns(new DateTime(2017, 1, 7, 0, 0, 1, DateTimeKind.Utc).ToUnixTimestamp());
                 Transaction transaction = CreateTransaction(this.testNet, this.key, 5, new Money(400 * 1000 * 1000), new Key(), new uint256(124124));
                 var txFee = new Money(1000);
-                SetupTxMempool(chainIndexer, this.testNet.Consensus.Options as ConsensusOptions, txFee, transaction);
+                SetupTxMempool(chainIndexer, this.testNet.Consensus.Options, txFee, transaction);
                 this.consensusRules
                     .Setup(s => s.CreateRuleContext(It.IsAny<ValidationContext>()))
                     .Returns(new PowRuleContext());

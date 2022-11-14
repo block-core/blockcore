@@ -228,7 +228,7 @@ namespace Blockcore.Features.MemoryPool
         /// <returns>The transaction size.</returns>
         public long GetTxSize()
         {
-            return (long)this.Transaction.GetVirtualSize(this.consensusOptions.WitnessScaleFactor);
+            return this.Transaction.GetVirtualSize(this.consensusOptions.WitnessScaleFactor);
         }
 
         /// <summary>

@@ -186,7 +186,7 @@ namespace Blockcore.Networks.Strax.Rules
                     if (fAccurate && straxNetwork?.Federations != null && lastOpcode.Code == OpcodeType.OP_NOP9) // OpcodeType.OP_FEDERATION)
                         n += (uint)straxNetwork.Federations.GetOnlyFederation().GetFederationDetails().transactionSigningKeys.Length;
                     else if (fAccurate && lastOpcode != null && lastOpcode.Code >= OpcodeType.OP_1 && lastOpcode.Code <= OpcodeType.OP_16)
-                        n += (lastOpcode.PushData == null || lastOpcode.PushData.Length == 0) ? 0U : (uint)lastOpcode.PushData[0];
+                        n += (lastOpcode.PushData == null || lastOpcode.PushData.Length == 0) ? 0U : lastOpcode.PushData[0];
                     else
                         n += 20;
                 }

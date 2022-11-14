@@ -142,7 +142,7 @@ namespace Blockcore.Base.Deployments
                     PeriodStartHeight = periodStartsHeader.Height,
                     PeriodEndHeight = periodEndsHeight,
                     StateValue = thresholdStates[deploymentIndex],
-                    ThresholdState = ((ThresholdState)thresholdStates[deploymentIndex]).ToString()
+                    ThresholdState = thresholdStates[deploymentIndex].ToString()
                 });
             }
 

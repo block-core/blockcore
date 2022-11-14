@@ -27,7 +27,7 @@ namespace Blockcore.Base.Deployments
         }
 
         public BIP9DeploymentsParameters(string name, int bit, long startTime, long timeout, long threshold)
-            : this(name, bit, (DateTimeOffset)Utils.UnixTimeToDateTime(startTime), Utils.UnixTimeToDateTime(timeout), threshold)
+            : this(name, bit, Utils.UnixTimeToDateTime(startTime), Utils.UnixTimeToDateTime(timeout), threshold)
         {
         }
 

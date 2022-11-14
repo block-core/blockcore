@@ -660,7 +660,7 @@ namespace Blockcore.Features.Miner.Staking
 
             long ourWeight = stakingUtxoDescriptions.Sum(s => s.TxOut.Value);
             long expectedTime = ((uint)this.network.Consensus.TargetSpacing.TotalSeconds) * this.networkWeight / ourWeight;
-            decimal ourPercent = this.networkWeight != 0 ? 100.0m * (decimal)ourWeight / (decimal)this.networkWeight : 0;
+            decimal ourPercent = this.networkWeight != 0 ? 100.0m * ourWeight / this.networkWeight : 0;
 
             this.logger.LogInformation("Node staking with {0} ({1:0.00} % of the network weight {2}), est. time to find new block is {3}.", new Money(ourWeight), ourPercent, new Money(this.networkWeight), TimeSpan.FromSeconds(expectedTime));
 
@@ -1146,7 +1146,7 @@ namespace Blockcore.Features.Miner.Staking
 
             // calculate the current shift value.
             uint shift = (block.Header.Bits >> 24) & 0xFF;
-            double diff = (double)0x0000FFFF / (double)(block.Header.Bits & 0x00FFFFFF);
+            double diff = 0x0000FFFF / (double)(block.Header.Bits & 0x00FFFFFF);
 
             // shift the difficulty up.
             while (shift < 29)
@@ -1187,8 +1187,8 @@ namespace Blockcore.Features.Miner.Staking
                 {
                     if (prevStakeBlock != null)
                     {
-                        stakeKernelsAvg += GetDifficulty(prevStakeBlock) * (double)0x100000000;
-                        stakesTime += (long)prevStakeBlock.Header.Time - (long)block.Header.Time;
+                        stakeKernelsAvg += GetDifficulty(prevStakeBlock) * 0x100000000;
+                        stakesTime += prevStakeBlock.Header.Time - (long)block.Header.Time;
                         stakesHandled++;
                     }
 

@@ -24,8 +24,6 @@ namespace Blockcore.Consensus.Chain
         private readonly IChainStore chainStore;
 
         /// <summary>Instance logger.</summary>
-        private readonly ILogger logger; // kada obršem izbacuje mi grešku
-
         private BlockLocator locator;
 
         private readonly object lockObj;
@@ -35,12 +33,12 @@ namespace Blockcore.Consensus.Chain
         public ChainRepository(ILoggerFactory loggerFactory, IChainStore chainStore, Network network)
         {
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
-
+            ILogger logger;
             this.chainStore = chainStore;
             this.Network = network;
             this.lockObj = new object();
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <inheritdoc />

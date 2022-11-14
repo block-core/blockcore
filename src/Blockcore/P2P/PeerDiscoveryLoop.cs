@@ -46,7 +46,6 @@ namespace Blockcore.P2P
         private readonly ILogger logger;
 
         /// <summary>Logger factory to create loggers.</summary>
-        //private readonly ILoggerFactory loggerFactory;
 
         /// <summary>Global application life cycle control - triggers when application shuts down.</summary>
         private readonly INodeLifetime nodeLifetime;

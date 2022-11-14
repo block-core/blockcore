@@ -12,7 +12,6 @@ namespace Blockcore.Configuration.Settings
     public class ConsensusSettings
     {
         /// <summary>Instance logger.</summary>
-       // private readonly ILogger logger;
 
         /// <summary>Whether use of checkpoints is enabled or not.</summary>
         public bool UseCheckpoints { get; set; }

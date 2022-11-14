@@ -258,8 +258,6 @@ namespace Blockcore.Configuration.Logging
         {
             if (settings != null && settings.DebugArgs.Any())
             {
-
-
                 if (settings.DebugArgs[0] == "1")
                 {
                     // Increase all logging to Debug.

@@ -253,7 +253,6 @@ namespace Blockcore.Connection
             {
                 var chainHeadersBehavior = peer.Behavior<ConsensusManagerBehavior>();
 
-
                 string peerHeights = $"(r/s/c):" +
                                      $"{(chainHeadersBehavior.BestReceivedTip != null ? chainHeadersBehavior.BestReceivedTip.Height.ToString() : peer.PeerVersion != null ? peer.PeerVersion.StartHeight + "*" : "-")}" +
                                      $"/{(chainHeadersBehavior.BestSentHeader != null ? chainHeadersBehavior.BestSentHeader.Height.ToString() : peer.PeerVersion != null ? peer.PeerVersion.StartHeight + "*" : "-")}" +

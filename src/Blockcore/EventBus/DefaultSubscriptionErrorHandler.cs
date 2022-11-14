@@ -16,7 +16,7 @@ namespace Blockcore.EventBus
 
         public DefaultSubscriptionErrorHandler(ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />

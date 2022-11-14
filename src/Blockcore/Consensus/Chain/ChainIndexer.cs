@@ -31,7 +31,7 @@ namespace Blockcore.Consensus.Chain
         /// </summary>
         public int Height => this.Tip.Height;
 
-        public ChainedHeader Genesis => this.GetHeader(0);
+        public ChainedHeader Genesis => GetHeader(0);
 
         public ChainIndexer()
         {
@@ -43,14 +43,14 @@ namespace Blockcore.Consensus.Chain
         {
             this.Network = network;
 
-            this.Initialize(new ChainedHeader(network.GetGenesis().Header, network.GetGenesis().GetHash(), 0));
+            Initialize(new ChainedHeader(network.GetGenesis().Header, network.GetGenesis().GetHash(), 0));
         }
 
         public ChainIndexer(Network network, ChainedHeader chainedHeader) : this()
         {
             this.Network = network;
 
-            this.Initialize(chainedHeader);
+            Initialize(chainedHeader);
         }
 
         public void Initialize(ChainedHeader chainedHeader)
@@ -93,7 +93,7 @@ namespace Blockcore.Consensus.Chain
             // Find the first block the caller has in the main chain.
             foreach (uint256 hash in hashes)
             {
-                ChainedHeader chainedHeader = this.GetHeader(hash);
+                ChainedHeader chainedHeader = GetHeader(hash);
                 if (chainedHeader != null)
                     return chainedHeader;
             }
@@ -111,7 +111,7 @@ namespace Blockcore.Consensus.Chain
             if (locator == null)
                 throw new ArgumentNullException(nameof(locator));
 
-            return this.FindFork(locator.Blocks);
+            return FindFork(locator.Blocks);
         }
 
         /// <summary>
@@ -121,13 +121,12 @@ namespace Blockcore.Consensus.Chain
         /// <returns>Enumeration of chained block headers after given block hash.</returns>
         public IEnumerable<ChainedHeader> EnumerateAfter(uint256 blockHash)
         {
-            ChainedHeader block = this.GetHeader(blockHash);
+            ChainedHeader block = GetHeader(blockHash);
 
             if (block == null)
                 return new ChainedHeader[0];
 
-
-            return this.EnumerateAfter(block);
+            return EnumerateAfter(block);
         }
 
         /// <summary>
@@ -140,7 +139,7 @@ namespace Blockcore.Consensus.Chain
             if (block == null)
                 throw new ArgumentNullException("block");
 
-            return this.EnumerateToTip(block.HashBlock);
+            return EnumerateToTip(block.HashBlock);
         }
 
         /// <summary>
@@ -150,13 +149,13 @@ namespace Blockcore.Consensus.Chain
         /// <returns>Enumeration of chained block headers from the given block hash to tip.</returns>
         public IEnumerable<ChainedHeader> EnumerateToTip(uint256 blockHash)
         {
-            ChainedHeader block = this.GetHeader(blockHash);
+            ChainedHeader block = GetHeader(blockHash);
             if (block == null)
                 yield break;
 
             yield return block;
 
-            foreach (ChainedHeader chainedBlock in this.EnumerateAfter(blockHash))
+            foreach (ChainedHeader chainedBlock in EnumerateAfter(blockHash))
                 yield return chainedBlock;
         }
 
@@ -172,7 +171,7 @@ namespace Blockcore.Consensus.Chain
 
             while (true)
             {
-                ChainedHeader b = this.GetHeader(i);
+                ChainedHeader b = GetHeader(i);
                 if ((b == null) || (b.Previous != prev))
                     yield break;
 
@@ -251,12 +250,12 @@ namespace Blockcore.Consensus.Chain
         /// <summary>
         /// Get a <see cref="ChainedHeader"/> based on it's height.
         /// </summary>
-        public ChainedHeader this[int key] => this.GetHeader(key);
+        public ChainedHeader this[int key] => GetHeader(key);
 
         /// <summary>
         /// Get a <see cref="ChainedHeader"/> based on it's hash.
         /// </summary>
-        public ChainedHeader this[uint256 id] => this.GetHeader(id);
+        public ChainedHeader this[uint256 id] => GetHeader(id);
 
         public override string ToString()
         {

@@ -112,7 +112,7 @@ namespace Blockcore.Connection
             this.connectedPeers = new NetworkPeerCollection();
             this.dateTimeProvider = dateTimeProvider;
             this.loggerFactory = loggerFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.Network = network;
             this.NetworkPeerFactory = networkPeerFactory;
             this.NodeSettings = nodeSettings;
@@ -130,20 +130,20 @@ namespace Blockcore.Connection
             this.selfEndpointTracker = selfEndpointTracker;
             this.versionProvider = versionProvider;
             this.ipRangeFilteringEndpointExclusions = new List<IPEndPoint>();
-            this.connectedPeersQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<INetworkPeer>($"{nameof(ConnectionManager)}-{nameof(this.connectedPeersQueue)}", this.OnPeerAdded);
+            this.connectedPeersQueue = asyncProvider.CreateAndRunAsyncDelegateDequeuer<INetworkPeer>($"{nameof(ConnectionManager)}-{nameof(this.connectedPeersQueue)}", OnPeerAdded);
             this.disconnectedPerfCounter = new PerformanceCounter();
 
             this.Parameters.Version = this.NodeSettings.Network.Consensus.ConsensusFactory.Protocol.ProtocolVersion;
             this.Parameters.UserAgent = $"/{this.ConnectionSettings.Agent}:{versionProvider.GetVersion()}({this.Network.CoinTicker};{this.Parameters.Version})/";
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name, 1100);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name, 1100);
         }
 
         /// <inheritdoc />
         public void Initialize(IConsensusManager consensusManager)
         {
             this.consensusManager = consensusManager;
-            this.AddExternalIpToSelfEndpoints();
+            AddExternalIpToSelfEndpoints();
 
             if (this.ConnectionSettings.Listen)
                 this.peerDiscovery.DiscoverPeers(this);
@@ -155,7 +155,7 @@ namespace Blockcore.Connection
             }
 
             if (this.ConnectionSettings.Listen)
-                this.StartNodeServer();
+                StartNodeServer();
 
             // If external IP address supplied this overrides all.
             if (this.ConnectionSettings.ExternalEndpoint != null)
@@ -384,7 +384,7 @@ namespace Blockcore.Connection
             // Code in this method is a quick and dirty fix for the race condition described here: https://github.com/stratisproject/StratisBitcoinFullNode/issues/2864
             // TODO race condition should be eliminated instead of fixing its consequences.
 
-            if (this.ShouldDisconnect(peer))
+            if (ShouldDisconnect(peer))
                 peer.Disconnect("Peer from the same network group.");
 
             return Task.CompletedTask;
@@ -512,7 +512,7 @@ namespace Blockcore.Connection
             if (peer != null)
             {
                 peer.Disconnect("Requested by user");
-                this.RemoveConnectedPeer(peer, "Requested by user");
+                RemoveConnectedPeer(peer, "Requested by user");
             }
 
             this.peerAddressManager.RemovePeer(ipEndpoint);

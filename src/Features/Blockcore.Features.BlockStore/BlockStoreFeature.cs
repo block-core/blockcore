@@ -73,7 +73,7 @@ namespace Blockcore.Features.BlockStore
             this.blockStoreQueue = blockStoreQueue;
             this.blockStoreSignaled = blockStoreSignaled;
             this.connectionManager = connectionManager;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.loggerFactory = loggerFactory;
             this.storeSettings = storeSettings;
             this.chainState = chainState;
@@ -82,7 +82,7 @@ namespace Blockcore.Features.BlockStore
             this.prunedBlockRepository = prunedBlockRepository;
             this.addressIndexer = addressIndexer;
             this.pruneBlockStoreService = pruneBlockStoreService;
-            nodeStats.RegisterStats(this.AddInlineStats, StatsType.Inline, this.GetType().Name, 900);
+            nodeStats.RegisterStats(AddInlineStats, StatsType.Inline, GetType().Name, 900);
         }
 
         private void AddInlineStats(StringBuilder log)

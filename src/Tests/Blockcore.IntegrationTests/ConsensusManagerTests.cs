@@ -48,12 +48,12 @@ namespace Blockcore.IntegrationTests
         {
             public ConsensusOptionsTest()
             {
-                MaxBlockBaseSize = 1_000_000;
-                MaxStandardVersion = 2;
-                MaxStandardTxWeight = 100_000;
-                MaxBlockSigopsCost = 20_000;
-                MaxStandardTxSigopsCost = 20_000 / 5;
-                WitnessScaleFactor = 4;
+                this.MaxBlockBaseSize = 1_000_000;
+                this.MaxStandardVersion = 2;
+                this.MaxStandardTxWeight = 100_000;
+                this.MaxBlockSigopsCost = 20_000;
+                this.MaxStandardTxSigopsCost = 20_000 / 5;
+                this.WitnessScaleFactor = 4;
             }
 
             public override int GetStakeMinConfirmations(int height, Network network)

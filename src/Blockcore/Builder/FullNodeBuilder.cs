@@ -105,7 +105,7 @@ namespace Blockcore.Builder
             this.NodeSettings = nodeSettings;
             this.Network = this.NodeSettings.Network;
 
-            this.ConfigureServices(service =>
+            ConfigureServices(service =>
             {
                 service.AddSingleton(this.NodeSettings);
                 service.AddSingleton(this.Network);
@@ -171,7 +171,7 @@ namespace Blockcore.Builder
                 throw new InvalidOperationException("full node already built");
             this.fullNodeBuilt = true;
 
-            this.Services = this.BuildServices();
+            this.Services = BuildServices();
 
             // Print command-line help
             if (this.NodeSettings?.PrintHelpAndExit ?? false)
@@ -193,7 +193,7 @@ namespace Blockcore.Builder
             this.NodeSettings?.CreateDefaultConfigurationFile(this.Features.FeatureRegistrations, this);
 
             ServiceProvider fullNodeServiceProvider = this.Services.BuildServiceProvider();
-            this.ConfigureServices(fullNodeServiceProvider);
+            ConfigureServices(fullNodeServiceProvider);
 
             // Obtain the nodeSettings from the service (it's set used FullNodeBuilder.UseNodeSettings)
             var nodeSettings = fullNodeServiceProvider.GetService<NodeSettings>();

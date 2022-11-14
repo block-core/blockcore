@@ -93,7 +93,7 @@ namespace Blockcore.Features.MemoryPool
             this.mapOrphanTransactionsByPrev = new Dictionary<OutPoint, List<OrphanTx>>(); // OutPoint already correctly implements equality compare
             this.recentRejects = new Dictionary<uint256, uint256>();
             this.hashRecentRejectsChainTip = uint256.Zero;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.lockObject = new object();
         }
 
@@ -154,7 +154,7 @@ namespace Blockcore.Features.MemoryPool
             {
                 foreach (Transaction transaction in transactionsToRemove)
                 {
-                    this.EraseOrphanTxLock(transaction.GetHash());
+                    EraseOrphanTxLock(transaction.GetHash());
                 }
             }
         }
@@ -275,7 +275,7 @@ namespace Blockcore.Features.MemoryPool
                             // witness-stripped transactions, as they can have been malleated.
                             // See https://github.com/bitcoin/bitcoin/issues/8279 for details.
 
-                            this.AddToRecentRejects(orphanHash);
+                            AddToRecentRejects(orphanHash);
                         }
                     }
 
@@ -290,7 +290,7 @@ namespace Blockcore.Features.MemoryPool
                 {
                     foreach (uint256 hash in eraseQueue)
                     {
-                        this.EraseOrphanTxLock(hash);
+                        EraseOrphanTxLock(hash);
                     }
                 }
             }
@@ -341,11 +341,11 @@ namespace Blockcore.Features.MemoryPool
                 //  from. pfrom->AskFor(_inv);
             }
 
-            bool ret = this.AddOrphanTx(from.PeerVersion.Nonce, tx);
+            bool ret = AddOrphanTx(from.PeerVersion.Nonce, tx);
 
             // DoS prevention: do not allow mapOrphanTransactions to grow unbounded
             int nMaxOrphanTx = this.mempoolSettings.MaxOrphanTx;
-            int nEvicted = this.LimitOrphanTxSize(nMaxOrphanTx);
+            int nEvicted = LimitOrphanTxSize(nMaxOrphanTx);
             if (nEvicted > 0)
                 this.logger.LogDebug("mapOrphan overflow, removed {0} tx", nEvicted);
 
@@ -381,7 +381,7 @@ namespace Blockcore.Features.MemoryPool
                     {
                         lock (this.lockObject)
                         {
-                            nErased += this.EraseOrphanTxLock(maybeErase.Tx.GetHash()) ? 1 : 0;
+                            nErased += EraseOrphanTxLock(maybeErase.Tx.GetHash()) ? 1 : 0;
                         }
                     }
                     else
@@ -405,7 +405,7 @@ namespace Blockcore.Features.MemoryPool
                     // Evict a random orphan:
                     int randomCount = this.random.Next(this.mapOrphanTransactions.Count);
                     uint256 erase = this.mapOrphanTransactions.ElementAt(randomCount).Key;
-                    this.EraseOrphanTxLock(erase);
+                    EraseOrphanTxLock(erase);
                     ++nEvicted;
                 }
             }
@@ -527,7 +527,7 @@ namespace Blockcore.Features.MemoryPool
                 {
                     if (erase.NodeId == peerId)
                     {
-                        erased += this.EraseOrphanTxLock(erase.Tx.GetHash()) ? 1 : 0;
+                        erased += EraseOrphanTxLock(erase.Tx.GetHash()) ? 1 : 0;
                     }
                 }
 

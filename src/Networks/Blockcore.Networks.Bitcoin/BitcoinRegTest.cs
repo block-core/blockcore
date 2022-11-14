@@ -116,8 +116,8 @@ namespace Blockcore.Networks.Bitcoin
 
             Assert(this.Consensus.HashGenesisBlock == uint256.Parse("0x0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"));
 
-            this.RegisterRules(this.Consensus);
-            this.RegisterMempoolRules(this.Consensus);
+            RegisterRules(this.Consensus);
+            RegisterMempoolRules(this.Consensus);
         }
     }
 }

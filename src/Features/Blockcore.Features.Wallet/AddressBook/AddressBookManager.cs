@@ -26,7 +26,7 @@ namespace Blockcore.Features.Wallet.AddressBook
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(dataFolder, nameof(dataFolder));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.fileStorage = new FileStorage<AddressBook>(dataFolder.RootPath);
         }
 

@@ -59,14 +59,14 @@ namespace Blockcore.P2P.Peer
         /// <param name="onPeerDisposed">Callback that is called before the peer is disposed.</param>
         public NetworkPeerDisposer(ILoggerFactory loggerFactory, IAsyncProvider asyncProvider, Action<INetworkPeer> onPeerDisposed = null)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.asyncProvider = asyncProvider;
             this.onPeerDisposed = onPeerDisposed;
             this.connectedPeers = new ConcurrentDictionary<int, INetworkPeer>();
 
             string dequeuerName = $"{nameof(NetworkPeerDisposer)}-{nameof(this.peersToDispose)}";
-            this.peersToDispose = asyncProvider.CreateAndRunAsyncDelegateDequeuer<INetworkPeer>(dequeuerName, this.OnEnqueueAsync);
+            this.peersToDispose = asyncProvider.CreateAndRunAsyncDelegateDequeuer<INetworkPeer>(dequeuerName, OnEnqueueAsync);
         }
 
         /// <summary>

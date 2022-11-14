@@ -13,7 +13,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class BlockSizeRuleTest : TestConsensusRulesUnitTestBase
     {
-        private ConsensusOptions options;
+        private readonly ConsensusOptions options;
 
         public BlockSizeRuleTest()
         {
@@ -50,7 +50,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
                 this.ruleContext.ValidationContext.BlockToValidate.Transactions.Add(new Transaction());
             }
 
-            int blockWeight = this.CalculateBlockWeight(this.ruleContext.ValidationContext.BlockToValidate, TransactionOptions.All);
+            int blockWeight = CalculateBlockWeight(this.ruleContext.ValidationContext.BlockToValidate, TransactionOptions.All);
 
             // increase max block weight to be able to hit this if statement
             this.options.MaxBlockWeight = (uint)(blockWeight * 4) + 100;
@@ -64,7 +64,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         public async Task RunAsync_BlockSizeAboveMaxBlockBaseSize_ThrowsBadBlockLengthConsensusErrorExceptionAsync()
         {
             this.ruleContext.ValidationContext.BlockToValidate = GenerateBlockWithWeight((int)this.options.MaxBlockBaseSize + 1, TransactionOptions.All);
-            int blockWeight = this.CalculateBlockWeight(this.ruleContext.ValidationContext.BlockToValidate, TransactionOptions.All);
+            int blockWeight = CalculateBlockWeight(this.ruleContext.ValidationContext.BlockToValidate, TransactionOptions.All);
 
             // increase max block weight to be able to hit this if statement
             this.options.MaxBlockWeight = (uint)(blockWeight * 4) + 1;
@@ -130,7 +130,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             transaction.Outputs.Add(new TxOut(new Money(10000000000), new Script()));
             block.Transactions.Add(transaction);
 
-            int blockWeight = this.CalculateBlockWeight(block, options);
+            int blockWeight = CalculateBlockWeight(block, options);
 
             int requiredScriptWeight = weight - blockWeight - 4;
             block.Transactions[0].Outputs.Clear();
@@ -138,7 +138,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             Script script = Script.FromBytesUnsafe(new string('A', requiredScriptWeight).Select(c => (byte)c).ToArray());
             transaction.Outputs.Add(new TxOut(new Money(10000000000), script));
 
-            blockWeight = this.CalculateBlockWeight(block, options);
+            blockWeight = CalculateBlockWeight(block, options);
 
             if (blockWeight == weight)
             {

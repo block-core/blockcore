@@ -62,7 +62,7 @@ namespace Blockcore.AsyncWork
         /// <inheritdoc />
         public IAsyncLoop Run(TimeSpan? repeatEvery = null, TimeSpan? startAfter = null)
         {
-            return this.Run(CancellationToken.None, repeatEvery, startAfter);
+            return Run(CancellationToken.None, repeatEvery, startAfter);
         }
 
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace Blockcore.AsyncWork
             if (repeatEvery != null)
                 this.RepeatEvery = repeatEvery.Value;
 
-            this.RunningTask = Task.Run(async () => await this.StartAsync(cancellation, startAfter), cancellation);
+            this.RunningTask = Task.Run(async () => await StartAsync(cancellation, startAfter), cancellation);
 
             return this;
         }
@@ -114,20 +114,18 @@ namespace Blockcore.AsyncWork
             {
                 if (!cancellation.IsCancellationRequested)
                 {
-                    this.logger.LogCritical(new EventId(0), ex, this.Name + " threw an unhandled exception");
+                    this.logger.LogCritical(new EventId(0), ex, "{logName} threw an unhandled exception", this.Name);
                     this.logger.LogError("{logName} threw an unhandled exception: {logUncaughtException}", this.Name, ex.ToString());
-                    return;
                 }
             }
             catch (Exception ex)
             {
-                this.logger.LogCritical(new EventId(0), ex, this.Name + " threw an unhandled exception");
+                this.logger.LogCritical(new EventId(0), ex, "{logName} threw an unhandled exception", this.Name);
                 this.logger.LogError("{0} threw an unhandled exception: {1}", this.Name, ex.ToString());
-                return;
             }
             finally
             {
-                this.logger.LogInformation(this.Name + " stopping.");
+                this.logger.LogInformation("{logName} stopping.", this.Name);
             }
         }
 

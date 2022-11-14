@@ -38,7 +38,7 @@ namespace Blockcore.IntegrationTests.BlockStore
 
         protected override void BeforeTest()
         {
-            this.nodeBuilder = NodeBuilder.Create(Path.Combine(this.GetType().Name, this.CurrentTest.DisplayName));
+            this.nodeBuilder = NodeBuilder.Create(Path.Combine(GetType().Name, this.CurrentTest.DisplayName));
             this.network = new BitcoinRegTest();
         }
 
@@ -110,7 +110,7 @@ namespace Blockcore.IntegrationTests.BlockStore
             var walletException = (WalletException)this.caughtException;
             walletException.Message.Should().Be("No spendable transactions found.");
 
-            this.ResetCaughtException();
+            ResetCaughtException();
         }
 
         private void the_transaction_is_put_in_the_mempool()

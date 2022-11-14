@@ -40,12 +40,12 @@ namespace Blockcore.Features.MemoryPool.Rules
             // Check against previous transactions.
             // This is done last to help prevent CPU exhaustion denial-of-service attacks.
             var txdata = new PrecomputedTransactionData(context.Transaction);
-            if (!this.CheckInputs(context, scriptVerifyFlags, txdata))
+            if (!CheckInputs(context, scriptVerifyFlags, txdata))
             {
                 // SCRIPT_VERIFY_CLEANSTACK requires SCRIPT_VERIFY_WITNESS, so we
                 // need to turn both off, and compare against just turning off CLEANSTACK
                 // to see if the failure is specifically due to witness validation.
-                if (!context.Transaction.HasWitness && this.CheckInputs(context, scriptVerifyFlags & ~(ScriptVerify.Witness | ScriptVerify.CleanStack), txdata) && !this.CheckInputs(context, scriptVerifyFlags & ~ScriptVerify.CleanStack, txdata))
+                if (!context.Transaction.HasWitness && CheckInputs(context, scriptVerifyFlags & ~(ScriptVerify.Witness | ScriptVerify.CleanStack), txdata) && !CheckInputs(context, scriptVerifyFlags & ~ScriptVerify.CleanStack, txdata))
                 {
                     // Only the witness is missing, so the transaction itself may be fine.
                     this.logger.LogTrace("(-)[FAIL_WITNESS_MUTATED]");
@@ -65,7 +65,7 @@ namespace Blockcore.Features.MemoryPool.Rules
 
             DeploymentFlags flags = this.nodeDeployments.GetFlags(this.chainIndexer.Tip);
 
-            if (!this.CheckInputs(context, flags.ScriptFlags, txdata))
+            if (!CheckInputs(context, flags.ScriptFlags, txdata))
             {
                 this.logger.LogTrace("(-)[FAIL_SCRIPT_VERIFY]");
                 context.State.Fail(new MempoolError(), $"CheckInputs: BUG! PLEASE REPORT THIS! ConnectInputs failed against MANDATORY but not STANDARD flags {context.TransactionHash}").Throw();

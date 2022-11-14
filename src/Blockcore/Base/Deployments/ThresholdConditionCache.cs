@@ -31,7 +31,7 @@ namespace Blockcore.Base.Deployments
         private readonly IConsensus consensus;
 
         // Cache of BIP9 deployment states keyed by block hash.
-        private Dictionary<uint256, ThresholdState?[]> cache = new Dictionary<uint256, ThresholdState?[]>();
+        private readonly Dictionary<uint256, ThresholdState?[]> cache = new Dictionary<uint256, ThresholdState?[]>();
 
         /// <summary>
         /// Constructs this object containing the BIP9 deployment states cache.
@@ -55,7 +55,7 @@ namespace Blockcore.Base.Deployments
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = this.GetState(pindexPrev, i);
+                array[i] = GetState(pindexPrev, i);
             }
 
             return array;
@@ -99,7 +99,7 @@ namespace Blockcore.Base.Deployments
 
                 while (headerTemp != periodStartsHeader)
                 {
-                    if (this.Condition(headerTemp, deploymentIndex))
+                    if (Condition(headerTemp, deploymentIndex))
                     {
                         votes++;
                     }
@@ -179,12 +179,12 @@ namespace Blockcore.Base.Deployments
 
             // Walk backwards in steps of nPeriod to find a pindexPrev whose information is known.
             var vToCompute = new List<ChainedHeader>();
-            while (!this.ContainsKey(indexPrev?.HashBlock, deployment))
+            while (!ContainsKey(indexPrev?.HashBlock, deployment))
             {
                 if (indexPrev.GetMedianTimePast() < timeStart)
                 {
                     // Optimization: don't recompute down further, as we know every earlier block will be before the start time.
-                    this.Set(indexPrev?.HashBlock, deployment, ThresholdState.Defined);
+                    Set(indexPrev?.HashBlock, deployment, ThresholdState.Defined);
                     break;
                 }
 
@@ -193,8 +193,8 @@ namespace Blockcore.Base.Deployments
             }
 
             // At this point, cache[pindexPrev] is known.
-            this.Assert(this.ContainsKey(indexPrev?.HashBlock, deployment));
-            ThresholdState state = this.Get(indexPrev?.HashBlock, deployment);
+            Assert(ContainsKey(indexPrev?.HashBlock, deployment));
+            ThresholdState state = Get(indexPrev?.HashBlock, deployment);
 
             // Now walk forward and compute the state of descendants of pindexPrev.
             while (vToCompute.Count != 0)
@@ -233,7 +233,7 @@ namespace Blockcore.Base.Deployments
                             int count = 0;
                             for (int i = 0; i < period; i++)
                             {
-                                if (this.Condition(pindexCount, deployment))
+                                if (Condition(pindexCount, deployment))
                                 {
                                     count++;
                                 }
@@ -266,7 +266,7 @@ namespace Blockcore.Base.Deployments
                 }
 
                 ThresholdState stateN = state = stateNext;
-                this.Set(indexPrev?.HashBlock, deployment, stateN);
+                Set(indexPrev?.HashBlock, deployment, stateN);
             }
 
             return state;
@@ -334,7 +334,7 @@ namespace Blockcore.Base.Deployments
             // This restricts us to at most 30 independent deployments. By restricting the top 3 bits to 001 we get 29 out of those
             // for the purposes of this proposal, and support two future upgrades for different mechanisms (top bits 010 and 011).
             // When a block nVersion does not have top bits 001, it is treated as if all bits are 0 for the purposes of deployments.
-            return (((pindex.Header.Version & VersionbitsTopMask) == VersionbitsTopBits) && (pindex.Header.Version & this.Mask(deployment)) != 0);
+            return (((pindex.Header.Version & VersionbitsTopMask) == VersionbitsTopBits) && (pindex.Header.Version & Mask(deployment)) != 0);
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace Blockcore.Base.Deployments
         private void Assert(bool v)
         {
             if (!v)
-                throw new ArgumentNullException("Assertion failed");
+                throw new ArgumentNullException(nameof(v), "Assertion failed");
         }
     }
 }

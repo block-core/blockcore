@@ -7,7 +7,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
 {
     public class BackendPerformanceCounterTest
     {
-        private BackendPerformanceCounter performanceCounter;
+        private readonly BackendPerformanceCounter performanceCounter;
 
         public BackendPerformanceCounterTest()
         {

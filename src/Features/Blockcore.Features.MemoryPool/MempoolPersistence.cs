@@ -182,7 +182,7 @@ namespace Blockcore.Features.MemoryPool
         public MempoolPersistence(NodeSettings settings, ILoggerFactory loggerFactory)
         {
             this.dataDir = settings?.DataDir;
-            this.mempoolLogger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.mempoolLogger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -190,7 +190,7 @@ namespace Blockcore.Features.MemoryPool
         {
             fileName = fileName ?? DefaultFilename;
             IEnumerable<MempoolPersistenceEntry> toSave = memPool.MapTx.Values.ToArray().Select(tx => MempoolPersistenceEntry.FromTxMempoolEntry(tx));
-            return this.Save(network, toSave, fileName);
+            return Save(network, toSave, fileName);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Blockcore.Features.MemoryPool
                     {
                         using (var fs = new FileStream(tempFilePath, FileMode.Create))
                         {
-                            this.DumpToStream(network, toSave, fs);
+                            DumpToStream(network, toSave, fs);
                         }
                         File.Delete(filePath);
                         File.Move(tempFilePath, filePath);
@@ -270,7 +270,7 @@ namespace Blockcore.Features.MemoryPool
             {
                 using (var fs = new FileStream(filePath, FileMode.Open))
                 {
-                    return this.LoadFromStream(network, fs);
+                    return LoadFromStream(network, fs);
                 }
             }
             catch (Exception ex)

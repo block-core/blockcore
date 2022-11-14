@@ -43,7 +43,7 @@ namespace Blockcore.Features.RPC
 
             this.next = next;
             this.authorization = authorization;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.httpContextFactory = httpContextFactory;
             this.dataFolder = dataFolder;
             this.ContentType = contentType;
@@ -53,7 +53,7 @@ namespace Blockcore.Features.RPC
         {
             Guard.NotNull(httpContext, nameof(httpContext));
 
-            if (!this.Authorized(httpContext))
+            if (!Authorized(httpContext))
             {
                 httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
@@ -62,7 +62,7 @@ namespace Blockcore.Features.RPC
             Exception ex = null;
             try
             {
-                string request = await this.ReadRequestAsync(httpContext.Request).ConfigureAwait(false);
+                string request = await ReadRequestAsync(httpContext.Request).ConfigureAwait(false);
 
                 this.logger.LogDebug("RPC request: {0}", string.IsNullOrEmpty(request) ? request : JToken.Parse(request).ToString(Formatting.Indented));
 
@@ -72,19 +72,19 @@ namespace Blockcore.Features.RPC
                 if (token is JArray)
                 {
                     // Batch request, invoke each request and accumulate responses into JArray.
-                    response = await this.InvokeBatchAsync(httpContext, token as JArray);
+                    response = await InvokeBatchAsync(httpContext, token as JArray);
                 }
                 else if (token is JObject)
                 {
                     // Single request, invoke single request and return single response object.
-                    response = await this.InvokeSingleAsync(httpContext, token as JObject);
+                    response = await InvokeSingleAsync(httpContext, token as JObject);
                 }
                 else
                 {
                     throw new NotImplementedException("The request is not supported.");
                 }
 
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
 
                 // Write the response body.
                 using (StreamWriter streamWriter = new StreamWriter(httpContext.Response.Body, Encoding.Default, 1024, true))
@@ -98,7 +98,7 @@ namespace Blockcore.Features.RPC
                 ex = exx;
             }
 
-            await this.HandleRpcInvokeExceptionAsync(httpContext, ex);
+            await HandleRpcInvokeExceptionAsync(httpContext, ex);
         }
 
         private async Task<string> ReadRequestAsync(HttpRequest request)
@@ -134,44 +134,44 @@ namespace Blockcore.Features.RPC
             if (ex is ArgumentException || ex is FormatException)
             {
                 JObject response = CreateError(RPCErrorCode.RPC_MISC_ERROR, "Argument error: " + ex.Message);
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
                 await httpContext.Response.WriteAsync(response.ToString(Formatting.Indented));
             }
             else if (ex is BlockNotFoundException)
             {
                 JObject response = CreateError(RPCErrorCode.RPC_INVALID_REQUEST, "Argument error: " + ex.Message);
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
                 await httpContext.Response.WriteAsync(response.ToString(Formatting.Indented));
             }
             else if (ex is ConfigurationException)
             {
                 JObject response = CreateError(RPCErrorCode.RPC_INTERNAL_ERROR, ex.Message);
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
                 await httpContext.Response.WriteAsync(response.ToString(Formatting.Indented));
             }
             else if (ex is RPCServerException)
             {
                 var rpcEx = (RPCServerException)ex;
                 JObject response = CreateError(rpcEx.ErrorCode, ex.Message);
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
                 await httpContext.Response.WriteAsync(response.ToString(Formatting.Indented));
             }
             else if (httpContext.Response?.StatusCode == 404)
             {
                 JObject response = CreateError(RPCErrorCode.RPC_METHOD_NOT_FOUND, "Method not found");
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
                 await httpContext.Response.WriteAsync(response.ToString(Formatting.Indented));
             }
-            else if (this.IsDependencyFailure(ex))
+            else if (IsDependencyFailure(ex))
             {
                 JObject response = CreateError(RPCErrorCode.RPC_METHOD_NOT_FOUND, ex.Message);
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
                 await httpContext.Response.WriteAsync(response.ToString(Formatting.Indented));
             }
             else if (httpContext.Response?.StatusCode == 500 || ex != null)
             {
                 JObject response = CreateError(RPCErrorCode.RPC_INTERNAL_ERROR, "Internal error");
-                httpContext.Response.ContentType = ContentType;
+                httpContext.Response.ContentType = this.ContentType;
                 this.logger.LogError(new EventId(0), ex, "Internal error while calling RPC Method");
                 await httpContext.Response.WriteAsync(response.ToString(Formatting.Indented));
             }
@@ -244,7 +244,7 @@ namespace Blockcore.Features.RPC
             }
             catch (Exception ex)
             {
-                await this.HandleRpcInvokeExceptionAsync(context, ex);
+                await HandleRpcInvokeExceptionAsync(context, ex);
 
                 context.Response.Body.Position = 0;
                 using (var streamReader = new StreamReader(context.Response.Body, Encoding.Default, true, 1024, true))

@@ -31,9 +31,9 @@ namespace Blockcore.Features.PoA
         /// <inheritdoc/>
         public override void AddToBlock(TxMempoolEntry mempoolEntry)
         {
-            this.AddTransactionToBlock(mempoolEntry.Transaction);
-            this.UpdateBlockStatistics(mempoolEntry);
-            this.UpdateTotalFees(mempoolEntry.Fee);
+            AddTransactionToBlock(mempoolEntry.Transaction);
+            UpdateBlockStatistics(mempoolEntry);
+            UpdateTotalFees(mempoolEntry.Fee);
         }
 
         /// <inheritdoc/>

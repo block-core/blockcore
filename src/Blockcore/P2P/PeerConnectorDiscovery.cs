@@ -35,7 +35,7 @@ namespace Blockcore.P2P
             ISelfEndpointTracker selfEndpointTracker) :
             base(asyncProvider, dateTimeProvider, loggerFactory, network, networkPeerFactory, nodeLifetime, nodeSettings, connectionSettings, peerAddressManager, selfEndpointTracker)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.Requirements.RequiredServices = NetworkPeerServices.Network;
         }
 
@@ -123,7 +123,7 @@ namespace Blockcore.P2P
             else
             {
                 // Connect if local, ip range filtering disabled or ip range filtering enabled and peer in a different group.
-                if (peer.Endpoint.Address.IsRoutable(false) && this.ConnectionSettings.IpRangeFiltering && this.PeerIsPartOfExistingGroup(peer))
+                if (peer.Endpoint.Address.IsRoutable(false) && this.ConnectionSettings.IpRangeFiltering && PeerIsPartOfExistingGroup(peer))
                 {
                     this.logger.LogTrace("(-)[RANGE_FILTERED]");
                     return;
@@ -131,7 +131,7 @@ namespace Blockcore.P2P
 
                 this.logger.LogDebug("Attempting connection to {0}.", peer.Endpoint);
 
-                await this.ConnectAsync(peer).ConfigureAwait(false);
+                await ConnectAsync(peer).ConfigureAwait(false);
             }
         }
 

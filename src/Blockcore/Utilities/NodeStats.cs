@@ -51,7 +51,7 @@ namespace Blockcore.Utilities
         {
             this.dateTimeProvider = dateTimeProvider;
             this.locker = new object();
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.stats = new List<StatsItem>();
         }
 

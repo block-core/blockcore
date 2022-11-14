@@ -314,7 +314,7 @@ namespace Blockcore.Benchmark.Uint256.New
 
         public byte[] ToBytes(bool littleEndian = true)
         {
-            var output = this.ToSpan().ToArray();
+            var output = ToSpan().ToArray();
 
             if (!littleEndian)
             {
@@ -343,7 +343,7 @@ namespace Blockcore.Benchmark.Uint256.New
 
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as uint256);
+            return Equals(obj as uint256);
         }
 
         public static bool operator !=(uint256 a, uint256 b)
@@ -383,10 +383,10 @@ namespace Blockcore.Benchmark.Uint256.New
             switch (obj)
             {
                 case uint256 target:
-                    return this.CompareTo(target);
+                    return CompareTo(target);
 
                 case null:
-                    return this.CompareTo(null as uint256);
+                    return CompareTo(null as uint256);
 
                 default:
                     throw new ArgumentException($"Object is not an instance of uint256", nameof(obj));

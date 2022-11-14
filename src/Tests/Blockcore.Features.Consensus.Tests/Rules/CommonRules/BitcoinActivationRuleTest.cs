@@ -16,7 +16,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         {
             this.network = KnownNetworks.TestNet; //important for bips
             this.ChainIndexer = GenerateChainWithHeight(5, this.network);
-            this.consensusRules = this.InitializeConsensusRules();
+            this.consensusRules = InitializeConsensusRules();
         }
 
         [Fact]

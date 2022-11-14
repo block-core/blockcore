@@ -228,7 +228,7 @@ namespace Blockcore.Consensus.Chain
             this.finalizedBlockInfo = finalizedBlockInfo;
             this.consensusSettings = consensusSettings;
             this.invalidHashesStore = invalidHashesStore;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.peerTipsByPeerId = new Dictionary<int, uint256>();
             this.peerIdsByTipHash = new Dictionary<uint256, HashSet<int>>();
@@ -264,7 +264,7 @@ namespace Blockcore.Consensus.Chain
             }
 
             // Initialize local tip claim with consensus tip.
-            this.AddOrReplacePeerTip(LocalPeerId, consensusTip.HashBlock);
+            AddOrReplacePeerTip(LocalPeerId, consensusTip.HashBlock);
         }
 
         /// <inheritdoc />
@@ -332,7 +332,7 @@ namespace Blockcore.Consensus.Chain
                 throw new ConsensusException("Header not found!");
             }
 
-            this.RemovePeerClaim(networkPeerId, peerTip);
+            RemovePeerClaim(networkPeerId, peerTip);
         }
 
         /// <inheritdoc />
@@ -387,7 +387,7 @@ namespace Blockcore.Consensus.Chain
 
             chainedHeader.BlockValidationState = ValidationState.PartiallyValidated;
 
-            if (chainedHeader.ChainWork > this.GetConsensusTip().ChainWork)
+            if (chainedHeader.ChainWork > GetConsensusTip().ChainWork)
             {
                 // A better tip that was partially validated is found. Set our node's claim on the tip to avoid that chain removal in
                 // case all the peers that were claiming a better chain are disconnected before we switch consensus tip of our node.
@@ -395,7 +395,7 @@ namespace Blockcore.Consensus.Chain
                 // that we are trying to switch to.
                 this.logger.LogDebug("Partially validated chained header '{0}' has more work than the current consensus tip.", chainedHeader);
 
-                this.ClaimPeerTip(LocalPeerId, chainedHeader.HashBlock);
+                ClaimPeerTip(LocalPeerId, chainedHeader.HashBlock);
 
                 fullValidationRequired = true;
             }
@@ -442,9 +442,9 @@ namespace Blockcore.Consensus.Chain
                 return new List<int>();
             }
 
-            List<int> peersToBan = this.RemoveSubtree(chainedHeader);
+            List<int> peersToBan = RemoveSubtree(chainedHeader);
 
-            this.RemoveUnclaimedBranch(chainedHeader.Previous);
+            RemoveUnclaimedBranch(chainedHeader.Previous);
 
             return peersToBan;
         }
@@ -452,7 +452,7 @@ namespace Blockcore.Consensus.Chain
         /// <inheritdoc />
         public List<int> ConsensusTipChanged(ChainedHeader newConsensusTip, bool blockMined = false)
         {
-            ChainedHeader oldConsensusTip = this.GetConsensusTip();
+            ChainedHeader oldConsensusTip = GetConsensusTip();
             ChainedHeader fork = newConsensusTip.FindFork(oldConsensusTip);
             ChainedHeader currentHeader = newConsensusTip;
 
@@ -469,12 +469,12 @@ namespace Blockcore.Consensus.Chain
             }
 
             // Switch consensus tip to the new block header.
-            this.AddOrReplacePeerTip(LocalPeerId, newConsensusTip.HashBlock);
+            AddOrReplacePeerTip(LocalPeerId, newConsensusTip.HashBlock);
 
-            List<int> peerIdsToResync = this.FindPeersToResync(newConsensusTip);
+            List<int> peerIdsToResync = FindPeersToResync(newConsensusTip);
 
             // Remove block data for the headers that are too far from the consensus tip.
-            this.CleanOldBlockDataFromMemory(newConsensusTip);
+            CleanOldBlockDataFromMemory(newConsensusTip);
 
             return peerIdsToResync;
         }
@@ -496,7 +496,7 @@ namespace Blockcore.Consensus.Chain
                     ChainedHeader peerTip = this.chainedHeadersByHash[peerIdToTipHash.Value];
                     int peerId = peerIdToTipHash.Key;
 
-                    ChainedHeader fork = this.FindForkIfChainedHeadersNotOnSameChain(peerTip, consensusTip);
+                    ChainedHeader fork = FindForkIfChainedHeadersNotOnSameChain(peerTip, consensusTip);
 
                     int finalizedHeight = this.finalizedBlockInfo.GetFinalizedBlockInfo().Height;
 
@@ -589,7 +589,7 @@ namespace Blockcore.Consensus.Chain
                     this.peerIdsByTipHash.Remove(header.HashBlock);
                 }
 
-                this.DisconnectChainHeader(header);
+                DisconnectChainHeader(header);
             }
 
             return peersToBan;
@@ -654,20 +654,20 @@ namespace Blockcore.Consensus.Chain
             uint256 lastHash = headers.Last().GetHash();
             if (this.chainedHeadersByHash.ContainsKey(lastHash))
             {
-                this.AddOrReplacePeerTip(networkPeerId, lastHash);
+                AddOrReplacePeerTip(networkPeerId, lastHash);
 
                 this.logger.LogTrace("(-)[NO_NEW_HEADERS]");
                 return new ConnectNewHeadersResult() { Consumed = this.chainedHeadersByHash[lastHash] };
             }
 
-            List<ChainedHeader> newChainedHeaders = this.CreateNewHeaders(headers, out bool insufficientInfo);
+            List<ChainedHeader> newChainedHeaders = CreateNewHeaders(headers, out bool insufficientInfo);
 
             if (insufficientInfo)
             {
-                if (this.TryFindLastValidatedHeader(headers, out ChainedHeader lastAlreadyValidatedHeader))
+                if (TryFindLastValidatedHeader(headers, out ChainedHeader lastAlreadyValidatedHeader))
                 {
                     this.logger.LogDebug("Some headers were already validated.");
-                    this.AddOrReplacePeerTip(networkPeerId, lastAlreadyValidatedHeader.Header.GetHash());
+                    AddOrReplacePeerTip(networkPeerId, lastAlreadyValidatedHeader.Header.GetHash());
                 }
 
                 this.logger.LogTrace("(-)[INSUFF_INFO]");
@@ -683,7 +683,7 @@ namespace Blockcore.Consensus.Chain
             ChainedHeader earliestNewHeader = newChainedHeaders.First();
             ChainedHeader latestNewHeader = newChainedHeaders.Last();
 
-            this.AddOrReplacePeerTip(networkPeerId, latestNewHeader.HashBlock);
+            AddOrReplacePeerTip(networkPeerId, latestNewHeader.HashBlock);
 
             ConnectNewHeadersResult connectNewHeadersResult = null;
 
@@ -706,7 +706,7 @@ namespace Blockcore.Consensus.Chain
                         this.logger.LogDebug("Chained header '{0}' represents an assumed valid block.", currentChainedHeader);
 
                         bool assumeValidBelowLastCheckpoint = this.consensusSettings.UseCheckpoints && (currentChainedHeader.Height <= this.checkpoints.GetLastCheckpointHeight());
-                        connectNewHeadersResult = this.HandleAssumedValidHeader(currentChainedHeader, latestNewHeader, assumeValidBelowLastCheckpoint);
+                        connectNewHeadersResult = HandleAssumedValidHeader(currentChainedHeader, latestNewHeader, assumeValidBelowLastCheckpoint);
                         break;
                     }
 
@@ -715,7 +715,7 @@ namespace Blockcore.Consensus.Chain
                     {
                         this.logger.LogDebug("Chained header '{0}' is a checkpoint.", currentChainedHeader);
 
-                        connectNewHeadersResult = this.HandleCheckpointsHeader(currentChainedHeader, latestNewHeader, checkpoint, networkPeerId);
+                        connectNewHeadersResult = HandleCheckpointsHeader(currentChainedHeader, latestNewHeader, checkpoint, networkPeerId);
                         break;
                     }
 
@@ -735,11 +735,11 @@ namespace Blockcore.Consensus.Chain
                 }
             }
 
-            if (latestNewHeader.ChainWork > this.GetConsensusTip().ChainWork)
+            if (latestNewHeader.ChainWork > GetConsensusTip().ChainWork)
             {
                 this.logger.LogDebug("Chained header '{0}' is the tip of a chain with more work than our current consensus tip.", latestNewHeader);
 
-                connectNewHeadersResult = this.MarkBetterChainAsRequired(latestNewHeader, latestNewHeader);
+                connectNewHeadersResult = MarkBetterChainAsRequired(latestNewHeader, latestNewHeader);
             }
 
             if (connectNewHeadersResult == null)
@@ -764,7 +764,7 @@ namespace Blockcore.Consensus.Chain
             ChainedHeader current = lastRequiredHeader;
             ChainedHeader next = current;
 
-            while (!this.HeaderWasRequested(current))
+            while (!HeaderWasRequested(current))
             {
                 current.BlockDataAvailability = BlockDataAvailabilityState.BlockRequired;
 
@@ -785,7 +785,7 @@ namespace Blockcore.Consensus.Chain
         {
             ChainedHeader current = chainedHeader;
 
-            while (!this.HeaderWasMarkedAsValidated(current))
+            while (!HeaderWasMarkedAsValidated(current))
             {
                 current.IsAssumedValid = true;
                 current = current.Previous;
@@ -802,7 +802,7 @@ namespace Blockcore.Consensus.Chain
         /// <c>false</c> otherwise or if checkpoints are disabled.</param>
         private ConnectNewHeadersResult HandleAssumedValidHeader(ChainedHeader assumedValidHeader, ChainedHeader latestNewHeader, bool isBelowLastCheckpoint)
         {
-            ChainedHeader bestTip = this.GetConsensusTip();
+            ChainedHeader bestTip = GetConsensusTip();
             var connectNewHeadersResult = new ConnectNewHeadersResult() { Consumed = latestNewHeader };
 
             if (latestNewHeader.ChainWork > bestTip.ChainWork)
@@ -810,10 +810,10 @@ namespace Blockcore.Consensus.Chain
                 this.logger.LogDebug("Chained header '{0}' is the tip of a chain with more work than our current consensus tip.", latestNewHeader);
 
                 ChainedHeader latestHeaderToMark = isBelowLastCheckpoint ? assumedValidHeader : latestNewHeader;
-                connectNewHeadersResult = this.MarkBetterChainAsRequired(latestHeaderToMark, latestNewHeader);
+                connectNewHeadersResult = MarkBetterChainAsRequired(latestHeaderToMark, latestNewHeader);
             }
 
-            this.MarkTrustedChainAsAssumedValid(assumedValidHeader);
+            MarkTrustedChainAsAssumedValid(assumedValidHeader);
 
             return connectNewHeadersResult;
         }
@@ -833,7 +833,7 @@ namespace Blockcore.Consensus.Chain
             {
                 // Make sure that chain with invalid checkpoint in it is removed from the tree.
                 // Otherwise a new peer may connect and present headers on top of invalid chain and we wouldn't recognize it.
-                this.RemovePeerClaim(peerId, latestNewHeader);
+                RemovePeerClaim(peerId, latestNewHeader);
 
                 this.logger.LogDebug("Chained header '{0}' does not match checkpoint '{1}'.", chainedHeader, checkpoint.Hash);
                 this.logger.LogTrace("(-)[INVALID_HEADER_NOT_MATCHING_CHECKPOINT]");
@@ -844,8 +844,8 @@ namespace Blockcore.Consensus.Chain
             if (chainedHeader.Height == this.checkpoints.LastCheckpointHeight)
                 subchainTip = latestNewHeader;
 
-            ConnectNewHeadersResult connectNewHeadersResult = this.MarkBetterChainAsRequired(subchainTip, latestNewHeader);
-            this.MarkTrustedChainAsAssumedValid(chainedHeader);
+            ConnectNewHeadersResult connectNewHeadersResult = MarkBetterChainAsRequired(subchainTip, latestNewHeader);
+            MarkTrustedChainAsAssumedValid(chainedHeader);
 
             return connectNewHeadersResult;
         }
@@ -895,7 +895,7 @@ namespace Blockcore.Consensus.Chain
                     break;
                 }
 
-                this.DisconnectChainHeader(currentHeader);
+                DisconnectChainHeader(currentHeader);
 
                 this.logger.LogDebug("Header '{0}' was removed from the tree.", currentHeader);
 
@@ -925,7 +925,7 @@ namespace Blockcore.Consensus.Chain
             {
                 this.logger.LogDebug("Header '{0}' is not the tip of any peer.", chainedHeader);
                 this.peerIdsByTipHash.Remove(chainedHeader.HashBlock);
-                this.RemoveUnclaimedBranch(chainedHeader);
+                RemoveUnclaimedBranch(chainedHeader);
             }
 
             this.peerTipsByPeerId.Remove(networkPeerId);
@@ -945,7 +945,7 @@ namespace Blockcore.Consensus.Chain
                 return;
             }
 
-            this.ClaimPeerTip(networkPeerId, newTip);
+            ClaimPeerTip(networkPeerId, newTip);
 
             if (oldTipHash != null)
             {
@@ -958,7 +958,7 @@ namespace Blockcore.Consensus.Chain
                     throw new Exception("Old tip is null!");
                 }
 
-                this.RemovePeerClaim(networkPeerId, oldTip);
+                RemovePeerClaim(networkPeerId, oldTip);
             }
 
             this.peerTipsByPeerId.Add(networkPeerId, newTip);
@@ -974,9 +974,9 @@ namespace Blockcore.Consensus.Chain
                 headerToBeCreated = provenBlockHeader.PosBlockHeader;
             }
 
-            this.CreateNewHeaders(new List<BlockHeader>() { headerToBeCreated }, out bool _);
+            CreateNewHeaders(new List<BlockHeader>() { headerToBeCreated }, out bool _);
 
-            ChainedHeader chainedHeader = this.GetChainedHeader(block.GetHash());
+            ChainedHeader chainedHeader = GetChainedHeader(block.GetHash());
 
             chainedHeader.BlockDataAvailability = BlockDataAvailabilityState.BlockAvailable;
             chainedHeader.Block = block;
@@ -1003,7 +1003,7 @@ namespace Blockcore.Consensus.Chain
         {
             insufficientInfo = false;
 
-            if (!this.TryFindNewHeaderIndex(headers, out int newHeaderIndex))
+            if (!TryFindNewHeaderIndex(headers, out int newHeaderIndex))
             {
                 this.logger.LogTrace("(-)[NO_NEW_HEADERS_FOUND]:null");
                 return (List<ChainedHeader>)Enumerable.Empty<ChainedHeader>();
@@ -1019,7 +1019,7 @@ namespace Blockcore.Consensus.Chain
 
             List<ChainedHeader> newChainedHeaders = null;
 
-            ChainedHeader newChainedHeader = this.CreateAndValidateNewChainedHeader(headers[newHeaderIndex], previousChainedHeader, out insufficientInfo);
+            ChainedHeader newChainedHeader = CreateAndValidateNewChainedHeader(headers[newHeaderIndex], previousChainedHeader, out insufficientInfo);
 
             if (newChainedHeader != null)
             {
@@ -1031,13 +1031,13 @@ namespace Blockcore.Consensus.Chain
 
                 try
                 {
-                    this.CheckMaxReorgRuleViolated(newChainedHeader);
+                    CheckMaxReorgRuleViolated(newChainedHeader);
 
                     previousChainedHeader = newChainedHeader;
 
                     for (; newHeaderIndex < headers.Count; newHeaderIndex++)
                     {
-                        newChainedHeader = this.CreateAndValidateNewChainedHeader(headers[newHeaderIndex], previousChainedHeader, out bool _);
+                        newChainedHeader = CreateAndValidateNewChainedHeader(headers[newHeaderIndex], previousChainedHeader, out bool _);
 
                         if (newChainedHeader == null)
                             break;
@@ -1053,7 +1053,7 @@ namespace Blockcore.Consensus.Chain
                     // Undo changes to the tree. This is necessary because the peer claim wasn't set to the last header yet.
                     // So in case of peer disconnection this branch wouldn't be removed.
                     // Also not removing this unclaimed branch will allow other peers to present headers on top of invalid chain without us recognizing it.
-                    this.RemoveUnclaimedBranch(newChainedHeader);
+                    RemoveUnclaimedBranch(newChainedHeader);
 
                     this.logger.LogTrace("(-)[VALIDATION_FAILED]");
                     throw;
@@ -1151,7 +1151,7 @@ namespace Blockcore.Consensus.Chain
         private void CheckMaxReorgRuleViolated(ChainedHeader chainedHeader)
         {
             uint maxReorgLength = this.chainState.MaxReorgLength;
-            ChainedHeader consensusTip = this.GetConsensusTip();
+            ChainedHeader consensusTip = GetConsensusTip();
             if (maxReorgLength != 0)
             {
                 ChainedHeader fork = chainedHeader.FindFork(consensusTip);

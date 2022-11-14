@@ -38,7 +38,7 @@ namespace Blockcore.Features.Consensus
 
         public StakeChainStore(Network network, ChainIndexer chainIndexer, IStakdb stakdb, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.network = network;
             this.chainIndexer = chainIndexer;
             this.stakdb = stakdb;
@@ -117,7 +117,7 @@ namespace Blockcore.Features.Consensus
             var item = new StakeItem { BlockId = chainedHeader.HashBlock, Height = chainedHeader.Height, BlockStake = blockStake, InStore = false };
             bool added = this.items.TryAdd(chainedHeader.HashBlock, item);
             if (added)
-                this.Flush(false);
+                Flush(false);
         }
 
         public void Flush(bool disposeMode)

@@ -57,9 +57,9 @@ namespace Blockcore.Features.MemoryPool
             this.broadcasterManager = broadcasterManager;
             this.payloadProvider = payloadProvider;
             this.feeFilterBehavior = feeFilterBehavior;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
         }
 
         private void AddComponentStats(StringBuilder log)

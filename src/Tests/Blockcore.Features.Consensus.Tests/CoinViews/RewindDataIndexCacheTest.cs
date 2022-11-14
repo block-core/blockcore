@@ -32,7 +32,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
         {
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
-            this.SetupMockCoinView(coinViewMock);
+            SetupMockCoinView(coinViewMock);
 
             Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
             finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
@@ -44,7 +44,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             var items = rewindDataIndexCache.GetMemberValue("items") as ConcurrentDictionary<OutPoint, int>;
 
             items.Should().HaveCount(10);
-            this.CheckCache(items, 5, 1);
+            CheckCache(items, 5, 1);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
         {
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
-            this.SetupMockCoinView(coinViewMock);
+            SetupMockCoinView(coinViewMock);
 
             Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
             finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
@@ -64,7 +64,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             var items = rewindDataIndexCache.GetMemberValue("items") as ConcurrentDictionary<OutPoint, int>;
 
             items.Should().HaveCount(22);
-            this.CheckCache(items, 20, 10);
+            CheckCache(items, 20, 10);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
         {
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
-            this.SetupMockCoinView(coinViewMock);
+            SetupMockCoinView(coinViewMock);
 
             Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
             finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
@@ -85,7 +85,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             var items = rewindDataIndexCache.GetMemberValue("items") as ConcurrentDictionary<OutPoint, int>;
 
             items.Should().HaveCount(21);
-            this.CheckCache(items, 21, 1);
+            CheckCache(items, 21, 1);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
         {
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
-            this.SetupMockCoinView(coinViewMock);
+            SetupMockCoinView(coinViewMock);
 
             Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
             finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
@@ -106,7 +106,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             var items = rewindDataIndexCache.GetMemberValue("items") as ConcurrentDictionary<OutPoint, int>;
 
             items.Should().HaveCount(12);
-            this.CheckCache(items, 15, 9);
+            CheckCache(items, 15, 9);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
         {
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             Mock<ICoinView> coinViewMock = new Mock<ICoinView>();
-            this.SetupMockCoinView(coinViewMock);
+            SetupMockCoinView(coinViewMock);
 
             Mock<IFinalizedBlockInfoRepository> finalizedBlockInfoRepositoryMock = new Mock<IFinalizedBlockInfoRepository>();
             finalizedBlockInfoRepositoryMock.Setup(s => s.GetFinalizedBlockInfo()).Returns(new HashHeightPair());
@@ -127,7 +127,7 @@ namespace Blockcore.Features.Consensus.Tests.CoinViews
             var items = rewindDataIndexCache.GetMemberValue("items") as ConcurrentDictionary<OutPoint, int>;
 
             items.Should().HaveCount(22);
-            this.CheckCache(items, 19, 9);
+            CheckCache(items, 19, 9);
         }
 
         private void CheckCache(ConcurrentDictionary<OutPoint, int> items, int tip, int bottom)

@@ -28,7 +28,7 @@ namespace Blockcore.Features.MemoryPool
             this.settings = settings;
             this.chainIndexer = chainIndexer;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />

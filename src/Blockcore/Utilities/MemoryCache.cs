@@ -115,21 +115,21 @@ namespace Blockcore.Utilities
                 }
                 else
                 {
-                    while (this.IsCacheFullLocked(item))
+                    while (IsCacheFullLocked(item))
                     {
                         // Remove the item that was not used for the longest time.
                         LinkedListNode<CacheItem> lastNode = this.Keys.First;
                         this.Cache.Remove(lastNode.Value.Key);
                         this.Keys.RemoveFirst();
 
-                        this.ItemRemovedLocked(lastNode.Value);
+                        ItemRemovedLocked(lastNode.Value);
                     }
 
                     node = new LinkedListNode<CacheItem>(item);
                     node.Value.Size = item.Size;
 
                     this.Cache.Add(item.Key, node);
-                    this.ItemAddedLocked(item);
+                    ItemAddedLocked(item);
                 }
 
                 node.Value.Dirty = true;
@@ -151,7 +151,7 @@ namespace Blockcore.Utilities
                 {
                     this.Cache.Remove(node.Value.Key);
                     this.Keys.Remove(node);
-                    this.ItemRemovedLocked(node.Value);
+                    ItemRemovedLocked(node.Value);
                 }
             }
         }

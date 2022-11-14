@@ -22,7 +22,7 @@ namespace Blockcore.Consensus.BlockInfo
         /// <summary>Current header version.</summary>
         public virtual int CurrentVersion => 3;
 
-        private static BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
+        private static readonly BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
 
         private uint256 hashPrevBlock;
 
@@ -134,7 +134,7 @@ namespace Blockcore.Consensus.BlockInfo
 
             using (var hs = new HashStream())
             {
-                this.ReadWriteHashingStream(new BitcoinStream(hs, true));
+                ReadWriteHashingStream(new BitcoinStream(hs, true));
                 hash = hs.GetHash();
             }
 
@@ -153,13 +153,13 @@ namespace Blockcore.Consensus.BlockInfo
         /// <returns>A hash.</returns>
         public virtual uint256 GetPoWHash()
         {
-            return this.GetHash();
+            return GetHash();
         }
 
         [Obsolete("Call PrecomputeHash(true, true) instead")]
         public void CacheHashes()
         {
-            this.PrecomputeHash(true, true);
+            PrecomputeHash(true, true);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Blockcore.Consensus.BlockInfo
                 this.hashes = new uint256[1];
 
             if (!lazily && this.hashes[0] == null)
-                this.hashes[0] = this.GetHash();
+                this.hashes[0] = GetHash();
         }
 
         public bool CheckProofOfWork()
@@ -182,13 +182,13 @@ namespace Blockcore.Consensus.BlockInfo
             if ((bitse.CompareTo(BigInteger.Zero) <= 0) || (bitse.CompareTo(pow256) >= 0))
                 return false;
 
-            return this.GetPoWHash() <= this.Bits.ToUInt256();
+            return GetPoWHash() <= this.Bits.ToUInt256();
         }
 
         /// <inheritdoc />
         public override string ToString()
         {
-            return this.GetHash().ToString();
+            return GetHash().ToString();
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Blockcore.Consensus.BlockInfo
 
             // Updating time can change work required on testnet.
             if (consensus.PowAllowMinDifficultyBlocks)
-                this.Bits = this.GetWorkRequired(consensus, prev);
+                this.Bits = GetWorkRequired(consensus, prev);
         }
 
         /// <summary>
@@ -219,17 +219,17 @@ namespace Blockcore.Consensus.BlockInfo
         /// <param name="prev">Previous block.</param>
         public void UpdateTime(DateTimeOffset now, Network network, ChainedHeader prev)
         {
-            this.UpdateTime(now, network.Consensus, prev);
+            UpdateTime(now, network.Consensus, prev);
         }
 
         public Target GetWorkRequired(Network network, ChainedHeader prev)
         {
-            return this.GetWorkRequired(network.Consensus, prev);
+            return GetWorkRequired(network.Consensus, prev);
         }
 
         public Target GetWorkRequired(IConsensus consensus, ChainedHeader prev)
         {
-            return new ChainedHeader(this, this.GetHash(), prev).GetWorkRequired(consensus);
+            return new ChainedHeader(this, GetHash(), prev).GetWorkRequired(consensus);
         }
     }
 }

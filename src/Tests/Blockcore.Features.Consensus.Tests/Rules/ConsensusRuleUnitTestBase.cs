@@ -259,7 +259,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules
 
         internal ProvenBlockHeader Build(ProvenBlockHeader previousProvenBlockHeader = null)
         {
-            this.SetStakeModifier(previousProvenBlockHeader);
+            SetStakeModifier(previousProvenBlockHeader);
             return this.provenBlockHeader;
         }
 

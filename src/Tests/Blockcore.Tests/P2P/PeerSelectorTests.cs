@@ -48,7 +48,7 @@ namespace Blockcore.Tests.P2P
             var endpoint = new IPEndPoint(ipAddress, 80);
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(endpoint, IPAddress.Loopback);
 
             peerAddressManager.PeerConnected(endpoint, DateTime.UtcNow);
@@ -93,7 +93,7 @@ namespace Blockcore.Tests.P2P
             var endPointThree = new IPEndPoint(ipAddress, 80);
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(endPointOne, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointTwo, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointThree, IPAddress.Loopback);
@@ -129,7 +129,7 @@ namespace Blockcore.Tests.P2P
             var endPointThree = new IPEndPoint(ipAddress, 80);
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(endPointOne, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointTwo, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointThree, IPAddress.Loopback);
@@ -170,7 +170,7 @@ namespace Blockcore.Tests.P2P
             var endPointThree = new IPEndPoint(ipAddress, 80);
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(endPointOne, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointTwo, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointThree, IPAddress.Loopback);
@@ -215,7 +215,7 @@ namespace Blockcore.Tests.P2P
             var endPointThree = new IPEndPoint(ipAddress, 80);
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
 
             peerAddressManager.AddPeer(endPointOne, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointTwo, IPAddress.Loopback);
@@ -257,7 +257,7 @@ namespace Blockcore.Tests.P2P
             var endPointThree = new IPEndPoint(ipAddress, 80);
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
 
             peerAddressManager.AddPeer(endPointOne, IPAddress.Loopback);
             peerAddressManager.AddPeer(endPointTwo, IPAddress.Loopback);
@@ -304,7 +304,7 @@ namespace Blockcore.Tests.P2P
             }
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeers(peersToAdd.ToArray(), IPAddress.Loopback);
 
             for (int i = 1; i <= 7; i++)
@@ -348,7 +348,7 @@ namespace Blockcore.Tests.P2P
             }
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeers(peersToAdd.ToArray(), IPAddress.Loopback);
 
             for (int i = 1; i <= 7; i++)
@@ -393,7 +393,7 @@ namespace Blockcore.Tests.P2P
             }
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeers(peersToAdd.ToArray(), IPAddress.Loopback);
 
             for (int i = 1; i <= 7; i++)
@@ -437,7 +437,7 @@ namespace Blockcore.Tests.P2P
             }
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
 
             peerAddressManager.AddPeers(peersToAdd.ToArray(), IPAddress.Loopback);
 
@@ -480,7 +480,7 @@ namespace Blockcore.Tests.P2P
             }
 
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
 
             peerAddressManager.AddPeers(peersToAdd.ToArray(), IPAddress.Loopback);
 
@@ -764,7 +764,7 @@ namespace Blockcore.Tests.P2P
         {
             IPAddress ipAddress = IPAddress.Parse("::ffff:192.168.0.1");
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(new IPEndPoint(ipAddress, 80), IPAddress.Loopback);
 
             peerAddressManager.PeerConnected(new IPEndPoint(ipAddress, 80), DateTime.UtcNow.AddSeconds(-80));
@@ -793,7 +793,7 @@ namespace Blockcore.Tests.P2P
         {
             IPAddress ipAddress = IPAddress.Parse("::ffff:192.168.0.1");
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(new IPEndPoint(ipAddress, 80), IPAddress.Loopback);
 
             peerAddressManager.PeerConnected(new IPEndPoint(ipAddress, 80), DateTime.UtcNow.AddSeconds(-80));
@@ -822,7 +822,7 @@ namespace Blockcore.Tests.P2P
         {
             IPAddress ipAddress = IPAddress.Parse("::ffff:192.168.0.1");
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(new IPEndPoint(ipAddress, 80), IPAddress.Loopback);
 
             peerAddressManager.PeerConnected(new IPEndPoint(ipAddress, 80), DateTime.UtcNow.AddSeconds(-80));
@@ -851,7 +851,7 @@ namespace Blockcore.Tests.P2P
         {
             IPAddress ipAddress = IPAddress.Parse("::ffff:192.168.0.1");
             DataFolder peerFolder = CreateDataFolder(this);
-            PeerAddressManager peerAddressManager = this.CreatePeerAddressManager(peerFolder);
+            PeerAddressManager peerAddressManager = CreatePeerAddressManager(peerFolder);
             peerAddressManager.AddPeer(new IPEndPoint(ipAddress, 80), IPAddress.Loopback);
 
             peerAddressManager.PeerConnected(new IPEndPoint(ipAddress, 80), DateTime.UtcNow.AddSeconds(-80));

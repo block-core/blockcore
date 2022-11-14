@@ -345,7 +345,7 @@ namespace Blockcore.Features.MemoryPool.Tests
         /// Source block information for hard coded blocks that are loaded.
         /// Pairs of extranonce, nonce fields.
         /// </summary>
-        private static long[,] blockinfoarr =
+        private static readonly long[,] blockinfoarr =
         {
             {4, 0xa4a3e223}, {2, 0x15c32f9e}, {1, 0x0375b547}, {1, 0x7004a8a5},
             {2, 0xce440296}, {2, 0x52cfe198}, {1, 0x77a72cd0}, {2, 0xbb5d6f84},

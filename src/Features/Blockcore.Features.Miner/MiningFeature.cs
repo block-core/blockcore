@@ -74,7 +74,7 @@ namespace Blockcore.Features.Miner
             this.powMining = powMining;
             this.timeSyncBehaviorState = timeSyncBehaviorState;
             this.posMinting = posMinting;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Blockcore.Features.Miner
 
             if (this.minerSettings.Stake)
             {
-                this.StartStaking(this.minerSettings.WalletName, this.minerSettings.WalletPassword);
+                StartStaking(this.minerSettings.WalletName, this.minerSettings.WalletPassword);
             }
 
             return Task.CompletedTask;
@@ -180,8 +180,8 @@ namespace Blockcore.Features.Miner
         /// <inheritdoc />
         public override void Dispose()
         {
-            this.StopMining();
-            this.StopStaking();
+            StopMining();
+            StopStaking();
         }
 
         /// <inheritdoc />

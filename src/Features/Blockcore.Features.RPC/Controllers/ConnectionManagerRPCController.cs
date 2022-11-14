@@ -22,7 +22,7 @@ namespace Blockcore.Controllers
             ILoggerFactory loggerFactory, IPeerBanning peerBanning) : base(connectionManager: connectionManager)
         {
             Guard.NotNull(this.ConnectionManager, nameof(this.ConnectionManager));
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.peerBanning = peerBanning;
         }
 

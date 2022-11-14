@@ -45,9 +45,9 @@ namespace Blockcore.Features.PoA.Tests
         [Fact]
         public void GetVotingDataWorksWithDifferentDataLength()
         {
-            Assert.NotNull(this.encoder.ExtractRawVotingData(this.GetTxWithVotingDataOfSize(50)));
+            Assert.NotNull(this.encoder.ExtractRawVotingData(GetTxWithVotingDataOfSize(50)));
 
-            Assert.NotNull(this.encoder.ExtractRawVotingData(this.GetTxWithVotingDataOfSize(63535)));
+            Assert.NotNull(this.encoder.ExtractRawVotingData(GetTxWithVotingDataOfSize(63535)));
         }
 
         [Fact]

@@ -481,7 +481,7 @@ namespace Blockcore.Tests.BlockPulling
 
             List<int> peerIdsClaimingA = peers.Take(5).Select(x => x.Connection.Id).ToList();
 
-            this.Shuffle(peers);
+            Shuffle(peers);
 
             foreach (INetworkPeer peer in peers)
                 this.puller.NewPeerTipClaimed(peer, peerIdsClaimingA.Contains(peer.Connection.Id) ? chainA.Last() : chainB.Last());
@@ -626,7 +626,7 @@ namespace Blockcore.Tests.BlockPulling
             Assert.Empty(this.helper.CallbacksCalled);
 
             Assert.Equal(10, this.puller.AssignedDownloadsByHash.Count);
-            this.VerifyAssignedDownloadsSortedOrder();
+            VerifyAssignedDownloadsSortedOrder();
 
             Assert.True(this.puller.AssignedHeadersByPeerId[behaviors[0].AttachedPeer.Connection.Id].Count == jobSizes[0]);
             Assert.True(this.puller.AssignedHeadersByPeerId[behaviors[1].AttachedPeer.Connection.Id].Count == jobSizes[1]);
@@ -698,7 +698,7 @@ namespace Blockcore.Tests.BlockPulling
             Assert.Empty(this.puller.DownloadJobsQueue);
             Assert.Equal(headers.Count, this.puller.AssignedDownloadsByHash.Count);
             Assert.True(this.puller.AssignedDownloadsByHash.All(x => x.Value.PeerId == peer1.Connection.Id));
-            this.VerifyAssignedDownloadsSortedOrder();
+            VerifyAssignedDownloadsSortedOrder();
         }
 
         /// <summary>
@@ -826,7 +826,7 @@ namespace Blockcore.Tests.BlockPulling
 
             this.puller.SetMaxBlocksBeingDownloaded(int.MaxValue);
 
-            this.Shuffle(headers);
+            Shuffle(headers);
             foreach (ChainedHeader header in headers)
                 this.puller.RequestBlocksDownload(new List<ChainedHeader>() { header });
 

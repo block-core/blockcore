@@ -115,11 +115,11 @@ namespace Blockcore.Features.PoA
             this.settings = poAMinerSettings;
             this.asyncProvider = asyncProvider;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.cancellation = CancellationTokenSource.CreateLinkedTokenSource(new[] { nodeLifetime.ApplicationStopping });
             this.votingDataEncoder = new VotingDataEncoder(loggerFactory);
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
         }
 
         /// <inheritdoc />
@@ -127,7 +127,7 @@ namespace Blockcore.Features.PoA
         {
             if (this.miningTask == null)
             {
-                this.miningTask = this.CreateBlocksAsync();
+                this.miningTask = CreateBlocksAsync();
                 this.asyncProvider.RegisterTask($"{nameof(PoAMiner)}.{nameof(this.miningTask)}", this.miningTask);
             }
         }
@@ -151,9 +151,9 @@ namespace Blockcore.Features.PoA
                         continue;
                     }
 
-                    uint miningTimestamp = await this.WaitUntilMiningSlotAsync().ConfigureAwait(false);
+                    uint miningTimestamp = await WaitUntilMiningSlotAsync().ConfigureAwait(false);
 
-                    ChainedHeader chainedHeader = await this.MineBlockAtTimestampAsync(miningTimestamp).ConfigureAwait(false);
+                    ChainedHeader chainedHeader = await MineBlockAtTimestampAsync(miningTimestamp).ConfigureAwait(false);
 
                     if (chainedHeader == null)
                     {
@@ -245,7 +245,7 @@ namespace Blockcore.Features.PoA
                 return null;
             }
 
-            Script walletScriptPubKey = this.GetScriptPubKeyFromWallet();
+            Script walletScriptPubKey = GetScriptPubKeyFromWallet();
 
             if (walletScriptPubKey == null)
             {
@@ -255,7 +255,7 @@ namespace Blockcore.Features.PoA
 
             BlockTemplate blockTemplate = this.blockDefinition.Build(tip, walletScriptPubKey);
 
-            this.FillBlockTemplate(blockTemplate, out bool dropTemplate);
+            FillBlockTemplate(blockTemplate, out bool dropTemplate);
 
             if (dropTemplate)
             {
@@ -296,7 +296,7 @@ namespace Blockcore.Features.PoA
         protected virtual void FillBlockTemplate(BlockTemplate blockTemplate, out bool dropTemplate)
         {
             if (this.network.ConsensusOptions.VotingEnabled)
-                this.AddVotingData(blockTemplate);
+                AddVotingData(blockTemplate);
 
             dropTemplate = false;
         }

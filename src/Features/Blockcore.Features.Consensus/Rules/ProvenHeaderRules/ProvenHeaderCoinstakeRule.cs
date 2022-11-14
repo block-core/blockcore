@@ -53,7 +53,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
         /// <inheritdoc />
         protected override void ProcessRule(PosRuleContext context, ChainedHeader chainedHeader, ProvenBlockHeader header)
         {
-            this.CheckCoinstakeIsNotNull(header);
+            CheckCoinstakeIsNotNull(header);
 
             // In case we are in PoW era there might be no coinstake tx.
             // We have no way of telling if the block was supposed to be PoW or PoS so attacker can trick us into thinking that all of them are PoW so no PH is required.
@@ -73,27 +73,27 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                     ConsensusErrors.HighHash.Throw();
                 }
 
-                this.ComputeNextStakeModifier(header, chainedHeader);
+                ComputeNextStakeModifier(header, chainedHeader);
 
                 this.Logger.LogTrace("(-)[POW_ERA]");
                 return;
             }
 
-            this.CheckIfCoinstakeIsTrue(header);
+            CheckIfCoinstakeIsTrue(header);
 
-            this.CheckHeaderAndCoinstakeTimes(header);
+            CheckHeaderAndCoinstakeTimes(header);
 
-            UnspentOutput prevUtxo = this.GetAndValidatePreviousUtxo(header, context);
+            UnspentOutput prevUtxo = GetAndValidatePreviousUtxo(header, context);
 
-            this.CheckCoinstakeAgeRequirement(chainedHeader, prevUtxo);
+            CheckCoinstakeAgeRequirement(chainedHeader, prevUtxo);
 
-            this.CheckSignature(header, prevUtxo);
+            CheckSignature(header, prevUtxo);
 
-            this.CheckStakeKernelHash(context, prevUtxo, header, chainedHeader);
+            CheckStakeKernelHash(context, prevUtxo, header, chainedHeader);
 
-            this.CheckCoinstakeMerkleProof(header);
+            CheckCoinstakeMerkleProof(header);
 
-            this.CheckHeaderSignatureWithCoinstakeKernel(header);
+            CheckHeaderSignatureWithCoinstakeKernel(header);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
             if (prevUtxo?.Coins == null)
             {
                 // We did not find the previous trx in the database, look in rewind data.
-                prevUtxo = this.CheckIfCoinstakeIsSpentOnAnotherChain(header, context);
+                prevUtxo = CheckIfCoinstakeIsSpentOnAnotherChain(header, context);
             }
             else
             {
@@ -140,7 +140,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                 if (utxo == null)
                 {
                     // UTXO is spent so find it in rewind data.
-                    prevUtxo = this.CheckIfCoinstakeIsSpentOnAnotherChain(header, context);
+                    prevUtxo = CheckIfCoinstakeIsSpentOnAnotherChain(header, context);
                 }
             }
 
@@ -227,7 +227,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
         private void ComputeNextStakeModifier(ProvenBlockHeader header, ChainedHeader chainedHeader, uint256 previousStakeModifier = null)
         {
             if (previousStakeModifier == null)
-                previousStakeModifier = this.GetPreviousStakeModifier(chainedHeader);
+                previousStakeModifier = GetPreviousStakeModifier(chainedHeader);
 
             // Computes the stake modifier and sets the value to the current validating proven header,
             // to retain it for next header validation as previousStakeModifier.
@@ -283,11 +283,11 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
         /// </exception>
         private void CheckStakeKernelHash(PosRuleContext context, UnspentOutput stakingCoins, ProvenBlockHeader header, ChainedHeader chainedHeader)
         {
-            OutPoint prevOut = this.GetPreviousOut(header);
+            OutPoint prevOut = GetPreviousOut(header);
             uint transactionTime = header.Time;
             uint headerBits = chainedHeader.Header.Bits.ToCompact();
 
-            uint256 previousStakeModifier = this.GetPreviousStakeModifier(chainedHeader);
+            uint256 previousStakeModifier = GetPreviousStakeModifier(chainedHeader);
 
             if (header.Coinstake.IsCoinStake)
             {
@@ -302,7 +302,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                 }
             }
 
-            this.ComputeNextStakeModifier(header, chainedHeader, previousStakeModifier);
+            ComputeNextStakeModifier(header, chainedHeader, previousStakeModifier);
         }
 
         /// <summary>

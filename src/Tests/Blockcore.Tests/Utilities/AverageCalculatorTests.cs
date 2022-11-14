@@ -23,7 +23,7 @@ namespace Blockcore.Tests.Utilities
             foreach (int sample in this.samples)
                 calculator.AddSample(sample);
 
-            Assert.True(this.DoubleEqual(this.samples.Average(), calculator.Average));
+            Assert.True(DoubleEqual(this.samples.Average(), calculator.Average));
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Blockcore.Tests.Utilities
             foreach (int sample in this.samples)
                 calculator.AddSample(sample);
 
-            Assert.True(this.DoubleEqual(25, calculator.Average));
+            Assert.True(DoubleEqual(25, calculator.Average));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Blockcore.Tests.Utilities
             calculator.SetMaxSamples(this.samples.Length);
 
             Assert.Equal(this.samples.Length, calculator.GetMaxSamples());
-            Assert.True(this.DoubleEqual(this.samples.Average(), calculator.Average));
+            Assert.True(DoubleEqual(this.samples.Average(), calculator.Average));
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Blockcore.Tests.Utilities
             // There are 2 samples: 30 and 40
 
             Assert.Equal(2, calculator.GetMaxSamples());
-            Assert.True(this.DoubleEqual(35, calculator.Average));
+            Assert.True(DoubleEqual(35, calculator.Average));
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Blockcore.Tests.Utilities
             calculator.SetMaxSamples(5);
 
             Assert.Equal(5, calculator.GetMaxSamples());
-            Assert.True(this.DoubleEqual(lastFive.Average(), calculator.Average));
+            Assert.True(DoubleEqual(lastFive.Average(), calculator.Average));
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace Blockcore.Tests.Utilities
             calculator.SetMaxSamples(5);
 
             Assert.Equal(5, calculator.GetMaxSamples());
-            Assert.True(this.DoubleEqual(this.samples.Reverse().Take(5).Average(), calculator.Average));
+            Assert.True(DoubleEqual(this.samples.Reverse().Take(5).Average(), calculator.Average));
         }
 
         private bool DoubleEqual(double a, double b)

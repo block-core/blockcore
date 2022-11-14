@@ -11,11 +11,11 @@ namespace Blockcore.Tests.Builder
 {
     public class FullNodeFeatureExecutorTest
     {
-        private FullNodeFeatureExecutor executor;
-        private Mock<IFullNodeFeature> feature;
-        private Mock<IFullNodeFeature> feature2;
-        private Mock<IFullNode> fullNode;
-        private Mock<IFullNodeServiceProvider> fullNodeServiceProvider;
+        private readonly FullNodeFeatureExecutor executor;
+        private readonly Mock<IFullNodeFeature> feature;
+        private readonly Mock<IFullNodeFeature> feature2;
+        private readonly Mock<IFullNode> fullNode;
+        private readonly Mock<IFullNodeServiceProvider> fullNodeServiceProvider;
 
         /// <summary>
         /// Property that constructs a node feature executor.

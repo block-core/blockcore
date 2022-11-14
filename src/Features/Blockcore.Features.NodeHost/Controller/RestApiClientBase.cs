@@ -44,7 +44,7 @@ namespace Blockcore.Controllers
         public RestApiClientBase(ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory, int port, string controllerName, string url)
         {
             this.httpClientFactory = httpClientFactory;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.endpointUrl = $"{url}:{port}/api/{controllerName}";
 
@@ -58,7 +58,7 @@ namespace Blockcore.Controllers
                         delayMs *= attemptNumber;
 
                     return TimeSpan.FromMilliseconds(delayMs);
-                }, onRetry: this.OnRetry);
+                }, onRetry: OnRetry);
         }
 
         protected async Task<HttpResponseMessage> SendPostRequestAsync<TModel>(TModel requestModel, string apiMethodName, CancellationToken cancellation) where TModel : class
@@ -107,17 +107,17 @@ namespace Blockcore.Controllers
 
         protected async Task<TResponse> SendPostRequestAsync<TModel, TResponse>(TModel requestModel, string apiMethodName, CancellationToken cancellation) where TResponse : class where TModel : class
         {
-            HttpResponseMessage response = await this.SendPostRequestAsync(requestModel, apiMethodName, cancellation).ConfigureAwait(false);
+            HttpResponseMessage response = await SendPostRequestAsync(requestModel, apiMethodName, cancellation).ConfigureAwait(false);
 
-            return await this.ParseHttpResponseMessageAsync<TResponse>(response).ConfigureAwait(false);
+            return await ParseHttpResponseMessageAsync<TResponse>(response).ConfigureAwait(false);
         }
 
         public async Task<TResponse> SendGetRequestAsync<TResponse>(string apiMethodName, string arguments = null,
             CancellationToken cancellation = default(CancellationToken)) where TResponse : class
         {
-            HttpResponseMessage response = await this.SendGetRequestAsync(apiMethodName, arguments, cancellation).ConfigureAwait(false);
+            HttpResponseMessage response = await SendGetRequestAsync(apiMethodName, arguments, cancellation).ConfigureAwait(false);
 
-            return await this.ParseHttpResponseMessageAsync<TResponse>(response).ConfigureAwait(false);
+            return await ParseHttpResponseMessageAsync<TResponse>(response).ConfigureAwait(false);
         }
 
         private async Task<TResponse> ParseHttpResponseMessageAsync<TResponse>(HttpResponseMessage httpResponse) where TResponse : class

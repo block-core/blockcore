@@ -90,7 +90,7 @@ namespace Blockcore.Features.Consensus.CoinViews
         /// <inheritdoc />
         public override string ToString()
         {
-            return this.Snapshot().ToString();
+            return Snapshot().ToString();
         }
 
         /// <summary>
@@ -260,13 +260,13 @@ namespace Blockcore.Features.Consensus.CoinViews
             if (this.TotalInsertedEntities > 0)
                 builder.AppendLine("Insert speed:".PadRight(LoggingConfiguration.ColumnLength) + (this.TotalInsertTime.TotalMilliseconds / this.TotalInsertedEntities).ToString("0.0000") + " ms/utxo");
 
-            builder.AppendLine("Insert time:".PadRight(LoggingConfiguration.ColumnLength) + this.TimespanToString(this.TotalInsertTime));
+            builder.AppendLine("Insert time:".PadRight(LoggingConfiguration.ColumnLength) + TimespanToString(this.TotalInsertTime));
             builder.AppendLine("Inserted UTXO:".PadRight(LoggingConfiguration.ColumnLength) + this.TotalInsertedEntities);
 
             if (this.TotalQueriedEntities > 0)
                 builder.AppendLine("Query speed:".PadRight(LoggingConfiguration.ColumnLength) + (this.TotalQueryTime.TotalMilliseconds / this.TotalQueriedEntities).ToString("0.0000") + " ms/utxo");
 
-            builder.AppendLine("Query time:".PadRight(LoggingConfiguration.ColumnLength) + this.TimespanToString(this.TotalQueryTime));
+            builder.AppendLine("Query time:".PadRight(LoggingConfiguration.ColumnLength) + TimespanToString(this.TotalQueryTime));
             builder.AppendLine("Queried UTXO:".PadRight(LoggingConfiguration.ColumnLength) + this.TotalQueriedEntities);
             return builder.ToString();
         }

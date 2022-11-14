@@ -165,7 +165,7 @@ namespace Blockcore.Features.Miner.Staking
         /// Target reserved balance that will not participate in staking.
         /// It is possible that less than this amount will be reserved.
         /// </summary>
-        private Money targetReserveBalance;
+        private readonly Money targetReserveBalance;
 
         /// <summary>Time in milliseconds between attempts to generate PoS blocks.</summary>
         private readonly int minerSleep;
@@ -185,7 +185,7 @@ namespace Blockcore.Features.Miner.Staking
         /// <summary>Information about node's staking for RPC "getstakinginfo" command.</summary>
         /// <remarks>This object does not need a synchronized access because there is no execution logic
         /// that depends on the reported information.</remarks>
-        private GetStakingInfoModel rpcGetStakingInfoModel;
+        private readonly GetStakingInfoModel rpcGetStakingInfoModel;
 
         /// <summary>Estimation of the total staking weight of all nodes on the network.</summary>
         private long networkWeight;
@@ -257,7 +257,7 @@ namespace Blockcore.Features.Miner.Staking
             this.timeSyncBehaviorState = timeSyncBehaviorState;
             this.loggerFactory = loggerFactory;
             this.minerSettings = minerSettings;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.minerSleep = 500; // GetArg("-minersleep", 500);
             this.systemTimeOutOfSyncSleep = 7000;
@@ -292,7 +292,7 @@ namespace Blockcore.Features.Miner.Staking
             {
                 try
                 {
-                    await this.GenerateBlocksAsync(walletSecret, token)
+                    await GenerateBlocksAsync(walletSecret, token)
                         .ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
@@ -413,23 +413,23 @@ namespace Blockcore.Features.Miner.Staking
                     return;
                 }
 
-                List<UtxoStakeDescription> utxoStakeDescriptions = this.GetUtxoStakeDescriptions(walletSecret, cancellationToken);
+                List<UtxoStakeDescription> utxoStakeDescriptions = GetUtxoStakeDescriptions(walletSecret, cancellationToken);
 
                 blockTemplate = blockTemplate ?? this.blockProvider.BuildPosBlock(chainTip, new Script());
                 var posBlock = (PosBlock)blockTemplate.Block;
 
-                this.networkWeight = (long)this.GetNetworkWeight();
+                this.networkWeight = (long)GetNetworkWeight();
                 this.rpcGetStakingInfoModel.CurrentBlockSize = posBlock.GetSerializedSize();
                 this.rpcGetStakingInfoModel.CurrentBlockTx = posBlock.Transactions.Count();
                 this.rpcGetStakingInfoModel.PooledTx = await this.mempoolLock.ReadAsync(() => this.mempool.MapTx.Count).ConfigureAwait(false);
-                this.rpcGetStakingInfoModel.Difficulty = this.GetDifficulty(chainTip);
+                this.rpcGetStakingInfoModel.Difficulty = GetDifficulty(chainTip);
                 this.rpcGetStakingInfoModel.NetStakeWeight = this.networkWeight;
 
                 // Trying to create coinstake that satisfies the difficulty target, put it into a block and sign the block.
-                if (await this.StakeAndSignBlockAsync(utxoStakeDescriptions, blockTemplate, chainTip, blockTemplate.TotalFee, coinstakeTimestamp).ConfigureAwait(false))
+                if (await StakeAndSignBlockAsync(utxoStakeDescriptions, blockTemplate, chainTip, blockTemplate.TotalFee, coinstakeTimestamp).ConfigureAwait(false))
                 {
                     this.logger.LogDebug("New POS block created and signed successfully.");
-                    await this.CheckStakeAsync(posBlock, chainTip).ConfigureAwait(false);
+                    await CheckStakeAsync(posBlock, chainTip).ConfigureAwait(false);
 
                     blockTemplate = null;
                 }
@@ -597,7 +597,7 @@ namespace Blockcore.Features.Miner.Staking
             this.lastCoinStakeSearchTime = searchTime;
             this.logger.LogDebug("Search interval set to {0}, last coinstake search timestamp set to {1}.", searchInterval, this.lastCoinStakeSearchTime);
 
-            if (await this.CreateCoinstakeAsync(utxoStakeDescriptions, blockTemplate, chainTip, searchInterval, fees, coinstakeContext).ConfigureAwait(false))
+            if (await CreateCoinstakeAsync(utxoStakeDescriptions, blockTemplate, chainTip, searchInterval, fees, coinstakeContext).ConfigureAwait(false))
             {
                 uint minTimestamp = chainTip.Header.Time + 1;
                 if (coinstakeContext.StakeTimeSlot >= minTimestamp)
@@ -636,7 +636,7 @@ namespace Blockcore.Features.Miner.Staking
             // Mark coinstake transaction.
             coinstakeContext.CoinstakeTx.Outputs.Add(new TxOut(Money.Zero, new Script()));
 
-            (Money balance, Money immature) = await this.GetMatureBalanceAsync(utxoStakeDescriptions).ConfigureAwait(false);
+            (Money balance, Money immature) = await GetMatureBalanceAsync(utxoStakeDescriptions).ConfigureAwait(false);
             this.rpcGetStakingInfoModel.Immature = immature.Satoshi;
 
             if (balance <= this.targetReserveBalance)
@@ -649,7 +649,7 @@ namespace Blockcore.Features.Miner.Staking
             }
 
             // Select UTXOs with suitable depth.
-            List<UtxoStakeDescription> stakingUtxoDescriptions = await this.GetUtxoStakeDescriptionsSuitableForStakingAsync(utxoStakeDescriptions, chainTip, coinstakeContext.StakeTimeSlot, balance - this.targetReserveBalance).ConfigureAwait(false);
+            List<UtxoStakeDescription> stakingUtxoDescriptions = await GetUtxoStakeDescriptionsSuitableForStakingAsync(utxoStakeDescriptions, chainTip, coinstakeContext.StakeTimeSlot, balance - this.targetReserveBalance).ConfigureAwait(false);
             if (!stakingUtxoDescriptions.Any())
             {
                 this.rpcGetStakingInfoModel.PauseStaking();
@@ -690,7 +690,7 @@ namespace Blockcore.Features.Miner.Staking
                 var cwc = new CoinstakeWorkerContext
                 {
                     Index = workerIndex,
-                    Logger = this.loggerFactory.CreateLogger(this.GetType().FullName),
+                    Logger = this.loggerFactory.CreateLogger(GetType().FullName),
                     utxoStakeDescriptions = new List<UtxoStakeDescription>(),
                     CoinstakeContext = coinstakeContext,
                     Result = workersResult
@@ -704,7 +704,7 @@ namespace Blockcore.Features.Miner.Staking
 
             await Task.Run(() => Parallel.ForEach(workerContexts, cwc =>
             {
-                this.CoinstakeWorker(cwc, chainTip, blockTemplate.Block, minimalAllowedTime, searchInterval);
+                CoinstakeWorker(cwc, chainTip, blockTemplate.Block, minimalAllowedTime, searchInterval);
             }));
 
             if (workersResult.KernelFoundIndex == CoinstakeWorkerResult.KernelNotFound)
@@ -751,7 +751,7 @@ namespace Blockcore.Features.Miner.Staking
             long coinstakeOutputValue = coinstakeInput.TxOut.Value + reward;
 
             int eventuallyStakableUtxosCount = utxoStakeDescriptions.Count;
-            Transaction coinstakeTx = this.PrepareCoinStakeTransactions(chainTip.Height, coinstakeContext, coinstakeOutputValue, eventuallyStakableUtxosCount, ourWeight, reward);
+            Transaction coinstakeTx = PrepareCoinStakeTransactions(chainTip.Height, coinstakeContext, coinstakeOutputValue, eventuallyStakableUtxosCount, ourWeight, reward);
 
             if (coinstakeTx is IPosTransactionWithTime posTrxn)
             {
@@ -759,7 +759,7 @@ namespace Blockcore.Features.Miner.Staking
             }
 
             // Sign.
-            if (!this.SignTransactionInput(coinstakeInput, coinstakeTx))
+            if (!SignTransactionInput(coinstakeInput, coinstakeTx))
             {
                 this.logger.LogTrace("(-)[SIGN_FAILED]:false");
                 return false;
@@ -781,7 +781,7 @@ namespace Blockcore.Features.Miner.Staking
         public virtual Transaction PrepareCoinStakeTransactions(int currentChainHeight, CoinstakeContext coinstakeContext, long coinstakeOutputValue, int utxosCount, long amountStaked, long reward)
         {
             // Split stake into SplitFactor utxos if above threshold.
-            bool shouldSplitStake = this.ShouldSplitStake(utxosCount, amountStaked, coinstakeOutputValue, currentChainHeight);
+            bool shouldSplitStake = ShouldSplitStake(utxosCount, amountStaked, coinstakeOutputValue, currentChainHeight);
 
             int lastOutputIndex = coinstakeContext.CoinstakeTx.Outputs.Count - 1;
 
@@ -999,7 +999,7 @@ namespace Blockcore.Features.Miner.Staking
             foreach (UtxoStakeDescription utxoStakeDescription in utxoStakeDescriptions)
             {
                 // Must wait until coinbase is safely deep enough in the chain before valuing it.
-                if ((utxoStakeDescription.UtxoSet.Coins.IsCoinbase || utxoStakeDescription.UtxoSet.Coins.IsCoinstake) && (await this.GetBlocksCountToMaturityAsync(utxoStakeDescription).ConfigureAwait(false) > 0))
+                if ((utxoStakeDescription.UtxoSet.Coins.IsCoinbase || utxoStakeDescription.UtxoSet.Coins.IsCoinstake) && (await GetBlocksCountToMaturityAsync(utxoStakeDescription).ConfigureAwait(false) > 0))
                 {
                     immature += utxoStakeDescription.TxOut.Value;
                     continue;
@@ -1038,7 +1038,7 @@ namespace Blockcore.Features.Miner.Staking
             {
                 // Internally GetDepthInMainChainAsync uses chainTip instead of (chainTip + 1). That is why there is a later comparison to
                 // (depth < requiredDepth) instead of (depth <= requiredDepth).
-                int depth = await this.GetDepthInMainChainAsync(utxoStakeDescription).ConfigureAwait(false);
+                int depth = await GetDepthInMainChainAsync(utxoStakeDescription).ConfigureAwait(false);
                 this.logger.LogDebug("Checking if UTXO '{0}' value {1} can be added, its depth is {2}.", utxoStakeDescription.OutPoint, utxoStakeDescription.TxOut.Value, depth);
 
                 if (depth < 1)
@@ -1062,7 +1062,7 @@ namespace Blockcore.Features.Miner.Staking
                 // Under normal circumstances this maturity check will not trigger, as the requiredDepth calculation will have already filtered out
                 // a coinbase/coinstake with insufficient confirmations. However, see the comments within the GetBlocksCountToMaturityAsync method
                 // for the rationale of why we perform this check anyway.
-                int toMaturity = await this.GetBlocksCountToMaturityAsync(utxoStakeDescription).ConfigureAwait(false);
+                int toMaturity = await GetBlocksCountToMaturityAsync(utxoStakeDescription).ConfigureAwait(false);
                 if (toMaturity > 0)
                 {
                     this.logger.LogDebug("UTXO '{0}' can't be added because it is not mature, {1} blocks to maturity left.", utxoStakeDescription.OutPoint, toMaturity);
@@ -1102,7 +1102,7 @@ namespace Blockcore.Features.Miner.Staking
             int minConf = (int)this.network.Consensus.CoinbaseMaturity;
 
             // The reason why we subtract 1 here is because any newly staked block will be at (chainTip + 1), effectively giving an extra confirmation over and above the depth calculation.
-            return Math.Max(0, minConf - 1 - await this.GetDepthInMainChainAsync(utxoStakeDescription).ConfigureAwait(false));
+            return Math.Max(0, minConf - 1 - await GetDepthInMainChainAsync(utxoStakeDescription).ConfigureAwait(false));
         }
 
         /// <summary>
@@ -1187,7 +1187,7 @@ namespace Blockcore.Features.Miner.Staking
                 {
                     if (prevStakeBlock != null)
                     {
-                        stakeKernelsAvg += this.GetDifficulty(prevStakeBlock) * (double)0x100000000;
+                        stakeKernelsAvg += GetDifficulty(prevStakeBlock) * (double)0x100000000;
                         stakesTime += (long)prevStakeBlock.Header.Time - (long)block.Header.Time;
                         stakesHandled++;
                     }

@@ -108,7 +108,7 @@ namespace Blockcore.P2P.Peer
         /// <summary>Callback that is invoked just before a message is to be sent to a peer, or <c>null</c> when nothing needs to be called.</summary>
         private Action<IPEndPoint, Payload> onSendingMessage;
 
-        private IPeerAddressManager peerAddressManager;
+        private readonly IPeerAddressManager peerAddressManager;
 
         /// <summary>
         /// Initializes a new instance of the factory.
@@ -182,7 +182,7 @@ namespace Blockcore.P2P.Peer
                 Services = NetworkPeerServices.Nothing,
             };
 
-            return await this.CreateConnectedNetworkPeerAsync(ipEndPoint, parameters, networkPeerDisposer).ConfigureAwait(false);
+            return await CreateConnectedNetworkPeerAsync(ipEndPoint, parameters, networkPeerDisposer).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

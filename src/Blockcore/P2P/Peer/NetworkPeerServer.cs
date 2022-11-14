@@ -91,7 +91,7 @@ namespace Blockcore.P2P.Peer
             IPeerAddressManager peerAddressManager,
             IDateTimeProvider dateTimeProvider)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.signals = asyncProvider.Signals;
             this.networkPeerFactory = networkPeerFactory;
             this.networkPeerDisposer = new NetworkPeerDisposer(loggerFactory, asyncProvider);
@@ -129,7 +129,7 @@ namespace Blockcore.P2P.Peer
             {
                 this.tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 this.tcpListener.Start();
-                this.acceptTask = this.AcceptClientsAsync();
+                this.acceptTask = AcceptClientsAsync();
             }
             catch (Exception e)
             {
@@ -151,7 +151,7 @@ namespace Blockcore.P2P.Peer
                 {
                     TcpClient tcpClient = await this.tcpListener.AcceptTcpClientAsync().WithCancellationAsync(this.serverCancel.Token).ConfigureAwait(false);
 
-                    (bool successful, string reason) = this.AllowClientConnection(tcpClient);
+                    (bool successful, string reason) = AllowClientConnection(tcpClient);
                     if (!successful)
                     {
                         this.signals.Publish(new PeerConnectionAttemptFailed(true, (IPEndPoint)tcpClient.Client.RemoteEndPoint, reason));
@@ -162,7 +162,7 @@ namespace Blockcore.P2P.Peer
 
                     this.logger.LogDebug("Connection accepted from client '{0}'.", tcpClient.Client.RemoteEndPoint);
 
-                    INetworkPeer connectedPeer = this.networkPeerFactory.CreateNetworkPeer(tcpClient, this.CreateNetworkPeerConnectionParameters(), this.networkPeerDisposer);
+                    INetworkPeer connectedPeer = this.networkPeerFactory.CreateNetworkPeer(tcpClient, CreateNetworkPeerConnectionParameters(), this.networkPeerDisposer);
                     this.signals.Publish(new PeerConnected(connectedPeer.Inbound, connectedPeer.PeerEndPoint));
                 }
             }

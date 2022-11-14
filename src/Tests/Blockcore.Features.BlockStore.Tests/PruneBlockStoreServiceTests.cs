@@ -53,7 +53,7 @@ namespace Blockcore.Features.BlockStore.Tests
         [Fact]
         public void PruneService_Initialize_MidChain_PrunedUpToHeader_Set()
         {
-            var chainHeaderTip = this.BuildProvenHeaderChain(10);
+            var chainHeaderTip = BuildProvenHeaderChain(10);
 
             this.chainState.Setup(c => c.BlockStoreTip).Returns(chainHeaderTip);
 
@@ -129,7 +129,7 @@ namespace Blockcore.Features.BlockStore.Tests
         [Fact]
         public void PruneService_Blockstore_Height_Below_PrunedTip_Plus_AmountToKeep_PruneAborted()
         {
-            var chain = this.BuildProvenHeaderChain(50);
+            var chain = BuildProvenHeaderChain(50);
 
             var storeTipAt25 = chain.GetAncestor(20);
 
@@ -159,7 +159,7 @@ namespace Blockcore.Features.BlockStore.Tests
         [Fact]
         public void PruneService_Triggered_FromGenesis_Respect_AmountOfBlocksToKeep()
         {
-            var chain = this.BuildProvenHeaderChain(50);
+            var chain = BuildProvenHeaderChain(50);
 
             var storeTipAt35 = chain.GetAncestor(35);
 
@@ -189,7 +189,7 @@ namespace Blockcore.Features.BlockStore.Tests
         [Fact]
         public void PruneService_Triggered_MidChain_Respect_AmountOfBlocksToKeep()
         {
-            var chain = this.BuildProvenHeaderChain(50);
+            var chain = BuildProvenHeaderChain(50);
 
             var storeTipAt45 = chain.GetAncestor(45);
 

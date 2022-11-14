@@ -170,7 +170,7 @@ namespace Blockcore.Configuration
                     throw new ConfigurationException($"Configuration file does not exist at {this.ConfigurationFile}.");
 
                 // Sets the ConfigReader based on the arguments and the configuration file if it exists.
-                this.ReadConfigurationFile();
+                ReadConfigurationFile();
             }
 
             // If the network is not known then derive it from the command line arguments.
@@ -208,7 +208,7 @@ namespace Blockcore.Configuration
             if (this.DataDir == null)
             {
                 // Create the data directories if they don't exist.
-                this.DataDir = this.CreateDefaultDataDirectories(Path.Combine(this.DataDirRoot, this.Network.RootFolderName), this.Network);
+                this.DataDir = CreateDefaultDataDirectories(Path.Combine(this.DataDirRoot, this.Network.RootFolderName), this.Network);
             }
             else
             {
@@ -236,14 +236,14 @@ namespace Blockcore.Configuration
                 this.Logger.LogDebug("Configuration file set to '{0}'.", this.ConfigurationFile);
 
                 if (File.Exists(this.ConfigurationFile))
-                    this.ReadConfigurationFile();
+                    ReadConfigurationFile();
             }
 
             // Create the custom logger factory.
             this.LoggerFactory.AddFilters(this.Log, this.DataFolder);
 
             // Load the configuration.
-            this.LoadConfiguration();
+            LoadConfiguration();
         }
 
         /// <summary>Determines whether to print help and exit.</summary>
@@ -294,8 +294,8 @@ namespace Blockcore.Configuration
                 }
 
                 File.WriteAllText(this.ConfigurationFile, builder.ToString());
-                this.ReadConfigurationFile();
-                this.LoadConfiguration();
+                ReadConfigurationFile();
+                LoadConfiguration();
             }
         }
 

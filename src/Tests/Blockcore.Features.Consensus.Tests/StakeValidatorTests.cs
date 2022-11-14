@@ -929,7 +929,7 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact]
         public void CheckKernel_SingleNullValueCoinInCoinView_ThrowsConsensusError()
         {
-            var header = this.AppendBlock(null, this.chainIndexer);
+            var header = AppendBlock(null, this.chainIndexer);
 
             var unspentoutputs = new UnspentOutput[]
             {
@@ -964,7 +964,7 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact]
         public void CheckKernel_TargetDepthNotMet_ThrowsConsensusError()
         {
-            var header = this.AppendBlock(null, this.chainIndexer);
+            var header = AppendBlock(null, this.chainIndexer);
             var transaction = CreateStubCoinStakeTransaction();
             header.Block.Transactions.Add(transaction);
 
@@ -986,7 +986,7 @@ namespace Blockcore.Features.Consensus.Tests
         [Fact]
         public void CheckKernel_InvalidStakeBlock_ThrowsConsensusError()
         {
-            var header = this.CreateChainWithStubCoinStakeTransactions(this.chainIndexer, 30);
+            var header = CreateChainWithStubCoinStakeTransactions(this.chainIndexer, 30);
             ChainedHeader stakableHeader = null;
             for (int i = 0; i < 15; i++)
             {
@@ -1015,7 +1015,7 @@ namespace Blockcore.Features.Consensus.Tests
         public void CheckKernel_ValidKernelCheck_DoesNotThrowConsensusError()
         {
             var satoshis = 5000 * Money.COIN;
-            var header = this.CreateChainWithStubCoinStakeTransactions(this.chainIndexer, 30, satoshis);
+            var header = CreateChainWithStubCoinStakeTransactions(this.chainIndexer, 30, satoshis);
             ChainedHeader stakableHeader = null;
             for (int i = 0; i < 15; i++)
             {

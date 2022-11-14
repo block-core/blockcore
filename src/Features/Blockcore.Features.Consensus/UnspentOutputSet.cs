@@ -27,7 +27,7 @@ namespace Blockcore.Features.Consensus
 
         public bool HaveInputs(Transaction tx)
         {
-            return tx.Inputs.All(txin => this.GetOutputFor(txin) != null);
+            return tx.Inputs.All(txin => GetOutputFor(txin) != null);
         }
 
         public UnspentOutput AccessCoins(OutPoint outpoint)
@@ -37,7 +37,7 @@ namespace Blockcore.Features.Consensus
 
         public Money GetValueIn(Transaction tx)
         {
-            return tx.Inputs.Select(txin => this.GetOutputFor(txin).Value).Sum();
+            return tx.Inputs.Select(txin => GetOutputFor(txin).Value).Sum();
         }
 
         public void Update(Network network, Transaction transaction, int height)
@@ -46,7 +46,7 @@ namespace Blockcore.Features.Consensus
             {
                 foreach (TxIn input in transaction.Inputs)
                 {
-                    UnspentOutput unspentOutput = this.AccessCoins(input.PrevOut);
+                    UnspentOutput unspentOutput = AccessCoins(input.PrevOut);
 
                     if (!unspentOutput.Spend())
                     {

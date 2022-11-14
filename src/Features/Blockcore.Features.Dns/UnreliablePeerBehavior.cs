@@ -59,7 +59,7 @@ namespace Blockcore.Features.Dns
             this.nodeSettings = nodeSettings;
             this.checkpoints = checkpoints;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -71,13 +71,13 @@ namespace Blockcore.Features.Dns
         /// <inheritdoc />
         protected override void AttachCore()
         {
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
         }
 
         /// <inheritdoc />
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Blockcore.Features.Dns
                 case VersionPayload version:
                     // If current node is on POS, and ProvenHeaders is activated, check if current connected peer can serve Proven Headers.
                     // If it can't, disconnect from him and ban for few minutes
-                    if (this.IsProvenHeaderActivated() && !this.CanServeProvenHeader(version))
+                    if (IsProvenHeaderActivated() && !CanServeProvenHeader(version))
                     {
                         this.logger.LogDebug("Peer '{0}' has been banned because can't serve proven headers. Peer Version: {1}", peer.RemoteSocketEndpoint, version.Version);
                         this.peerBanning.BanAndDisconnectPeer(peer.PeerEndPoint, "Can't serve proven headers.");

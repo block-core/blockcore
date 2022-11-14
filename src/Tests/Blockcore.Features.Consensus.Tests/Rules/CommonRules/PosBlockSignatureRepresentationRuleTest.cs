@@ -12,7 +12,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
 {
     public class PosBlockSignatureRepresentationRuleTest : TestPosConsensusRulesUnitTestBase
     {
-        private Key key;
+        private readonly Key key;
 
         public PosBlockSignatureRepresentationRuleTest()
         {

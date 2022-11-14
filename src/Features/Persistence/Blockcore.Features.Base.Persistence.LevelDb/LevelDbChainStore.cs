@@ -30,7 +30,7 @@ namespace Blockcore.Features.Base.Persistence.LevelDb
 
         private readonly DB leveldb;
 
-        private object locker;
+        private readonly object locker;
 
         public LevelDbChainStore(Network network, DataFolder dataFolder, ChainIndexer chainIndexer)
         {

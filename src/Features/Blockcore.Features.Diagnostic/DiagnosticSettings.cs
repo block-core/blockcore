@@ -45,7 +45,7 @@ namespace Blockcore.Features.Diagnostic
         {
             Guard.NotNull(nodeSettings, nameof(nodeSettings));
 
-            this.logger = nodeSettings.LoggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = nodeSettings.LoggerFactory.CreateLogger(GetType().FullName);
 
             TextFileConfiguration config = nodeSettings.ConfigReader;
 

@@ -85,13 +85,13 @@ namespace Blockcore.Consensus.Checkpoints
             this.consensusSettings = consensusSettings;
             this.network = network;
 
-            this.LastCheckpointHeight = this.GetLastCheckpointHeight();
+            this.LastCheckpointHeight = GetLastCheckpointHeight();
         }
 
         /// <inheritdoc />
         public int GetLastCheckpointHeight()
         {
-            Dictionary<int, CheckpointInfo> checkpoints = this.GetCheckpoints();
+            Dictionary<int, CheckpointInfo> checkpoints = GetCheckpoints();
             return checkpoints.Count > 0 ? checkpoints.Keys.Last() : 0;
         }
 
@@ -101,7 +101,7 @@ namespace Blockcore.Consensus.Checkpoints
         /// <returns>Last <see cref="CheckpointInfo"/> or null.</returns>
         public CheckpointInfo GetLastCheckpoint(out int height)
         {
-            var checkpoints = this.GetCheckpoints();
+            var checkpoints = GetCheckpoints();
             if (checkpoints.Count == 0)
             {
                 height = 0;
@@ -118,7 +118,7 @@ namespace Blockcore.Consensus.Checkpoints
         public bool CheckHardened(int height, uint256 hash)
         {
             CheckpointInfo checkpoint;
-            if (!this.GetCheckpoints().TryGetValue(height, out checkpoint)) return true;
+            if (!GetCheckpoints().TryGetValue(height, out checkpoint)) return true;
 
             return checkpoint.Hash.Equals(hash);
         }
@@ -127,7 +127,7 @@ namespace Blockcore.Consensus.Checkpoints
         public CheckpointInfo GetCheckpoint(int height)
         {
             CheckpointInfo checkpoint;
-            this.GetCheckpoints().TryGetValue(height, out checkpoint);
+            GetCheckpoints().TryGetValue(height, out checkpoint);
             return checkpoint;
         }
 

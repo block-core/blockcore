@@ -23,7 +23,7 @@ namespace Blockcore.Features.PoA.Behaviors
             IConsensusManager consensusManager, IPeerBanning peerBanning, ILoggerFactory loggerFactory)
         : base(chainIndexer, initialBlockDownloadState, consensusManager, peerBanning, loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -33,11 +33,11 @@ namespace Blockcore.Features.PoA.Behaviors
             switch (message.Message.Payload)
             {
                 case GetHeadersPayload getHeaders:
-                    await this.ProcessGetHeadersAsync(peer, getHeaders).ConfigureAwait(false);
+                    await ProcessGetHeadersAsync(peer, getHeaders).ConfigureAwait(false);
                     break;
 
                 case PoAHeadersPayload headers:
-                    await this.ProcessHeadersAsync(peer, headers.Headers.Cast<BlockHeader>().ToList()).ConfigureAwait(false);
+                    await ProcessHeadersAsync(peer, headers.Headers.Cast<BlockHeader>().ToList()).ConfigureAwait(false);
                     break;
             }
         }

@@ -238,9 +238,9 @@ namespace Blockcore.BlockPulling
 
             this.chainState = chainState;
             this.dateTimeProvider = dateTimeProvider;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name);
         }
 
         /// <inheritdoc/>
@@ -248,8 +248,8 @@ namespace Blockcore.BlockPulling
         {
             this.onDownloadedCallback = callback;
 
-            this.assignerLoop = this.AssignerLoopAsync();
-            this.stallingLoop = this.StallingLoopAsync();
+            this.assignerLoop = AssignerLoopAsync();
+            this.stallingLoop = StallingLoopAsync();
         }
 
         /// <inheritdoc />
@@ -275,7 +275,7 @@ namespace Blockcore.BlockPulling
             }
 
             foreach (int peerId in peerIdsToRemove)
-                this.PeerDisconnected(peerId);
+                PeerDisconnected(peerId);
         }
 
         /// <inheritdoc/>
@@ -349,7 +349,7 @@ namespace Blockcore.BlockPulling
                 this.pullerBehaviorsByPeerId.Remove(peerId);
             }
 
-            this.ReleaseAndReassignAssignments(peerId);
+            ReleaseAndReassignAssignments(peerId);
         }
 
         /// <inheritdoc/>
@@ -363,7 +363,6 @@ namespace Blockcore.BlockPulling
                 int jobId = this.nextJobId++;
 
                 Queue<DownloadJob> queue = highPriority ? this.reassignedJobsQueue : this.downloadJobsQueue;
-
 
                 queue.Enqueue(new DownloadJob(jobId, new List<ChainedHeader>(headers)));
 
@@ -388,7 +387,7 @@ namespace Blockcore.BlockPulling
                     return;
                 }
 
-                await this.AssignDownloadJobsAsync().ConfigureAwait(false);
+                await AssignDownloadJobsAsync().ConfigureAwait(false);
             }
         }
 
@@ -407,7 +406,7 @@ namespace Blockcore.BlockPulling
                     return;
                 }
 
-                this.CheckStalling();
+                CheckStalling();
             }
         }
 
@@ -420,7 +419,7 @@ namespace Blockcore.BlockPulling
             lock (this.queueLock)
             {
                 // First process reassign queue ignoring slots limitations.
-                this.ProcessQueueLocked(this.reassignedJobsQueue, newAssignments, failedHashes);
+                ProcessQueueLocked(this.reassignedJobsQueue, newAssignments, failedHashes);
 
                 // Process regular queue.
                 int emptySlots;
@@ -432,7 +431,7 @@ namespace Blockcore.BlockPulling
                 int slotsThreshold = (int)(this.maxBlocksBeingDownloaded * MinEmptySlotsPercentageToStartProcessingTheQueue);
 
                 if (emptySlots >= slotsThreshold)
-                    this.ProcessQueueLocked(this.downloadJobsQueue, newAssignments, failedHashes, emptySlots);
+                    ProcessQueueLocked(this.downloadJobsQueue, newAssignments, failedHashes, emptySlots);
                 else
                     this.logger.LogDebug("Slots threshold is not met, queue will not be processed. There are {0} empty slots, threshold is {1}.", emptySlots, slotsThreshold);
 
@@ -442,7 +441,7 @@ namespace Blockcore.BlockPulling
             if (newAssignments.Count != 0)
             {
                 this.logger.LogDebug("Total amount of downloads assigned in this iteration is {0}.", newAssignments.Count);
-                await this.AskPeersForBlocksAsync(newAssignments).ConfigureAwait(false);
+                await AskPeersForBlocksAsync(newAssignments).ConfigureAwait(false);
             }
 
             // Call callbacks with null since puller failed to deliver requested blocks.
@@ -476,7 +475,7 @@ namespace Blockcore.BlockPulling
                 DownloadJob jobToAssign = jobsQueue.Peek();
                 int jobHeadersCount = jobToAssign.Headers.Count;
 
-                List<AssignedDownload> assignments = this.DistributeHeadersLocked(jobToAssign, failedHashes, emptySlots);
+                List<AssignedDownload> assignments = DistributeHeadersLocked(jobToAssign, failedHashes, emptySlots);
 
                 emptySlots -= assignments.Count;
 
@@ -487,7 +486,7 @@ namespace Blockcore.BlockPulling
                     foreach (AssignedDownload assignment in assignments)
                     {
                         newAssignments.Add(assignment);
-                        this.AddAssignedDownloadLocked(assignment);
+                        AddAssignedDownloadLocked(assignment);
                     }
                 }
 
@@ -596,7 +595,7 @@ namespace Blockcore.BlockPulling
                 if (!success)
                 {
                     this.logger.LogDebug("Failed to ask peer {0} for {1} blocks.", peerId, hashes.Count);
-                    this.PeerDisconnected(peerId);
+                    PeerDisconnected(peerId);
                 }
             }
         }
@@ -755,14 +754,14 @@ namespace Blockcore.BlockPulling
                         IBlockPullerBehavior pullerBehavior = this.pullerBehaviorsByPeerId[peerId];
                         pullerBehavior.Penalize(secondsPassed, assignedCount);
 
-                        this.RecalculateQualityScoreLocked(pullerBehavior, peerId);
+                        RecalculateQualityScoreLocked(pullerBehavior, peerId);
                     }
                 }
 
                 // Release downloads for selected peers.
                 foreach (int peerId in peerIdsToReassignJobs)
                 {
-                    Dictionary<int, List<ChainedHeader>> reassignedAssignmentsByJobId = this.ReleaseAssignmentsLocked(peerId);
+                    Dictionary<int, List<ChainedHeader>> reassignedAssignmentsByJobId = ReleaseAssignmentsLocked(peerId);
                     allReleasedAssignments.Add(reassignedAssignmentsByJobId);
                 }
             }
@@ -773,7 +772,7 @@ namespace Blockcore.BlockPulling
                 {
                     // Reassign all released jobs.
                     foreach (Dictionary<int, List<ChainedHeader>> released in allReleasedAssignments)
-                        this.ReassignAssignmentsLocked(released);
+                        ReassignAssignmentsLocked(released);
 
                     // Trigger queue processing in case anything was reassigned.
                     this.processQueuesSignal.Set();
@@ -802,7 +801,7 @@ namespace Blockcore.BlockPulling
                     return;
                 }
 
-                this.RemoveAssignedDownloadLocked(assignedDownload);
+                RemoveAssignedDownloadLocked(assignedDownload);
             }
 
             double deliveredInSeconds = (this.dateTimeProvider.GetUtcNow() - assignedDownload.AssignedTime).TotalSeconds;
@@ -816,7 +815,7 @@ namespace Blockcore.BlockPulling
                     behavior.AddSample(block.BlockSize.Value, deliveredInSeconds);
 
                     // Recalculate quality score.
-                    this.RecalculateQualityScoreLocked(behavior, peerId);
+                    RecalculateQualityScoreLocked(behavior, peerId);
                 }
             }
 
@@ -824,7 +823,7 @@ namespace Blockcore.BlockPulling
             {
                 this.averageBlockSizeBytes.AddSample(block.BlockSize.Value);
 
-                this.RecalculateMaxBlocksBeingDownloadedLocked();
+                RecalculateMaxBlocksBeingDownloadedLocked();
 
                 this.processQueuesSignal.Set();
             }
@@ -869,7 +868,7 @@ namespace Blockcore.BlockPulling
         {
             // How many blocks we can download in 1 second.
             if (this.averageBlockSizeBytes.Average > 0)
-                this.maxBlocksBeingDownloaded = (int)((this.GetTotalSpeedOfAllPeersBytesPerSec() * MaxBlocksBeingDownloadedMultiplier) / this.averageBlockSizeBytes.Average);
+                this.maxBlocksBeingDownloaded = (int)((GetTotalSpeedOfAllPeersBytesPerSec() * MaxBlocksBeingDownloadedMultiplier) / this.averageBlockSizeBytes.Average);
 
             if (this.maxBlocksBeingDownloaded < MinimalCountOfBlocksBeingDownloaded)
                 this.maxBlocksBeingDownloaded = MinimalCountOfBlocksBeingDownloaded;
@@ -888,14 +887,14 @@ namespace Blockcore.BlockPulling
 
             lock (this.assignedLock)
             {
-                headersByJobId = this.ReleaseAssignmentsLocked(peerId);
+                headersByJobId = ReleaseAssignmentsLocked(peerId);
             }
 
             if (headersByJobId.Count != 0)
             {
                 lock (this.queueLock)
                 {
-                    this.ReassignAssignmentsLocked(headersByJobId);
+                    ReassignAssignmentsLocked(headersByJobId);
                     this.processQueuesSignal.Set();
                 }
             }
@@ -929,7 +928,7 @@ namespace Blockcore.BlockPulling
                 }
 
                 foreach (AssignedDownload assignment in assignmentsToRemove)
-                    this.RemoveAssignedDownloadLocked(assignment);
+                    RemoveAssignedDownloadLocked(assignment);
             }
 
             return headersByJobId;
@@ -970,11 +969,11 @@ namespace Blockcore.BlockPulling
                 statsBuilder.AppendLine($"Queued downloads: {unassignedDownloads}");
             }
 
-            double avgBlockSizeBytes = this.GetAverageBlockSizeBytes();
+            double avgBlockSizeBytes = GetAverageBlockSizeBytes();
             double averageBlockSizeKb = avgBlockSizeBytes / 1024.0;
             statsBuilder.AppendLine($"Average block size: {Math.Round(averageBlockSizeKb, 2)} KB");
 
-            double totalSpeedBytesPerSec = this.GetTotalSpeedOfAllPeersBytesPerSec();
+            double totalSpeedBytesPerSec = GetTotalSpeedOfAllPeersBytesPerSec();
             double totalSpeedKbPerSec = (totalSpeedBytesPerSec / 1024.0);
             statsBuilder.AppendLine($"Total download speed: {Math.Round(totalSpeedKbPerSec, 2)} KB/sec");
 

@@ -52,13 +52,13 @@ namespace Blockcore.Features.MemoryPool
         public volatile uint vTxHashesIdx;
 
         /// <summary>The modified size of the transaction used for priority.</summary>
-        private long nModSize;
+        private readonly long nModSize;
 
         /// <summary>The total memory usage.</summary>
-        private long nUsageSize;
+        private readonly long nUsageSize;
 
         /// <summary>Priority when entering the memory pool.</summary>
-        private double entryPriority;
+        private readonly double entryPriority;
 
         /// <summary> Proof of work consensus options.</summary>
         private readonly ConsensusOptions consensusOptions;
@@ -103,7 +103,7 @@ namespace Blockcore.Features.MemoryPool
             this.nUsageSize = transaction.GetSerializedSize(); // RecursiveDynamicUsage(*tx) + memusage::DynamicUsage(Transaction);
 
             this.CountWithDescendants = 1;
-            this.SizeWithDescendants = this.GetTxSize();
+            this.SizeWithDescendants = GetTxSize();
             this.ModFeesWithDescendants = this.Fee;
             Money nValueIn = transaction.TotalOut + this.Fee;
             Guard.Assert(this.InChainInputValue <= nValueIn);
@@ -111,7 +111,7 @@ namespace Blockcore.Features.MemoryPool
             this.feeDelta = 0;
 
             this.CountWithAncestors = 1;
-            this.SizeWithAncestors = this.GetTxSize();
+            this.SizeWithAncestors = GetTxSize();
             this.ModFeesWithAncestors = this.Fee;
             this.SigOpCostWithAncestors = this.SigOpCost;
         }

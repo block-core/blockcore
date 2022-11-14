@@ -14,7 +14,7 @@ namespace Blockcore.Networks.City.Networks.Rules
         /// <inheritdoc />
         public override Money GetProofOfWorkReward(int height)
         {
-            if (this.IsPremine(height))
+            if (IsPremine(height))
                 return this.consensus.PremineReward;
 
             return this.consensus.ProofOfWorkReward;
@@ -27,7 +27,7 @@ namespace Blockcore.Networks.City.Networks.Rules
         /// <returns>Miner's coin stake reward.</returns>
         public override Money GetProofOfStakeReward(int height)
         {
-            if (this.IsPremine(height))
+            if (IsPremine(height))
                 return this.consensus.PremineReward;
 
             if (height > REDUCTIONHEIGHT)

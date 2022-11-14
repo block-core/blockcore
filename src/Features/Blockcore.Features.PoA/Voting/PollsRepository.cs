@@ -37,7 +37,7 @@ namespace Blockcore.Features.PoA.Voting
             Directory.CreateDirectory(folder);
             this.dbreeze = new DBreezeEngine(folder);
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.dataStoreSerializer = dataStoreSerializer;
         }
 
@@ -81,7 +81,7 @@ namespace Blockcore.Features.PoA.Voting
                     transaction.RemoveKey<byte[]>(TableName, pollId.ToBytes());
 
                     this.highestPollId--;
-                    this.SaveHighestPollId(transaction);
+                    SaveHighestPollId(transaction);
                 }
 
                 transaction.Commit();
@@ -103,7 +103,7 @@ namespace Blockcore.Features.PoA.Voting
                     transaction.Insert<byte[], byte[]>(TableName, pollToAdd.Id.ToBytes(), bytes);
 
                     this.highestPollId++;
-                    this.SaveHighestPollId(transaction);
+                    SaveHighestPollId(transaction);
                 }
 
                 transaction.Commit();

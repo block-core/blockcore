@@ -10,8 +10,8 @@ namespace Blockcore.IntegrationTests
 {
     public class CoinViewTester
     {
-        private ICoinView coinView;
-        private List<UnspentOutput> pendingCoins = new List<UnspentOutput>();
+        private readonly ICoinView coinView;
+        private readonly List<UnspentOutput> pendingCoins = new List<UnspentOutput>();
         private HashHeightPair hash;
         private int blockHeight;
 

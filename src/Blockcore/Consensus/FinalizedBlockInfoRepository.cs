@@ -81,7 +81,7 @@ namespace Blockcore.Consensus
             Guard.NotNull(keyValueRepo, nameof(keyValueRepo));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.keyValueRepo = keyValueRepo;
             this.finalizedBlockInfosToSave = new Queue<HashHeightPair>();
@@ -89,7 +89,7 @@ namespace Blockcore.Consensus
 
             this.queueUpdatedEvent = new AsyncManualResetEvent(false);
             this.cancellation = new CancellationTokenSource();
-            this.finalizedBlockInfoPersistingTask = this.PersistFinalizedBlockInfoContinuouslyAsync();
+            this.finalizedBlockInfoPersistingTask = PersistFinalizedBlockInfoContinuouslyAsync();
 
             asyncProvider.RegisterTask($"{nameof(FinalizedBlockInfoRepository)}.{nameof(this.finalizedBlockInfoPersistingTask)}", this.finalizedBlockInfoPersistingTask);
         }

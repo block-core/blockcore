@@ -44,7 +44,7 @@ namespace Blockcore.Controllers
         {
             this.connectionManager = connectionManager;
             this.network = network;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.peerBanning = peerBanning;
         }
 
@@ -67,7 +67,7 @@ namespace Blockcore.Controllers
                     peer.Disconnect($"{endpoint} was disconnected via the API.");
                 }
 
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -111,7 +111,7 @@ namespace Blockcore.Controllers
                         throw new Exception("Only 'add' or 'remove' are valid 'setban' commands.");
                 }
 
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -128,7 +128,7 @@ namespace Blockcore.Controllers
             {
                 List<PeerAddress> allBannedPeers = this.peerBanning.GetAllBanned();
 
-                return this.Json(allBannedPeers.Select(p => new BannedPeerModel() { EndPoint = p.Endpoint.ToString(), BanUntil = p.BanUntil, BanReason = p.BanReason }));
+                return Json(allBannedPeers.Select(p => new BannedPeerModel() { EndPoint = p.Endpoint.ToString(), BanUntil = p.BanUntil, BanReason = p.BanReason }));
             }
             catch (Exception e)
             {
@@ -153,7 +153,7 @@ namespace Blockcore.Controllers
             {
                 this.peerBanning.ClearBannedPeers();
 
-                return this.Ok();
+                return Ok();
             }
             catch (Exception e)
             {

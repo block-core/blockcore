@@ -16,7 +16,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         public CalculateStakeRuleTest()
         {
             this.ChainIndexer = GenerateChainWithHeight(5, this.network);
-            this.consensusRules = this.InitializeConsensusRules();
+            this.consensusRules = InitializeConsensusRules();
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
         {
             this.network = KnownNetworks.RegTest;
             this.ChainIndexer = MineChainWithHeight(2, this.network);
-            this.consensusRules = this.InitializeConsensusRules();
+            this.consensusRules = InitializeConsensusRules();
 
             this.ruleContext.ValidationContext = new ValidationContext()
             {

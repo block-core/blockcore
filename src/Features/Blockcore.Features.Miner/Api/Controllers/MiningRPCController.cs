@@ -45,7 +45,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
             Guard.NotNull(walletManager, nameof(walletManager));
 
             this.fullNode = fullNode;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.walletManager = walletManager;
             this.powMining = powMining;
         }
@@ -66,7 +66,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 throw new RPCServerException(RPCErrorCode.RPC_INVALID_REQUEST, "The number of blocks to mine must be higher than zero.");
             }
 
-            WalletAccountReference accountReference = this.GetAccount();
+            WalletAccountReference accountReference = GetAccount();
             HdAddress address = this.walletManager.GetUnusedAddress(accountReference);
 
             List<uint256> res = this.powMining.GenerateBlocks(new ReserveScript(address.Pubkey), (ulong)blockCount, int.MaxValue);

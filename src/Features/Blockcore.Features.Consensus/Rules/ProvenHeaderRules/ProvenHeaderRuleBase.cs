@@ -59,7 +59,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
 
             ChainedHeader chainedHeader = context.ValidationContext.ChainedHeaderToValidate;
 
-            if (!this.IsProvenHeaderActivated(chainedHeader.Height))
+            if (!IsProvenHeaderActivated(chainedHeader.Height))
             {
                 this.Logger.LogTrace("(-)[PH_NOT_ACTIVATED]");
                 return;
@@ -73,7 +73,7 @@ namespace Blockcore.Features.Consensus.Rules.ProvenHeaderRules
                 return;
             }
 
-            this.ProcessRule((PosRuleContext)context, chainedHeader, chainedHeader.ProvenBlockHeader);
+            ProcessRule((PosRuleContext)context, chainedHeader, chainedHeader.ProvenBlockHeader);
         }
 
         /// <summary>

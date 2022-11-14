@@ -33,7 +33,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
             // Check transactions
             foreach (Transaction tx in block.Transactions)
-                this.CheckTransaction(this.Parent.Network, options, tx);
+                CheckTransaction(this.Parent.Network, options, tx);
 
             return Task.CompletedTask;
         }
@@ -77,7 +77,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                 }
 
                 valueOut += txout.Value;
-                if (!this.MoneyRange(network.Consensus, valueOut))
+                if (!MoneyRange(network.Consensus, valueOut))
                 {
                     this.Logger.LogTrace("(-)[TX_TOTAL_OUTPUT_TOO_LARGE]");
                     ConsensusErrors.BadTransactionTooLargeTotalOutput.Throw();

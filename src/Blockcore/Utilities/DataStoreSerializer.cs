@@ -48,7 +48,7 @@ namespace Blockcore.Utilities
                 int itemIndex = 0;
                 foreach (object arrayObject in array)
                 {
-                    byte[] serializedObject = this.Serialize(arrayObject);
+                    byte[] serializedObject = Serialize(arrayObject);
                     serializedItems[itemIndex] = serializedObject;
                     itemIndex++;
                 }
@@ -80,7 +80,7 @@ namespace Blockcore.Utilities
 
         public T Deserialize<T>(byte[] bytes)
         {
-            return (T)this.Deserialize(bytes, typeof(T));
+            return (T)Deserialize(bytes, typeof(T));
         }
 
         /// <summary>

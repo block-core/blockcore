@@ -112,7 +112,7 @@ namespace Blockcore.Tests.Common
             var blocks = new List<Block>();
             for (int i = 0; i < amount; i++)
             {
-                Block block = this.CreateBlock(i);
+                Block block = CreateBlock(i);
                 block.Header.HashPrevBlock = blocks.LastOrDefault()?.GetHash() ?? this.Network.GenesisHash;
                 blocks.Add(block);
             }
@@ -149,7 +149,7 @@ namespace Blockcore.Tests.Common
 
         public ProvenBlockHeader CreateNewProvenBlockHeaderMock(PosBlock posBlock = null)
         {
-            PosBlock block = posBlock == null ? this.CreatePosBlock() : posBlock;
+            PosBlock block = posBlock == null ? CreatePosBlock() : posBlock;
             ProvenBlockHeader provenBlockHeader = ((PosConsensusFactory)this.Network.Consensus.ConsensusFactory).CreateProvenBlockHeader(block);
 
             return provenBlockHeader;
@@ -164,7 +164,7 @@ namespace Blockcore.Tests.Common
             var blocks = new List<Block>();
             for (int i = 0; i < amount; i++)
             {
-                PosBlock block = this.CreatePosBlock();
+                PosBlock block = CreatePosBlock();
                 block.Header.HashPrevBlock = blocks.LastOrDefault()?.GetHash() ?? this.Network.GenesisHash;
                 blocks.Add(block);
             }
@@ -212,7 +212,7 @@ namespace Blockcore.Tests.Common
 
             for (int i = 1; i < blockCount; i++)
             {
-                PosBlock block = this.CreatePosBlock();
+                PosBlock block = CreatePosBlock();
                 ProvenBlockHeader header = ((PosConsensusFactory)this.Network.Consensus.ConsensusFactory).CreateProvenBlockHeader(block);
 
                 header.PosBlockHeader.Nonce = RandomUtils.GetUInt32();

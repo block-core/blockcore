@@ -21,7 +21,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
             // Check transactions
             foreach (Transaction tx in block.Transactions)
-                this.CheckTransaction(tx);
+                CheckTransaction(tx);
 
             return Task.CompletedTask;
         }

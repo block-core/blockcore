@@ -117,7 +117,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync((Transaction)null);
 
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns(transaction);
 
@@ -133,7 +133,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         {
             var txId = new uint256(12142124);
 
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             this.blockStore.Setup(b => b.GetTransactionById(txId))
                 .Returns(transaction);
             this.controller = new FullNodeController(this.LoggerFactory.Object, null, this.pooledGetUnspentTransaction.Object, this.getUnspentTransaction.Object, this.networkDifficulty.Object,
@@ -177,7 +177,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
                 .Returns(this.chain.Tip);
             ChainedHeader block = this.chain.GetHeader(1);
 
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
@@ -224,7 +224,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         public async Task GetTaskAsync_Verbose_ChainStateTipNull_DoesNotCalulateConfirmationsAsync()
         {
             ChainedHeader block = this.chain.GetHeader(1);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
@@ -243,7 +243,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         public async Task GetTaskAsync_Verbose_BlockNotFoundOnChain_ReturnsTransactionVerboseModelWithoutBlockInformationAsync()
         {
             ChainedHeader block = this.chain.GetHeader(1);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var txId = new uint256(12142124);
             this.pooledTransaction.Setup(p => p.GetTransaction(txId))
                 .ReturnsAsync(transaction);
@@ -316,7 +316,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         [Fact]
         public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionFound_ReturnsModelAsync()
         {
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
             this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(transaction, 0)))
@@ -338,7 +338,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         public async Task GetTxOutAsync_IncludeInMempool_UnspentTransactionFound_ReturnsModelAsync()
         {
             var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
@@ -361,7 +361,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         public async Task GetTxOutAsync_NotIncludeInMempool_UnspentTransactionFound_VOutNotFound_ReturnsModelAsync()
         {
             var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
             this.getUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
@@ -380,7 +380,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         public async Task GetTxOutAsync_IncludeInMempool_UnspentTransactionFound_VOutNotFound_ReturnsModelAsync()
         {
             var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var unspentOutputs = new UnspentOutput(new OutPoint(transaction, 0), new Coins(1, transaction.Outputs[0], transaction.IsCoinBase));
 
             this.pooledGetUnspentTransaction.Setup(s => s.GetUnspentTransactionAsync(new OutPoint(txId, 0)))
@@ -655,7 +655,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
         {
             this.fullNode.SetupGet(p => p.Network).Returns(this.network);
             var txId = new uint256(1243124);
-            Transaction transaction = this.CreateTransaction();
+            Transaction transaction = CreateTransaction();
             var decodedTx = this.controller.DecodeRawTransaction(transaction.ToHex());
             decodedTx.Should().BeOfType<TransactionVerboseModel>();
 
@@ -674,7 +674,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
 
         private string GetBlockHeaderBits(BlockHeader header)
         {
-            byte[] bytes = this.GetBytes(header.Bits.ToCompact());
+            byte[] bytes = GetBytes(header.Bits.ToCompact());
             return Encoders.Hex.EncodeData(bytes);
         }
 
@@ -695,19 +695,19 @@ namespace Blockcore.Features.RPC.Tests.Controller
 
             public event EventHandler<NetworkPeerEventArgs> Removed;
 
-            private List<INetworkPeer> networkPeers;
+            private readonly List<INetworkPeer> networkPeers;
 
             public TestReadOnlyNetworkPeerCollection()
             {
-                this.Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
-                this.Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
                 this.networkPeers = new List<INetworkPeer>();
             }
 
             public TestReadOnlyNetworkPeerCollection(List<INetworkPeer> peers)
             {
-                this.Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
-                this.Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Added = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
+                Removed = new EventHandler<NetworkPeerEventArgs>((obj, eventArgs) => { });
                 this.networkPeers = peers;
             }
 
@@ -733,7 +733,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
-                return this.GetEnumerator();
+                return GetEnumerator();
             }
         }
     }

@@ -17,7 +17,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
     public abstract class NetworkPeerBehavior : INetworkPeerBehavior
     {
-        private object cs = new object();
+        private readonly object cs = new object();
 
         public INetworkPeer AttachedPeer { get; private set; }
 
@@ -41,7 +41,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
                 this.AttachedPeer = peer;
 
-                this.AttachCore();
+                AttachCore();
             }
         }
 
@@ -64,7 +64,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
                 if (this.AttachedPeer == null)
                     return;
 
-                this.DetachCore();
+                DetachCore();
             }
         }
 
@@ -76,7 +76,7 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
         INetworkPeerBehavior INetworkPeerBehavior.Clone()
         {
-            return (INetworkPeerBehavior)this.Clone();
+            return (INetworkPeerBehavior)Clone();
         }
     }
 }

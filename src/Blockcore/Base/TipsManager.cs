@@ -74,7 +74,7 @@ namespace Blockcore.Base
             this.newCommonTipSetEvent = new AsyncManualResetEvent(false);
             this.cancellation = new CancellationTokenSource();
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         /// <inheritdoc />
@@ -93,7 +93,7 @@ namespace Blockcore.Base
 
             this.logger.LogDebug("Tips manager initialized at '{0}'.", this.lastCommonTip);
 
-            this.commonTipPersistingTask = this.PersistCommonTipContinuouslyAsync();
+            this.commonTipPersistingTask = PersistCommonTipContinuouslyAsync();
         }
 
         /// <summary>Continuously persists <see cref="lastCommonTip"/> to hard drive.</summary>
@@ -178,7 +178,7 @@ namespace Blockcore.Base
                 if (!tipsOnSameChain)
                 {
                     this.logger.LogDebug("Tips are not on the same chain, finding last common fork between them.");
-                    lowestTip = this.FindCommonFork(this.tipsByProvider.Values.ToList());
+                    lowestTip = FindCommonFork(this.tipsByProvider.Values.ToList());
                 }
 
                 this.lastCommonTip = lowestTip;
@@ -187,7 +187,7 @@ namespace Blockcore.Base
         }
 
         /// <summary>Finds common fork between multiple chains.</summary>
-        private ChainedHeader FindCommonFork(List<ChainedHeader> tips)
+        private static ChainedHeader FindCommonFork(List<ChainedHeader> tips)
         {
             ChainedHeader fork = null;
 
@@ -203,22 +203,18 @@ namespace Blockcore.Base
         }
 
         /// <inheritdoc />
-
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-
                 this.cancellation.Cancel();
-
                 this.commonTipPersistingTask?.GetAwaiter().GetResult();
-
             }
         }
     }

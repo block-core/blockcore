@@ -486,7 +486,7 @@ namespace Blockcore.Tests.P2P
             var networkPeerFactory = new Mock<INetworkPeerFactory>();
             var peerConnector = new Mock<IPeerConnector>();
             var selfEndpointTracker = new Mock<ISelfEndpointTracker>();
-            IConnectionManager connectionManager = this.CreateConnectionManager(nodeSettings, connectionManagerSettings, peerAddressManager, peerConnector.Object, selfEndpointTracker.Object);
+            IConnectionManager connectionManager = CreateConnectionManager(nodeSettings, connectionManagerSettings, peerAddressManager, peerConnector.Object, selfEndpointTracker.Object);
 
             connectionManager.Initialize(new Mock<IConsensusManager>().Object);
 

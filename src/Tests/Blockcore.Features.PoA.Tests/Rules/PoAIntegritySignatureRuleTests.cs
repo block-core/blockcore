@@ -16,7 +16,7 @@ namespace Blockcore.Features.PoA.Tests.Rules
         public PoAIntegritySignatureRuleTests()
         {
             this.integritySignatureRule = new PoAIntegritySignatureRule();
-            this.InitRule(this.integritySignatureRule);
+            InitRule(this.integritySignatureRule);
         }
 
         [Fact]

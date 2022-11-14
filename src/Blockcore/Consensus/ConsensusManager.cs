@@ -194,7 +194,7 @@ namespace Blockcore.Consensus
             this.chainIndexer = chainIndexer;
             this.connectionManager = connectionManager;
             this.nodeLifetime = nodeLifetime;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.dateTimeProvider = dateTimeProvider;
 
             this.chainedHeaderTree = chainedHeaderTree;
@@ -217,9 +217,9 @@ namespace Blockcore.Consensus
             this.consensusSettings = consensusSettings;
             this.maxUnconsumedBlocksDataBytes = consensusSettings.MaxBlockMemoryInMB * 1024 * 1024;
 
-            nodeStats.RegisterStats(this.AddInlineStats, StatsType.Inline, this.GetType().Name, 1000);
-            nodeStats.RegisterStats(this.AddComponentStats, StatsType.Component, this.GetType().Name, 1000);
-            nodeStats.RegisterStats(this.AddBenchStats, StatsType.Benchmark, this.GetType().Name, 1000);
+            nodeStats.RegisterStats(AddInlineStats, StatsType.Inline, GetType().Name, 1000);
+            nodeStats.RegisterStats(AddComponentStats, StatsType.Component, GetType().Name, 1000);
+            nodeStats.RegisterStats(AddBenchStats, StatsType.Benchmark, GetType().Name, 1000);
         }
 
         /// <inheritdoc />
@@ -258,12 +258,12 @@ namespace Blockcore.Consensus
 
             this.chainedHeaderTree.Initialize(pendingTip);
 
-            this.SetConsensusTip(pendingTip);
+            SetConsensusTip(pendingTip);
 
             if (this.chainIndexer.Tip != pendingTip)
                 this.chainIndexer.Initialize(pendingTip);
 
-            this.blockPuller.Initialize(this.BlockDownloaded);
+            this.blockPuller.Initialize(BlockDownloaded);
 
             this.isIbd = this.ibdState.IsInitialBlockDownload();
             this.blockPuller.OnIbdStateChanged(this.isIbd);
@@ -301,14 +301,14 @@ namespace Blockcore.Consensus
                     return connectNewHeadersResult;
                 }
 
-                this.chainState.IsAtBestChainTip = this.IsConsensusConsideredToBeSyncedLocked(out ChainedHeader bestPeerTip);
+                this.chainState.IsAtBestChainTip = IsConsensusConsideredToBeSyncedLocked(out ChainedHeader bestPeerTip);
                 this.chainState.BestPeerTip = bestPeerTip;
 
                 this.blockPuller.NewPeerTipClaimed(peer, connectNewHeadersResult.Consumed);
             }
 
             if (triggerDownload && (connectNewHeadersResult.DownloadTo != null))
-                this.DownloadBlocks(connectNewHeadersResult.ToArray());
+                DownloadBlocks(connectNewHeadersResult.ToArray());
 
             return connectNewHeadersResult;
         }
@@ -318,7 +318,7 @@ namespace Blockcore.Consensus
         {
             lock (this.peerLock)
             {
-                this.PeerDisconnectedLocked(peerId);
+                PeerDisconnectedLocked(peerId);
             }
         }
 
@@ -361,7 +361,7 @@ namespace Blockcore.Consensus
 
                     if (fullValidationRequired)
                     {
-                        ConnectBlocksResult fullValidationResult = await this.FullyValidateLockedAsync(validationContext.ChainedHeaderToValidate, true).ConfigureAwait(false);
+                        ConnectBlocksResult fullValidationResult = await FullyValidateLockedAsync(validationContext.ChainedHeaderToValidate, true).ConfigureAwait(false);
                         if (!fullValidationResult.Succeeded)
                         {
                             this.logger.LogDebug("Miner produced an invalid block, full validation failed: {0}", fullValidationResult.Error.Message);
@@ -414,7 +414,7 @@ namespace Blockcore.Consensus
                 {
                     this.chainedHeaderTree.PeerDisconnected(peerId);
                     this.blockPuller.PeerDisconnected(peerId);
-                    this.ProcessDownloadQueueLocked();
+                    ProcessDownloadQueueLocked();
                 }
                 else
                     this.logger.LogDebug("Node is shutting down therefore underlying components won't be updated.");
@@ -444,7 +444,7 @@ namespace Blockcore.Consensus
             this.logger.LogDebug("Partial validation is{0} required.", partialValidationRequired ? string.Empty : " NOT");
 
             if (partialValidationRequired)
-                this.partialValidator.StartPartialValidation(chainedHeaderBlock.ChainedHeader, chainedHeaderBlock.Block, this.OnPartialValidationCompletedCallbackAsync);
+                this.partialValidator.StartPartialValidation(chainedHeaderBlock.ChainedHeader, chainedHeaderBlock.Block, OnPartialValidationCompletedCallbackAsync);
         }
 
         private async Task OnPartialValidationCompletedCallbackAsync(ValidationContext validationContext)
@@ -457,7 +457,7 @@ namespace Blockcore.Consensus
 
             if (validationContext.Error == null)
             {
-                await this.OnPartialValidationSucceededAsync(validationContext.ChainedHeaderToValidate).ConfigureAwait(false);
+                await OnPartialValidationSucceededAsync(validationContext.ChainedHeaderToValidate).ConfigureAwait(false);
             }
             else
             {
@@ -472,7 +472,7 @@ namespace Blockcore.Consensus
                     {
                         this.blockPuller.RequestPeerServices(validationContext.MissingServices.Value);
 
-                        this.DownloadBlocks(new[] { validationContext.ChainedHeaderToValidate });
+                        DownloadBlocks(new[] { validationContext.ChainedHeaderToValidate });
                         this.logger.LogWarning("Downloading block for '{0}' had missing services {1}, it will be enqueued again.", validationContext.ChainedHeaderToValidate, validationContext.MissingServices);
                         this.logger.LogTrace("(-)[MISSING_SERVICES]");
                         return;
@@ -519,7 +519,7 @@ namespace Blockcore.Consensus
 
                     if (fullValidationRequired)
                     {
-                        connectBlocksResult = await this.FullyValidateLockedAsync(chainedHeader).ConfigureAwait(false);
+                        connectBlocksResult = await FullyValidateLockedAsync(chainedHeader).ConfigureAwait(false);
                     }
                 }
 
@@ -545,11 +545,11 @@ namespace Blockcore.Consensus
                     }
 
                     if (connectBlocksResult.ConsensusTipChanged)
-                        await this.NotifyBehaviorsOnConsensusTipChangedAsync().ConfigureAwait(false);
+                        await NotifyBehaviorsOnConsensusTipChangedAsync().ConfigureAwait(false);
 
                     lock (this.peerLock)
                     {
-                        this.ProcessDownloadQueueLocked();
+                        ProcessDownloadQueueLocked();
                     }
                 }
 
@@ -564,7 +564,7 @@ namespace Blockcore.Consensus
                         // Start validating all next blocks that come after the current block,
                         // all headers in this list have the blocks present in the header.
                         foreach (ChainedHeaderBlock toValidate in chainedHeaderBlocksToValidate)
-                            this.partialValidator.StartPartialValidation(toValidate.ChainedHeader, toValidate.Block, this.OnPartialValidationCompletedCallbackAsync);
+                            this.partialValidator.StartPartialValidation(toValidate.ChainedHeader, toValidate.Block, OnPartialValidationCompletedCallbackAsync);
                     }
                 }
             }
@@ -606,7 +606,7 @@ namespace Blockcore.Consensus
             }
 
             foreach (ConnectNewHeadersResult newHeaders in blocksToDownload)
-                this.DownloadBlocks(newHeaders.ToArray());
+                DownloadBlocks(newHeaders.ToArray());
         }
 
         /// <summary>Attempt to switch to new chain, which may require rewinding blocks from the current chain.</summary>
@@ -637,9 +637,9 @@ namespace Blockcore.Consensus
             List<ChainedHeaderBlock> disconnectedBlocks = null;
 
             if (!isExtension)
-                disconnectedBlocks = await this.RewindToForkPointAsync(fork, oldTip).ConfigureAwait(false);
+                disconnectedBlocks = await RewindToForkPointAsync(fork, oldTip).ConfigureAwait(false);
 
-            List<ChainedHeaderBlock> blocksToConnect = this.TryGetBlocksToConnect(newTip, fork.Height + 1);
+            List<ChainedHeaderBlock> blocksToConnect = TryGetBlocksToConnect(newTip, fork.Height + 1);
 
             // Sanity check. This should never happen.
             if (blocksToConnect == null)
@@ -649,7 +649,7 @@ namespace Blockcore.Consensus
                 throw new ConsensusException("Blocks to connect are missing!");
             }
 
-            ConnectBlocksResult connectBlockResult = await this.ConnectChainAsync(blocksToConnect, blockMined).ConfigureAwait(false);
+            ConnectBlocksResult connectBlockResult = await ConnectChainAsync(blocksToConnect, blockMined).ConfigureAwait(false);
 
             if (connectBlockResult.Succeeded)
             {
@@ -675,7 +675,7 @@ namespace Blockcore.Consensus
             if (connectBlockResult.LastValidatedBlockHeader != null)
             {
                 // Block validation failed we need to rewind any blocks that were added to the chain.
-                await this.RewindToForkPointAsync(fork, connectBlockResult.LastValidatedBlockHeader).ConfigureAwait(false);
+                await RewindToForkPointAsync(fork, connectBlockResult.LastValidatedBlockHeader).ConfigureAwait(false);
             }
 
             if (isExtension)
@@ -685,7 +685,7 @@ namespace Blockcore.Consensus
             }
 
             // Reconnect disconnected blocks.
-            ConnectBlocksResult reconnectionResult = await this.ReconnectOldChainAsync(disconnectedBlocks).ConfigureAwait(false);
+            ConnectBlocksResult reconnectionResult = await ReconnectOldChainAsync(disconnectedBlocks).ConfigureAwait(false);
 
             // Add peers that needed to be banned as a result of a failure to connect blocks.
             // Otherwise they get lost as we are returning a different ConnnectBlocksResult.
@@ -741,7 +741,7 @@ namespace Blockcore.Consensus
 
                 lock (this.peerLock)
                 {
-                    this.SetConsensusTipInternalLocked(current.Previous);
+                    SetConsensusTipInternalLocked(current.Previous);
                     this.chainIndexer.Remove(current);
                 }
 
@@ -778,7 +778,7 @@ namespace Blockcore.Consensus
 
                 using (dsb)
                 {
-                    connectBlockResult = await this.ConnectBlockAsync(blockToConnect).ConfigureAwait(false);
+                    connectBlockResult = await ConnectBlockAsync(blockToConnect).ConfigureAwait(false);
 
                     if (!connectBlockResult.Succeeded)
                     {
@@ -793,7 +793,7 @@ namespace Blockcore.Consensus
                     // Block connected successfully.
                     lock (this.peerLock)
                     {
-                        this.SetConsensusTipInternalLocked(lastValidatedBlockHeader);
+                        SetConsensusTipInternalLocked(lastValidatedBlockHeader);
                         this.chainIndexer.Add(lastValidatedBlockHeader);
                     }
 
@@ -821,10 +821,10 @@ namespace Blockcore.Consensus
             }
 
             // After successfully connecting all blocks set the tree tip and claim the branch.
-            List<int> peersToResync = this.SetConsensusTip(lastValidatedBlockHeader, blockMined);
+            List<int> peersToResync = SetConsensusTip(lastValidatedBlockHeader, blockMined);
 
             // Disconnect peers that are not relevant anymore.
-            await this.ResyncPeersAsync(peersToResync).ConfigureAwait(false);
+            await ResyncPeersAsync(peersToResync).ConfigureAwait(false);
 
             return connectBlockResult;
         }
@@ -834,7 +834,7 @@ namespace Blockcore.Consensus
         private async Task<ConnectBlocksResult> ReconnectOldChainAsync(List<ChainedHeaderBlock> blocksToReconnect)
         {
             // Connect back the old blocks.
-            ConnectBlocksResult connectBlockResult = await this.ConnectChainAsync(blocksToReconnect).ConfigureAwait(false);
+            ConnectBlocksResult connectBlockResult = await ConnectChainAsync(blocksToReconnect).ConfigureAwait(false);
             if (connectBlockResult.Succeeded)
             {
                 // Even though reconnection was successful we return result with success == false because
@@ -874,7 +874,7 @@ namespace Blockcore.Consensus
                         this.logger.LogDebug("Peer ID {0} was removed already.", peerId);
 
                     // Simulate peer disconnection to remove their data from internal structures.
-                    this.PeerDisconnectedLocked(peerId);
+                    PeerDisconnectedLocked(peerId);
                 }
             }
 
@@ -934,7 +934,7 @@ namespace Blockcore.Consensus
             {
                 this.chainedHeaderTree.FullValidationSucceeded(blockToConnect.ChainedHeader);
 
-                this.chainState.IsAtBestChainTip = this.IsConsensusConsideredToBeSyncedLocked(out ChainedHeader bestPeerTip);
+                this.chainState.IsAtBestChainTip = IsConsensusConsideredToBeSyncedLocked(out ChainedHeader bestPeerTip);
                 this.chainState.BestPeerTip = bestPeerTip;
             }
 
@@ -952,7 +952,7 @@ namespace Blockcore.Consensus
 
             while (currentHeader.Height >= heightOfFirstBlock)
             {
-                ChainedHeaderBlock chainedHeaderBlock = this.GetBlockData(currentHeader.HashBlock);
+                ChainedHeaderBlock chainedHeaderBlock = GetBlockData(currentHeader.HashBlock);
 
                 if (chainedHeaderBlock?.Block == null)
                 {
@@ -979,7 +979,7 @@ namespace Blockcore.Consensus
             {
                 List<int> peerIdsToResync = this.chainedHeaderTree.ConsensusTipChanged(newTip, blockMined);
 
-                this.SetConsensusTipInternalLocked(newTip);
+                SetConsensusTipInternalLocked(newTip);
 
                 bool ibd = this.ibdState.IsInitialBlockDownload();
 
@@ -1078,7 +1078,7 @@ namespace Blockcore.Consensus
                 foreach (BlockDownloadRequest downloadRequest in downloadRequests)
                     this.toDownloadQueue.Enqueue(downloadRequest);
 
-                this.ProcessDownloadQueueLocked();
+                ProcessDownloadQueueLocked();
             }
         }
 
@@ -1144,7 +1144,7 @@ namespace Blockcore.Consensus
 
             if (reassignDownload)
             {
-                this.DownloadBlocks(new[] { chainedHeader });
+                DownloadBlocks(new[] { chainedHeader });
                 this.logger.LogWarning("Downloading block for '{0}' failed, it will be enqueued again.", chainedHeader);
                 this.logger.LogTrace("(-)[BLOCK_DOWNLOAD_FAILED_REASSIGNED]");
                 return;
@@ -1193,7 +1193,7 @@ namespace Blockcore.Consensus
 
                 if (downloadedCallbacks.ConsensusRequested)
                 {
-                    this.ProcessDownloadedBlock(chainedHeaderBlock);
+                    ProcessDownloadedBlock(chainedHeaderBlock);
                 }
 
                 if (downloadedCallbacks.Callbacks != null)
@@ -1215,7 +1215,7 @@ namespace Blockcore.Consensus
 
             foreach (uint256 blockHash in blockHashes)
             {
-                ChainedHeaderBlock chainedHeaderBlock = this.GetBlockData(blockHash);
+                ChainedHeaderBlock chainedHeaderBlock = GetBlockData(blockHash);
 
                 if ((chainedHeaderBlock == null) || (chainedHeaderBlock.Block != null))
                 {
@@ -1236,7 +1236,7 @@ namespace Blockcore.Consensus
             if (blocksToDownload.Count != 0)
             {
                 this.logger.LogDebug("Asking block puller for {0} blocks.", blocksToDownload.Count);
-                this.DownloadBlocks(blocksToDownload.ToArray(), onBlockDownloadedCallback);
+                DownloadBlocks(blocksToDownload.ToArray(), onBlockDownloadedCallback);
             }
         }
 
@@ -1330,7 +1330,7 @@ namespace Blockcore.Consensus
 
                 this.logger.LogDebug("{0} slots are available.", this.freeSlots);
 
-                if (!this.ValidateConditions())
+                if (!ValidateConditions())
                     return;
 
                 BlockDownloadRequest request = this.toDownloadQueue.Peek();
@@ -1349,7 +1349,7 @@ namespace Blockcore.Consensus
                         BlocksToDownload = new List<ChainedHeader>(request.BlocksToDownload.GetRange(0, this.maxBlocksToAsk))
                     };
 
-                    request.BlocksToDownload.RemoveRange(0, maxBlocksToAsk);
+                    request.BlocksToDownload.RemoveRange(0, this.maxBlocksToAsk);
 
                     request = blockPullerRequest;
                 }
@@ -1393,15 +1393,14 @@ namespace Blockcore.Consensus
             // if there are no samples, assume the worst scenario (you are going to donwload full blocks).
 
             this.avgSize = (long)this.blockPuller.GetAverageBlockSizeBytes();
-
-            if (avgSize == 0)
+            if (this.avgSize == 0)
             {
-                avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
+                this.avgSize = this.network.Consensus.Options.MaxBlockBaseSize;
             }
 
             this.maxBlocksToAsk = Math.Min((int)(freeBytes / this.avgSize), this.freeSlots);
 
-            this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", this.avgSize, maxBlocksToAsk);
+            this.logger.LogDebug("With {0} average block size, we have {1} download slots available.", this.avgSize, this.maxBlocksToAsk);
 
             if (this.maxBlocksToAsk <= 0)
             {

@@ -35,13 +35,13 @@ namespace Blockcore.Features.BlockStore.Tests
         private int repositorySavesCount = 0;
         private int repositoryTotalBlocksSaved = 0;
         private int repositoryTotalBlocksDeleted = 0;
-        private Random random;
-        private StoreSettings storeSettings;
+        private readonly Random random;
+        private readonly StoreSettings storeSettings;
 
-        private Dictionary<uint256, Block> listOfSavedBlocks;
-        private ILoggerFactory loggerFactory;
-        private ISignals signals;
-        private AsyncProvider asyncProvider;
+        private readonly Dictionary<uint256, Block> listOfSavedBlocks;
+        private readonly ILoggerFactory loggerFactory;
+        private readonly ISignals signals;
+        private readonly AsyncProvider asyncProvider;
 
         private readonly string testBlockHex = "07000000af72d939050259913e440b23bee62e3b9604129ec8424d265a6ee4916e060000a5a2cbad28617657336403daf202b797bfc4b9c5cfc65a258f32ec33ec9ad485314ea957ffff0f1e812b07000101000000184ea957010000000000000000000000000000000000000000000000000000000000000000ffffffff03510101ffffffff010084d717000000001976a9140099e795d9ee809dc74dce32c79d26db0265072488ac0000000000";
 
@@ -175,7 +175,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             int count = 5 * 1024 * 1024 / blockSize + 2;
 
-            ChainIndexer longChainIndexer = this.CreateChain(count);
+            ChainIndexer longChainIndexer = CreateChain(count);
             this.repositoryTipHashAndHeight = new HashHeightPair(longChainIndexer.Genesis.HashBlock, 0);
 
             var blockStoreFlushCondition = new BlockStoreQueueFlushCondition(this.chainState, this.initialBlockDownloadState.Object);
@@ -221,7 +221,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 this.blockStoreQueue.AddToPending(new ChainedHeaderBlock(block, lastHeader));
             }
 
-            await this.WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
+            await WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
 
             Assert.Equal(this.chainState.BlockStoreTip, this.chainIndexer.Genesis);
             Assert.Equal(0, this.repositorySavesCount);
@@ -254,14 +254,14 @@ namespace Blockcore.Features.BlockStore.Tests
 
                 if (i == this.chainIndexer.Height)
                 {
-                    await this.WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
+                    await WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
                     blockStoreFlushConditionMock.Setup(s => s.ShouldFlush).Returns(true);
                 }
 
                 this.blockStoreQueue.AddToPending(new ChainedHeaderBlock(block, lastHeader));
             }
 
-            await this.WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
+            await WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
 
             // Wait for store tip to finish saving
             int counter = 0;
@@ -310,7 +310,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 this.blockStoreQueue.AddToPending(new ChainedHeaderBlock(block, this.chainIndexer.GetHeader(i)));
             }
 
-            await this.WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
+            await WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
 
             Assert.Equal(this.chainState.BlockStoreTip, this.chainIndexer.Genesis);
             Assert.Equal(0, this.repositorySavesCount);
@@ -385,7 +385,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 this.blockStoreQueue.AddToPending(new ChainedHeaderBlock(block, header));
             }
 
-            await this.WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
+            await WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
 
             blockStoreFlushCondition.Setup(s => s.ShouldFlush).Returns(false);
 
@@ -407,7 +407,7 @@ namespace Blockcore.Features.BlockStore.Tests
                 this.blockStoreQueue.AddToPending(new ChainedHeaderBlock(block, this.chainIndexer.GetHeader(i)));
             }
 
-            await this.WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
+            await WaitUntilQueueIsEmptyAsync().ConfigureAwait(false);
 
             // Make sure chain is saved.
             Assert.Equal(this.chainIndexer.Tip.Height + alternativeBlocks.Count, this.repositoryTotalBlocksSaved);
@@ -433,7 +433,7 @@ namespace Blockcore.Features.BlockStore.Tests
         [Fact]
         public void RetrieveBlocksFromCache()
         {
-            List<ChainedHeaderBlock> chainedHeaderBlocks = this.AddBlocksToBlockStoreQueue();
+            List<ChainedHeaderBlock> chainedHeaderBlocks = AddBlocksToBlockStoreQueue();
 
             // Try to get 10 random blocks.
             for (int i = 0; i < 10; i++)
@@ -450,7 +450,7 @@ namespace Blockcore.Features.BlockStore.Tests
         [Fact]
         public void RetrieveTransactionByIdFromCacheReturnsNullWhenNotIndexed()
         {
-            List<ChainedHeaderBlock> chainedHeaderBlocks = this.AddBlocksToBlockStoreQueue();
+            List<ChainedHeaderBlock> chainedHeaderBlocks = AddBlocksToBlockStoreQueue();
 
             // Try to get 10 random transactions.
             for (int i = 0; i < 10; i++)
@@ -467,7 +467,7 @@ namespace Blockcore.Features.BlockStore.Tests
         [Fact]
         public void RetrieveBlockIdByTxIdFromCache()
         {
-            List<ChainedHeaderBlock> chainedHeaderBlocks = this.AddBlocksToBlockStoreQueue();
+            List<ChainedHeaderBlock> chainedHeaderBlocks = AddBlocksToBlockStoreQueue();
 
             // Try to get 10 random block ids.
             for (int i = 0; i < 10; i++)

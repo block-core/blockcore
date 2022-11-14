@@ -79,7 +79,7 @@ namespace Blockcore.Features.PoA
             this.chainState = chainState;
             this.blockStoreQueue = blockStoreQueue;
 
-            payloadProvider.DiscoverPayloads(this.GetType().Assembly);
+            payloadProvider.DiscoverPayloads(GetType().Assembly);
         }
 
         /// <inheritdoc />
@@ -87,9 +87,9 @@ namespace Blockcore.Features.PoA
         {
             NetworkPeerConnectionParameters connectionParameters = this.connectionManager.Parameters;
 
-            this.ReplaceConsensusManagerBehavior(connectionParameters);
+            ReplaceConsensusManagerBehavior(connectionParameters);
 
-            this.ReplaceBlockStoreBehavior(connectionParameters);
+            ReplaceBlockStoreBehavior(connectionParameters);
 
             this.federationManager.Initialize();
             this.whitelistedHashesRepository.Initialize();

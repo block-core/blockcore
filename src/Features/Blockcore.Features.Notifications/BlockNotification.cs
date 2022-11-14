@@ -56,7 +56,7 @@ namespace Blockcore.Features.Notifications
             this.signals = signals;
             this.asyncProvider = asyncProvider;
             this.nodeLifetime = nodeLifetime;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         public ChainIndexer ChainIndexer { get; }
@@ -95,7 +95,7 @@ namespace Blockcore.Features.Notifications
         {
             this.asyncLoop = this.asyncProvider.CreateAndRunAsyncLoop("Notify", async token =>
             {
-                await this.Notify(this.nodeLifetime.ApplicationStopping);
+                await Notify(this.nodeLifetime.ApplicationStopping);
             },
             this.nodeLifetime.ApplicationStopping);
         }

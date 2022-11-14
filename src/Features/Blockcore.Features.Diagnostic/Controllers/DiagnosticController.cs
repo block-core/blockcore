@@ -48,7 +48,7 @@ namespace Blockcore.Features.Diagnostic.Controllers
                     return new { peer.IsConnected, peer.DisconnectReason, peer.State, EndPoint = peer.PeerEndPoint.ToString() };
                 }
 
-                return this.Json(new
+                return Json(new
                 {
                     peersByPeerId = peersByPeerId.Select(DumpPeer),
                     connectedPeers = connectedPeers.Select(DumpPeer),
@@ -70,7 +70,7 @@ namespace Blockcore.Features.Diagnostic.Controllers
         {
             try
             {
-                return this.Json(new
+                return Json(new
                 {
                     PeerStatistics = this.peerStatisticsCollector.Enabled ? "Enabled" : "Disabled"
                 });
@@ -99,7 +99,7 @@ namespace Blockcore.Features.Diagnostic.Controllers
                     peerStatistics = peerStatistics.Where(peer => connectedPeersEndpoints.Contains(peer.PeerEndPoint));
                 }
 
-                return this.Json(peerStatistics.Select(peer => new PeerStatisticsModel(peer, connectedPeersEndpoints.Contains(peer.PeerEndPoint))));
+                return Json(peerStatistics.Select(peer => new PeerStatisticsModel(peer, connectedPeersEndpoints.Contains(peer.PeerEndPoint))));
             }
             catch (Exception e)
             {

@@ -27,7 +27,7 @@ namespace Blockcore.Features.MemoryPool
             Guard.NotNull(mempoolManager, nameof(mempoolManager));
 
             this.MempoolManager = mempoolManager;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
         }
 
         [ActionName("getrawmempool")]
@@ -51,7 +51,7 @@ namespace Blockcore.Features.MemoryPool
         {
             try
             {
-                return this.Json(await this.GetRawMempool().ConfigureAwait(false));
+                return Json(await GetRawMempool().ConfigureAwait(false));
             }
             catch (Exception e)
             {

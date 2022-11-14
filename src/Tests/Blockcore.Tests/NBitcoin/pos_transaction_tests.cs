@@ -1286,7 +1286,7 @@ namespace NBitcoin.Tests
             Assert.True(builder.Verify(spending));
         }
 
-        private ScriptVerify allowHighS = ScriptVerify.Standard & ~ScriptVerify.LowS;
+        private readonly ScriptVerify allowHighS = ScriptVerify.Standard & ~ScriptVerify.LowS;
 
         [Fact]
         public void CanUseLockTime()

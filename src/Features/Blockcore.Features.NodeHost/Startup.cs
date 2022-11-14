@@ -35,14 +35,14 @@ namespace Blockcore.Features.NodeHost
             this.Configuration = builder.Build();
         }
 
-        private IFullNode fullNode;
+        private readonly IFullNode fullNode;
 
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
+            NodeHostSettings hostSettings = this.fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             // Make the configuration available to custom features.
             services.AddSingleton(this.Configuration);
@@ -210,7 +210,7 @@ namespace Blockcore.Features.NodeHost
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            NodeHostSettings hostSettings = fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
+            NodeHostSettings hostSettings = this.fullNode.Services.ServiceProvider.GetService<NodeHostSettings>();
 
             app.UseStaticFiles();
 
@@ -242,7 +242,7 @@ namespace Blockcore.Features.NodeHost
                 if (hostSettings.EnableWS)
                 {
                     IHubContext<EventsHub> hubContext = app.ApplicationServices.GetService<IHubContext<EventsHub>>();
-                    IEventsSubscriptionService eventsSubscriptionService = fullNode.Services.ServiceProvider.GetService<IEventsSubscriptionService>();
+                    IEventsSubscriptionService eventsSubscriptionService = this.fullNode.Services.ServiceProvider.GetService<IEventsSubscriptionService>();
                     eventsSubscriptionService.SetHub(hubContext);
 
                     endpoints.MapHub<EventsHub>("/ws-events");

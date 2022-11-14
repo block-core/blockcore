@@ -17,7 +17,7 @@ namespace Blockcore.Features.PoA.Tests
         private TestPoANetwork network;
         private readonly PoAConsensusOptions consensusOptions;
         private readonly IFederationManager federationManager;
-        private Mock<ChainIndexer> chainIndexer;
+        private readonly Mock<ChainIndexer> chainIndexer;
 
         public SlotsManagerTests()
         {

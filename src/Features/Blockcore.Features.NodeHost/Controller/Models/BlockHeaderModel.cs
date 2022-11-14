@@ -42,7 +42,7 @@ namespace Blockcore.Controllers.Models
             this.PreviousBlockHash = blockHeader.HashPrevBlock.ToString();
             this.MerkleRoot = blockHeader.HashMerkleRoot.ToString();
             this.Time = blockHeader.Time;
-            byte[] bytes = this.GetBytes(blockHeader.Bits.ToCompact());
+            byte[] bytes = GetBytes(blockHeader.Bits.ToCompact());
             string encodedBytes = Encoders.Hex.EncodeData(bytes);
             this.Bits = encodedBytes;
             this.Nonce = (int)blockHeader.Nonce;

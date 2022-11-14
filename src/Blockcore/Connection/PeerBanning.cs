@@ -76,7 +76,7 @@ namespace Blockcore.Connection
 
         public PeerBanning(IConnectionManager connectionManager, ILoggerFactory loggerFactory, IDateTimeProvider dateTimeProvider, IPeerAddressManager peerAddressManager)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.connectionManager = connectionManager;
             this.dateTimeProvider = dateTimeProvider;
             this.peerAddressManager = peerAddressManager;
@@ -136,13 +136,13 @@ namespace Blockcore.Connection
         /// <inheritdoc />
         public void BanAndDisconnectPeer(IPEndPoint endpoint, string reason = null)
         {
-            this.BanAndDisconnectPeer(endpoint, this.connectionManager.ConnectionSettings.BanTimeSeconds, reason);
+            BanAndDisconnectPeer(endpoint, this.connectionManager.ConnectionSettings.BanTimeSeconds, reason);
         }
 
         /// <inheritdoc />
         public void ClearBannedPeers()
         {
-            foreach (PeerAddress peer in this.peerAddressManager.Peers.Where(peer => this.IsBanned(peer.Endpoint)))
+            foreach (PeerAddress peer in this.peerAddressManager.Peers.Where(peer => IsBanned(peer.Endpoint)))
             {
 
                 peer.UnBan();

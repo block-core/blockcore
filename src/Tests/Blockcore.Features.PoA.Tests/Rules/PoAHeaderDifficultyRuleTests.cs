@@ -50,7 +50,7 @@ namespace Blockcore.Features.PoA.Tests.Rules
         public void VerifyHeaderDifficulty()
         {
             var rule = new PoAHeaderDifficultyRule();
-            this.InitRule(rule);
+            InitRule(rule);
 
             var validationContext = new ValidationContext() { ChainedHeaderToValidate = this.currentHeader };
             var ruleContext = new RuleContext(validationContext, DateTimeOffset.Now);

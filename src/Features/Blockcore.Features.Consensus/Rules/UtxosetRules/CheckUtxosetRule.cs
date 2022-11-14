@@ -60,7 +60,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
                         ConsensusErrors.BadTransactionMissingInput.Throw();
                     }
 
-                    if (!this.IsTxFinal(tx, context))
+                    if (!IsTxFinal(tx, context))
                     {
                         this.Logger.LogDebug("Transaction '{0}' is not final", tx.GetHash());
                         this.Logger.LogTrace("(-)[BAD_TX_NON_FINAL]");
@@ -71,7 +71,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
                     // * legacy (always),
                     // * p2sh (when P2SH enabled in flags and excludes coinbase),
                     // * witness (when witness enabled in flags and excludes coinbase).
-                    sigOpsCost += this.GetTransactionSignatureOperationCost(tx, view, flags);
+                    sigOpsCost += GetTransactionSignatureOperationCost(tx, view, flags);
                     if (sigOpsCost > this.ConsensusOptions.MaxBlockSigopsCost)
                     {
                         this.Logger.LogTrace("(-)[BAD_BLOCK_SIG_OPS]");
@@ -80,9 +80,9 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 
                     if (!tx.IsCoinBase)
                     {
-                        this.CheckInputs(tx, view, index.Height);
+                        CheckInputs(tx, view, index.Height);
 
-                        fees += this.GetTransactionFee(view, tx);
+                        fees += GetTransactionFee(view, tx);
 
                         var txData = new PrecomputedTransactionData(tx);
                         for (int inputIndex = 0; inputIndex < tx.Inputs.Count; inputIndex++)
@@ -101,12 +101,12 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
                     }
                 }
 
-                this.UpdateCoinView(context, tx);
+                UpdateCoinView(context, tx);
             }
 
             if (!context.SkipValidation)
             {
-                this.CheckBlockReward(context, fees, index.Height, block);
+                CheckBlockReward(context, fees, index.Height, block);
 
                 // Start the Parallel loop on a thread so its result can be awaited rather than blocking
                 Task<ParallelLoopResult> checkInputsInParallel = Task.Run(() =>
@@ -116,7 +116,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
                         if (state.ShouldExitCurrentIteration)
                             return;
 
-                        if (!this.CheckInput(input.tx, input.inputIndexCopy, input.txOut, input.txData, input.input, input.flags))
+                        if (!CheckInput(input.tx, input.inputIndexCopy, input.txOut, input.txData, input.input, input.flags))
                         {
                             state.Stop();
                         }
@@ -259,13 +259,13 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
                 OutPoint prevout = transaction.Inputs[i].PrevOut;
                 UnspentOutput coins = inputs.AccessCoins(prevout);
 
-                this.CheckMaturity(coins, spendHeight);
+                CheckMaturity(coins, spendHeight);
 
-                this.CheckInputValidity(transaction, coins);
+                CheckInputValidity(transaction, coins);
 
                 // Check for negative or overflow input values.
                 valueIn += coins.Coins.TxOut.Value;
-                if (!this.MoneyRange(coins.Coins.TxOut.Value) || !this.MoneyRange(valueIn))
+                if (!MoneyRange(coins.Coins.TxOut.Value) || !MoneyRange(valueIn))
                 {
                     this.Logger.LogTrace("(-)[BAD_TX_INPUT_VALUE]");
                     ConsensusErrors.BadTransactionInputValueOutOfRange.Throw();
@@ -289,7 +289,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
                 }
 
                 fees += txFee;
-                if (!this.MoneyRange(fees))
+                if (!MoneyRange(fees))
                 {
                     this.Logger.LogTrace("(-)[BAD_FEE]");
                     ConsensusErrors.BadTransactionFeeOutOfRange.Throw();
@@ -313,20 +313,20 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <returns>Signature operation cost for all transaction's inputs.</returns>
         public long GetTransactionSignatureOperationCost(Transaction transaction, UnspentOutputSet inputs, DeploymentFlags flags)
         {
-            long signatureOperationCost = this.GetLegacySignatureOperationsCount(transaction) * this.ConsensusOptions.WitnessScaleFactor;
+            long signatureOperationCost = GetLegacySignatureOperationsCount(transaction) * this.ConsensusOptions.WitnessScaleFactor;
 
             if (transaction.IsCoinBase)
                 return signatureOperationCost;
 
             if (flags.ScriptFlags.HasFlag(ScriptVerify.P2SH))
             {
-                signatureOperationCost += this.GetP2SHSignatureOperationsCount(transaction, inputs) * this.ConsensusOptions.WitnessScaleFactor;
+                signatureOperationCost += GetP2SHSignatureOperationsCount(transaction, inputs) * this.ConsensusOptions.WitnessScaleFactor;
             }
 
             for (int i = 0; i < transaction.Inputs.Count; i++)
             {
                 TxOut prevout = inputs.GetOutputFor(transaction.Inputs[i]);
-                signatureOperationCost += this.CountWitnessSignatureOperation(prevout.ScriptPubKey, transaction.Inputs[i].WitScript, flags);
+                signatureOperationCost += CountWitnessSignatureOperation(prevout.ScriptPubKey, transaction.Inputs[i].WitScript, flags);
             }
 
             return signatureOperationCost;

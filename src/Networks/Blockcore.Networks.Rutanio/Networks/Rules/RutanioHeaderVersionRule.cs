@@ -40,7 +40,7 @@ namespace Rutanio.Networks.Rules
 
             if (chainedHeader.Header.Version < 7)
             {
-                Logger.LogTrace("(-)[BAD_VERSION]");
+                this.Logger.LogTrace("(-)[BAD_VERSION]");
 
                 ConsensusErrors.BadVersion.Throw();
             }

@@ -57,7 +57,7 @@ namespace Blockcore.P2P
             Guard.NotNull(peerAddressManager, nameof(loggerFactory));
 
             this.dateTimeProvider = dateTimeProvider;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             this.loggerFactory = loggerFactory;
             this.peerBanning = peerBanning;
             this.Mode = PeerAddressManagerBehaviourMode.AdvertiseDiscover;
@@ -67,8 +67,8 @@ namespace Blockcore.P2P
 
         protected override void AttachCore()
         {
-            this.AttachedPeer.StateChanged.Register(this.OnStateChangedAsync);
-            this.AttachedPeer.MessageReceived.Register(this.OnMessageReceivedAsync);
+            this.AttachedPeer.StateChanged.Register(OnStateChangedAsync);
+            this.AttachedPeer.MessageReceived.Register(OnMessageReceivedAsync);
 
             if ((this.Mode & PeerAddressManagerBehaviourMode.Discover) != 0)
             {
@@ -175,8 +175,8 @@ namespace Blockcore.P2P
 
         protected override void DetachCore()
         {
-            this.AttachedPeer.MessageReceived.Unregister(this.OnMessageReceivedAsync);
-            this.AttachedPeer.StateChanged.Unregister(this.OnStateChangedAsync);
+            this.AttachedPeer.MessageReceived.Unregister(OnMessageReceivedAsync);
+            this.AttachedPeer.StateChanged.Unregister(OnStateChangedAsync);
         }
 
         public override object Clone()

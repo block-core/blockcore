@@ -25,7 +25,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
         /// <exception cref="ConsensusErrors.UnexpectedWitness">The block does not expect witness transactions but contains a witness transaction.</exception>
         public override Task RunAsync(RuleContext context)
         {
-            return this.ValidateWitnessCommitment(context, this.Parent.Network);
+            return ValidateWitnessCommitment(context, this.Parent.Network);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                     Buffer.BlockCopy(witness.Pushes.First(), 0, hashed, 32, 32);
                     hashWitness = Hashes.Hash256(hashed);
 
-                    if (!this.EqualsArray(hashWitness.ToBytes(), commitment.ToBytes(true).Skip(6).ToArray(), 32))
+                    if (!EqualsArray(hashWitness.ToBytes(), commitment.ToBytes(true).Skip(6).ToArray(), 32))
                     {
                         this.Logger.LogTrace("(-)[WITNESS_MERKLE_MISMATCH]");
                         ConsensusErrors.BadWitnessMerkleMatch.Throw();

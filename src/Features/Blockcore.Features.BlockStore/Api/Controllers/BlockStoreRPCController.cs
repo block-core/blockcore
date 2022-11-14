@@ -62,7 +62,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                 foreach (var transactionId in transactionIds)
                 {
                     var hashBlock = uint256.Parse(blockhash);
-                    ChainedHeader chainedHeader = this.GetTransactionBlock(transactionId);
+                    ChainedHeader chainedHeader = GetTransactionBlock(transactionId);
                     if (chainedHeader.HashBlock != hashBlock)
                     {
                         throw new RPCServerException(RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY, "Not all transactions found in specified or retrieved block");
@@ -78,7 +78,7 @@ namespace Blockcore.Features.BlockStore.Api.Controllers
                 // Loop through txids and try to find which block they're in. Exit loop once a block is found.
                 foreach (var transactionId in transactionIds)
                 {
-                    ChainedHeader chainedHeader = this.GetTransactionBlock(transactionId);
+                    ChainedHeader chainedHeader = GetTransactionBlock(transactionId);
                     if (chainedHeader.BlockDataAvailability == BlockDataAvailabilityState.BlockAvailable)
                     {
                         block = this.consensusManager.GetBlockData(chainedHeader.HashBlock);

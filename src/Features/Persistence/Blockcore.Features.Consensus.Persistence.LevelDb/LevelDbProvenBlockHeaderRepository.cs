@@ -29,7 +29,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
         /// </summary>
         private readonly DB leveldb;
 
-        private object locker;
+        private readonly object locker;
 
         /// <summary>
         /// Specification of the network the node runs on - RegTest/TestNet/MainNet.
@@ -81,7 +81,7 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
             Guard.NotNull(folder, nameof(folder));
             this.dataStoreSerializer = dataStoreSerializer;
 
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             Directory.CreateDirectory(folder);
 
@@ -99,14 +99,14 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
         {
             Task task = Task.Run(() =>
             {
-                this.TipHashHeight = this.GetTipHash();
+                this.TipHashHeight = GetTipHash();
 
                 if (this.TipHashHeight != null)
                     return;
 
                 var hashHeight = new HashHeightPair(this.network.GetGenesis().GetHash(), 0);
 
-                this.SetTip(hashHeight);
+                SetTip(hashHeight);
 
                 this.TipHashHeight = hashHeight;
             });
@@ -147,9 +147,9 @@ namespace Blockcore.Features.Consensus.Persistence.LevelDb
             {
                 this.logger.LogDebug("({0}.Count():{1})", nameof(headers), headers.Count());
 
-                this.InsertHeaders(headers);
+                InsertHeaders(headers);
 
-                this.SetTip(newTip);
+                SetTip(newTip);
 
                 this.TipHashHeight = newTip;
             });

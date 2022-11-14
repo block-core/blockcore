@@ -31,7 +31,7 @@ namespace Blockcore.Networks.X1.Components
         /// <param name="loggerFactory">the loggerFactory</param>
         public OpenCLMiner(X1MinerSettings minerSettings, ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
             var devices = ComputePlatform.Platforms.SelectMany(p => p.Devices).Where(d => d.Available && d.CompilerAvailable).ToList();
 
             if (!devices.Any())
@@ -58,7 +58,7 @@ namespace Blockcore.Networks.X1.Components
         /// </summary>
         ~OpenCLMiner()
         {
-            this.DisposeOpenCLResources();
+            DisposeOpenCLResources();
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Blockcore.Networks.X1.Components
                 throw new InvalidOperationException("GPU not found");
             }
 
-            this.ConstructOpenCLResources();
+            ConstructOpenCLResources();
 
             using var headerBuffer = new ComputeBuffer<byte>(this.computeContext, ComputeMemoryFlags.ReadOnly | ComputeMemoryFlags.CopyHostPointer, header);
             using var bitsBuffer = new ComputeBuffer<byte>(this.computeContext, ComputeMemoryFlags.ReadOnly | ComputeMemoryFlags.CopyHostPointer, bits);
@@ -117,7 +117,7 @@ namespace Blockcore.Networks.X1.Components
             commands.ReadFromBuffer(powBuffer, ref nonceOut, true, null);
             commands.Finish();
 
-            this.DisposeOpenCLResources();
+            DisposeOpenCLResources();
 
             return nonceOut[0];
         }

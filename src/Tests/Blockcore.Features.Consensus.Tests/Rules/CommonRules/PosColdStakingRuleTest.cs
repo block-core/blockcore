@@ -93,7 +93,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             this.ChainIndexer.SetTip(block.Header);
 
             // Execute the rule and check the outcome against what is expected.
-            var rule = this.CreateRule<PosColdStakingRule>();
+            var rule = CreateRule<PosColdStakingRule>();
 
             // Initialize the rule context.
             posRuleContext.ValidationContext.ChainedHeaderToValidate = this.ChainIndexer.Tip;

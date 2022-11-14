@@ -52,7 +52,7 @@ namespace Blockcore.Features.Wallet
             this.network = network;
             this.walletManager = walletManager;
             this.walletFeePolicy = walletFeePolicy;
-            this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            this.logger = loggerFactory.CreateLogger(GetType().FullName);
 
             this.TransactionPolicy = transactionPolicy;
         }
@@ -60,7 +60,7 @@ namespace Blockcore.Features.Wallet
         /// <inheritdoc />
         public Transaction BuildTransaction(TransactionBuildContext context)
         {
-            this.InitializeTransactionBuilder(context);
+            InitializeTransactionBuilder(context);
 
             const int maxRetries = 5;
             int retryCount = 0;
@@ -76,7 +76,7 @@ namespace Blockcore.Features.Wallet
                 {
                     ICoin[] coinsSpent = context.TransactionBuilder.FindSpentCoins(transaction);
                     // TODO: Improve this as we already have secrets when running a retry iteration.
-                    this.AddSecrets(context, coinsSpent);
+                    AddSecrets(context, coinsSpent);
                     context.TransactionBuilder.SignTransactionInPlace(transaction);
                 }
 
@@ -114,7 +114,7 @@ namespace Blockcore.Features.Wallet
             foreach (TxIn transactionInput in transaction.Inputs)
                 context.SelectedInputs.Add(transactionInput.PrevOut);
 
-            Transaction newTransaction = this.BuildTransaction(context);
+            Transaction newTransaction = BuildTransaction(context);
 
             if (context.ChangeAddress != null)
             {
@@ -178,9 +178,9 @@ namespace Blockcore.Features.Wallet
                     AccountReference = accountReference
                 };
 
-                this.AddRecipients(context);
-                this.AddCoins(context);
-                this.AddFee(context);
+                AddRecipients(context);
+                AddCoins(context);
+                AddFee(context);
 
                 if (this.network.MinTxFee > Money.Zero)
                 {
@@ -199,7 +199,7 @@ namespace Blockcore.Features.Wallet
         /// <inheritdoc />
         public Money EstimateFee(TransactionBuildContext context)
         {
-            this.InitializeTransactionBuilder(context);
+            InitializeTransactionBuilder(context);
 
             return context.TransactionFee;
         }
@@ -227,11 +227,11 @@ namespace Blockcore.Features.Wallet
                 context.TransactionBuilder.CoinSelector = new AllCoinsSelector();
             }
 
-            this.AddRecipients(context);
-            this.AddOpReturnOutput(context);
-            this.AddCoins(context);
-            this.FindChangeAddress(context);
-            this.AddFee(context);
+            AddRecipients(context);
+            AddOpReturnOutput(context);
+            AddCoins(context);
+            FindChangeAddress(context);
+            AddFee(context);
 
             if (context.Time.HasValue)
                 context.TransactionBuilder.SetTimeStamp(context.Time.Value);

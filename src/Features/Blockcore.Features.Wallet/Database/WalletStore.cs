@@ -48,10 +48,10 @@ namespace Blockcore.Features.Wallet.Database
             this.inmemorySqliteConnection = new SqliteConnection(this.dbConnection);
             this.inmemorySqliteConnection.Open();
 
-            this.CreateDatabase();
+            CreateDatabase();
 
             this.network = network;
-            this.Init(wallet);
+            Init(wallet);
         }
 
         public WalletStore(Network network, DataFolder dataFolder, Types.Wallet wallet)
@@ -66,7 +66,7 @@ namespace Blockcore.Features.Wallet.Database
 
             if (!File.Exists(this.dbPath))
             {
-                this.CreateDatabase();
+                CreateDatabase();
             }
             else
             {
@@ -75,14 +75,14 @@ namespace Blockcore.Features.Wallet.Database
                 {
                     var walletVersion = -1;
 
-                    using (var conn = this.GetDbConnection())
+                    using (var conn = GetDbConnection())
                     {
                         walletVersion = conn.QueryFirst<int>("SELECT WalletVersion FROM WalletData");
                     }
 
                     if (walletVersion != WalletVersion)
                     {
-                        this.UpgradeDatabase(walletVersion);
+                        UpgradeDatabase(walletVersion);
                     }
                 }
                 catch (Microsoft.Data.Sqlite.SqliteException sqex)
@@ -105,13 +105,13 @@ namespace Blockcore.Features.Wallet.Database
                     {
                         throw;
                     }
-                    this.CreateDatabase();
+                    CreateDatabase();
                 }
             }
 
             this.network = network;
 
-            this.Init(wallet);
+            Init(wallet);
         }
 
         protected SqliteConnection GetDbConnection()
@@ -131,7 +131,7 @@ namespace Blockcore.Features.Wallet.Database
             SqlMapper.AddTypeHandler(new CollectionOfPaymentDetailsHandler());
             SqlMapper.AddTypeHandler(new PartialMerkleTreeHandler());
 
-            this.WalletData = this.GetData();
+            this.WalletData = GetData();
 
             if (this.WalletData != null)
             {
@@ -142,7 +142,7 @@ namespace Blockcore.Features.Wallet.Database
             }
             else
             {
-                this.SetData(new WalletData
+                SetData(new WalletData
                 {
                     Key = "Key",
                     EncryptedSeed = wallet.EncryptedSeed,
@@ -157,7 +157,7 @@ namespace Blockcore.Features.Wallet.Database
         {
             if (this.WalletData == null)
             {
-                using var conn = this.GetDbConnection();
+                using var conn = GetDbConnection();
                 this.WalletData = conn.QueryFirstOrDefault<WalletData>("SELECT *, Id AS Key FROM WalletData WHERE Id = 'Key'");
             }
 
@@ -172,7 +172,7 @@ namespace Blockcore.Features.Wallet.Database
                       ON CONFLICT(Id) DO UPDATE SET
                       EncryptedSeed = @EncryptedSeed, WalletTip = @WalletTip, BlockLocator = @BlockLocator;";
 
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             conn.Execute(sql, data);
 
             this.WalletData = data;
@@ -180,7 +180,7 @@ namespace Blockcore.Features.Wallet.Database
 
         public void InsertOrUpdate(TransactionOutputData item)
         {
-            TransactionData insert = this.Convert(item);
+            TransactionData insert = Convert(item);
 
             var sql = @$"INSERT INTO TransactionData
                       (OutPoint, Address, Id, Amount, IndexInTransaction, BlockHeight, BlockHash, BlockIndex, CreationTime, ScriptPubKey, IsPropagated, IsCoinBase, IsCoinStake, IsColdCoinStake, AccountIndex, MerkleProof, Hex, SpendingDetailsTransactionId, SpendingDetailsBlockHeight, SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake, SpendingDetailsCreationTime, SpendingDetailsPayments, SpendingDetailsHex)
@@ -188,13 +188,13 @@ namespace Blockcore.Features.Wallet.Database
                       ON CONFLICT(OutPoint) DO UPDATE SET
                       IndexInTransaction = @IndexInTransaction, BlockHeight = @BlockHeight, BlockHash = @BlockHash, BlockIndex = @BlockIndex, CreationTime = @CreationTime, IsPropagated = @IsPropagated, IsColdCoinStake = @IsColdCoinStake, AccountIndex = @AccountIndex, MerkleProof = @MerkleProof, Hex = @Hex, SpendingDetailsTransactionId = @SpendingDetailsTransactionId, SpendingDetailsBlockHeight = @SpendingDetailsBlockHeight, SpendingDetailsBlockIndex = @SpendingDetailsBlockIndex, SpendingDetailsIsCoinStake = @SpendingDetailsIsCoinStake, SpendingDetailsCreationTime = @SpendingDetailsCreationTime, SpendingDetailsPayments = @SpendingDetailsPayments, SpendingDetailsHex = @SpendingDetailsHex;";
 
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             conn.Execute(sql, insert);
         }
 
         public int CountForAddress(string address)
         {
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM TransactionData WHERE Address = @address", new { address });
 
             return count;
@@ -205,7 +205,7 @@ namespace Blockcore.Features.Wallet.Database
             // The result of this method is not guaranteed to be the length
             //  of the 'take' param. In case some of the inputs we have are
             // in the same trx they will be grouped in to a single entry.
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             conn.Open();
 
             var sql = @$"SELECT * FROM TransactionData
@@ -216,7 +216,7 @@ namespace Blockcore.Features.Wallet.Database
                       LIMIT @take OFFSET @skip ";
 
             var historySpentResult = conn.Query<TransactionData>(sql, new { accountIndex, skip, take }).ToList();
-            var historySpent = historySpentResult.Select(this.Convert);
+            var historySpent = historySpentResult.Select(Convert);
 
             sql = @$"SELECT * FROM TransactionData
                   WHERE AccountIndex == @accountIndex
@@ -228,7 +228,7 @@ namespace Blockcore.Features.Wallet.Database
 
             conn.Close();
 
-            var historyUnspent = historyUnspentResult.Select(this.Convert);
+            var historyUnspent = historyUnspentResult.Select(Convert);
 
             var items = new List<WalletHistoryData>();
 
@@ -307,25 +307,25 @@ namespace Blockcore.Features.Wallet.Database
 
         public IEnumerable<TransactionOutputData> GetForAddress(string address)
         {
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             var trxs = conn.Query<TransactionData>(
                 "SELECT * FROM TransactionData " +
                 "WHERE Address = @address",
                 new { address });
 
-            return trxs.Select(this.Convert);
+            return trxs.Select(Convert);
         }
 
         public IEnumerable<TransactionOutputData> GetUnspentForAddress(string address)
         {
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             var trxs = conn.Query<TransactionData>(
                 "SELECT * FROM 'TransactionData' " +
                 "WHERE Address = @address " +
                 "AND SpendingDetailsTransactionId IS NULL",
                 new { address });
 
-            return trxs.Select(this.Convert);
+            return trxs.Select(Convert);
         }
 
         public WalletBalanceResult GetBalanceForAddress(string address, bool excludeColdStake)
@@ -340,7 +340,7 @@ namespace Blockcore.Features.Wallet.Database
                         {excludeColdStakeSql}
                         GROUP BY BlockHeight IS NOT NULL";
 
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             var result = conn.Query(sql, new { address });
 
             var walletBalanceResult = new WalletBalanceResult();
@@ -366,7 +366,7 @@ namespace Blockcore.Features.Wallet.Database
                       {excludeColdStakeSql}
                       GROUP BY BlockHeight IS NOT NULL";
 
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             var result = conn.Query(sql, new { accountIndex });
 
             var walletBalanceResult = new WalletBalanceResult();
@@ -384,7 +384,7 @@ namespace Blockcore.Features.Wallet.Database
         {
             TransactionData trx = null;
 
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             trx = conn.QueryFirstOrDefault<TransactionData>("SELECT * FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
 
             if (trx == null)
@@ -392,14 +392,14 @@ namespace Blockcore.Features.Wallet.Database
                 return null;
             }
 
-            TransactionOutputData ret = this.Convert(trx);
+            TransactionOutputData ret = Convert(trx);
 
             return ret;
         }
 
         public bool Remove(OutPoint outPoint)
         {
-            using var conn = this.GetDbConnection();
+            using var conn = GetDbConnection();
             var ret = conn.ExecuteScalar<int>("DELETE FROM TransactionData WHERE OutPoint = @outPoint", new { outPoint });
             return ret > 0;
         }

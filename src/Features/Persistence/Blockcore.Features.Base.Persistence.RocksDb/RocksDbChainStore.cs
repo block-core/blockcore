@@ -72,7 +72,7 @@ namespace Blockcore.Features.Base.Persistence.RocksDb
                 bytes = this.rocksdb.Get(DBH.Key(HeaderTableName, bytes));
             }
 
-            if (bytes == null)
+            if (bytes.IsEmpty)
             {
                 throw new ApplicationException("Header must exist if requested");
             }

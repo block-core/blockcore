@@ -168,7 +168,7 @@ namespace Blockcore.Base
                 bool tipsOnSameChain = true;
                 foreach (ChainedHeader chainedHeader in this.tipsByProvider.Values)
                 {
-                    if (chainedHeader.GetAncestor(lowestTip.Height) != lowestTip)
+                    if (lowestTip == null || chainedHeader.GetAncestor(lowestTip.Height) != lowestTip)
                     {
                         tipsOnSameChain = false;
                         break;

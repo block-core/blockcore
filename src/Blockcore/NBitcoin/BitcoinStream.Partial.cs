@@ -15,7 +15,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)
@@ -38,7 +38,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)
@@ -58,7 +58,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)
@@ -79,7 +79,7 @@ namespace NBitcoin
                 throw new ArgumentNullException("Impossible to serialize a null array");
             if (this.Serializing)
             {
-                var len = data == null ? 0 : (ulong)data.Length;
+                var len = (ulong)data.Length;
                 if (len > (uint)MaxArraySize)
                     throw new ArgumentOutOfRangeException("Array size too big");
                 VarInt.StaticWrite(this, len);
@@ -109,7 +109,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)
@@ -128,7 +128,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)
@@ -147,7 +147,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)
@@ -166,7 +166,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)
@@ -185,7 +185,7 @@ namespace NBitcoin
         {
             if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
-            this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
+            this._VarInt.SetValue((ulong)data.Length);
             ReadWrite(ref this._VarInt);
 
             if (this._VarInt.ToLong() > (uint)this.MaxArraySize)

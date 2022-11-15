@@ -56,7 +56,7 @@ namespace Blockcore.EventBus
                 var token = new SubscriptionToken(this, typeof(TEvent));
                 this.subscriptions[typeof(TEvent)].Add(new Subscription<TEvent>(handler, token));
 
-                return token;
+                return subscriptionToken;
             }
         }
 

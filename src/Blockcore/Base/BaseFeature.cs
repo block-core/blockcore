@@ -235,7 +235,7 @@ namespace Blockcore.Base
                 this.logger.LogDebug("Time synchronization with peers is disabled.");
             }
 
-            // Block store must be initialized before consensus manager.
+            // Block store must be initialized before consensus manager.111
             // This may be a temporary solution until a better way is found to solve this dependency.
             this.blockStore.Initialize();
 

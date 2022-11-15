@@ -276,7 +276,7 @@ namespace Blockcore.Features.Dns
         /// </summary>
         public void NotThatDispose()
         {
-            Dispose(true);
+            this.DisposeDis(true);
             GC.SuppressFinalize(this);
         }
 

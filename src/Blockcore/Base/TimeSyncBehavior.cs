@@ -366,7 +366,8 @@ namespace Blockcore.Base
         }
 
         /// <inheritdoc />
-        protected virtual void Dispose(bool disposing)
+        protected
+            void Dispose(bool disposing)
         {
             if (disposing)
             {

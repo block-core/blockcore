@@ -137,8 +137,8 @@ namespace Blockcore.Networks.XRC.Rules
             var nAveragingTargetTimespanV4 = nAveragingInterval * multiAlgoTargetSpacingV4;
             var nMaxAdjustDownV4 = 16;
             var nMaxAdjustUpV4 = 8;
-            var nMinActualTimespanV4 = TimeSpan.FromSeconds(nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100);
-            var nMaxActualTimespanV4 = TimeSpan.FromSeconds(nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100);
+            var nMinActualTimespanV4 = TimeSpan.FromSeconds((double)nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100);
+            var nMaxActualTimespanV4 = TimeSpan.FromSeconds((double)nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100);
 
             var height = chainedHeaderToValidate.Height;
             Target proofOfWorkLimit = consensus.PowLimit2;

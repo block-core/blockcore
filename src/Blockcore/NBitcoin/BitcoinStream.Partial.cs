@@ -13,7 +13,7 @@ namespace NBitcoin
 
         private void ReadWriteArray<T>(ref T[] data) where T : IBitcoinSerializable
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);
@@ -36,7 +36,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref ulong[] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);
@@ -56,7 +56,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref ushort[] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);
@@ -75,7 +75,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref byte[][] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             if (this.Serializing)
             {
@@ -107,7 +107,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref uint[] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);
@@ -126,7 +126,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref long[] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);
@@ -145,7 +145,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref short[] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);
@@ -164,7 +164,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref int[] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);
@@ -183,7 +183,7 @@ namespace NBitcoin
 
         private void ReadWriteArray(ref string[] data)
         {
-            if (data == null && this.Serializing)
+            if (data == null)
                 throw new ArgumentNullException("Impossible to serialize a null array");
             this._VarInt.SetValue(data == null ? 0 : (ulong)data.Length);
             ReadWrite(ref this._VarInt);

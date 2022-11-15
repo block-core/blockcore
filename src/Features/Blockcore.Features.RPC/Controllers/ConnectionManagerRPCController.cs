@@ -101,7 +101,7 @@ namespace Blockcore.Controllers
                     {
                         peerNode.LocalAddress = peer.PeerVersion.AddressReceiver?.ToString();
                         peerNode.Services = ((ulong)peer.PeerVersion.Services).ToString("X");
-                        peerNode.Version = (uint)peer.PeerVersion.Version;
+                        peerNode.Version = peer.PeerVersion.Version;
                         peerNode.SubVersion = peer.PeerVersion.UserAgent;
                         peerNode.StartingHeight = peer.PeerVersion.StartHeight;
                     }

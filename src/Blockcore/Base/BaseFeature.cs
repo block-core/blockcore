@@ -264,7 +264,7 @@ namespace Blockcore.Base
 
             if (!Directory.Exists(this.dataFolder.KeyValueRepositoryPath))
             {
-                this.logger.LogInformation("Creating {0}.", this.dataFolder.KeyValueRepositoryPath);
+                this.logger.LogInformation("Creating {this.dataFolder.KeyValueRepositoryPath}.", this.dataFolder.KeyValueRepositoryPath);
                 Directory.CreateDirectory(this.dataFolder.KeyValueRepositoryPath);
             }
 
@@ -275,7 +275,7 @@ namespace Blockcore.Base
             ChainedHeader chainTip = await this.chainRepository.LoadAsync(this.chainIndexer.Genesis).ConfigureAwait(false);
             this.chainIndexer.Initialize(chainTip);
 
-            this.logger.LogInformation("Chain loaded at height {0}.", this.chainIndexer.Height);
+            this.logger.LogInformation("Chain loaded at height {this.chainIndexer.Height}.", this.chainIndexer.Height);
 
             this.flushChainLoop = this.asyncProvider.CreateAndRunAsyncLoop("FlushChain", async token =>
             {

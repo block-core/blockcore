@@ -366,7 +366,7 @@ namespace Blockcore.Features.Miner.Tests
             for (int i = 0; i < blockAmount; i++)
             {
                 Block block = network.Consensus.ConsensusFactory.CreateBlock();
-                Transaction coinStake = CreateCoinStakeTransaction(network, key, chain.Height + 1, new uint256((ulong)12312312 + (ulong)i));
+                Transaction coinStake = CreateCoinStakeTransaction(network, key, chain.Height + 1, new uint256(12312312 + (ulong)i));
 
                 block.AddTransaction(coinStake);
                 block.UpdateMerkleRoot();
@@ -389,7 +389,7 @@ namespace Blockcore.Features.Miner.Tests
             for (int i = 0; i < blockAmount; i++)
             {
                 Block block = network.Consensus.ConsensusFactory.CreateBlock();
-                Transaction coinbase = CreateCoinStakeTransaction(network, key, chain.Height + 1, new uint256((ulong)12312312 + (ulong)i));
+                Transaction coinbase = CreateCoinStakeTransaction(network, key, chain.Height + 1, new uint256(12312312 + (ulong)i));
 
                 block.AddTransaction(coinbase);
                 block.UpdateMerkleRoot();

@@ -6,7 +6,7 @@ namespace Blockcore.EventBus
     {
         public Guid CorrelationId { get; }
 
-        public EventBase()
+        protected EventBase()
         {
             // Assigns an unique id to the event.
             this.CorrelationId = Guid.NewGuid();

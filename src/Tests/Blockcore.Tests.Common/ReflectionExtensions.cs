@@ -103,7 +103,7 @@ namespace Blockcore.Tests.Common
         public static void SetPrivatePropertyValue<T>(this object obj, Type objectType, string propertyName, T value)
         {
             if (objectType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance) == null)
-                throw new ArgumentOutOfRangeException("propertyName", string.Format("Property {0} was not found in Type {1}", propertyName, obj.GetType().FullName));
+                throw new ArgumentOutOfRangeException(nameof(propertyName), string.Format("Property {0} was not found in Type {1}", propertyName, obj.GetType().FullName));
 
             objectType.InvokeMember(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.SetProperty | BindingFlags.Instance, null, obj, new object[] { value });
         }

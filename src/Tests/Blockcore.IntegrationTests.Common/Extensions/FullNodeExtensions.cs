@@ -27,7 +27,7 @@ namespace Blockcore.IntegrationTests.Common.Extensions
 
         public static IConsensusManager ConsensusManager(this FullNode fullNode)
         {
-            return fullNode.NodeService<IConsensusManager>() as IConsensusManager;
+            return fullNode.NodeService<IConsensusManager>();
         }
 
         public static ICoinView CoinView(this FullNode fullNode)

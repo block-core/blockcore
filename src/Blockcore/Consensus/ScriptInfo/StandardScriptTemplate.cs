@@ -274,17 +274,17 @@ namespace Blockcore.Consensus.ScriptInfo
         {
             bool needMoreCheck;
             if (!FastCheckScriptSig(scriptSig, null, out needMoreCheck))
-                return null;
+                return new TransactionSignature[0];
             Op[] ops = scriptSig.ToOps().ToArray();
             if (!CheckScriptSigCore(network, scriptSig, ops, null, null))
-                return null;
+                return new TransactionSignature[0];
             try
             {
                 return ops.Skip(1).Select(i => i.Code == OpcodeType.OP_0 ? null : new TransactionSignature(i.PushData)).ToArray();
             }
             catch (FormatException)
             {
-                return null;
+                return new TransactionSignature[0];
             }
         }
 
@@ -378,12 +378,6 @@ namespace Blockcore.Consensus.ScriptInfo
             return true;
         }
 
-        public Script GenerateScriptSig(Op[] ops, Script redeemScript)
-        {
-            Op pushScript = Op.GetPushOp(redeemScript._Script);
-            return new Script(ops.Concat(new[] { pushScript }));
-        }
-
         public PayToScriptHashSigParameters ExtractScriptSigParameters(Network network, Script scriptSig)
         {
             return ExtractScriptSigParameters(network, scriptSig, null as Script);
@@ -416,20 +410,6 @@ namespace Blockcore.Consensus.ScriptInfo
                 ops.Add(Op.GetPushOp(push));
             ops.Add(Op.GetPushOp(redeemScript.ToBytes(true)));
             return new Script(ops);
-        }
-
-        public Script GenerateScriptSig(Network network, TransactionSignature[] signatures, Script redeemScript)
-        {
-            var ops = new List<Op>();
-            var multiSigTemplate = new PayToMultiSigTemplate();
-            bool multiSig = multiSigTemplate.CheckScriptPubKey(redeemScript);
-            if (multiSig)
-                ops.Add(OpcodeType.OP_0);
-            foreach (TransactionSignature sig in signatures)
-            {
-                ops.Add(sig == null ? OpcodeType.OP_0 : Op.GetPushOp(sig.ToBytes()));
-            }
-            return GenerateScriptSig(ops.ToArray(), redeemScript);
         }
 
         public Script GenerateScriptSig(Network network, ECDSASignature[] signatures, Script redeemScript)
@@ -818,6 +798,26 @@ namespace Blockcore.Consensus.ScriptInfo
         }
 
         protected abstract bool CheckScriptSigCore(Network network, Script scriptSig, Op[] scriptSigOps, Script scriptPubKey, Op[] scriptPubKeyOps);
+
+        public Script GenerateScriptSig(Op[] ops, Script redeemScript)
+        {
+            Op pushScript = Op.GetPushOp(redeemScript._Script);
+            return new Script(ops.Concat(new[] { pushScript }));
+        }
+
+        public Script GenerateScriptSig(Network network, TransactionSignature[] signatures, Script redeemScript)
+        {
+            var ops = new List<Op>();
+            var multiSigTemplate = new PayToMultiSigTemplate();
+            bool multiSig = multiSigTemplate.CheckScriptPubKey(redeemScript);
+            if (multiSig)
+                ops.Add(OpcodeType.OP_0);
+            foreach (TransactionSignature sig in signatures)
+            {
+                ops.Add(sig == null ? OpcodeType.OP_0 : Op.GetPushOp(sig.ToBytes()));
+            }
+            return GenerateScriptSig(ops.ToArray(), redeemScript);
+        }
 
         public abstract TxOutType Type
         {

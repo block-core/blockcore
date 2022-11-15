@@ -636,7 +636,7 @@ namespace Blockcore.Consensus.ScriptInfo
                             case (OpcodeType.OP_PUSHDATA1): { if (op.PushData.Length < (byte)OpcodeType.OP_PUSHDATA1) return false; continue; }
                             case (OpcodeType.OP_PUSHDATA2): { if (op.PushData.Length <= 0xFF) return false; continue; }
                             case (OpcodeType.OP_PUSHDATA4): { if (op.PushData.Length <= 0xFFFF) return false; continue; }
-                            default: { return true; break; }
+                            default: { return true; }
 
                         }
 
@@ -1332,7 +1332,6 @@ namespace Blockcore.Consensus.ScriptInfo
                 case TxNullDataTemplate:
                     {
                         return PushAll(Max(sigs1, sigs2));
-                        break;
                     }
 
 
@@ -1343,7 +1342,6 @@ namespace Blockcore.Consensus.ScriptInfo
                             return PushAll(sigs2);
                         else
                             return PushAll(sigs1);
-                        break;
                     }
 
                 case PayToScriptHashTemplate:
@@ -1362,16 +1360,14 @@ namespace Blockcore.Consensus.ScriptInfo
                         Script result = CombineSignatures(network, redeem, checker, sigs1, sigs2, hashVersion);
                         result += Op.GetPushOp(redeemBytes);
                         return result;
-                        break;
                     }
 
                 case PayToMultiSigTemplate:
                     {
                         return CombineMultisig(network, scriptPubKey, checker, sigs1, sigs2, hashVersion);
-                        break;
                     }
 
-                default: { return null; break; }
+                default: { return null; }
 
 
             }
@@ -1381,15 +1377,9 @@ namespace Blockcore.Consensus.ScriptInfo
         private static Script CombineMultisig(Network network, Script scriptPubKey, TransactionChecker checker, byte[][] sigs1, byte[][] sigs2, HashVersion hashVersion)
         {
             // Combine all the signatures we've got:
-            var allsigs = new List<TransactionSignature>();
-            foreach (byte[] v in sigs1)
-            {
-                if (TransactionSignature.IsValid(network, v))
-                {
-                    allsigs.Add(new TransactionSignature(v));
-                }
-            }
-
+            var allsigs = (from byte[] v in sigs1
+                           where TransactionSignature.IsValid(network, v)
+                           select new TransactionSignature(v)).ToList();
             foreach (byte[] v in sigs2)
             {
                 if (TransactionSignature.IsValid(network, v))

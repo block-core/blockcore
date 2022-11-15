@@ -117,6 +117,7 @@ namespace NBitcoin
                 return false;
             return ToString().Equals(item.ToString());
         }
+
         public static bool operator ==(KeyPath a, KeyPath b)
         {
             if (ReferenceEquals(a, b))

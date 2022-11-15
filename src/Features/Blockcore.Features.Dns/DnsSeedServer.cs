@@ -21,7 +21,7 @@ namespace Blockcore.Features.Dns
     /// <summary>
     /// This class defines a DNS server based on 3rd party library https://github.com/kapetan/dns.
     /// </summary>
-    public class DnsSeedServer : IDnsServer
+    public class DnsSeedServer : IDnsServer 
     {
         /// <summary>
         /// Sets the timeout at 2 seconds.
@@ -187,7 +187,7 @@ namespace Blockcore.Features.Dns
             }
 
             // Create async loop for outputting metrics.
-            this.metricsLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.LogMetrics), async (token) => await Task.Run(() => LogMetrics()), this.nodeLifetime.ApplicationStopping, repeatEvery: TimeSpan.FromSeconds(MetricsLogRate));
+            this.metricsLoop = this.asyncProvider.CreateAndRunAsyncLoop(nameof(this.LogMetrics), async (token) => await Task.Run(() => this.LogMetrics(), System.Threading.CancellationToken.None), this.nodeLifetime.ApplicationStopping, repeatEvery: TimeSpan.FromSeconds(MetricsLogRate));
 
             // Create async loop for saving the master file.
             StartSaveMasterfileLoop();
@@ -276,7 +276,7 @@ namespace Blockcore.Features.Dns
         /// </summary>
         public void NotThatDispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -284,7 +284,7 @@ namespace Blockcore.Features.Dns
         /// Disposes of the object.
         /// </summary>
         /// <param name="disposing"><c>true</c> if the object is being disposed of deterministically, otherwise <c>false</c>.</param>
-        protected virtual void Dispose(bool disposing)
+        protected virtual void DisposeDis(bool disposing)
         {
             if (!this.disposed)
             {

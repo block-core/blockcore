@@ -836,11 +836,12 @@ namespace NBitcoin.BouncyCastle.Math.EC
         {
             if (this.si == null)
             {
-                lock (this)
+                AbstractF2mCurve abstractF2mCurve = this;
+                lock (abstractF2mCurve)
                 {
-                    if (this.si == null)
+                    if (abstractF2mCurve.si == null)
                     {
-                        this.si = Tnaf.GetSi(this);
+                        abstractF2mCurve.si = Tnaf.GetSi(abstractF2mCurve);
                     }
                 }
             }

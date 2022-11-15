@@ -83,7 +83,7 @@ namespace Blockcore.BlockPulling
         void PushBlock(uint256 blockHash, Block block, int peerId);
     }
 
-    public class BlockPuller : IBlockPuller
+    public sealed class BlockPuller : IBlockPuller
     {
         /// <summary>Interval between checking if peers that were assigned important blocks didn't deliver the block.</summary>
         private const int StallingLoopIntervalMs = 500;
@@ -589,6 +589,7 @@ namespace Blockcore.BlockPulling
                     }
                     catch (OperationCanceledException)
                     {
+                        //When a block contains a comment, this block is not considered to be empty.
                     }
                 }
 

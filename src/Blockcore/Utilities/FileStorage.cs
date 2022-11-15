@@ -194,7 +194,14 @@ namespace Blockcore.Utilities
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"No wallet file found at {filePath}");
 
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
+            if (filePath.StartsWith(this.FolderPath, StringComparison.Ordinal))
+            {
+                return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
+            }
+            else
+            {
+                throw new FileNotFoundException($"No wallet file found at {filePath}");
+            }
         }
 
         /// <summary>

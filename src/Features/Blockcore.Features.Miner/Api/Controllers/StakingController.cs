@@ -296,7 +296,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
 
                                 var redeemScriptExpiryItem = new RedeemScriptExpiryItem
                                 {
-                                    RedeemScript = Encoders.Hex.EncodeData(((Script)redeemScriptExpiry.RedeemScript).ToBytes(false)),
+                                    RedeemScript = Encoders.Hex.EncodeData(redeemScriptExpiry.RedeemScript.ToBytes(false)),
                                     StakingExpiry = redeemScriptExpiry.StakingExpiry,
                                     Expired = redeemScriptExpiry.StakingExpiry > DateTime.UtcNow
                                 };

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
@@ -8,7 +7,6 @@ using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Utilities;
-using Microsoft.Extensions.Logging;
 using NBitcoin;
 
 namespace Blockcore.Connection.Broadcasting

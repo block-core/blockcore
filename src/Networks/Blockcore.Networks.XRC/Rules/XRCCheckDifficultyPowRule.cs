@@ -137,8 +137,8 @@ namespace Blockcore.Networks.XRC.Rules
             var nAveragingTargetTimespanV4 = nAveragingInterval * multiAlgoTargetSpacingV4;
             var nMaxAdjustDownV4 = 16;
             var nMaxAdjustUpV4 = 8;
-            var nMinActualTimespanV4 = TimeSpan.FromSeconds(nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100);
-            var nMaxActualTimespanV4 = TimeSpan.FromSeconds(nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100);
+            var nMinActualTimespanV4 = TimeSpan.FromSeconds((double)nAveragingTargetTimespanV4 * (100 - nMaxAdjustUpV4) / 100);
+            var nMaxActualTimespanV4 = TimeSpan.FromSeconds((double)nAveragingTargetTimespanV4 * (100 + nMaxAdjustDownV4) / 100);
 
             var height = chainedHeaderToValidate.Height;
             Target proofOfWorkLimit = consensus.PowLimit2;
@@ -168,7 +168,7 @@ namespace Blockcore.Networks.XRC.Rules
             BigInteger newTarget = lastBlock.Header.Bits.ToBigInteger();
 
             newTarget = newTarget.Multiply(BigInteger.ValueOf((long)nActualTimespan.TotalSeconds));
-            newTarget = newTarget.Divide(BigInteger.ValueOf((long)nAveragingTargetTimespanV4));
+            newTarget = newTarget.Divide(BigInteger.ValueOf(nAveragingTargetTimespanV4));
 
             var finalTarget = new Target(newTarget);
             if (finalTarget > proofOfWorkLimit)

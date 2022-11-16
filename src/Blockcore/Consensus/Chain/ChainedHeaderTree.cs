@@ -705,7 +705,7 @@ namespace Blockcore.Consensus.Chain
                     {
                         this.logger.LogDebug("Chained header '{0}' represents an assumed valid block.", currentChainedHeader);
 
-                        bool assumeValidBelowLastCheckpoint = this.consensusSettings.UseCheckpoints && (currentChainedHeader.Height <= this.checkpoints.GetLastCheckpointHeight());
+                        bool assumeValidBelowLastCheckpoint = this.consensusSettings.UseCheckpoints && (currentChainedHeader.Height <= this.checkpoints.LastCheckpointHeight);
                         connectNewHeadersResult = this.HandleAssumedValidHeader(currentChainedHeader, latestNewHeader, assumeValidBelowLastCheckpoint);
                         break;
                     }

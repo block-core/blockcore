@@ -366,7 +366,7 @@ namespace Blockcore.IntegrationTests.Wallet
 
                 // Assert.
                 GetTransactionModel resultSendingWallet = txSendingWallet.Result.ToObject<GetTransactionModel>();
-                resultSendingWallet.Amount.Should().Be((decimal)-97999999.9999M);
+                resultSendingWallet.Amount.Should().Be(-97999999.9999M);
                 resultSendingWallet.Fee.Should().Be((decimal)-0.0001);
                 resultSendingWallet.Confirmations.Should().Be(1);
                 resultSendingWallet.Isgenerated.Should().BeNull();

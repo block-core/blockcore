@@ -48,7 +48,6 @@ namespace Blockcore.Networks.x42.Networks.Rules
         {
             var networkConsensus = (x42Consensus)this.consensus;
             return (networkConsensus.SubsidyLimit > 0) &&
-                   (networkConsensus.SubsidyLimit > 0) &&
                    (height > networkConsensus.SubsidyLimit);
         }
 
@@ -60,7 +59,6 @@ namespace Blockcore.Networks.x42.Networks.Rules
         bool IsPastLastPOWBlock(int height)
         {
             return (this.consensus.LastPOWBlock > 0) &&
-                   (this.consensus.LastPOWBlock > 0) &&
                    (height > this.consensus.LastPOWBlock);
         }
 
@@ -73,7 +71,6 @@ namespace Blockcore.Networks.x42.Networks.Rules
         {
             var networkConsensus = (x42Consensus)this.consensus;
             return (networkConsensus.LastProofOfStakeRewardHeight > 0) &&
-                   (networkConsensus.LastProofOfStakeRewardHeight > 0) &&
                    (height <= networkConsensus.LastProofOfStakeRewardHeight);
         }
 

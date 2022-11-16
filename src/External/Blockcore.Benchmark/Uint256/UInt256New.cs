@@ -296,7 +296,7 @@ namespace Blockcore.Benchmark.Uint256.New
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("index");
+                    throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             return (byte)(value >> (byteIndex * 8));
@@ -386,7 +386,7 @@ namespace Blockcore.Benchmark.Uint256.New
                     return CompareTo(target);
 
                 case null:
-                    return CompareTo(null as uint256);
+                    return CompareTo(null);
 
                 default:
                     throw new ArgumentException($"Object is not an instance of uint256", nameof(obj));

@@ -142,7 +142,7 @@ namespace Blockcore.Base.Deployments
                     PeriodStartHeight = periodStartsHeader.Height,
                     PeriodEndHeight = periodEndsHeight,
                     StateValue = thresholdStates[deploymentIndex],
-                    ThresholdState = ((ThresholdState)thresholdStates[deploymentIndex]).ToString()
+                    ThresholdState = thresholdStates[deploymentIndex].ToString()
                 });
             }
 
@@ -193,7 +193,7 @@ namespace Blockcore.Base.Deployments
             }
 
             // At this point, cache[pindexPrev] is known.
-            this.Assert(this.ContainsKey(indexPrev?.HashBlock, deployment));
+            ThresholdConditionCache.Assert(this.ContainsKey(indexPrev?.HashBlock, deployment));
             ThresholdState state = this.Get(indexPrev?.HashBlock, deployment);
 
             // Now walk forward and compute the state of descendants of pindexPrev.
@@ -351,7 +351,7 @@ namespace Blockcore.Base.Deployments
         /// Throws an 'Assertion failed' exception if the passed argument is <c>false</c>.
         /// </summary>
         /// <param name="v">The passed argument which, if false, raises a 'Assertion Failed' exception.</param>
-        private void Assert(bool v)
+        private static void Assert(bool v)
         {
             if (!v)
                 throw new ArgumentNullException(nameof(v), "Assertion failed");

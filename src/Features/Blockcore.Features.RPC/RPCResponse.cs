@@ -30,7 +30,7 @@ namespace Blockcore.Features.RPC
                 this.Error = new RPCError(error);
             }
 
-            this.Result = json.GetValue("result") as JToken;
+            this.Result = json.GetValue("result");
         }
 
         public string Id { get; set; }

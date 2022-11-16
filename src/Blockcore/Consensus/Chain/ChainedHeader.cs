@@ -569,7 +569,7 @@ namespace Blockcore.Consensus.Chain
         public bool Validate(Network network)
         {
             if (network == null)
-                throw new ArgumentNullException("network");
+                throw new ArgumentNullException(nameof(network));
 
             if (network.Consensus.IsProofOfStake)
                 return BlockStake.Validate(network, this);
@@ -586,7 +586,7 @@ namespace Blockcore.Consensus.Chain
         public bool Validate(IConsensus consensus)
         {
             if (consensus == null)
-                throw new ArgumentNullException("consensus");
+                throw new ArgumentNullException(nameof(consensus));
 
             if ((this.Height != 0) && (this.Previous == null))
                 return false;
@@ -627,7 +627,7 @@ namespace Blockcore.Consensus.Chain
         public ChainedHeader FindFork(ChainedHeader block)
         {
             if (block == null)
-                throw new ArgumentNullException("block");
+                throw new ArgumentNullException(nameof(block));
 
             ChainedHeader highChain = this.Height > block.Height ? this : block;
             ChainedHeader lowChain = highChain == this ? block : this;
@@ -734,7 +734,7 @@ namespace Blockcore.Consensus.Chain
             // but the following expression was taken from bitcoin core. There it was tested in simulations
             // and performed well.
             // Skip steps are exponential - Using skip, max 110 steps to go back up to 2^18 blocks.
-            return (height & 1) != 0 ? this.InvertLowestOne(this.InvertLowestOne(height - 1)) + 1 : this.InvertLowestOne(height);
+            return (height & 1) != 0 ? ChainedHeader.InvertLowestOne(ChainedHeader.InvertLowestOne(height - 1)) + 1 : ChainedHeader.InvertLowestOne(height);
         }
 
         /// <summary>
@@ -742,7 +742,7 @@ namespace Blockcore.Consensus.Chain
         /// </summary>
         /// <param name="n">Number to invert lowest bit.</param>
         /// <returns>New number.</returns>
-        private int InvertLowestOne(int n)
+        private static int InvertLowestOne(int n)
         {
             return n & (n - 1);
         }

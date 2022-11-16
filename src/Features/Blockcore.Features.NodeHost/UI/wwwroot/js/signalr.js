@@ -206,7 +206,7 @@ if (Array.isArray) {
 
 var isArray = _isArray;
 
-var len = 0;
+let len = 0;
 var vertxNext = void 0;
 var customSchedulerFn = void 0;
 
@@ -263,7 +263,7 @@ function useVertxTimer() {
 }
 
 function useMutationObserver() {
-  var iterations = 0;
+  let iterations = 0;
   var observer = new BrowserMutationObserver(flush);
   var node = document.createTextNode('');
   observer.observe(node, { characterData: true });
@@ -2100,6 +2100,7 @@ var HubConnection = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         _a.label = 2;
+                        break;
                     case 2:
                         _a.trys.push([2, 4, , 5]);
                         // Awaiting undefined continues immediately

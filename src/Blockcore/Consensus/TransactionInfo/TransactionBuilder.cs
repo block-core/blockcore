@@ -265,9 +265,9 @@ namespace Blockcore.Consensus.TransactionInfo
 
             #region IKeyRepository Members
 
-            public Key FindKey(Script scriptPubkey)
+            public Key FindKey(Script scriptPubKey)
             {
-                return this._TxBuilder.FindKey(this._Ctx, scriptPubkey);
+                return this._TxBuilder.FindKey(this._Ctx, scriptPubKey);
             }
 
             #endregion IKeyRepository Members

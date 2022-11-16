@@ -7,7 +7,7 @@ namespace Blockcore.Consensus.BlockInfo
     /// <summary>
     /// A representation of a block signature.
     /// </summary>
-    public class BlockSignature : IBitcoinSerializable
+    public sealed class BlockSignature : IBitcoinSerializable
     {
         protected bool Equals(BlockSignature other)
         {

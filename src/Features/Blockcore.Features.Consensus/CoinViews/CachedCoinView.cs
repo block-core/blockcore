@@ -595,7 +595,7 @@ namespace Blockcore.Features.Consensus.CoinViews
 
                 int rewindDataWindow = CalculateRewindWindow();
 
-                int rewindToRemove = this.blockHash.Height - (int)rewindDataWindow;
+                int rewindToRemove = this.blockHash.Height - rewindDataWindow;
 
                 if (this.cachedRewindData.TryGetValue(rewindToRemove, out RewindData delete))
                 {

@@ -437,7 +437,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
             var model = new GetTransactionModel
             {
                 Confirmations = blockHeight != null ? this.ConsensusManager.Tip.Height - blockHeight.Value + 1 : 0,
-                Isgenerated = isGenerated ? true : (bool?)null,
+                Isgenerated = isGenerated ? true : null,
                 BlockHash = blockHash,
                 BlockIndex = blockIndex ?? block?.Transactions.FindIndex(t => t.GetHash() == trxid),
                 BlockTime = block?.Header.BlockTime.ToUnixTimeSeconds(),

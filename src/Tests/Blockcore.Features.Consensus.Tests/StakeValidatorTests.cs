@@ -1053,7 +1053,7 @@ namespace Blockcore.Features.Consensus.Tests
             var trans = CreateStubCoinStakeTransaction();
             var referenceHeader = ChainedHeadersHelper.CreateConsecutiveHeaders(18).Last();
 
-            var coins = new UnspentOutput(new OutPoint(trans, 0), new Coins((uint)9, trans.Outputs.First(), false));
+            var coins = new UnspentOutput(new OutPoint(trans, 0), new Coins(9, trans.Outputs.First(), false));
             var targetDepth = 10;
 
             var result = this.stakeValidator.IsConfirmedInNPrevBlocks(coins, referenceHeader, targetDepth);
@@ -1067,7 +1067,7 @@ namespace Blockcore.Features.Consensus.Tests
             var trans = CreateStubCoinStakeTransaction();
             var referenceHeader = ChainedHeadersHelper.CreateConsecutiveHeaders(18).Last();
 
-            var coins = new UnspentOutput(new OutPoint(trans, 0), new Coins((uint)8, trans.Outputs.First(), false));
+            var coins = new UnspentOutput(new OutPoint(trans, 0), new Coins(8, trans.Outputs.First(), false));
             var targetDepth = 10;
 
             var result = this.stakeValidator.IsConfirmedInNPrevBlocks(coins, referenceHeader, targetDepth);
@@ -1081,7 +1081,7 @@ namespace Blockcore.Features.Consensus.Tests
             var trans = CreateStubCoinStakeTransaction();
             var referenceHeader = ChainedHeadersHelper.CreateConsecutiveHeaders(18).Last();
 
-            var coins = new UnspentOutput(new OutPoint(trans, 0), new Coins((uint)7, trans.Outputs.First(), false));
+            var coins = new UnspentOutput(new OutPoint(trans, 0), new Coins(7, trans.Outputs.First(), false));
             var targetDepth = 10;
 
             var result = this.stakeValidator.IsConfirmedInNPrevBlocks(coins, referenceHeader, targetDepth);

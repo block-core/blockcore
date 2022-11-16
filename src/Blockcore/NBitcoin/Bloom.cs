@@ -174,8 +174,6 @@ namespace NBitcoin
         /// Compresses a bloom filter to the following encoding:
         ///   (length of encoding) [[(number of zeros)(explicit byte) ...]
         /// </summary>
-        /// <param name="maxSize">The maximum size of the compressed bytes.</param>
-        /// <returns>The compressed bytes  or <c>null</c> if <paramref name="maxSize"/> is exceeded.</returns>
         public byte[] GetCompressedBloom()
         {
             // The compressed version should be shorter than the uncompressed version.

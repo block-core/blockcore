@@ -89,7 +89,7 @@ namespace Blockcore.Utilities
             bool lockTaken = false;
             try
             {
-                Monitor.Enter((object)stoppingSource, ref lockTaken);
+                Monitor.Enter(stoppingSource, ref lockTaken);
                 try
                 {
                     this.stoppingSource.Cancel(false);
@@ -101,7 +101,7 @@ namespace Blockcore.Utilities
             finally
             {
                 if (lockTaken)
-                    Monitor.Exit((object)stoppingSource);
+                    Monitor.Exit(stoppingSource);
             }
         }
 

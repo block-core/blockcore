@@ -753,7 +753,7 @@ namespace Blockcore.Features.Wallet
                 {
                     // When the account is a normal one, we want to filter out all cold stake UTXOs.
                     items = query.SelectMany(s => wallet.walletStore.GetForAddress(s.Address)
-                                 .Where(t => t.IsColdCoinStake == null || t.IsColdCoinStake == false)
+                                 .Where(t => t.IsColdCoinStake is null or false)
                                  .Select(t => new FlatHistory { Address = s, Transaction = t }))
                                 .ToArray();
                 }

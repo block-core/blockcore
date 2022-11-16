@@ -65,10 +65,10 @@ namespace Blockcore.Utilities
             if (ReferenceEquals(a, b))
                 return true;
 
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            if (a is null || b is null)
                 return false;
 
-            return ((a.hash == b.hash) && (a.height == b.height));
+            return (a.hash == b.hash) && (a.height == b.height);
         }
 
         public static bool operator !=(HashHeightPair a, HashHeightPair b)

@@ -97,7 +97,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
             if (tx.IsCoinBase)
             {
-                if ((tx.Inputs[0].ScriptSig.Length < 2) || (tx.Inputs[0].ScriptSig.Length > 100))
+                if (tx.Inputs[0].ScriptSig.Length is < 2 or > 100)
                 {
                     this.Logger.LogTrace("(-)[BAD_COINBASE_SIZE]");
                     ConsensusErrors.BadCoinbaseSize.Throw();
@@ -118,7 +118,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
         private bool MoneyRange(IConsensus consensus, long nValue)
         {
-            return ((nValue >= 0) && (nValue <= consensus.MaxMoney));
+            return (nValue >= 0) && (nValue <= consensus.MaxMoney);
         }
     }
 }

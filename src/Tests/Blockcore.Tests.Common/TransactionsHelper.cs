@@ -22,7 +22,7 @@ namespace Blockcore.Tests.Common
             transaction.Inputs.Add(new TxIn(outPoint));
             Money outValue = Money.Satoshis(inputTransaction.TotalOut.Satoshi / 4);
             outValue.Should().NotBe(Money.Zero, "just to have an actual out");
-            Script outScript = (new Key()).ScriptPubKey;
+            Script outScript = new Key().ScriptPubKey;
             transaction.Outputs.Add(new TxOut(outValue, outScript));
             return transaction;
         }

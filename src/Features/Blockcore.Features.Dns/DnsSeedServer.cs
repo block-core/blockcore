@@ -21,7 +21,7 @@ namespace Blockcore.Features.Dns
     /// <summary>
     /// This class defines a DNS server based on 3rd party library https://github.com/kapetan/dns.
     /// </summary>
-    public class DnsSeedServer : IDnsServer 
+    public class DnsSeedServer : IDnsServer
     {
         /// <summary>
         /// Sets the timeout at 2 seconds.
@@ -236,7 +236,7 @@ namespace Blockcore.Features.Dns
                 this.logger.LogDebug("Cancellation requested, shutting down DNS listener.");
                 token.ThrowIfCancellationRequested();
             }
-            catch (Exception e) when (!(e is OperationCanceledException))
+            catch (Exception e) when (e is not OperationCanceledException)
             {
                 this.metrics.CaptureServerFailedMetric();
                 throw;

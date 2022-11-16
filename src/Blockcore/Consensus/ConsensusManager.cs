@@ -888,8 +888,8 @@ namespace Blockcore.Consensus
         /// <exception cref="ConsensusException">Thrown in case CHT is not in a consistent state.</exception>
         private async Task<ConnectBlocksResult> ConnectBlockAsync(ChainedHeaderBlock blockToConnect)
         {
-            if ((blockToConnect.ChainedHeader.BlockValidationState != ValidationState.PartiallyValidated) &&
-                (blockToConnect.ChainedHeader.BlockValidationState != ValidationState.FullyValidated))
+            if (blockToConnect.ChainedHeader.BlockValidationState is not ValidationState.PartiallyValidated and
+                not ValidationState.FullyValidated)
             {
                 this.logger.LogError("Block '{0}' must be partially or fully validated but it is {1}.", blockToConnect, blockToConnect.ChainedHeader.BlockValidationState);
                 this.logger.LogTrace("(-)[BLOCK_INVALID_STATE]");
@@ -1482,7 +1482,7 @@ namespace Blockcore.Consensus
 
                 string unconsumedBlocks = FormatBigNumber(this.chainedHeaderTree.UnconsumedBlocksCount);
 
-                double filledPercentage = Math.Round((this.chainedHeaderTree.UnconsumedBlocksDataBytes / (double)this.maxUnconsumedBlocksDataBytes) * 100, 2);
+                double filledPercentage = Math.Round(this.chainedHeaderTree.UnconsumedBlocksDataBytes / (double)this.maxUnconsumedBlocksDataBytes * 100, 2);
 
                 log.AppendLine($"Unconsumed blocks: {unconsumedBlocks} -- ({this.chainedHeaderTree.UnconsumedBlocksDataBytes.BytesToMegaBytes()} / {this.maxUnconsumedBlocksDataBytes.BytesToMegaBytes()} MB). Cache is filled by: {filledPercentage}%");
 
@@ -1495,7 +1495,7 @@ namespace Blockcore.Consensus
 
         /// <summary>Formats the big number.</summary>
         /// <remarks><c>123456789</c> => <c>123,456,789</c>.</remarks>
-        static private string FormatBigNumber(long number)
+        private static string FormatBigNumber(long number)
         {
             return $"{number:#,##0}";
         }

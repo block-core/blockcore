@@ -208,7 +208,7 @@ namespace NBitcoin.Tests
         public void Util_FormatMoney()
         {
             AssertEx.Equal(new Money(0).ToString(false), "0.00");
-            AssertEx.Equal(new Money((Money.COIN / 10000) * 123456789).ToString(false), "12345.6789");
+            AssertEx.Equal(new Money(Money.COIN / 10000 * 123456789).ToString(false), "12345.6789");
             AssertEx.Equal(new Money(Money.COIN).ToString(true), "+1.00");
             AssertEx.Equal(new Money(-Money.COIN).ToString(false), "-1.00");
             AssertEx.Equal(new Money(-Money.COIN).ToString(true), "-1.00");
@@ -296,7 +296,7 @@ namespace NBitcoin.Tests
                 AssertEx.Equal(ret, multiplier * new Money(0));
 
                 Assert.True(Money.TryParse(prefix + "12345.6789", out ret));
-                AssertEx.Equal(ret, multiplier * new Money((Money.COIN / 10000) * 123456789));
+                AssertEx.Equal(ret, multiplier * new Money(Money.COIN / 10000 * 123456789));
 
                 Assert.True(Money.TryParse(prefix + "100000000.00", out ret));
                 AssertEx.Equal(ret, multiplier * new Money(Money.COIN * 100000000));
@@ -361,7 +361,7 @@ namespace NBitcoin.Tests
             Assert.True(splitted.Sum() == money);
             IEnumerable<IGrouping<long, long>> groups = splitted.Select(s => s.Satoshi).GroupBy(o => o);
             int differentValues = groups.Count();
-            Assert.True(differentValues == 1 || differentValues == 2);
+            Assert.True(differentValues is 1 or 2);
         }
 
         [Fact]
@@ -403,7 +403,7 @@ namespace NBitcoin.Tests
             Assert.True(splitted.Sum(asset) == money);
             IEnumerable<IGrouping<long, long>> groups = splitted.Select(s => s.Quantity).GroupBy(o => o);
             int differentValues = groups.Count();
-            Assert.True(differentValues == 1 || differentValues == 2);
+            Assert.True(differentValues is 1 or 2);
         }
 
         [Fact]
@@ -854,23 +854,23 @@ namespace NBitcoin.Tests
             // (10 MSFT + 3 GOOG) - 1000 satoshis
             Assert.Equal(
                 new MoneyBag(new AssetMoney(msft, 10), new AssetMoney(goog, 3), new Money(-1000)),
-                mb - (Money.Satoshis(1000)));
+                mb - Money.Satoshis(1000));
 
             // (10 MSFT + 3 GOOG) - 30 GOOG == (10 MSFT - 27 GOOG)
             Assert.Equal(
                 new MoneyBag(new AssetMoney(msft, 10), new AssetMoney(goog, -27)),
-                mb - (new AssetMoney(goog, 30)));
+                mb - new AssetMoney(goog, 30));
 
             // (10 MSFT + 3 GOOG) - (10 MSFT + 3 GOOG) == ()
             Assert.Equal(
                 new MoneyBag(),
-                mb - (mb));
+                mb - mb);
 
             // (10 MSFT + 3 GOOG) - (1 MSFT - 5 GOOG) +  10000 Satoshi == (9 MSFT + 8 GOOG + 10000 Satoshi)
             var b1 = new MoneyBag(new AssetMoney(msft, 10), new AssetMoney(goog, 3));
             var b2 = new MoneyBag(new AssetMoney(msft, 1), new AssetMoney(goog, -5));
 
-            MoneyBag b1_2 = b1 - (b2) + (new Money(10000));
+            MoneyBag b1_2 = b1 - b2 + new Money(10000);
             Assert.True(
                 b1_2.SequenceEqual(new IMoney[] { new AssetMoney(msft, 9), new AssetMoney(goog, 8), new Money(10000) }));
         }

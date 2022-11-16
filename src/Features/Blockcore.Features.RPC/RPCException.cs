@@ -188,33 +188,21 @@ namespace Blockcore.Features.RPC
 
         private static string FindMessage(RPCErrorCode code)
         {
-            switch (code)
+            return code switch
             {
-                case RPCErrorCode.RPC_MISC_ERROR:
-                    return "std::exception thrown in command handling";
-                case RPCErrorCode.RPC_FORBIDDEN_BY_SAFE_MODE:
-                    return "Server is in safe mode, and command is not allowed in safe mode";
-                case RPCErrorCode.RPC_TYPE_ERROR:
-                    return "Unexpected type was passed as parameter";
-                case RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY:
-                    return "Invalid address or key";
-                case RPCErrorCode.RPC_OUT_OF_MEMORY:
-                    return "Ran out of memory during operation";
-                case RPCErrorCode.RPC_INVALID_PARAMETER:
-                    return "Invalid, missing or duplicate parameter";
-                case RPCErrorCode.RPC_DATABASE_ERROR:
-                    return "Database error";
-                case RPCErrorCode.RPC_DESERIALIZATION_ERROR:
-                    return "Error parsing or validating structure in raw format";
-                case RPCErrorCode.RPC_TRANSACTION_ERROR:
-                    return "General error during transaction submission";
-                case RPCErrorCode.RPC_TRANSACTION_REJECTED:
-                    return "Transaction was rejected by network rules";
-                case RPCErrorCode.RPC_TRANSACTION_ALREADY_IN_CHAIN:
-                    return "Transaction already in chain";
-                default:
-                    return code.ToString();
-            }
+                RPCErrorCode.RPC_MISC_ERROR => "std::exception thrown in command handling",
+                RPCErrorCode.RPC_FORBIDDEN_BY_SAFE_MODE => "Server is in safe mode, and command is not allowed in safe mode",
+                RPCErrorCode.RPC_TYPE_ERROR => "Unexpected type was passed as parameter",
+                RPCErrorCode.RPC_INVALID_ADDRESS_OR_KEY => "Invalid address or key",
+                RPCErrorCode.RPC_OUT_OF_MEMORY => "Ran out of memory during operation",
+                RPCErrorCode.RPC_INVALID_PARAMETER => "Invalid, missing or duplicate parameter",
+                RPCErrorCode.RPC_DATABASE_ERROR => "Database error",
+                RPCErrorCode.RPC_DESERIALIZATION_ERROR => "Error parsing or validating structure in raw format",
+                RPCErrorCode.RPC_TRANSACTION_ERROR => "General error during transaction submission",
+                RPCErrorCode.RPC_TRANSACTION_REJECTED => "Transaction was rejected by network rules",
+                RPCErrorCode.RPC_TRANSACTION_ALREADY_IN_CHAIN => "Transaction already in chain",
+                _ => code.ToString(),
+            };
         }
 
         private readonly RPCErrorCode _RPCCode;

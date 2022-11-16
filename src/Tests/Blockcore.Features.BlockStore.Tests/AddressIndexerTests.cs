@@ -118,19 +118,13 @@ namespace Blockcore.Features.BlockStore.Tests
             {
                 ChainedHeader header = headers.SingleOrDefault(x => x.HashBlock == hash);
 
-                switch (header?.Height)
+                return (header?.Height) switch
                 {
-                    case 1:
-                        return new ChainedHeaderBlock(block1, header);
-
-                    case 5:
-                        return new ChainedHeaderBlock(block5, header);
-
-                    case 10:
-                        return new ChainedHeaderBlock(block10, header);
-                }
-
-                return new ChainedHeaderBlock(new Block(), header);
+                    1 => new ChainedHeaderBlock(block1, header),
+                    5 => new ChainedHeaderBlock(block5, header),
+                    10 => new ChainedHeaderBlock(block10, header),
+                    _ => new ChainedHeaderBlock(new Block(), header),
+                };
             });
 
             this.addressIndexer.Initialize();

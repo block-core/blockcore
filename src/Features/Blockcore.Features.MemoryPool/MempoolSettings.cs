@@ -79,7 +79,7 @@ namespace Blockcore.Features.MemoryPool
             this.EnableReplacement = config.GetOrDefault("mempoolreplacement", MempoolValidator.DefaultEnableReplacement, this.logger);
             this.MaxOrphanTx = config.GetOrDefault("maxorphantx", MempoolOrphans.DefaultMaxOrphanTransactions, this.logger);
             this.WhiteListRelay = config.GetOrDefault("whitelistrelay", DefaultWhiteListRelay, this.logger);
-            this.RequireStandard = !(config.GetOrDefault("acceptnonstdtxn", nodeSettings.Network.IsTest(), this.logger));
+            this.RequireStandard = !config.GetOrDefault("acceptnonstdtxn", nodeSettings.Network.IsTest(), this.logger);
             this.PermitBareMultisig = config.GetOrDefault("permitbaremultisig", MempoolValidator.DefaultPermitBareMultisig, this.logger);
             this.FeeFilter = config.GetOrDefault("feefilter", MempoolValidator.DefaultFeeFilter, this.logger);
         }
@@ -100,7 +100,7 @@ namespace Blockcore.Features.MemoryPool
             builder.AppendLine($"-mempoolreplacement=<0 or 1>  Enable transaction replacement in the memory pool.");
             builder.AppendLine($"-maxorphantx=<kB>         Maximum number of orphan transactions kept in memory. Defaults to {MempoolOrphans.DefaultMaxOrphanTransactions}.");
             builder.AppendLine($"-whitelistrelay=<0 or 1>  Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to {DefaultWhiteListRelay}.");
-            builder.AppendLine($"-acceptnonstdtxn=<0 or 1> Accept non-standard transactions. Default {(!(network.IsTest()) ? 1 : 0)}.");
+            builder.AppendLine($"-acceptnonstdtxn=<0 or 1> Accept non-standard transactions. Default {(!network.IsTest() ? 1 : 0)}.");
             builder.AppendLine($"-permitbaremultisig=<0 or 1> Relay non-P2SH multisig. Defaults to {MempoolValidator.DefaultPermitBareMultisig}.");
             builder.AppendLine($"-feefilter=<0 or 1>       Tell other nodes to filter invs to us by our mempool min fee (default: {MempoolValidator.DefaultFeeFilter}).");
 
@@ -135,8 +135,8 @@ namespace Blockcore.Features.MemoryPool
             builder.AppendLine($"#maxorphantx={MempoolOrphans.DefaultMaxOrphanTransactions}");
             builder.AppendLine($"#Enable to accept relayed transactions received from whitelisted peers even when not relaying transactions. Defaults to {(DefaultWhiteListRelay ? 1 : 0)}.");
             builder.AppendLine($"#whitelistrelay={(DefaultWhiteListRelay ? 1 : 0)}");
-            builder.AppendLine($"#Accept non-standard transactions. Default {(!(network.IsTest()) ? 1 : 0)}.");
-            builder.AppendLine($"#acceptnonstdtxn={(!(network.IsTest()) ? 1 : 0)}");
+            builder.AppendLine($"#Accept non-standard transactions. Default {(!network.IsTest() ? 1 : 0)}.");
+            builder.AppendLine($"#acceptnonstdtxn={(!network.IsTest() ? 1 : 0)}");
             builder.AppendLine($"#Relay non-P2SH multisig. Defaults to {MempoolValidator.DefaultPermitBareMultisig}.");
             builder.AppendLine($"#permitbaremultisig={MempoolValidator.DefaultPermitBareMultisig}");
         }

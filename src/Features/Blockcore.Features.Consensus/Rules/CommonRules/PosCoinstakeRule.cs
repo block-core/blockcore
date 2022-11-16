@@ -48,7 +48,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
                     }
 
                     // First output must be empty.
-                    if ((!block.Transactions[0].Outputs[0].IsEmpty))
+                    if (!block.Transactions[0].Outputs[0].IsEmpty)
                     {
                         this.Logger.LogTrace("(-)[COINBASE_NOT_EMPTY]");
                         ConsensusErrors.BadStakeBlock.Throw();

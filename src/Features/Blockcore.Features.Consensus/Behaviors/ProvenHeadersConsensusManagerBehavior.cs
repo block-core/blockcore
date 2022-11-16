@@ -128,11 +128,9 @@ namespace Blockcore.Features.Consensus.Behaviors
         protected override Payload ConstructHeadersPayload(GetHeadersPayload getHeadersPayload, out ChainedHeader lastHeader)
         {
             // If getHeadersPayload isn't a GetProvenHeadersPayload, return base implementation result
-            if (!(getHeadersPayload is GetProvenHeadersPayload))
+            if (getHeadersPayload is not GetProvenHeadersPayload)
             {
-                var headersPayload = base.ConstructHeadersPayload(getHeadersPayload, out lastHeader) as HeadersPayload;
-
-                if (headersPayload == null)
+                if (base.ConstructHeadersPayload(getHeadersPayload, out lastHeader) is not HeadersPayload headersPayload)
                 {
                     this.logger.LogTrace("(-)[INVALID_LOCATOR]:null");
                     return null;

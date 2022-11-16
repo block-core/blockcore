@@ -14,7 +14,7 @@ namespace Blockcore.Features.PoA.Voting
         public VotingDataModel(VotingData votingData)
         {
             this.Key = votingData.Key.ToString();
-            this.Hash = (new uint256(votingData.Data)).ToString();
+            this.Hash = new uint256(votingData.Data).ToString();
         }
 
         [JsonConstructor]

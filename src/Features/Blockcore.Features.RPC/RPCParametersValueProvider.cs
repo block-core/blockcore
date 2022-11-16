@@ -62,8 +62,7 @@ namespace Blockcore.Features.RPC
             if (actionContext.RouteData?.Values == null || (actionContext.RouteData.Values.Count == 0))
                 return null;
 
-            var req = actionContext.RouteData.Values["req"] as JObject;
-            if (req == null)
+            if (actionContext.RouteData.Values["req"] is not JObject req)
                 return null;
 
             var actionParameters = actionContext.ActionDescriptor?.Parameters;

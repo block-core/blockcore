@@ -67,7 +67,7 @@ namespace Blockcore.Networks.X1.Components
         /// Displays mining help information on the console.
         /// </summary>
         /// <param name="network">Not used.</param>
-        public new static void PrintHelp(Network network)
+        public static new void PrintHelp(Network network)
         {
             NodeSettings defaults = NodeSettings.Default(network);
             var builder = new StringBuilder();
@@ -100,7 +100,7 @@ namespace Blockcore.Networks.X1.Components
         /// </summary>
         /// <param name="builder">The string builder to add the settings to.</param>
         /// <param name="network">The network to base the defaults off.</param>
-        public new static void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
+        public static new void BuildDefaultConfigurationFile(StringBuilder builder, Network network)
         {
             builder.AppendLine("####Miner Settings####");
             builder.AppendLine("#Enable POW mining.");

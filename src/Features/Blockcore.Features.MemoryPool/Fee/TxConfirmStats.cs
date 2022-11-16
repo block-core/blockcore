@@ -217,9 +217,9 @@ namespace Blockcore.Features.MemoryPool.Fee
             for (int j = 0; j < this.buckets.Count; j++)
             {
                 for (int i = 0; i < this.confAvg.Count; i++)
-                    this.confAvg[i][j] = this.confAvg[i][j] * this.decay + this.curBlockConf[i][j];
-                this.avg[j] = this.avg[j] * this.decay + this.curBlockVal[j];
-                this.txCtAvg[j] = this.txCtAvg[j] * this.decay + this.curBlockTxCt[j];
+                    this.confAvg[i][j] = (this.confAvg[i][j] * this.decay) + this.curBlockConf[i][j];
+                this.avg[j] = (this.avg[j] * this.decay) + this.curBlockVal[j];
+                this.txCtAvg[j] = (this.txCtAvg[j] * this.decay) + this.curBlockTxCt[j];
             }
         }
 

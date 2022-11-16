@@ -46,7 +46,7 @@ namespace Bitcoin.Cli
                 }
 
                 var optionList = new List<string>();
-                while ((argList.Any()) && (argList[0].StartsWith('-')))
+                while (argList.Any() && argList[0].StartsWith('-'))
                 {
                     optionList.Add(argList[0]);
                     argList.RemoveAt(0);
@@ -56,7 +56,7 @@ namespace Bitcoin.Cli
                 if (argList.Any())
                 {
                     method = argList.First().ToUpper();
-                    if (method == "GET" || method == "POST" || method == "DELETE")
+                    if (method is "GET" or "POST" or "DELETE")
                     {
                         argList.RemoveAt(0);
                     }
@@ -180,24 +180,12 @@ namespace Bitcoin.Cli
                     object commandArgObj = GetAnonymousObjectFromDictionary(commandArgList
                         .Select(a => a.Split('='))
                         .ToDictionary(a => a[0], a => a[1]));
-
-                    HttpResponseMessage httpResponse;
-
-                    switch (method)
+                    HttpResponseMessage httpResponse = method switch
                     {
-                        case "POST":
-                            httpResponse = CallApiPost(url, commandArgObj);
-                            break;
-
-                        case "DELETE":
-                            httpResponse = CallApiDelete(url, commandArgObj);
-                            break;
-
-                        default:
-                            httpResponse = CallApiGet(url, commandArgObj);
-                            break;
-                    }
-
+                        "POST" => CallApiPost(url, commandArgObj),
+                        "DELETE" => CallApiDelete(url, commandArgObj),
+                        _ => CallApiGet(url, commandArgObj),
+                    };
                     var response = httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                     // Format and return the result as a string to the console.

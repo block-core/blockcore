@@ -144,9 +144,9 @@ namespace Blockcore.Networks.Stratis
             this.Consensus.PosEmptyCoinbase = true;
             this.Consensus.PosUseTimeFieldInKernalHash = true;
 
-            this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (65) };
-            this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (196) };
-            this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (65 + 128) };
+            this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { 65 };
+            this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { 196 };
+            this.Base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { 65 + 128 };
 
             this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder("tstrat");

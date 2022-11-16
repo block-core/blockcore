@@ -156,8 +156,8 @@ namespace Blockcore.Features.Miner.Tests
 
             //only a rough calculation to prevent infinite loop later in the test
             var targetSplitCoinValue = amounts.Sum(u => u.Satoshi) / (500 + 1) * 3;
-            var maxIterations = Math.Ceiling((Math.Log(amounts.Last().Satoshi, PosMinting.SplitFactor)
-                                       - Math.Log(targetSplitCoinValue, PosMinting.SplitFactor))) + 1;
+            var maxIterations = Math.Ceiling(Math.Log(amounts.Last().Satoshi, PosMinting.SplitFactor)
+                                       - Math.Log(targetSplitCoinValue, PosMinting.SplitFactor)) + 1;
 
             var iterations = 0;
             while (this.posMinting.ShouldSplitStake(

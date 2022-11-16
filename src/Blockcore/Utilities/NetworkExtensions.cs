@@ -17,7 +17,7 @@ namespace Blockcore.Utilities
         /// <returns><c>true</c> if the specified network is a test network, <c>false</c> otherwise.</returns>
         public static bool IsTest(this Network network)
         {
-            return network.NetworkType == NetworkType.Testnet || network.NetworkType == NetworkType.Regtest;
+            return network.NetworkType is NetworkType.Testnet or NetworkType.Regtest;
         }
 
         /// <summary>

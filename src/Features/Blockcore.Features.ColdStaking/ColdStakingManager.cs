@@ -146,7 +146,7 @@ namespace Blockcore.Features.ColdStaking
         public override IEnumerable<UnspentOutputReference> GetSpendableTransactionsInWalletForStaking(string walletName, int confirmations = 0)
         {
             return GetUnspentTransactionsInWallet(walletName, confirmations,
-                a => (a.Index < Wallet.Types.Wallet.SpecialPurposeAccountIndexesStart) || (a.Index == ColdStakingManager.HotWalletAccountIndex));
+                a => a.Index is < Wallet.Types.Wallet.SpecialPurposeAccountIndexesStart or ColdStakingManager.HotWalletAccountIndex);
         }
 
         /// <summary>

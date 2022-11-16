@@ -113,9 +113,9 @@ namespace Blockcore.Benchmark.Uint256.Old
             for (int i = 0; i < WIDTH; i++)
             {
                 if (i + k + 1 < WIDTH && shift != 0)
-                    target[i + k + 1] |= (source[i] >> (32 - shift));
+                    target[i + k + 1] |= source[i] >> (32 - shift);
                 if (i + k < WIDTH)
-                    target[i + k] |= (target[i] << shift);
+                    target[i + k] |= target[i] << shift;
             }
             return new uint256(target);
         }
@@ -129,9 +129,9 @@ namespace Blockcore.Benchmark.Uint256.Old
             for (int i = 0; i < WIDTH; i++)
             {
                 if (i - k - 1 >= 0 && shift != 0)
-                    target[i - k - 1] |= (source[i] << (32 - shift));
+                    target[i - k - 1] |= source[i] << (32 - shift);
                 if (i - k >= 0)
-                    target[i - k] |= (source[i] >> shift);
+                    target[i - k] |= source[i] >> shift;
             }
             return new uint256(target);
         }
@@ -171,44 +171,18 @@ namespace Blockcore.Benchmark.Uint256.Old
         {
             int uintIndex = index / sizeof(uint);
             int byteIndex = index % sizeof(uint);
-            UInt32 value;
-            switch (uintIndex)
+            var value = uintIndex switch
             {
-                case 0:
-                    value = this.pn0;
-                    break;
-
-                case 1:
-                    value = this.pn1;
-                    break;
-
-                case 2:
-                    value = this.pn2;
-                    break;
-
-                case 3:
-                    value = this.pn3;
-                    break;
-
-                case 4:
-                    value = this.pn4;
-                    break;
-
-                case 5:
-                    value = this.pn5;
-                    break;
-
-                case 6:
-                    value = this.pn6;
-                    break;
-
-                case 7:
-                    value = this.pn7;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index));
-            }
+                0 => this.pn0,
+                1 => this.pn1,
+                2 => this.pn2,
+                3 => this.pn3,
+                4 => this.pn4,
+                5 => this.pn5,
+                6 => this.pn6,
+                7 => this.pn7,
+                _ => throw new ArgumentOutOfRangeException(nameof(index)),
+            };
             return (byte)(value >> (byteIndex * 8));
         }
 
@@ -341,7 +315,7 @@ namespace Blockcore.Benchmark.Uint256.Old
         {
             if (ReferenceEquals(a, b))
                 return true;
-            if (((object)a == null) || ((object)b == null))
+            if ((a is null) || (b is null))
                 return false;
 
             bool equals = true;
@@ -380,9 +354,9 @@ namespace Blockcore.Benchmark.Uint256.Old
         {
             if (a is null && b is null)
                 return 0;
-            if (a is null && !(b is null))
+            if (a is null && b is not null)
                 return -1;
-            if (!(a is null) && b is null)
+            if (a is not null && b is null)
                 return 1;
             if (a.pn7 < b.pn7)
                 return -1;
@@ -426,7 +400,7 @@ namespace Blockcore.Benchmark.Uint256.Old
 
         public static bool operator ==(uint256 a, ulong b)
         {
-            return (a == new uint256(b));
+            return a == new uint256(b);
         }
 
         public static bool operator !=(uint256 a, ulong b)
@@ -506,7 +480,7 @@ namespace Blockcore.Benchmark.Uint256.Old
 
         public ulong GetLow64()
         {
-            return this.pn0 | (ulong)this.pn1 << 32;
+            return this.pn0 | ((ulong)this.pn1 << 32);
         }
 
         public uint GetLow32()

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
@@ -26,7 +25,7 @@ namespace Blockcore.Consensus.ScriptInfo
         /// <param name="scriptTemplate">The standard script template to register.</param>
         public static void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {
-            if (!StandardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
+            if (!StandardTemplates.Any(template => template.Type == scriptTemplate.Type))
                 StandardTemplates.Add(scriptTemplate);
         }
 

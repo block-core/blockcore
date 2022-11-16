@@ -35,7 +35,7 @@ namespace Blockcore.Utilities
         /// <inheritdoc />
         protected override bool IsCacheFullLocked(CacheItem item)
         {
-            return (this.Keys.Count == this.maxItemsCount);
+            return this.Keys.Count == this.maxItemsCount;
         }
     }
 }

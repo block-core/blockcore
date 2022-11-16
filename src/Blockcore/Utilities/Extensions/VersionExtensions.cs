@@ -14,7 +14,7 @@ namespace Blockcore.Utilities.Extensions
         /// <returns>Integer representation of the <param name="version"/> information.</returns>
         public static uint ToUint(this Version version)
         {
-            return (uint)(version.Major * 1000000u + version.Minor * 10000u + version.Build * 100u + version.Revision);
+            return (uint)((version.Major * 1000000u) + (version.Minor * 10000u) + (version.Build * 100u) + version.Revision);
         }
     }
 }

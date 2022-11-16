@@ -399,8 +399,8 @@ namespace Blockcore.IntegrationTests
                 for (int i = 0; i < 1001; ++i)
                 {
                     tx.Outputs[0].Value -= Money.CENT;
-                    bool spendsCoinbase = (i == 0); // only first tx spends coinbase
-                                                    // If we don't set the # of sig ops in the CTxMemPoolEntry, template creation fails
+                    bool spendsCoinbase = i == 0; // only first tx spends coinbase
+                                                  // If we don't set the # of sig ops in the CTxMemPoolEntry, template creation fails
                     var txMempoolEntry = txMempoolHelper.Fee(Money.CENT).Time(DateTimeProvider.Default.GetTime()).SpendsCoinbase(spendsCoinbase).FromTx(tx);
                     miner.FullNode.NodeService<ITxMempool>().AddUnchecked(tx.GetHash(), txMempoolEntry);
 
@@ -442,7 +442,7 @@ namespace Blockcore.IntegrationTests
             {
                 tx.Outputs[0].Value -= context.LOWFEE;
                 context.hash = tx.GetHash();
-                bool spendsCoinbase = (i == 0); // only first tx spends coinbase
+                bool spendsCoinbase = i == 0; // only first tx spends coinbase
                 context.mempool.AddUnchecked(context.hash, context.entry.Fee(context.LOWFEE).Time(context.DateTimeProvider.GetTime()).SpendsCoinbase(spendsCoinbase).FromTx(tx));
                 tx = context.network.CreateTransaction(tx.ToBytes());
                 tx.Inputs[0].PrevOut.Hash = context.hash;
@@ -624,7 +624,7 @@ namespace Blockcore.IntegrationTests
                 context.ChainIndexer.SetTip(header);
             }
 
-            SequenceLock locks = (tx.CalculateSequenceLocks(prevheights.ToArray(), context.ChainIndexer.Tip, flags));
+            SequenceLock locks = tx.CalculateSequenceLocks(prevheights.ToArray(), context.ChainIndexer.Tip, flags);
             Assert.True(locks.Evaluate(context.ChainIndexer.Tip));
 
             context = new TestContext();

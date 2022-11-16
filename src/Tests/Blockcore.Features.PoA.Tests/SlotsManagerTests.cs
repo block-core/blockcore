@@ -36,7 +36,7 @@ namespace Blockcore.Features.PoA.Tests
 
             Assert.True(this.slotsManager.IsValidTimestamp(targetSpacing));
             Assert.True(this.slotsManager.IsValidTimestamp(targetSpacing * 100));
-            Assert.False(this.slotsManager.IsValidTimestamp(targetSpacing * 10 + 1));
+            Assert.False(this.slotsManager.IsValidTimestamp((targetSpacing * 10) + 1));
             Assert.False(this.slotsManager.IsValidTimestamp(targetSpacing + 2));
         }
 
@@ -54,7 +54,7 @@ namespace Blockcore.Features.PoA.Tests
                 if (currentFedIndex > federationMembers.Count - 1)
                     currentFedIndex = 0;
 
-                Assert.Equal(federationMembers[currentFedIndex].PubKey, this.slotsManager.GetFederationMemberForTimestamp(roundStart + this.consensusOptions.TargetSpacingSeconds * (uint)i).PubKey);
+                Assert.Equal(federationMembers[currentFedIndex].PubKey, this.slotsManager.GetFederationMemberForTimestamp(roundStart + (this.consensusOptions.TargetSpacingSeconds * (uint)i)).PubKey);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Blockcore.Features.PoA.Tests
             Assert.True(this.slotsManager.IsValidTimestamp(this.slotsManager.GetMiningTimestamp(roundStart - 5)));
 
             uint thisTurnTimestamp = roundStart + this.consensusOptions.TargetSpacingSeconds;
-            uint nextTurnTimestamp = thisTurnTimestamp + this.consensusOptions.TargetSpacingSeconds * (uint)federationMembers.Count;
+            uint nextTurnTimestamp = thisTurnTimestamp + (this.consensusOptions.TargetSpacingSeconds * (uint)federationMembers.Count);
 
             // If we are past our last timestamp's turn, always give us the NEXT timestamp.
             uint justPastOurTurnTime = thisTurnTimestamp + (this.consensusOptions.TargetSpacingSeconds / 2) + 1;

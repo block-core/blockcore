@@ -157,7 +157,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
             this.averageTimePerBlock = new AverageCalculator(200);
             int maxReorgLength = GetMaxReorgOrFallbackMaxReorg(this.network);
 
-            this.compactionTriggerDistance = maxReorgLength * 2 + SyncBuffer + 1000;
+            this.compactionTriggerDistance = (maxReorgLength * 2) + SyncBuffer + 1000;
         }
 
         /// <summary>Returns maxReorg of <see cref="FallBackMaxReorg"/> in case maxReorg is <c>0</c>.</summary>

@@ -417,7 +417,7 @@ namespace Blockcore.Features.MemoryPool
             foreach (TxMempoolEntry piter in parentIters)
                 UpdateChild(piter, entry, add);
 
-            long updateCount = (add ? 1 : -1);
+            long updateCount = add ? 1 : -1;
             long updateSize = updateCount * entry.GetTxSize();
             Money updateFee = updateCount * entry.ModifiedFee;
             foreach (TxMempoolEntry ancestorIt in setAncestors)
@@ -667,7 +667,7 @@ namespace Blockcore.Features.MemoryPool
             var toremove = new SetEntries();
             foreach (TxMempoolEntry entry in this.MapTx.EntryTime)
             {
-                if ((entry.Time >= time)) break;
+                if (entry.Time >= time) break;
                 toremove.Add(entry);
             }
 

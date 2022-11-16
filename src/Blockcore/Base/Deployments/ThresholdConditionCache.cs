@@ -334,7 +334,7 @@ namespace Blockcore.Base.Deployments
             // This restricts us to at most 30 independent deployments. By restricting the top 3 bits to 001 we get 29 out of those
             // for the purposes of this proposal, and support two future upgrades for different mechanisms (top bits 010 and 011).
             // When a block nVersion does not have top bits 001, it is treated as if all bits are 0 for the purposes of deployments.
-            return (((pindex.Header.Version & VersionbitsTopMask) == VersionbitsTopBits) && (pindex.Header.Version & this.Mask(deployment)) != 0);
+            return ((pindex.Header.Version & VersionbitsTopMask) == VersionbitsTopBits) && (pindex.Header.Version & this.Mask(deployment)) != 0;
         }
 
         /// <summary>

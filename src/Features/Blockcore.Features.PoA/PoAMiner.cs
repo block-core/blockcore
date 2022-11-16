@@ -388,7 +388,7 @@ namespace Blockcore.Features.PoA
 
             log.Append("...");
             log.AppendLine();
-            log.AppendLine($"Block producers hits      : {hitCount} of {maxDepth}({((hitCount / (float)maxDepth)).ToString("P2")})");
+            log.AppendLine($"Block producers hits      : {hitCount} of {maxDepth}({(hitCount / (float)maxDepth).ToString("P2")})");
             log.AppendLine($"Block producers idle time : {TimeSpan.FromSeconds(this.network.ConsensusOptions.TargetSpacingSeconds * (maxDepth - hitCount)).ToString(@"hh\:mm\:ss")}");
             log.AppendLine();
         }

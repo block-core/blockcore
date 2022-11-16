@@ -94,7 +94,7 @@ namespace Blockcore.Tests.Utilities
             {
                 bool success = cache.TryGetValue(i, out string unused);
 
-                if (i < 3 || i > 7)
+                if (i is < 3 or > 7)
                     Assert.True(success);
                 else
                     Assert.False(success);

@@ -1509,7 +1509,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                         }
 
                         // For the purpose of fee estimation use the transfer amount as if the fee were network.MinTxFee.
-                        Money transferAmount = (transactionTransferAmount) / recipients.Count;
+                        Money transferAmount = transactionTransferAmount / recipients.Count;
                         recipients.ForEach(r => r.Amount = transferAmount);
 
                         var context = new TransactionBuildContext(this.network)

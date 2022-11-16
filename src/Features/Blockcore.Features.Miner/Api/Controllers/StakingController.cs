@@ -206,7 +206,7 @@ namespace Blockcore.Features.Miner.Api.Controllers
                 {
                     foreach (HdAddress address in account.GetCombinedAddresses())
                     {
-                        if ((address.Address == request.Address))
+                        if (address.Address == request.Address)
                         {
                             address.StakingExpiry = request.StakingExpiry;
                         }

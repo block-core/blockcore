@@ -190,7 +190,7 @@ namespace Blockcore
         {
             this.State = FullNodeState.Starting;
 
-            if (this.State == FullNodeState.Disposing || this.State == FullNodeState.Disposed)
+            if (this.State is FullNodeState.Disposing or FullNodeState.Disposed)
                 throw new ObjectDisposedException(nameof(FullNode));
 
             this.nodeRunningLock = new NodeRunningLock(this.DataFolder);
@@ -268,7 +268,7 @@ namespace Blockcore
         /// <inheritdoc />
         public void Dispose()
         {
-            if (this.State == FullNodeState.Disposing || this.State == FullNodeState.Disposed)
+            if (this.State is FullNodeState.Disposing or FullNodeState.Disposed)
                 return;
 
             this.State = FullNodeState.Disposing;

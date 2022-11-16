@@ -173,7 +173,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             Assert.Equal(2, result.Outputs.Count);
             TxOut output = result.Outputs[0];
-            Assert.Equal((testContext.AddressTransaction.Amount - context.TransactionFee - 7500), output.Value);
+            Assert.Equal(testContext.AddressTransaction.Amount - context.TransactionFee - 7500, output.Value);
             Assert.Equal(expectedChangeAddressKeys.Address.ScriptPubKey, output.ScriptPubKey);
 
             output = result.Outputs[1];
@@ -212,7 +212,7 @@ namespace Blockcore.Features.Wallet.Tests
 
             Assert.Equal(2, result.Outputs.Count);
             TxOut output = result.Outputs[0];
-            Assert.Equal((testContext.AddressTransaction.Amount - context.TransactionFee - 7500), output.Value);
+            Assert.Equal(testContext.AddressTransaction.Amount - context.TransactionFee - 7500, output.Value);
             Assert.Equal(changeAddress.ScriptPubKey, output.ScriptPubKey);
 
             output = result.Outputs[1];

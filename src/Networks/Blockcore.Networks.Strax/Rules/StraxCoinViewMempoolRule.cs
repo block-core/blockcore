@@ -56,7 +56,7 @@ namespace Blockcore.Networks.Strax.Rules
                         }
 
                         // Every other (spendable) output must go to the multisig
-                        if (output.ScriptPubKey != ((StraxBaseNetwork)(this.network)).Federations.GetOnlyFederation().MultisigScript.PaymentScript)
+                        if (output.ScriptPubKey != ((StraxBaseNetwork)this.network).Federations.GetOnlyFederation().MultisigScript.PaymentScript)
                         {
                             this.logger.LogTrace("(-)[INVALID_REWARD_SPEND_DESTINATION]");
                             context.State.Fail(new MempoolError(MempoolErrors.RejectInvalid, "bad-cirrus-reward-tx-reward-dest-invalid"), "Cirrus reward transaction invalid, reward destination invalid.").Throw();

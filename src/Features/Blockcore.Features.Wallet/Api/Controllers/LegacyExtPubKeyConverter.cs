@@ -47,7 +47,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
         private static bool IsLegacyStratisExtpubKey(byte[] extPubKey)
         {
-            var legacyStratisVersionBytes = new byte[] { (0x04), (0x88), (0xC2), (0x1E) };
+            var legacyStratisVersionBytes = new byte[] { 0x04, 0x88, 0xC2, 0x1E };
             byte[] version = extPubKey.Take(4).ToArray();
             return version.SequenceEqual(legacyStratisVersionBytes);
         }

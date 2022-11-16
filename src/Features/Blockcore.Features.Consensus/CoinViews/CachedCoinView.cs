@@ -698,7 +698,7 @@ namespace Blockcore.Features.Consensus.CoinViews
             log.AppendLine("Rewind data entries ".PadRight(20) + this.rewindDataCount + " items");
             var cache = this.cacheSizeBytes;
             var rewind = this.rewindDataSizeBytes;
-            double filledPercentage = Math.Round(((cache + rewind) / (double)this.MaxCacheSizeBytes) * 100, 2);
+            double filledPercentage = Math.Round((cache + rewind) / (double)this.MaxCacheSizeBytes * 100, 2);
             log.AppendLine("Cache size".PadRight(20) + cache.BytesToMegaBytes() + " MB");
             log.AppendLine("Rewind data size".PadRight(20) + rewind.BytesToMegaBytes() + " MB");
             log.AppendLine("Total cache size".PadRight(20) + (cache + rewind).BytesToMegaBytes() + " MB / " + this.consensusSettings.MaxCoindbCacheInMB + " MB (" + filledPercentage + "%)");

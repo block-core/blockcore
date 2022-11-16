@@ -9,7 +9,7 @@ namespace Blockcore.Features.RPC
     {
         internal RPCError(JObject error)
         {
-            this.Code = (RPCErrorCode)((int)error.GetValue("code"));
+            this.Code = (RPCErrorCode)(int)error.GetValue("code");
             this.Message = (string)error.GetValue("message");
         }
 

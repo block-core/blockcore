@@ -63,7 +63,7 @@ namespace Blockcore.Consensus
         {
             var item = obj as ConsensusError;
 
-            return (item != null) && (this.Code.Equals(item.Code));
+            return (item != null) && this.Code.Equals(item.Code);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Blockcore.Consensus
             if (object.ReferenceEquals(a, b))
                 return true;
 
-            if (((object)a == null) || ((object)b == null))
+            if ((a is null) || (b is null))
                 return false;
 
             return a.Code == b.Code;

@@ -456,7 +456,7 @@ namespace Blockcore.Features.Consensus.CoinViews.Coindb
 
                     long res = 0;
                     foreach (byte bt in hash256.ToBytes())
-                        res = res * 31 * 31 * bt + 17;
+                        res = (res * 31 * 31 * bt) + 17;
 
                     return res;
                 }

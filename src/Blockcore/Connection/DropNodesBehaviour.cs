@@ -59,7 +59,7 @@ namespace Blockcore.Connection
 
                 if ((thresholdCount < this.connection.ConnectedPeers.Count()) && (version.StartHeight < this.chainIndexer.Height))
                 {
-                        peer.Disconnect($"Node at height = {version.StartHeight} too far behind current height");
+                    peer.Disconnect($"Node at height = {version.StartHeight} too far behind current height");
                 }
             }
 

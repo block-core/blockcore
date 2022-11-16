@@ -39,7 +39,7 @@ namespace Blockcore.Consensus.ScriptInfo
                 return new ColdStakingScriptSigParameters()
                 {
                     TransactionSignature = new TransactionSignature(ops[0].PushData),
-                    IsColdPublicKey = (ops[0].Code == OP_0),
+                    IsColdPublicKey = ops[0].Code == OP_0,
                     PublicKey = new PubKey(ops[2].PushData, true),
                 };
             }
@@ -210,7 +210,7 @@ namespace Blockcore.Consensus.ScriptInfo
             if (ops.Length != 3)
                 return false;
 
-            return ((ops[0].PushData != null) && TransactionSignature.IsValid(network, ops[0].PushData, ScriptVerify.None))
+            return (ops[0].PushData != null) && TransactionSignature.IsValid(network, ops[0].PushData, ScriptVerify.None)
                 && ((ops[1].Code == OP_0) || (ops[1].Code == OP_1))
                 && (ops[2].PushData != null) && PubKey.Check(ops[2].PushData, false);
         }

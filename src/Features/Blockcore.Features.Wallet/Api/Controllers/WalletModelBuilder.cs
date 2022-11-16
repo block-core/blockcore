@@ -18,37 +18,16 @@ namespace Blockcore.Features.Wallet.Api.Controllers
     {
         public static Mnemonic GenerateMnemonic(string language = "English", int wordCount = 12)
         {
-            Wordlist wordList;
-            switch (language.ToLowerInvariant())
+            Wordlist wordList = language.ToLowerInvariant() switch
             {
-                case "english":
-                    wordList = Wordlist.English;
-                    break;
-
-                case "french":
-                    wordList = Wordlist.French;
-                    break;
-
-                case "spanish":
-                    wordList = Wordlist.Spanish;
-                    break;
-
-                case "japanese":
-                    wordList = Wordlist.Japanese;
-                    break;
-
-                case "chinesetraditional":
-                    wordList = Wordlist.ChineseTraditional;
-                    break;
-
-                case "chinesesimplified":
-                    wordList = Wordlist.ChineseSimplified;
-                    break;
-
-                default:
-                    throw new FormatException($"Invalid language '{language}'. Choices are: English, French, Spanish, Japanese, ChineseSimplified and ChineseTraditional.");
-            }
-
+                "english" => Wordlist.English,
+                "french" => Wordlist.French,
+                "spanish" => Wordlist.Spanish,
+                "japanese" => Wordlist.Japanese,
+                "chinesetraditional" => Wordlist.ChineseTraditional,
+                "chinesesimplified" => Wordlist.ChineseSimplified,
+                _ => throw new FormatException($"Invalid language '{language}'. Choices are: English, French, Spanish, Japanese, ChineseSimplified and ChineseTraditional."),
+            };
             var count = (WordCount)wordCount;
 
             // generate the mnemonic
@@ -99,7 +78,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                     {
                         // First we look for staking transaction as they require special attention.
                         // A staking transaction spends one of our inputs into 2 outputs or more, paid to the same address.
-                        if ((item.Transaction.IsCoinStake ?? false == true))
+                        if (item.Transaction.IsCoinStake ?? false == true)
                         {
                             if (item.Transaction.IsSent == true)
                             {
@@ -325,7 +304,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
 
                 // Sort and filter the history items.
                 List<TransactionItemModel> itemsToInclude = transactionItems.OrderByDescending(t => t.Timestamp)
-                    .Where(x => string.IsNullOrEmpty(request.SearchQuery) || (x.Id.ToString() == request.SearchQuery || x.ToAddress == request.SearchQuery || x.Payments.Any(p => p.DestinationAddress == request.SearchQuery)))
+                    .Where(x => string.IsNullOrEmpty(request.SearchQuery) || x.Id.ToString() == request.SearchQuery || x.ToAddress == request.SearchQuery || x.Payments.Any(p => p.DestinationAddress == request.SearchQuery))
                     .Skip(request.Skip ?? 0)
                     .Take(request.Take ?? transactionItems.Count)
                     .ToList();

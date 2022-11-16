@@ -81,7 +81,7 @@ namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules
             await this.consensusRules.RegisterRule<CheckDifficultyHybridRule>().RunAsync(this.ruleContext);
 
             this.stakeValidator.Verify();
-            Assert.NotNull((this.ruleContext as PosRuleContext));
+            Assert.NotNull(this.ruleContext as PosRuleContext);
             Assert.Equal(0, (int)(this.ruleContext as PosRuleContext).BlockStake.Flags);
             Assert.Equal(uint256.Zero, (this.ruleContext as PosRuleContext).BlockStake.StakeModifierV2);
             Assert.Equal(uint256.Zero, (this.ruleContext as PosRuleContext).BlockStake.HashProof);

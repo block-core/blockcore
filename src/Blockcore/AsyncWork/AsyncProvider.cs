@@ -276,8 +276,8 @@ namespace Blockcore.AsyncWork
                     Columns = new string[]
                     {
                         info.FriendlyName,
-                        (info.Type.ToString()),
-                        (info.IsRunning ? "Running" : "Faulted")
+                        info.Type.ToString(),
+                        info.IsRunning ? "Running" : "Faulted"
                     },
                     Exception = info.Exception?.Message
                 };

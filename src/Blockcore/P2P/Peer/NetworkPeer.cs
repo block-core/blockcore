@@ -197,14 +197,14 @@ namespace Blockcore.P2P.Peer
         {
             get
             {
-                return (this.State == NetworkPeerState.Connected) || (this.State == NetworkPeerState.HandShaked);
+                return this.State is NetworkPeerState.Connected or NetworkPeerState.HandShaked;
             }
         }
 
         /// <inheritdoc />
         public bool MatchRemoteIPAddress(IPAddress ip, int? port = null)
         {
-            bool isConnectedOrHandShaked = (this.State == NetworkPeerState.Connected || this.State == NetworkPeerState.HandShaked);
+            bool isConnectedOrHandShaked = this.State is NetworkPeerState.Connected or NetworkPeerState.HandShaked;
 
             bool isAddressMatching = this.RemoteSocketAddress.Equals(ip)
                                      && (!port.HasValue || port == this.RemoteSocketPort);
@@ -407,7 +407,7 @@ namespace Blockcore.P2P.Peer
 
                 await this.OnStateChangedAsync(previous).ConfigureAwait(false);
 
-                if ((newState == NetworkPeerState.Failed) || (newState == NetworkPeerState.Offline))
+                if (newState is NetworkPeerState.Failed or NetworkPeerState.Offline)
                 {
                     this.logger.LogDebug("Communication with the peer has been closed. newState={0}", newState);
                     this.asyncProvider.Signals.Publish(new PeerDisconnected(this.Inbound, this.PeerEndPoint, this.DisconnectReason?.Reason, this.DisconnectReason?.Exception));
@@ -661,7 +661,7 @@ namespace Blockcore.P2P.Peer
                 this.Behaviors.Add(behavior.Clone());
             }
 
-            if ((this.State == NetworkPeerState.Connected) || (this.State == NetworkPeerState.HandShaked))
+            if (this.State is NetworkPeerState.Connected or NetworkPeerState.HandShaked)
             {
                 foreach (INetworkPeerBehavior behavior in this.Behaviors)
                 {

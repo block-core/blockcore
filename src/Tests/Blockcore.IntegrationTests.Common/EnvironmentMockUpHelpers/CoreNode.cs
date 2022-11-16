@@ -328,7 +328,7 @@ namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
                 this.State = CoreNodeState.Starting;
             }
 
-            if ((this.runner is BitcoinCoreRunner) || (this.runner is StratisXRunner))
+            if (this.runner is BitcoinCoreRunner or StratisXRunner)
                 WaitForExternalNodeStartup();
             else
                 StartStratisRunner();

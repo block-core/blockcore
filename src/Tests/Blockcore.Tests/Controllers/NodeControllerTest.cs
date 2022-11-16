@@ -664,7 +664,7 @@ namespace Blockcore.Tests.Controllers
                 (byte)(compact >> 24),
                 (byte)(compact >> 16),
                 (byte)(compact >> 8),
-                (byte)(compact)
+                (byte)compact
             };
         }
 

@@ -28,7 +28,7 @@ namespace Blockcore.Networks.City.Networks.Policies
 
         public override void RegisterStandardScriptTemplate(ScriptTemplate scriptTemplate)
         {
-            if (!this.standardTemplates.Any(template => (template.Type == scriptTemplate.Type)))
+            if (!this.standardTemplates.Any(template => template.Type == scriptTemplate.Type))
             {
                 this.standardTemplates.Add(scriptTemplate);
             }

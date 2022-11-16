@@ -166,7 +166,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
 
                     // Increment processedLeavesCount to the value it would have if two entries at this
                     // level had existed.
-                    processedLeavesCount += (((uint)1) << level);
+                    processedLeavesCount += ((uint)1) << level;
                     level++;
 
                     // And propagate the result upwards accordingly.

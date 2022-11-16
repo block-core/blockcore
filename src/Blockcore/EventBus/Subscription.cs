@@ -22,7 +22,7 @@ namespace Blockcore.EventBus
 
         public void Publish(EventBase eventBase)
         {
-            if (!(eventBase is TEventBase))
+            if (eventBase is not TEventBase)
                 throw new ArgumentException("Event Item is not the correct type.");
 
             this.action.Invoke(eventBase as TEventBase);

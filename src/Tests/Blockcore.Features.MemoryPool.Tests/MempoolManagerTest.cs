@@ -89,7 +89,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                     new MempoolPersistenceEntry
                     {
                     Tx =new Transaction(),
-                    Time = manager.DateTimeProvider.GetTime() - expiryInSeconds*2
+                    Time = manager.DateTimeProvider.GetTime() - (expiryInSeconds*2)
                     }
             };
             await manager.AddMempoolEntriesToMempoolAsync(txs);
@@ -113,7 +113,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                     new MempoolPersistenceEntry
                     {
                     Tx =new Transaction(),
-                    Time = manager.DateTimeProvider.GetTime() - expiryInSeconds/2
+                    Time = manager.DateTimeProvider.GetTime() - (expiryInSeconds/2)
                     }
             };
             await manager.AddMempoolEntriesToMempoolAsync(txs);

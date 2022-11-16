@@ -42,19 +42,13 @@ namespace Blockcore.Features.Wallet.Types
         /// </summary>
         public static int ToConfirmations(this FeeType fee)
         {
-            switch (fee)
+            return fee switch
             {
-                case FeeType.Low:
-                    return 50;
-
-                case FeeType.Medium:
-                    return 20;
-
-                case FeeType.High:
-                    return 5;
-            }
-
-            throw new WalletException("Invalid fee");
+                FeeType.Low => 50,
+                FeeType.Medium => 20,
+                FeeType.High => 5,
+                _ => throw new WalletException("Invalid fee"),
+            };
         }
     }
 }

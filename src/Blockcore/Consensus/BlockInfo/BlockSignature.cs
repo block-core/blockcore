@@ -16,7 +16,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return this.Equals((BlockSignature)obj);
@@ -24,7 +24,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public override int GetHashCode()
         {
-            return (this.signature?.GetHashCode() ?? 0);
+            return this.signature?.GetHashCode() ?? 0;
         }
 
         public BlockSignature()
@@ -62,7 +62,7 @@ namespace Blockcore.Consensus.BlockInfo
             if (ReferenceEquals(a, b))
                 return true;
 
-            if (((object)a == null) || ((object)b == null))
+            if ((a is null) || (b is null))
                 return false;
 
             return a.signature.SequenceEqual(b.signature);

@@ -70,7 +70,7 @@ namespace Blockcore.Networks.Strax.Rules
                 // 2. The first coinbase output must be empty
 
                 // First output must be empty.
-                if ((!coinBase.Outputs[0].IsEmpty))
+                if (!coinBase.Outputs[0].IsEmpty)
                 {
                     this.Logger.LogTrace("(-)[COINBASE_NOT_EMPTY]");
                     ConsensusErrors.BadStakeBlock.Throw();

@@ -114,7 +114,7 @@ namespace Blockcore.Features.RPC
 
             byte[] result = await SendRequestAsync("headers", RestResponseFormat.Bin, count.ToString(CultureInfo.InvariantCulture), blockId.ToString()).ConfigureAwait(false);
 
-            const int hexSize = (BlockHeader.Size);
+            const int hexSize = BlockHeader.Size;
 
             return Enumerable
                 .Range(0, result.Length / hexSize)

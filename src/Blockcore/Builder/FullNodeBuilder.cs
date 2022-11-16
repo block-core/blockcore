@@ -248,7 +248,7 @@ namespace Blockcore.Builder
                 {
                     featureRegistration.EnsureDependencies(this.Features.FeatureRegistrations);
                 }
-                catch (MissingDependencyException e)
+                catch (MissingDependencyException)
                 {
                     this.NodeSettings.Logger.LogCritical("Feature {0} cannot be configured because it depends on other features that were not registered",
                         featureRegistration.FeatureType.Name);

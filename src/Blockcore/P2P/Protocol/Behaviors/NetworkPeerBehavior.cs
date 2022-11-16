@@ -53,8 +53,8 @@ namespace Blockcore.P2P.Protocol.Behaviors
 
         private static bool Disconnected(INetworkPeer peer)
         {
-            return (peer.State == NetworkPeerState.Created) || (peer.State == NetworkPeerState.Disconnecting) ||
-                   (peer.State == NetworkPeerState.Failed) || (peer.State == NetworkPeerState.Offline);
+            return peer.State is NetworkPeerState.Created or NetworkPeerState.Disconnecting or
+                   NetworkPeerState.Failed or NetworkPeerState.Offline;
         }
 
         public void Detach()

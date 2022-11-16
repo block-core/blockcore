@@ -21,7 +21,7 @@ namespace Blockcore.Features.Dns
     /// <summary>
     /// This class defines a DNS server based on 3rd party library https://github.com/kapetan/dns.
     /// </summary>
-    public class DnsSeedServer : IDnsServer
+    public class DnsSeedServer : IDnsServer 
     {
         /// <summary>
         /// Sets the timeout at 2 seconds.

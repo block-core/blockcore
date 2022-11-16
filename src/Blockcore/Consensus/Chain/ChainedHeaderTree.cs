@@ -369,8 +369,8 @@ namespace Blockcore.Consensus.Chain
 
             // Can happen in case of a race condition when peer 1 presented a block, we started partial validation, peer 1 disconnected,
             // peer 2 connected, presented header and supplied a block and block puller pushed it so the block data is not null.
-            if ((chainedHeader.Previous.BlockValidationState != ValidationState.PartiallyValidated) &&
-                (chainedHeader.Previous.BlockValidationState != ValidationState.FullyValidated))
+            if (chainedHeader.Previous.BlockValidationState is not ValidationState.PartiallyValidated and
+                not ValidationState.FullyValidated)
             {
                 this.logger.LogDebug("Previous block validation state invalid: {0}", chainedHeader.Previous);
                 this.logger.LogTrace("(-)[PREV_BLOCK_NOT_VALIDATED]:null");
@@ -378,8 +378,8 @@ namespace Blockcore.Consensus.Chain
             }
 
             // Same scenario as above except for prev block was validated which triggered next partial validation to be started.
-            if ((chainedHeader.BlockValidationState == ValidationState.PartiallyValidated) ||
-                (chainedHeader.BlockValidationState == ValidationState.FullyValidated))
+            if (chainedHeader.BlockValidationState is ValidationState.PartiallyValidated or
+                ValidationState.FullyValidated)
             {
                 this.logger.LogTrace("(-)[ALREADY_VALIDATED]:null");
                 return new List<ChainedHeaderBlock>();
@@ -632,8 +632,8 @@ namespace Blockcore.Consensus.Chain
 
             this.logger.LogDebug("UnconsumedBlocks increased by block {0} (byte: {1}), new count: {2}, new size: {3}", chainedHeader, chainedHeader.Block.BlockSize.Value, this.UnconsumedBlocksCount, this.UnconsumedBlocksDataBytes);
 
-            bool partialValidationRequired = chainedHeader.Previous.BlockValidationState == ValidationState.PartiallyValidated
-                                          || chainedHeader.Previous.BlockValidationState == ValidationState.FullyValidated;
+            bool partialValidationRequired = chainedHeader.Previous.BlockValidationState is ValidationState.PartiallyValidated
+                                          or ValidationState.FullyValidated;
 
             this.logger.LogDebug("[BLOCK_DOWNLOAD_PREVIOUS_STATE]{0}.{1}:{2}", nameof(chainedHeader), nameof(chainedHeader.Previous), chainedHeader.Previous);
 
@@ -856,8 +856,7 @@ namespace Blockcore.Consensus.Chain
         /// </summary>
         private bool HeaderWasRequested(ChainedHeader chainedHeader)
         {
-            return (chainedHeader.BlockDataAvailability == BlockDataAvailabilityState.BlockAvailable)
-                || (chainedHeader.BlockDataAvailability == BlockDataAvailabilityState.BlockRequired);
+            return chainedHeader.BlockDataAvailability is BlockDataAvailabilityState.BlockAvailable or BlockDataAvailabilityState.BlockRequired;
         }
 
         /// <summary>

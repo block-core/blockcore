@@ -28,7 +28,7 @@ namespace Blockcore.Features.Wallet
             bool found = false;
             while (!found)
             {
-                int check = lowerLimit + (upperLimit - lowerLimit) / 2;
+                int check = lowerLimit + ((upperLimit - lowerLimit) / 2);
                 DateTime blockTimeAtCheck = chainIndexer.GetHeader(check).Header.BlockTime.DateTime;
 
                 if (blockTimeAtCheck > date)

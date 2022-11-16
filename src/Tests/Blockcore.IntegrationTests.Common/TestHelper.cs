@@ -61,7 +61,7 @@ namespace Blockcore.IntegrationTests.Common
                     return false;
             }
 
-            if ((node1.FullNode.WalletManager().ContainsWallets) && (node2.FullNode.WalletManager().ContainsWallets))
+            if (node1.FullNode.WalletManager().ContainsWallets && node2.FullNode.WalletManager().ContainsWallets)
                 if (node1.FullNode.WalletManager().WalletTipHash != node2.FullNode.WalletManager().WalletTipHash)
                     return false;
 
@@ -102,7 +102,7 @@ namespace Blockcore.IntegrationTests.Common
                     return (false, "[NODE1_MEMPOOL_COUNT_NOT_EQUAL_NODE2_MEMPOOL_COUNT]");
             }
 
-            if ((node1.FullNode.WalletManager().ContainsWallets) && (node2.FullNode.WalletManager().ContainsWallets))
+            if (node1.FullNode.WalletManager().ContainsWallets && node2.FullNode.WalletManager().ContainsWallets)
                 if (node1.FullNode.WalletManager().WalletTipHash != node2.FullNode.WalletManager().WalletTipHash)
                     return (false, "[WALLET_TIP_HASH_DOESNOT_MATCH]");
 
@@ -125,7 +125,7 @@ namespace Blockcore.IntegrationTests.Common
             if (node.FullNode.BlockStore().GetBlock(node.FullNode.ChainBehaviorState.ConsensusTip.HashBlock) == null)
                 return false;
 
-            if ((node.FullNode.WalletManager().ContainsWallets) &&
+            if (node.FullNode.WalletManager().ContainsWallets &&
                 (node.FullNode.ChainIndexer.Tip.HashBlock != node.FullNode.WalletManager().WalletTipHash))
                 return false;
 
@@ -488,7 +488,7 @@ namespace Blockcore.IntegrationTests.Common
 
         private static bool IsBitcoinCoreConnectedTo(CoreNode thisNode, CoreNode isConnectedToNode)
         {
-            if (!(thisNode.runner is BitcoinCoreRunner))
+            if (thisNode.runner is not BitcoinCoreRunner)
                 throw new ArgumentException($"{0} is not a bitcoin core node.");
 
             var thisNodePeers = thisNode.CreateRPCClient().GetPeersInfo();

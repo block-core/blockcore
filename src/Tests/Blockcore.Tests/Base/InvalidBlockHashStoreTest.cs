@@ -76,7 +76,7 @@ namespace Blockcore.Tests.Base
             foreach (uint256 hash in allHashes)
             {
                 uint num = hash.GetLow32();
-                bool isSecondGroup = (0x10 <= num) && (num < 0x20);
+                bool isSecondGroup = num is >= 0x10 and < 0x20;
                 Assert.Equal(!isSecondGroup, invalidBlockHashStore.IsInvalid(hash));
             }
         }

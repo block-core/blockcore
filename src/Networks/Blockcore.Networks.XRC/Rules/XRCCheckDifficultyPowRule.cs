@@ -80,7 +80,7 @@ namespace Blockcore.Networks.XRC.Rules
             long difficultyAdjustmentInterval = GetDifficultyAdjustmentInterval(consensus);
 
             // Only change once per interval.
-            if ((height) % difficultyAdjustmentInterval != 0)
+            if (height % difficultyAdjustmentInterval != 0)
             {
                 if (consensus.PowAllowMinDifficultyBlocks)
                 {
@@ -157,7 +157,7 @@ namespace Blockcore.Networks.XRC.Rules
             // Use medians to prevent time-warp attacks
             TimeSpan nActualTimespan = GetAverageTimePast(lastBlock) - GetAverageTimePast(firstBlock);
             nActualTimespan = TimeSpan.FromSeconds(nAveragingTargetTimespanV4
-                                    + (nActualTimespan.TotalSeconds - nAveragingTargetTimespanV4) / 4);
+                                    + ((nActualTimespan.TotalSeconds - nAveragingTargetTimespanV4) / 4));
 
             if (nActualTimespan < nMinActualTimespanV4)
                 nActualTimespan = nMinActualTimespanV4;

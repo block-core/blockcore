@@ -113,7 +113,7 @@ namespace Blockcore.Features.MemoryPool.Rules
 
                         // TODO: Investigate whether the checker and context can be reused instead of recreated. Probably not.
                         checker = new TransactionChecker(tx, iiInput, txout.Value, txData);
-                        ctx = new ScriptEvaluationContext(this.network) { ScriptVerify = (scriptVerify & ~ScriptVerify.StandardNotMandatory) };
+                        ctx = new ScriptEvaluationContext(this.network) { ScriptVerify = scriptVerify & ~ScriptVerify.StandardNotMandatory };
 
                         if (ctx.VerifyScript(input.ScriptSig, txout.ScriptPubKey, checker))
                         {

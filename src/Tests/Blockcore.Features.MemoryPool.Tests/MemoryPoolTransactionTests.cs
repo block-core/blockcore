@@ -371,7 +371,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             tx7.AddInput(new TxIn(new OutPoint(tx6.GetHash(), 0), new Script(OpcodeType.OP_11)));
             tx7.AddOutput(new TxOut(new Money(10 * Money.COIN), new Script(OpcodeType.OP_11, OpcodeType.OP_EQUAL)));
             int tx7Size = tx7.GetVirtualSize(KnownNetworks.TestNet.Consensus.Options.WitnessScaleFactor);
-            Money fee = (20000 / tx2Size) * (tx7Size + tx6Size) - 1;
+            Money fee = (20000 / tx2Size * (tx7Size + tx6Size)) - 1;
             pool.AddUnchecked(tx7.GetHash(), entry.Fee(fee).FromTx(tx7));
             Assert.Equal(7, pool.Size);
             sortedOrder.Insert(1, tx7.GetHash().ToString());
@@ -490,23 +490,23 @@ namespace Blockcore.Features.MemoryPool.Tests
             Assert.Equal(pool.GetMinFee(1).FeePerK.Satoshi, maxFeeRateRemoved.FeePerK.Satoshi + 1000);
             // ... we should keep the same min fee until we get a block
             pool.RemoveForBlock(vtx, 1);
-            dateTimeSet.time = 42 + 2 * +TxMempool.RollingFeeHalflife;
+            dateTimeSet.time = 42 + (2 * +TxMempool.RollingFeeHalflife);
             Assert.Equal(pool.GetMinFee(1).FeePerK.Satoshi, (maxFeeRateRemoved.FeePerK.Satoshi + 1000) / 2);
             // ... then feerate should drop 1/2 each halflife
 
-            dateTimeSet.time = 42 + 2 * TxMempool.RollingFeeHalflife + TxMempool.RollingFeeHalflife / 2;
+            dateTimeSet.time = 42 + (2 * TxMempool.RollingFeeHalflife) + (TxMempool.RollingFeeHalflife / 2);
             Assert.Equal(pool.GetMinFee(pool.DynamicMemoryUsage() * 5 / 2).FeePerK.Satoshi, (maxFeeRateRemoved.FeePerK.Satoshi + 1000) / 4);
             // ... with a 1/2 halflife when mempool is < 1/2 its target size
 
-            dateTimeSet.time = 42 + 2 * TxMempool.RollingFeeHalflife + TxMempool.RollingFeeHalflife / 2 + TxMempool.RollingFeeHalflife / 4;
+            dateTimeSet.time = 42 + (2 * TxMempool.RollingFeeHalflife) + (TxMempool.RollingFeeHalflife / 2) + (TxMempool.RollingFeeHalflife / 4);
             Assert.Equal(pool.GetMinFee(pool.DynamicMemoryUsage() * 9 / 2).FeePerK.Satoshi, (maxFeeRateRemoved.FeePerK.Satoshi + 1000) / 8);
             // ... with a 1/4 halflife when mempool is < 1/4 its target size
 
-            dateTimeSet.time = 42 + 7 * TxMempool.RollingFeeHalflife + TxMempool.RollingFeeHalflife / 2 + TxMempool.RollingFeeHalflife / 4;
+            dateTimeSet.time = 42 + (7 * TxMempool.RollingFeeHalflife) + (TxMempool.RollingFeeHalflife / 2) + (TxMempool.RollingFeeHalflife / 4);
             Assert.Equal(1000, pool.GetMinFee(1).FeePerK.Satoshi);
             // ... but feerate should never drop below 1000
 
-            dateTimeSet.time = 42 + 8 * TxMempool.RollingFeeHalflife + TxMempool.RollingFeeHalflife / 2 + TxMempool.RollingFeeHalflife / 4;
+            dateTimeSet.time = 42 + (8 * TxMempool.RollingFeeHalflife) + (TxMempool.RollingFeeHalflife / 2) + (TxMempool.RollingFeeHalflife / 4);
             Assert.Equal(0, pool.GetMinFee(1).FeePerK);
             // ... unless it has gone all the way to 0 (after getting past 1000/2)
         }

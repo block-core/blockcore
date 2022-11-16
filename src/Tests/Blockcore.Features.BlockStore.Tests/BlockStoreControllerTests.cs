@@ -155,7 +155,7 @@ namespace Blockcore.Features.BlockStore.Tests
 
             response.Should().BeOfType<JsonResult>();
             var result = (JsonResult)response;
-            ((Block)(result.Value)).ToHex(KnownNetworks.StratisTest.Consensus.ConsensusFactory).Should().Be(BlockAsHex);
+            ((Block)result.Value).ToHex(KnownNetworks.StratisTest.Consensus.ConsensusFactory).Should().Be(BlockAsHex);
         }
 
         [Fact]

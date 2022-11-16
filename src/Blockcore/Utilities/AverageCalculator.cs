@@ -63,12 +63,12 @@ namespace Blockcore.Utilities
             if (!oldSampleExisted)
             {
                 // Old sample wasn't replaced.
-                this.Average = (this.Average * (this.samples.Count - 1) + sample) / this.samples.Count;
+                this.Average = ((this.Average * (this.samples.Count - 1)) + sample) / this.samples.Count;
             }
             else
             {
                 // Old sample was replaced.
-                this.Average = this.Average + (sample - removedSample) / this.samples.Count;
+                this.Average = this.Average + ((sample - removedSample) / this.samples.Count);
             }
         }
     }

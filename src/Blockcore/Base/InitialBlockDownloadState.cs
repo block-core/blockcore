@@ -52,7 +52,7 @@ namespace Blockcore.Base
             if (this.lastCheckpointHeight > this.chainState.ConsensusTip.Height)
                 return true;
 
-            if (this.chainState.ConsensusTip.Header.BlockTime < (this.dateTimeProvider.GetUtcNow().AddSeconds(-this.consensusSettings.MaxTipAge)))
+            if (this.chainState.ConsensusTip.Header.BlockTime < this.dateTimeProvider.GetUtcNow().AddSeconds(-this.consensusSettings.MaxTipAge))
                 return true;
 
             if (this.chainState.ConsensusTip.ChainWork < this.minimumChainWork)

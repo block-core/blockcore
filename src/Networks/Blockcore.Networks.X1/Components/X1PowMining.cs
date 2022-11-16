@@ -317,7 +317,7 @@ namespace Blockcore.Networks.X1.Components
 
         private void LogMiningInformation(int extraNonce, long totalHashes, double totalSeconds, double difficultly, string minerInfo)
         {
-            var MHashedPerSec = Math.Round((totalHashes / totalSeconds) / 1_000_000, 4);
+            var MHashedPerSec = Math.Round(totalHashes / totalSeconds / 1_000_000, 4);
 
             var currentDifficulty = BigInteger.ValueOf((long)difficultly);
             var MHashedPerSecTotal = currentDifficulty.Multiply(this.pow256)
@@ -593,7 +593,7 @@ namespace Blockcore.Networks.X1.Components
             }
             public override bool Equals(object obj)
             {
-                if (!(obj is CScriptNum))
+                if (obj is not CScriptNum)
                     return false;
                 var item = (CScriptNum)obj;
                 return this.m_value == item.m_value;
@@ -759,14 +759,14 @@ namespace Blockcore.Networks.X1.Components
 
                 long result = 0;
                 for (int i = 0; i != vch.Length; ++i)
-                    result |= ((long)(vch[i])) << 8 * i;
+                    result |= ((long)vch[i]) << (8 * i);
 
                 // If the input vector's most significant byte is 0x80, remove it from
                 // the result's msb and return a negative.
                 if ((vch[vch.Length - 1] & 0x80) != 0)
                 {
                     ulong temp = ~(0x80UL << (8 * (vch.Length - 1)));
-                    return -((long)((ulong)result & temp));
+                    return -(long)((ulong)result & temp);
                 }
 
                 return result;

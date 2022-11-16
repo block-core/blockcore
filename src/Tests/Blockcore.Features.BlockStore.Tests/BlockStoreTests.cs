@@ -173,7 +173,7 @@ namespace Blockcore.Features.BlockStore.Tests
             int blockSize = block.GetSerializedSize();
             this.chainState.ConsensusTip = null;
 
-            int count = 5 * 1024 * 1024 / blockSize + 2;
+            int count = (5 * 1024 * 1024 / blockSize) + 2;
 
             ChainIndexer longChainIndexer = CreateChain(count);
             this.repositoryTipHashAndHeight = new HashHeightPair(longChainIndexer.Genesis.HashBlock, 0);

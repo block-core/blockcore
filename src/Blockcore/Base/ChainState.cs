@@ -32,7 +32,7 @@ namespace Blockcore.Base
     /// The data are provided by different components and the chaine state is a mechanism that allows
     /// these components to share that data without creating extra dependencies.
     /// </summary>
-    
+
     public class ChainState : IChainState
     {
         /// <inheritdoc />

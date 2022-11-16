@@ -702,7 +702,7 @@ namespace Blockcore.IntegrationTests.Wallet
                     .GetJsonAsync<WalletBalanceModel>();
 
                 receivingAccountBalance = receivingNodeBalances.AccountsBalances.Single();
-                (receivingAccountBalance.AmountConfirmed).Should().Be(new Money(receivingAccountBalanceOnStart + 1, MoneyUnit.BTC));
+                receivingAccountBalance.AmountConfirmed.Should().Be(new Money(receivingAccountBalanceOnStart + 1, MoneyUnit.BTC));
 
                 // The sending node should have fewer coins.
                 sendingNodeBalances = await $"http://localhost:{sendingNode.ApiPort}/api"
@@ -711,7 +711,7 @@ namespace Blockcore.IntegrationTests.Wallet
                     .GetJsonAsync<WalletBalanceModel>();
 
                 sendingAccountBalance = sendingNodeBalances.AccountsBalances.Single();
-                (sendingAccountBalance.AmountConfirmed).Should().Be(new Money(sendingAccountBalanceOnStart + 4 - 2, MoneyUnit.BTC));
+                sendingAccountBalance.AmountConfirmed.Should().Be(new Money(sendingAccountBalanceOnStart + 4 - 2, MoneyUnit.BTC));
 
                 // Check the transaction.
                 string lastBlockHash = await $"http://localhost:{receivingNode.ApiPort}/api"

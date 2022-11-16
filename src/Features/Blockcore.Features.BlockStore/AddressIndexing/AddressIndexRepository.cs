@@ -35,7 +35,7 @@ namespace Blockcore.Features.BlockStore.AddressIndexing
                 data = this.addressIndexerDataCollection.FindById(address) ?? new AddressIndexerData() { Address = address, BalanceChanges = new List<AddressBalanceChange>() };
             }
 
-            int size = 1 + data.BalanceChanges.Count / 10;
+            int size = 1 + (data.BalanceChanges.Count / 10);
             AddOrUpdate(address, data, size);
 
             return data;

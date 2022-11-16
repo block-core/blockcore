@@ -245,7 +245,7 @@ namespace Blockcore.Tests.Consensus
                 }
 
                 // Each should have 1 Next pointer.
-                Assert.True(nextPointersByHeightMap.Where(x => x.Key < 3 || (x.Key > 3 && x.Key < 7)).All(y => y.Value.Count == 1));
+                Assert.True(nextPointersByHeightMap.Where(x => x.Key is < 3 or (> 3 and < 7)).All(y => y.Value.Count == 1));
 
                 // Except for 8a and 8b which contain none.
                 Assert.True(nextPointersByHeightMap.Where(x => x.Key == 7).All(y => y.Value.Count == 0));
@@ -521,7 +521,7 @@ namespace Blockcore.Tests.Consensus
             Assert.True(connectNewHeadersResult.HaveBlockDataAvailabilityStateOf(BlockDataAvailabilityState.BlockRequired));
 
             ChainedHeader chainedHeader = chainedHeaderTree.GetChainedHeadersByHash()
-                .SingleOrDefault(x => (x.Value.HashBlock == checkpoint.Header.GetHash())).Value;
+                .SingleOrDefault(x => x.Value.HashBlock == checkpoint.Header.GetHash()).Value;
 
             // Checking from the checkpoint back to the initialized chain.
             while (chainedHeader.Height > initialChainSize)
@@ -601,7 +601,7 @@ namespace Blockcore.Tests.Consensus
 
             // Checking from first checkpoint back to the initialized chain (h20 -> h6).
             ChainedHeader chainedHeader = chainedHeaderTree.GetChainedHeadersByHash()
-                .SingleOrDefault(x => (x.Value.HashBlock == checkpoint1.Header.GetHash())).Value;
+                .SingleOrDefault(x => x.Value.HashBlock == checkpoint1.Header.GetHash()).Value;
             while (chainedHeader.Height > initialChainSize)
             {
                 Assert.True(chainedHeader.IsAssumedValid);
@@ -686,7 +686,7 @@ namespace Blockcore.Tests.Consensus
             }
 
             // All from X-10 (h21->h30) are marked for download.
-            int chainedHeaderHeightXMinus10 = (assumeValidBlockHeight - 10);
+            int chainedHeaderHeightXMinus10 = assumeValidBlockHeight - 10;
             ChainedHeader fromHeader = extendedChainTip.GetAncestor(chainedHeaderHeightXMinus10 + 1);
 
             chainedHeaderDownloadFrom = connectNewHeadersResult.DownloadFrom;
@@ -1511,7 +1511,7 @@ namespace Blockcore.Tests.Consensus
             testContext.SetupCheckpoints(checkpoint1, checkpoint2);
 
             // Present chain h15->h25 covering assume valid at h20 and excluding both checkpoints.
-            int headersToPresentCount = (headersEndHeight - headersStartHeight + 1 /* inclusive */);
+            int headersToPresentCount = headersEndHeight - headersStartHeight + 1 /* inclusive */;
             listOfChainHeaders = listOfChainHeaders.Skip(headersStartHeight - 1).Take(headersToPresentCount).ToList();
 
             // Present chain:
@@ -2454,7 +2454,7 @@ namespace Blockcore.Tests.Consensus
 
             // Peer 2 presents ten headers including checkpoint: h5 -> h15.
             extendedChainTip = testContext.ExtendAChain(chainExtensionSizeOfFive, extendedChainTip); // tip h15
-            listOfChainBlockHeaders = testContext.ChainedHeaderToList(extendedChainTip, initialChainSizeOfFive + chainExtensionSizeOfFive * 2);
+            listOfChainBlockHeaders = testContext.ChainedHeaderToList(extendedChainTip, initialChainSizeOfFive + (chainExtensionSizeOfFive * 2));
             connectNewHeadersResult = chainedHeaderTree.ConnectNewHeaders(peerTwoId, listOfChainBlockHeaders.GetRange(initialChainSizeOfFive - 1, 11).ToList());
 
             // Headers h6 -> 15 should be marked for download.

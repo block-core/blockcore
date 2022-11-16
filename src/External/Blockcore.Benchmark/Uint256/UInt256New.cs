@@ -162,15 +162,15 @@ namespace Blockcore.Benchmark.Uint256.New
             while (i > 0)
             {
                 char c = hexAsSpan[i--];
-                if (c >= '0' && c <= '9')
+                if (c is >= '0' and <= '9')
                 {
                     dst[j] = (byte)(c - '0');
                 }
-                else if (c >= 'a' && c <= 'f')
+                else if (c is >= 'a' and <= 'f')
                 {
                     dst[j] = (byte)(c - ('a' - 10));
                 }
-                else if (c >= 'A' && c <= 'F')
+                else if (c is >= 'A' and <= 'F')
                 {
                     dst[j] = (byte)(c - ('A' - 10));
                 }
@@ -180,15 +180,15 @@ namespace Blockcore.Benchmark.Uint256.New
                 }
 
                 c = hexAsSpan[i--];
-                if (c >= '0' && c <= '9')
+                if (c is >= '0' and <= '9')
                 {
                     dst[j] |= (byte)((c - '0') << 4);
                 }
-                else if (c >= 'a' && c <= 'f')
+                else if (c is >= 'a' and <= 'f')
                 {
                     dst[j] |= (byte)((c - ('a' - 10)) << 4);
                 }
-                else if (c >= 'A' && c <= 'F')
+                else if (c is >= 'A' and <= 'F')
                 {
                     dst[j] |= (byte)((c - ('A' - 10)) << 4);
                 }
@@ -233,9 +233,9 @@ namespace Blockcore.Benchmark.Uint256.New
             for (int i = 0; i < Width; i++)
             {
                 if (i + k + 1 < Width && shift != 0)
-                    target[i + k + 1] |= (source[i] >> (32 - shift));
+                    target[i + k + 1] |= source[i] >> (32 - shift);
                 if (i + k < Width)
-                    target[i + k] |= (target[i] << shift);
+                    target[i + k] |= target[i] << shift;
             }
             return new uint256(target);
         }
@@ -249,9 +249,9 @@ namespace Blockcore.Benchmark.Uint256.New
             for (int i = 0; i < Width; i++)
             {
                 if (i - k - 1 >= 0 && shift != 0)
-                    target[i - k - 1] |= (source[i] << (32 - shift));
+                    target[i - k - 1] |= source[i] << (32 - shift);
                 if (i - k >= 0)
-                    target[i - k] |= (source[i] >> shift);
+                    target[i - k] |= source[i] >> shift;
             }
             return new uint256(target);
         }
@@ -275,30 +275,14 @@ namespace Blockcore.Benchmark.Uint256.New
         {
             int uintIndex = index / sizeof(ulong);
             int byteIndex = index % sizeof(ulong);
-            ulong value;
-
-            switch (uintIndex)
+            var value = uintIndex switch
             {
-                case 0:
-                    value = this.part1;
-                    break;
-
-                case 1:
-                    value = this.part2;
-                    break;
-
-                case 2:
-                    value = this.part3;
-                    break;
-
-                case 3:
-                    value = this.part4;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
+                0 => this.part1,
+                1 => this.part2,
+                2 => this.part3,
+                3 => this.part4,
+                _ => throw new ArgumentOutOfRangeException(nameof(index)),
+            };
             return (byte)(value >> (byteIndex * 8));
         }
 
@@ -356,7 +340,7 @@ namespace Blockcore.Benchmark.Uint256.New
             if (ReferenceEquals(a, b))
                 return true;
 
-            if (((object)a == null) || ((object)b == null))
+            if ((a is null) || (b is null))
                 return false;
 
             return a.Equals(b);
@@ -380,17 +364,12 @@ namespace Blockcore.Benchmark.Uint256.New
 
         public int CompareTo(object obj)
         {
-            switch (obj)
+            return obj switch
             {
-                case uint256 target:
-                    return CompareTo(target);
-
-                case null:
-                    return CompareTo(null);
-
-                default:
-                    throw new ArgumentException($"Object is not an instance of uint256", nameof(obj));
-            }
+                uint256 target => CompareTo(target),
+                null => CompareTo(null),
+                _ => throw new ArgumentException($"Object is not an instance of uint256", nameof(obj)),
+            };
         }
 
         public static bool operator <(uint256 a, uint256 b)
@@ -418,10 +397,10 @@ namespace Blockcore.Benchmark.Uint256.New
             if (a is null && b is null)
                 return 0;
 
-            if (a is null && !(b is null))
+            if (a is null && b is not null)
                 return -1;
 
-            if (!(a is null) && b is null)
+            if (a is not null && b is null)
                 return 1;
 
             if (a.part4 < b.part4) return -1;
@@ -438,7 +417,7 @@ namespace Blockcore.Benchmark.Uint256.New
 
         public static bool operator ==(uint256 a, ulong b)
         {
-            return (a == new uint256(b));
+            return a == new uint256(b);
         }
 
         public static bool operator !=(uint256 a, ulong b)

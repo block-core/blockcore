@@ -39,36 +39,17 @@ namespace Blockcore.Utilities
         {
             logLevel = logLevel.ToLowerInvariant();
 
-            switch (logLevel)
+            return logLevel switch
             {
-                case "trace":
-                    return NLog.LogLevel.Trace;
-
-                case "debug":
-                    return NLog.LogLevel.Debug;
-
-                case "info":
-                case "information":
-                    return NLog.LogLevel.Info;
-
-                case "warn":
-                case "warning":
-                    return NLog.LogLevel.Warn;
-
-                case "error":
-                    return NLog.LogLevel.Error;
-
-                case "fatal":
-                case "critical":
-                case "crit":
-                    return NLog.LogLevel.Fatal;
-
-                case "off":
-                    return NLog.LogLevel.Off;
-
-                default:
-                    throw new Exception($"Failed converting {logLevel} to a member of NLog.LogLevel.");
-            }
+                "trace" => NLog.LogLevel.Trace,
+                "debug" => NLog.LogLevel.Debug,
+                "info" or "information" => NLog.LogLevel.Info,
+                "warn" or "warning" => NLog.LogLevel.Warn,
+                "error" => NLog.LogLevel.Error,
+                "fatal" or "critical" or "crit" => NLog.LogLevel.Fatal,
+                "off" => NLog.LogLevel.Off,
+                _ => throw new Exception($"Failed converting {logLevel} to a member of NLog.LogLevel."),
+            };
         }
     }
 }

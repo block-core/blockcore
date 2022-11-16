@@ -869,7 +869,7 @@ namespace Blockcore.BlockPulling
         {
             // How many blocks we can download in 1 second.
             if (this.averageBlockSizeBytes.Average > 0)
-                this.maxBlocksBeingDownloaded = (int)((this.GetTotalSpeedOfAllPeersBytesPerSec() * MaxBlocksBeingDownloadedMultiplier) / this.averageBlockSizeBytes.Average);
+                this.maxBlocksBeingDownloaded = (int)(this.GetTotalSpeedOfAllPeersBytesPerSec() * MaxBlocksBeingDownloadedMultiplier / this.averageBlockSizeBytes.Average);
 
             if (this.maxBlocksBeingDownloaded < MinimalCountOfBlocksBeingDownloaded)
                 this.maxBlocksBeingDownloaded = MinimalCountOfBlocksBeingDownloaded;
@@ -975,10 +975,10 @@ namespace Blockcore.BlockPulling
             statsBuilder.AppendLine($"Average block size: {Math.Round(averageBlockSizeKb, 2)} KB");
 
             double totalSpeedBytesPerSec = this.GetTotalSpeedOfAllPeersBytesPerSec();
-            double totalSpeedKbPerSec = (totalSpeedBytesPerSec / 1024.0);
+            double totalSpeedKbPerSec = totalSpeedBytesPerSec / 1024.0;
             statsBuilder.AppendLine($"Total download speed: {Math.Round(totalSpeedKbPerSec, 2)} KB/sec");
 
-            double timeToDownloadBlockMs = Math.Round((avgBlockSizeBytes / totalSpeedBytesPerSec) * 1000, 2);
+            double timeToDownloadBlockMs = Math.Round(avgBlockSizeBytes / totalSpeedBytesPerSec * 1000, 2);
             statsBuilder.AppendLine($"Average time to download a block: {timeToDownloadBlockMs} ms");
 
             double blocksPerSec = Math.Round(totalSpeedBytesPerSec / avgBlockSizeBytes, 2);

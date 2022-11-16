@@ -22,7 +22,7 @@ namespace Blockcore.Utilities.Extensions
         /// <returns>Block weight.</returns>
         public static long GetBlockWeight(this Block block, IConsensus consensus)
         {
-            return block.GetSize(TransactionOptions.None, consensus.ConsensusFactory) * (consensus.Options.WitnessScaleFactor - 1) + block.GetSize(TransactionOptions.Witness, consensus.ConsensusFactory);
+            return (block.GetSize(TransactionOptions.None, consensus.ConsensusFactory) * (consensus.Options.WitnessScaleFactor - 1)) + block.GetSize(TransactionOptions.Witness, consensus.ConsensusFactory);
         }
 
         /// <summary>

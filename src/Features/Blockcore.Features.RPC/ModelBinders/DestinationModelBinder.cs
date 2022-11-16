@@ -41,8 +41,8 @@ namespace Blockcore.Features.RPC.ModelBinders
 
         private static bool SupportType(Type type)
         {
-            return (typeof(Base58Data).GetTypeInfo().IsAssignableFrom(type) ||
-                   typeof(IDestination).GetTypeInfo().IsAssignableFrom(type));
+            return typeof(Base58Data).GetTypeInfo().IsAssignableFrom(type) ||
+                   typeof(IDestination).GetTypeInfo().IsAssignableFrom(type);
         }
 
         public IModelBinder GetBinder(ModelBinderProviderContext context)

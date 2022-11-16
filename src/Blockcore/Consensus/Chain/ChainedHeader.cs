@@ -333,7 +333,7 @@ namespace Blockcore.Consensus.Chain
             if (ReferenceEquals(a, b))
                 return true;
 
-            if (((object)a == null) || ((object)b == null))
+            if ((a is null) || (b is null))
                 return false;
 
             return a.HashBlock == b.HashBlock;
@@ -484,7 +484,7 @@ namespace Blockcore.Consensus.Chain
             long difficultyAdjustmentInterval = this.GetDifficultyAdjustmentInterval(consensus);
 
             // Only change once per interval.
-            if ((height) % difficultyAdjustmentInterval != 0)
+            if (height % difficultyAdjustmentInterval != 0)
             {
                 if (consensus.PowAllowMinDifficultyBlocks)
                 {

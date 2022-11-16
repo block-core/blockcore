@@ -79,7 +79,7 @@ namespace Blockcore.Connection
                     peer.SendMessage(new SendHeadersPayload());
                 }
 
-                if ((peer.State == NetworkPeerState.Failed) || (peer.State == NetworkPeerState.Offline))
+                if (peer.State is NetworkPeerState.Failed or NetworkPeerState.Offline)
                 {
                     this.infoLogger.LogDebug("Peer '{0}' ({1}) offline, reason: '{2}.{3}'", peer.RemoteSocketEndpoint, peer.Inbound ? "inbound" : "outbound", peer.DisconnectReason?.Reason ?? "unknown", peer.DisconnectReason?.Exception?.Message != null ? string.Format(" {0}.", peer.DisconnectReason.Exception.Message) : string.Empty);
 

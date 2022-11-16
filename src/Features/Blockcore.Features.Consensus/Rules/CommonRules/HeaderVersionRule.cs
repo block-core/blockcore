@@ -23,7 +23,7 @@ namespace Blockcore.Features.Consensus.Rules.CommonRules
             for (int deployment = 0; deployment < thresholdConditionCache.ArraySize; deployment++)
             {
                 ThresholdState state = thresholdConditionCache.GetState(prevChainedHeader, deployment);
-                if ((state == ThresholdState.LockedIn) || (state == ThresholdState.Started))
+                if (state is ThresholdState.LockedIn or ThresholdState.Started)
                     version |= thresholdConditionCache.Mask(deployment);
             }
 

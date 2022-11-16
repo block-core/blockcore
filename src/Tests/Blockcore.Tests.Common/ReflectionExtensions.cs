@@ -53,7 +53,7 @@ namespace Blockcore.Tests.Common
             var propertyInfos = new List<PropertyInfo>();
 
             propertyInfos.Add(obj.GetType().GetProperty(memberName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy));
-            propertyInfos = propertyInfos.Where(i => !ReferenceEquals(i, null)).ToList();
+            propertyInfos = propertyInfos.Where(i => i is not null).ToList();
             if (propertyInfos.Count != 0)
                 return propertyInfos[0];
 
@@ -62,7 +62,7 @@ namespace Blockcore.Tests.Common
             fieldInfos.Add(obj.GetType().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy));
 
             // To add more types of properties.
-            fieldInfos = fieldInfos.Where(i => !ReferenceEquals(i, null)).ToList();
+            fieldInfos = fieldInfos.Where(i => i is not null).ToList();
 
             if (fieldInfos.Count != 0)
                 return fieldInfos[0];

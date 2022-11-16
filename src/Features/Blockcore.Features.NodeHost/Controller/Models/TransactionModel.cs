@@ -83,7 +83,7 @@ namespace Blockcore.Controllers.Models
 
                 // size = (weight + WITNESS_SCALE_FACTOR - 1) / WITNESS_SCALE_FACTOR;
                 // hence, weight = size * WITNESS_SCALE_FACTOR - (WITNESS_SCALE_FACTOR - 1) (only subtract if has witness).
-                this.Weight = this.VSize * network.Consensus.Options.WitnessScaleFactor - (network.Consensus.Options.WitnessScaleFactor - 1);
+                this.Weight = (this.VSize * network.Consensus.Options.WitnessScaleFactor) - (network.Consensus.Options.WitnessScaleFactor - 1);
 
                 this.VIn = trx.Inputs.Select(txin => new Vin(txin.PrevOut, txin.Sequence, txin.ScriptSig)).ToList();
 
@@ -327,25 +327,15 @@ namespace Blockcore.Controllers.Models
         {
             if (template == null)
                 return "nonstandard";
-            switch (template.Type)
+            return template.Type switch
             {
-                case TxOutType.TX_PUBKEY:
-                    return "pubkey";
-
-                case TxOutType.TX_PUBKEYHASH:
-                    return "pubkeyhash";
-
-                case TxOutType.TX_SCRIPTHASH:
-                    return "scripthash";
-
-                case TxOutType.TX_MULTISIG:
-                    return "multisig";
-
-                case TxOutType.TX_NULL_DATA:
-                    return "nulldata";
-            }
-
-            return "nonstandard";
+                TxOutType.TX_PUBKEY => "pubkey",
+                TxOutType.TX_PUBKEYHASH => "pubkeyhash",
+                TxOutType.TX_SCRIPTHASH => "scripthash",
+                TxOutType.TX_MULTISIG => "multisig",
+                TxOutType.TX_NULL_DATA => "nulldata",
+                _ => "nonstandard",
+            };
         }
     }
 }

@@ -141,7 +141,7 @@ namespace Blockcore.Features.Miner
             this.BlockMinFeeRate = this.Options.BlockMinFeeRate;
 
             // Whether we need to account for byte usage (in addition to weight usage).
-            this.NeedSizeAccounting = (this.Options.BlockMaxSize < network.Consensus.Options.MaxBlockSerializedSize);
+            this.NeedSizeAccounting = this.Options.BlockMaxSize < network.Consensus.Options.MaxBlockSerializedSize;
 
             Configure();
         }
@@ -506,7 +506,7 @@ namespace Blockcore.Features.Miner
         protected virtual bool TestPackage(TxMempoolEntry entry, long packageSize, long packageSigOpsCost)
         {
             // TODO: Switch to weight-based accounting for packages instead of vsize-based accounting.
-            if (this.BlockWeight + this.Network.Consensus.Options.WitnessScaleFactor * packageSize >= this.Options.BlockMaxWeight)
+            if (this.BlockWeight + (this.Network.Consensus.Options.WitnessScaleFactor * packageSize) >= this.Options.BlockMaxWeight)
             {
                 this.logger.LogTrace("(-)[MAX_WEIGHT_REACHED]:false");
                 return false;

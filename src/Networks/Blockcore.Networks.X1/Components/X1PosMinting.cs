@@ -793,7 +793,7 @@ namespace Blockcore.Networks.X1.Components
             }
 
             long splitValue = coinstakeOutputValue / SplitFactor;
-            long remainder = coinstakeOutputValue - (SplitFactor - 1) * splitValue;
+            long remainder = coinstakeOutputValue - ((SplitFactor - 1) * splitValue);
             coinstakeContext.CoinstakeTx.Outputs[lastOutputIndex].Value = remainder;
 
             for (int i = 0; i < SplitFactor - 1; i++)
@@ -904,7 +904,7 @@ namespace Blockcore.Networks.X1.Components
                             string scriptType = this.ValidStakingTemplates.Single(t => t.Value.CheckScriptPubKey(utxoStakeInfo.TxOut.ScriptPubKey)).Key;
 
                             // Default behavior.
-                            if ((scriptType == "P2PK") || (scriptType == "P2PKH"))
+                            if (scriptType is "P2PK" or "P2PKH")
                             {
                                 scriptPubKeyOut = PayToPubkeyTemplate.Instance.GenerateScriptPubKey(context.CoinstakeContext.Key.PubKey);
                             }

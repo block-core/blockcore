@@ -51,14 +51,14 @@ namespace Blockcore.Consensus.PerformanceCounters.Rules
                 {
                     if (rule.CalledTimes == 0)
                     {
-                        builder.AppendLine($"    {rule.RuleName.PadRight(50, '-')}{("No Samples").PadRight(12, '-')}");
+                        builder.AppendLine($"    {rule.RuleName.PadRight(50, '-')}{"No Samples".PadRight(12, '-')}");
                         continue;
                     }
 
-                    double avgExecutionTimeMs = Math.Round((TimeSpan.FromTicks(rule.ExecutionTimesTicks / rule.CalledTimes).TotalMilliseconds), 4);
+                    double avgExecutionTimeMs = Math.Round(TimeSpan.FromTicks(rule.ExecutionTimesTicks / rule.CalledTimes).TotalMilliseconds, 4);
 
                     // % from average execution time for the group.
-                    double percentage = Math.Round((avgExecutionTimeMs / avgGroupExecutionTimeMs) * 100.0);
+                    double percentage = Math.Round(avgExecutionTimeMs / avgGroupExecutionTimeMs * 100.0);
 
                     builder.AppendLine($"    {rule.RuleName.PadRight(50, '-')}{(avgExecutionTimeMs + " ms").PadRight(12, '-')}{percentage} %");
                 }

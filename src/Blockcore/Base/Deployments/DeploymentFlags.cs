@@ -27,7 +27,7 @@ namespace Blockcore.Base.Deployments
 
             // BIP16 didn't become active until Apr 1 2012.
             DateTimeOffset nBIP16SwitchTime = Utils.UnixTimeToDateTime(1333238400);
-            bool fStrictPayToScriptHash = (nextBlock.Header.BlockTime >= nBIP16SwitchTime);
+            bool fStrictPayToScriptHash = nextBlock.Header.BlockTime >= nBIP16SwitchTime;
 
             this.ScriptFlags = fStrictPayToScriptHash ? ScriptVerify.P2SH : ScriptVerify.None;
 

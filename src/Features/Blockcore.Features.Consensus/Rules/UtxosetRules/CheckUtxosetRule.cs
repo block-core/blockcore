@@ -408,7 +408,7 @@ namespace Blockcore.Features.Consensus.Rules.UtxosetRules
         /// <returns><c>true</c> if the value is in range. Otherwise <c>false</c>.</returns>
         private bool MoneyRange(long value)
         {
-            return ((value >= 0) && (value <= this.Consensus.MaxMoney));
+            return (value >= 0) && (value <= this.Consensus.MaxMoney);
         }
 
         /// <summary>

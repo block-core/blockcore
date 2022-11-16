@@ -153,7 +153,7 @@ namespace Blockcore.P2P.Peer
                     this.MessageProducer.PushMessage(incomingMessage);
                 }
             }
-            catch (Exception ex) when (ex is IOException || ex is OperationCanceledException || ex is ObjectDisposedException)
+            catch (Exception ex) when (ex is IOException or OperationCanceledException or ObjectDisposedException)
             {
                 this.logger.LogDebug("The node stopped receiving messages, exception: {1}", ex.ToString());
                 this.peer.Disconnect("The node stopped receiving messages.", ex);
@@ -310,7 +310,7 @@ namespace Blockcore.P2P.Peer
                 }
                 catch (Exception e)
                 {
-                    if ((e is IOException) || (e is OperationCanceledException) || (e is ObjectDisposedException))
+                    if (e is IOException or OperationCanceledException or ObjectDisposedException)
                     {
                         this.logger.LogDebug("Connection has been terminated.");
                         if (e is IOException) this.logger.LogTrace("(-)[IO_EXCEPTION]");

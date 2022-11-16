@@ -171,7 +171,7 @@ namespace Blockcore.Features.Consensus.Tests
             }
 
             TimeSpan diff = dateTimeProvider.GetAdjustedTime() - dateTimeProvider.GetUtcNow();
-            Assert.True(Math.Abs(diff.TotalMilliseconds - 400 * 1000) < TimeEpsilonMs, $"should be 400ms because of outbound preference. Actual: {diff.TotalMilliseconds}ms");
+            Assert.True(Math.Abs(diff.TotalMilliseconds - (400 * 1000)) < TimeEpsilonMs, $"should be 400ms because of outbound preference. Actual: {diff.TotalMilliseconds}ms");
 
             // Add another batch of outbounds with a different offset.
             for (int i = TimeSyncBehaviorState.MaxOutboundSamples; i < TimeSyncBehaviorState.MaxOutboundSamples * 2; i++)
@@ -182,7 +182,7 @@ namespace Blockcore.Features.Consensus.Tests
             }
 
             diff = dateTimeProvider.GetAdjustedTime() - dateTimeProvider.GetUtcNow();
-            Assert.True(Math.Abs(diff.TotalMilliseconds - 800 * 1000) < TimeEpsilonMs, $"should be 800ms because of outbound preference. Actual: {diff.TotalMilliseconds}ms");
+            Assert.True(Math.Abs(diff.TotalMilliseconds - (800 * 1000)) < TimeEpsilonMs, $"should be 800ms because of outbound preference. Actual: {diff.TotalMilliseconds}ms");
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Blockcore.Features.Consensus.Tests
             Assert.True(state.AddTimeData(new IPAddress(4), TimeSpan.FromSeconds(500), false));
 
             TimeSpan diff = dateTimeProvider.GetAdjustedTime() - dateTimeProvider.GetUtcNow();
-            Assert.True(Math.Abs(diff.TotalMilliseconds - 250 * 1000) < TimeEpsilonMs, $"Should be 250ms because leaning towards the inbound value of 400ms, but still in outbound. Actual: {diff.TotalMilliseconds}ms");
+            Assert.True(Math.Abs(diff.TotalMilliseconds - (250 * 1000)) < TimeEpsilonMs, $"Should be 250ms because leaning towards the inbound value of 400ms, but still in outbound. Actual: {diff.TotalMilliseconds}ms");
 
             // Add another batch of inbound samples with a greater offset than highest outbound sample.
             for (int i = TimeSyncBehaviorState.MaxInboundSamples; i < TimeSyncBehaviorState.MaxInboundSamples * 2; i++)

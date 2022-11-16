@@ -120,7 +120,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             IEnumerable<MempoolPersistenceEntry> toSave = CreateTestEntries(numTx);
             MempoolManager mempoolManager = CreateTestMempool(settings, out TxMempool unused);
 
-            MemPoolSaveResult result = (new MempoolPersistence(settings, new LoggerFactory())).Save(settings.Network, toSave, fileName);
+            MemPoolSaveResult result = new MempoolPersistence(settings, new LoggerFactory()).Save(settings.Network, toSave, fileName);
             mempoolManager.LoadPoolAsync(fileName).GetAwaiter().GetResult();
             long actualSize = mempoolManager.MempoolSize().GetAwaiter().GetResult();
 
@@ -152,7 +152,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                     FeeDelta = expectedTx1FeeDelta
                 },
             };
-            MemPoolSaveResult result = (new MempoolPersistence(settings, new LoggerFactory())).Save(settings.Network, toSave, fileName);
+            MemPoolSaveResult result = new MempoolPersistence(settings, new LoggerFactory()).Save(settings.Network, toSave, fileName);
 
             long expectedSize = 2;
             await mempoolManager.LoadPoolAsync(fileName);
@@ -189,7 +189,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                     FeeDelta = expectedTx1FeeDelta
                 },
             };
-            MemPoolSaveResult result = (new MempoolPersistence(settings, new LoggerFactory())).Save(settings.Network, toSave, fileName);
+            MemPoolSaveResult result = new MempoolPersistence(settings, new LoggerFactory()).Save(settings.Network, toSave, fileName);
 
             long expectedSize = 1;
             await mempoolManager.LoadPoolAsync(fileName);
@@ -205,7 +205,7 @@ namespace Blockcore.Features.MemoryPool.Tests
             int numTx = 22;
             int expectedLinesPerTransaction = 3;
             int expectedHeaderLines = 2;
-            int expectedLines = numTx * expectedLinesPerTransaction + expectedHeaderLines;
+            int expectedLines = (numTx * expectedLinesPerTransaction) + expectedHeaderLines;
             var settings = new NodeSettings(this.network, args: new string[] { $"-datadir={Path.Combine(this.dir, "SaveStreamTest")}" });
             var persistence = new MempoolPersistence(settings, new LoggerFactory());
             IEnumerable<MempoolPersistenceEntry> toSave = CreateTestEntries(numTx);

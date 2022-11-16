@@ -60,7 +60,7 @@ namespace Blockcore.Features.PoA
             uint roundTime = GetRoundLengthSeconds(federationMembers.Count);
 
             // Time when current round started.
-            uint roundStartTimestamp = (headerUnixTimestamp / roundTime) * roundTime;
+            uint roundStartTimestamp = headerUnixTimestamp / roundTime * roundTime;
 
             // Slot number in current round.
             int currentSlotNumber = (int)((headerUnixTimestamp - roundStartTimestamp) / this.consensusOptions.TargetSpacingSeconds);
@@ -83,8 +83,8 @@ namespace Blockcore.Features.PoA
             uint slotIndex = (uint)federationMembers.FindIndex(x => x.PubKey == this.federationManager.CurrentFederationKey.PubKey);
 
             // Time when current round started.
-            uint roundStartTimestamp = (currentTime / roundTime) * roundTime;
-            uint nextTimestampForMining = roundStartTimestamp + slotIndex * this.consensusOptions.TargetSpacingSeconds;
+            uint roundStartTimestamp = currentTime / roundTime * roundTime;
+            uint nextTimestampForMining = roundStartTimestamp + (slotIndex * this.consensusOptions.TargetSpacingSeconds);
 
             // Check if we have missed our turn for this round.
             // We still consider ourselves "in a turn" if we are in the first half of the turn and we haven't mined there yet.
@@ -93,7 +93,7 @@ namespace Blockcore.Features.PoA
                   || this.chainIndexer.Tip.Header.Time == nextTimestampForMining) // We have already mined in that slot
             {
                 // Get timestamp for next round.
-                nextTimestampForMining = roundStartTimestamp + roundTime + slotIndex * this.consensusOptions.TargetSpacingSeconds;
+                nextTimestampForMining = roundStartTimestamp + roundTime + (slotIndex * this.consensusOptions.TargetSpacingSeconds);
             }
 
             return nextTimestampForMining;

@@ -104,12 +104,12 @@ namespace NBitcoin.Tests
 
             Assert.Equal(12, this.networkMain.Base58Prefixes.Length);
             Assert.Equal(new byte[] { 0 }, this.networkMain.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
-            Assert.Equal(new byte[] { (5) }, this.networkMain.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
-            Assert.Equal(new byte[] { (128) }, this.networkMain.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
+            Assert.Equal(new byte[] { 5 }, this.networkMain.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
+            Assert.Equal(new byte[] { 128 }, this.networkMain.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
             Assert.Equal(new byte[] { 0x01, 0x42 }, this.networkMain.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC]);
             Assert.Equal(new byte[] { 0x01, 0x43 }, this.networkMain.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xB2), (0x1E) }, this.networkMain.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xAD), (0xE4) }, this.networkMain.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xB2, 0x1E }, this.networkMain.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xAD, 0xE4 }, this.networkMain.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
             Assert.Equal(new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 }, this.networkMain.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE]);
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, this.networkMain.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 23 }, this.networkMain.Base58Prefixes[(int)Base58Type.ASSET_ID]);
@@ -182,12 +182,12 @@ namespace NBitcoin.Tests
 
             Assert.Equal(12, network.Base58Prefixes.Length);
             Assert.Equal(new byte[] { 111 }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
-            Assert.Equal(new byte[] { (196) }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
-            Assert.Equal(new byte[] { (239) }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
+            Assert.Equal(new byte[] { 196 }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
+            Assert.Equal(new byte[] { 239 }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
             Assert.Equal(new byte[] { 0x01, 0x42 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC]);
             Assert.Equal(new byte[] { 0x01, 0x43 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC]);
-            Assert.Equal(new byte[] { (0x04), (0x35), (0x87), (0xCF) }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
-            Assert.Equal(new byte[] { (0x04), (0x35), (0x83), (0x94) }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x35, 0x87, 0xCF }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x35, 0x83, 0x94 }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
             Assert.Equal(new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 }, network.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE]);
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 115 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
@@ -260,12 +260,12 @@ namespace NBitcoin.Tests
 
             Assert.Equal(12, network.Base58Prefixes.Length);
             Assert.Equal(new byte[] { 111 }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
-            Assert.Equal(new byte[] { (196) }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
-            Assert.Equal(new byte[] { (239) }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
+            Assert.Equal(new byte[] { 196 }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
+            Assert.Equal(new byte[] { 239 }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
             Assert.Equal(new byte[] { 0x01, 0x42 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC]);
             Assert.Equal(new byte[] { 0x01, 0x43 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC]);
-            Assert.Equal(new byte[] { (0x04), (0x35), (0x87), (0xCF) }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
-            Assert.Equal(new byte[] { (0x04), (0x35), (0x83), (0x94) }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x35, 0x87, 0xCF }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x35, 0x83, 0x94 }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
             Assert.Equal(new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 }, network.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE]);
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 115 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
@@ -337,13 +337,13 @@ namespace NBitcoin.Tests
             Assert.Equal(new Bech32Encoder("strat").ToString(), network.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS].ToString());
 
             Assert.Equal(12, network.Base58Prefixes.Length);
-            Assert.Equal(new byte[] { (63) }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
-            Assert.Equal(new byte[] { (125) }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
-            Assert.Equal(new byte[] { (63 + 128) }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
+            Assert.Equal(new byte[] { 63 }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
+            Assert.Equal(new byte[] { 125 }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
+            Assert.Equal(new byte[] { 63 + 128 }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
             Assert.Equal(new byte[] { 0x01, 0x42 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC]);
             Assert.Equal(new byte[] { 0x01, 0x43 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xB2), (0x1E) }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xAD), (0xE4) }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xB2, 0x1E }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xAD, 0xE4 }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
             Assert.Equal(new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 }, network.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE]);
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 23 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
@@ -409,13 +409,13 @@ namespace NBitcoin.Tests
             Assert.Equal(new Bech32Encoder("tstrat").ToString(), network.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS].ToString());
 
             Assert.Equal(12, network.Base58Prefixes.Length);
-            Assert.Equal(new byte[] { (65) }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
-            Assert.Equal(new byte[] { (196) }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
-            Assert.Equal(new byte[] { (65 + 128) }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
+            Assert.Equal(new byte[] { 65 }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
+            Assert.Equal(new byte[] { 196 }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
+            Assert.Equal(new byte[] { 65 + 128 }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
             Assert.Equal(new byte[] { 0x01, 0x42 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC]);
             Assert.Equal(new byte[] { 0x01, 0x43 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xB2), (0x1E) }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xAD), (0xE4) }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xB2, 0x1E }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xAD, 0xE4 }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
             Assert.Equal(new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 }, network.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE]);
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 23 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);
@@ -481,13 +481,13 @@ namespace NBitcoin.Tests
             Assert.Equal(new Bech32Encoder("tstrat").ToString(), network.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS].ToString());
 
             Assert.Equal(12, network.Base58Prefixes.Length);
-            Assert.Equal(new byte[] { (65) }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
-            Assert.Equal(new byte[] { (196) }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
-            Assert.Equal(new byte[] { (65 + 128) }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
+            Assert.Equal(new byte[] { 65 }, network.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS]);
+            Assert.Equal(new byte[] { 196 }, network.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS]);
+            Assert.Equal(new byte[] { 65 + 128 }, network.Base58Prefixes[(int)Base58Type.SECRET_KEY]);
             Assert.Equal(new byte[] { 0x01, 0x42 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC]);
             Assert.Equal(new byte[] { 0x01, 0x43 }, network.Base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xB2), (0x1E) }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
-            Assert.Equal(new byte[] { (0x04), (0x88), (0xAD), (0xE4) }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xB2, 0x1E }, network.Base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY]);
+            Assert.Equal(new byte[] { 0x04, 0x88, 0xAD, 0xE4 }, network.Base58Prefixes[(int)Base58Type.EXT_SECRET_KEY]);
             Assert.Equal(new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 }, network.Base58Prefixes[(int)Base58Type.PASSPHRASE_CODE]);
             Assert.Equal(new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A }, network.Base58Prefixes[(int)Base58Type.CONFIRMATION_CODE]);
             Assert.Equal(new byte[] { 23 }, network.Base58Prefixes[(int)Base58Type.ASSET_ID]);

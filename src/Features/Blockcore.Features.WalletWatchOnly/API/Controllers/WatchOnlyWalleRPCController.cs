@@ -103,7 +103,7 @@ namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 
             Wallet.Types.Wallet wallet = this.walletManager.GetWallet(accountReference.WalletName);
             Func<HdAccount, bool> accountFilter = null;
-            if (account == "*" || account == null)
+            if (account is "*" or null)
             {
                 accountFilter = Wallet.Types.Wallet.AllAccounts;
             }

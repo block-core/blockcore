@@ -256,13 +256,13 @@ namespace Blockcore.Features.MemoryPool
         /// <seealso cref="Transaction.GetSerializedSize"/>
         public static int GetTransactionWeight(Transaction tx, ConsensusFactory consensusFactory, ConsensusOptions consensusOptions)
         {
-            uint noWitnessProtocolVersion = (consensusFactory.Protocol.ProtocolVersion | ConsensusOptions.SerializeTransactionNoWitness);
+            uint noWitnessProtocolVersion = consensusFactory.Protocol.ProtocolVersion | ConsensusOptions.SerializeTransactionNoWitness;
 
             int noWitnessSize = tx.GetSerializedSize(consensusFactory, noWitnessProtocolVersion, SerializationType.Network);
-            int scaleFactor = (consensusOptions.WitnessScaleFactor - 1);
+            int scaleFactor = consensusOptions.WitnessScaleFactor - 1;
             int withWitnessSize = tx.GetSerializedSize(consensusFactory, SerializationType.Network);
 
-            return noWitnessSize * (scaleFactor) + withWitnessSize;
+            return (noWitnessSize * scaleFactor) + withWitnessSize;
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace Blockcore.Features.MemoryPool
             // Providing any more cleanup incentive than making additional inputs free would
             // risk encouraging people to create junk outputs to redeem later.
             if (nTxSize == 0)
-                nTxSize = (GetTransactionWeight(trx, consensusFactory, consensusOptions) + (consensusOptions.WitnessScaleFactor) - 1) / consensusOptions.WitnessScaleFactor;
+                nTxSize = (GetTransactionWeight(trx, consensusFactory, consensusOptions) + consensusOptions.WitnessScaleFactor - 1) / consensusOptions.WitnessScaleFactor;
 
             foreach (TxIn txInput in trx.Inputs)
             {

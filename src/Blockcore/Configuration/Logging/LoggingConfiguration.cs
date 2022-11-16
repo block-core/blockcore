@@ -165,7 +165,7 @@ namespace Blockcore.Configuration.Logging
             List<Target> debugTargets = LogManager.Configuration.AllTargets.Where(t => (t.Name != null) && t.Name.StartsWith("debug")).ToList();
             foreach (Target debugTarget in debugTargets)
             {
-                FileTarget debugFileTarget = debugTarget is AsyncTargetWrapper ? (FileTarget)((debugTarget as AsyncTargetWrapper).WrappedTarget) : (FileTarget)debugTarget;
+                FileTarget debugFileTarget = debugTarget is AsyncTargetWrapper ? (FileTarget)(debugTarget as AsyncTargetWrapper).WrappedTarget : (FileTarget)debugTarget;
                 string currentFile = debugFileTarget.FileName.Render(new LogEventInfo { TimeStamp = DateTime.UtcNow });
                 debugFileTarget.FileName = Path.Combine(folder.LogPath, Path.GetFileName(currentFile));
 

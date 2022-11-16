@@ -61,7 +61,7 @@ namespace Blockcore.IntegrationTests
                     Tx = t,
                     Block = b
                 }))
-                .Where(b => !b.Tx.IsCoinBase || (this.ChainIndexer.Height + 1) - this.ChainIndexer.GetHeader(b.Block.GetHash()).Height >= 100)
+                .Where(b => !b.Tx.IsCoinBase || this.ChainIndexer.Height + 1 - this.ChainIndexer.GetHeader(b.Block.GetHash()).Height >= 100)
                 .Select(b => b.Tx)
                 .SelectMany(b => b.Outputs.AsIndexedOutputs())
                 .Where(o => o.TxOut.ScriptPubKey == this.MinerScriptPubKey)

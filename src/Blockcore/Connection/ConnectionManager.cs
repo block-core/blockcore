@@ -201,7 +201,7 @@ namespace Blockcore.Connection
                 NetworkPeerServer server = this.NetworkPeerFactory.CreateNetworkPeerServer(listen.Endpoint, this.ConnectionSettings.ExternalEndpoint, this.Parameters.Version);
 
                 this.Servers.Add(server);
-                var cmb = (cloneParameters.TemplateBehaviors.Single(x => x is IConnectionManagerBehavior) as ConnectionManagerBehavior);
+                var cmb = cloneParameters.TemplateBehaviors.Single(x => x is IConnectionManagerBehavior) as ConnectionManagerBehavior;
                 cmb.Whitelisted = listen.Whitelisted;
 
                 server.InboundNetworkPeerConnectionParameters = cloneParameters;
@@ -352,7 +352,7 @@ namespace Blockcore.Connection
 
         private string ToKBSec(ulong bytesPerSec)
         {
-            double speed = (bytesPerSec / 1024.0);
+            double speed = bytesPerSec / 1024.0;
             return speed.ToString("0.00") + " KB/S";
         }
 

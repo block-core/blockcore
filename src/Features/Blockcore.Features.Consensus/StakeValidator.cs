@@ -119,7 +119,7 @@ namespace Blockcore.Features.Consensus
 
             BigInteger target = firstBlockTarget.ToBigInteger();
 
-            long multiplyBy = (interval - 1) * targetSpacing + actualSpacing + actualSpacing;
+            long multiplyBy = ((interval - 1) * targetSpacing) + actualSpacing + actualSpacing;
             target = target.Multiply(BigInteger.ValueOf(multiplyBy));
 
             long divideBy = (interval + 1) * targetSpacing;

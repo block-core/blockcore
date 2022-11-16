@@ -783,7 +783,7 @@ namespace Blockcore.Tests.BlockPulling
 
             // Fake assign time to avoid waiting for a long time.
             foreach (AssignedDownload assignedDownload in this.puller.AssignedDownloadsByHash.Values)
-                assignedDownload.AssignedTime = (assignedDownload.AssignedTime - TimeSpan.FromSeconds(this.puller.MaxSecondsToDeliverBlock));
+                assignedDownload.AssignedTime = assignedDownload.AssignedTime - TimeSpan.FromSeconds(this.puller.MaxSecondsToDeliverBlock);
 
             Assert.Empty(this.puller.ReassignedJobsQueue);
 
@@ -811,7 +811,7 @@ namespace Blockcore.Tests.BlockPulling
         [Fact]
         public async Task Stalling_ImportantHeadersAreReleasedAsync()
         {
-            List<ChainedHeader> headers = ChainedHeadersHelper.CreateConsecutiveHeaders(this.puller.ImportantHeightMargin * 2 + 5);
+            List<ChainedHeader> headers = ChainedHeadersHelper.CreateConsecutiveHeaders((this.puller.ImportantHeightMargin * 2) + 5);
 
             this.helper.ChainState.ConsensusTip = headers[5];
 
@@ -834,7 +834,7 @@ namespace Blockcore.Tests.BlockPulling
 
             // Fake assign time to avoid waiting for a long time.
             foreach (AssignedDownload assignedDownload in this.puller.AssignedDownloadsByHash.Values)
-                assignedDownload.AssignedTime = (assignedDownload.AssignedTime - TimeSpan.FromSeconds(this.puller.MaxSecondsToDeliverBlock));
+                assignedDownload.AssignedTime = assignedDownload.AssignedTime - TimeSpan.FromSeconds(this.puller.MaxSecondsToDeliverBlock);
 
             Assert.Empty(this.puller.ReassignedJobsQueue);
 
@@ -892,7 +892,7 @@ namespace Blockcore.Tests.BlockPulling
 
                 // Fake assign time to avoid waiting for a long time.
                 foreach (AssignedDownload assignedDownload in this.puller.AssignedDownloadsByHash.Values)
-                    assignedDownload.AssignedTime = (assignedDownload.AssignedTime - TimeSpan.FromSeconds(this.puller.MaxSecondsToDeliverBlock));
+                    assignedDownload.AssignedTime = assignedDownload.AssignedTime - TimeSpan.FromSeconds(this.puller.MaxSecondsToDeliverBlock);
 
                 this.puller.CheckStalling();
             }

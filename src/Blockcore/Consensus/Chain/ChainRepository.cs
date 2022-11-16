@@ -61,7 +61,7 @@ namespace Blockcore.Consensus.Chain
                     int index = 0;
                     while (true)
                     {
-                        data = this.chainStore.GetChainData((index));
+                        data = this.chainStore.GetChainData(index);
 
                         if (data == null)
                             break;

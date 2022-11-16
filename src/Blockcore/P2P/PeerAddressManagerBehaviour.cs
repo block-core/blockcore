@@ -107,7 +107,7 @@ namespace Blockcore.P2P
                         this.addrPayloadSent = true;
                     }
 
-                    if ((message.Message.Payload is PingPayload) || (message.Message.Payload is PongPayload))
+                    if (message.Message.Payload is PingPayload or PongPayload)
                     {
                         if (peer.State == NetworkPeerState.HandShaked)
                             this.peerAddressManager.PeerSeen(peer.PeerEndPoint, this.dateTimeProvider.GetUtcNow());
@@ -144,7 +144,7 @@ namespace Blockcore.P2P
                     this.peerAddressManager.PeerHandshaked(peer.PeerEndPoint, this.dateTimeProvider.GetUtcNow());
             }
 
-            if ((peer.Inbound) && (peer.State == NetworkPeerState.HandShaked) &&
+            if (peer.Inbound && (peer.State == NetworkPeerState.HandShaked) &&
                 (this.Mode == PeerAddressManagerBehaviourMode.Advertise || this.Mode == PeerAddressManagerBehaviourMode.AdvertiseDiscover))
             {
                 this.logger.LogDebug("[INBOUND] {0}:{1}, {2}:{3}, {4}:{5}", nameof(peer.RemoteSocketAddress), peer.RemoteSocketAddress, nameof(peer.RemoteSocketEndpoint), peer.RemoteSocketEndpoint, nameof(peer.RemoteSocketPort), peer.RemoteSocketPort);

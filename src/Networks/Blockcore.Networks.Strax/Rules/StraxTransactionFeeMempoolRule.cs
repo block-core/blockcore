@@ -29,19 +29,19 @@ namespace Blockcore.Networks.Strax.Rules
             bool federationPayment = !(context.Transaction.Outputs.Count < 2);
 
             // The OP_RETURN output that marks the transaction as cross-chain (and in particular a reward claiming transaction) must be present.
-            if (context.Transaction.Outputs.All(o => o.ScriptPubKey != StraxCoinstakeRule.CirrusTransactionTag(((StraxBaseNetwork)(this.network)).CirrusRewardDummyAddress)))
+            if (context.Transaction.Outputs.All(o => o.ScriptPubKey != StraxCoinstakeRule.CirrusTransactionTag(((StraxBaseNetwork)this.network).CirrusRewardDummyAddress)))
             {
                 federationPayment = false;
             }
 
             // At least one other output must be paying to the multisig.
-            if (context.Transaction.Outputs.All(o => o.ScriptPubKey != ((StraxBaseNetwork)(this.network)).Federations.GetOnlyFederation().MultisigScript.PaymentScript))
+            if (context.Transaction.Outputs.All(o => o.ScriptPubKey != ((StraxBaseNetwork)this.network).Federations.GetOnlyFederation().MultisigScript.PaymentScript))
             {
                 federationPayment = false;
             }
 
             // There must be no other spendable scriptPubKeys.
-            if (context.Transaction.Outputs.Any(o => o.ScriptPubKey != ((StraxBaseNetwork)(this.network)).Federations.GetOnlyFederation().MultisigScript.PaymentScript && !o.ScriptPubKey.IsUnspendable))
+            if (context.Transaction.Outputs.Any(o => o.ScriptPubKey != ((StraxBaseNetwork)this.network).Federations.GetOnlyFederation().MultisigScript.PaymentScript && !o.ScriptPubKey.IsUnspendable))
             {
                 federationPayment = false;
             }

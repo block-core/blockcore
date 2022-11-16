@@ -69,8 +69,7 @@ namespace Blockcore.Utilities.JsonConverters
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var base58 = value as IBitcoinString;
-            if (base58 != null)
+            if (value is IBitcoinString base58)
             {
                 writer.WriteValue(value.ToString());
             }

@@ -417,14 +417,13 @@ namespace NBitcoin.Tests
 
                 Script wit = null;
                 Money amount = Money.Zero;
-                if (test[i] is JArray)
+                if (test[i] is JArray array)
                 {
-                    var array = (JArray)test[i];
                     for (int ii = 0; ii < array.Count - 1; ii++)
                     {
                         wit += Encoders.Hex.DecodeData(array[ii].ToString());
                     }
-                    amount = Money.Coins(((JValue)(array[array.Count - 1])).Value<decimal>());
+                    amount = Money.Coins(((JValue)array[array.Count - 1]).Value<decimal>());
                     i++;
                 }
                 Script scriptSig = ParseScript((string)test[i++]);

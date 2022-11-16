@@ -126,7 +126,7 @@ namespace Blockcore.P2P.Protocol.Payloads
             stream.ReadWrite(ref this.message);
             stream.ReadWrite(ref this.code);
             stream.ReadWrite(ref this.reason);
-            if ((this.Message == "tx") || (this.Message == "block"))
+            if (this.Message is "tx" or "block")
                 stream.ReadWrite(ref this.hash);
         }
     }

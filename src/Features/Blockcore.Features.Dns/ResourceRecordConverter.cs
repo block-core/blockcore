@@ -35,7 +35,7 @@ namespace Blockcore.Features.Dns
         /// <returns><c>True</c> if the object can be converted otherwise returns <c>false</c>.</returns>
         public override bool CanConvert(Type objectType)
         {
-            return (typeof(IResourceRecord).IsAssignableFrom(objectType));
+            return typeof(IResourceRecord).IsAssignableFrom(objectType);
         }
 
         /// <summary>

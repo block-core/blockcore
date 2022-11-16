@@ -8,10 +8,10 @@ namespace Blockcore.Features.RPC
         public UnspentTransaction(JObject unspent)
         {
             this.bestblock = uint256.Parse((string)unspent[nameof(this.bestblock)]);
-            this.confirmations = (int)unspent[(nameof(this.confirmations))];
-            this.value = (decimal)unspent[(nameof(this.value))];
+            this.confirmations = (int)unspent[nameof(this.confirmations)];
+            this.value = (decimal)unspent[nameof(this.value)];
             this.scriptPubKey = unspent[nameof(this.scriptPubKey)].ToObject<RPCScriptPubKey>();
-            this.coinbase = (bool)unspent[(nameof(this.coinbase))];
+            this.coinbase = (bool)unspent[nameof(this.coinbase)];
         }
 
         public uint256 bestblock { get; set; }

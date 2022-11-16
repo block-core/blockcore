@@ -20,13 +20,13 @@ namespace Blockcore.IntegrationTests
             Assembly assembly = Assembly.GetExecutingAssembly();
 
             var testables =
-            (
+
                 from type in assembly.GetTypes().Where(t => t == typeof(T))
                 where type.GetConstructor(Type.EmptyTypes) != null
                 from method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
                 where method.GetCustomAttributes<FactAttribute>().Any()
                 select new { type, method }
-            );
+            ;
 
             var executed = new Dictionary<MethodInfo, (Type, Exception)>();
 

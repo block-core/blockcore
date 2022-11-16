@@ -9,7 +9,7 @@ namespace NBitcoin
         public static string NormalizeKD(string str)
         {
             var builder = new StringBuilder(str.Length);
-            foreach(char c in str)
+            foreach (char c in str)
             {
                 if (!Supported(c))
                 {

@@ -717,7 +717,7 @@ namespace NBitcoin.Tests
             bs = new BitcoinStream(ms, false, this.consensusFactory);
 
             roundTrip(bs, ref input);
-            if (!(input is byte[])) //Byte serialization reuse the input array
+            if (input is not byte[]) //Byte serialization reuse the input array
                 Assert.True(before2 != input);
             AssertEx.CollectionEquals(before, input);
         }
@@ -1488,8 +1488,8 @@ namespace NBitcoin.Tests
 
             var script2 = new Script("30440220d47ce4c025c35ec440bc81d99834a624875161a26bf56ef7fdc0f5d52f843ad102209a5f1c75e461d7ceb1cf3cab9013eb2dc85b6d0da8c3c6e27e3a5a5b3faa5bab01 04dbd0c61532279cf72981c3584fc32216e0127699635c2789f549e0730c059b81ae133016a69c21e23f1859a95f06d52b7bf149a8f2fe4e8535c8a829b449c5ff");
 
-            ECDSASignature sig1 = (PayToPubkeyHashTemplate.Instance.ExtractScriptSigParameters(this.stratisMain, script1).TransactionSignature.Signature);
-            ECDSASignature sig2 = (PayToPubkeyHashTemplate.Instance.ExtractScriptSigParameters(this.stratisMain, script2).TransactionSignature.Signature);
+            ECDSASignature sig1 = PayToPubkeyHashTemplate.Instance.ExtractScriptSigParameters(this.stratisMain, script1).TransactionSignature.Signature;
+            ECDSASignature sig2 = PayToPubkeyHashTemplate.Instance.ExtractScriptSigParameters(this.stratisMain, script2).TransactionSignature.Signature;
 
             BigInteger n = ECKey.CURVE.N;
             var z1 = new BigInteger(1, Encoders.Hex.DecodeData("c0e2d0a89a348de88fda08211c70d1d7e52ccef2eb9459911bf977d587784c6e"));
@@ -1502,7 +1502,7 @@ namespace NBitcoin.Tests
             var expected = new Key(Encoders.Hex.DecodeData("c477f9f65c22cce20657faa5b2d1d8122336f851a508a1ed04e479c34985bf96"), fCompressedIn: false);
 
             var expectedBigInt = new BigInteger(1, Encoders.Hex.DecodeData("c477f9f65c22cce20657faa5b2d1d8122336f851a508a1ed04e479c34985bf96"));
-            BigInteger priv = (z1.Multiply(sig2.S).Subtract(z2.Multiply(sig1.S)).Mod(n)).Divide(sig1.R.Multiply(sig1.S.Subtract(sig2.S)).Mod(n));
+            BigInteger priv = z1.Multiply(sig2.S).Subtract(z2.Multiply(sig1.S)).Mod(n).Divide(sig1.R.Multiply(sig1.S.Subtract(sig2.S)).Mod(n));
             Assert.Equal(expectedBigInt.ToString(), priv.ToString());
         }
 
@@ -1953,10 +1953,10 @@ namespace NBitcoin.Tests
             {
                 string strTest = test.ToString();
                 //Skip comments
-                if (!(test[0] is JArray))
+                if (test[0] is not JArray)
                     continue;
                 var inputs = (JArray)test[0];
-                if (test.Count != 3 || !(test[1] is string) || !(test[2] is string))
+                if (test.Count != 3 || test[1] is not string || test[2] is not string)
                 {
                     Assert.False(true, "Bad test: " + strTest);
                     continue;
@@ -2046,11 +2046,11 @@ namespace NBitcoin.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => new Sequence(-1));
 
             TimeSpan time = TimeSpan.FromSeconds(512 * 0xFF);
-            Assert.True(new Sequence(time) == (0xFF | 1 << 22));
+            Assert.True(new Sequence(time) == (0xFF | (1 << 22)));
             Assert.True(new Sequence(time).IsRelativeLock);
             Assert.True(new Sequence(time).IsRBF);
             Assert.Throws<ArgumentOutOfRangeException>(() => new Sequence(TimeSpan.FromSeconds(512 * (0xFFFF + 1))));
-            new Sequence(TimeSpan.FromSeconds(512 * (0xFFFF)));
+            new Sequence(TimeSpan.FromSeconds(512 * 0xFFFF));
             Assert.Throws<InvalidOperationException>(() => new Sequence(time).LockHeight);
         }
 
@@ -2072,13 +2072,13 @@ namespace NBitcoin.Tests
             {
                 string strTest = test.ToString();
                 //Skip comments
-                if (!(test[0] is JArray))
+                if (test[0] is not JArray)
                 {
                     comment = test[0].ToString();
                     continue;
                 }
                 var inputs = (JArray)test[0];
-                if (test.Count != 3 || !(test[1] is string) || !(test[2] is string))
+                if (test.Count != 3 || test[1] is not string || test[2] is not string)
                 {
                     Assert.False(true, "Bad test: " + strTest);
                     continue;

@@ -306,7 +306,7 @@ namespace NBitcoin
         {
             ulong l = data;
             ReadWriteNumber(ref l, sizeof(ulong));
-            if(!this.Serializing)
+            if (!this.Serializing)
                 data = l;
         }
 

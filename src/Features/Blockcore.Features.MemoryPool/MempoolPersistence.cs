@@ -135,10 +135,9 @@ namespace Blockcore.Features.MemoryPool
         /// <returns>Whether the objects are equal.</returns>
         public override bool Equals(object obj)
         {
-            var toCompare = obj as MempoolPersistenceEntry;
-            if (toCompare == null) return false;
+            if (obj is not MempoolPersistenceEntry toCompare) return false;
 
-            if ((this.tx == null) != (toCompare.tx == null))
+            if (this.tx == null != (toCompare.tx == null))
                 return false;
 
             if (!this.time.Equals(toCompare.time) || !this.feeDelta.Equals(toCompare.feeDelta))

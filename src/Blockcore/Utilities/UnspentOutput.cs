@@ -78,7 +78,7 @@ namespace Blockcore.Utilities
         {
             get
             {
-                return ((this.TxOut.ScriptPubKey.Length > 0) && (this.TxOut.ScriptPubKey.ToBytes(true)[0] == (byte)OpcodeType.OP_RETURN));
+                return (this.TxOut.ScriptPubKey.Length > 0) && (this.TxOut.ScriptPubKey.ToBytes(true)[0] == (byte)OpcodeType.OP_RETURN);
             }
         }
 

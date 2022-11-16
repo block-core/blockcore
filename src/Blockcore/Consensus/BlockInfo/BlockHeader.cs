@@ -48,7 +48,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public uint256 HashMerkleRoot { get { return this.hashMerkleRoot; } set { this.hashMerkleRoot = value; } }
 
-        public bool IsNull { get { return (this.bits == 0); } }
+        public bool IsNull { get { return this.bits == 0; } }
 
         protected uint256[] hashes;
 

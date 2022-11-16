@@ -62,7 +62,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                     for (int k = 0; k < 4; k++)
                     { // add 4 fee txs
                         Transaction tx = KnownNetworks.Main.CreateTransaction(txf.ToHex());
-                        tx.Inputs[0].PrevOut.N = (uint)(10000 * blocknum + 100 * j + k); // make transaction unique
+                        tx.Inputs[0].PrevOut.N = (uint)((10000 * blocknum) + (100 * j) + k); // make transaction unique
                         uint256 hash = tx.GetHash();
                         mpool.AddUnchecked(hash, entry.Fee(feeV[j]).Time(dateTimeSet.GetTime()).Priority(0).Height(blocknum).FromTx(tx, mpool));
                         txHashes[j].Add(hash);
@@ -92,8 +92,8 @@ namespace Blockcore.Features.MemoryPool.Tests
                     Assert.True(mpool.EstimateFee(1) == new FeeRate(0));
                     Assert.True(mpool.EstimateFee(2) == new FeeRate(0));
                     Assert.True(mpool.EstimateFee(3) == new FeeRate(0));
-                    Assert.True(mpool.EstimateFee(4).FeePerK < 8 * baseRate.FeePerK + deltaFee);
-                    Assert.True(mpool.EstimateFee(4).FeePerK > 8 * baseRate.FeePerK - deltaFee);
+                    Assert.True(mpool.EstimateFee(4).FeePerK < (8 * baseRate.FeePerK) + deltaFee);
+                    Assert.True(mpool.EstimateFee(4).FeePerK > (8 * baseRate.FeePerK) - deltaFee);
 
                     Assert.True(mpool.EstimateSmartFee(1, out answerFound) == mpool.EstimateFee(4) && answerFound == 4);
                     Assert.True(mpool.EstimateSmartFee(3, out answerFound) == mpool.EstimateFee(4) && answerFound == 4);
@@ -119,8 +119,8 @@ namespace Blockcore.Features.MemoryPool.Tests
                 int mult = 11 - i;
                 if (i > 1)
                 {
-                    Assert.True(origFeeEst[i - 1] < mult * baseRate.FeePerK + deltaFee);
-                    Assert.True(origFeeEst[i - 1] > mult * baseRate.FeePerK - deltaFee);
+                    Assert.True(origFeeEst[i - 1] < (mult * baseRate.FeePerK) + deltaFee);
+                    Assert.True(origFeeEst[i - 1] > (mult * baseRate.FeePerK) - deltaFee);
                 }
                 else
                 {
@@ -149,7 +149,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                     for (int k = 0; k < 4; k++)
                     { // add 4 fee txs
                         Transaction tx = KnownNetworks.Main.CreateTransaction(txf.ToHex());
-                        tx.Inputs[0].PrevOut.N = (uint)(10000 * blocknum + 100 * j + k);
+                        tx.Inputs[0].PrevOut.N = (uint)((10000 * blocknum) + (100 * j) + k);
                         uint256 hash = tx.GetHash();
                         mpool.AddUnchecked(hash, entry.Fee(feeV[j]).Time(dateTimeSet.GetTime()).Priority(0).Height(blocknum).FromTx(tx, mpool));
                         txHashes[j].Add(hash);
@@ -193,7 +193,7 @@ namespace Blockcore.Features.MemoryPool.Tests
                     for (int k = 0; k < 4; k++)
                     { // add 4 fee txs
                         Transaction tx = KnownNetworks.Main.CreateTransaction(txf.ToHex());
-                        tx.Inputs[0].PrevOut.N = (uint)(10000 * blocknum + 100 * j + k);
+                        tx.Inputs[0].PrevOut.N = (uint)((10000 * blocknum) + (100 * j) + k);
                         uint256 hash = tx.GetHash();
                         mpool.AddUnchecked(hash, entry.Fee(feeV[j]).Time(dateTimeSet.GetTime()).Priority(0).Height(blocknum).FromTx(tx, mpool));
                         Transaction ptx = mpool.Get(hash);

@@ -175,7 +175,7 @@ namespace Blockcore.Networks.X1.Consensus
                     // Special difficulty rule for testnet:
                     // If the new block's timestamp is more than 2 * TargetSpacing.TotalSeconds,
                     // then allow mining of a min-difficulty block.
-                    if (lastPowBlock.Header.Time > lastPowBlock.Header.Time + GetTargetSpacingTotalSeconds(lastPowBlock.Height) * 2)
+                    if (lastPowBlock.Header.Time > lastPowBlock.Header.Time + (GetTargetSpacingTotalSeconds(lastPowBlock.Height) * 2))
                         return consensus.PowLimit;
                     else
                     {
@@ -192,7 +192,7 @@ namespace Blockcore.Networks.X1.Consensus
             }
 
             // We'll also not adjust the difficulty, if the ratchet wasn't active at least 2x difficultyAdjustmentInterval + 4 blocks.
-            if (lastPowBlock.Height < GetPosPowRatchetIsActiveHeight() + 2 * difficultyAdjustmentInterval + 4)
+            if (lastPowBlock.Height < GetPosPowRatchetIsActiveHeight() + (2 * difficultyAdjustmentInterval) + 4)
                 return lastPowBlock.Header.Bits;
 
             // Define the amount of PoW blocks used to calculate the average, and for the sake of logic,
@@ -280,7 +280,7 @@ namespace Blockcore.Networks.X1.Consensus
             // The problem with random spacing values is that they frequently lead to difficult adjustments in the wrong direction,
             // when the sample size is as low as 1.
             // The results with 1/2 were: PoS block ETA seconds: Average: 351, Median: 165. But average and median should have been 256 seconds.
-            long numerator = 31 * targetSpacing + actualSpacing;
+            long numerator = (31 * targetSpacing) + actualSpacing;
             long denominator = 32 * targetSpacing;
             nextTarget = nextTarget.Multiply(BigInteger.ValueOf(numerator));
             nextTarget = nextTarget.Divide(BigInteger.ValueOf(denominator));
@@ -322,17 +322,13 @@ namespace Blockcore.Networks.X1.Consensus
 
         private int GetPosPowRatchetIsActiveHeight()
         {
-            switch (this.currentNetwork.NetworkType)
+            return this.currentNetwork.NetworkType switch
             {
-                case NetworkType.Mainnet:
-                    return PosPowRatchetIsActiveHeightMainNet;
-                case NetworkType.Testnet:
-                    return PosPowRatchetIsActiveHeightTestNet;
-                case NetworkType.Regtest:
-                    return PosPowRatchetIsActiveHeightInvalid;
-            }
-
-            return PosPowRatchetIsActiveHeightInvalid;
+                NetworkType.Mainnet => PosPowRatchetIsActiveHeightMainNet,
+                NetworkType.Testnet => PosPowRatchetIsActiveHeightTestNet,
+                NetworkType.Regtest => PosPowRatchetIsActiveHeightInvalid,
+                _ => PosPowRatchetIsActiveHeightInvalid,
+            };
         }
 
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local

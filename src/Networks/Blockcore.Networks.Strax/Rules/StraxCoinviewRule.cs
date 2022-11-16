@@ -127,7 +127,7 @@ namespace Blockcore.Networks.Strax.Rules
                     }
 
                     // Every other (spendable) output must go to the multisig
-                    if (output.ScriptPubKey != ((StraxBaseNetwork)(this.Parent.Network)).Federations.GetOnlyFederation().MultisigScript.PaymentScript)
+                    if (output.ScriptPubKey != ((StraxBaseNetwork)this.Parent.Network).Federations.GetOnlyFederation().MultisigScript.PaymentScript)
                     {
                         this.Logger.LogTrace("(-)[INVALID_REWARD_SPEND_DESTINATION]");
                         ConsensusErrors.BadTransactionScriptError.Throw();
@@ -179,9 +179,9 @@ namespace Blockcore.Networks.Strax.Rules
             Op lastOpcode = null;
             foreach (Op op in script.ToOps())
             {
-                if (op.Code == OpcodeType.OP_CHECKSIG || op.Code == OpcodeType.OP_CHECKSIGVERIFY)
+                if (op.Code is OpcodeType.OP_CHECKSIG or OpcodeType.OP_CHECKSIGVERIFY)
                     n++;
-                else if (op.Code == OpcodeType.OP_CHECKMULTISIG || op.Code == OpcodeType.OP_CHECKMULTISIGVERIFY)
+                else if (op.Code is OpcodeType.OP_CHECKMULTISIG or OpcodeType.OP_CHECKMULTISIGVERIFY)
                 {
                     if (fAccurate && straxNetwork?.Federations != null && lastOpcode.Code == OpcodeType.OP_NOP9) // OpcodeType.OP_FEDERATION)
                         n += (uint)straxNetwork.Federations.GetOnlyFederation().GetFederationDetails().transactionSigningKeys.Length;

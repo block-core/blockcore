@@ -89,7 +89,7 @@ namespace Blockcore.Networks.X1.Components
 
             BigInteger target = firstBlockTarget.ToBigInteger();
 
-            long multiplyBy = (interval - 1) * targetSpacing + actualSpacing + actualSpacing;
+            long multiplyBy = ((interval - 1) * targetSpacing) + actualSpacing + actualSpacing;
             target = target.Multiply(BigInteger.ValueOf(multiplyBy));
 
             long divideBy = (interval + 1) * targetSpacing;
@@ -116,7 +116,7 @@ namespace Blockcore.Networks.X1.Components
                 options.IsPosPowRatchetActiveAtHeight(chainTip.Height - 4))
             {
                 bool isChainTipProofOfStake = stakeChain.Get(chainTip.HashBlock).IsProofOfStake();
-                if (isChainTipProofOfStake && chainTip.Height % 2 != 0 || !isChainTipProofOfStake && chainTip.Height % 2 == 0)
+                if ((isChainTipProofOfStake && chainTip.Height % 2 != 0) || (!isChainTipProofOfStake && chainTip.Height % 2 == 0))
                     throw new InvalidOperationException("Misconfiguration: When the ratchet is active for a height, the convention that PoS block heights are even numbers, must be met.");
 
                 return options.GetNextTargetRequired(chainTip, isChainTipProofOfStake, consensus, proofOfStake);

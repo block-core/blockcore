@@ -14,11 +14,11 @@ namespace Blockcore.Consensus.BlockInfo
     [Flags]
     public enum BlockFlag //block index flags
     {
-        BLOCK_PROOF_OF_STAKE = (1 << 0), // is proof-of-stake block
+        BLOCK_PROOF_OF_STAKE = 1 << 0, // is proof-of-stake block
 
-        BLOCK_STAKE_ENTROPY = (1 << 1), // entropy bit for stake modifier
+        BLOCK_STAKE_ENTROPY = 1 << 1, // entropy bit for stake modifier
 
-        BLOCK_STAKE_MODIFIER = (1 << 2), // regenerated stake modifier
+        BLOCK_STAKE_MODIFIER = 1 << 2, // regenerated stake modifier
     }
 
     public class BlockStake : IBitcoinSerializable
@@ -82,7 +82,7 @@ namespace Blockcore.Consensus.BlockInfo
 
         public bool IsProofOfWork()
         {
-            return (this.Flags <= 0 && BlockFlag.BLOCK_PROOF_OF_STAKE <= 0);
+            return this.Flags <= 0 && BlockFlag.BLOCK_PROOF_OF_STAKE <= 0;
         }
 
         public bool IsProofOfStake()
@@ -104,7 +104,7 @@ namespace Blockcore.Consensus.BlockInfo
         {
             if (nEntropyBit > 1)
                 return false;
-            this.Flags |= (nEntropyBit != 0 ? BlockFlag.BLOCK_STAKE_ENTROPY : 0);
+            this.Flags |= nEntropyBit != 0 ? BlockFlag.BLOCK_STAKE_ENTROPY : 0;
             return true;
         }
 
@@ -273,7 +273,7 @@ namespace Blockcore.Consensus.BlockInfo
             }
             else
             {
-                uint version = (witSupported && (this.vin.Count == 0 && this.vout.Count > 0)) ? this.nVersion | NoDummyInput : this.nVersion;
+                uint version = (witSupported && this.vin.Count == 0 && this.vout.Count > 0) ? this.nVersion | NoDummyInput : this.nVersion;
                 stream.ReadWrite(ref version);
 
                 // the POS time stamp
@@ -470,7 +470,7 @@ namespace Blockcore.Consensus.BlockInfo
         /// The block signature type.
         /// </summary>
         public BlockSignature BlockSignature { get; set; }
-        
+
 
         /// <summary>
         /// The additional serialization of the block POS block.

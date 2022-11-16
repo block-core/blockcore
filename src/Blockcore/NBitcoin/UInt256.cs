@@ -62,13 +62,10 @@ namespace NBitcoin
         private const int Width = 256 / 64;
 
         private const int WidthByte = 256 / 8;
-
-#pragma warning disable IDE0044 // Add readonly modifier
         private ulong part1;
         private ulong part2;
         private ulong part3;
         private ulong part4;
-#pragma warning restore IDE0044 // Add readonly modifier
 
         internal ulong Part1 => this.part1;
         internal ulong Part2 => this.part2;

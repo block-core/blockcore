@@ -660,7 +660,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
             decodedTx.Should().BeOfType<TransactionVerboseModel>();
 
             var verboseTx = (TransactionVerboseModel)decodedTx;
-            verboseTx.Weight.Should().Be(verboseTx.VSize * 4 - 3);
+            verboseTx.Weight.Should().Be((verboseTx.VSize * 4) - 3);
             verboseTx.Hex.Should().BeNullOrEmpty();
         }
 
@@ -685,7 +685,7 @@ namespace Blockcore.Features.RPC.Tests.Controller
                 (byte)(compact >> 24),
                 (byte)(compact >> 16),
                 (byte)(compact >> 8),
-                (byte)(compact)
+                (byte)compact
             };
         }
 

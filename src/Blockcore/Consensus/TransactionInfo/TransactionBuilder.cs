@@ -14,7 +14,7 @@ using NBitcoin.Policy;
 namespace Blockcore.Consensus.TransactionInfo
 {
     [Flags]
-    public enum ChangeType : int
+    public enum ChangeType 
     {
         All = 3,
         Colored = 1,
@@ -273,7 +273,7 @@ namespace Blockcore.Consensus.TransactionInfo
             #endregion IKeyRepository Members
         }
 
-        private class KnownSignatureSigner : ISigner, IKeyRepository
+        private sealed class KnownSignatureSigner : ISigner, IKeyRepository
         {
             private readonly ICoin coin;
             private SigHash sigHash;

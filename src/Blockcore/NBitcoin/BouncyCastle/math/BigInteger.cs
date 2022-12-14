@@ -1301,8 +1301,8 @@ namespace NBitcoin.BouncyCastle.Math
             return this.sign < 0 ? ~hc : hc;
         }
 
-        // TODO Make public?
-        private BigInteger Inc()
+        
+        public BigInteger Inc()
         {
             if (this.sign == 0)
                 return One;

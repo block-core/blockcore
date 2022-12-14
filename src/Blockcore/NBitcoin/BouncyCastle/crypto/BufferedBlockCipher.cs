@@ -107,10 +107,10 @@ namespace NBitcoin.BouncyCastle.Crypto
         * with len bytes of input.
         */
         public override int GetOutputSize(
-            int length)
+            int inputLen)
         {
             // Note: Can assume IsPartialBlockOkay is true for purposes of this calculation
-            return length + this.bufOff;
+            return inputLen + this.bufOff;
         }
 
         /**

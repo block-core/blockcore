@@ -84,14 +84,14 @@ namespace Blockcore.AsyncWork
         /// <param name="cancellation">Cancellation token that triggers when the task and the loop should be cancelled.</param>
         /// <param name="delayStart">Delay before the first run of the task, or null if no startup delay is required.</param>
         private async Task StartAsync(CancellationToken cancellation, TimeSpan? delayStart = null)
-        {
+        { 
             try
             {
                 if (cancellation.IsCancellationRequested) return;
 
                 if (delayStart != null)
                 {
-                    this.logger.LogInformation("{0} starting in {1} seconds.", this.Name, delayStart.Value.TotalSeconds);
+                    this.logger.LogInformation("{name} starting in {value} seconds.", this.Name, delayStart.Value.TotalSeconds);
                     await Task.Delay(delayStart.Value, cancellation).ConfigureAwait(false);
                 }
 

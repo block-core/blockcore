@@ -1503,7 +1503,7 @@ namespace Blockcore.Consensus
         /// <inheritdoc />
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
             
         }

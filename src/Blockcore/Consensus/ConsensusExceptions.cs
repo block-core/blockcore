@@ -76,7 +76,7 @@ namespace Blockcore.Consensus
         {
         }
     }
-
+    [Serializable]
     public class IntegrityValidationFailedException : ConsensusException
     {
         /// <summary>The peer this block came from.</summary>

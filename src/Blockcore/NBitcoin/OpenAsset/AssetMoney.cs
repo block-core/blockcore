@@ -279,16 +279,12 @@ namespace NBitcoin.OpenAsset
                 throw new ArgumentNullException("left");
             if (right == null)
                 throw new ArgumentNullException("right");
-            left.CheckAssetId(right, "right");
+           left.CheckAssetId(right, "right");
             return left.Quantity <= right.Quantity;
         }
 
         public static bool operator >=(AssetMoney left, AssetMoney right)
         {
-            if (left == null)
-                throw new ArgumentNullException("left");
-            if (right == null)
-                throw new ArgumentNullException("right");
             left.CheckAssetId(right, "right");
             return left.Quantity >= right.Quantity;
         }

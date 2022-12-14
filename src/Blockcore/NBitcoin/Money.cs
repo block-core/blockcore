@@ -558,12 +558,9 @@ namespace NBitcoin
             return new Money(checked(left._Satoshis / right));
         }
 
-        public static bool operator <(Money left, Money right)
+        public static bool operator < (Money left, Money right)
         {
-            if (left == null)
-
-                if (right == null)
-                    throw new ArgumentNullException("right");
+           
             return left._Satoshis < right._Satoshis;
         }
         public static bool operator >(Money left, Money right)

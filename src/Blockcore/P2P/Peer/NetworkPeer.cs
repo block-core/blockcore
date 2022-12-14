@@ -942,11 +942,12 @@ namespace Blockcore.P2P.Peer
         /// <inheritdoc />
         public InventoryType AddSupportedOptions(InventoryType inventoryType)
         {
+         
             // Transaction options we prefer and which are also supported by peer.
             TransactionOptions actualTransactionOptions = this.preferredTransactionOptions & this.SupportedTransactionOptions;
-
+            
             if ((actualTransactionOptions & TransactionOptions.Witness) != 0)
-                inventoryType |= InventoryType.MSG_WITNESS_FLAG;
+                inventoryType = InventoryType.MSG_WITNESS_FLAG;
 
             return inventoryType;
         }

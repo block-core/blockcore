@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.ExceptionServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -525,19 +526,24 @@ namespace Blockcore.Features.RPC
         /// <summary>Cancel all commands.</summary>
         public void CancelBatch()
         {
-            ConcurrentQueue<(RPCRequest request, TaskCompletionSource<RPCResponse> task)> batches;
-            lock (this)
+                ConcurrentQueue<(RPCRequest request, TaskCompletionSource<RPCResponse> task)> batches;
+
+            //  lock (this)
+                  RPCClient pRCClient = this;
+                  lock (pRCClient)
+
+
             {
-                if (this.batchedRequests == null)
-                    throw new InvalidOperationException("This RPCClient instance is not a batch, use PrepareBatch");
-                batches = this.batchedRequests;
-                this.batchedRequests = null;
+                    if (pRCClient.batchedRequests == null)
+                        throw new InvalidOperationException("This RPCClient instance is not a batch, use PrepareBatch");
+                    batches = pRCClient.batchedRequests;
+                   pRCClient.batchedRequests = null;
             }
 
-            (RPCRequest request, TaskCompletionSource<RPCResponse> task) req;
-            while (batches.TryDequeue(out req))
-                req.task.TrySetCanceled();
-        }
+                (RPCRequest request, TaskCompletionSource<RPCResponse> task) req;
+                while (batches.TryDequeue(out req))
+                    req.task.TrySetCanceled();
+            } 
 
         /// <summary>Send all commands in one batch.</summary>
         public async Task SendBatchAsync()

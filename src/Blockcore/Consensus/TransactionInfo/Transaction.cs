@@ -26,29 +26,11 @@ namespace Blockcore.Consensus.TransactionInfo
         private uint256 hash = uint256.Zero;
         private uint n;
 
-        public uint256 Hash
-        {
-            get
-            {
-                return this.hash;
-            }
-            set
-            {
-                this.hash = value;
-            }
-        }
+        public uint256 Hash { get; set; }
+        
 
-        public uint N
-        {
-            get
-            {
-                return this.n;
-            }
-            set
-            {
-                this.n = value;
-            }
-        }
+        public uint N { get; set; }
+        
 
         public static bool TryParse(string str, out OutPoint result)
         {
@@ -225,17 +207,9 @@ namespace Blockcore.Consensus.TransactionInfo
             }
         }
 
-        public Script ScriptSig
-        {
-            get
-            {
-                return this.scriptSig;
-            }
-            set
-            {
-                this.scriptSig = value;
-            }
-        }
+        public Script ScriptSig { get; set; }
+        
+        
 
         /// <summary>
         /// Try to get the expected scriptPubKey of this TxIn based on its scriptSig and witScript.

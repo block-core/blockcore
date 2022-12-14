@@ -131,6 +131,6 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
         public abstract int GetDigestSize();
         public abstract int DoFinal(byte[] output, int outOff);
         public abstract IMemoable Copy();
-        public abstract void Reset(IMemoable t);
+        public abstract void Reset(IMemoable other);
     }
 }

@@ -72,24 +72,11 @@ namespace Blockcore.Consensus
         /// <param name="a">first instance to compare.</param>
         /// <param name="b">Second instance to compare.</param>
         /// <returns><c>true</c> if bother instances are the same.</returns>
-        public static bool operator ==(ConsensusError a, ConsensusError b)
-        {
-            if (object.ReferenceEquals(a, b))
-                return true;
-
-            if ((a is null) || (b is null))
-                return false;
-
-            return a.Code == b.Code;
-        }
-
+        
         /// <summary>
         /// Compare two instances of <see cref="ConsensusError"/> are not the same.
         /// </summary>
-        public static bool operator !=(ConsensusError a, ConsensusError b)
-        {
-            return !(a == b);
-        }
+       
 
         /// <inheritdoc />
         public override int GetHashCode()

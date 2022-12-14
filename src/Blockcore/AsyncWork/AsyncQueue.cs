@@ -18,7 +18,7 @@ namespace Blockcore.AsyncWork
     /// </para>
     /// </summary>
     /// <typeparam name="T">Type of items to be inserted in the queue.</typeparam>
-    internal class AsyncQueue<T> : IDisposable, IAsyncQueue<T>, IAsyncDelegateDequeuer<T>
+    internal class AsyncQueue<T> : IAsyncQueue<T>, IAsyncDelegateDequeuer<T>
     {
         /// <summary>
         /// Execution context holding information about the current status of the execution

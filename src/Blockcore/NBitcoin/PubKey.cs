@@ -359,19 +359,6 @@ namespace NBitcoin
             return ToHex().Equals(item.ToHex());
         }
 
-        public static bool operator ==(PubKey a, PubKey b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-            if (((object)a == null) || ((object)b == null))
-                return false;
-            return a.ToHex() == b.ToHex();
-        }
-
-        public static bool operator !=(PubKey a, PubKey b)
-        {
-            return !(a == b);
-        }
 
         public override int GetHashCode()
         {

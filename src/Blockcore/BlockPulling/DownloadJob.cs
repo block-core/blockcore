@@ -15,6 +15,8 @@ namespace Blockcore.BlockPulling
 
         public int Id { get; set; }
 
-        public List<ChainedHeader> Headers;
+        public List<ChainedHeader> Headers { get; set; }
+
+        
     }
 }

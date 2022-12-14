@@ -595,7 +595,7 @@ namespace Blockcore.BlockPulling
 
                 if (!success)
                 {
-                    this.logger.LogDebug("Failed to ask peer {0} for {1} blocks.", peerId, hashes.Count);
+                    this.logger.LogDebug("Failed to ask peer {peerId} for {Count} blocks.", peerId, hashes.Count);
                     this.PeerDisconnected(peerId);
                 }
             }
@@ -852,7 +852,7 @@ namespace Blockcore.BlockPulling
             }
             else
             {
-                this.logger.LogDebug("Peer ID {0} is the fastest peer. Recalculating quality score of all peers.", peerId);
+                this.logger.LogDebug("Peer ID {peerId} is the fastest peer. Recalculating quality score of all peers.", peerId);
 
                 // This is the best peer. Recalculate quality score for everyone.
                 foreach (IBlockPullerBehavior peerPullerBehavior in this.pullerBehaviorsByPeerId.Values)
@@ -984,7 +984,6 @@ namespace Blockcore.BlockPulling
             double blocksPerSec = Math.Round(totalSpeedBytesPerSec / avgBlockSizeBytes, 2);
             statsBuilder.AppendLine($"Amount of blocks node can download in 1 second: {blocksPerSec}");
 
- 
             // peer -- quality score -- assigned blocks -- speed  (SORT BY QualityScore)
         }
 

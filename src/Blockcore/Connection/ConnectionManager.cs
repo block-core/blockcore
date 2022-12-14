@@ -542,7 +542,7 @@ namespace Blockcore.Connection
                 this.logger.LogTrace("(-)[IPENDPOINT_ADDRESS_NULL]:{0}", endpoint);
             }
 
-            if (this.ConnectionSettings.RetrieveAddNodes().Where(a => a.Address == null).Any())
+            if (this.ConnectionSettings.RetrieveAddNodes().Any(a => a.Address == null))
             {
                 throw new ArgumentNullException(nameof(this.ConnectionSettings), "The addnode collection contains endpoints with null addresses.");
             }
@@ -559,7 +559,7 @@ namespace Blockcore.Connection
 
             if (existingConnection != null)
             {
-                this.logger.LogDebug("{0} is already connected.");
+                this.logger.LogDebug("{value} is already connected.");
                 return existingConnection;
             }
 

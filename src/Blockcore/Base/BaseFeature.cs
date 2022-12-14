@@ -118,7 +118,6 @@ namespace Blockcore.Base
         private readonly IConsensusRuleEngine consensusRules;
         private readonly IBlockPuller blockPuller;
         private readonly IBlockStore blockStore;
-        private readonly ITipsManager tipsManager;
         private readonly IKeyValueRepository keyValueRepo;
 
         /// <inheritdoc cref="IFinalizedBlockInfoRepository"/>
@@ -177,7 +176,6 @@ namespace Blockcore.Base
             this.provenBlockHeaderStore = provenBlockHeaderStore;
             this.partialValidator = partialValidator;
             this.peerBanning = Guard.NotNull(peerBanning, nameof(peerBanning));
-            this.tipsManager = Guard.NotNull(tipsManager, nameof(tipsManager));
             this.keyValueRepo = Guard.NotNull(keyValueRepo, nameof(keyValueRepo));
             this.nodeDeployments = nodeDeployments;
 

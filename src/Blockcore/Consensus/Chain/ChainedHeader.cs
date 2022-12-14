@@ -328,22 +328,7 @@ namespace Blockcore.Consensus.Chain
         }
 
         /// <inheritdoc />
-        public static bool operator ==(ChainedHeader a, ChainedHeader b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if ((a is null) || (b is null))
-                return false;
-
-            return a.HashBlock == b.HashBlock;
-        }
-
-        /// <inheritdoc />
-        public static bool operator !=(ChainedHeader a, ChainedHeader b)
-        {
-            return !(a == b);
-        }
+        
 
         /// <inheritdoc />
         public override int GetHashCode()
@@ -537,7 +522,7 @@ namespace Blockcore.Consensus.Chain
         /// <summary>
 
         /// </summary>
-        /// <returns>The difficulty adjustment interval in blocks.</returns>
+        // <returns>The difficulty adjustment interval in blocks.</returns>
         private long GetDifficultyAdjustmentInterval(IConsensus consensus)
         {
             return (long)consensus.TargetTimespan.TotalSeconds / (long)consensus.TargetSpacing.TotalSeconds;

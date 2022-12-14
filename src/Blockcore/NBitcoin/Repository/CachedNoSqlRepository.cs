@@ -43,7 +43,7 @@ namespace NBitcoin
         private Dictionary<string, byte[]> _Table = new Dictionary<string, byte[]>();
         private HashSet<string> _Removed = new HashSet<string>();
         private HashSet<string> _Added = new HashSet<string>();
-        private ReaderWriterLock @lock = new ReaderWriterLock();
+        private Blockcore.Utilities.ReaderWriterLock @lock = new Blockcore.Utilities.ReaderWriterLock();
 
         public override async Task PutBatch(IEnumerable<Tuple<string, IBitcoinSerializable>> values)
         {

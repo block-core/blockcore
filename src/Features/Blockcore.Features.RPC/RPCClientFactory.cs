@@ -21,7 +21,7 @@ namespace Blockcore.Features.RPC
     /// <summary>
     /// A factory for creating new instances of an <see cref="RPCClient"/>.
     /// </summary>
-    public class RPCClientFactory : IRPCClientFactory
+    public class RpcClientFactory : IRPCClientFactory
     {
         /// <inheritdoc/>
         public IRPCClient Create(RpcSettings rpcSettings, Uri address, Network network)

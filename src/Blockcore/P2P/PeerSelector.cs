@@ -239,7 +239,7 @@ namespace Blockcore.P2P
         /// <inheritdoc/>
         public IEnumerable<PeerAddress> SelectPeersForDiscovery(int peerCount)
         {
-            if (this.peerAddresses.Count == 0)
+            if (this.peerAddresses.IsEmpty)
                 return Enumerable.Empty<PeerAddress>();
 
             var discoverable = this.peerAddresses.Values.Where(pa => pa.LastDiscoveredFrom == null).ToList();
@@ -280,7 +280,7 @@ namespace Blockcore.P2P
 
                 // If the amount of connected and/or handshaked peers is less
                 // than 50% of the peers asked for, just take all of them.
-                if (connectedAndHandshaked.Count() < toTake)
+                if (connectedAndHandshaked.Count < toTake)
                     peersToReturn.AddRange(connectedAndHandshaked);
                 // If not take 50% of the amount requested.
                 else

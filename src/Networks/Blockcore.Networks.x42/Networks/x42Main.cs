@@ -224,7 +224,7 @@ namespace Blockcore.Networks.x42.Networks
                 .Register<TransactionDuplicationActivationRule>()
                 .Register<x42PosCoinviewRule>()
                 .Register<PosColdStakingRule>()
-                .Register<SaveCoinviewRule>();
+                .Register<PushUtxosetRule>();
         }
 
         protected void RegisterMempoolRules(IConsensus consensus)

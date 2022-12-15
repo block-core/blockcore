@@ -134,7 +134,6 @@ namespace Blockcore.AsyncWork
         /// </summary>
         public void Dispose()
         {
-
             GC.SuppressFinalize(this);
 
             if (!this.RunningTask.IsCanceled)

@@ -164,7 +164,7 @@ namespace Blockcore.Features.RPC
             fullNodeBuilder.ConfigureServices(service =>
             {
                 service.AddSingleton<RpcSettings>();
-                service.AddSingleton<IRPCClientFactory, RPCClientFactory>();
+                service.AddSingleton<IRPCClientFactory, RpcClientFactory>();
             });
 
             return fullNodeBuilder;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
@@ -196,10 +197,12 @@ namespace Blockcore
             this.nodeRunningLock = new NodeRunningLock(this.DataFolder);
 
             if (!this.nodeRunningLock.TryLockNodeFolder())
-            {
-                this.logger.LogCritical("Node folder is being used by another instance of the application!");
-                throw new Exception("Node folder is being used!");
-            }
+                try {
+                       this.logger.LogCritical("Node folder is being used by another instance of the application!");
+                    }
+              catch {
+                    throw new Exception("Node folder is being used!");
+                    }
 
             this.nodeLifetime = this.Services.ServiceProvider.GetRequiredService<INodeLifetime>() as NodeLifetime;
             this.fullNodeFeatureExecutor = this.Services.ServiceProvider.GetRequiredService<FullNodeFeatureExecutor>();

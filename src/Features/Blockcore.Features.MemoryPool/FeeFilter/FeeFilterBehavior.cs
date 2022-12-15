@@ -130,7 +130,7 @@ namespace Blockcore.Features.MemoryPool.FeeFilter
             catch (OperationCanceledException)
             {
                 this.logger.LogTrace("(-)[CANCELED_EXCEPTION]");
-                return;
+                
             }
         }
 

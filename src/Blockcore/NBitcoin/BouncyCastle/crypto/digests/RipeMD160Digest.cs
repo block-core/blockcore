@@ -329,7 +329,7 @@ namespace NBitcoin.BouncyCastle.Crypto.Digests
             // right
             ee = RL(ee + F4(aa, bb, cc) + this.X[6] + unchecked((int)0x5c4dd124), 9) + dd;
             bb = RL(bb, 10);
-            dd = RL(dd + F4(ee, aa, bb) + this.X[11] + unchecked((int)0x5c4dd124), 13) + cc;
+            dd = RL(dd + F4(ee, aa, bb) + this.X[11] + unchecked(0x5c4dd124), 13) + cc;
             aa = RL(aa, 10);
             cc = RL(cc + F4(dd, ee, aa) + this.X[3] + unchecked((int)0x5c4dd124), 15) + bb;
             ee = RL(ee, 10);

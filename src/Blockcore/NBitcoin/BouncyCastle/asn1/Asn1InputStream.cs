@@ -142,7 +142,6 @@ namespace NBitcoin.BouncyCastle.Asn1
             //
             int tagNo = ReadTagNumber(this.s, tag);
 
-            bool isConstructed = (tag & Asn1Tags.Constructed) != 0;
 
             //
             // calculate length

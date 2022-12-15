@@ -156,7 +156,7 @@ namespace Blockcore.Controllers
                 Difficulty = GetNetworkDifficulty(this.networkDifficulty)?.Difficulty ?? 0,
                 Agent = this.connectionManager.ConnectionSettings.Agent,
                 ExternalAddress = this.selfEndpointTracker.MyExternalAddress.Address.ToString(),
-                ProcessId = Process.GetCurrentProcess().Id,
+                ProcessId = Environment.ProcessId,
                 Network = this.fullNode.Network.Name,
                 ConsensusHeight = this.chainState.ConsensusTip?.Height,
                 DataDirectoryPath = this.nodeSettings.DataDir,

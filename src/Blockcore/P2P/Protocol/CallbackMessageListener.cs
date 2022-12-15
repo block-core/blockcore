@@ -15,7 +15,7 @@ namespace Blockcore.P2P.Protocol
     /// <param name="message">New message to be processed.</param>
     /// <param name="cancellationToken">Cancellation token that the callback method should use for its async operations to avoid blocking the listener during shutdown.</param>
     /// <typeparam name="T">Type of the messages that are being handled.</typeparam>
-    public delegate Task ProcessMessageAsync<T>(T message, CancellationToken cancellationToken);
+    public delegate Task ProcessMessageAsync<in T>(T message, CancellationToken cancellationToken);
 
     /// <summary>
     /// Message listener that processes the incoming message using a user defined callback routine.

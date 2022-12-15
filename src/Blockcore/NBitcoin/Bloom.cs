@@ -8,7 +8,7 @@ namespace NBitcoin
     /// <summary>
     /// Type representation of data used in a bloom filter.
     /// </summary>
-    public class Bloom : IBitcoinSerializable
+    public sealed class Bloom : IBitcoinSerializable
     {
         /// <summary>
         /// Length of the bloom data in bytes. 2048 bits.

@@ -33,7 +33,7 @@ namespace Blockcore.Networks.x42.Networks.Consensus.Rules
             FeeRate OpReturnFeeRate = new FeeRate(((x42Consensus)this.network.Consensus).MinOpReturnFee);
 
             // If there is OP_RETURN data, we will want to make sure the fee is correct.
-            if (opReturns.Count() > 0)
+            if (opReturns.Any())
             {
                 var opReturnSize = opReturns.Sum(r => r.Length);
                 if (transactionFees < OpReturnFeeRate.GetFee(opReturnSize))

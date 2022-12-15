@@ -274,7 +274,7 @@ namespace Blockcore.Features.Dns
         /// <summary>
         /// Disposes of the object.
         /// </summary>
-        public void Dispose()
+        public void DisposePlatform(IDisposable d)
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);

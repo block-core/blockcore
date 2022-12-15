@@ -351,7 +351,7 @@ namespace NBitcoin.OpenAsset
             }
 
             this.Metadata = Encoders.ASCII.DecodeData("u=" + uri.AbsoluteUri);
-            return;
+           
         }
     }
 }

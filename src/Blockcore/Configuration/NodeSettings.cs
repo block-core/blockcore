@@ -138,7 +138,7 @@ namespace Blockcore.Configuration
             // Record arguments.
             this.Network = network;
             this.Agent = agent;
-            this.ConfigReader = new TextFileConfiguration(args ?? new string[] { });
+            this.ConfigReader = new TextFileConfiguration(args ?? Array.Empty<string>());
 
             // Log arguments.
             this.Logger.LogDebug("Arguments: network='{0}', protocolVersion='{1}', agent='{2}', args='{3}'.",

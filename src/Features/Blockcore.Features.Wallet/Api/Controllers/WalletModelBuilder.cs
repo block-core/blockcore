@@ -112,7 +112,7 @@ namespace Blockcore.Features.Wallet.Api.Controllers
                             continue;
                         }
 
-                        if (item.Transaction.IsCoinStake.HasValue && item.Transaction.IsCoinStake.Value == true)
+                        if (item.Transaction.IsCoinStake.HasValue && item.Transaction.IsCoinStake.Value)
                         {
                             // We don't show in history transactions that are outputs of staking transactions.
                             continue;

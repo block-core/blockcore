@@ -23,12 +23,12 @@ namespace Blockcore.Consensus.BlockInfo
 
     public class BlockStake : IBitcoinSerializable
     {
-        private int Mint;
+        private int mint;
 
         public int MintMethod
         {
-            get { return Mint; }
-	        set { Mint = value ; }
+            get { return this.mint; }
+	        set { this.mint = value; }
         }
 
         public OutPoint PrevoutStake;
@@ -73,7 +73,7 @@ namespace Blockcore.Consensus.BlockInfo
         public void ReadWrite(BitcoinStream stream)
         {
             stream.ReadWrite(ref this.flags);
-            stream.ReadWrite(ref this.Mint);
+            stream.ReadWrite(ref this.mint);
             stream.ReadWrite(ref this.StakeModifier);
             stream.ReadWrite(ref this.StakeModifierV2);
 

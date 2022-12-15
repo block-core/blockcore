@@ -53,7 +53,7 @@ namespace Blockcore.Features.Consensus.Tests
                 Mine2BlocksAndCreateABlockWithBadPrevHashAsync);
         }
 
-        [Fact(Skip = "Revisit with ConsensusManager tests")]
+        [Fact]
         public async Task NodeIsSynced_PeerSendsAMutatedBlockAndPeerDisconnected_ThePeerGetsBanned_Async()
         {
             await NodeIsSynced_PeerSendsABadBlockAndPeerDisconnected_ThePeerGetsBanned_Async(

@@ -1872,7 +1872,7 @@ namespace Blockcore.Consensus.TransactionInfo
         public bool HasWitness => this.Inputs.Any(i => !i.WitScriptEmpty);
 
         private static readonly uint MAX_BLOCK_SIZE = 1000000;
-        private static readonly ulong MAX_MONEY = long.MaxValue; // 21000000ul * Money.COIN;
+        private static readonly ulong MAX_MONEY = long.MaxValue; 
 
         /// <summary>
         /// Context free transaction check

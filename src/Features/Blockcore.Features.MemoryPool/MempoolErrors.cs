@@ -119,13 +119,13 @@ namespace Blockcore.Features.MemoryPool
         public static MempoolError Coinbase = new MempoolError(RejectInvalid, "coinbase");
 
         /// <summary>'coinstake' error returns a <see cref="RejectInvalid"/> reject code.</summary>
-        public static MempoolError Coinstake = new MempoolError(RejectInvalid, "coinstake");
+        public static readonly MempoolError Coinstake = new MempoolError(RejectInvalid, "coinstake");
 
         /// <summary>'non-final' error returns a <see cref="RejectNonstandard"/> reject code.</summary>
-        public static MempoolError NonFinal = new MempoolError(RejectNonstandard, "non-final");
+        public static readonly MempoolError NonFinal = new MempoolError(RejectNonstandard, "non-final");
 
         /// <summary>'txn-already-in-mempool' error returns a <see cref="RejectAlreadyKnown"/> reject code.</summary>
-        public static MempoolError InPool = new MempoolError(RejectAlreadyKnown, "txn-already-in-mempool");
+        public static readonly MempoolError InPool = new MempoolError(RejectAlreadyKnown, "txn-already-in-mempool");
 
         /// <summary>'txn-mempool-conflict' error returns a <see cref="RejectConflict"/> reject code.</summary>
         public static MempoolError Conflict = new MempoolError(RejectConflict, "txn-mempool-conflict");

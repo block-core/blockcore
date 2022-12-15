@@ -6,6 +6,7 @@ namespace Blockcore.Consensus
     /// <summary>
     /// An exception that is used when consensus breaking errors are found.
     /// </summary>
+    
     public class ConsensusErrorException : Exception
     {
         /// <summary>

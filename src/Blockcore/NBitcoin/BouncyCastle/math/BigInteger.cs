@@ -680,7 +680,7 @@ namespace NBitcoin.BouncyCastle.Math
             byte mask = (byte)(255U >> xBits);
             byte lead = (byte)(1 << (7 - xBits));
 
-            for (; ; )
+             while ((lead & mask) != 0) 
             {
                 random.NextBytes(b);
 
@@ -738,9 +738,8 @@ namespace NBitcoin.BouncyCastle.Math
 
             if (m != 0)
             {
-                while (tI >= 0 && ++a[tI--] == 0)
-                {
-                }
+                while (tI >= 0 && ++a[tI--] == 0) ;
+                
             }
 
             return a;

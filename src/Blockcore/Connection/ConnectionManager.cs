@@ -86,7 +86,6 @@ namespace Blockcore.Connection
 
         private readonly IAsyncProvider asyncProvider;
 
-
         private IConsensusManager consensusManager;
 
         private readonly IAsyncDelegateDequeuer<INetworkPeer> connectedPeersQueue;
@@ -351,7 +350,7 @@ namespace Blockcore.Connection
                 builder.Append(otherBuilder.ToString());
         }
 
-        private string ToKBSec(ulong bytesPerSec)
+        private static string ToKBSec(ulong bytesPerSec)
         {
             double speed = bytesPerSec / 1024.0;
             return speed.ToString("0.00") + " KB/S";

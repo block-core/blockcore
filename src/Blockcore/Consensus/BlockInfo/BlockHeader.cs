@@ -22,7 +22,7 @@ namespace Blockcore.Consensus.BlockInfo
         /// <summary>Current header version.</summary>
         public virtual int CurrentVersion => 3;
 
-        private static readonly BigInteger pow256 = BigInteger.ValueOf(2).Pow(256);
+        private static readonly BigInteger Pow256 = BigInteger.ValueOf(2).Pow(256);
 
         private uint256 hashPrevBlock;
 
@@ -179,7 +179,7 @@ namespace Blockcore.Consensus.BlockInfo
         public bool CheckProofOfWork()
         {
             BigInteger bitse = this.Bits.ToBigInteger();
-            if ((bitse.CompareTo(BigInteger.Zero) <= 0) || (bitse.CompareTo(pow256) >= 0))
+            if ((bitse.CompareTo(BigInteger.Zero) <= 0) || (bitse.CompareTo(Pow256) >= 0))
                 return false;
 
             return this.GetPoWHash() <= this.Bits.ToUInt256();

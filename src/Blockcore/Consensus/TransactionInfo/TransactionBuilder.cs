@@ -229,8 +229,8 @@ namespace Blockcore.Consensus.TransactionInfo
     {
         internal class TransactionBuilderSigner : ISigner
         {
-            private ICoin coin;
-            private SigHash sigHash;
+            private readonly ICoin coin;
+            private readonly SigHash sigHash;
             private IndexedTxIn txIn;
             private TransactionBuilder builder;
 

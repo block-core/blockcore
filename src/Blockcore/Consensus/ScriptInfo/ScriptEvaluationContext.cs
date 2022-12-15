@@ -2077,9 +2077,8 @@ namespace Blockcore.Consensus.ScriptInfo
                 var newS = new NBitcoin.BouncyCastle.Math.BigInteger(1, vchSig, S, nLenS);
                 var newR = new NBitcoin.BouncyCastle.Math.BigInteger(1, vchSig, R, nLenR);
                 var sig2 = new ECDSASignature(newR, newS);
-                if (sig2.R != scriptSig.Signature.R || sig2.S != scriptSig.Signature.S)
+                if (sig2.R != scriptSig.Signature.R || sig2.S != scriptSig.Signature.S && !pubkey.Verify(sighash, sig2))
                 {
-                    if (!pubkey.Verify(sighash, sig2))
                         return false;
                 }
             }

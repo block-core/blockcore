@@ -189,8 +189,8 @@ namespace Blockcore.Consensus.ScriptInfo
 
             Guard.Assert(!needMoreCheck);
 
-            hotPubKeyHash = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(6, 20));
-            coldPubKeyHash = new KeyId(scriptPubKey.ToBytes(true).SafeSubarray(28, 20));
+            hotPubKeyHash = new KeyId(scriptPubKey.ToBytes().SafeSubarray(6, 20));
+            coldPubKeyHash = new KeyId(scriptPubKey.ToBytes().SafeSubarray(28, 20));
 
             return true;
         }

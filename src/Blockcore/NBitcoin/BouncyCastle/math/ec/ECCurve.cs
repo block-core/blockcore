@@ -9,7 +9,7 @@ using NBitcoin.BouncyCastle.Utilities;
 namespace NBitcoin.BouncyCastle.Math.EC
 {
     /// <remarks>Base class for an elliptic curve.</remarks>
-    internal abstract class ECCurve
+    internal abstract class ECCurve : IEquatable<ECCurve>
     {
         public const int COORD_AFFINE = 0;
         public const int COORD_HOMOGENEOUS = 1;

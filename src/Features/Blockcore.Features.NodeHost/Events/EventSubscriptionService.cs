@@ -40,7 +40,7 @@ namespace Blockcore.Features.NodeHost.Events
             ILoggerFactory logger,
             ISignals signals)
         {
-            this.log = logger.CreateLogger<EventSubscriptionService>(); ;
+            this.log = logger.CreateLogger<EventSubscriptionService>(); 
             this.signals = signals;
         }
 

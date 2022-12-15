@@ -958,7 +958,7 @@ namespace Blockcore.Consensus
                 {
                     this.logger.LogError("Block '{0}' wasn't loaded from store!", currentHeader);
                     this.logger.LogTrace("(-):null");
-                    return null;
+                    return new List<ChainedHeaderBlock> { };
                 }
 
                 chainedHeaderBlocks.Add(chainedHeaderBlock);
@@ -1505,7 +1505,6 @@ namespace Blockcore.Consensus
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
-            
         }
 
         protected virtual void Dispose(bool disposing)

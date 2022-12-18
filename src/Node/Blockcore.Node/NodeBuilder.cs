@@ -71,7 +71,7 @@ namespace Blockcore.Node
             .UseBlockStore()
             .UseMempool()
             //.UseBlockNotification() this feature is broken and anyway its not used
-            .UseTransactionNotification()
+            // .UseTransactionNotification() this feature is broken and anyway its not used
             .UseNodeHost()
             .AddRPC()
             .UseDiagnosticFeature();

@@ -153,7 +153,7 @@ namespace Blockcore.Networks.Bitcoin
                 { 491800, new CheckpointInfo(new uint256("0x000000000000000000d80de1f855902b50941bc3a3d0f71064d9613fd3943dc4"))},
                 { 550000, new CheckpointInfo(new uint256("0x000000000000000000223b7a2298fb1c6c75fb0efc28a4c56853ff4112ec6bc9"))}, // 14-11-2018,
                 { 610000, new CheckpointInfo(new uint256("0x0000000000000000000a6f607f74db48dae0a94022c10354536394c17672b7f7"))}, // 27-12-2019
-                { 765000, new CheckpointInfo(new uint256("00000000000000000006e35496e6056700db72df0815e38863cad399df7b5373"))}    // 28-11-2022
+                { 765000, new CheckpointInfo(new uint256("0x00000000000000000006e35496e6056700db72df0815e38863cad399df7b5373"))}  // 28-11-2022
             };
 
             this.DNSSeeds = new List<DNSSeedData>

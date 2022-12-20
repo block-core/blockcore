@@ -95,7 +95,7 @@ namespace Blockcore.Networks.Bitcoin
                 bip34Hash: new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"),
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 0,
-                defaultAssumeValid: new uint256("00000000000000000003e1d91b245eb32787afb10afe49b61621375361221c38"), // 760000
+                defaultAssumeValid: new uint256("0x00000000000000000003e1d91b245eb32787afb10afe49b61621375361221c38"), // 760000
                 maxMoney: 21000000 * Money.COIN,
                 coinbaseMaturity: 100,
                 premineHeight: 0,

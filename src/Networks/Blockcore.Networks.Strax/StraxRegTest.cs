@@ -14,6 +14,7 @@ using Blockcore.Networks.Strax.Deployments;
 using Blockcore.Networks.Strax.Federation;
 using Blockcore.Networks.Strax.Policies;
 using Blockcore.P2P;
+using Blockcore.Networks.Strax.Staking;
 
 namespace Blockcore.Networks.Strax
 {
@@ -173,6 +174,8 @@ namespace Blockcore.Networks.Strax
             this.SeedNodes = new List<NetworkAddress>();
 
             this.StandardScriptsRegistry = new StraxStandardScriptsRegistry();
+
+            this.FullNodeBuilderServiceOverride = new MiningServiceOverride();
 
             Assert(this.DefaultBanTimeSeconds <= this.Consensus.MaxReorgLength * this.Consensus.TargetSpacing.TotalSeconds / 2);
 

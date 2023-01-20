@@ -258,6 +258,8 @@ namespace Blockcore.Builder
                 featureRegistration.BuildFeature(this.Services);
             }
 
+            this.Network.FullNodeBuilderServiceOverride?.OverrideServices(this);
+
             return this.Services;
         }
 

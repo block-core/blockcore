@@ -46,7 +46,7 @@ namespace Blockcore.Tests.Consensus
 
             int result = checkpoints.GetLastCheckpointHeight();
 
-            Assert.Equal(610000, result);
+            Assert.Equal(765000, result);
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace Blockcore.Tests.Consensus
             consensusSettings.UseCheckpoints = true;
 
             result = checkpoints.GetLastCheckpointHeight();
-            Assert.Equal(610000, result);
+            Assert.Equal(765000, result);
         }
 
         [Fact]

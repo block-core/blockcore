@@ -1,3 +1,12 @@
+##  (2023-02-02)
+
+* Fix big size blocks bug from NBitcoin ([880292e](https://github.com/block-core/blockcore/commit/880292e))
+* Fix not null warning ([f4f7330](https://github.com/block-core/blockcore/commit/f4f7330))
+* Update bitcoin checkpoints and defaultAssumeValid (#436) ([57a93a8](https://github.com/block-core/blockcore/commit/57a93a8)), closes [#436](https://github.com/block-core/blockcore/issues/436)
+* Update version and changelog ([213b2e8](https://github.com/block-core/blockcore/commit/213b2e8))
+
+
+
 ##  (2022-10-24)
 
 * Add back the SBC and RSC launch settings ([5e529f3](https://github.com/block-core/blockcore/commit/5e529f3))

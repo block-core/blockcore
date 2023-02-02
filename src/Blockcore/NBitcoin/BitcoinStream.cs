@@ -96,7 +96,7 @@ namespace NBitcoin
 
             this.isNetworkStream = inner is NetworkStream;
             this.Inner = inner;
-            this.MaxArraySize = 1024 * 1024;
+            this.MaxArraySize = 1024 * 1024 * 4;
         }
 
         public BitcoinStream(Stream inner, bool serializing, ConsensusFactory consensus)

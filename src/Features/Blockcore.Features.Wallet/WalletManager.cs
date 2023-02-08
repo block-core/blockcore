@@ -1696,7 +1696,7 @@ namespace Blockcore.Features.Wallet
 
             if (wallet.Version < 2)
             {
-                foreach (HdAccount hdAccount in wallet.GetAccounts())
+                foreach (HdAccount hdAccount in wallet.GetAccounts(_ => true))
                 {
                     hdAccount.Purpose = 44;
                 }

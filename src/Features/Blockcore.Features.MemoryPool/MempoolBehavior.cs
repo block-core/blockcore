@@ -358,10 +358,10 @@ namespace Blockcore.Features.MemoryPool
 
             foreach (InventoryVector item in getDataPayload.Inventory.Where(inv => inv.Type.HasFlag(InventoryType.MSG_TX)))
             {
-                TxMempoolInfo trxInfo = await this.mempoolManager.InfoAsync(item.Hash).ConfigureAwait(false);
-                
                 if (!peer.IsConnected)
                     continue;
+
+                TxMempoolInfo trxInfo = await this.mempoolManager.InfoAsync(item.Hash).ConfigureAwait(false);
 
                 if (trxInfo == null)
                 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Blockcore.Builder;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Checkpoints;
@@ -275,6 +276,11 @@ namespace Blockcore.Networks
         /// However, a non-standard transaction will typically not be relayed between nodes.
         /// </summary>
         public IStandardScriptsRegistry StandardScriptsRegistry { get; protected set; }
+
+        /// <summary>
+        /// Allow the DI to override services.
+        /// </summary>
+        public IFullNodeBuilderServiceOverride FullNodeBuilderServiceOverride { get; protected set; }
 
         /// <summary>
         /// Mines a new genesis block, to use with a new network.

@@ -1,3 +1,11 @@
+##  (2023-04-16)
+
+* Add an interface to override services from the network class (#438) ([faa5f75](https://github.com/block-core/blockcore/commit/faa5f75)), closes [#438](https://github.com/block-core/blockcore/issues/438)
+* make sure cold staking legacy accounts default to bip44 ([729ec43](https://github.com/block-core/blockcore/commit/729ec43))
+* Update version and changelog ([9c4ff98](https://github.com/block-core/blockcore/commit/9c4ff98))
+
+
+
 ##  (2023-02-02)
 
 * Fix big size blocks bug from NBitcoin ([880292e](https://github.com/block-core/blockcore/commit/880292e))

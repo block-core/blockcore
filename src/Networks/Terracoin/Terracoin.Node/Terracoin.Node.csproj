@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+   <PropertyGroup>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+      <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
+      <AssemblyName>Terracoin.Node</AssemblyName>
+      <OutputType>Exe</OutputType>
+      <Authors>Blockcore</Authors>
+   </PropertyGroup>
+
+   <PropertyGroup>
+      <LangVersion>latest</LangVersion>
+      <ServerGarbageCollection>false</ServerGarbageCollection>
+      <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+   </PropertyGroup>
+
+   <ItemGroup>
+      <PackageReference Include="Blockcore.Features.Base.Persistence.LevelDb" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.BlockStore.Persistence.LevelDb" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.Consensus.Persistence.LevelDb" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.BlockStore" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.ColdStaking" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.Consensus" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.MemoryPool" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.Miner" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.RPC" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.Wallet" Version="1.*" />
+      <PackageReference Include="Blockcore.Features.Diagnostic" Version="1.*" />
+      <PackageReference Include="Blockcore.NBitcoin" Version="1.*" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <ProjectReference Include="..\Terracoin\Terracoin.csproj" />
+   </ItemGroup>
+
+</Project>

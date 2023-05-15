@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Blockcore.NBitcoin;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using NBitcoin;
 
 namespace Blockcore.Features.RPC.ModelBinders
 {

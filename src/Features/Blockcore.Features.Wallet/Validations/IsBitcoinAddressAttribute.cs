@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Validations
 {

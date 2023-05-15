@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Blockcore.NBitcoin;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Configuration
 {

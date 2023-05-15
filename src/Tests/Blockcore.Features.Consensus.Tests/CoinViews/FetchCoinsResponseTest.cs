@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.CoinViews

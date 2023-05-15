@@ -3,8 +3,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Interfaces;
-using NBitcoin;
-
+using Blockcore.NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.RPC

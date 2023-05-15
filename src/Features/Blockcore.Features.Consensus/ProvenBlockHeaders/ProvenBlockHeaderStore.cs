@@ -7,9 +7,9 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 {

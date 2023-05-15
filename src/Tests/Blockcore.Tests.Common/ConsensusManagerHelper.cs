@@ -21,7 +21,6 @@ using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 
 namespace Blockcore.Tests.Common
 {

@@ -9,6 +9,7 @@ using Blockcore.Features.BlockStore;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.P2P.Peer;
@@ -17,7 +18,6 @@ using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.BlockStore

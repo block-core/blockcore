@@ -5,7 +5,6 @@ using Blockcore.Features.Consensus;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using FluentAssertions;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.NodeHost.Tests

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace NBitcoin.Protocol
+namespace Blockcore.NBitcoin.Protocol
 {
     public class CompactVarInt : IBitcoinSerializable
     {

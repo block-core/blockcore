@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using LiteDB;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Database
 {

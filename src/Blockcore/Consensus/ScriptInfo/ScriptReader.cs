@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using ooo = NBitcoin.BouncyCastle.Math;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
 
 namespace Blockcore.Consensus.ScriptInfo
 {
@@ -310,7 +310,7 @@ namespace Blockcore.Consensus.ScriptInfo
 
         public static Op GetPushOp(long value)
         {
-            return GetPushOp(Utils.BigIntegerToBytes(ooo.BigInteger.ValueOf(value)));
+            return GetPushOp(Utils.BigIntegerToBytes(BigInteger.ValueOf(value)));
         }
         public static Op GetPushOp(byte[] data)
         {

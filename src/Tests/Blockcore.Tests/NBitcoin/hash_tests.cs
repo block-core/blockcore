@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
 using Xunit;
 
 namespace NBitcoin.Tests

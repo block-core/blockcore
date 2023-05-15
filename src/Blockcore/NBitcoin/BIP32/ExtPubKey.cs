@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP32
 {
     /// <summary>
     /// A public HD key

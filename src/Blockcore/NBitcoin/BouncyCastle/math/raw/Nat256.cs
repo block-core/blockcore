@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using NBitcoin.BouncyCastle.Crypto.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.crypto.util;
 
-namespace NBitcoin.BouncyCastle.Math.Raw
+namespace Blockcore.NBitcoin.BouncyCastle.math.raw
 {
     internal abstract class Nat256
     {

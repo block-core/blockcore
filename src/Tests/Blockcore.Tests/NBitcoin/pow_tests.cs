@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using Blockcore.Consensus.Chain;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Xunit;
 

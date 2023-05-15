@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Blockcore.Features.PoA.Voting;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.PoA.Tests

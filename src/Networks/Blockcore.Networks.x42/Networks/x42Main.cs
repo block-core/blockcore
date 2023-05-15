@@ -11,6 +11,10 @@ using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks.x42.Networks.Consensus;
 using Blockcore.Networks.x42.Networks.Consensus.Rules;
 using Blockcore.Networks.x42.Networks.Deployments;
@@ -18,10 +22,6 @@ using Blockcore.Networks.x42.Networks.Policies;
 using Blockcore.Networks.x42.Networks.Rules;
 using Blockcore.Networks.x42.Networks.Setup;
 using Blockcore.P2P;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.x42.Networks
 {

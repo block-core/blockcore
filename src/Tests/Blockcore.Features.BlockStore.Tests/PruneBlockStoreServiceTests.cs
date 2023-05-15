@@ -8,7 +8,6 @@ using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.BlockStore.Tests

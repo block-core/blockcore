@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NBitcoin;
 using Newtonsoft.Json;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.Wallet;

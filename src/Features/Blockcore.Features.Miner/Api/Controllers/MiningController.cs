@@ -14,7 +14,6 @@ using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests.Controllers")]
 namespace Blockcore.Features.Miner.Api.Controllers

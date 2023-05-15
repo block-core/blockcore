@@ -1,9 +1,9 @@
 ﻿using System;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin.Crypto;
+using Blockcore.NBitcoin.Crypto;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     [Flags]
     public enum BloomFlags : byte

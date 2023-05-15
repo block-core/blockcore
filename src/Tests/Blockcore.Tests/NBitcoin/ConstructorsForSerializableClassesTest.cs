@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.Protocol;
 using Xunit;
 
 namespace NBitcoin.Tests
@@ -23,7 +26,7 @@ namespace NBitcoin.Tests
                 typeof(PosBlock),
                 typeof(PosBlockHeader),
                 typeof(PosTransaction),
-                typeof(Protocol.CompactVarInt),
+                typeof(CompactVarInt),
             };
 
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()

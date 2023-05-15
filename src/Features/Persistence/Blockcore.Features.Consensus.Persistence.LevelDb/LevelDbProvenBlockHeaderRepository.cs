@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LevelDB;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Persistence.LevelDb
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin.OpenAsset
+namespace Blockcore.NBitcoin.OpenAsset
 {
     /// <summary>
     /// A unique Id for an asset

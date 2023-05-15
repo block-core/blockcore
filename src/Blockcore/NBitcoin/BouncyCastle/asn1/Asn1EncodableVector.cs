@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Asn1
+namespace Blockcore.NBitcoin.BouncyCastle.asn1
 {
     internal class Asn1EncodableVector
         : IEnumerable

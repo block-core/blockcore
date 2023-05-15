@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Blockcore.Configuration;
-using NBitcoin;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP39;
 
 namespace Blockcore.Features.PoA
 {

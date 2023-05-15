@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities.Extensions;
-using NBitcoin;
 using Newtonsoft.Json;
 
 namespace Blockcore.Controllers.Models

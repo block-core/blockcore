@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Consensus.Chain
 {

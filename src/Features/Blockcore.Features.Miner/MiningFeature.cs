@@ -20,10 +20,10 @@ using Blockcore.Features.Wallet;
 using Blockcore.Interfaces;
 using Blockcore.Interfaces.UI;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Miner.Tests")]
 

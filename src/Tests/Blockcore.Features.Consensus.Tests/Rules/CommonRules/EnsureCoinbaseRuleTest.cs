@@ -3,7 +3,7 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules

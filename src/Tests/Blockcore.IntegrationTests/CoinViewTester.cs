@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.IntegrationTests
 {

@@ -4,8 +4,8 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
+using Blockcore.NBitcoin;
 using Blockcore.Networks.Stratis.Rules;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules

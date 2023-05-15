@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.AsyncWork;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Consensus
 {

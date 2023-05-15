@@ -1,7 +1,7 @@
 ﻿using System;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Utilities
 {

@@ -5,6 +5,7 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Validators;
+using Blockcore.NBitcoin;
 using Moq;
 using NBitcoin;
 using Xunit;

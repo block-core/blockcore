@@ -3,7 +3,6 @@ using Blockcore.Configuration.Settings;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.P2P.Protocol.Payloads;
-using NBitcoin;
 
 namespace Blockcore.Consensus
 {

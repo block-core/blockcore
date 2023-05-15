@@ -21,10 +21,11 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NBitcoin.BouncyCastle.Crypto.Parameters;
-using NBitcoin.Crypto.Internal;
+using Blockcore.NBitcoin.BouncyCastle.crypto.digests;
+using Blockcore.NBitcoin.BouncyCastle.crypto.macs;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto.Cryptsharp
 {
     // See http://www.tarsnap.com/scrypt/scrypt.pdf for algorithm details.
     // TODO: Test on a big-endian machine and make sure it works.
@@ -141,7 +142,7 @@ namespace NBitcoin.Crypto
                                        int cost, int blockSize, int parallel, int? maxThreads)
         {
             byte[] B = GetEffectivePbkdf2Salt(key, salt, cost, blockSize, parallel, maxThreads);
-            var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new NBitcoin.BouncyCastle.Crypto.Digests.Sha256Digest());
+            var mac = new HMac(new Sha256Digest());
             mac.Init(new KeyParameter(key));
             var kdf = new Pbkdf2(mac, B, 1);
             Security.Clear(B);
@@ -166,7 +167,7 @@ namespace NBitcoin.Crypto
             Check.Range("maxThreads", (int)maxThreads, 1, int.MaxValue);
 
 
-            var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new NBitcoin.BouncyCastle.Crypto.Digests.Sha256Digest());
+            var mac = new HMac(new Sha256Digest());
             mac.Init(new KeyParameter(P));
             byte[] B = Pbkdf2.ComputeDerivedKey(mac, S, 1, parallel * MFLen);
 

@@ -11,14 +11,14 @@ using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks.BCP.Networks.Deployments;
 using Blockcore.Networks.BCP.Networks.Policies;
 using Blockcore.Networks.BCP.Networks.Rules;
 using Blockcore.Networks.BCP.Networks.Setup;
 using Blockcore.P2P;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 
 namespace Blockcore.Networks.BCP.Networks
 {

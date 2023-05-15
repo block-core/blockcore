@@ -1,8 +1,8 @@
 ﻿using Blockcore.Consensus.BlockInfo;
 using Blockcore.Controllers.Converters;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Utilities;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Controllers.Models

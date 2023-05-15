@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class PartialMerkleTree : IBitcoinSerializable
     {

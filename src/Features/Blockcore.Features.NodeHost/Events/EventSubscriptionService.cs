@@ -7,12 +7,12 @@ using System.Reflection;
 using Blockcore.Broadcasters;
 using Blockcore.EventBus;
 using Blockcore.Features.NodeHost.Hubs;
+using Blockcore.NBitcoin;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.NodeHost.Events
 {

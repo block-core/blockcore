@@ -5,7 +5,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Staking;
 using Blockcore.Mining;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Miner.Interfaces
 {

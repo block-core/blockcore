@@ -10,13 +10,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public static class Extensions
     {

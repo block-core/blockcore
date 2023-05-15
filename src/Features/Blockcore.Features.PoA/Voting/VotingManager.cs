@@ -7,10 +7,10 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.EventBus;
 using Blockcore.EventBus.CoreEvents;
+using Blockcore.NBitcoin;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.Voting
 {

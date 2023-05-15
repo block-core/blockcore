@@ -20,12 +20,11 @@ using Blockcore.Features.Wallet.Types;
 using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces;
 using Blockcore.Interfaces.UI;
+using Blockcore.NBitcoin.Policy;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
-using NBitcoin.Policy;
 
 namespace Blockcore.Features.Wallet
 {

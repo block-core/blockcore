@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Xunit;

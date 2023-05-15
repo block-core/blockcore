@@ -2,8 +2,8 @@
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
-using NBitcoin;
 
 namespace Blockcore.Features.ColdStaking
 {

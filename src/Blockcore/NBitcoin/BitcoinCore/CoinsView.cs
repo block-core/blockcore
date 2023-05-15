@@ -3,9 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin.Repository;
 using Blockcore.Networks;
 
-namespace NBitcoin.BitcoinCore
+namespace Blockcore.NBitcoin.BitcoinCore
 {
     public class CoinsView
     {

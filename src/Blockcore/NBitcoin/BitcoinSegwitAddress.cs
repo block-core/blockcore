@@ -1,9 +1,9 @@
 ﻿using System;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class BitcoinWitPubKeyAddress : BitcoinAddress, IBech32Data
     {

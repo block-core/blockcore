@@ -1,4 +1,4 @@
-﻿namespace NBitcoin.Protocol
+﻿namespace Blockcore.NBitcoin.Protocol
 {
     /// <summary>
     /// Network protocol versioning.

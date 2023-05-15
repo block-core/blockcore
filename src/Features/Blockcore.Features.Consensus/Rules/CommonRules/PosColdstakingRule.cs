@@ -5,8 +5,8 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.NBitcoin;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {

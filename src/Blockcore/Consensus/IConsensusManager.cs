@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.NBitcoin;
 using Blockcore.P2P.Peer;
-using NBitcoin;
 
 namespace Blockcore.Consensus
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Newtonsoft.Json;
 
 namespace Blockcore.Features.RPC.Models

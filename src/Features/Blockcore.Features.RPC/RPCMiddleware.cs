@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Blockcore.Configuration;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.RPC.Exceptions;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

@@ -1,8 +1,8 @@
 ﻿using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json.Linq;
 
 namespace Blockcore.Features.RPC

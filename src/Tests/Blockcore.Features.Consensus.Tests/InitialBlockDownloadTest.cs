@@ -6,12 +6,12 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests

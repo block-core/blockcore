@@ -4,10 +4,10 @@ using Blockcore.Controllers;
 using Blockcore.Features.Miner.Api.Models;
 using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Wallet.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Miner.Api.Controllers
 {

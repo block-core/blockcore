@@ -13,10 +13,10 @@ using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Tests.Wallet.Common;
 using Moq;
-using NBitcoin;
 using Newtonsoft.Json;
 
 using Xunit;

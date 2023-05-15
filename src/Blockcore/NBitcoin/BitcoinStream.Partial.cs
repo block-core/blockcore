@@ -1,11 +1,9 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NBitcoin.Protocol;
+using Blockcore.NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public partial class BitcoinStream
     {
@@ -77,7 +75,7 @@ namespace NBitcoin
             if (this.Serializing)
             {
                 var len = data == null ? 0 : (ulong)data.Length;
-                if (len > (uint)MaxArraySize)
+                if (len > (uint)this.MaxArraySize)
                     throw new ArgumentOutOfRangeException("Array size too big");
                 VarInt.StaticWrite(this, len);
                 if (len == 0)

@@ -15,7 +15,6 @@ using Blockcore.P2P;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities.Extensions;
 using FluentAssertions;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.Connectivity

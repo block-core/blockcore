@@ -9,11 +9,12 @@ using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.TestNetworks;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.TestFramework;
 using FluentAssertions;
-using NBitcoin;
 using Xunit.Abstractions;
 
 namespace Blockcore.IntegrationTests.Wallet

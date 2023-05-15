@@ -1,6 +1,6 @@
 ﻿using Blockcore.Networks;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public interface IBitcoinString
     {

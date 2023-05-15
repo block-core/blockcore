@@ -8,15 +8,16 @@ using Blockcore.Features.RPC;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Stratis;
 using FluentAssertions;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using uint256 = Blockcore.NBitcoin.uint256;
 
 namespace Blockcore.IntegrationTests.RPC
 {

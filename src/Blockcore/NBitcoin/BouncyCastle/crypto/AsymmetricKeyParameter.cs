@@ -1,4 +1,4 @@
-namespace NBitcoin.BouncyCastle.Crypto
+namespace Blockcore.NBitcoin.BouncyCastle.crypto
 {
     internal abstract class AsymmetricKeyParameter
         : ICipherParameters

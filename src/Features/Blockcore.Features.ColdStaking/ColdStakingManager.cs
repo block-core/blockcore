@@ -17,12 +17,12 @@ using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BuilderExtensions;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.BuilderExtensions;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.ColdStaking.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.IntegrationTests")]

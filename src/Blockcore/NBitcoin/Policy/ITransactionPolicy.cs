@@ -3,7 +3,7 @@ using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 
-namespace NBitcoin.Policy
+namespace Blockcore.NBitcoin.Policy
 {
     public class TransactionPolicyError
     {

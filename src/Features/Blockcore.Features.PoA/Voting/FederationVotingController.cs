@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
@@ -7,7 +8,6 @@ using Blockcore.Utilities.ModelStateErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.Voting
 {

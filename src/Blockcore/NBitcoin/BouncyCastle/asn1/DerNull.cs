@@ -1,6 +1,6 @@
 using System;
 
-namespace NBitcoin.BouncyCastle.Asn1
+namespace Blockcore.NBitcoin.BouncyCastle.asn1
 {
     /**
      * A Null object.

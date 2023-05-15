@@ -13,11 +13,11 @@ using Blockcore.Features.BlockStore;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet
 {

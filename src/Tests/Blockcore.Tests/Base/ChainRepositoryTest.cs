@@ -5,6 +5,7 @@ using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.Base.Persistence.LevelDb;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using LevelDB;

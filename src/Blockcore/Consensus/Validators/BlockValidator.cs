@@ -6,7 +6,6 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Consensus.Validators
 {

@@ -8,7 +8,6 @@ using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 
 namespace Blockcore.Features.Diagnostic
 {

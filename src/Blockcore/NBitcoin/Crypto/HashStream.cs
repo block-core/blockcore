@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using Blockcore.NBitcoin.BouncyCastle.crypto.digests;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto
 {
     public class HashStream : Stream
     {
@@ -103,7 +104,7 @@ namespace NBitcoin.Crypto
                 ProcessBlock();
         }
 
-        private BouncyCastle.Crypto.Digests.Sha256Digest sha = new BouncyCastle.Crypto.Digests.Sha256Digest();
+        private Sha256Digest sha = new Sha256Digest();
         private void ProcessBlock()
         {
             this.sha.BlockUpdate(this._Buffer, 0, this._Pos);

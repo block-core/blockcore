@@ -1,10 +1,10 @@
 ﻿using System;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public abstract class TxDestination : IDestination
     {

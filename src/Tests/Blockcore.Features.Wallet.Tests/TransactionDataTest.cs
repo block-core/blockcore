@@ -1,6 +1,6 @@
 ﻿using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests

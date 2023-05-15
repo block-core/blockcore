@@ -9,11 +9,11 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Repository;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using DBreeze.Utils;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 using RocksDbSharp;
 using DB = RocksDbSharp.RocksDb;
 

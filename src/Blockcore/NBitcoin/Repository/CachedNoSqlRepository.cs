@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blockcore.Utilities;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.Repository
 {
     public class CachedNoSqlRepository : NoSqlRepository
     {

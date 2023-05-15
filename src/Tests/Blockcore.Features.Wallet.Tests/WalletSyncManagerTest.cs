@@ -13,6 +13,7 @@ using Blockcore.Features.BlockStore;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
@@ -21,7 +22,6 @@ using Blockcore.Tests.Wallet.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests

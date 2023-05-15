@@ -1,7 +1,7 @@
 ﻿using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP32
 {
     public abstract class BitcoinExtKeyBase : Base58Data, IDestination
     {

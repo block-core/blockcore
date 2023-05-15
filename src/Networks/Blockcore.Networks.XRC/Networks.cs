@@ -1,6 +1,4 @@
-﻿using NBitcoin;
-
-namespace Blockcore.Networks.XRC
+﻿namespace Blockcore.Networks.XRC
 {
     public static class Networks
     {

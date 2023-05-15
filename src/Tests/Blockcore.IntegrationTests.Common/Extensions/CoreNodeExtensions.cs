@@ -4,7 +4,7 @@ using Blockcore.Consensus;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.IntegrationTests.Common.Extensions
 {

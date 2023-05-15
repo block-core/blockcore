@@ -14,6 +14,8 @@ using Blockcore.Features.RPC.Controllers;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.RPC.Models;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;
@@ -22,10 +24,6 @@ using Blockcore.Tests.Wallet.Common;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
-
 using Xunit;
 
 namespace Blockcore.Features.RPC.Tests.Controller

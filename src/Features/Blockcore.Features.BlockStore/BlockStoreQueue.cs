@@ -12,10 +12,10 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Repository;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore
 {

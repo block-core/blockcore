@@ -13,11 +13,11 @@ using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
 using Blockcore.Features.PoA.Policies;
 using Blockcore.Features.PoA.Voting.ConsensusRules;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Features.PoA
 {

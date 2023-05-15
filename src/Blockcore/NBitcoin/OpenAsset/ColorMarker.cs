@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.DataEncoders;
 
-namespace NBitcoin.OpenAsset
+namespace Blockcore.NBitcoin.OpenAsset
 {
     public class ColorMarker : IBitcoinSerializable
     {

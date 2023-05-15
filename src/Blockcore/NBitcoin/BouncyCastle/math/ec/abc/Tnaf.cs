@@ -1,6 +1,6 @@
 using System;
 
-namespace NBitcoin.BouncyCastle.Math.EC.Abc
+namespace Blockcore.NBitcoin.BouncyCastle.math.ec.abc
 {
     /**
     * Class holding methods for point multiplication based on the window

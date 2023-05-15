@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus
 {

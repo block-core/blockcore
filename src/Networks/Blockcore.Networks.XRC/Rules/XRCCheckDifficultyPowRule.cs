@@ -4,10 +4,10 @@ using System.Linq;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
 using Blockcore.Networks.XRC.Consensus;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
 
 namespace Blockcore.Networks.XRC.Rules
 {

@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace NBitcoin.BouncyCastle.Utilities.IO
+namespace Blockcore.NBitcoin.BouncyCastle.util.io
 {
     internal class FilterStream : Stream
     {

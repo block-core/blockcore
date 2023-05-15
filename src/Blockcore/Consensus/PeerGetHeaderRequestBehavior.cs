@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Connection;
+using Blockcore.NBitcoin;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Consensus
 {

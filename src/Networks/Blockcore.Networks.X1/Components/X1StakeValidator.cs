@@ -10,12 +10,12 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks.X1.Consensus;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Networks.X1.Components
 {

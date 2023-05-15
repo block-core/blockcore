@@ -1,6 +1,6 @@
 ﻿using System;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
-using NBitcoin;
 
 namespace Blockcore.Features.Miner
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities.JsonConverters;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA
 {

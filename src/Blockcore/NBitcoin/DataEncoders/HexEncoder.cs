@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace NBitcoin.DataEncoders
+namespace Blockcore.NBitcoin.DataEncoders
 {
     public class HexEncoder : DataEncoder
     {

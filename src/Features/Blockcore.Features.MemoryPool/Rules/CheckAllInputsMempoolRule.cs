@@ -8,7 +8,6 @@ using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool.Rules
 {

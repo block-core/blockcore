@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Newtonsoft.Json.Linq;
 
 namespace Blockcore.Features.RPC

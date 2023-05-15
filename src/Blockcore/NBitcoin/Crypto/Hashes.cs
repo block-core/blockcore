@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using NBitcoin.BouncyCastle.Crypto.Digests;
 using System.Security.Cryptography;
-using NBitcoin.BouncyCastle.Crypto.Parameters;
+using Blockcore.NBitcoin.BouncyCastle.crypto.digests;
+using Blockcore.NBitcoin.BouncyCastle.crypto.macs;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto
 {
     public static class Hashes
     {
@@ -385,7 +386,7 @@ namespace NBitcoin.Crypto
         {
             if (UseBCForHMACSHA512)
             {
-                var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new Sha512Digest());
+                var mac = new HMac(new Sha512Digest());
                 mac.Init(new KeyParameter(key));
                 mac.BlockUpdate(data, 0, data.Length);
                 byte[] result = new byte[mac.GetMacSize()];

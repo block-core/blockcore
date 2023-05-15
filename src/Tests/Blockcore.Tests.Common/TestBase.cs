@@ -9,10 +9,10 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using FluentAssertions;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Tests.Common

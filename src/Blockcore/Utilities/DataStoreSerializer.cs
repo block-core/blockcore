@@ -4,8 +4,8 @@ using System.Linq;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
 using DBreeze.Utils;
-using NBitcoin;
 
 namespace Blockcore.Utilities
 {

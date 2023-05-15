@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Utilities;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.Repository
 {
     public class CachedTransactionRepository : ITransactionRepository
     {

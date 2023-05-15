@@ -16,12 +16,12 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using LiteDB;
 using FileMode = LiteDB.FileMode;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 using Script = Blockcore.Consensus.ScriptInfo.Script;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing

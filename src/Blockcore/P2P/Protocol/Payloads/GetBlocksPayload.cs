@@ -1,5 +1,4 @@
-﻿using NBitcoin;
-using NBitcoin.Protocol;
+﻿using Blockcore.NBitcoin;
 
 namespace Blockcore.P2P.Protocol.Payloads
 {

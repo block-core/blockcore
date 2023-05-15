@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities.JsonConverters;
-using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

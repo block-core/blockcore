@@ -11,6 +11,8 @@ using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.ReadyData;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Utilities.JsonErrors;
@@ -18,8 +20,6 @@ using DBreeze.Utils;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 using Xunit;
 

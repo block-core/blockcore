@@ -26,6 +26,7 @@ using Blockcore.Features.MemoryPool.Fee;
 using Blockcore.Features.Miner;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
@@ -35,8 +36,6 @@ using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
-
 using Xunit;
 using Xunit.Sdk;
 

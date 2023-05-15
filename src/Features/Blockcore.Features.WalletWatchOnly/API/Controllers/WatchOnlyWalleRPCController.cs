@@ -16,10 +16,10 @@ using Blockcore.Features.Wallet.Types;
 using Blockcore.Features.WalletWatchOnly.Api.Models;
 using Blockcore.Features.WalletWatchOnly.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using NBitcoin;
 
 namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 {

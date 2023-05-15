@@ -1,11 +1,11 @@
 ﻿using System;
-using NBitcoin.BouncyCastle.Crypto.Macs;
-using NBitcoin.BouncyCastle.Crypto.Parameters;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.BouncyCastle.Security;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.crypto.macs;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.security;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Crypto.Signers
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.signers
 {
     /**
      * A deterministic K calculator based on the algorithm in section 3.2 of RFC 6979.

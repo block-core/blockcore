@@ -2,7 +2,7 @@
 using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Consensus.CoinViews
 {

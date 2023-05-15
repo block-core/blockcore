@@ -1,4 +1,4 @@
-namespace NBitcoin.BouncyCastle.Crypto
+namespace Blockcore.NBitcoin.BouncyCastle.crypto
 {
     /**
      * interface that a message digest conforms to.

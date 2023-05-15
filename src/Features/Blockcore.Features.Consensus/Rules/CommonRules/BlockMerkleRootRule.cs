@@ -4,9 +4,9 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {

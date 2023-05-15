@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Reflection;
+using Blockcore.NBitcoin.OpenAsset;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.OpenAsset;
 using Newtonsoft.Json;
 
 namespace Blockcore.Utilities.JsonConverters

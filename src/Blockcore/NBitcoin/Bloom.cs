@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.NBitcoin.DataEncoders;
 using HashLib;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     /// <summary>
     /// Type representation of data used in a bloom filter.

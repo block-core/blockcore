@@ -4,13 +4,12 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
-using NBitcoin;
-using NBitcoin.Protocol;
 
 namespace Blockcore.P2P.Peer
 {

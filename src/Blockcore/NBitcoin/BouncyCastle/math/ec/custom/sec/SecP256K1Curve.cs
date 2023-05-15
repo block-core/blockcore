@@ -1,6 +1,6 @@
-﻿using NBitcoin.BouncyCastle.Utilities.Encoders;
+﻿using Blockcore.NBitcoin.BouncyCastle.util.encoders;
 
-namespace NBitcoin.BouncyCastle.Math.EC.Custom.Sec
+namespace Blockcore.NBitcoin.BouncyCastle.math.ec.custom.sec
 {
     internal class SecP256K1Curve
         : AbstractFpCurve

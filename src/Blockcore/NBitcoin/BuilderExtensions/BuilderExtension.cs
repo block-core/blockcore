@@ -1,9 +1,9 @@
 ﻿using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin.BuilderExtensions
+namespace Blockcore.NBitcoin.BuilderExtensions
 {
     public interface ISigner
     {

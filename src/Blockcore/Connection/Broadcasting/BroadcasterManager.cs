@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using ConcurrentCollections;
-using NBitcoin;
 
 namespace Blockcore.Connection.Broadcasting
 {

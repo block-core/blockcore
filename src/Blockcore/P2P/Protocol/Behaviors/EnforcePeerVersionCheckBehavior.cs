@@ -5,7 +5,6 @@ using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.P2P.Protocol.Behaviors
 {

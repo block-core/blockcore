@@ -16,11 +16,11 @@ using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.IntegrationTests.Wallet;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.Mempool

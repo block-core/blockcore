@@ -1,6 +1,6 @@
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.NBitcoin;
 using Blockcore.Networks.x42.Networks.Consensus;
-using NBitcoin;
 
 namespace Blockcore.Networks.x42.Networks.Rules
 {

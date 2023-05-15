@@ -4,7 +4,7 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Consensus
 {

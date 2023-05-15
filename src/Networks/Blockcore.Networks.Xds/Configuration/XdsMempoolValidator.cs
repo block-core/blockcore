@@ -8,9 +8,9 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Networks.Xds.Configuration
 {

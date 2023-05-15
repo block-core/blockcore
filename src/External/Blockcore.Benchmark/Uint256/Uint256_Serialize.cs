@@ -2,7 +2,7 @@
 using System.IO;
 using BenchmarkDotNet.Attributes;
 using Blockcore.Benchmark.Uint256;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using uint256 = Blockcore.Benchmark.Uint256.New.uint256;
 
 namespace Blockcore.Benchmark.Uint256

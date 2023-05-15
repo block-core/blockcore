@@ -1,5 +1,5 @@
 ﻿using Blockcore.Consensus.Chain;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Newtonsoft.Json;
 
 namespace Blockcore.EventBus.CoreEvents

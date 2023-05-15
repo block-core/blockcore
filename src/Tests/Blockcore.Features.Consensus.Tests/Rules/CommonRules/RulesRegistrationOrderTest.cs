@@ -9,7 +9,6 @@ using Blockcore.Networks.Bitcoin.Rules;
 using Blockcore.Networks.Stratis;
 using Blockcore.Networks.Stratis.Rules;
 using FluentAssertions;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules

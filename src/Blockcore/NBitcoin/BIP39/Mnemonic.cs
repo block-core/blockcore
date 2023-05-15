@@ -2,10 +2,14 @@
 using System.Collections;
 using System.Linq;
 using System.Text;
-using NBitcoin.BouncyCastle.Crypto.Parameters;
-using NBitcoin.Crypto;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.BouncyCastle.crypto.digests;
+using Blockcore.NBitcoin.BouncyCastle.crypto.macs;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.Crypto.Cryptsharp;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP39
 {
     /// <summary>
     /// A .NET implementation of the Bitcoin Improvement Proposal - 39 (BIP39)
@@ -146,7 +150,7 @@ namespace NBitcoin
             byte[] salt = Concat(Encoding.UTF8.GetBytes("mnemonic"), Normalize(passphrase));
             byte[] bytes = Normalize(this._Mnemonic);
 
-            var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new NBitcoin.BouncyCastle.Crypto.Digests.Sha512Digest());
+            var mac = new HMac(new Sha512Digest());
             mac.Init(new KeyParameter(bytes));
             return Pbkdf2.ComputeDerivedKey(mac, salt, 2048, 64);
         }

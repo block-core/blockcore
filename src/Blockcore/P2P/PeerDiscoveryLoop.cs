@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Blockcore.AsyncWork;
 using Blockcore.Configuration;
 using Blockcore.Connection;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.P2P
 {

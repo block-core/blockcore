@@ -24,13 +24,12 @@ using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BuilderExtensions;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.BuilderExtensions;
-using NBitcoin.Crypto;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Features.Miner.Staking
 {

@@ -1,8 +1,8 @@
 using System;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Asn1
+namespace Blockcore.NBitcoin.BouncyCastle.asn1
 {
     internal class DerInteger
         : Asn1Object

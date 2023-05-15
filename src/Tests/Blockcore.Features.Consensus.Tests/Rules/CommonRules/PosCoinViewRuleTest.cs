@@ -20,12 +20,11 @@ using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Moq;
-using NBitcoin;
-using NBitcoin.Crypto;
-
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.CommonRules

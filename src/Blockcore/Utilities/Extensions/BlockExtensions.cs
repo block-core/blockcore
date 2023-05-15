@@ -2,7 +2,7 @@
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Utilities.Extensions
 {

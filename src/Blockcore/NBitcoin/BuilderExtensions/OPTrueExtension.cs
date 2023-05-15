@@ -2,7 +2,7 @@
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
 
-namespace NBitcoin.BuilderExtensions
+namespace Blockcore.NBitcoin.BuilderExtensions
 {
     public class OPTrueExtension : BuilderExtension
     {

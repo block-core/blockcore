@@ -5,9 +5,9 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool
 {

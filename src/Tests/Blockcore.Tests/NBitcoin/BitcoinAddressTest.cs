@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Xunit;
 

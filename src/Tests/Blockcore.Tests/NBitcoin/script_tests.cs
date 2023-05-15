@@ -7,11 +7,12 @@ using System.Runtime.InteropServices;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

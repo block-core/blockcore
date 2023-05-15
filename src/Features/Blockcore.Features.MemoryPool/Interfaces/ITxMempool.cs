@@ -2,7 +2,7 @@
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.MemoryPool.Fee;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.MemoryPool.Interfaces
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace NBitcoin.BouncyCastle.Utilities
+namespace Blockcore.NBitcoin.BouncyCastle.util
 {
     internal interface IMemoable
     {

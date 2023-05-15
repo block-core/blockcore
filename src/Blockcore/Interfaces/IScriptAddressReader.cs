@@ -1,7 +1,6 @@
 ﻿using Blockcore.Consensus;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Networks;
-using NBitcoin;
 
 namespace Blockcore.Interfaces
 {

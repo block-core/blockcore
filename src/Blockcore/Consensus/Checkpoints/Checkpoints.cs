@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration.Settings;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Consensus.Checkpoints
 {

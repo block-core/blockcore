@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Blockcore.NBitcoin.BIP39;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     internal class BitReader
     {

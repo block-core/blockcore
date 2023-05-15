@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Tests
 {

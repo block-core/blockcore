@@ -16,14 +16,15 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Interfaces;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP39;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Features.Consensus.Tests.Rules
 {

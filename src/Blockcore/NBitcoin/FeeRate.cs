@@ -1,7 +1,7 @@
 ﻿using System;
 using Blockcore.Consensus.TransactionInfo;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class FeeRate : IEquatable<FeeRate>, IComparable<FeeRate>
     {
@@ -108,7 +108,7 @@ namespace NBitcoin
             if (m != null)
                 return this._FeePerK.CompareTo(m._FeePerK);
 #if !NETCORE
-            return _FeePerK.CompareTo(obj);
+            return this._FeePerK.CompareTo(obj);
 #else
             return this._FeePerK.CompareTo((long)obj);
 #endif

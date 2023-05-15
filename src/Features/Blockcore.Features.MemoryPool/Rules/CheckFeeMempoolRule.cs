@@ -1,8 +1,8 @@
 ﻿using Blockcore.Consensus.Chain;
 using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool.Rules
 {

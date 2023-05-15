@@ -5,7 +5,7 @@ using Blockcore.Networks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace NBitcoin.Formatters
+namespace Blockcore.NBitcoin.Formatters
 {
     internal abstract class RawFormatter
     {

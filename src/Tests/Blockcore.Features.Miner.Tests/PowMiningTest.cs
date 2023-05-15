@@ -15,12 +15,12 @@ using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Miner.Tests

@@ -1,7 +1,7 @@
 ﻿using System;
 using Blockcore.Consensus.Chain;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class SequenceLock
     {

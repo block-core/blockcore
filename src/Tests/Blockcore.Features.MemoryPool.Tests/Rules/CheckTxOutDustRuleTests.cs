@@ -5,11 +5,11 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.MemoryPool.Tests.Rules

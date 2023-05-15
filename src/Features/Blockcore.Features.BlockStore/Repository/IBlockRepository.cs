@@ -2,8 +2,8 @@
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore.Repository
 {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.NBitcoin.BouncyCastle.asn1.x9;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.math.ec;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks;
-using NBitcoin.BouncyCastle.Asn1.X9;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.BouncyCastle.Math.EC;
-using NBitcoin.Crypto;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP38
 {
     public class BitcoinConfirmationCode : Base58Data
     {

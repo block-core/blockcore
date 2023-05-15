@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
-using NBitcoin;
 
 namespace Blockcore.IntegrationTests.Common.TestNetworks
 {

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.PoA.Tests

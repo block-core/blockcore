@@ -5,7 +5,7 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 
-namespace NBitcoin.BuilderExtensions
+namespace Blockcore.NBitcoin.BuilderExtensions
 {
     public class P2MultiSigBuilderExtension : BuilderExtension
     {

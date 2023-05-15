@@ -1,8 +1,8 @@
 using System;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.BouncyCastle.Security;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.security;
 
-namespace NBitcoin.BouncyCastle.Utilities
+namespace Blockcore.NBitcoin.BouncyCastle.util
 {
     /**
      * BigInteger utilities.

@@ -6,6 +6,8 @@ using System.Net.Http;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Xunit;
@@ -153,7 +155,7 @@ namespace NBitcoin.Tests
             foreach (string history in histories)
             {
                 int height = int.Parse(history.Split(',')[0]);
-                var expectedTarget = new Target(new BouncyCastle.Math.BigInteger(history.Split(',')[1], 10));
+                var expectedTarget = new Target(new BigInteger(history.Split(',')[1], 10));
 
                 BlockHeader block = main.GetHeader(height).Header;
 

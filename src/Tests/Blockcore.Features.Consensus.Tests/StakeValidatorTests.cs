@@ -7,15 +7,15 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.Policy;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using Moq;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.Policy;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests

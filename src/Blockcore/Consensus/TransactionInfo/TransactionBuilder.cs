@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BuilderExtensions;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.OpenAsset;
+using Blockcore.NBitcoin.Policy;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.BuilderExtensions;
-using NBitcoin.Crypto;
-using NBitcoin.OpenAsset;
-using NBitcoin.Policy;
 
 namespace Blockcore.Consensus.TransactionInfo
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Consensus.BlockInfo
 {

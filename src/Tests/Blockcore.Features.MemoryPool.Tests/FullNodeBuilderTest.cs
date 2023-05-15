@@ -11,8 +11,6 @@ using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
-
 using Xunit;
 
 namespace Blockcore.Features.MemoryPool.Tests

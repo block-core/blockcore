@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP32
 {
 
     /// <summary>

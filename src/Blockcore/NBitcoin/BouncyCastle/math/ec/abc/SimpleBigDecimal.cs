@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace NBitcoin.BouncyCastle.Math.EC.Abc
+namespace Blockcore.NBitcoin.BouncyCastle.math.ec.abc
 {
     /**
     * Class representing a simple version of a big decimal. A

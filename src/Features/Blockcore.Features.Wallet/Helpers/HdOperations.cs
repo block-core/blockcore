@@ -1,7 +1,9 @@
 ﻿using System;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.BIP39;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Helpers
 {

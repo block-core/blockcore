@@ -4,8 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Utilities.JsonConverters

@@ -1,5 +1,5 @@
 ﻿using System;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Base.Deployments
 {

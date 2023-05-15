@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
-using NBitcoin.DataEncoders;
 using Xunit;
 
 namespace NBitcoin.Tests

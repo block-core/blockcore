@@ -1,6 +1,6 @@
 ﻿using System;
-using NBitcoin;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Utilities.JsonConverters

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using Blockcore.Configuration;
-using NBitcoin;
 
 namespace Blockcore.P2P
 {

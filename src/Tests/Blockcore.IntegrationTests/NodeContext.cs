@@ -7,7 +7,6 @@ using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.IntegrationTests
 {

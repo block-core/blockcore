@@ -1,7 +1,7 @@
-using NBitcoin.BouncyCastle.Math.EC;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.math.ec;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Asn1.X9
+namespace Blockcore.NBitcoin.BouncyCastle.asn1.x9
 {
     /**
      * class for describing an ECPoint as a Der object.

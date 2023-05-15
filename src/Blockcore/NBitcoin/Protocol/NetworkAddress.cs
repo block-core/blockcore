@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace NBitcoin.Protocol
+namespace Blockcore.NBitcoin.Protocol
 {
     public class NetworkAddress : IBitcoinSerializable
     {

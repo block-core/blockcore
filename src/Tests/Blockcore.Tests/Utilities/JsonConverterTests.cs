@@ -1,11 +1,13 @@
 ﻿using System;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.OpenAsset;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities.JsonConverters;
 using NBitcoin;
-using NBitcoin.Crypto;
-using NBitcoin.OpenAsset;
 using Xunit;
 
 namespace Blockcore.Tests.Utilities

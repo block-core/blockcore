@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Reflection;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 
 namespace Blockcore.P2P.Protocol.Payloads
 {

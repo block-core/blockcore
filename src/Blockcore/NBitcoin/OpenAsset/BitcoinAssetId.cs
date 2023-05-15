@@ -1,7 +1,7 @@
 ﻿using System;
 using Blockcore.Networks;
 
-namespace NBitcoin.OpenAsset
+namespace Blockcore.NBitcoin.OpenAsset
 {
     /// <summary>
     /// Base58 representation of an asset id

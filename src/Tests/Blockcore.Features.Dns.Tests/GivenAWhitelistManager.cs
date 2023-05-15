@@ -15,7 +15,6 @@ using DNS.Protocol.ResourceRecords;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using NSubstitute;
 using Xunit;
 

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using Blockcore.Utilities;
 using ConcurrentCollections;
-using NBitcoin;
 
 namespace Blockcore.P2P.Peer
 {

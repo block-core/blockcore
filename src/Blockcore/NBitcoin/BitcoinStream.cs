@@ -8,9 +8,9 @@ using System.Text;
 using Blockcore.Consensus;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin.Protocol;
+using Blockcore.NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public enum SerializationType
     {

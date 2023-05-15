@@ -14,13 +14,12 @@ using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.CoinViews.Coindb;
 using Blockcore.Features.Consensus.Persistence.LevelDb;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.CoinViews

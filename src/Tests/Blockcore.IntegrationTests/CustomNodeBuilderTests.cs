@@ -13,8 +13,6 @@ using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using FluentAssertions;
-using NBitcoin;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

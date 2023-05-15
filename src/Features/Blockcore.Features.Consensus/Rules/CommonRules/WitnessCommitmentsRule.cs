@@ -8,11 +8,11 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks;
 using Blockcore.P2P.Protocol.Payloads;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {

@@ -1,6 +1,6 @@
 ﻿using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Types;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Wallet.Interfaces
 {

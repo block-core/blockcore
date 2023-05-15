@@ -1,4 +1,4 @@
-namespace NBitcoin.BouncyCastle.Math.EC.Multiplier
+namespace Blockcore.NBitcoin.BouncyCastle.math.ec.multiplier
 {
     /**
     * Interface for classes storing precomputation data for multiplication

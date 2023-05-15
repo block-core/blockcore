@@ -1,5 +1,5 @@
 ﻿using Blockcore.Features.Consensus.Rules.UtxosetRules;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Networks.City.Networks.Rules
 {

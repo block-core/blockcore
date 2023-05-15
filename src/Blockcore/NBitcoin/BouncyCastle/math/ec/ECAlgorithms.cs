@@ -1,9 +1,9 @@
 using System;
-using NBitcoin.BouncyCastle.Math.EC.Endo;
-using NBitcoin.BouncyCastle.Math.EC.Multiplier;
-using NBitcoin.BouncyCastle.Math.Field;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.endo;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.multiplier;
+using Blockcore.NBitcoin.BouncyCastle.math.field;
 
-namespace NBitcoin.BouncyCastle.Math.EC
+namespace Blockcore.NBitcoin.BouncyCastle.math.ec
 {
     internal class ECAlgorithms
     {

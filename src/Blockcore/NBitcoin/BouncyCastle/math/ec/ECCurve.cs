@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
-using NBitcoin.BouncyCastle.Math.EC.Abc;
-using NBitcoin.BouncyCastle.Math.EC.Endo;
-using NBitcoin.BouncyCastle.Math.EC.Multiplier;
-using NBitcoin.BouncyCastle.Math.Field;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.abc;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.endo;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.multiplier;
+using Blockcore.NBitcoin.BouncyCastle.math.field;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Math.EC
+namespace Blockcore.NBitcoin.BouncyCastle.math.ec
 {
     /// <remarks>Base class for an elliptic curve.</remarks>
     internal abstract class ECCurve

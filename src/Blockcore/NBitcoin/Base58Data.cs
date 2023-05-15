@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
 
     public interface IBase58Data : IBitcoinString

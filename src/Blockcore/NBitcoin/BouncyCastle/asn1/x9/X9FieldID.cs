@@ -1,7 +1,7 @@
 using System;
-using NBitcoin.BouncyCastle.Math;
+using Blockcore.NBitcoin.BouncyCastle.math;
 
-namespace NBitcoin.BouncyCastle.Asn1.X9
+namespace Blockcore.NBitcoin.BouncyCastle.asn1.x9
 {
     /**
      * ASN.1 def for Elliptic-Curve Field ID structure. See

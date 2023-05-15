@@ -1,6 +1,6 @@
-using NBitcoin.BouncyCastle.Security;
+using Blockcore.NBitcoin.BouncyCastle.security;
 
-namespace NBitcoin.BouncyCastle.Crypto.Paddings
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.paddings
 {
     /**
     * A padder that adds Pkcs7/Pkcs5 padding to a block.

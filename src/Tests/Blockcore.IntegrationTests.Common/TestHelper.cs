@@ -17,6 +17,7 @@ using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.Runners;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;
@@ -24,7 +25,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 
 namespace Blockcore.IntegrationTests.Common
 {

@@ -6,8 +6,8 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.RPC;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.Compatibility

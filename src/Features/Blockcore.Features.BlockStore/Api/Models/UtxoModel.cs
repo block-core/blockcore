@@ -1,5 +1,5 @@
 ﻿using Blockcore.Consensus.ScriptInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Newtonsoft.Json;
 
 namespace Blockcore.Features.BlockStore.Models

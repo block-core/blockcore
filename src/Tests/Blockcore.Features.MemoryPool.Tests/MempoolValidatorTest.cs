@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks.Bitcoin.Policies;
 using Blockcore.Tests.Common;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.Crypto;
 using Xunit;
 
 namespace Blockcore.Features.MemoryPool.Tests

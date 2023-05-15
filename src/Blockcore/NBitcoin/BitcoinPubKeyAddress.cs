@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     /// <summary>
     /// Base58 representation of a pubkey hash and base class for the representation of a script hash

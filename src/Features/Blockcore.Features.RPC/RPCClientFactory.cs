@@ -1,7 +1,6 @@
 ﻿using System;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.RPC
 {

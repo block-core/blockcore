@@ -3,7 +3,6 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool.Broadcasting
 {

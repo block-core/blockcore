@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin.BouncyCastle.crypto.digests;
+using Blockcore.NBitcoin.BouncyCastle.crypto.macs;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP32
 {
     /// <summary>
     /// A private Hierarchical Deterministic key
@@ -171,8 +174,8 @@ namespace NBitcoin
         {
             if (UseBCForHMACSHA512)
             {
-                var mac = new NBitcoin.BouncyCastle.Crypto.Macs.HMac(new NBitcoin.BouncyCastle.Crypto.Digests.Sha512Digest());
-                mac.Init(new NBitcoin.BouncyCastle.Crypto.Parameters.KeyParameter(hashkey));
+                var mac = new HMac(new Sha512Digest());
+                mac.Init(new KeyParameter(hashkey));
                 byte[] hashMACBC = new byte[mac.GetMacSize()];
                 byte[] hash = new byte[mac.GetMacSize()];
                 mac.BlockUpdate(seed, 0, seed.Length);

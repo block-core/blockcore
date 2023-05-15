@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NBitcoin.Crypto;
+using Blockcore.NBitcoin.Crypto;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class MerkleNode
     {

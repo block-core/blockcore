@@ -4,13 +4,14 @@ using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using HomeCoin.Networks.Policies;
 using HomeCoin.Networks.Setup;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 
 namespace HomeCoin.Networks
 {
@@ -116,7 +117,7 @@ namespace HomeCoin.Networks
 
             this.Checkpoints = network.Checkpoints;
             this.DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-            this.SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
+            this.SeedNodes = network.Nodes.Select(node => new NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
 
             this.StandardScriptsRegistry = new HomeCoinStandardScriptsRegistry();
 

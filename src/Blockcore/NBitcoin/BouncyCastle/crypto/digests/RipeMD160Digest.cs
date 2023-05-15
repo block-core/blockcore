@@ -1,7 +1,7 @@
 using System;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Crypto.Digests
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.digests
 {
     /**
     * implementation of RipeMD see,

@@ -1,8 +1,8 @@
 ﻿using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.Miner.Staking
 {

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 
 namespace Blockcore.Networks.X1.Consensus
 {

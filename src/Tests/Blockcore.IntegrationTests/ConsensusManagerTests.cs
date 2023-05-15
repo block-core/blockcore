@@ -17,6 +17,8 @@ using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP39;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Stratis;
@@ -25,7 +27,6 @@ using Blockcore.Utilities;
 using Flurl;
 using Flurl.Http;
 using Microsoft.Extensions.DependencyInjection;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

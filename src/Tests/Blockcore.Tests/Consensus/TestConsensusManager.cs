@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus;
+using Blockcore.NBitcoin;
 using NBitcoin;
 
 namespace Blockcore.Tests.Consensus

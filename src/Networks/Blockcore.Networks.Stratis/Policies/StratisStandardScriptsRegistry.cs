@@ -2,8 +2,7 @@
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
-using NBitcoin.BitcoinCore;
+using Blockcore.NBitcoin.BitcoinCore;
 
 namespace Blockcore.Networks.Stratis.Policies
 {

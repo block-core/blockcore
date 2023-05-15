@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Blockcore.Consensus.Checkpoints;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.P2P;
-using NBitcoin;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.Impleum
 {

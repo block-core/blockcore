@@ -4,9 +4,9 @@ using Blockcore.Configuration;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using NBitcoin;
 using RocksDbSharp;
 using DB = RocksDbSharp.RocksDb;
 

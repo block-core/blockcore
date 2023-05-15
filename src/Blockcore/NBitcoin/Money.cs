@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using NBitcoin.OpenAsset;
+using Blockcore.NBitcoin.OpenAsset;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public static class MoneyExtensions
     {
@@ -495,7 +495,7 @@ namespace NBitcoin
             if (m != null)
                 return this._Satoshis.CompareTo(m._Satoshis);
 #if !NETCORE
-            return _Satoshis.CompareTo(obj);
+            return this._Satoshis.CompareTo(obj);
 #else
             return this._Satoshis.CompareTo((long)obj);
 #endif

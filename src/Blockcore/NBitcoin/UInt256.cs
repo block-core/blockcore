@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     /// <summary>
     /// An implementation of uint256 based on https://github.com/MithrilMan/MithrilShards

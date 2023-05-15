@@ -1,12 +1,12 @@
 using System.Collections;
-using NBitcoin.BouncyCastle.Asn1.X9;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.BouncyCastle.Math.EC;
-using NBitcoin.BouncyCastle.Math.EC.Endo;
-using NBitcoin.BouncyCastle.Utilities;
-using NBitcoin.BouncyCastle.Utilities.Encoders;
+using Blockcore.NBitcoin.BouncyCastle.asn1.x9;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.math.ec;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.endo;
+using Blockcore.NBitcoin.BouncyCastle.util;
+using Blockcore.NBitcoin.BouncyCastle.util.encoders;
 
-namespace NBitcoin.BouncyCastle.Asn1.Sec
+namespace Blockcore.NBitcoin.BouncyCastle.asn1.sec
 {
     internal sealed class SecNamedCurves
     {

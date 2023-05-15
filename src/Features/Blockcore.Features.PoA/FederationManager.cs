@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Configuration;
 using Blockcore.Features.PoA.Events;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA
 {

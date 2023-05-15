@@ -4,7 +4,7 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.RPC

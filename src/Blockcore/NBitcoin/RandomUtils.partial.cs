@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class RandomNumberGeneratorRandom : IRandom
     {

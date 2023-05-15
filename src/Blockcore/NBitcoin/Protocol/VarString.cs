@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace NBitcoin.Protocol
+namespace Blockcore.NBitcoin.Protocol
 {
     public class VarString : IBitcoinSerializable
     {

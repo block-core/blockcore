@@ -1,8 +1,8 @@
 using System;
-using System.Globalization;
 using System.Collections;
+using System.Globalization;
 
-namespace NBitcoin.BouncyCastle.Utilities
+namespace Blockcore.NBitcoin.BouncyCastle.util
 {
     internal abstract class Platform
     {

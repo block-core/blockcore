@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Xunit;
 
 namespace NBitcoin.Tests

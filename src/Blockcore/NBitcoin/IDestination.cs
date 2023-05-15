@@ -1,6 +1,6 @@
 ﻿using Blockcore.Consensus.ScriptInfo;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     /// <summary>
     /// Represent any type which represent an underlying ScriptPubKey

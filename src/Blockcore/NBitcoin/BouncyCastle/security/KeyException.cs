@@ -1,6 +1,6 @@
 using System;
 
-namespace NBitcoin.BouncyCastle.Security
+namespace Blockcore.NBitcoin.BouncyCastle.security
 {
     internal class KeyException : GeneralSecurityException
     {

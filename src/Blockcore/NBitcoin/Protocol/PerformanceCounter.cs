@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.Protocol
 {
     public class PerformanceSnapshot
     {

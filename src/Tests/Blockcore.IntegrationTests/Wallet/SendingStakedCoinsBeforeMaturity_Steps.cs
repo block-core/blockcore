@@ -7,13 +7,13 @@ using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common.TestFramework;
 using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using NBitcoin;
 using Xunit.Abstractions;
 
 namespace Blockcore.IntegrationTests.Wallet

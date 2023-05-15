@@ -26,6 +26,9 @@ using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Stratis;
@@ -37,9 +40,6 @@ using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

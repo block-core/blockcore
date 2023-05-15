@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Interfaces
 {

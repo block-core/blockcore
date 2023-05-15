@@ -14,6 +14,7 @@ using Blockcore.Consensus.Rules;
 using Blockcore.Features.Base.Persistence.LevelDb;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.PoA.Voting;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
@@ -21,7 +22,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.Tests
 {

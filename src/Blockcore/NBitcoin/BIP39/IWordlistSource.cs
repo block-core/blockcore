@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP39
 {
     public interface IWordlistSource
     {

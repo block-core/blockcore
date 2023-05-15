@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using NBitcoin.BouncyCastle.Asn1;
-using NBitcoin.BouncyCastle.Asn1.Sec;
-using NBitcoin.BouncyCastle.Asn1.X9;
-using NBitcoin.BouncyCastle.Crypto.Parameters;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.BouncyCastle.Math.EC;
-using NBitcoin.Crypto;
+using Blockcore.NBitcoin.BouncyCastle.asn1;
+using Blockcore.NBitcoin.BouncyCastle.asn1.sec;
+using Blockcore.NBitcoin.BouncyCastle.asn1.x9;
+using Blockcore.NBitcoin.BouncyCastle.crypto;
+using Blockcore.NBitcoin.BouncyCastle.crypto.digests;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.math.ec;
+using Blockcore.NBitcoin.Crypto;
 using Xunit;
 
 namespace NBitcoin.Tests
@@ -113,22 +115,22 @@ namespace NBitcoin.Tests
             Assert.Equal(test.R, signature.R);
         }
 
-        private Func<BouncyCastle.Crypto.IDigest> GetHash(string hash)
+        private Func<IDigest> GetHash(string hash)
         {
             if (hash.Equals("SHA-256", StringComparison.OrdinalIgnoreCase))
-                return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha256Digest();
+                return () => new Sha256Digest();
 
             if (hash.Equals("SHA-1", StringComparison.OrdinalIgnoreCase))
-                return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha1Digest();
+                return () => new Sha1Digest();
 
             if (hash.Equals("SHA-224", StringComparison.OrdinalIgnoreCase))
-                return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha224Digest();
+                return () => new Sha224Digest();
 
             if (hash.Equals("SHA-384", StringComparison.OrdinalIgnoreCase))
-                return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha384Digest();
+                return () => new Sha384Digest();
 
             if (hash.Equals("SHA-512", StringComparison.OrdinalIgnoreCase))
-                return () => new NBitcoin.BouncyCastle.Crypto.Digests.Sha512Digest();
+                return () => new Sha512Digest();
 
             throw new NotImplementedException();
         }

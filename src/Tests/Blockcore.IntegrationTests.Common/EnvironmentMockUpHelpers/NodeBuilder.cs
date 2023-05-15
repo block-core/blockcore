@@ -14,11 +14,10 @@ using Blockcore.Features.RPC;
 using Blockcore.Features.Wallet;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.Runners;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.Tests.Common;
-using NBitcoin;
-using NBitcoin.Protocol;
 using NLog;
 
 namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers

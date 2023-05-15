@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using NBitcoin;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 
 namespace Blockcore.Consensus.BlockInfo
 {

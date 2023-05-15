@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using Blockcore.Consensus.TransactionInfo;
 
-namespace NBitcoin.Protocol.Payloads
+namespace Blockcore.NBitcoin.Protocol
 {
     public class UTxOutputs : IBitcoinSerializable
     {

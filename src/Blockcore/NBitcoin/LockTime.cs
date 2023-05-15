@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public struct LockTime : IBitcoinSerializable
     {

@@ -1,7 +1,7 @@
-﻿using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
-using uint256 = NBitcoin.uint256;
+﻿using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
+using uint256 = Blockcore.NBitcoin.uint256;
 
 namespace Blockcore.P2P.Protocol.Payloads
 {

@@ -2,7 +2,7 @@
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 
-namespace NBitcoin.BuilderExtensions
+namespace Blockcore.NBitcoin.BuilderExtensions
 {
     public class P2PKHBuilderExtension : BuilderExtension
     {

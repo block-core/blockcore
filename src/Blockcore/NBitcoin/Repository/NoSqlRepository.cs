@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockcore.Networks;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.Repository
 {
     public abstract class NoSqlRepository
     {

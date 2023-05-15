@@ -1,7 +1,7 @@
 ﻿using System;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.Voting
 {

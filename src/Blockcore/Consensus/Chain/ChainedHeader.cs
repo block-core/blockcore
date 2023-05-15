@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
 
 namespace Blockcore.Consensus.Chain
 {

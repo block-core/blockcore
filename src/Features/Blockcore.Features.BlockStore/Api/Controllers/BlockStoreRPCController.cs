@@ -5,9 +5,9 @@ using Blockcore.Controllers;
 using Blockcore.Features.RPC;
 using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Microsoft.AspNetCore.Mvc;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore.Api.Controllers
 {

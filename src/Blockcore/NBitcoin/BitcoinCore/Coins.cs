@@ -4,7 +4,7 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 
-namespace NBitcoin.BitcoinCore
+namespace Blockcore.NBitcoin.BitcoinCore
 {
     public class Coins : IBitcoinSerializable
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace NBitcoin.BouncyCastle.Crypto.Parameters
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.parameters
 {
     internal class KeyParameter
         : ICipherParameters

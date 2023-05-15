@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
+using Blockcore.NBitcoin;
 using HomeCoin.Networks.Setup;
-using NBitcoin;
 
 namespace HomeCoin
 {

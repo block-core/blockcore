@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using NBitcoin.Crypto;
+using Blockcore.NBitcoin.Crypto;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class UnsecureRandom : IRandom
     {

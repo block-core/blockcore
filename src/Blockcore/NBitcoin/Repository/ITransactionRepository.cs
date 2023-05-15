@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.Repository
 {
     /// <summary>
     /// Represent a transaction map

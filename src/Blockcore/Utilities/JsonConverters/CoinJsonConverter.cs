@@ -2,9 +2,9 @@
 using System.Reflection;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.OpenAsset;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.OpenAsset;
 using Newtonsoft.Json;
 
 namespace Blockcore.Utilities.JsonConverters

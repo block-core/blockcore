@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities.JsonConverters;
 using LiteDB;
-using NBitcoin;
 using Newtonsoft.Json;
 
 namespace Blockcore.Controllers.Models

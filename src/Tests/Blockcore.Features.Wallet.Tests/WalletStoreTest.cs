@@ -5,11 +5,11 @@ using Blockcore.Configuration;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Database;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities.JsonConverters;
 using FluentAssertions;
-using NBitcoin;
 using Newtonsoft.Json;
 using Xunit;
 

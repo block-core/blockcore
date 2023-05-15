@@ -15,13 +15,19 @@ using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin.BIP32;
 using Blockcore.Signals;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Tests.Wallet.Common;
 using Blockcore.Utilities;
 using Moq;
-using NBitcoin;
 using Xunit;
+using BitcoinPubKeyAddress = Blockcore.NBitcoin.BitcoinPubKeyAddress;
+using Coin = Blockcore.NBitcoin.Coin;
+using ExtKey = Blockcore.NBitcoin.BIP32.ExtKey;
+using Key = Blockcore.NBitcoin.Key;
+using Money = Blockcore.NBitcoin.Money;
+using uint256 = Blockcore.NBitcoin.uint256;
 
 namespace Blockcore.Features.ColdStaking.Tests
 {
@@ -37,7 +43,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             this.Network.StandardScriptsRegistry.RegisterStandardScriptTemplate(ColdStakingScriptTemplate.Instance);
         }
 
-        public Transaction CreateColdStakingSetupTransaction(Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, PubKey destinationColdPubKey, PubKey destinationHotPubKey, HdAddress changeAddress, Money amount, Money fee)
+        public Transaction CreateColdStakingSetupTransaction(Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, NBitcoin.PubKey destinationColdPubKey, NBitcoin.PubKey destinationHotPubKey, HdAddress changeAddress, Money amount, Money fee)
         {
             TransactionOutputData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
             var coin = new Coin(spendingTransaction.Id, (uint)spendingTransaction.Index, spendingTransaction.Amount, spendingTransaction.ScriptPubKey);
@@ -64,7 +70,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             return tx;
         }
 
-        public Transaction CreateColdStakingWithdrawalTransaction(Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, PubKey destinationPubKey, Script changeScript, Money amount, Money fee)
+        public Transaction CreateColdStakingWithdrawalTransaction(Wallet.Types.Wallet wallet, string password, HdAddress spendingAddress, NBitcoin.PubKey destinationPubKey, Script changeScript, Money amount, Money fee)
         {
             TransactionOutputData spendingTransaction = wallet.walletStore.GetForAddress(spendingAddress.Address).ElementAt(0);
             var coin = new Coin(spendingTransaction.Id, (uint)spendingTransaction.Index, spendingTransaction.Amount, spendingTransaction.ScriptPubKey);
@@ -104,18 +110,18 @@ namespace Blockcore.Features.ColdStaking.Tests
             Wallet.Types.Wallet wallet = this.walletFixture.GenerateBlankWallet("myWallet", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
 
-            (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) changeKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "1/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) changeKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "1/0");
 
             Wallet.Types.Wallet coldWallet = this.walletFixture.GenerateBlankWallet("myColdWallet", "password");
             (ExtKey ExtKey, string ExtPubKey) accountColdKeys = WalletTestsHelpers.GenerateAccountKeys(coldWallet, "password", $"m/44'/0'/{ColdStakingManager.ColdWalletAccountIndex}'");
 
-            (PubKey PubKey, BitcoinPubKeyAddress Address) destinationColdKeys = WalletTestsHelpers.GenerateAddressKeys(coldWallet, accountColdKeys.ExtPubKey, "0/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) destinationColdKeys = WalletTestsHelpers.GenerateAddressKeys(coldWallet, accountColdKeys.ExtPubKey, "0/0");
 
             Wallet.Types.Wallet hotWallet = this.walletFixture.GenerateBlankWallet("myHotWallet", "password");
             (ExtKey ExtKey, string ExtPubKey) accountHotKeys = WalletTestsHelpers.GenerateAccountKeys(hotWallet, "password", $"m/44'/0'/{ColdStakingManager.HotWalletAccountIndex}'");
 
-            (PubKey PubKey, BitcoinPubKeyAddress Address) destinationHotKeys = WalletTestsHelpers.GenerateAddressKeys(hotWallet, accountHotKeys.ExtPubKey, "0/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) destinationHotKeys = WalletTestsHelpers.GenerateAddressKeys(hotWallet, accountHotKeys.ExtPubKey, "0/0");
 
             var spendingAddress = new HdAddress
             {
@@ -247,7 +253,7 @@ namespace Blockcore.Features.ColdStaking.Tests
             Wallet.Types.Wallet withdrawalWallet = this.walletFixture.GenerateBlankWallet("myWithDrawalWallet", "password");
             (ExtKey ExtKey, string ExtPubKey) withdrawalAccountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
 
-            (PubKey PubKey, BitcoinPubKeyAddress Address) withdrawalKeys = WalletTestsHelpers.GenerateAddressKeys(withdrawalWallet, withdrawalAccountKeys.ExtPubKey, "0/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) withdrawalKeys = WalletTestsHelpers.GenerateAddressKeys(withdrawalWallet, withdrawalAccountKeys.ExtPubKey, "0/0");
 
             // Withdrawing to this address.
             var withdrawalAddress = new HdAddress

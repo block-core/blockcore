@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Networks.Strax.ScriptTemplates;
-using NBitcoin;
 
 namespace Blockcore.Networks.Strax.Federation
 {

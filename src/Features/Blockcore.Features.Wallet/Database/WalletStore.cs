@@ -7,14 +7,14 @@ using Blockcore.Configuration;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Wallet.Exceptions;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonConverters;
 using Dapper;
 using DBreeze.Utils;
 using Microsoft.Data.Sqlite;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Features.Wallet.Database

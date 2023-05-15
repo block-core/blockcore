@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP39
 {
     internal class KDTable
     {

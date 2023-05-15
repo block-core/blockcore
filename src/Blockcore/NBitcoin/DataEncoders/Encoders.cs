@@ -1,4 +1,4 @@
-﻿namespace NBitcoin.DataEncoders
+﻿namespace Blockcore.NBitcoin.DataEncoders
 {
     public abstract class DataEncoder
     {

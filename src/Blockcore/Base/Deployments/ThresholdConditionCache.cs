@@ -4,8 +4,8 @@ using System.Linq;
 using Blockcore.Base.Deployments.Models;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Base.Deployments
 {

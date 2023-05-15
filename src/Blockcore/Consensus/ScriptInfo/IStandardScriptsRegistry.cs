@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin.BitcoinCore;
 using Blockcore.Networks;
-using NBitcoin.BitcoinCore;
 
 namespace Blockcore.Consensus.ScriptInfo
 {

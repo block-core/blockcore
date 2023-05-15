@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using NBitcoin;
-using NBitcoin.Protocol;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Protocol;
 
 namespace Blockcore.P2P.Protocol.Payloads
 {

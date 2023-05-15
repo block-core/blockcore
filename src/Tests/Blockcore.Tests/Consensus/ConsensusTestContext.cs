@@ -23,6 +23,8 @@ using Blockcore.Consensus.Validators;
 using Blockcore.Features.Consensus.Rules;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
@@ -191,7 +193,7 @@ namespace Blockcore.Tests.Consensus
         internal Target ChangeDifficulty(ChainedHeader header, int difficultyAdjustmentDivisor)
         {
             var newTarget = header.Header.Bits.ToBigInteger();
-            newTarget = newTarget.Divide(NBitcoin.BouncyCastle.Math.BigInteger.ValueOf(difficultyAdjustmentDivisor));
+            newTarget = newTarget.Divide(BigInteger.ValueOf(difficultyAdjustmentDivisor));
             return new Target(newTarget);
         }
 

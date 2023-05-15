@@ -1,7 +1,7 @@
 using System;
-using NBitcoin.BouncyCastle.Security;
+using Blockcore.NBitcoin.BouncyCastle.security;
 
-namespace NBitcoin.BouncyCastle.Crypto.Paddings
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.paddings
 {
     /**
     * A wrapper class that allows block ciphers to be used to process data in

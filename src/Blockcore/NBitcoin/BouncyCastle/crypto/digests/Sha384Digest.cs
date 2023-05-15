@@ -1,7 +1,7 @@
-using NBitcoin.BouncyCastle.Crypto.Utilities;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.crypto.util;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Crypto.Digests
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.digests
 {
     /**
      * Draft FIPS 180-2 implementation of SHA-384. <b>Note:</b> As this is

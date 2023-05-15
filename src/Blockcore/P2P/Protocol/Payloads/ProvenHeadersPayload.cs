@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Consensus.BlockInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.P2P.Protocol.Payloads
 {

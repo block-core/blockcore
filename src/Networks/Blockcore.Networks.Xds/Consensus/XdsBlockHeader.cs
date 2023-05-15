@@ -1,7 +1,7 @@
 using System.IO;
 using Blockcore.Consensus.BlockInfo;
-using NBitcoin;
-using NBitcoin.Crypto;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 
 namespace Blockcore.Networks.Xds.Consensus
 {

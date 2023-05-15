@@ -1,6 +1,4 @@
-﻿using NBitcoin;
-
-namespace Blockcore.Networks.Bitcoin
+﻿namespace Blockcore.Networks.Bitcoin
 {
     public static class Networks
     {

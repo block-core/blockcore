@@ -1,8 +1,8 @@
 using System;
-using NBitcoin.BouncyCastle.Crypto.Parameters;
-using NBitcoin.BouncyCastle.Utilities;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
+using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Crypto.Macs
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.macs
 {
     /**
     * HMAC implementation based on RFC2104

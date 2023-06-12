@@ -4,9 +4,9 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using FluentAssertions;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules

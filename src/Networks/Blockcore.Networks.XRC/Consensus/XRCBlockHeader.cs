@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks.XRC.Crypto;
-using NBitcoin;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Networks.XRC.Consensus
 {

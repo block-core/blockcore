@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Xunit;
 

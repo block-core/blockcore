@@ -29,6 +29,9 @@ using Blockcore.Features.Wallet.Database;
 using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP39;
+using Blockcore.NBitcoin.Policy;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Networks.Stratis.Policies;
@@ -39,9 +42,6 @@ using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
-using NBitcoin.Policy;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.Features.ColdStaking.Tests

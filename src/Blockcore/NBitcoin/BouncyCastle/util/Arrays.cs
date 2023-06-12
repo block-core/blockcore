@@ -1,8 +1,8 @@
 using System;
 using System.Text;
-using NBitcoin.BouncyCastle.Math;
+using Blockcore.NBitcoin.BouncyCastle.math;
 
-namespace NBitcoin.BouncyCastle.Utilities
+namespace Blockcore.NBitcoin.BouncyCastle.util
 {
     /// <summary> General array utilities.</summary>
     internal abstract class Arrays

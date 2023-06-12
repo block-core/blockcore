@@ -5,7 +5,6 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Utilities;
 using LiteDB;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore.AddressIndexing
 {

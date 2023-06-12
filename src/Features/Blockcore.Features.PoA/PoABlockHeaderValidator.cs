@@ -1,7 +1,7 @@
 ﻿using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Features.PoA
 {

@@ -1,4 +1,4 @@
-﻿namespace NBitcoin.BouncyCastle.Math.Field
+﻿namespace Blockcore.NBitcoin.BouncyCastle.math.field
 {
     internal interface IExtensionField
         : IFiniteField

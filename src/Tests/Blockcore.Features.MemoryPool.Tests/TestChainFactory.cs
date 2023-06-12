@@ -26,14 +26,13 @@ using Blockcore.Features.MemoryPool.Rules;
 using Blockcore.Features.Miner;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
-
 using Xunit;
 
 namespace Blockcore.Features.MemoryPool.Tests

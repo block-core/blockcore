@@ -1,5 +1,5 @@
 ﻿using Blockcore.Consensus.ScriptInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Wallet.Types
 {

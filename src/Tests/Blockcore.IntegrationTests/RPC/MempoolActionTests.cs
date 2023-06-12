@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using Blockcore.Features.MemoryPool;
 using Blockcore.IntegrationTests.Common.Extensions;
-using NBitcoin;
-
+using Blockcore.NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.RPC

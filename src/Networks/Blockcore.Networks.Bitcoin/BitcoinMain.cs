@@ -10,13 +10,13 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.Rules.CommonRules;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Bitcoin.Policies;
 using Blockcore.Networks.Bitcoin.Rules;
 using Blockcore.P2P;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Networks.Bitcoin
 {
@@ -95,7 +95,7 @@ namespace Blockcore.Networks.Bitcoin
                 bip34Hash: new uint256("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"),
                 minerConfirmationWindow: 2016, // nPowTargetTimespan / nPowTargetSpacing
                 maxReorgLength: 0,
-                defaultAssumeValid: new uint256("0000000000000000000304dece599f1d046f5c606deec3d1d49eb24b3231b4a3"), // 629000
+                defaultAssumeValid: new uint256("0x00000000000000000003e1d91b245eb32787afb10afe49b61621375361221c38"), // 760000
                 maxMoney: 21000000 * Money.COIN,
                 coinbaseMaturity: 100,
                 premineHeight: 0,
@@ -152,7 +152,8 @@ namespace Blockcore.Networks.Bitcoin
                 { 486000, new CheckpointInfo(new uint256("0x000000000000000000a2a8104d61651f76c666b70754d6e9346176385f7afa24"))},
                 { 491800, new CheckpointInfo(new uint256("0x000000000000000000d80de1f855902b50941bc3a3d0f71064d9613fd3943dc4"))},
                 { 550000, new CheckpointInfo(new uint256("0x000000000000000000223b7a2298fb1c6c75fb0efc28a4c56853ff4112ec6bc9"))}, // 14-11-2018,
-                { 610000, new CheckpointInfo(new uint256("0x0000000000000000000a6f607f74db48dae0a94022c10354536394c17672b7f7"))}  // 27-12-2019
+                { 610000, new CheckpointInfo(new uint256("0x0000000000000000000a6f607f74db48dae0a94022c10354536394c17672b7f7"))}, // 27-12-2019
+                { 765000, new CheckpointInfo(new uint256("0x00000000000000000006e35496e6056700db72df0815e38863cad399df7b5373"))}  // 28-11-2022
             };
 
             this.DNSSeeds = new List<DNSSeedData>

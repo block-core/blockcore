@@ -11,7 +11,6 @@ using Blockcore.Utilities.JsonErrors;
 using FluentAssertions;
 using Flurl;
 using Flurl.Http;
-using NBitcoin;
 using Newtonsoft.Json;
 using Xunit;
 

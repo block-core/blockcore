@@ -1,4 +1,5 @@
-﻿using Blockcore.Utilities;
+﻿using Blockcore.NBitcoin;
+using Blockcore.Utilities;
 using NBitcoin;
 using Xunit;
 

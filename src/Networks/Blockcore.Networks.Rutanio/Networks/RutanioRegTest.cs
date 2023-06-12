@@ -3,15 +3,16 @@ using System.Linq;
 using System.Net;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Rutanio.Networks.Consensus;
 using Rutanio.Networks.Deployments;
 using Rutanio.Networks.Policies;
 using Rutanio.Networks.Setup;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 
 
 namespace Rutanio.Networks
@@ -128,7 +129,7 @@ namespace Rutanio.Networks
 
             Checkpoints = network.Checkpoints;
             DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-            SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(Dns.GetHostAddresses(node).GetValue(0).ToString()), network.DefaultPort)).ToList();
+            SeedNodes = network.Nodes.Select(node => new NetworkAddress(IPAddress.Parse(Dns.GetHostAddresses(node).GetValue(0).ToString()), network.DefaultPort)).ToList();
 
             StandardScriptsRegistry = new RutanioStandardScriptsRegistry();
 

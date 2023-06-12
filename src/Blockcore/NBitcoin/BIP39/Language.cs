@@ -1,4 +1,4 @@
-﻿namespace NBitcoin
+﻿namespace Blockcore.NBitcoin.BIP39
 {
     public enum Language
     {

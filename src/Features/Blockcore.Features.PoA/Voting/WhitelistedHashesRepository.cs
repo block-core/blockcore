@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.Voting
 {

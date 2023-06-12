@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin.BIP38;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin.DataEncoders;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class BitcoinSecret : Base58Data, IDestination, ISecret
     {

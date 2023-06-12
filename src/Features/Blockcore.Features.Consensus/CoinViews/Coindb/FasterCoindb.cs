@@ -6,12 +6,12 @@ using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using FASTER.core;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Features.Consensus.CoinViews.Coindb
 {

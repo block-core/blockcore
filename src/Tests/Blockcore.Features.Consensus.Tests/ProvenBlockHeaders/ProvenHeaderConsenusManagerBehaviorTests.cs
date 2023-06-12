@@ -15,6 +15,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Features.Consensus.Behaviors;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.P2P.Peer;
@@ -25,7 +26,6 @@ using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders

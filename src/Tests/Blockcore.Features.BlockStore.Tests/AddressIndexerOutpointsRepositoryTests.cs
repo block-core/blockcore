@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.NBitcoin;
 using LiteDB;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.BlockStore.Tests

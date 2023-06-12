@@ -8,9 +8,9 @@ using System.Text;
 using Blockcore.Consensus;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin.Protocol;
+using Blockcore.NBitcoin.Protocol;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public enum SerializationType
     {
@@ -96,7 +96,7 @@ namespace NBitcoin
 
             this.isNetworkStream = inner is NetworkStream;
             this.Inner = inner;
-            this.MaxArraySize = 1024 * 1024;
+            this.MaxArraySize = 1024 * 1024 * 4;
         }
 
         public BitcoinStream(Stream inner, bool serializing, ConsensusFactory consensus)

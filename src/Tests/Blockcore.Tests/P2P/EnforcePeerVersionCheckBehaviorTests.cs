@@ -4,6 +4,8 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
@@ -14,7 +16,6 @@ using Blockcore.Tests.Common.Logging;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.Tests.P2P

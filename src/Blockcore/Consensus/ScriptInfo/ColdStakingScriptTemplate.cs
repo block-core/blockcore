@@ -2,9 +2,9 @@
 using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
-using NBitcoin;
 using static Blockcore.Consensus.ScriptInfo.OpcodeType;
 
 namespace Blockcore.Consensus.ScriptInfo

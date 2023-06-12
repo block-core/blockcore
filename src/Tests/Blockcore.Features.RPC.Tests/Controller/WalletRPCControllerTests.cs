@@ -16,8 +16,6 @@ using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Moq;
-using NBitcoin;
-
 using Xunit;
 
 namespace Blockcore.Features.RPC.Tests.Controller

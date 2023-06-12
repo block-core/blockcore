@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 
 namespace Blockcore.Features.Wallet.Api.Controllers
 {

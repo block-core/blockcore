@@ -6,6 +6,7 @@ using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.ProvenBlockHeaders;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
@@ -13,8 +14,6 @@ using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
-
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.CoinViews

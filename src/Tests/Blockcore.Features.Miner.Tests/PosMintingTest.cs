@@ -26,6 +26,7 @@ using Blockcore.Features.Wallet.Tests;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
@@ -33,7 +34,6 @@ using Blockcore.Tests.Wallet.Common;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Miner.Tests

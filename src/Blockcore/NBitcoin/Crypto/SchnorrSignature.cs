@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NBitcoin.BouncyCastle.Asn1.X9;
-using NBitcoin.BouncyCastle.Math.EC.Custom.Sec;
-using NBitcoin.BouncyCastle.Math.EC;
-using NBitcoin.BouncyCastle.Asn1;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.BouncyCastle.asn1.x9;
+using Blockcore.NBitcoin.BouncyCastle.crypto.ec;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.custom.sec;
+using Blockcore.NBitcoin.DataEncoders;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto
 {
 	/// <summary>
 	/// Schnorr Signatures using Bouncy Castle
@@ -33,25 +28,25 @@ namespace NBitcoin.Crypto
 			if (bytes.Length != 64)
 				throw new ArgumentException(paramName: nameof(bytes), message:"Invalid schnorr signature length.");
 
-			R = new BigInteger(1, bytes, 0, 32);
-			S = new BigInteger(1, bytes, 32, 32);
+			this.R = new BigInteger(1, bytes, 0, 32);
+			this.S = new BigInteger(1, bytes, 32, 32);
 
 		}
 
 		public SchnorrSignature(BigInteger r, BigInteger s)
 		{
-			R = r;
-			S = s;
+			this.R = r;
+			this.S = s;
 		}
 		public byte[] ToBytes()
 		{
-			return Utils.BigIntegerToBytes(R, 32).Concat(Utils.BigIntegerToBytes(S, 32));
+			return Utils.BigIntegerToBytes(this.R, 32).Concat(Utils.BigIntegerToBytes(this.S, 32));
 		}
 	}
 
 	public class SchnorrSigner
 	{
-		private static X9ECParameters Secp256k1 = NBitcoin.BouncyCastle.Crypto.EC.CustomNamedCurves.Secp256k1;
+		private static X9ECParameters Secp256k1 = CustomNamedCurves.Secp256k1;
 		private static BigInteger PP = ((SecP256K1Curve)Secp256k1.Curve).QQ;
 
 		public SchnorrSignature Sign(uint256 m, Key secret)

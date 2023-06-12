@@ -15,6 +15,7 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
@@ -24,14 +25,13 @@ using Blockcore.Utilities.ModelStateErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = NLog.LogLevel;
-using Target = NBitcoin.Target;
+using Target = Blockcore.NBitcoin.Target;
 
 namespace Blockcore.Controllers
 {

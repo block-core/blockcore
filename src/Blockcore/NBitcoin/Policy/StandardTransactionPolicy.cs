@@ -5,7 +5,7 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 
-namespace NBitcoin.Policy
+namespace Blockcore.NBitcoin.Policy
 {
     public class StandardTransactionPolicy : ITransactionPolicy
     {

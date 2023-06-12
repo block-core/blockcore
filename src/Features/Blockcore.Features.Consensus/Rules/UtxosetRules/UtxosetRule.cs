@@ -10,7 +10,6 @@ using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Interfaces;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.UtxosetRules
 {

@@ -14,6 +14,8 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers;
 using Blockcore.Controllers.Models;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using Blockcore.P2P.Peer;
@@ -26,8 +28,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NBitcoin;
-using NBitcoin.DataEncoders;
-
 using Xunit;
 
 namespace Blockcore.Tests.Controllers

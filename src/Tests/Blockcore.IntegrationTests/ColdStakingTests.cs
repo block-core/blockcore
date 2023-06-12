@@ -10,7 +10,6 @@ using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Networks.Stratis.Deployments;
 using Blockcore.Utilities.Extensions;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Blockcore.Connection;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
@@ -11,7 +12,6 @@ using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin.Protocol;
 
 namespace Blockcore.P2P
 {

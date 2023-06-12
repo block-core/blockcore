@@ -5,13 +5,14 @@ using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Checkpoints;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks.Strax.Deployments;
 using Blockcore.Networks.Strax.Federation;
 using Blockcore.Networks.Strax.Policies;
+using Blockcore.Networks.Strax.Staking;
 using Blockcore.P2P;
 
 namespace Blockcore.Networks.Strax
@@ -188,6 +189,8 @@ namespace Blockcore.Networks.Strax
             };
 
             this.StandardScriptsRegistry = new StraxStandardScriptsRegistry();
+
+            this.FullNodeBuilderServiceOverride = new MiningServiceOverride();
 
             Assert(this.DefaultBanTimeSeconds <= this.Consensus.MaxReorgLength * this.Consensus.TargetSpacing.TotalSeconds / 2);
 

@@ -21,15 +21,17 @@ using Blockcore.Features.Wallet.Helpers;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.BIP39;
+using Blockcore.NBitcoin.BuilderExtensions;
+using Blockcore.NBitcoin.Policy;
 using Blockcore.Networks;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.BuilderExtensions;
-using NBitcoin.Policy;
 
 [assembly: InternalsVisibleTo("Blockcore.Features.Wallet.Tests")]
 
@@ -1696,7 +1698,7 @@ namespace Blockcore.Features.Wallet
 
             if (wallet.Version < 2)
             {
-                foreach (HdAccount hdAccount in wallet.GetAccounts())
+                foreach (HdAccount hdAccount in wallet.GetAccounts(_ => true))
                 {
                     hdAccount.Purpose = 44;
                 }

@@ -5,9 +5,9 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Rules;
 using Blockcore.Features.PoA.BasePoAFeatureConsensusRules;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
 using Blockcore.Tests.Common;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
 using Xunit;
 
 namespace Blockcore.Features.PoA.Tests.Rules

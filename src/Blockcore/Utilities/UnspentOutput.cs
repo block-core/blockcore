@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Utilities
 {

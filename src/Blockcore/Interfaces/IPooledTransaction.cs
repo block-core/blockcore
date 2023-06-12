@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Interfaces
 {

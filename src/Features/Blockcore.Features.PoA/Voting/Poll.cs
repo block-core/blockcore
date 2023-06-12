@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.PoA.Voting
 {

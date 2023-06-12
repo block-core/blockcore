@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Formatters;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Formatters;
 using Newtonsoft.Json.Linq;
 
 namespace Blockcore.Consensus.BlockInfo

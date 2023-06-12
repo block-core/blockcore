@@ -5,8 +5,8 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Features.MemoryPool;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Features.MemoryPool.Rules;
+using Blockcore.NBitcoin;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Networks.x42.Networks.Consensus.Rules
 {

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Utilities.ValidationAttributes
 {

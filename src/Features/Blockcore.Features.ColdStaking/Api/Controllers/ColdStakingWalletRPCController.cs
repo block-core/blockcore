@@ -10,7 +10,6 @@ using Blockcore.Interfaces;
 using Blockcore.Networks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.ColdStaking.Api.Controllers
 {

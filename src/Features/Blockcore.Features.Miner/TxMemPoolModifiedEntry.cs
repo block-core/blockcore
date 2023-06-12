@@ -1,6 +1,6 @@
 ﻿using System;
 using Blockcore.Features.MemoryPool;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Miner
 {

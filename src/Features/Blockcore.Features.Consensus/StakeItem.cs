@@ -1,5 +1,5 @@
 ﻿using Blockcore.Consensus.BlockInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Consensus
 {

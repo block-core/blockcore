@@ -2,7 +2,8 @@
 using System.Diagnostics;
 using System.Linq;
 using Blockcore.Consensus.ScriptInfo;
-using NBitcoin.Crypto;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Crypto;
 using Xunit;
 
 namespace NBitcoin.Tests

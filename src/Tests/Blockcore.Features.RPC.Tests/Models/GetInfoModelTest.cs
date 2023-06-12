@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Features.RPC.Models;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

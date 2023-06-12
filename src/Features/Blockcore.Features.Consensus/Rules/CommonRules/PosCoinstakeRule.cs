@@ -6,7 +6,6 @@ using Blockcore.Consensus.Rules;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus.Rules.CommonRules
 {

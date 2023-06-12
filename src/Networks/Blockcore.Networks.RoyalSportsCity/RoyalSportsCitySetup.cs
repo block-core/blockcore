@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Blockcore.Consensus.Checkpoints;
+using Blockcore.NBitcoin;
 using Blockcore.Networks.RoyalSportsCity.Networks;
 using Blockcore.Networks.RoyalSportsCity.Networks.Setup;
-using NBitcoin;
 
 namespace Blockcore.Networks.RoyalSportsCity
 {

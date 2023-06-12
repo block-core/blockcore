@@ -9,10 +9,10 @@ using Blockcore.Features.Wallet.Types;
 using Blockcore.IntegrationTests.Common;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using FluentAssertions;
-using NBitcoin;
 using Xunit.Abstractions;
 
 namespace Blockcore.IntegrationTests.BlockStore

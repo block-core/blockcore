@@ -7,14 +7,15 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
 using Blockcore.Features.Consensus.Rules.ProvenHeaderRules;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP39;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
-using NBitcoin.Crypto;
 using Xunit;
-using uint256 = NBitcoin.uint256;
+using uint256 = Blockcore.NBitcoin.uint256;
 
 namespace Blockcore.Features.Consensus.Tests.Rules.ProvenHeaderRules
 {

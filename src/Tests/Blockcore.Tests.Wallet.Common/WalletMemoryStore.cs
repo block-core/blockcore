@@ -10,7 +10,6 @@ using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using Microsoft.Data.Sqlite;
 using Moq;
-using NBitcoin;
 
 namespace Blockcore.Features.Wallet.Tests
 {

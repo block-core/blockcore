@@ -16,7 +16,6 @@ using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests.ProvenBlockHeaders

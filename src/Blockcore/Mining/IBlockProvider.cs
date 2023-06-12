@@ -1,7 +1,6 @@
 ﻿using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
-using NBitcoin;
 
 namespace Blockcore.Mining
 {

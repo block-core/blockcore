@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Blockcore.Builder;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.BIP38;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.P2P;
-using NBitcoin;
-using NBitcoin.DataEncoders;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Networks
 {
@@ -275,6 +278,11 @@ namespace Blockcore.Networks
         /// However, a non-standard transaction will typically not be relayed between nodes.
         /// </summary>
         public IStandardScriptsRegistry StandardScriptsRegistry { get; protected set; }
+
+        /// <summary>
+        /// Allow the DI to override services.
+        /// </summary>
+        public IFullNodeBuilderServiceOverride FullNodeBuilderServiceOverride { get; protected set; }
 
         /// <summary>
         /// Mines a new genesis block, to use with a new network.

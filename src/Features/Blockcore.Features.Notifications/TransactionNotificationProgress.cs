@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Notifications
 {

@@ -1,6 +1,6 @@
-using NBitcoin.BouncyCastle.Security;
+using Blockcore.NBitcoin.BouncyCastle.security;
 
-namespace NBitcoin.BouncyCastle.Crypto.Paddings
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.paddings
 {
     /**
      * Block cipher padders are expected to conform to this interface

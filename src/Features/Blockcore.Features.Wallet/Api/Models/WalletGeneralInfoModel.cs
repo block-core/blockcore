@@ -1,7 +1,6 @@
 ﻿using System;
 using Blockcore.Networks;
 using Blockcore.Utilities.JsonConverters;
-using NBitcoin;
 using Newtonsoft.Json;
 
 namespace Blockcore.Features.Wallet.Api.Models

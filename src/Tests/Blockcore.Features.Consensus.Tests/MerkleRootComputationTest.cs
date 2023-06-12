@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Features.Consensus.Rules.CommonRules;
-using NBitcoin;
+using Blockcore.NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Consensus.Tests

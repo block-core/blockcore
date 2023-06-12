@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Blockcore.NBitcoin;
 using HashLib;
-using NBitcoin;
 
 namespace Blockcore.Networks.XRC.Crypto
 {

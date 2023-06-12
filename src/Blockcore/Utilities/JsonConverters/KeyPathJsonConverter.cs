@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using NBitcoin;
+using Blockcore.NBitcoin.BIP32;
 using Newtonsoft.Json;
 
 namespace Blockcore.Utilities.JsonConverters

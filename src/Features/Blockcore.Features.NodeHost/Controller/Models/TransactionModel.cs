@@ -4,9 +4,9 @@ using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Converters;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Controllers.Models

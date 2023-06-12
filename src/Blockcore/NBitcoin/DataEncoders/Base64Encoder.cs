@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NBitcoin.DataEncoders
+namespace Blockcore.NBitcoin.DataEncoders
 {
     public class Base64Encoder : DataEncoder
     {

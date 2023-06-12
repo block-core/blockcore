@@ -12,6 +12,7 @@ using Blockcore.Features.Miner.Interfaces;
 using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Wallet.Common;
@@ -19,8 +20,6 @@ using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
-
 using Xunit;
 
 namespace Blockcore.Features.Miner.Tests.Controllers

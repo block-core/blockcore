@@ -1,4 +1,4 @@
-﻿namespace NBitcoin.BouncyCastle.Math.EC.Endo
+﻿namespace Blockcore.NBitcoin.BouncyCastle.math.ec.endo
 {
     internal interface ECEndomorphism
     {

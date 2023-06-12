@@ -15,6 +15,9 @@ using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.BIP39;
 using Blockcore.P2P.Peer;
 using Blockcore.Tests.Common;
 using Blockcore.Tests.Common.Logging;
@@ -23,7 +26,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Wallet.Tests

@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using Blockcore.Configuration;
 using Blockcore.Features.Miner;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Networks.X1.Components
 {

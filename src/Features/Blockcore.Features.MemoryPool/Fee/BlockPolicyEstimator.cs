@@ -2,8 +2,8 @@
 using System.IO;
 using Blockcore.Configuration;
 using Blockcore.Features.MemoryPool.Interfaces;
+using Blockcore.NBitcoin;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool.Fee
 {

@@ -1,9 +1,8 @@
 ﻿using System;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
-using NBitcoin;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Utilities.JsonConverters

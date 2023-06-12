@@ -1,4 +1,4 @@
-﻿using NBitcoin;
+﻿using Blockcore.NBitcoin;
 using Newtonsoft.Json.Linq;
 
 namespace Blockcore.Features.RPC

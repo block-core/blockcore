@@ -6,9 +6,6 @@ using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
 using HomeCoin.Networks.Policies;
 using HomeCoin.Networks.Rules;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 using System.Linq;
 using System.Net;
 using HomeCoin.Networks.Setup;
@@ -19,6 +16,10 @@ using Blockcore.Consensus;
 using Blockcore.P2P;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Consensus.ScriptInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using HomeCoin.Networks.Deployments;
 
 namespace HomeCoin.Networks
@@ -153,7 +154,7 @@ namespace HomeCoin.Networks
 
             this.Checkpoints = network.Checkpoints;
             this.DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-            this.SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
+            this.SeedNodes = network.Nodes.Select(node => new NetworkAddress(IPAddress.Parse(node), network.DefaultPort)).ToList();
 
             this.StandardScriptsRegistry = new HomeCoinStandardScriptsRegistry();
 

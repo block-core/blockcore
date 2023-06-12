@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Blockcore.Consensus.TransactionInfo;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class UnsignedList<T> : List<T>
         where T : IBitcoinSerializable, new()

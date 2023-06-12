@@ -21,10 +21,9 @@ using Blockcore.Features.Wallet;
 using Blockcore.Features.Wallet.UI;
 using Blockcore.Interfaces.UI;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 
 namespace Blockcore.Networks.X1.Components
 {

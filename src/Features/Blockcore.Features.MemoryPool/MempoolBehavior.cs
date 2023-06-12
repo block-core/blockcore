@@ -7,6 +7,7 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
@@ -16,7 +17,6 @@ using Blockcore.Signals;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool
 {

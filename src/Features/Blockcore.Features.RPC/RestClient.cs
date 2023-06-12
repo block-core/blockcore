@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.Protocol.Payloads;
 using Newtonsoft.Json.Linq;
 
 namespace Blockcore.Features.RPC

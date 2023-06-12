@@ -2,8 +2,8 @@
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool
 {

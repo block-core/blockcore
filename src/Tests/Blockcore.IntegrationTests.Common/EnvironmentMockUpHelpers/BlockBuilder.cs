@@ -5,8 +5,8 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.IntegrationTests.Common.Extensions;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {

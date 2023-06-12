@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP38;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
 using Xunit;

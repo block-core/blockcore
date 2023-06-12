@@ -2,7 +2,7 @@
 using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public class MerkleBlock : IBitcoinSerializable
     {

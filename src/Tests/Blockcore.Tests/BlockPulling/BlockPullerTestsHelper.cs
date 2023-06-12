@@ -12,6 +12,8 @@ using Blockcore.Configuration.Logging;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.P2P.Peer;
@@ -23,7 +25,6 @@ using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NBitcoin;
-using NBitcoin.Protocol;
 
 namespace Blockcore.Tests.BlockPulling
 {

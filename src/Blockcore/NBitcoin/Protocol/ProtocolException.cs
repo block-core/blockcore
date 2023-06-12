@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NBitcoin.Protocol
+namespace Blockcore.NBitcoin.Protocol
 {
     public class ProtocolException : Exception
     {

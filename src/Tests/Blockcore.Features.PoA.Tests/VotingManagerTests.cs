@@ -5,9 +5,9 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.EventBus.CoreEvents;
 using Blockcore.Features.PoA.Voting;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.PoA.Tests

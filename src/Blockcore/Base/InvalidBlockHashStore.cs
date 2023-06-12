@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Base
 {

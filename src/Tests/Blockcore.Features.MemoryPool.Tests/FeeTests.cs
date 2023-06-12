@@ -5,9 +5,9 @@ using Blockcore.Configuration;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.MemoryPool.Fee;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Blockcore.Utilities;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.MemoryPool.Tests

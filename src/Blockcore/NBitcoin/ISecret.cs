@@ -1,4 +1,4 @@
-﻿namespace NBitcoin
+﻿namespace Blockcore.NBitcoin
 {
     public interface ISecret
     {

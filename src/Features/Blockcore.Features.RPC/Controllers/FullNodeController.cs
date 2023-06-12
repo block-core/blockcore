@@ -19,13 +19,13 @@ using Blockcore.Features.RPC.Exceptions;
 using Blockcore.Features.RPC.ModelBinders;
 using Blockcore.Features.RPC.Models;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 
 namespace Blockcore.Features.RPC.Controllers
 {

@@ -17,11 +17,11 @@ using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
 using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Common.ReadyData;
 using Blockcore.IntegrationTests.Common.TestNetworks;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
-using NBitcoin;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.IntegrationTests.Compatibility

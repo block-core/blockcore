@@ -3,10 +3,10 @@ using Blockcore.Configuration;
 using Blockcore.Configuration.Logging;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.PoA.Tests

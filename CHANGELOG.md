@@ -1,3 +1,27 @@
+##  (2023-05-15)
+
+* bump version ([3d8dc3a](https://github.com/block-core/blockcore/commit/3d8dc3a))
+* Move NBitcoin to namespace Blockcore.NBitcoin (#446) ([d6dd45b](https://github.com/block-core/blockcore/commit/d6dd45b)), closes [#446](https://github.com/block-core/blockcore/issues/446)
+
+
+
+##  (2023-04-16)
+
+* Add an interface to override services from the network class (#438) ([faa5f75](https://github.com/block-core/blockcore/commit/faa5f75)), closes [#438](https://github.com/block-core/blockcore/issues/438)
+* make sure cold staking legacy accounts default to bip44 ([729ec43](https://github.com/block-core/blockcore/commit/729ec43))
+* Update version and changelog ([9c4ff98](https://github.com/block-core/blockcore/commit/9c4ff98))
+
+
+
+##  (2023-02-02)
+
+* Fix big size blocks bug from NBitcoin ([880292e](https://github.com/block-core/blockcore/commit/880292e))
+* Fix not null warning ([f4f7330](https://github.com/block-core/blockcore/commit/f4f7330))
+* Update bitcoin checkpoints and defaultAssumeValid (#436) ([57a93a8](https://github.com/block-core/blockcore/commit/57a93a8)), closes [#436](https://github.com/block-core/blockcore/issues/436)
+* Update version and changelog ([213b2e8](https://github.com/block-core/blockcore/commit/213b2e8))
+
+
+
 ##  (2022-10-24)
 
 * Add back the SBC and RSC launch settings ([5e529f3](https://github.com/block-core/blockcore/commit/5e529f3))

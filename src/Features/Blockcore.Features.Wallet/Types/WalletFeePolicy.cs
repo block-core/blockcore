@@ -1,7 +1,7 @@
 ﻿using System;
 using Blockcore.Configuration;
 using Blockcore.Features.Wallet.Interfaces;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Wallet.Types
 {

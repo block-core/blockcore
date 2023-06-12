@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using NBitcoin.BouncyCastle.Crypto.Utilities;
-using NBitcoin.BouncyCastle.Security;
+using Blockcore.NBitcoin.BouncyCastle.crypto.util;
+using Blockcore.NBitcoin.BouncyCastle.security;
 
-namespace NBitcoin.BouncyCastle.Math.Raw
+namespace Blockcore.NBitcoin.BouncyCastle.math.raw
 {
     internal abstract class Mod
     {

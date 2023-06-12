@@ -6,11 +6,11 @@ using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Persistence.LevelDb;
 using Blockcore.Features.BlockStore.Persistence.RocksDb;
 using Blockcore.Features.BlockStore.Repository;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Utilities;
 using LevelDB;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.BlockStore.Tests

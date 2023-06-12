@@ -14,6 +14,8 @@ using Blockcore.Features.Wallet.Exceptions;
 using Blockcore.Features.Wallet.Interfaces;
 using Blockcore.Features.Wallet.Types;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.Policy;
 using Blockcore.Networks;
 using Blockcore.Tests.Common.Logging;
 using Blockcore.Tests.Wallet.Common;
@@ -21,9 +23,13 @@ using Blockcore.Utilities;
 using DBreeze.Utils;
 using FluentAssertions;
 using Moq;
-using NBitcoin;
-using NBitcoin.Policy;
 using Xunit;
+using BitcoinPubKeyAddress = Blockcore.NBitcoin.BitcoinPubKeyAddress;
+using ExtKey = Blockcore.NBitcoin.BIP32.ExtKey;
+using FeeRate = Blockcore.NBitcoin.FeeRate;
+using Key = Blockcore.NBitcoin.Key;
+using Money = Blockcore.NBitcoin.Money;
+using uint256 = Blockcore.NBitcoin.uint256;
 
 namespace Blockcore.Features.Wallet.Tests
 {
@@ -101,9 +107,9 @@ namespace Blockcore.Features.Wallet.Tests
 
             Types.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) changeKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "1/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) changeKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "1/0");
 
             var address = new HdAddress
             {
@@ -166,7 +172,7 @@ namespace Blockcore.Features.Wallet.Tests
             Transaction transactionResult = testContext.WalletTransactionHandler.BuildTransaction(context);
 
             Transaction result = this.Network.CreateTransaction(transactionResult.ToHex());
-            (PubKey PubKey, BitcoinPubKeyAddress Address) expectedChangeAddressKeys = WalletTestsHelpers.GenerateAddressKeys(testContext.Wallet, testContext.AccountKeys.ExtPubKey, "1/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) expectedChangeAddressKeys = WalletTestsHelpers.GenerateAddressKeys(testContext.Wallet, testContext.AccountKeys.ExtPubKey, "1/0");
 
             Assert.Single(result.Inputs);
             Assert.Equal(testContext.AddressTransaction.Id, result.Inputs[0].PrevOut.Hash);
@@ -318,10 +324,10 @@ namespace Blockcore.Features.Wallet.Tests
 
             Types.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys1 = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys2 = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/2");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys3 = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/3");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys1 = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys2 = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/2");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys3 = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/3");
 
             var address = new HdAddress
             {
@@ -682,8 +688,8 @@ namespace Blockcore.Features.Wallet.Tests
 
             Types.Wallet wallet = WalletTestsHelpers.GenerateBlankWallet("myWallet1", "password");
             (ExtKey ExtKey, string ExtPubKey) accountKeys = WalletTestsHelpers.GenerateAccountKeys(wallet, "password", "m/44'/0'/0'");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
-            (PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) spendingKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/0");
+            (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) destinationKeys = WalletTestsHelpers.GenerateAddressKeys(wallet, accountKeys.ExtPubKey, "0/1");
 
             var address = new HdAddress
             {
@@ -749,7 +755,7 @@ namespace Blockcore.Features.Wallet.Tests
 
         public (ExtKey ExtKey, string ExtPubKey) AccountKeys { get; set; }
 
-        public (PubKey PubKey, BitcoinPubKeyAddress Address) DestinationKeys { get; set; }
+        public (NBitcoin.PubKey PubKey, BitcoinPubKeyAddress Address) DestinationKeys { get; set; }
 
         public TransactionOutputData AddressTransaction { get; set; }
 

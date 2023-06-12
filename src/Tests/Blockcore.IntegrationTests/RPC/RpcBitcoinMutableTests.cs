@@ -8,11 +8,12 @@ using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.RPC;
 using Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Tests.Common;
-using NBitcoin;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using uint256 = Blockcore.NBitcoin.uint256;
 
 namespace Blockcore.IntegrationTests.RPC
 {

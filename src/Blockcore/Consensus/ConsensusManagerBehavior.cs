@@ -7,6 +7,7 @@ using Blockcore.Connection;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.Chain;
 using Blockcore.Interfaces;
+using Blockcore.NBitcoin;
 using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol;
 using Blockcore.P2P.Protocol.Behaviors;
@@ -14,7 +15,6 @@ using Blockcore.P2P.Protocol.Payloads;
 using Blockcore.Utilities;
 using Blockcore.Utilities.Extensions;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Consensus
 {

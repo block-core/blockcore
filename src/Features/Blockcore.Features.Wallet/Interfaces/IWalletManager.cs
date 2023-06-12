@@ -6,8 +6,10 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.BlockStore.Models;
 using Blockcore.Features.Wallet.Types;
-using NBitcoin;
-using NBitcoin.BuilderExtensions;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.BIP39;
+using Blockcore.NBitcoin.BuilderExtensions;
 
 namespace Blockcore.Features.Wallet.Interfaces
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using NBitcoin.BouncyCastle.Asn1;
-using NBitcoin.BouncyCastle.Math;
+using Blockcore.NBitcoin.BouncyCastle.asn1;
+using Blockcore.NBitcoin.BouncyCastle.math;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto
 {
     public class ECDSASignature
     {

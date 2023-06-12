@@ -2,8 +2,8 @@ using System;
 using System.Runtime.CompilerServices;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
 
 namespace Blockcore.Networks.X1.Consensus
 {

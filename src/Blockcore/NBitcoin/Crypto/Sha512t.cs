@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto
 {
     public static class Sha512T
     {

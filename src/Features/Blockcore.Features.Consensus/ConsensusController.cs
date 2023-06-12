@@ -7,12 +7,12 @@ using Blockcore.Base.Deployments.Models;
 using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Controllers;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.Consensus
 {

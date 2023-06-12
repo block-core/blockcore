@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities.JsonConverters;
-using NBitcoin;
 using Newtonsoft.Json;
 
 namespace Blockcore.Features.Wallet.Api.Models

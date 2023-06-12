@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.Crypto;
 using Blockcore.Networks;
-using NBitcoin;
-using NBitcoin.Crypto;
 
 namespace Blockcore.Consensus.ScriptInfo
 {
@@ -2075,8 +2076,8 @@ namespace Blockcore.Consensus.ScriptInfo
                 byte nLenS = vchSig[5 + nLenR];
                 int R = 4;
                 int S = 6 + nLenR;
-                var newS = new NBitcoin.BouncyCastle.Math.BigInteger(1, vchSig, S, nLenS);
-                var newR = new NBitcoin.BouncyCastle.Math.BigInteger(1, vchSig, R, nLenR);
+                var newS = new BigInteger(1, vchSig, S, nLenS);
+                var newR = new BigInteger(1, vchSig, R, nLenR);
                 var sig2 = new ECDSASignature(newR, newS);
                 if (sig2.R != scriptSig.Signature.R || sig2.S != scriptSig.Signature.S)
                 {

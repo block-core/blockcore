@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Blockcore.Utilities
 {
@@ -29,7 +30,7 @@ namespace Blockcore.Utilities
         /// <param name="parameterName">The name of the object.</param>
         /// <returns>The object if it is not null.</returns>
         /// <exception cref="ArgumentNullException">An exception if the object passed is null.</exception>
-        public static T NotNull<T>(T value, string parameterName)
+        public static T NotNull<T>([NotNull] T value, string parameterName)
         {
             // the parameterName should never be null or empty
             if (string.IsNullOrWhiteSpace(parameterName))

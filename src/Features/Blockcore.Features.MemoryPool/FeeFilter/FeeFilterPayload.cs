@@ -1,5 +1,5 @@
-﻿using Blockcore.P2P.Protocol.Payloads;
-using NBitcoin;
+﻿using Blockcore.NBitcoin;
+using Blockcore.P2P.Protocol.Payloads;
 
 namespace Blockcore.Features.MemoryPool.FeeFilter
 {

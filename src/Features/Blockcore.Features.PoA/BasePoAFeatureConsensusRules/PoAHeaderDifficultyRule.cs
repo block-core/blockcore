@@ -1,5 +1,5 @@
 ﻿using Blockcore.Consensus.Rules;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.PoA.BasePoAFeatureConsensusRules
 {

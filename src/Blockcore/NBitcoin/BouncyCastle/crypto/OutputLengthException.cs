@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NBitcoin.BouncyCastle.Crypto
+namespace Blockcore.NBitcoin.BouncyCastle.crypto
 {
     internal class OutputLengthException
         : DataLengthException

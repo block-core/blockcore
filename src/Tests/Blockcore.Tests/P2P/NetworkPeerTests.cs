@@ -1,6 +1,6 @@
-﻿using Blockcore.P2P.Peer;
+﻿using Blockcore.NBitcoin.Protocol;
+using Blockcore.P2P.Peer;
 using Blockcore.P2P.Protocol.Payloads;
-using NBitcoin.Protocol;
 using Xunit;
 
 namespace Blockcore.Tests.P2P

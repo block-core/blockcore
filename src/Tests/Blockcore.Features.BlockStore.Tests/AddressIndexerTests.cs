@@ -12,6 +12,7 @@ using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Controllers.Models;
 using Blockcore.Features.BlockStore.AddressIndexing;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Stratis;
@@ -19,7 +20,6 @@ using Blockcore.Tests.Common;
 using Blockcore.Utilities;
 using LiteDB;
 using Moq;
-using NBitcoin;
 using Xunit;
 using Script = Blockcore.Consensus.ScriptInfo.Script;
 

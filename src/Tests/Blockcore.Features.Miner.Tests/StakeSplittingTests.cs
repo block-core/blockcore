@@ -5,8 +5,8 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Miner.Staking;
+using Blockcore.NBitcoin;
 using FluentAssertions;
-using NBitcoin;
 using Xunit;
 
 namespace Blockcore.Features.Miner.Tests

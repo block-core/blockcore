@@ -6,9 +6,6 @@ using Blockcore.Features.Consensus.Rules.UtxosetRules;
 using Blockcore.Features.MemoryPool.Rules;
 using OpenExo.Networks.Policies;
 using OpenExo.Networks.Rules;
-using NBitcoin;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 using System.Collections;
 using System.Linq;
 using System.Collections.Specialized;
@@ -18,12 +15,16 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BIP32;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.Protocol;
 using Blockcore.Networks;
 using Blockcore.P2P;
 using OpenExo.Networks.Consensus;
 using OpenExo.Networks.Setup;
 using OpenExo.Networks.Deployments;
-using NBitcoin.Protocol;
 
 namespace OpenExo.Networks
 {
@@ -167,7 +168,7 @@ namespace OpenExo.Networks
 
             Checkpoints = network.Checkpoints;
             DNSSeeds = network.DNS.Select(dns => new DNSSeedData(dns, dns)).ToList();
-            SeedNodes = network.Nodes.Select(node => new NBitcoin.Protocol.NetworkAddress(IPAddress.Parse(Dns.GetHostAddresses(node).GetValue(0).ToString()), network.DefaultPort)).ToList();
+            SeedNodes = network.Nodes.Select(node => new NetworkAddress(IPAddress.Parse(Dns.GetHostAddresses(node).GetValue(0).ToString()), network.DefaultPort)).ToList();
 
             StandardScriptsRegistry = new OpenExoStandardScriptsRegistry();
 

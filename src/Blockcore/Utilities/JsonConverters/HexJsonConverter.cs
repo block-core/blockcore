@@ -1,5 +1,5 @@
 ﻿using System;
-using NBitcoin.DataEncoders;
+using Blockcore.NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 
 namespace Blockcore.Utilities.JsonConverters

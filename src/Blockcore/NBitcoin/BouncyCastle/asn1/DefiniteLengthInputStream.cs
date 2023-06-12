@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using NBitcoin.BouncyCastle.Utilities.IO;
+using Blockcore.NBitcoin.BouncyCastle.util.io;
 
-namespace NBitcoin.BouncyCastle.Asn1
+namespace Blockcore.NBitcoin.BouncyCastle.asn1
 {
     internal class DefiniteLengthInputStream
         : LimitedInputStream

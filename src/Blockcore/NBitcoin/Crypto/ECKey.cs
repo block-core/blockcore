@@ -1,12 +1,13 @@
 ﻿using System;
-using NBitcoin.BouncyCastle.Asn1.X9;
-using NBitcoin.BouncyCastle.Crypto.Parameters;
-using NBitcoin.BouncyCastle.Crypto.Signers;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.BouncyCastle.Math.EC;
-using NBitcoin.BouncyCastle.Math.EC.Custom.Sec;
+using Blockcore.NBitcoin.BouncyCastle.asn1.x9;
+using Blockcore.NBitcoin.BouncyCastle.crypto.ec;
+using Blockcore.NBitcoin.BouncyCastle.crypto.parameters;
+using Blockcore.NBitcoin.BouncyCastle.crypto.signers;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.BouncyCastle.math.ec;
+using Blockcore.NBitcoin.BouncyCastle.math.ec.custom.sec;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto
 {
     internal class ECKey
     {
@@ -27,7 +28,7 @@ namespace NBitcoin.Crypto
         public static readonly X9ECParameters _Secp256k1;
         static ECKey()
         {
-            _Secp256k1 = BouncyCastle.Crypto.EC.CustomNamedCurves.Secp256k1;
+            _Secp256k1 = CustomNamedCurves.Secp256k1;
             CURVE = new ECDomainParameters(_Secp256k1.Curve, _Secp256k1.G, _Secp256k1.N, _Secp256k1.H);
             HALF_CURVE_ORDER = _Secp256k1.N.ShiftRight(1);
             CURVE_ORDER = _Secp256k1.N;

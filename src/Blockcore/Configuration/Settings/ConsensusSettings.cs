@@ -1,8 +1,8 @@
 ﻿using System.Text;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Configuration.Settings
 {

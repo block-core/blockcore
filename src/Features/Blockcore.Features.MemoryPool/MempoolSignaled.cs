@@ -11,7 +11,6 @@ using Blockcore.Features.MemoryPool.Interfaces;
 using Blockcore.P2P.Peer;
 using Blockcore.Signals;
 using Blockcore.Utilities;
-using NBitcoin;
 
 namespace Blockcore.Features.MemoryPool
 {

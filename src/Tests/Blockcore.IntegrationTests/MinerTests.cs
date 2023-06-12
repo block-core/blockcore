@@ -34,6 +34,8 @@ using Blockcore.IntegrationTests.Common.Extensions;
 using Blockcore.IntegrationTests.Wallet;
 using Blockcore.Interfaces;
 using Blockcore.Mining;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Tests.Common;
@@ -41,8 +43,6 @@ using Blockcore.Utilities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NBitcoin;
-using NBitcoin.DataEncoders;
 using Xunit;
 
 namespace Blockcore.IntegrationTests

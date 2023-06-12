@@ -1,7 +1,7 @@
 using System;
-using NBitcoin.BouncyCastle.Math;
+using Blockcore.NBitcoin.BouncyCastle.math;
 
-namespace NBitcoin.BouncyCastle.Crypto.Parameters
+namespace Blockcore.NBitcoin.BouncyCastle.crypto.parameters
 {
     internal class ECPrivateKeyParameters
         : ECKeyParameters

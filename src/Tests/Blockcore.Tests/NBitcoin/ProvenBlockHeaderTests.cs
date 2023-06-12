@@ -4,6 +4,7 @@ using System.Linq;
 using Blockcore.Consensus.BlockInfo;
 using Blockcore.Consensus.ScriptInfo;
 using Blockcore.Consensus.TransactionInfo;
+using Blockcore.NBitcoin;
 using Blockcore.Tests.Common;
 using FluentAssertions;
 using Xunit;

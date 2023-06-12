@@ -2,7 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Blockcore.Consensus.BlockInfo;
-using NBitcoin;
+using Blockcore.NBitcoin;
+using IBitcoinSerializable = Blockcore.NBitcoin.IBitcoinSerializable;
 
 namespace Blockcore.Consensus.Chain
 {

@@ -6,13 +6,14 @@ using System.Threading;
 using Blockcore.Base.Deployments;
 using Blockcore.Consensus;
 using Blockcore.Consensus.BlockInfo;
+using Blockcore.NBitcoin;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 using Blockcore.Networks.Bitcoin;
 using Blockcore.Networks.Bitcoin.Deployments;
 using Blockcore.Networks.Stratis;
 using Blockcore.Tests.Common;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.DataEncoders;
 using Xunit;
 
 namespace NBitcoin.Tests
@@ -78,7 +79,7 @@ namespace NBitcoin.Tests
         [Fact]
         public void BitcoinMainnetIsInitializedCorrectly()
         {
-            Assert.Equal(17, this.networkMain.Checkpoints.Count);
+            Assert.Equal(18, this.networkMain.Checkpoints.Count);
             Assert.Equal(6, this.networkMain.DNSSeeds.Count);
             Assert.Equal(512, this.networkMain.SeedNodes.Count);
 
@@ -140,7 +141,7 @@ namespace NBitcoin.Tests
             Assert.Equal(Utils.UnixTimeToDateTime(1510704000), this.networkMain.Consensus.BIP9Deployments[BitcoinBIP9Deployments.Segwit].Timeout);
             Assert.Equal(0, this.networkMain.Consensus.CoinType);
             Assert.False(this.networkMain.Consensus.IsProofOfStake);
-            Assert.Equal(new uint256("0x0000000000000000000304dece599f1d046f5c606deec3d1d49eb24b3231b4a3"), this.networkMain.Consensus.DefaultAssumeValid);
+            Assert.Equal(new uint256("0x00000000000000000003e1d91b245eb32787afb10afe49b61621375361221c38"), this.networkMain.Consensus.DefaultAssumeValid);
             Assert.Equal(100, this.networkMain.Consensus.CoinbaseMaturity);
             Assert.Equal(0, this.networkMain.Consensus.PremineReward);
             Assert.Equal(0, this.networkMain.Consensus.PremineHeight);

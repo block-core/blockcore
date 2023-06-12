@@ -13,7 +13,6 @@ using Blockcore.P2P.Peer;
 using Blockcore.Signals;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Features.BlockStore
 {

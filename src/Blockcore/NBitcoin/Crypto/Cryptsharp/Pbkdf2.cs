@@ -19,10 +19,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 using System;
 using System.IO;
-using NBitcoin.BouncyCastle.Crypto;
-using NBitcoin.Crypto.Internal;
+using Blockcore.NBitcoin.BouncyCastle.crypto;
 
-namespace NBitcoin.Crypto
+namespace Blockcore.NBitcoin.Crypto.Cryptsharp
 {
     /// <summary>
     /// Implements the PBKDF2 key derivation function.
@@ -67,10 +66,10 @@ namespace NBitcoin.Crypto
         /// <param name="iterations">The number of iterations to apply.</param>
         public Pbkdf2(IMac hmacAlgorithm, byte[] salt, int iterations)
         {
-            Internal.Check.Null("hmacAlgorithm", hmacAlgorithm);
-            Internal.Check.Null("salt", salt);
-            Internal.Check.Length("salt", salt, 0, int.MaxValue - 4);
-            Internal.Check.Range("iterations", iterations, 1, int.MaxValue);
+            Check.Null("hmacAlgorithm", hmacAlgorithm);
+            Check.Null("salt", salt);
+            Check.Length("salt", salt, 0, int.MaxValue - 4);
+            Check.Range("iterations", iterations, 1, int.MaxValue);
             int hmacLength = hmacAlgorithm.GetMacSize();
             this._saltBuffer = new byte[salt.Length + 4];
             Array.Copy(salt, this._saltBuffer, salt.Length);
@@ -87,7 +86,7 @@ namespace NBitcoin.Crypto
         /// <returns>Bytes from the derived key stream.</returns>
         public byte[] Read(int count)
         {
-            Internal.Check.Range("count", count, 0, int.MaxValue);
+            Check.Range("count", count, 0, int.MaxValue);
 
             var buffer = new byte[count];
             int bytes = Read(buffer, 0, count);
@@ -114,7 +113,7 @@ namespace NBitcoin.Crypto
         public static byte[] ComputeDerivedKey(IMac hmacAlgorithm, byte[] salt, int iterations,
                                                int derivedKeyLength)
         {
-            Internal.Check.Range("derivedKeyLength", derivedKeyLength, 0, int.MaxValue);
+            Check.Range("derivedKeyLength", derivedKeyLength, 0, int.MaxValue);
 
             using(var kdf = new Pbkdf2(hmacAlgorithm, salt, iterations))
             {
@@ -174,7 +173,7 @@ namespace NBitcoin.Crypto
         /// <inheritdoc />
         public override int Read(byte[] buffer, int offset, int count)
         {
-            Internal.Check.Bounds("buffer", buffer, offset, count);
+            Check.Bounds("buffer", buffer, offset, count);
             int bytes = 0;
 
             while(count > 0)

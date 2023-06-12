@@ -2,9 +2,9 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus;
 using Blockcore.Features.Consensus.Rules.UtxosetRules;
+using Blockcore.NBitcoin;
 using Blockcore.Utilities;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.Networks.Xds.Rules
 {

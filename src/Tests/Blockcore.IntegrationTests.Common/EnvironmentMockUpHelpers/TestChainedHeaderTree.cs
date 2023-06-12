@@ -6,9 +6,9 @@ using Blockcore.Consensus;
 using Blockcore.Consensus.Chain;
 using Blockcore.Consensus.Checkpoints;
 using Blockcore.Consensus.Validators;
+using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 namespace Blockcore.IntegrationTests.Common.EnvironmentMockUpHelpers
 {

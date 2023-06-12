@@ -29,7 +29,6 @@ using Blockcore.Utilities;
 using Blockcore.Utilities.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NBitcoin;
 
 [assembly: InternalsVisibleTo("Blockcore.Tests")]
 [assembly: InternalsVisibleTo("Blockcore.Tests.Common")]

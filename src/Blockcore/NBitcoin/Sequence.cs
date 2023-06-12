@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin
 {
     public enum SequenceLockType
     {

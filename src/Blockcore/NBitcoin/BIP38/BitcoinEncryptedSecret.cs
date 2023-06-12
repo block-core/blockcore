@@ -1,14 +1,15 @@
 ﻿using System.Linq;
 using System.Security;
-using System.Text;
-using NBitcoin.BouncyCastle.Asn1.X9;
-using NBitcoin.BouncyCastle.Math;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
 using System.Security.Cryptography;
+using System.Text;
+using Blockcore.NBitcoin.BouncyCastle.asn1.x9;
+using Blockcore.NBitcoin.BouncyCastle.math;
+using Blockcore.NBitcoin.Crypto;
+using Blockcore.NBitcoin.Crypto.Cryptsharp;
+using Blockcore.NBitcoin.DataEncoders;
 using Blockcore.Networks;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.BIP38
 {
     public class BitcoinEncryptedSecretNoEC : BitcoinEncryptedSecret
     {

@@ -1,6 +1,6 @@
-﻿using NBitcoin.BouncyCastle.Utilities;
+﻿using Blockcore.NBitcoin.BouncyCastle.util;
 
-namespace NBitcoin.BouncyCastle.Math.Field
+namespace Blockcore.NBitcoin.BouncyCastle.math.field
 {
     internal class GF2Polynomial
         : IPolynomial

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Networks;
 
-namespace NBitcoin
+namespace Blockcore.NBitcoin.Repository
 {
     public class NoSqlTransactionRepository : ITransactionRepository
     {

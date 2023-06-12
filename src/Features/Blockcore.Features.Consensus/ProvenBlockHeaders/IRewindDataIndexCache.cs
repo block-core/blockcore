@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Blockcore.Consensus.TransactionInfo;
 using Blockcore.Features.Consensus.CoinViews;
-using NBitcoin;
+using Blockcore.NBitcoin;
 
 namespace Blockcore.Features.Consensus.ProvenBlockHeaders
 {

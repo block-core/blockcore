@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - dotnet8
 #  repository_dispatch:
 #    types: [build]
   workflow_dispatch:

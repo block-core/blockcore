@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>

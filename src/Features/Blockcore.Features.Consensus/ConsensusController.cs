@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Asp.Versioning;
 using Blockcore.Base;
 using Blockcore.Base.Deployments;
 using Blockcore.Base.Deployments.Models;

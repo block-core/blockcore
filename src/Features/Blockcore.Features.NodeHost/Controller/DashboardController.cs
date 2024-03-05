@@ -1,4 +1,5 @@
-﻿using Blockcore.AsyncWork;
+﻿using Asp.Versioning;
+using Blockcore.AsyncWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

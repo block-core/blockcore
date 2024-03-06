@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Asp.Versioning;
 using Blockcore.Features.Wallet.Api.Models;
 using Blockcore.NBitcoin;
 using Blockcore.Networks;

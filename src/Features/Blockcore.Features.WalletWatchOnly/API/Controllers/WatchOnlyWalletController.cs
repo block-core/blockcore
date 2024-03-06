@@ -8,6 +8,7 @@ using Blockcore.Features.WalletWatchOnly.Models;
 using Blockcore.Features.WalletWatchOnly.Interfaces;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
+using Asp.Versioning;
 
 namespace Blockcore.Features.WalletWatchOnly.Api.Controllers
 {

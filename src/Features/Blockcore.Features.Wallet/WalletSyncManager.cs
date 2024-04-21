@@ -322,6 +322,12 @@ namespace Blockcore.Features.Wallet
             this.walletTip = chainedHeader ?? throw new WalletException("Invalid block height");
             this.walletManager.WalletTipHash = chainedHeader.HashBlock;
             this.walletManager.WalletTipHeight = chainedHeader.Height;
+
+            // Rather than waiting for a new block to be received, which could take a while, immediately
+            // trigger resync from after the newly-set wallet tip through the current consensus tip.
+            // Note that we are taking advantage of how OnProcessBlockAsync will iterate over any blocks
+            // in the consensus chain between the wallet tip and this block.
+            this.ProcessBlock(this.blockStore.GetBlock(this.chainIndexer.Tip.HashBlock));
         }
 
         /// <inheritdoc />

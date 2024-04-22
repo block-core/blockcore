@@ -341,13 +341,17 @@ namespace Blockcore.Features.MemoryPool
                 //  from. pfrom->AskFor(_inv);
             }
 
-            bool ret = this.AddOrphanTx(from.PeerVersion.Nonce, tx);
+            bool ret = false;
+            if (from.PeerVersion != null)
+            {
+                ret = this.AddOrphanTx(from.PeerVersion.Nonce, tx);
 
-            // DoS prevention: do not allow mapOrphanTransactions to grow unbounded
-            int nMaxOrphanTx = this.mempoolSettings.MaxOrphanTx;
-            int nEvicted = this.LimitOrphanTxSize(nMaxOrphanTx);
-            if (nEvicted > 0)
-                this.logger.LogDebug("mapOrphan overflow, removed {0} tx", nEvicted);
+                // DoS prevention: do not allow mapOrphanTransactions to grow unbounded
+                int nMaxOrphanTx = this.mempoolSettings.MaxOrphanTx;
+                int nEvicted = this.LimitOrphanTxSize(nMaxOrphanTx);
+                if (nEvicted > 0)
+                    this.logger.LogDebug("mapOrphan overflow, removed {0} tx", nEvicted);
+            }
 
             return ret;
         }

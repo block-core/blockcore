@@ -62,17 +62,17 @@ namespace Blockcore.Consensus.Chain
 
                     Guard.Assert(data.Hash == genesisHeader.HashBlock); // can't swap networks
 
-                    int index = 0;
-                    while (true)
+                    var list = this.chainStore.GetChainData();
+
+                    foreach (var chainedData in list)
                     {
-                        data = this.chainStore.GetChainData((index));
+                        // Create a new ChainedHeader with reference to previous. This will build a large object graph of all headers.
+                        tip = new ChainedHeader(chainedData.Hash, chainedData.Work, tip);
 
-                        if (data == null)
-                            break;
-
-                        tip = new ChainedHeader(data.Hash, data.Work, tip);
-                        if (tip.Height == 0) tip.SetChainStore(this.chainStore);
-                        index++;
+                        if (tip.Height == 0)
+                        {
+                            tip.SetChainStore(this.chainStore);
+                        }
                     }
 
                     if (tip == null)

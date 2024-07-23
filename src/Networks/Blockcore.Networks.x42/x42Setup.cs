@@ -50,7 +50,7 @@ namespace Blockcore.Networks.x42
             HashGenesisBlock = "0x04ffe583707a96c1c2eb54af33a4b1dc6d9d8e09fea8c9a7b097ba88f0cb64c4",
             HashMerkleRoot = "0x6e3439a32382f83dee4f94a6f8bdd38908bcf0c82ec09aba85c5321357f01f67",
             DNS = new[] { "mainnet1.x42seed.host", "mainnetnode1.x42seed.host", "tech.x42.cloud", "x42.seed.blockcore.net" },
-            Nodes = new[] { "161.97.101.147", "149.102.149.209", "121.170.70.100", "209.145.56.58", "154.26.136.64", "193.187.129.227", "51.254.85.40", "89.10.238.216", "121.170.70.22", "149.102.131.85", "152.228.148.188", "212.90.120.47" },
+            Nodes = new[] { "161.97.101.147", "149.102.149.209", "121.170.70.100", "209.145.56.58", "154.26.136.64", "193.187.129.227", "51.254.85.40", "89.10.238.216", "121.170.70.22", "149.102.131.85", "212.90.120.47" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 { 0, new CheckpointInfo(new uint256("0x04ffe583707a96c1c2eb54af33a4b1dc6d9d8e09fea8c9a7b097ba88f0cb64c4"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) }, // Genisis

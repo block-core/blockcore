@@ -5,6 +5,7 @@ using Blockcore.Features.Notifications.Interfaces;
 using Blockcore.NBitcoin;
 using Blockcore.Utilities.JsonErrors;
 using Microsoft.AspNetCore.Authorization;
+using Asp.Versioning;
 
 namespace Blockcore.Features.Notifications.Controllers
 {

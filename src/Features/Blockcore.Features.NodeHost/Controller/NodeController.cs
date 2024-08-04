@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using Blockcore.AsyncWork;
 using Blockcore.Base;
 using Blockcore.Builder.Feature;

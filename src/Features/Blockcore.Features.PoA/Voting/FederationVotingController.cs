@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Asp.Versioning;
 using Blockcore.NBitcoin;
 using Blockcore.Networks;
 using Blockcore.Utilities;

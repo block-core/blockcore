@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -72,10 +73,15 @@ namespace Blockcore.Tests.P2P
             const int portNumber = 80;
             var client = new TcpClient("www.stratisplatform.com", portNumber);
 
-            var ipandport = client.Client.RemoteEndPoint.ToString();
-            var ip = ipandport.Replace(ipandport.Substring(ipandport.IndexOf(':')), "");
-
-            var endpointDiscovered = new IPEndPoint(IPAddress.Parse(ip), portNumber);
+            var ipAndPort = client.Client.RemoteEndPoint.ToString();
+            var ip = ipAndPort.Substring(0, ipAndPort.LastIndexOf(':'));
+            IPAddress ipAddress;
+            if (!IPAddress.TryParse(ip, out ipAddress))
+            {
+                // Log error or handle the case where IP address is not valid
+                throw new InvalidOperationException("The IP address format is invalid.");
+            }
+            var endpointDiscovered = new IPEndPoint(ipAddress, portNumber);
 
             // Include the external client as a NodeServerEndpoint.
             connectionManagerSettings.Bind.Add(new NodeServerEndpoint(endpointDiscovered, isWhiteListed));

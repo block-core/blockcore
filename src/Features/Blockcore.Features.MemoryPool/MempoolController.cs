@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using Blockcore.Controllers;
 using Blockcore.NBitcoin;
 using Blockcore.Utilities;

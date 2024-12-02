@@ -10,7 +10,7 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-	  <PackageReference Include="RocksDB" Version="8.11.3.46984" />
+	  <PackageReference Include="RocksDB" Version="9.4.0.50294" />
   </ItemGroup>
 
   <ItemGroup>

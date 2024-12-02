@@ -52,7 +52,7 @@ jobs:
     - name: Nuget Pack
       run: dotnet pack --configuration ${{env.BUILD_CONFIGURATION}} --output "${{github.workspace}}/package/" ${{env.SOLUTION_PATH}}
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: Blockcore-${{env.VERSION}}-${{matrix.os}}-preview
         path: "${{github.workspace}}/package/"

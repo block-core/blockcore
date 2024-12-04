@@ -24,6 +24,10 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Features\Blockcore.Features.Consensus\Blockcore.Features.Consensus.csproj" />

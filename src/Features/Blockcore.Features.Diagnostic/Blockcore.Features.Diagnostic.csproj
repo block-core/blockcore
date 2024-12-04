@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Blockcore\Blockcore.csproj" />
     <ProjectReference Include="..\Blockcore.Features.NodeHost\Blockcore.Features.NodeHost.csproj" />
   </ItemGroup>

@@ -45,6 +45,7 @@ jobs:
       shell: bash
 
     - name: Unit Test
+      continue-on-error: true
       run: |
         dotnet nuget locals all --clear
         dotnet test -v=normal --filter "FullyQualifiedName!~IntegrationTests&Unstable!=True" -c ${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_PATH}}

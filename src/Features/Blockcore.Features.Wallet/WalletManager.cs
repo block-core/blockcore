@@ -365,39 +365,89 @@ namespace Blockcore.Features.Wallet
             Guard.NotEmpty(message, nameof(message));
             Guard.NotEmpty(externalAddress, nameof(externalAddress));
 
-            // Get wallet
+            // Get wallet and all addresses
             Types.Wallet wallet = this.GetWalletByName(walletName);
+            var allAddresses = wallet.GetAllAddresses(a => true);
 
-            // Sign the message.
-            HdAddress hdAddress = wallet.GetAddress(externalAddress, account => account.Name.Equals(accountName));
-            Key privateKey = wallet.GetExtendedPrivateKeyForAddress(password, hdAddress).PrivateKey;
-            return new SignMessageResult()
+            // Try to find the address directly first
+            HdAddress hdAddress = allAddresses.FirstOrDefault(a => a.Address == externalAddress);
+
+            // If not found, check for SegWit addresses
+            if (hdAddress == null)
             {
-                Signature = privateKey.SignMessage(message),
+                hdAddress = FindSegWitAddress(wallet, allAddresses, externalAddress);
+                if (hdAddress != null)
+                {
+                    var privateKey = wallet.GetExtendedPrivateKeyForAddress(password, hdAddress).PrivateKey;
+                    var signature = privateKey.SignMessage(message);
+
+                    // Get the SegWit address for consistency
+                    var pubkey = PayToPubkeyTemplate.Instance.ExtractScriptPubKeyParameters(hdAddress.Pubkey);
+                    var witAddress = pubkey.GetSegwitAddress(this.network);
+
+                    return new SignMessageResult
+                    {
+                        Signature = signature,
+                        SignedAddress = witAddress.ToString()
+                    };
+                }
+            }
+
+            // If we still haven't found the address, return null or throw an exception
+            if (hdAddress == null)
+            {
+                throw new WalletException("Address not found in wallet.");
+            }
+
+            // Sign with legacy address
+            var legacyPrivateKey = wallet.GetExtendedPrivateKeyForAddress(password, hdAddress).PrivateKey;
+            return new SignMessageResult
+            {
+                Signature = legacyPrivateKey.SignMessage(message),
                 SignedAddress = hdAddress.Address
             };
         }
 
+        private HdAddress FindSegWitAddress(Types.Wallet wallet, IEnumerable<HdAddress> allAddresses, string externalAddress)
+        {
+            return allAddresses
+                .Where(addr => addr.IsBip44() && wallet.Version < 2 && addr.Pubkey != null)
+                .FirstOrDefault(addr =>
+                {
+                    var pubkey = PayToPubkeyTemplate.Instance.ExtractScriptPubKeyParameters(addr.Pubkey);
+                    var witAddress = pubkey.GetSegwitAddress(this.network);
+                    return externalAddress == witAddress.ToString();
+                });
+        }
+
         /// <inheritdoc />
-        public bool VerifySignedMessage(string externalAddress, string message, string signature)
+        public bool VerifySignedMessage(string address, string message, string signature)
         {
             Guard.NotEmpty(message, nameof(message));
-            Guard.NotEmpty(externalAddress, nameof(externalAddress));
+            Guard.NotEmpty(address, nameof(address));
             Guard.NotEmpty(signature, nameof(signature));
-
-            bool result = false;
-
             try
             {
-                BitcoinPubKeyAddress bitcoinPubKeyAddress = new BitcoinPubKeyAddress(externalAddress, this.network);
-                result = bitcoinPubKeyAddress.VerifyMessage(message, signature);
+                // Parse the Bitcoin address and recover the public key
+                var bitcoinAddress = BitcoinAddress.Create(address, this.network);
+                var pubKey = PubKey.RecoverFromMessage(message, signature);
+
+                // Check if it's a SegWit address
+                if (bitcoinAddress.ScriptPubKey.IsScriptType(ScriptType.P2WPKH))
+                {
+                    var segwitAddress = pubKey.GetSegwitAddress(this.network);
+                    return segwitAddress.ToString() == address;
+                }
+
+                // Legacy address verification
+                var legacyAddress = pubKey.GetAddress(this.network);
+                return legacyAddress.ToString() == address;
             }
             catch (Exception ex)
             {
-                this.logger.LogDebug("Failed to verify message: {0}", ex.ToString());
-                this.logger.LogTrace("(-)[EXCEPTION]");
+                this.logger?.LogError(ex, "Error verifying message for address {address}", address);
+                return false;
             }
-            return result;
         }
 
         /// <inheritdoc />

@@ -55,6 +55,13 @@ namespace Blockcore.Base
         /// <inheritdoc />
         public bool IsInitialBlockDownload()
         {
+            // The HTTP server starts up before the blockchain database is loaded, this means ConsensusTip can at startup be null. Simply
+            // return IBD as true if ConsensusTip is null.
+            if (this.chainState.ConsensusTip == null)
+            {
+                return true;
+            }
+            
             if (this.lastCheckpointHeight > this.chainState.ConsensusTip.Height)
                 return true;
 

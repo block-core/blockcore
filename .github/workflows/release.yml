@@ -47,10 +47,5 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
       
-    - name: Install NuGet CLI
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y nuget
-
     - name: Nuget Push
-      run: nuget push "${{github.workspace}}/artifacts/*.nupkg" -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate
+      run: dotnet nuget push "${{github.workspace}}/artifacts/*.nupkg" -ApiKey ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate

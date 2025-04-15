@@ -10,6 +10,7 @@ namespace Blockcore.Networks.City.Networks.Rules
     public class CityCheckPosUtxosetRule : CheckPosUtxosetRule
     {
         private static readonly int REDUCTIONHEIGHT = 1111111;
+        private static readonly int NOREWARDHEIGHT = 3000000;
 
         /// <inheritdoc />
         public override Money GetProofOfWorkReward(int height)
@@ -30,10 +31,16 @@ namespace Blockcore.Networks.City.Networks.Rules
             if (this.IsPremine(height))
                 return this.consensus.PremineReward;
 
+            if (height > NOREWARDHEIGHT)
+            {
+                return Money.Zero;
+            }
+
             if (height > REDUCTIONHEIGHT)
             {
                 return this.consensus.ProofOfStakeReward / 10;
             }
+
 
             return this.consensus.ProofOfStakeReward;
         }

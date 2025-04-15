@@ -48,4 +48,4 @@ jobs:
       run: ls -R
       
     - name: Nuget Push
-      run: dotnet nuget push "${{github.workspace}}/artifacts/*.nupkg" --api-key ${{secrets.NUGET_KEY}} -Source "https://api.nuget.org/v3/index.json" -SkipDuplicate
+      run: dotnet nuget push "${{github.workspace}}/artifacts/*.nupkg" --api-key ${{secrets.NUGET_KEY}} --source "https://api.nuget.org/v3/index.json" --skip-duplicate

@@ -45,8 +45,8 @@ namespace Blockcore.Networks.City
             GenesisReward = Money.Zero,
             HashGenesisBlock = "00000b0517068e602ed5279c20168cfa1e69884ee4e784909652da34c361bff2",
             HashMerkleRoot = "b3425d46594a954b141898c7eebe369c6e6a35d2dab393c1f495504d2147883b",
-            DNS = new[] { "seed.city-chain.org", "seed.city-coin.org", "seed.liberstad.com", "city.seed.blockcore.net" },
-            Nodes = new[] { "95.217.210.139", "195.201.16.145", "89.10.224.54" },
+            DNS = new[] { "seed.city-chain.org", "seed.liberstad.com", "city.seed.blockcore.net" },
+            Nodes = new[] { "185.252.79.75", "95.217.210.139" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
          {
                 { 0, new CheckpointInfo(new uint256("0x00000b0517068e602ed5279c20168cfa1e69884ee4e784909652da34c361bff2"), new uint256("0x0000000000000000000000000000000000000000000000000000000000000000")) },
@@ -58,6 +58,7 @@ namespace Blockcore.Networks.City
                 { 1060000, new CheckpointInfo(new uint256("0xea17e88ff533ca71dbaf0a8772d1f680845371e774250e35251671227fdcb699"), new uint256("0xfc4d6eec52900c6623711427d11357afe6becc6aafa71ed3ade3fe3128d9f23f")) },
                 { 1125570, new CheckpointInfo(new uint256("0x1295cd37612f19ad8847531f84489f25fa1612a0cb91e95bff44b566a0de2cfa"), new uint256("0xa62070bd16f609f33b724e2de7bd555fcef28161a6146e6270dfcaf784b21d61")) },
                 { 1764800, new CheckpointInfo(new uint256("0xbec401a33c003c5949658afa253f73369ed3b2b8c9d9b067c589befaf33ec727"), new uint256("0xf0f969a1ab26187c01fd71e9b5955d5923d6b4f7dece270c1f3d1705d330210b")) },
+                { 2976200, new CheckpointInfo(new uint256("0x2f74deb133333fc374b18dba3a8cc76ccbd8d878e4f3b6a9afcdf7d631842ccd"), new uint256("0x271a01a87ca473ddf3d4622d3a748415e387cab0bfee2ba554df61931f00572c")) },
          }
         };
 
@@ -81,7 +82,7 @@ namespace Blockcore.Networks.City
             HashGenesisBlock = "000039df5f7c79084bf96c67ea24761e177d77c24f326eb5294860144301cb68",
             HashMerkleRoot = "d382311c9e4a1ec84be1b32eddb33f7f0420544a460754f573d7cb7054566d75",
             DNS = new[] { "seedregtest1.city.blockcore.net", "seedregtest2.city.blockcore.net", "seedregtest.city.blockcore.net" },
-            Nodes = new[] { "23.97.234.230", "13.73.143.193", "89.10.227.34" },
+            Nodes = new[] { "185.252.79.75", "95.217.210.139" },
             Checkpoints = new Dictionary<int, CheckpointInfo>
             {
                 // TODO: Add checkpoints as the network progresses.

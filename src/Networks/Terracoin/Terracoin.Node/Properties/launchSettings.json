@@ -1,0 +1,39 @@
+{
+   "profiles": {
+      "TRC (MAIN)": {
+         "commandName": "Project"
+      },
+      "TRC (TEST)": {
+         "commandName": "Project",
+         "commandLineArgs": "-testnet"
+      },
+      "TRC (MAIN/RPC)": {
+         "commandName": "Project",
+         "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser"
+      },
+      "TRC (TEST/RPC)": {
+         "commandName": "Project",
+         "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -testnet"
+      },
+      "TRC (MAIN/LOCAL/RPC)": {
+         "commandName": "Project",
+         "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata"
+      },
+      "TRC (TEST/LOCAL/RPC)": {
+         "commandName": "Project",
+         "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -testnet"
+      },
+      "TRC (MAIN/LOCAL/RPC/DEFAULT)": {
+         "commandName": "Project",
+         "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -defaultwalletname=default -defaultwalletpassword=default -unlockdefaultwallet -server"
+      },
+      "TRC (TEST/LOCAL/RPC/DEFAULT)": {
+         "commandName": "Project",
+         "commandLineArgs": "-server -rpcallowip=127.0.0.1 -rpcbind=127.0.0.1 -rpcpassword=rpcpassword -rpcuser=rpcuser -datadir=nodedata -defaultwalletname=default -defaultwalletpassword=default -unlockdefaultwallet -server -testnet"
+      },
+      "TRC (TEST/NO ASSUME VALID)": {
+         "commandName": "Project",
+         "commandLineArgs": "-testnet -assumevalid=0 -checkpoints=false"
+      }
+   }
+}

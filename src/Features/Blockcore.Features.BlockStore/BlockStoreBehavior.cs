@@ -281,18 +281,24 @@ namespace Blockcore.Features.BlockStore
             // TODO: bring logic from core
             foreach (InventoryVector item in getDataPayload.Inventory.Where(inv => inv.Type.HasFlag(InventoryType.MSG_BLOCK)))
             {
+                if (!peer.IsConnected)
+                    continue;
+
                 ChainedHeaderBlock chainedHeaderBlock = this.consensusManager.GetBlockData(item.Hash);
 
                 if (chainedHeaderBlock?.Block != null)
                 {
                     this.logger.LogDebug("Sending block '{0}' to peer '{1}'.", chainedHeaderBlock.ChainedHeader, peer.RemoteSocketEndpoint);
 
-                    //TODO strip block of witness if node does not support
                     await peer.SendMessageAsync(new BlockPayload(chainedHeaderBlock.Block.WithOptions(this.ChainIndexer.Network.Consensus.ConsensusFactory, peer.SupportedTransactionOptions))).ConfigureAwait(false);
                 }
                 else
                 {
                     this.logger.LogDebug("Block with hash '{0}' requested from peer '{1}' was not found in store.", item.Hash, peer.RemoteSocketEndpoint);
+
+                    // https://btcinformation.org/en/developer-reference#notfound
+                    // https://github.com/bitcoin/bitcoin/pull/2192
+                    await peer.SendMessageAsync(new NotFoundPayload(InventoryType.MSG_BLOCK, item.Hash)).ConfigureAwait(false);
                 }
 
                 // If the peer is syncing using "getblocks" message we are supposed to send
